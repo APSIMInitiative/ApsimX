@@ -2695,8 +2695,8 @@ namespace Models.AgPasture
             {
                 if (phenologicStage > 0)
                 {
-                    // Evaluate the nitrogen soil demand, supply, and uptake
-                    DoNitrogenCalculations();
+                   // Evaluate whether remobilisation of luxury N is needed
+                    EvaluateLuxuryNRemobilisation();
 
                     // Get the actual growth, after nutrient limitations but before senescence
                     CalcGrowthAfterNutrientLimitations();
@@ -2976,7 +2976,7 @@ namespace Models.AgPasture
             {
                 //only relevant for leaves+stems
                 double currentGreenDM = Leaf.DMLive + Stem.DMLive;
-                double currentMatureDM = Leaf.Tissue[2].DM.Wt + Stem.Tissue[2].DM.Wt;
+                double currentMatureDM = Leaf.MatureTissue.DM.Wt + Stem.MatureTissue.DM.Wt;
                 double dmGreenToBe = currentGreenDM - (currentMatureDM * gama);
                 double minimumStandingLive = Leaf.MinimumLiveDM + Stem.MinimumLiveDM;
                 if (dmGreenToBe < minimumStandingLive)
@@ -2992,7 +2992,11 @@ namespace Models.AgPasture
             }
 
             // Check minimum DM for roots too
-            gamaR = roots[0].EvaluateTissueTurnover(gamaR);
+            if (Root.Live.DM.Wt * (1.0 - gamaR) < Root.MinimumLiveDM)
+            {
+                gamaR = MathUtilities.Divide(Math.Max(Root.Live.DM.Wt - Root.MinimumLiveDM, 0.0), Root.Live.DM.Wt, 0.0);
+                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
+            }
 
             // Make sure rates are within bounds
             gama = MathUtilities.Bound(gama, 0.0, 1.0);
@@ -3000,7 +3004,7 @@ namespace Models.AgPasture
             gamaR = MathUtilities.Bound(gamaR, 0.0, 1.0);
             gamaD = MathUtilities.Bound(gamaD, 0.0, 1.0);
 
-            // Do the actual turnover, update DM and N
+            // Do the actual turnover, set DM and N aside to transfer between tissues
             // - Leaves and stems
             double[] turnoverRates = new double[] { gama * RelativeTurnoverEmerging, gama, gama, gamaD };
             Leaf.CalculateTissueTurnover(turnoverRates);
@@ -3034,7 +3038,6 @@ namespace Models.AgPasture
             detachedRootDM = Root.DMDetached;
             detachedRootN = Root.NDetached;
             // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
-            //}
         }
 
         /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
@@ -3102,7 +3105,9 @@ namespace Models.AgPasture
 
                 // Evaluate root elongation and allocate new growth in each layer
                 if (phenologicStage > 0)
+                {
                     Root.EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)));
+                }
 
                 Root.DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
             }
@@ -3221,13 +3226,6 @@ namespace Models.AgPasture
 
         #region - Nitrogen uptake processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Performs the nitrogen uptake calculations.</summary>
-        internal void DoNitrogenCalculations()
-        {
-            // Evaluate whether remobilisation of luxury N is needed
-            EvaluateLuxuryNRemobilisation();
-        }
-
         /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
         internal void EvaluateNitrogenDemand()
         {
@@ -3238,7 +3236,7 @@ namespace Models.AgPasture
 
             // N demand for new growth, with optimum N (kg/ha)
             demandOptimumN = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                       + (toStol * Stolon.NConcOptimum) + (toRoot * roots[0].NConcOptimum);
+                           + (toStol * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
 
             // get the factor to reduce the demand under elevated CO2
             double fN = NOptimumVariationDueToCO2();
@@ -3246,7 +3244,7 @@ namespace Models.AgPasture
 
             // N demand for new growth, with luxury uptake (maximum [N])
             demandLuxuryN = (toLeaf * Leaf.NConcMaximum) + (toStem * Stem.NConcMaximum)
-                       + (toStol * Stolon.NConcMaximum) + (toRoot * roots[0].NConcMaximum);
+                          + (toStol * Stolon.NConcMaximum) + (toRoot * Root.NConcMaximum);
             // It is assumed that luxury uptake is not affected by CO2 variations
         }
 
@@ -3264,7 +3262,9 @@ namespace Models.AgPasture
 
                 // Update N fixation if under N stress
                 if (Nstress < 0.99)
+                {
                     fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - Nstress) * adjNDemand;
+                }
             }
         }
 
@@ -3274,13 +3274,13 @@ namespace Models.AgPasture
             double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
-            if (adjNDemand - fixedN < Epsilon)
+            if ((adjNDemand - fixedN) < Epsilon)
             {
                 // N demand is fulfilled by fixation alone
                 senescedNRemobilised = 0.0;
                 mySoilNDemand = 0.0;
             }
-            else if (adjNDemand - (fixedN + remobilisableSenescedN) < Epsilon)
+            else if ((adjNDemand - (fixedN + remobilisableSenescedN)) < Epsilon)
             {
                 // N demand is fulfilled by fixation plus N remobilised from senesced material
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
@@ -3309,9 +3309,10 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of luxury nitrogen remobilised into new growth.</summary>
         internal void EvaluateLuxuryNRemobilisation()
         {
-            // check whether there is still demand for N (only match demand for growth at optimum N conc.)
-            // check whether there is any luxury N remobilisable
+            // check whether there is N demand after fixation, senescence and soil uptake (only match demand for growth at optimum N conc.)
             double Nmissing = demandOptimumN * GlfSoilFertility - (fixedN + senescedNRemobilised + SoilUptakeN);
+
+            // check whether there is any luxury N remobilisable
             if ((Nmissing > Epsilon) && (RemobilisableLuxuryN > Epsilon))
             {
                 // all N already considered is not enough to match demand for growth, check remobilisation of luxury N

@@ -92,7 +92,7 @@
         public double ExponentSoilMoisture = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        private double minimumLiveDM = 0.0;
+        public double MinimumLiveDM { get; set; } = 1.0;
 
         //----------------------- States -----------------------
 
@@ -217,8 +217,8 @@
 
         /// <summary>Initialise this root instance (and tissues).</summary>
         /// <param name="zone">The zone the roots belong to.</param>
-        /// <param name="minLiveDM">Minimum live DM biomass for this organ (kg/ha).</param>
-        public void Initialise(Zone zone, double minLiveDM)
+        /// <param name="minimumLiveWt">Minimum live DM biomass for this organ (kg/ha).</param>
+        public void Initialise(Zone zone, double minimumLiveWt)
         {
             // link to soil models parameters
             soil = zone.FindInScope<Soil>();
@@ -271,7 +271,7 @@
             mySoilWaterAvailable = new double[nLayers];
 
             // save minimum DM and get target root distribution
-            minimumLiveDM = minLiveDM;
+            MinimumLiveDM = minimumLiveWt;
             TargetDistribution = RootDistributionTarget();
 
             // initialise tissues
@@ -579,39 +579,43 @@
 
         /// <summary>Computes the allocation of new growth to roots for each layer.</summary>
         /// <remarks>
-        /// The current target distribution for roots changes whenever then root depth changes, this is then used to allocate 
+        /// The current target distribution for roots changes whenever the root depth changes, this is then used to allocate 
         ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
         ///  take some time for the actual distribution to evolve to be equal to the target.
         /// </remarks>
-        /// <param name="dGrowthRootDM">Root growth dry matter (kg/ha).</param>
-        /// <param name="dGrowthRootN">Root growth nitrogen (kg/ha).</param>
-        public void DoRootGrowthAllocation(double dGrowthRootDM, double dGrowthRootN)
+        /// <param name="rootDMToAdd">Root dry matter grown (kg/ha).</param>
+        /// <param name="rootNToAdd">Nitrogen in root grown (kg/ha).</param>
+        public void DoRootGrowthAllocation(double rootDMToAdd, double rootNToAdd)
         {
-            if (MathUtilities.IsGreaterThan(dGrowthRootDM, 0))
+            if (MathUtilities.IsGreaterThan(rootDMToAdd, 0))
             {
                 // root DM is changing due to growth, check potential changes in distribution
-                double[] growthRootFraction;
+                double[] newGrowthFraction;
                 double[] currentRootTarget = CurrentRootDistributionTarget();
                 if (MathUtilities.AreEqual(Live.FractionWt, currentRootTarget))
                 {
                     // no need to change the distribution
-                    growthRootFraction = Live.FractionWt;
+                    newGrowthFraction = Live.FractionWt;
                 }
                 else
                 {
                     // root distribution should change, get preliminary distribution (average of current and target)
-                    growthRootFraction = new double[nLayers];
+                    newGrowthFraction = new double[nLayers];
                     for (int layer = 0; layer <= BottomLayer; layer++)
-                        growthRootFraction[layer] = 0.5 * (Live.FractionWt[layer] + currentRootTarget[layer]);
+                    {
+                        newGrowthFraction[layer] = 0.5 * (Live.FractionWt[layer] + currentRootTarget[layer]);
+                    }
 
                     // normalise distribution of allocation
-                    double layersTotal = growthRootFraction.Sum();
+                    double layersTotal = newGrowthFraction.Sum();
                     for (int layer = 0; layer <= BottomLayer; layer++)
-                        growthRootFraction[layer] = growthRootFraction[layer] / layersTotal;
+                    {
+                        newGrowthFraction[layer] = newGrowthFraction[layer] / layersTotal;
+                    }
                 }
 
-                Live.SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootDM),
-                                           n: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootN));
+                Live.SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(newGrowthFraction, rootDMToAdd),
+                                           n: MathUtilities.Multiply_Value(newGrowthFraction, rootNToAdd));
             }
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
         }
@@ -630,7 +634,7 @@
         {
             // Check changes in root depth
             var dRootDepth = 0.0;
-            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0) && (Depth < RootDepthMaximum))
+            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < RootDepthMaximum))
             {
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
                 dRootDepth = RootElongationRate * tempFactor;
@@ -674,23 +678,6 @@
         public bool IsInZone(string zoneName)
         {
             return this.zoneName == zoneName;
-        }
-
-        /// <summary>Computes the turnover rate.</summary>
-        /// <param name="gamaR">Daily DM turnover rate for root tissue.</param>
-        /// <returns></returns>
-        public double EvaluateTissueTurnover(double gamaR)
-        {
-            // Check minimum DM for roots too
-            if (DMLive * (1.0 - gamaR) < minimumLiveDM)
-            {
-                if (DMLive <= minimumLiveDM)
-                    gamaR = 0.0;
-                else
-                    gamaR = MathUtilities.Divide(DMLive - minimumLiveDM, DMLive, 0.0);
-                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
-            }
-            return gamaR;
         }
     }
 }

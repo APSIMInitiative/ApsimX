@@ -171,8 +171,7 @@
                 NTransferredOut += turnedoverN;
                 if (receivingTissue != null)
                 {
-                    receivingTissue.DMTransferredIn += turnedoverDM;
-                    receivingTissue.NTransferredIn += turnedoverN;
+                    receivingTissue.SetBiomassTransferIn(turnedoverDM, turnedoverN);
                 }
 
                 // get the N amount remobilisable (all N in this tissue above the given nConc concentration)

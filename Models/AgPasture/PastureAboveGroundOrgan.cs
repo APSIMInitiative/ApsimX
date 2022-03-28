@@ -50,7 +50,7 @@
         public double FractionStanding { get; set; } = 1.0;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; set; }
+        public double MinimumLiveDM { get; set; } = 10.0;
 
         //----------------------- States -----------------------
 
