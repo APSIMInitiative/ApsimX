@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using System;
 
 namespace Models
@@ -18,7 +19,7 @@ namespace Models
         /// <returns>true if line was able to be parsed.</returns>
         public static bool TryParse(string line, Report report, IEvent events)
         {
-            string[] tokens = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            string[] tokens = StringUtilities.SplitStringHonouringBrackets(line, " ", '[', ']');
             if (tokens.Length == 1)
             {
                 new EventReportFrequency(report, events, tokens[0]);
