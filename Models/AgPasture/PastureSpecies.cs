@@ -3312,6 +3312,9 @@ namespace Models.AgPasture
             // check whether there is N demand after fixation, senescence and soil uptake (only match demand for growth at optimum N conc.)
             double Nmissing = demandOptimumN * GlfSoilFertility - (fixedN + senescedNRemobilised + SoilUptakeN);
 
+            // For the purpose of remobilisation, consider live root alongside 'developing' shoot tissue:
+            int eqTissue = 1;
+
             // check whether there is any luxury N remobilisable
             if ((Nmissing > Epsilon) && (RemobilisableLuxuryN > Epsilon))
             {
@@ -3330,7 +3333,7 @@ namespace Models.AgPasture
                             Leaf.Tissue[tissue].DoRemobiliseN(1.0);
                             Stem.Tissue[tissue].DoRemobiliseN(1.0);
                             Stolon.Tissue[tissue].DoRemobiliseN(1.0);
-                            if (tissue == 0)
+                            if (tissue == eqTissue)
                             {
                                 Root.Live.DoRemobiliseN(1.0);
                                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
@@ -3347,7 +3350,7 @@ namespace Models.AgPasture
                     for (int tissue = 2; tissue >= 0; tissue--)
                     {
                         Nluxury = Leaf.Tissue[tissue].NRemobilisable + Stem.Tissue[tissue].NRemobilisable + Stolon.Tissue[tissue].NRemobilisable;
-                        if (tissue == 0)
+                        if (tissue == eqTissue)
                         {
                             Nluxury += Root.Live.NRemobilisable;
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
@@ -3357,7 +3360,7 @@ namespace Models.AgPasture
                         Leaf.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         Stem.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         Stolon.Tissue[tissue].DoRemobiliseN(fracRemobilised);
-                        if (tissue == 0)
+                        if (tissue == eqTissue)
                         {
                             Root.Live.DoRemobiliseN(fracRemobilised);
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too

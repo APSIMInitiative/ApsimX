@@ -133,8 +133,6 @@
             }
 
             // additions need to consider distribution over the profile
-            DMTransferredIn = dmTransferredInByLayer.Sum();
-            NTransferredIn = nTransferredInByLayer.Sum();
             if (DMTransferredIn > 0.0 || NTransferredIn > 0.0)
             {
                 for (int layer = 0; layer < dmByLayer.Length; layer++)
@@ -207,7 +205,7 @@
         /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum</remarks>
         public void DoTissueTurnover(double turnoverRate, RootTissue receivingTissue, double nConc)
         {
-            if (turnoverRate > 0.0)
+            if (DM.Wt > 0.0 && turnoverRate > 0.0)
             {
                 var turnedoverDM = DM.Wt * turnoverRate;
                 var turnedoverN = DM.N * turnoverRate;
@@ -216,7 +214,7 @@
                 if (receivingTissue != null)
                 {
                     receivingTissue.SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(FractionWt, turnedoverDM),
-                                                         n: MathUtilities.Multiply_Value(FractionWt, turnedoverN));
+                                                          n: MathUtilities.Multiply_Value(FractionWt, turnedoverN));
                 }
 
                 // get the N amount remobilisable (all N in this tissue above the given nConc concentration)
@@ -237,6 +235,9 @@
                 dmTransferredInByLayer[layer] += dm[layer];
                 nTransferredInByLayer[layer] += n[layer];
             }
+
+            DMTransferredIn = dmTransferredInByLayer.Sum();
+            NTransferredIn = nTransferredInByLayer.Sum();
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>

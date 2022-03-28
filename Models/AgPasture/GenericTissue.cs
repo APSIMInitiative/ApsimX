@@ -163,7 +163,7 @@
         /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum</remarks>
         public void DoTissueTurnover(double turnoverRate, GenericTissue receivingTissue, double nConc)
         {
-            if (turnoverRate > 0.0)
+            if (DM.Wt > 0.0 && turnoverRate > 0.0)
             {
                 var turnedoverDM = DM.Wt * turnoverRate;
                 var turnedoverN = DM.N * turnoverRate;
