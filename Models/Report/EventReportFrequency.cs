@@ -39,7 +39,6 @@ namespace Models
             this.events = events;
             this.eventName = eventName;
             events.Subscribe(eventName, OnEvent);
-            events.Subscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
         }
 
         /// <summary>Called when the event is published.</summary>
@@ -48,17 +47,6 @@ namespace Models
         private void OnEvent(object sender, EventArgs e)
         {
             report.DoOutput();
-        }
-
-        /// <summary>
-        /// Disconnect event handlers when the simulation finishes.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event data.</param>
-        private void OnEndOfSimulation(object sender, EventArgs e)
-        {
-            events.Unsubscribe(eventName, OnEvent);
-            events.Unsubscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
         }
     }
 }

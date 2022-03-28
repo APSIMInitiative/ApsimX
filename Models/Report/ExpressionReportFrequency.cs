@@ -41,7 +41,6 @@ namespace Models
             this.events = events;
             this.expressionFunction = expressionFunction;
             events.Subscribe("[Clock].DoReport", OnDoReport);
-            events.Subscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
         }
 
         /// <summary>An event handler called at the end of each day.</summary>
@@ -51,17 +50,6 @@ namespace Models
         {
             if (expressionFunction.Value())
                 report.DoOutput();
-        }
-
-        /// <summary>
-        /// Disconnect event handlers when the simulation finishes.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event data.</param>
-        private void OnEndOfSimulation(object sender, EventArgs e)
-        {
-            events.Unsubscribe("[Clock].DoReport", OnDoReport);
-            events.Unsubscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
         }
     }
 }
