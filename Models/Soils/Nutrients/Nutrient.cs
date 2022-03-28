@@ -628,6 +628,9 @@ namespace Models.Soils.Nutrients
             // Basic model description.
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
 
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+
             // Document model structure.
             List<ITag> structureTags = new List<ITag>();
             structureTags.Add(new DirectedGraphTag(DirectedGraphInfo));
