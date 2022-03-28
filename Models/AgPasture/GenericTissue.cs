@@ -54,13 +54,13 @@
         public double DMTransferredIn { get; set; }
 
         /// <summary>DM transferred out of this tissue (kg/ha).</summary>
-        public double DMTransferredOut { get; set; }
+        public double DMTransferredOut { get; private set; }
 
         /// <summary>N transferred into this tissue (kg/ha).</summary>
         public double NTransferredIn { get; set; }
 
         /// <summary>N transferred out of this tissue (kg/ha).</summary>
-        public double NTransferredOut { get; set; }
+        public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
         public double DMRemoved { get; private set; }
@@ -180,6 +180,15 @@
                 totalRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConc);
                 NRemobilisable = Math.Max(0.0, totalRemobilisableN * FractionNRemobilisable);
             }
+        }
+
+        /// <summary>Set the biomass moving into the tissue.</summary>
+        /// <param name="dm">Dry matter to add (kg/ha).</param>
+        /// <param name="n">The nitrogen to add (kg/ha).</param>
+        public void SetBiomassTransferIn(double dm, double n)
+        {
+            DMTransferredIn += dm;
+            NTransferredIn += n;
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>

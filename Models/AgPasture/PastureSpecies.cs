@@ -2365,7 +2365,7 @@ namespace Models.AgPasture
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // get the number of layers in the soil profile and initialise soil related variables

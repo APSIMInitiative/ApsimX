@@ -45,22 +45,22 @@
         private double[] nTransferredInByLayer;
 
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
-        public double DMTransferredIn { get; set; }
+        public double DMTransferredIn { get; private set; }
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
-        public double DMTransferredOut { get; set; }
+        public double DMTransferredOut = 0.0;
 
         /// <summary>Nitrogen transferred into this tissue (kg/ha).</summary>
-        public double NTransferredIn { get; set; }
+        public double NTransferredIn { get; private set; }
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
-        public double NTransferredOut { get; set; }
+        public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
         public double DMRemoved { get;  set; }
 
         /// <summary>The fraction of DM removed from this tissue.</summary>
-        public double FractionRemoved { get;  set; }
+        public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
         public double NRemoved { get;  set; }
@@ -116,15 +116,6 @@
             pByLayer = new double[soilPhysical.Thickness.Length];
             dmTransferredInByLayer = new double[soilPhysical.Thickness.Length];
             nTransferredInByLayer = new double[soilPhysical.Thickness.Length];
-        }
-
-        /// <summary>Set the biomass moving into the tissue.</summary>
-        /// <param name="dm">Dry matter (kg/ha).</param>
-        /// <param name="n">The nitrogen (kg/ha).</param>
-        public void SetBiomassTransferIn(double[] dm, double[] n)
-        {
-            dmTransferredInByLayer = dm;
-            nTransferredInByLayer = n;
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -232,6 +223,19 @@
                 double totalRemobilisableN = (DM.Wt - DMTransferredOut) * Math.Max(0.0, DM.NConc - nConc);
                 totalRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConc);
                 NRemobilisable = Math.Max(0.0, totalRemobilisableN * FractionNRemobilisable);
+            }
+        }
+
+        /// <summary>Set the biomass moving into the tissue.</summary>
+        /// <param name="dm">Dry matter to add (kg/ha).</param>
+        /// <param name="n">The nitrogen to add (kg/ha).</param>
+        public void SetBiomassTransferIn(double[] dm, double[] n)
+        {
+            int nLayers = Math.Min(dm.Length, nTransferredInByLayer.Length);
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                dmTransferredInByLayer[layer] += dm[layer];
+                nTransferredInByLayer[layer] += n[layer];
             }
         }
 
