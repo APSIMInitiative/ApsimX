@@ -292,6 +292,8 @@ namespace UserInterface.Views
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
             }
 
+            component.Sensitive = property.Enabled;
+
             // Set the widget's name to the property name.
             // This allows us to provide the property name when firing off
             // the property changed event, despite the event handlers being
