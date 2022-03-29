@@ -87,18 +87,6 @@
 
         //----------------------- Public methods -----------------------
 
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs args)
-        {
-            ClearDailyTransferredAmounts();
-        }
-
-        /// <summary>Preparation before the main daily processes.</summary>
-        public void OnDoDailyInitialisation()
-        {
-            ClearDailyTransferredAmounts();
-        }
-
         /// <summary>Sets the biomass of this tissue.</summary>
         /// <param name="dmAmount">The DM amount to set to (kg/ha).</param>
         /// <param name="nAmount">The amount of N to set to (kg/ha).</param>

@@ -93,21 +93,6 @@
 
         //----------------------- Public methods -----------------------
 
-        /// <summary>Performs the initialisation procedures for this tissue.</summary>
-        /// <param name="sender">The sender model.</param>
-        /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            ClearDailyTransferredAmounts();
-        }
-
-        /// <summary>Preparation before the main daily processes.</summary>
-        public void OnDoDailyInitialisation()
-        {
-            ClearDailyTransferredAmounts();
-        }
-
         /// <summary>Initialise this tissue instance.</summary>
         public void Initialise()
         {

@@ -277,8 +277,6 @@
             TargetDistribution = RootDistributionTarget();
 
             // initialise tissues
-/*            Live = Tissue[0];
-            Dead = Tissue[1];*/
             Live.Initialise();
             Dead.Initialise();
         }
