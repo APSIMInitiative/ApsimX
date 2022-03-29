@@ -3665,10 +3665,6 @@ namespace Models.AgPasture
         /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
         public Biomass RemoveBiomass(double amountToRemove)
         {
-            DateTime testDate = DateTime.Parse("18/09/1976");
-            if (myClock.Today == testDate)
-                testDate.AddDays(0);
-
             // get existing DM and N amounts
             double preRemovalDMShoot = AboveGroundWt;
             double preRemovalNShoot = AboveGroundN;
@@ -3740,20 +3736,17 @@ namespace Models.AgPasture
                 DefoliatedDigestibility = greenDigestibility + deadDigestibility;
 
                 // Remove biomass from the organs.
-                Leaf.RemoveBiomass(
-                    new OrganBiomassRemovalType()
+                Leaf.RemoveBiomass(new OrganBiomassRemovalType()
                     {
                         FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLive, 0.0, Epsilon)),
                         FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDead, 0.0, Epsilon))
                     });
-                Stem.RemoveBiomass(
-                    new OrganBiomassRemovalType()
+                Stem.RemoveBiomass(new OrganBiomassRemovalType()
                     {
                         FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], Stem.DMLive, 0.0, Epsilon)),
                         FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], Stem.DMDead, 0.0, Epsilon))
                     });
-                Stolon.RemoveBiomass(
-                    new OrganBiomassRemovalType()
+                Stolon.RemoveBiomass(new OrganBiomassRemovalType()
                     {
                         FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0, Epsilon)),
                         FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0, Epsilon))
@@ -3783,7 +3776,6 @@ namespace Models.AgPasture
                 StructuralN = defoliatedN,
             };
         }
-
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
