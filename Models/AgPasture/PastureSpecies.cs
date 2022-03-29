@@ -768,15 +768,15 @@ namespace Models.AgPasture
 
         /// <summary>Minimum temperature for tissue turnover (oC).</summary>
         [Units("oC")]
-        public double TurnoverTemperatureMin { get; set; } = 2.0;
+        public double TurnoverTemperatureMin { get; set; } = 1.0;
 
         /// <summary>Reference temperature for tissue turnover (oC).</summary>
         [Units("oC")]
-        public double TurnoverTemperatureRef { get; set; } = 20.0;
+        public double TurnoverTemperatureRef { get; set; } = 16.0;
 
         /// <summary>Exponent of function for temperature effect on tissue turnover (>0.0).</summary>
         [Units("-")]
-        public double TurnoverTemperatureExponent { get; set; } = 1.0;
+        public double TurnoverTemperatureExponent { get; set; } = 1.5;
 
         /// <summary>Maximum increase in tissue turnover due to water deficit (>0.0).</summary>
         [Units("-")]
@@ -3987,7 +3987,8 @@ namespace Models.AgPasture
         private double TemperatureEffectOnRespiration(double temperature)
         {
             double result;
-            if (temperature <= 0.0)
+            double baseTemp = GrowthTminimum * 0.5; // assuming halfway between Tmin and zero
+            if (temperature <= baseTemp)
             {
                 // too cold, no respiration
                 result = 0.0;
@@ -3995,7 +3996,7 @@ namespace Models.AgPasture
             else
             {
                 double scalef = 1.0 - Math.Exp(-1.0);
-                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / RespirationTReference, RespirationExponent));
+                double baseEffect = 1.0 - Math.Exp(-Math.Pow((temperature - baseTemp) / (RespirationTReference - baseTemp), RespirationExponent));
                 result = baseEffect / scalef;
             }
 
