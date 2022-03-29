@@ -849,7 +849,7 @@ namespace Models.AgPasture
 
         /// <summary>Exponent to modify the effect of N deficiency on plant growth (>1.0).</summary>
         [Units("-")]
-        public double NDillutionCoefficient { get; set; } = 0.5;
+        public double NDilutionCoefficient { get; set; } = 2.0;
 
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
@@ -2775,10 +2775,11 @@ namespace Models.AgPasture
             {
                 if (dNewGrowthN > Epsilon)
                 {
-                    glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
+                    glfNSupply = MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0);
+                    glfNSupply = MathUtilities.Bound(glfNSupply, 0.0, 1.0);
 
-                    // adjust the glfN
-                    glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                    // adjust the glf to consider N dilution
+                    glfNit = 1.0 - Math.Pow(1.0 - glfNSupply, NDilutionCoefficient);
                 }
                 else
                 {

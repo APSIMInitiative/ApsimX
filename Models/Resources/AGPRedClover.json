@@ -65,7 +65,7 @@
       "SoilSaturationEffectMax": 0.15,
       "MinimumWaterFreePorosity": -1.0,
       "SoilSaturationRecoveryFactor": 0.2,
-      "NDillutionCoefficient": 1.0,
+      "NDilutionCoefficient": 1.0,
       "GlfGeneric": 1.0,
       "GlfSoilFertility": 1.0,
       "PlantHeightMinimum": 300.0,
