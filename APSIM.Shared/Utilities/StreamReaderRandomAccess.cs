@@ -37,6 +37,11 @@ namespace APSIM.Shared.Utilities
         private long position = 0;
 
         /// <summary>
+        /// Current position in the buffer, in number of bytes.
+        /// </summary>
+        private long positionBytes = 0;
+
+        /// <summary>
         /// Current position in the file. This is in number of bytes.
         /// </summary>
         private long offset = 0;
@@ -107,6 +112,7 @@ namespace APSIM.Shared.Utilities
             file.Close();
             file = null;
             position = 0;
+            positionBytes = 0;
             EndOfStream = true;
             bufferSize = 0;
         }
@@ -141,6 +147,7 @@ namespace APSIM.Shared.Utilities
             char ch = '\0';
             bool endOfLine = false;
             int numBytesRead = 0;
+            long offsetStart = bufferOffset + positionBytes;
 
             while (!endOfLine)
             {
@@ -160,7 +167,10 @@ namespace APSIM.Shared.Utilities
                 }
 
                 position++;
-                numBytesRead += file.CurrentEncoding.GetByteCount(ch);
+
+                int numBytes = file.CurrentEncoding.GetByteCount(ch);
+                positionBytes += numBytes;
+                numBytesRead += numBytes;
 
                 // If we've reached the end of the buffer, we read a new buffer
                 // from the underlying stream.
@@ -177,7 +187,7 @@ namespace APSIM.Shared.Utilities
             // multi-byte encodings. Note also that the buffer offset will
             // change when we reach the end of the buffer, so we need to use the
             // buffer offset from before we started reading.
-            offset += numBytesRead;
+            offset = offsetStart + numBytesRead;
             return lineBuffer.ToString();
         }
 
@@ -204,6 +214,7 @@ namespace APSIM.Shared.Utilities
 
             file = new StreamReader(stream);
             position = 0;
+            positionBytes = 0;
             EndOfStream = false;
             bufferSize = 0;
             bufferOffset = 0;
@@ -219,6 +230,7 @@ namespace APSIM.Shared.Utilities
         {
             bufferOffset = bomLength + file.BaseStream.Position;
             position = 0;
+            positionBytes = 0;
             bufferSize = file.Read(buffer, 0, maxBufferSize);
 
             if (bufferSize == 0)

@@ -105,32 +105,34 @@ namespace UnitTests.APSIMShared
         [TestCase("UnitTests.APSIMShared.Resources.test-utf16-be.csv")]
         public void TestBomParsing(string inputFile)
         {
-            string[] expected = new string[]
+            string[] expected = new string[4]
             {
                 "x,y",
                 "0,1",
                 "1,2",
                 "2,4"
             };
+            long[] endOfLinePositions = new long[expected.Length];
 
             using (Stream stream = GetResourceStream(inputFile))
             {
                 StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
-                long endOfFirstLine = -1;
                 for (int i = 0; i < expected.Length; i++)
                 {
                     string line = reader.ReadLine();
                     Assert.AreEqual(expected[i], line);
-                    if (i == 0)
-                        endOfFirstLine = reader.Position;
+                    endOfLinePositions[i] = reader.Position;
                 }
 
-                // Seek to the end of the first line, then call ReadLine(). This
-                // should cause the second line to be read, unless the BOM is
-                // not accounted for.
-                reader.Seek(endOfFirstLine, SeekOrigin.Begin);
-                string input = reader.ReadLine();
-                Assert.AreEqual(expected[1], input);
+                // Seek to the end of each line, and read a line, and ensure
+                // that we get the expected result. This should probably be a
+                // separate test.
+                for (int i = 1; i < expected.Length - 1; i++)
+                {
+                    reader.Seek(endOfLinePositions[i], SeekOrigin.Begin);
+                    string input = reader.ReadLine();
+                    Assert.AreEqual(expected[i + 1], input);
+                }
             }
         }
 
