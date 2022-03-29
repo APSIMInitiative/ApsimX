@@ -47,7 +47,7 @@
       "FractionLeafDMFactor": 2000.0,
       "FractionLeafExponent": 3.0,
       "FractionToStolon": 0.2,
-      "SpecificLeafArea": 30.0,
+      "SpecificLeafArea": 25.0,
       "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 500.0,
       "MaxStemEffectOnLAI": 0.5,
@@ -75,7 +75,7 @@
       "PlantHeightMaximum": 150.0,
       "PlantHeightMassForMax": 7500.0,
       "PlantHeightExponent": 2.5,
-      "MinimumGreenWt": 50.0,
+      "MinimumGreenWt": 10.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "Children": [
@@ -83,7 +83,7 @@
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Leaf",
           "NConcOptimum": 0.050,
-          "NConcMinimum": 0.025,
+          "NConcMinimum": 0.0275,
           "NConcMaximum": 0.060,
           "Children": [
             {
@@ -135,9 +135,9 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
-          "NConcOptimum": 0.025,
+          "NConcOptimum": 0.020,
           "NConcMinimum": 0.010,
-          "NConcMaximum": 0.030,
+          "NConcMaximum": 0.025,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -188,7 +188,7 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stolon",
-          "NConcOptimum": 0.025,
+          "NConcOptimum": 0.020,
           "NConcMinimum": 0.010,
           "NConcMaximum": 0.030,
           "FractionStanding": 0.3,
@@ -255,8 +255,6 @@
           "KNO3": 0.01,
           "KNH4": 0.005,
           "MaximumNUptake": 5.0,
-          "ReferenceRLD": 5.0,
-          "ReferenceKSuptake": 15.0,
           "Children": [
             {
               "$type": "Models.AgPasture.RootTissue, Models",

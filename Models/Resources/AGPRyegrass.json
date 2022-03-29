@@ -75,7 +75,7 @@
       "PlantHeightMaximum": 250.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.8,
-      "MinimumGreenWt": 100.0,
+      "MinimumGreenWt": 25.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "Children": [
@@ -83,7 +83,7 @@
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Leaf",
           "NConcOptimum": 0.04,
-          "NConcMinimum": 0.02,
+          "NConcMinimum": 0.01,
           "NConcMaximum": 0.05,
           "Children": [
             {
@@ -136,7 +136,7 @@
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
           "NConcOptimum": 0.020,
-          "NConcMinimum": 0.010,
+          "NConcMinimum": 0.007,
           "NConcMaximum": 0.025,
           "Children": [
             {
@@ -243,7 +243,7 @@
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
           "Name": "Root",
           "NConcOptimum": 0.020,
-          "NConcMinimum": 0.010,
+          "NConcMinimum": 0.006,
           "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 90.0,
           "RootDistributionExponent": 3.2,
@@ -252,11 +252,9 @@
           "RootDepthMinimum": 50.0,
           "RootDepthMaximum": 1000.0,
           "RootElongationRate": 25.0,
-          "KNO3": 0.02,
+          "KNO3": 0.025,
           "KNH4": 0.01,
           "MaximumNUptake": 10.0,
-          "ReferenceRLD": 5.0,
-          "ReferenceKSuptake": 15.0,
           "Children": [
             {
               "$type": "Models.AgPasture.RootTissue, Models",
