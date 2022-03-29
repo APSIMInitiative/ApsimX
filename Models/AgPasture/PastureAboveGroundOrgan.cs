@@ -12,27 +12,27 @@
     [Serializable]
     public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility
     {
-        /// <summary>The collection of tissues for this organ.</summary>
+        /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
         public GenericTissue[] Tissue;
 
-        /// <summary>The emerging tissue.</summary>
+        /// <summary>Emerging aboveground organ tissue.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue EmergingTissue { get; private set; }
 
-        /// <summary>The developing tissue.</summary>
+        /// <summary>Developing aboveground organ tissue.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue DevelopingTissue { get; private set; }
 
-        /// <summary>The mature tissue.</summary>
+        /// <summary>Mature aboveground organ tissue.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue MatureTissue { get; private set; }
 
-        /// <summary>The mature tissue.</summary>
+        /// <summary>Dead aboveground organ tissue.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue DeadTissue { get; private set; }
 
-        /// <summary>Array of live tissue.</summary>
+        /// <summary>Collection of live aboveground organ tissues.</summary>
         public GenericTissue[] LiveTissue { get; private set; }
 
         //---------------------------- Parameters -----------------------

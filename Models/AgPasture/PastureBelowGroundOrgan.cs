@@ -21,7 +21,15 @@
 
         /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
-        private RootTissue[] tissue = null;
+        public RootTissue[] Tissue;
+
+        /// <summary>Live root tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public RootTissue Live { get; private set; }
+
+        /// <summary>Dead root tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public RootTissue Dead { get; private set; }
 
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
@@ -95,12 +103,6 @@
         public double MinimumLiveDM { get; set; } = 1.0;
 
         //----------------------- States -----------------------
-
-        /// <summary>Root live tissue.</summary>
-        public RootTissue Live { get; private set; }
-
-        /// <summary>Root dead tissue.</summary>
-        public RootTissue Dead { get; private set; }
 
         /// <summary>Rooting depth (mm).</summary>
         public double Depth { get; set; }
@@ -185,11 +187,11 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
+                    result[layer] = Tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
                 }
                 return result;
             }
@@ -275,8 +277,8 @@
             TargetDistribution = RootDistributionTarget();
 
             // initialise tissues
-            Live = tissue[0];
-            Dead = tissue[1];
+/*            Live = Tissue[0];
+            Dead = Tissue[1];*/
             Live.Initialise();
             Dead.Initialise();
         }
@@ -292,7 +294,9 @@
 
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
             var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0));
-            tissue[0].SetBiomass(rootBiomassWt, rootBiomassN); // assumes there's no dead material
+            Live.SetBiomass(rootBiomassWt, rootBiomassN);
+            var blankArray = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), 0.0);
+            Dead.SetBiomass(blankArray, blankArray); // assumes there's no dead material
         }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
@@ -315,9 +319,9 @@
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void ClearDailyTransferredAmounts()
         {
-            for (int t = 0; t < tissue.Length; t++)
+            for (int t = 0; t < Tissue.Length; t++)
             {
-                tissue[t].ClearDailyTransferredAmounts();
+                Tissue[t].ClearDailyTransferredAmounts();
             }
         }
 

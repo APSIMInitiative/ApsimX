@@ -145,6 +145,13 @@
             UpdateDM();
         }
 
+        /// <summary>Update dry matter.</summary>
+        private void UpdateDM()
+        {
+            biomass.Wt = dmByLayer.Sum();
+            biomass.N = nByLayer.Sum();
+        }
+
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
         /// <param name="amountDM">The DM amount to detach (kg/ha).</param>
         /// <param name="amountN">The N amount to detach (kg/ha).</param>
@@ -332,13 +339,6 @@
             {
                 DetachBiomass(dmToSoil, nToSoil);
             }
-        }
-
-        /// <summary>Update dry matter.</summary>
-        private void UpdateDM()
-        {
-            biomass.Wt = dmByLayer.Sum();
-            biomass.N = nByLayer.Sum();
         }
 
         /// <summary>Reset the transfer amounts in this tissue.</summary>
