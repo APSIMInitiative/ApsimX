@@ -784,7 +784,11 @@ namespace Models.AgPasture
 
         /// <summary>Minimum GLFwater without effect on tissue turnover (0-1).</summary>
         [Units("0-1")]
-        public double TurnoverDroughtThreshold { get; set; } = 0.5;
+        public double TurnoverDroughtThreshold { get; set; } = 0.6;
+
+        /// <summary>Exponent of function for the effect of GLFwater on tissue turnover (>1.0).</summary>
+        [Units("-")]
+        public double TurnoverDroughtExponent { get; set; } = 2.0;
 
         /// <summary>Coefficient controlling detachment rate as function of moisture (>0.0).</summary>
         [Units("-")]
@@ -4081,7 +4085,7 @@ namespace Models.AgPasture
             if (Math.Min(glfWaterSupply, glfWaterLogging) < TurnoverDroughtThreshold)
             {
                 effect = (TurnoverDroughtThreshold - Math.Min(glfWaterSupply, glfWaterLogging)) / TurnoverDroughtThreshold;
-                effect = 1.0 + TurnoverDroughtEffectMax * effect;
+                effect = 1.0 + TurnoverDroughtEffectMax * Math.Pow(effect, TurnoverDroughtExponent);
             }
 
             return effect;
