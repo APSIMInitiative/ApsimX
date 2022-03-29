@@ -28,8 +28,8 @@
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         private const double carbonFractionInDM = 0.4;
 
-        /// <summary>Fraction of luxury N remobilisable per day (0-1).</summary>
-        private const double fractionNLuxuryRemobilisable = 0.1;
+        /// <summary>Minimum significant difference between two values.</summary>
+        internal const double Epsilon = 0.000000001;
 
         //---------------------------- Parameters -----------------------
 

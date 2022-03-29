@@ -29,6 +29,9 @@
         /// <summary>Carbon to nitrogen ratio of cell walls (kg/kg).</summary>
         private const double CNratioCellWall = 100.0;
 
+        /// <summary>Minimum significant difference between two values.</summary>
+        internal const double Epsilon = 0.000000001;
+
         //----------------------- Backing fields for states -----------------------
 
         private AGPBiomass dryMatter = new AGPBiomass();

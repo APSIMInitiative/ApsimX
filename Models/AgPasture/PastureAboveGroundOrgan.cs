@@ -52,6 +52,11 @@
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         public double MinimumLiveDM { get; set; } = 10.0;
 
+        //----------------------- Constants -----------------------
+
+        /// <summary>Minimum significant difference between two values.</summary>
+        internal const double Epsilon = 0.000000001;
+
         //----------------------- States -----------------------
 
         /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
@@ -130,11 +135,11 @@
 
         /// <summary>N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0); } }
+        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0, Epsilon); } }
 
         /// <summary>N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0); } }
+        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0, Epsilon); } }
 
         /// <summary>Total N in this tissue (kg/ha).</summary>
         [Units("kg/ha")]
@@ -151,15 +156,15 @@
 
         /// <summary>Average total N concentration.</summary>
         [Units("kg/kg")]
-        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
+        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0, Epsilon); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
+        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0, Epsilon); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
+        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0, Epsilon); } }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
         public double NLuxuryRemobilisable { get { return LiveTissue.Sum(tissue => tissue.NRemobilisable); } }
@@ -200,9 +205,9 @@
                 double preRemovalDM = 0.0;
                 foreach (var tissue in Tissue)
                 {
-                    preRemovalDM += MathUtilities.Divide(tissue.DMRemoved, tissue.FractionRemoved, 0.0);
+                    preRemovalDM += MathUtilities.Divide(tissue.DMRemoved, tissue.FractionRemoved, 0.0, Epsilon);
                 }
-                return MathUtilities.Divide(DMRemoved, preRemovalDM, 0.0);
+                return MathUtilities.Divide(DMRemoved, preRemovalDM, 0.0, Epsilon);
             }
         }
 
@@ -214,18 +219,26 @@
 
         /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityTotal { 
+        public double DigestibilityTotal
+        { 
             get
             { 
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
-                                            DMTotal, 0.0);
+                                            DMTotal, 0.0, Epsilon);
             }
         }
 
         /// <summary>Average digestibility of live biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityLive { get { return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt), DMLive, 0.0); } }
+        public double DigestibilityLive
+        {
+            get
+            {
+                return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
+                                            DMLive, 0.0, Epsilon);
+            }
+        }
 
         /// <summary>Average digestibility of dead biomass.</summary>
         [Units("kg/kg")]
