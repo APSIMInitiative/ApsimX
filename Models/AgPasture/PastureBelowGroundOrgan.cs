@@ -5,11 +5,11 @@
     using System.Collections.Generic;
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Interfaces;
     using Models.PMF;
     using Models.Soils;
     using Models.Soils.Arbitrator;
     using Models.Soils.Nutrients;
+    using Models.Interfaces;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -351,10 +351,8 @@
             Dead.Update();
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0.0);
-            bool nIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached - NTotal), 0.0);
-            if (dmIsOk == false || nIsOk == false)
-                previousDM += 0.0;
+            bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
+            bool nIsOk = MathUtilities.FloatsAreEqual(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached, NTotal, 0.000001);
             return (dmIsOk || nIsOk);
         }
 
@@ -646,14 +644,6 @@
                 // No net growth
                 dRootDepth = 0.0;
             }
-        }
-
-        /// <summary>Detach roots.</summary>
-        /// <param name="dryMatter">Dry matter to detach.</param>
-        /// <param name="nitrogen">Nitrogen to detach.</param>
-        public void DetachRoots(double dryMatter, double nitrogen)
-        {
-            Live.DetachBiomass(dryMatter, nitrogen);
         }
 
         /// <summary>Remove water from soil - uptake.</summary>

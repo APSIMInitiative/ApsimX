@@ -341,8 +341,8 @@
             CalculateStates();
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0.0);
-            bool nIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached - NTotal), 0.0);
+            bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
+            bool nIsOk = MathUtilities.FloatsAreEqual(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached, NTotal, 0.000001);
             return (dmIsOk || nIsOk);
         }
 

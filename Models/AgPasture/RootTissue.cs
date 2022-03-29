@@ -154,7 +154,6 @@
             {
                 var amountDMLayered = new double[dmByLayer.Length];
                 var amountNLayered = new double[dmByLayer.Length];
-
                 var fractionWt = FractionWt;
                 for (int layer = 0; layer < dmByLayer.Length; layer++)
                 {
@@ -167,8 +166,8 @@
         }
 
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool, per layer.</summary>
-        /// <param name="amountDM">The DM amount to detach (kg/ha).</param>
-        /// <param name="amountN">The N amount to detach (kg/ha).</param>
+        /// <param name="amountDM">The DM amounts to detach (kg/ha).</param>
+        /// <param name="amountN">The N amounts to detach (kg/ha).</param>
         public void DetachBiomass(double[] amountDM, double[] amountN)
         {
             if (amountDM.Sum() + amountN.Sum() > 0.0)

@@ -1,19 +1,17 @@
 namespace Models.AgPasture
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using Newtonsoft.Json;
+    using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Soils;
     using Models.PMF;
+    using Models.PMF.Interfaces;
+    using Models.Soils;
     using Models.Soils.Arbitrator;
     using Models.Interfaces;
-    using APSIM.Shared.Utilities;
     using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.Surface;
-    using Models.Soils.Nutrients;
 
     /// <summary>
     /// Describes a pasture species.
@@ -266,7 +264,7 @@ namespace Models.AgPasture
             // incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
             {
-                root.DetachRoots(RootWt, RootN);
+                root.Dead.DetachBiomass(RootWt, RootN);
             }
 
             // zero all transfer variables
@@ -2709,9 +2707,7 @@ namespace Models.AgPasture
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    roots[0].DetachRoots(detachedRootDM, detachedRootN);
-                    //foreach (PastureBelowGroundOrgan root in rootZones)
-                    //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
+                    Root.Dead.DetachBiomass(detachedRootDM, detachedRootN);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
                 }
             }
@@ -3126,8 +3122,8 @@ namespace Models.AgPasture
             dGrowthNet = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
             // Save some variables for mass balance check
-            double preTotalWt = TotalWt;
-            double preTotalN = TotalN;
+            double previousDM = TotalWt;
+            double previousN = TotalN;
 
             // Update each organ, returns test for mass balance
             if (Leaf.Update() == false)
@@ -3150,10 +3146,10 @@ namespace Models.AgPasture
             //    Examples\Tutorials\Sensitivity_SobolMethod.apsimx
 
             // Check for loss of mass balance in the whole plant
-            if (!MathUtilities.FloatsAreEqual(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, 0.0001))
+            if (!MathUtilities.FloatsAreEqual(previousDM + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, 0.000001))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (!MathUtilities.FloatsAreEqual(preTotalN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.00001))
+            if (!MathUtilities.FloatsAreEqual(previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.000001))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
