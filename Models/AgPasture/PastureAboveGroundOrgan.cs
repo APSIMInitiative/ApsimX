@@ -198,18 +198,7 @@
 
         /// <summary>Fraction of DM removed from organ.</summary>
         [Units("kg/kg")]
-        public double FractionRemoved
-        {
-            get
-            {
-                double preRemovalDM = 0.0;
-                foreach (var tissue in Tissue)
-                {
-                    preRemovalDM += MathUtilities.Divide(tissue.DMRemoved, tissue.FractionRemoved, 0.0, Epsilon);
-                }
-                return MathUtilities.Divide(DMRemoved, preRemovalDM, 0.0, Epsilon);
-            }
-        }
+        public double FractionRemoved { get { return removedFraction; } }
 
         /// <summary>DM added to this organ via growth (kg/ha).</summary>
         public double DMGrowth { get { return EmergingTissue.DMTransferredIn; } }
@@ -247,6 +236,9 @@
         /// <summary>Digestibility of standing herbage.</summary>
         [Units("kg/kg")]
         public double StandingDigestibility { get { return DigestibilityTotal; } }
+
+        /// <summary>Fraction of dry matter removed (0-1).</summary>
+        private double removedFraction = 0.0;
 
         //----------------------- Public methods -----------------------
 
@@ -286,7 +278,7 @@
         public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
         {
             // The fractions passed in are based on the total biomass
-            var dm = Tissue.Sum(t => t.DM.Wt);
+            var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
 
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
@@ -297,6 +289,9 @@
             // Dead removal
             Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
 
+            // Calculate the fraction of DM removed from this organ
+            removedFraction = MathUtilities.Divide(Tissue.Sum(tissue => tissue.DMRemoved), previousDM, 0.0, Epsilon);
+
             // Tissue states have changed so recalculate our states.
             CalculateStates();
         }
@@ -304,6 +299,7 @@
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         public void ClearDailyTransferredAmounts()
         {
+            removedFraction = 0.0;
             for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].ClearDailyTransferredAmounts();
