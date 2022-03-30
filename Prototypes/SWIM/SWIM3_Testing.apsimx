@@ -4822,7 +4822,7 @@
                       "Specifications": [
                         "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
                         "[SWIM3_SetLowerBC].Script.LowerBCValue=0",
-                        "[Swim3].MaxWaterIncrement = 5.0"
+                        "[Swim3].MaxWaterIncrement = 1.0"
                       ],
                       "Paths": null,
                       "Values": null,
