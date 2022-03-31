@@ -367,17 +367,15 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         10.0,
-                        15.0,
-                        20.0,
                         25.0,
-                        30.0
+                        30.0,
+                        35.0
                       ],
                       "Y": [
                         0.0,
-                        25.0,
-                        25.0,
-                        0.0,
-                        0.0
+                        35.0,
+                        40.0,
+                        50.0
                       ],
                       "XVariableName": null,
                       "Name": "Response",
@@ -1292,12 +1290,18 @@
                           "X": [
                             0.0,
                             10.0,
-                            50.0
+                            23.0,
+                            25.0,
+                            30.0,
+                            35.0
                           ],
                           "Y": [
                             1.0,
                             1.0,
-                            1.0
+                            1.0,
+                            0.2,
+                            0.2,
+                            0.0
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -1478,8 +1482,8 @@
                         1000.0
                       ],
                       "Y": [
-                        0.67,
-                        0.67
+                        0.77,
+                        0.77
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -2305,12 +2309,12 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.1,
-                        6.0
+                        0.0,
+                        3.0
                       ],
                       "Y": [
-                        0.01,
-                        0.015
+                        0.012,
+                        0.02
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -2408,7 +2412,7 @@
                                         8.0
                                       ],
                                       "Y": [
-                                        0.8,
+                                        0.5,
                                         1.0,
                                         1.0
                                       ],
@@ -2481,16 +2485,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
+                        0.5,
                         1.0,
-                        1.5,
-                        8.0,
-                        9.0
+                        5.0,
+                        6.0
                       ],
                       "Y": [
-                        150.0,
+                        120.0,
                         70.0,
-                        90.0,
-                        120.0
+                        70.0,
+                        150.0
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -2820,8 +2824,8 @@
                       ],
                       "Y": [
                         0.0,
-                        0.4,
-                        2.0,
+                        0.3,
+                        2.5,
                         0.0
                       ],
                       "XVariableName": null,
@@ -2842,6 +2846,40 @@
                       "$type": "Models.Memo, Models",
                       "Text": "Values were sourced from additional phenology study conducted at Gatton, QLD in 2021.",
                       "Name": "Memo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "VPEffect",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        5.0,
+                        10.0,
+                        15.0
+                      ],
+                      "Y": [
+                        0.0,
+                        0.0,
+                        1.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].VP",
+                      "Name": "XValue",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -3341,7 +3379,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.35,
+                  "FixedValue": 0.3,
                   "Units": null,
                   "Name": "PotentialHarvestIndex",
                   "Children": [
@@ -5165,7 +5203,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.2,
                   "Units": null,
                   "Name": "PotentialHarvestIndex",
                   "Children": [
@@ -6097,7 +6135,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
+                              "FixedValue": 0.5,
                               "Units": null,
                               "Name": "StemFraction",
                               "Children": [],
@@ -6478,14 +6516,14 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue=600",
+                    "[Phenology].Vegetative.Target.FixedValue=800",
                     "[Phenology].EarlyFlowering.Target.FixedValue=50",
                     "[Phenology].EarlyPodDevelopment.Target.FixedValue=50",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=50",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=150",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=150",
-                    "[Phenology].Maturing.Target.FixedValue=150",
-                    "[Phenology].Ripening.Target.FixedValue=150",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=200",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=400",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=300",
+                    "[Phenology].Maturing.Target.FixedValue=200",
+                    "[Phenology].Ripening.Target.FixedValue=200",
                     "",
                     "[Leaf].Phyllochron.XYPairs.X=1,1.5,7,8",
                     "[Leaf].Phyllochron.XYPairs.Y=200,50,50,50",
@@ -6503,21 +6541,26 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue=670",
+                    "[Phenology].Vegetative.Target.FixedValue=700",
                     "[Phenology].EarlyFlowering.Target.FixedValue=50",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=50",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=50",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=200",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=200",
-                    "[Phenology].Maturing.Target.FixedValue=200",
-                    "[Phenology].Ripening.Target.FixedValue=200",
+                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=150",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=300",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=400",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=300",
+                    "[Phenology].Maturing.Target.FixedValue=500",
+                    "[Phenology].Ripening.Target.FixedValue=300",
                     "",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.Y=.6,.9,.75",
+                    "[Phenology].VegetativeThermalTime.Response.X=10,13,30,40,45",
+                    "[Phenology].VegetativeThermalTime.Response.Y=0,10,40,40,0",
                     "",
-                    "[Leaf].AreaLargestLeaf.FixedValue=.03",
                     "",
-                    "[Stem].PotentialGrowth.PartitionFraction.VegGrowthPhase.StemFraction.FixedValue=.3",
-                    "[Stem].PotentialGrowth.PartitionFraction.GrainFilling.StemFraction.FixedValue=.3"
+                    "[Leaf].Phyllochron.XYPairs.X=0,1,12,13",
+                    "[Leaf].Phyllochron.XYPairs.Y=120,70,70,110",
+                    "",
+                    "[Leaf].ExtinctionCoefficient.XYPairs.X=0,3",
+                    "[Leaf].ExtinctionCoefficient.XYPairs.Y=.77,.77",
+                    "",
+                    "[Grain].PotentialHarvestIndex.FixedValue=.45"
                   ],
                   "Name": "Emerald",
                   "Children": [],
@@ -6527,20 +6570,17 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue=600",
-                    "[Phenology].EarlyFlowering.Target.FixedValue=50",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=100",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=100",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=100",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=50",
-                    "[Phenology].Maturing.Target.FixedValue=20",
+                    "[Phenology].Vegetative.Target.FixedValue=800",
+                    "[Phenology].EarlyFlowering.Target.FixedValue=100",
+                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=200",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=150",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=250",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=150",
+                    "[Phenology].Maturing.Target.FixedValue=5",
                     "[Phenology].Ripening.Target.FixedValue=5",
                     "",
                     "",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.Y=.6,.9,1",
-                    "",
-                    "[Leaf].Phyllochron.XYPairs.X=1,5,12,13",
-                    "[Leaf].Phyllochron.XYPairs.Y=150,50,70,200"
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.Y=.6,.9,1"
                   ],
                   "Name": "CeleraII",
                   "Children": [],
@@ -6550,12 +6590,12 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue=677",
-                    "[Phenology].EarlyFlowering.Target.FixedValue=50",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=50",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=150",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=100",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=100",
+                    "[Phenology].Vegetative.Target.FixedValue=840",
+                    "[Phenology].EarlyFlowering.Target.FixedValue=100",
+                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=200",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=300",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=250",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=150",
                     "[Phenology].Maturing.Target.FixedValue=5",
                     "[Phenology].Ripening.Target.FixedValue=5"
                   ],
@@ -6569,10 +6609,10 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue=840",
                     "[Phenology].EarlyFlowering.Target.FixedValue=100",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=50",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=100",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=100",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=100",
+                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=200",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=250",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=250",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=150",
                     "[Phenology].Maturing.Target.FixedValue=5",
                     "[Phenology].Ripening.Target.FixedValue=5"
                   ],
@@ -6584,14 +6624,21 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue=656",
-                    "[Phenology].EarlyFlowering.Target.FixedValue=150",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=150",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=100",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=30",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=30",
-                    "[Phenology].Maturing.Target.FixedValue=20",
-                    "[Phenology].Ripening.Target.FixedValue=20"
+                    "[Phenology].Vegetative.Target.FixedValue=840",
+                    "[Phenology].EarlyFlowering.Target.FixedValue=100",
+                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=200",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=250",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=250",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=150",
+                    "[Phenology].Maturing.Target.FixedValue=5",
+                    "[Phenology].Ripening.Target.FixedValue=5",
+                    "",
+                    "[Grain].PotentialHarvestIndex.FixedValue=.1",
+                    "",
+                    "[Shell].PotentialHarvestIndex.FixedValue=.3",
+                    "",
+                    "[Phenology].VegetativeThermalTime.Response.X=10,13,30,40,45",
+                    "[Phenology].VegetativeThermalTime.Response.Y=0,10,40,40,0"
                   ],
                   "Name": "Onyx",
                   "Children": [],
@@ -6601,17 +6648,16 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue=600",
+                    "[Phenology].Vegetative.Target.FixedValue=950",
                     "[Phenology].EarlyFlowering.Target.FixedValue=100",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=50",
-                    "[Phenology].EarlyGrainFilling.Target.FixedValue=150",
-                    "[Phenology].MidGrainFilling.Target.FixedValue=100",
-                    "[Phenology].LateGrainFilling.Target.FixedValue=50",
-                    "[Phenology].Maturing.Target.FixedValue=20",
-                    "[Phenology].Ripening.Target.FixedValue=20",
+                    "[Phenology].EarlyPodDevelopment.Target.FixedValue=200",
+                    "[Phenology].EarlyGrainFilling.Target.FixedValue=250",
+                    "[Phenology].MidGrainFilling.Target.FixedValue=200",
+                    "[Phenology].LateGrainFilling.Target.FixedValue=150",
+                    "[Phenology].Maturing.Target.FixedValue=5",
+                    "[Phenology].Ripening.Target.FixedValue=5",
                     "",
-                    "[Leaf].Phyllochron.XYPairs.X=1,2,7,8",
-                    "[Leaf].Phyllochron.XYPairs.Y=150,70,70,150"
+                    "[Grain].PotentialHarvestIndex.FixedValue=.45"
                   ],
                   "Name": "Opal",
                   "Children": [],
@@ -6702,8 +6748,9 @@
             "[Soil].SoilWater.Es",
             "[Irrigation].IrrigationApplied",
             "[Root].WaterUptake",
-            "",
-            "",
+            "[Weather].VP",
+            "[Weather].VPD",
+            "[Leaf].Photosynthesis.VPD",
             "[Soil].SoilWater.Drainage",
             "[Soil].SoilWater.Runoff",
             "",
@@ -8068,6 +8115,10 @@
                               "Code": "\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \n        namespace Models\n        {\n           [Serializable] \n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\n            public class Script : Model\n            {      \n               [Link] Plant Mungbean;\n               [Link] Clock Clock;\n\n               [Description(\"Spacing (mm) between rows\")]\n               public double RowSpacing { get; set; }\n               [Description(\"Depth (mm) Grains are planted\")]\n               public double SowingDepth { get; set; }\n               [Description(\"Seeds sown (/m2)\")]\n               public double SowingRate { get; set; }\n               [Description(\"Cultivar\")]\n               [Display(Type=DisplayType.CultivarName)]\n               public string CultivarName { get; set; }\n               [Description(\"Sowing Date\")]\n               public DateTime SowingDate { get; set; }\n\n               [EventSubscribe(\"DoManagement\")]\n               private void OnDoManagement(object sender, EventArgs e)\n               {\n                if (Clock.Today.Date == SowingDate)\n                    Mungbean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n               }\n            }\n        }\n                \n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "11/28/1996 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "Emerald"
                                 },
@@ -8082,10 +8133,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "40"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "11/28/1996 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -11238,7 +11285,7 @@
                                   "Specifications": [
                                     "[Operations]",
                                     "[SowingRule].Script.CultivarName=Emerald",
-                                    "[AutoIrr].Script.AutoIrrigationOn=False"
+                                    "[AutoIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -12167,6 +12214,10 @@
                               "Code": "\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \n        namespace Models\n        {\n           [Serializable] \n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\n            public class Script : Model\n            {      \n               [Link] Plant Mungbean;\n               [Link] Clock Clock;\n\n               [Description(\"Spacing (mm) between rows\")]\n               public double RowSpacing { get; set; }\n               [Description(\"Depth (mm) Grains are planted\")]\n               public double SowingDepth { get; set; }\n               [Description(\"Seeds sown (/m2)\")]\n               public double SowingRate { get; set; }\n               [Description(\"Cultivar\")]\n               [Display(Type=DisplayType.CultivarName)]\n               public string CultivarName { get; set; }\n               [Description(\"Sowing Date\")]\n               public DateTime SowingDate { get; set; }\n\n               [EventSubscribe(\"DoManagement\")]\n               private void OnDoManagement(object sender, EventArgs e)\n               {\n                if (Clock.Today.Date == SowingDate)\n                    Mungbean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n               }\n            }\n        }\n                \n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "11/28/1996 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "Emerald"
                                 },
@@ -12181,10 +12232,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "40"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "11/28/1996 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -15976,6 +16023,10 @@
                               "Code": "\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \n        namespace Models\n        {\n           [Serializable] \n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\n            public class Script : Model\n            {      \n               [Link] Plant Mungbean;\n               [Link] Clock Clock;\n\n               [Description(\"Spacing (mm) between rows\")]\n               public double RowSpacing { get; set; }\n               [Description(\"Depth (mm) Grains are planted\")]\n               public double SowingDepth { get; set; }\n               [Description(\"Seeds sown (/m2)\")]\n               public double SowingRate { get; set; }\n               [Description(\"Cultivar\")]\n               [Display(Type=DisplayType.CultivarName)]\n               public string CultivarName { get; set; }\n               [Description(\"Sowing Date\")]\n               public DateTime SowingDate { get; set; }\n\n               [EventSubscribe(\"DoManagement\")]\n               private void OnDoManagement(object sender, EventArgs e)\n               {\n                if (Clock.Today.Date == SowingDate)\n                    Mungbean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n               }\n            }\n        }\n                \n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "01/07/1997 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "Emerald"
                                 },
@@ -15990,10 +16041,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "40"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "01/07/1997 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -16022,7 +16069,7 @@
                                 },
                                 {
                                   "Key": "weeks",
-                                  "Value": "2"
+                                  "Value": "0"
                                 },
                                 {
                                   "Key": "afterSowing",
@@ -16650,6 +16697,16 @@
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": "Weather.MaxT",
+                              "Position": 2,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
                             }
                           ],
                           "LegendPosition": 0,
@@ -16721,6 +16778,62 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Observed",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16776961,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Weather.MaxT",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted1",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16776961,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Weather.MinT",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted2",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -19430,7 +19543,7 @@
                                   "Specifications": [
                                     "[SowingRule].Script.SowingDate=1997-12-3",
                                     "[Operations]",
-                                    "[AutoIrr].Script.AutoIrrigationOn=False"
+                                    "[AutoIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -19442,7 +19555,7 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "1997-12-04",
-                                          "Action": "[Irrigation].Apply(amount: 40)",
+                                          "Action": "[Irrigation].Apply(amount: 200)",
                                           "Enabled": true
                                         },
                                         {
@@ -19520,11 +19633,11 @@
                                       ],
                                       "Name": "_",
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -19574,11 +19687,11 @@
                                       ],
                                       "Name": "_",
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -19586,7 +19699,7 @@
                                   "Specifications": [
                                     "[SowingRule].Script.SowingDate=1997-12-30",
                                     "[Operations]",
-                                    "[AutoIrr].Script.AutoIrrigationOn=False"
+                                    "[AutoIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -19670,11 +19783,11 @@
                                       ],
                                       "Name": "_",
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -19729,11 +19842,11 @@
                                       ],
                                       "Name": "_",
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -19859,7 +19972,7 @@
                                   "Specifications": [
                                     "[SowingRule].Script.SowingDate=1997-12-3",
                                     "[Operations]",
-                                    "[ClimateController].Script.RainfallMultiplier=0.55",
+                                    "[ClimateController].Script.RainfallMultiplier=0.1",
                                     "[ClimateController].Script.ControlStart = 24-Jan",
                                     "[ClimateController].Script.ControlEnd = 21-Feb"
                                   ],
@@ -19879,7 +19992,7 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "1997-12-08",
-                                          "Action": "[Irrigation].Apply(amount: 20)",
+                                          "Action": "[Irrigation].Apply(amount: 40)",
                                           "Enabled": true
                                         },
                                         {
@@ -19890,31 +20003,13 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Date": "1997-12-15",
-                                          "Action": "[Irrigation].Apply(amount: 20)",
+                                          "Date": "1998-01-06",
+                                          "Action": "[Irrigation].Apply(amount: 35)",
                                           "Enabled": true
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Date": "1997-12-18",
-                                          "Action": "[Irrigation].Apply(amount: 33)",
-                                          "Enabled": true
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Date": "1997-12-23",
-                                          "Action": "[Irrigation].Apply(amount: 20)",
-                                          "Enabled": true
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Date": "1998-02-22",
-                                          "Action": "[Irrigation].Apply(amount: 45)",
-                                          "Enabled": true
-                                        },
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Date": "1998-02-27",
+                                          "Date": "1998-02-24",
                                           "Action": "[Irrigation].Apply(amount: 55)",
                                           "Enabled": true
                                         },
@@ -19971,7 +20066,7 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "1997-12-18",
-                                          "Action": "[Irrigation].Apply(amount: 16)",
+                                          "Action": "[Irrigation].Apply(amount: 26)",
                                           "Enabled": true
                                         },
                                         {
@@ -19983,13 +20078,13 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "1997-12-26",
-                                          "Action": "[Irrigation].Apply(amount: 13)",
+                                          "Action": "[Irrigation].Apply(amount: 23)",
                                           "Enabled": true
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "1998-01-02",
-                                          "Action": "[Irrigation].Apply(amount: 20)",
+                                          "Action": "[Irrigation].Apply(amount: 30)",
                                           "Enabled": true
                                         },
                                         {
@@ -20457,6 +20552,10 @@
                               "Code": "\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \n        namespace Models\n        {\n           [Serializable] \n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\n            public class Script : Model\n            {      \n               [Link] Plant Mungbean;\n               [Link] Clock Clock;\n\n               [Description(\"Spacing (mm) between rows\")]\n               public double RowSpacing { get; set; }\n               [Description(\"Depth (mm) Grains are planted\")]\n               public double SowingDepth { get; set; }\n               [Description(\"Seeds sown (/m2)\")]\n               public double SowingRate { get; set; }\n               [Description(\"Cultivar\")]\n               [Display(Type=DisplayType.CultivarName)]\n               public string CultivarName { get; set; }\n               [Description(\"Sowing Date\")]\n               public DateTime SowingDate { get; set; }\n\n               [EventSubscribe(\"DoManagement\")]\n               private void OnDoManagement(object sender, EventArgs e)\n               {\n                if (Clock.Today.Date == SowingDate)\n                    Mungbean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n               }\n            }\n        }\n                \n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "12/18/1997 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "Emerald"
                                 },
@@ -20471,10 +20570,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "40"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "12/18/1997 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -21039,7 +21134,7 @@
                                 },
                                 {
                                   "Key": "afterSowing",
-                                  "Value": "20"
+                                  "Value": "0"
                                 }
                               ],
                               "Name": "AutoIrr",
@@ -21088,7 +21183,9 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp3SowDec30RFCultivarEmerald"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
@@ -21185,6 +21282,16 @@
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": "Weather.MaxT",
+                              "Position": 2,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
                             }
                           ],
                           "LegendPosition": 0,
@@ -21221,11 +21328,11 @@
                               "Children": [
                                 {
                                   "$type": "Models.EventNamesOnGraph, Models",
-                                  "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                  "ColumnName": "Mungbean.Phenology.CurrentStageName",
                                   "SimulationName": "exp3SowDec3IrrCultivarEmerald",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
@@ -21256,6 +21363,62 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Observed",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16776961,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Weather.MaxT",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted1",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 2,
+                              "ColourArgb": -16776961,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Weather.MinT",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted2",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -21292,13 +21455,7 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3ROCultivarEmerald",
-                            "exp3SowDec17ROCultivarEmerald",
-                            "exp3SowDec30ROCultivarEmerald"
-                          ],
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "RadiationInterception",
                           "Children": [
@@ -21503,10 +21660,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3RFCultivarEmerald",
-                            "exp3SowDec17RFCultivarEmerald",
                             "exp3SowDec30RFCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -21611,10 +21764,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3ROCultivarEmerald",
-                            "exp3SowDec17ROCultivarEmerald",
                             "exp3SowDec30ROCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -21719,10 +21868,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3ROCultivarEmerald",
-                            "exp3SowDec17ROCultivarEmerald",
                             "exp3SowDec30ROCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -21837,10 +21982,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3ROCultivarEmerald",
-                            "exp3SowDec17ROCultivarEmerald",
                             "exp3SowDec30ROCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -21945,10 +22086,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3ROCultivarEmerald",
-                            "exp3SowDec17ROCultivarEmerald",
                             "exp3SowDec30ROCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -22043,10 +22180,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3ROCultivarEmerald",
-                            "exp3SowDec17ROCultivarEmerald",
                             "exp3SowDec30ROCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -22141,10 +22274,6 @@
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
                           "DisabledSeries": [
-                            "exp3SowDec3IrrCultivarEmerald",
-                            "exp3SowDec30IrrCultivarEmerald",
-                            "exp3SowDec3RFCultivarEmerald",
-                            "exp3SowDec17RFCultivarEmerald",
                             "exp3SowDec30RFCultivarEmerald"
                           ],
                           "LegendOutsideGraph": false,
@@ -22588,7 +22717,10 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp3SowDec30RFCultivarEmerald",
+                            "exp3SowDec30ROCultivarEmerald"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "GrainWt",
                           "Children": [
@@ -25213,81 +25345,6 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "AbovegroundWt PredictedObserved",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "Cultivar",
-                      "FactorToVaryMarkers": "Experiment",
-                      "FactorToVaryLines": null,
-                      "Marker": 8,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "PredictedObservedHarvest",
-                      "XFieldName": "Observed.Mungbean.AboveGround.Wt",
-                      "YFieldName": "Predicted.Mungbean.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
                   "Name": "Yield PredictedObserved",
                   "Children": [
                     {
@@ -25524,7 +25581,8 @@
                                   "Specifications": [
                                     "[SowingRule].Script.SowingDate=2019-10-22",
                                     "[AutoPart].Script.AutoIrrigationOn=True",
-                                    "[Operations]"
+                                    "[Operations]",
+                                    "[Soil].Initial Water.SW=0.208,0.273,0.286,0.286,0.286,0.286,0.286,0.286,0.286"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -25614,7 +25672,8 @@
                                   "Specifications": [
                                     "[SowingRule].Script.SowingDate=2019-10-22",
                                     "[AutoPart].Script.AutoIrrigationOn=True",
-                                    "[Operations]"
+                                    "[Operations]",
+                                    "[Soil].Initial Water.SW=0.208,0.273,0.286,0.286,0.286,0.286,0.286,0.286,0.286"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -25663,7 +25722,7 @@
                                     "[SowingRule].Script.SowingDate=2019-11-28",
                                     "",
                                     "",
-                                    "",
+                                    "[Soil].Initial Water.SW=0.208,0.273,0.286,0.286,0.286,0.286,0.286,0.286,0.286",
                                     "",
                                     "",
                                     "",
@@ -25733,7 +25792,8 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Operations]",
-                                    "[SowingRule].Script.SowingDate=2019-11-28"
+                                    "[SowingRule].Script.SowingDate=2019-11-28",
+                                    "[Soil].Initial Water.SW=0.208,0.273,0.286,0.286,0.286,0.286,0.286,0.286,0.286"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -26137,6 +26197,10 @@
                               "Code": "\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \n        namespace Models\n        {\n           [Serializable] \n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\n            public class Script : Model\n            {      \n               [Link] Plant Mungbean;\n               [Link] Clock Clock;\n\n               [Description(\"Spacing (mm) between rows\")]\n               public double RowSpacing { get; set; }\n               [Description(\"Depth (mm) Grains are planted\")]\n               public double SowingDepth { get; set; }\n               [Description(\"Seeds sown (/m2)\")]\n               public double SowingRate { get; set; }\n               [Description(\"Cultivar\")]\n               [Display(Type=DisplayType.CultivarName)]\n               public string CultivarName { get; set; }\n               [Description(\"Sowing Date\")]\n               public DateTime SowingDate { get; set; }\n\n               [EventSubscribe(\"DoManagement\")]\n               private void OnDoManagement(object sender, EventArgs e)\n               {\n                if (Clock.Today.Date == SowingDate)\n                    Mungbean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n               }\n            }\n        }\n                \n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "11/28/1996 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "Emerald"
                                 },
@@ -26151,10 +26215,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "30.8"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "11/28/1996 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -28821,29 +28881,29 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "2020-01-16",
-                                          "Action": "[Irrigation].Apply(amount:34.5)",
+                                          "Action": "[Irrigation].Apply(amount:54.5)",
                                           "Enabled": true
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "2020-02-16",
-                                          "Action": "[Irrigation].Apply(amount:24.5)",
+                                          "Action": "[Irrigation].Apply(amount:54.5)",
                                           "Enabled": true
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "2020-03-16",
-                                          "Action": "[Irrigation].Apply(amount:24.5)",
+                                          "Action": "[Irrigation].Apply(amount:54.5)",
                                           "Enabled": true
                                         }
                                       ],
                                       "Name": "Irr",
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -28887,7 +28947,7 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -28895,15 +28955,15 @@
                               "Specification": "[SowingRule].Script.CultivarName=Opal",
                               "Name": "Cv",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -28917,14 +28977,14 @@
                           "Verbosity": 100,
                           "Name": "summaryfile",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -28933,7 +28993,7 @@
                           "End": "2020-05-24T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -28943,7 +29003,7 @@
                           "ExcelWorkSheetName": "Kylie",
                           "Name": "Weather",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -28958,14 +29018,14 @@
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
                               "ResourceName": "Fertiliser",
                               "Name": "fertiliser",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -28978,7 +29038,7 @@
                               "InitialCNR": 40.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29088,7 +29148,7 @@
                               "GroupByVariableName": null,
                               "Name": "DailyReport",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29096,7 +29156,7 @@
                               "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
                               "Parameters": [],
                               "Name": "HarvestRule",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29121,14 +29181,14 @@
                               "GroupByVariableName": null,
                               "Name": "HarvestReport",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "ResourceName": "Soybean",
                               "Name": "Mungbean",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29157,7 +29217,7 @@
                                 }
                               ],
                               "Name": "Irrigatefixeddates",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29165,7 +29225,7 @@
                               "Operation": [],
                               "Name": "Operations",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29194,7 +29254,7 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29227,7 +29287,7 @@
                                 }
                               ],
                               "Name": "AutoIrr",
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29242,7 +29302,7 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29318,7 +29378,7 @@
                                   ],
                                   "ResourceName": "WaterBalance",
                                   "Name": "SoilWater",
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -29394,7 +29454,7 @@
                                   "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -29454,21 +29514,21 @@
                                   "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -29598,11 +29658,11 @@
                                       "XFMetadata": null,
                                       "Name": "MungbeanSoil",
                                       "Children": [],
-                                      "Enabled": false,
+                                      "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
@@ -29673,19 +29733,19 @@
                                   "PHUnits": 0,
                                   "Name": "Initial Water",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29757,11 +29817,11 @@
                                   "SimulationName": "TOSyear2OpalSowIrrCvOpal",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29789,11 +29849,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -29853,7 +29913,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29881,11 +29941,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -29945,7 +30005,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -29973,11 +30033,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30037,7 +30097,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30065,11 +30125,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30129,7 +30189,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30157,11 +30217,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30221,7 +30281,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30249,11 +30309,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30313,7 +30373,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30341,11 +30401,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30405,7 +30465,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30433,11 +30493,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30497,7 +30557,7 @@
                               "Filter": "[Mungbean.Leaf.NodeNumber]>0 AND [Clock.Today]>'2019-1-1'",
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30525,15 +30585,15 @@
                               "Filter": "",
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -30599,7 +30659,7 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30633,15 +30693,15 @@
                                   "SimulationName": "TOSyear2SowNov19CvCrystal",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30707,11 +30767,11 @@
                                   "SimulationName": "TOSyear2SowNov19CvCrystal",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30739,11 +30799,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30803,7 +30863,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30831,11 +30891,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30901,11 +30961,11 @@
                                   "SimulationName": "TOSyear2SowJan20CvJade",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30933,11 +30993,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -31004,15 +31064,15 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -31072,7 +31132,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -31100,11 +31160,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -31164,7 +31224,7 @@
                               "Filter": "[Mungbean.Leaf.NodeNumber]>0 AND [Clock.Today]>'2019-1-1'",
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -31192,19 +31252,19 @@
                               "Filter": "",
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -31231,7 +31291,8 @@
                                     "[SowingRule].Script.SowingDate=2020-9-10",
                                     "",
                                     "[Soil].Initial Water.SW=0.208,0.273,0.306,0.306,0.306,0.3,0.310,0.330,0.330",
-                                    "[Operations]"
+                                    "[Operations]",
+                                    "[AutoIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -31287,7 +31348,7 @@
                                     "[SowingRule].Script.SowingDate=2020-10-15",
                                     "[Soil].Initial Water.SW=0.408,0.373,0.386,0.386,0.386,0.3,0.310,0.330,0.330",
                                     "[Operations]",
-                                    "[AutoIrr].Script.AutoIrrigationOn=True"
+                                    "[LotsofIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -31330,7 +31391,8 @@
                                     "",
                                     "[SowingRule].Script.SowingDate=2020-11-24",
                                     "[Soil].Initial Water.SW=0.308,0.373,0.386,0.386,0.386,0.3,0.310,0.330,0.330",
-                                    "[Operations]"
+                                    "[Operations]",
+                                    "[AutoIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -31360,8 +31422,9 @@
                                   "Specifications": [
                                     "",
                                     "[SowingRule].Script.SowingDate=2021-1-14",
-                                    "[Soil].Initial Water.SW=0.308,0.373,0.386,0.386,0.386,0.3,0.310,0.330,0.330",
-                                    "[Operations]"
+                                    "",
+                                    "[Operations]",
+                                    "[LotsofIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -31373,19 +31436,37 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "2021-01-15",
-                                          "Action": "[Irrigation].Apply(amount:14.75)",
+                                          "Action": "[Irrigation].Apply(amount:44.75)",
                                           "Enabled": true
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "2021-02-10",
-                                          "Action": "[Irrigation].Apply(amount:18.5)",
+                                          "Action": "[Irrigation].Apply(amount:48.5)",
                                           "Enabled": true
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Date": "2021-02-23",
-                                          "Action": "[Irrigation].Apply(amount:33.5)",
+                                          "Action": "[Irrigation].Apply(amount:53.5)",
+                                          "Enabled": true
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Date": "2021-02-28",
+                                          "Action": "[Irrigation].Apply(amount:53.5)",
+                                          "Enabled": true
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Date": "2021-03-03",
+                                          "Action": "[Irrigation].Apply(amount:53.5)",
+                                          "Enabled": true
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Date": "2021-03-23",
+                                          "Action": "[Irrigation].Apply(amount:53.5)",
                                           "Enabled": true
                                         }
                                       ],
@@ -31404,7 +31485,8 @@
                                     "",
                                     "[SowingRule].Script.SowingDate=2021-02-22",
                                     "[Soil].Initial Water.SW=0.308,0.373,0.386,0.386,0.386,0.3,0.310,0.330,0.330",
-                                    "[Operations]"
+                                    "[Operations]",
+                                    "[AutoIrr].Script.AutoIrrigationOn=True"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -31435,7 +31517,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[SowingRule].Script.CultivarName=Jade",
+                              "Specification": "[SowingRule].Script.CultivarName=Onyx,Opal,Jade,Crystal,CeleraII",
                               "Name": "Cv",
                               "Children": [],
                               "Enabled": true,
@@ -32220,6 +32302,39 @@
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.Interfaces;\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPhysical soilPhysical;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n\n\n        [Description(\"Crop to irrigate\")]\n        public IPlant Crop { get; set; }\n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [Description(\"Minimum weeks between irrigations\")]\n        public double weeks { get; set; }\n\n        [Description(\"Minimum days after sowing for first irrigation\")]\n        public int afterSowing { get; set; }\n\n        private double irrigationGap = 0;    // gap between irrigations\n\n        /// <summary>Called at start of simulation. Performs some basic error checking. </summary>\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void ErrorChecking(object sender, EventArgs args)\n        {\n            if (Crop == null)\n                throw new Exception(\"No crop was specified in script \" + Parent.Name);\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (AutoIrrigationOn && Crop.IsAlive)\n            {\n                   irrigationGap += 1;                // increment gap between irrigations\n                CalculateFASW();                // calc FASW and WaterDeficit\n                if ((FASW < FASWThreshold) && (irrigationGap >= weeks * 7))\n                {\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                    irrigationGap = 0;            // reset\n                }\n            }\n            else\n            {\n                irrigationGap = weeks * 7 - afterSowing - 1;    // allow irrigation a number of days after it becomes alive/sown\n            }\n        }\n\n        // Calculate the fraction of the potential available sw\n        // Calculate the deficit amount from DUL\n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex(FASWDepth);\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);    // tricky function that sums up to before nlayr\n\n            double part_layer = MathUtilities.Divide((FASWDepth - cumdep), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0) + part_layer * waterBalance.SWmm[nlayr])\n                            - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0) + part_layer * DUL[nlayr])\n                                - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\n            \n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        // Get index of the layer that has this depth in it \n        private int GetLayerIndex(double pointDepth)\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            int layerIdx = 0;\n            while ((layerIdx < cumThickness.Length) && (pointDepth > cumThickness[layerIdx]))\n            {\n                layerIdx += 1;\n            }\n\n            return layerIdx;\n        }\n    }\n}\n",
+                              "Parameters": [
+                                {
+                                  "Key": "AutoIrrigationOn",
+                                  "Value": "False"
+                                },
+                                {
+                                  "Key": "Crop",
+                                  "Value": "[Mungbean]"
+                                },
+                                {
+                                  "Key": "FASWThreshold",
+                                  "Value": "0.9"
+                                },
+                                {
+                                  "Key": "FASWDepth",
+                                  "Value": "600"
+                                },
+                                {
+                                  "Key": "weeks",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "afterSowing",
+                                  "Value": "0"
+                                }
+                              ],
+                              "Name": "LotsofIrr",
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -33185,7 +33300,7 @@
                                 {
                                   "$type": "Models.EventNamesOnGraph, Models",
                                   "ColumnName": "Mungbean.Phenology.CurrentStageName",
-                                  "SimulationName": "TOSyear3SowFeb21CvJade",
+                                  "SimulationName": "TOSyear3SowOct20CvJade",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
                                   "Enabled": true,
@@ -33228,8 +33343,8 @@
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
-                              "ColourArgb": -16776961,
-                              "FactorToVaryColours": "SimulationName",
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 11,
@@ -33238,7 +33353,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Weather.MaxT",
+                              "YFieldName": "Weather.MinT",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33256,8 +33371,8 @@
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
-                              "ColourArgb": -16776961,
-                              "FactorToVaryColours": "SimulationName",
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 11,
@@ -33266,7 +33381,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Weather.MinT",
+                              "YFieldName": "Weather.MaxT",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -33284,8 +33399,8 @@
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
-                              "ColourArgb": -16776961,
-                              "FactorToVaryColours": "SimulationName",
+                              "ColourArgb": -3376729,
+                              "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 11,
@@ -33294,7 +33409,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Phenology.StartFloweringDAS",
+                              "YFieldName": "Leaf.Photosynthesis.VPD",
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
@@ -34134,7 +34249,7 @@
                   "Text": "This dataset ([Muchow_etal_1993]) includes the cultvar \"King\" grown under irrigated conditions in a subtropical environment at the Gatton Research Station in southeastern Queensland, Australia and Kimberly, NT, Australia.  Plants were sampled almost weekly for biomass partitioning, nitrogen and plant development.\n\n\n\n",
                   "Name": "Memo",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -34169,7 +34284,7 @@
                                 }
                               ],
                               "Name": "Irrigated",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34194,11 +34309,11 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -34213,7 +34328,7 @@
                           "End": "1989-05-31T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -34221,7 +34336,7 @@
                           "Verbosity": 100,
                           "Name": "summaryfile",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -34231,14 +34346,14 @@
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -34261,14 +34376,14 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34289,14 +34404,14 @@
                                 }
                               ],
                               "Name": "AutomaticIrrigation",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
                               "ResourceName": "Fertiliser",
                               "Name": "fertiliser",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34309,7 +34424,7 @@
                               "InitialCNR": 55.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34338,14 +34453,14 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "ResourceName": "Soybean",
                               "Name": "Mungbean",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34497,11 +34612,11 @@
                                       "XFMetadata": null,
                                       "Name": "MungbeanSoil",
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -34545,7 +34660,7 @@
                                   "KLAT": null,
                                   "ResourceName": "WaterBalance",
                                   "Name": "SoilWater",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -34621,7 +34736,7 @@
                                   "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -34681,7 +34796,7 @@
                                   "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -34722,25 +34837,25 @@
                                   "PHUnits": 0,
                                   "Name": "InitialSW",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34748,7 +34863,7 @@
                               "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
                               "Parameters": [],
                               "Name": "HarvestRule",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34858,7 +34973,7 @@
                               "GroupByVariableName": null,
                               "Name": "DailyReport",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34883,15 +34998,15 @@
                               "GroupByVariableName": null,
                               "Name": "HarvestReport",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -34957,7 +35072,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -34985,11 +35100,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35049,7 +35164,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35077,11 +35192,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35141,7 +35256,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35169,11 +35284,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35239,11 +35354,11 @@
                                   "SimulationName": "KatherineJan28WaterIrrigated",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35271,11 +35386,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35341,11 +35456,11 @@
                                   "SimulationName": "KatherineJan28WaterIrrigated",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35373,11 +35488,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35437,7 +35552,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35465,11 +35580,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35529,7 +35644,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35557,11 +35672,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35621,7 +35736,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35649,11 +35764,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35713,7 +35828,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35741,11 +35856,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35811,11 +35926,11 @@
                                   "SimulationName": "KatherineJan28WaterRainfed",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35843,11 +35958,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35913,11 +36028,11 @@
                                   "SimulationName": "KatherineJan28WaterIrrigated",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35945,11 +36060,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36015,11 +36130,11 @@
                                   "SimulationName": "KatherineJan28WaterIrrigated",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36047,19 +36162,19 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -36074,7 +36189,7 @@
                       "End": "1990-05-31T00:00:00",
                       "Name": "clock",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -36082,7 +36197,7 @@
                       "Verbosity": 100,
                       "Name": "summaryfile",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -36092,14 +36207,14 @@
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                       "Name": "Soil Arbitrator",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -36122,21 +36237,21 @@
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
                           "ResourceName": "Fertiliser",
                           "Name": "fertiliser",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36149,7 +36264,7 @@
                           "InitialCNR": 55.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36259,7 +36374,7 @@
                           "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36288,7 +36403,7 @@
                             }
                           ],
                           "Name": "SowingRule",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36305,7 +36420,7 @@
                           "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36457,11 +36572,11 @@
                                   "XFMetadata": null,
                                   "Name": "MungbeanSoil",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36515,7 +36630,7 @@
                               ],
                               "ResourceName": "WaterBalance",
                               "Name": "SoilWater",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36591,7 +36706,7 @@
                               "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36651,7 +36766,7 @@
                               "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36692,25 +36807,25 @@
                               "PHUnits": 0,
                               "Name": "Initial Water",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "ResourceName": "Nutrient",
                               "Name": "Nutrient",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36718,14 +36833,14 @@
                           "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
                           "Parameters": [],
                           "Name": "HarvestRule",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "ResourceName": "Soybean",
                           "Name": "Mungbean",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36758,11 +36873,11 @@
                             }
                           ],
                           "Name": "AutoIrr",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -36828,7 +36943,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36856,11 +36971,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36920,7 +37035,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36948,11 +37063,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37012,7 +37127,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37040,11 +37155,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37104,7 +37219,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37132,11 +37247,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37196,7 +37311,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37224,11 +37339,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37288,7 +37403,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37316,11 +37431,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37380,7 +37495,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37408,11 +37523,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37472,7 +37587,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37500,11 +37615,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37564,7 +37679,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37592,11 +37707,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37656,7 +37771,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37684,11 +37799,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37748,7 +37863,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37776,11 +37891,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37840,7 +37955,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -37868,19 +37983,19 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -37901,15 +38016,15 @@
                               "Specification": "[SowingRule].Script.SowingRate=10,27,50",
                               "Name": "Dens",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -37924,7 +38039,7 @@
                           "End": "1980-05-31T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37932,7 +38047,7 @@
                           "Verbosity": 100,
                           "Name": "summaryfile",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37942,14 +38057,14 @@
                           "ExcelWorkSheetName": "Emerald",
                           "Name": "Weather",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -37972,14 +38087,14 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38000,14 +38115,14 @@
                                 }
                               ],
                               "Name": "AutomaticIrrigation",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
                               "ResourceName": "Fertiliser",
                               "Name": "fertiliser",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38020,7 +38135,7 @@
                               "InitialCNR": 55.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38049,14 +38164,14 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "ResourceName": "Soybean",
                               "Name": "Mungbean",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38064,7 +38179,7 @@
                               "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
                               "Parameters": [],
                               "Name": "HarvestRule",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38174,7 +38289,7 @@
                               "GroupByVariableName": null,
                               "Name": "DailyReport",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38199,7 +38314,7 @@
                               "GroupByVariableName": null,
                               "Name": "HarvestReport",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38265,14 +38380,14 @@
                                   "KLAT": null,
                                   "ResourceName": "WaterBalance",
                                   "Name": "SoilWater",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "Temperature",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -38348,7 +38463,7 @@
                                   "FOMMetadata": null,
                                   "Name": "Organic",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -38408,7 +38523,7 @@
                                   "PHMetadata": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -38459,14 +38574,14 @@
                                   "PHUnits": 0,
                                   "Name": "Initial conditions",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -38646,11 +38761,11 @@
                                       "XFMetadata": null,
                                       "Name": "MungbeanSoil",
                                       "Children": [],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -38661,11 +38776,11 @@
                                   "RelativeTo": null,
                                   "Name": "Initial water",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38698,15 +38813,15 @@
                                 }
                               ],
                               "Name": "Automatic irrigation based on water deficit",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -38778,11 +38893,11 @@
                                   "SimulationName": "Kimberly1980Dens10",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38810,11 +38925,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -38880,11 +38995,11 @@
                                   "SimulationName": "Kimberly1980Dens10",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38912,11 +39027,11 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -38976,7 +39091,7 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -39004,19 +39119,19 @@
                               "Filter": null,
                               "Name": "Observed",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -39089,15 +39204,15 @@
                               "showEquation": true,
                               "Name": "Regression",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -39164,19 +39279,19 @@
                               "showEquation": true,
                               "Name": "Regression",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -39243,19 +39358,19 @@
                           "showEquation": true,
                           "Name": "Regression",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -41012,7 +41127,7 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16776961,
+                  "ColourArgb": -16747854,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
@@ -41025,7 +41140,7 @@
                   "YFieldName": "Predicted.Mungbean.AboveGround.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": false,
+                  "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
