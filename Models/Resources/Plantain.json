@@ -5384,32 +5384,9 @@
               "Name": "InitialWt",
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.Constant, Models",
                   "Name": "Structural",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": "g/plant",
-                      "Name": "InitialRootWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].Population",
-                      "Name": "Population",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.002"
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
