@@ -833,7 +833,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.022,
+                  "FixedValue": 0.02,
                   "Units": "m^2/g",
                   "Name": "SpecificLeafArea",
                   "Children": [],
@@ -4818,8 +4818,8 @@
                     0.003
                   ],
                   "Y": [
-                    0.02,
-                    0.03
+                    0.01,
+                    0.02
                   ],
                   "Name": "XYPairs",
                   "Children": [],
