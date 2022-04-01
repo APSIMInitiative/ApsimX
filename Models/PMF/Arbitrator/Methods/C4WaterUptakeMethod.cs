@@ -176,9 +176,6 @@ namespace Models.PMF.Arbitrator
 
                 double[] llDep = MathUtilities.Multiply(soilCrop.LL, soilPhysical.Thickness);
 
-                if (root.Depth != myZone.Depth)
-                    myZone.Depth += 0; // wtf??
-
                 var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
