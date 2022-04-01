@@ -28237,7 +28237,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[SowingRule].Script.CultivarName=CeleraII, Jade, Crystal, Onyx, Opal",
+                              "Specification": "[SowingRule].Script.CultivarName=Jade",
                               "Name": "Cv",
                               "Children": [],
                               "Enabled": true,
@@ -30111,7 +30111,7 @@
                               "Filter": null,
                               "Name": "Predicted11",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -38745,7 +38745,7 @@
                                     300.0
                                   ],
                                   "NO3N": [
-                                    36.0,
+                                    15.0,
                                     9.0,
                                     7.0,
                                     4.0,
@@ -38995,7 +38995,14 @@
                                     300.0,
                                     300.0
                                   ],
-                                  "NO3": null,
+                                  "NO3": [
+                                    "NaN",
+                                    "NaN",
+                                    "NaN",
+                                    "NaN",
+                                    "NaN",
+                                    "NaN"
+                                  ],
                                   "NH4": [
                                     "NaN",
                                     "NaN",
