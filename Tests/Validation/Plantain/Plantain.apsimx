@@ -3109,7 +3109,7 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "Inputs",
                           "Children": [
@@ -5353,7 +5353,7 @@
                           "LegendPosition": 1,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "PlantBiomass",
                           "Children": [
@@ -5713,7 +5713,7 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "LiveBiomassBG",
                           "Children": [
@@ -11365,7 +11365,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "AboveGroundWt",
                       "Children": [
@@ -11457,7 +11457,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "AboveGroundWt_PO",
                       "Children": [
@@ -11532,7 +11532,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestedWt",
                       "Children": [
@@ -11624,7 +11624,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestedWt_PO",
                       "Children": [
@@ -11699,7 +11699,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt",
                       "Children": [
@@ -11791,7 +11791,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt_PO",
                       "Children": [
@@ -11866,7 +11866,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HerbageNc",
                       "Children": [
@@ -11958,7 +11958,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HerbageNc_PO",
                       "Children": [
@@ -13107,7 +13107,7 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2014-10-24",
+                                  "Date": "2014-10-10",
                                   "Action": " [Plantain].Sow(population: 200, cultivar: \"Tonic\", depth: 10, rowSpacing: 150)",
                                   "Enabled": true
                                 }
@@ -13165,7 +13165,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "2014-12-16",
-                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 60, amountType: \"ResidualDM\", duration: 1)",
+                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
                                   "Enabled": true
                                 },
                                 {
@@ -22430,7 +22430,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "AboveGroundWt",
                       "Children": [
@@ -22522,7 +22522,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "AboveGroundWt_PO",
                       "Children": [
@@ -22597,7 +22597,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestedWt",
                       "Children": [
@@ -22689,7 +22689,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestedWt_PO",
                       "Children": [
@@ -22764,7 +22764,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt",
                       "Children": [
@@ -22856,7 +22856,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt_PO",
                       "Children": [
@@ -22931,7 +22931,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HerbageNc",
                       "Children": [
@@ -23023,7 +23023,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HerbageNc_PO",
                       "Children": [
@@ -24029,7 +24029,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1998-05-19",
-                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 40, amountType: \"ResidualDM\", duration: 1)",
                                   "Enabled": true
                                 },
                                 {
@@ -24122,7 +24122,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1998-05-19",
-                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 40, amountType: \"ResidualDM\", duration: 1)",
                                   "Enabled": true
                                 },
                                 {
@@ -26314,7 +26314,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Population",
                       "Children": [
@@ -26378,7 +26378,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Phenology",
                       "Children": [
@@ -26442,7 +26442,7 @@
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Radiation",
                       "Children": [
@@ -32840,7 +32840,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Harvests",
                       "Children": [
@@ -32932,7 +32932,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestedBiomass",
                       "Children": [
@@ -33007,7 +33007,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt",
                       "Children": [
@@ -33099,7 +33099,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt_PO",
                       "Children": [
@@ -33341,13 +33341,13 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "2000-08-08",
-                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 60, amountType: \"ResidualDM\", duration: 1)",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "2000-09-05",
-                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 50, amountType: \"ResidualDM\", duration: 1)",
+                                  "Action": "[Defoliate].Script.Defoliate(defoliationType: \"Cut\", amountDM: 60, amountType: \"ResidualDM\", duration: 1)",
                                   "Enabled": true
                                 }
                               ],
@@ -41888,7 +41888,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Population",
                       "Children": [
@@ -41980,7 +41980,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Harvests",
                       "Children": [
@@ -42100,7 +42100,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestedBiomass",
                       "Children": [
@@ -42175,7 +42175,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt",
                       "Children": [
@@ -42267,7 +42267,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CumHarvestedWt_PO",
                       "Children": [
@@ -42358,7 +42358,7 @@
               "LegendPosition": 1,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "HarvestedWt",
               "Children": [
@@ -42433,7 +42433,7 @@
               "LegendPosition": 1,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "CumHarvestedWt_PO",
               "Children": [
@@ -42444,7 +42444,7 @@
                   "YAxis": 0,
                   "ColourArgb": -16777216,
                   "FactorToVaryColours": "Cultivar",
-                  "FactorToVaryMarkers": null,
+                  "FactorToVaryMarkers": "CutFrequency",
                   "FactorToVaryLines": null,
                   "Marker": 0,
                   "MarkerSize": 1,
