@@ -58,7 +58,7 @@ namespace Models.Functions.RootShape
             if (zone.RootFront <= hDist)
                 SDepth = 0.0;
             else
-                SDepth = Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootFront, 2) - Math.Pow(hDist, 2), 0, 1000000));
+                SDepth = Math.Sqrt(Math.Pow(zone.RootFront, 2) - Math.Pow(hDist, 2));
 
             // Rectangle - SDepth past bottom of this area
             if (SDepth >= bottom)
