@@ -15,6 +15,7 @@ namespace UserInterface.Views
     using Gtk;
     using Interfaces;
     using Extensions;
+    using Utility;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -122,7 +123,7 @@ namespace UserInterface.Views
                 //listview.CursorChanged -= OnSelectionChanged;
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
-                ClearPopup();
+                popup.Clear();
                 popup.Dispose();
                 listmodel.Dispose();
                 accel.Dispose();
@@ -416,7 +417,7 @@ namespace UserInterface.Views
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
-            ClearPopup();
+            popup.Clear();
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
@@ -470,26 +471,5 @@ namespace UserInterface.Views
             popup.ShowAll();
         }
 
-        private void ClearPopup()
-        {
-            foreach (Widget w in popup)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-                popup.Remove(w);
-                w.Dispose();
-            }
-        }
     }
 }

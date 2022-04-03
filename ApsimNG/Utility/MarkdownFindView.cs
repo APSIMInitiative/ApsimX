@@ -82,6 +82,7 @@ namespace Utility
             btnFindNext.Clicked -= BtnFindNext_Click;
             btnFindPrevious.Clicked -= BtnFindPrevious_Click;
             btnCancel.Clicked -= BtnCancel_Click;
+            btnHighlightAll.Clicked -= BtnHighlightAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
         }

@@ -165,8 +165,9 @@ namespace Models
         {
             // convert arguments to an object array.
             ParameterInfo[] parameters = method.GetParameters();
+            int numMandatoryParameters = parameters.Where(p => !p.HasDefaultValue).Count();
             object[] parameterValues = new object[parameters.Length];
-            if (arguments.Length > parameters.Length)
+            if (arguments.Length < numMandatoryParameters)
                 return null;
 
             //retrieve the values for the named arguments that were provided. (not all the named arguments for the method may have been provided)

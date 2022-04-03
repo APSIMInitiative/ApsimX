@@ -127,6 +127,7 @@ namespace UserInterface.Intellisense
             this.ShowError = ShowError;
             this.view = view;
             view.Completion.ShowHeaders = false;
+            view.KeyPressEvent += OnCompletionInfoKeyPress;
         }
 
         /// <summary>
@@ -169,7 +170,6 @@ namespace UserInterface.Intellisense
                 // We need to attach the popup window to the sourceview, so it
                 // gets hidden/removed when the sourceview loses focus.
                 methodSignaturePopup.AttachedTo = view;
-                view.KeyPressEvent += OnCompletionInfoKeyPress;
 
                 // Move the info window to the location of the cursor.
                 methodSignaturePopup.MoveToIter(view, iter);
@@ -186,10 +186,10 @@ namespace UserInterface.Intellisense
         {
             try
             {
-                if (args.Event.Key == Gdk.Key.Escape)
+                if (methodSignaturePopup != null && args.Event.Key == Gdk.Key.Escape)
                 {
-                    methodSignaturePopup.Hide();
                     methodSignaturePopup.Dispose();
+                    methodSignaturePopup = null;
                 }
             }
             catch (Exception err)
@@ -277,10 +277,17 @@ namespace UserInterface.Intellisense
                     return;
 
                 IEnumerable<NeedContextItemsArgs.ContextItem> contextItems = task.Result.OrderBy(c => c.Name);
+                // Iff owned is true, the list will be freed by calls to Dispose().
+                bool owned = true;
+                // Iff elementsOwned is true, the list elements will be freed
+                // when the list is freed, which will result in double disposal
+                // of the list elements.
+                bool elementsOwned = false;
+
                 List proposals = new List(contextItems.Select(c => new CompletionProposalAdapter(new CustomScriptCompletionProposal(c))).ToArray(),
                                           typeof(CompletionProposalAdapter),
-                                          true,
-                                          true);
+                                          owned,
+                                          elementsOwned);
                 context.AddProposals(this, proposals, true);
             }
             catch (Exception err)

@@ -358,9 +358,9 @@ namespace Models.Soils
         private double a_to_evap_fact = 0.44;
 
         /// <summary>
-        /// coef. in exp effect of canopy on
+        /// coef. in exp effect of canopy on soil water evaporation. In previous version initialised to 1.7.
         /// </summary>
-        private double canopy_eos_coef = 0;
+        private double canopy_eos_coef = 1.7;
 
         /// <summary>
         /// The effect of residue and canopy cover is implemented as in the soilwat model.
@@ -408,12 +408,12 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double ersoil = 0.000001;
+        public double ersoil { get; set; } = 0.000001;
 
         /// <summary>
         /// 
         /// </summary>
-        private double ernode = 0.000001;
+        public double ernode { get; set; } = 0.000001;
 
         /// <summary>
         /// 
@@ -433,7 +433,7 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double slcerr = 0.000001;
+        public double slcerr { get; set; } = 0.000001;
         
         /// <summary>
         /// 
@@ -771,12 +771,10 @@ namespace Models.Soils
         {
             get
             {
-                double[] flow = new double[n];
-
                 // Flow represents flow downward out of a layer
                 // and so start at node 1 (not 0)
                 double[] value = new double[n];
-                for (int i = 1; i <= n; i++)
+                for (int i = 1; i < n; i++)
                     value[i] = TD_wflow[i];
                 return value;
             }
@@ -918,7 +916,7 @@ namespace Models.Soils
 
         /// <summary>Pond depth (mm)</summary>
         [Units("mm")]
-        public double pond
+        public double Pond
         {
             get
             {
@@ -963,8 +961,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Subsurface drain (mm)</summary>
         [Units("mm")]
-        private double subsurface_drain
+        public double SubsurfaceDrain
         {
             get
             {
@@ -1449,11 +1448,11 @@ namespace Models.Soils
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
                 double solconc = 0.0;
-                if (solute_names[solnum] == "no3")
+                if (solute_names[solnum].Equals("no3", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NO3;
-                else if (solute_names[solnum] == "nh4")
+                else if (solute_names[solnum].Equals("nh4", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NH4;
-                else if (solute_names[solnum] == "cl")
+                else if (solute_names[solnum].Equals("cl", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.CL;
 
                 if (solconc > 0.0)
@@ -2003,100 +2002,13 @@ namespace Models.Soils
 
         //}
 
-        //private void RegisterSoluteOutputs(int solnum)
-        //{
-        //    string solutename = solute_names[solnum];
-
-        //    string variable_name = "flow_" + solutename;
-        //    flow_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\" unit=\"kg/ha\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "leach_" + solutename;
-        //    leach_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"F\" unit=\"kg/ha\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "exco_" + solutename;
-        //    exco_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "conc_water_" + solutename;
-        //    conc_water_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\" unit=\"ug/g\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "conc_adsorb_" + solutename;
-        //    conc_adsorb_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\" unit=\"ug/g\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "subsurface_drain_" + solutename;
-        //    subsurface_drain_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"F\" unit=\"mm\"/>", true, false, false, "", "", getPropertyValue);
-        //}
-
-        //public bool getPropertyValue(int propID, ref TPropertyInfo value, bool isReqSet)
-        //{
-        //    double[] valueArray = new double[n + 1];
-        //    bool uflag;
-        //    if (isReqSet)  // currently only handling read requests, so fail if this is not.
-        //        return false;
-        //    for (int crop = 0; crop < num_crops; crop++)
-        //    {
-
-        //        if (uptake_water_id[crop] == propID)
-        //        {
-        //            GetSWUptake(crop, out valueArray, out uflag);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-        //        for (int sol = 0; sol < num_solutes; sol++)
-        //        {
-        //            if (supply_solute_id[crop][sol] == propID)
-        //            {
-        //                GetSupply(crop, sol, out valueArray, out uflag);
-        //                value.setValue(valueArray);
-        //                return true;
-        //            }
-        //        }
-        //    }
-
-        //    for (int solnum = 0; solnum < num_solutes; solnum++)
-        //    {
-        //        if (leach_id[solnum] == propID)
-        //        {
-        //            value.setValue(TD_soldrain[solnum]);
-        //            return true;
-        //        }
-
-        //        if (flow_id[solnum] == propID)
-        //        {
-        //            GetFlow(solute_names[solnum], out valueArray, out uflag);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (exco_id[solnum] == propID)
-        //        {
-        //            for (int node = 0; node < n; node++)
-        //                valueArray[node] = ex[solnum][node] / rhob[node];
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (conc_water_id[solnum] == propID)
-        //        {
-        //            ConcWaterSolute(solute_names[solnum], ref valueArray);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (conc_adsorb_id[solnum] == propID)
-        //        {
-        //            ConcAdsorbSolute(solute_names[solnum], ref valueArray);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (subsurface_drain_id[solnum] == propID)
-        //        {
-        //            value.setValue(TD_slssof[solnum]);
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
+        private int SoluteIndex(string soluteName)
+        {
+            int soluteIndex = Array.FindIndex(solute_names, s => s.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
+            if (soluteIndex == -1)
+                throw new Exception($"Invalid solute name: {soluteName}");
+            return soluteIndex;
+        }
 
         /// <summary>
         /// 
@@ -2394,10 +2306,15 @@ namespace Models.Soils
                 SwimSoluteParameters soluteParam = FindInScope<SwimSoluteParameters>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                for (int j = 0; j < soluteParam.FIP.Length; j++)
+                    if (soluteParam.FIP[j] < 1.0)
+                        throw new Exception("In the current implementation FIP must be equal to 1 to enforce a linear isotherm. Nonlinear isotherms were causing mass balance errors - this might be resolved in the future, " + solute_names[i]);
                 fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
+                ex[i] = MathUtilities.Multiply(exco[i], soilPhysical.BD);
                 cslgw[i] = soluteParam.WaterTableConcentration;
                 d0[i] = soluteParam.D0;
+
             }
         }
 
@@ -3102,13 +3019,15 @@ namespace Models.Soils
             {
                 TD_slssof[sol] = 0.0;
                 TD_soldrain[sol] = 0.0;
-                for (int node = 0; node <= n; node++)
+                for (int node = 0; node <= n + 1; node++)
                     TD_sflow[sol][node] = 0.0;
             }
 
+            for (int node = 0; node <= n+1; node++)
+                TD_wflow[node] = 0.0;
+            
             for (int node = 0; node <= n; node++)
             {
-                TD_wflow[node] = 0.0;
                 for (int vegnum = 0; vegnum < num_crops; vegnum++)
                 {
                     for (int sol = 0; sol < num_solutes; sol++)
@@ -3310,20 +3229,22 @@ namespace Models.Soils
                 {
                     psiValue = _psi[node]; // Initial estimate
                 }
-                
 
 
 
-                for (int iter = 0; iter < maxIterations; iter++)
+                int iter = 0;
+                double est = 0.0;
+
+                for (iter = 0; iter < maxIterations; iter++)
                 {
-                    double est = SimpleTheta(node, psiValue);
+                    est = SimpleTheta(node, psiValue);
                     double m = (SimpleTheta(node, psiValue + dpsi) - est) / dpsi;
 
                     if (Math.Abs(est - theta) < tolerance)
                         break;
                     psiValue -= Math.Min(-dpsi,(est - theta) / m);
-                    //psiValue -= (est - theta) / m;
                 }
+                //summary.WriteMessage(this, $"We want this stuff, {(est - theta)}, {iter}, {psiValue}", MessageType.Diagnostic);
                 return psiValue;
             }
         }
@@ -3890,8 +3811,11 @@ namespace Models.Soils
                     //_h = Math.Max(0.0, _h + dp[-1]);
                 }
 
-                var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
-                summary.WriteMessage(this, msg, MessageType.Diagnostic);
+                if (Diagnostics)
+                {
+                    var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
+                    summary.WriteMessage(this, msg, MessageType.Diagnostic);
+                }
             }
             while (fail && it < itlim);
 
@@ -4013,7 +3937,10 @@ namespace Models.Soils
 
                 //Peter's CHANGE 21/10/98 to ensure zero exchange is treated as linear
                 //         if (p%fip(solnum,j).eq.1.) then
-                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)))
+                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance))    //exco=0
+                    || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)) // fip=1
+
+                    ) // solute amount is zero  2022-01-06 Val Snow added this to avoid crashes when solutes initiated with zero concentraion  || (MathUtilities.FloatsAreEqual(csl[solnum][j], 0.0, 1e-6))
                 {
                     //           linear exchange isotherm
                     c2[i] = 1.0;
@@ -4217,7 +4144,7 @@ namespace Models.Soils
                     j = 0;
                     for (int i = 0; i <= n; i++)
                     {
-                        if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
+                        if (i > 0 && !MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                         {
                             if (i > 0)
                                 j++;
@@ -4359,11 +4286,9 @@ namespace Models.Soils
 
         private void GetSoluteVariables()
         {
-            double[] solute_n = new double[n + 1];
-
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
-                ConcWaterSolute(solnum, ref solute_n);
+                double[] solute_n = ConcWaterSolute(solnum);
                 for (int node = 0; node <= n; node++)
                     csl[solnum][node] = solute_n[node];
             }
@@ -4402,14 +4327,14 @@ namespace Models.Soils
             }
         }
 
-        private void ConcWaterSolute(int solnum, ref double[] concWaterSolute)
+        private double[] ConcWaterSolute(int solnum)
         {
-            concWaterSolute = new double[n + 1]; // Init with zeroes
+            double[] concWaterSolute = new double[n + 1]; // Init with zeroes
             double[] solute_n = new double[n + 1]; // solute at each node
 
             if (solnum >= 0)
             {
-                solute_n = solutes[solnum].kgha;
+                solute_n = (double[])solutes[solnum].kgha.Clone();
 
                 for (int node = 0; node <= n; node++)
                 {
@@ -4457,6 +4382,7 @@ namespace Models.Soils
             }
             else
                 throw new Exception("You have asked apswim to use a solute that it does not know about. Number = " + solnum);
+            return concWaterSolute;
         }
 
         private void ConcAdsorbSolute(string solname, ref double[] concAdsorbSolute)
@@ -5714,6 +5640,7 @@ namespace Models.Soils
                 double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness, divideTolerance);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
+                run_has_started = false;
             }
         }
 
@@ -5725,29 +5652,53 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
 
-        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNO3 property"); } }
+        /// <summary>NO3 movement out of a layer. </summary>
+        public double[] FlowNO3 => TD_sflow[SoluteIndex("NO3")];
 
-        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNH4 property"); } }
+        /// <summary>NH4 movement out of a layer. </summary>
+        public double[] FlowNH4 => TD_sflow[SoluteIndex("NH4")];
 
-        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement a LeachUrea property"); } }
+        /// <summary>NH4 movement out of a layer. </summary>
+        public double[] FlowUrea => TD_sflow[SoluteIndex("Urea")];
 
-        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNO3 property"); } }
+        /// <summary>CL movement out of a layer. </summary>
+        public double[] FlowCl => TD_sflow[SoluteIndex("Cl")];
 
-        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNH4 property"); } }
+        /// <summary>NO3 movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainNO3 => TD_slssof[SoluteIndex("NO3")];
 
-        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowUrea { get { throw new NotImplementedException("SWIM doesn't implement a FlowUrea property"); } }
+        /// <summary>NH4 movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainNH4 => TD_slssof[SoluteIndex("NH4")];
+
+        /// <summary>NH4 movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainUrea => TD_slssof[SoluteIndex("Urea")];
+
+        /// <summary>CL movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainCL => TD_slssof[SoluteIndex("CL")];
+
+        /// <summary>NO3 leached from the bottom of the profile.</summary>
+        public double LeachNO3 => TD_soldrain[SoluteIndex("NO3")];
+
+        /// <summary>NH4 leached from the bottom of the profile.</summary>
+        public double LeachNH4 => TD_soldrain[SoluteIndex("NH4")];
+
+        /// <summary>Urea leached from the bottom of the profile.</summary>
+        public double LeachUrea => TD_soldrain[SoluteIndex("Urea")];
+
+        /// <summary>CL leached from the bottom of the profile.</summary>
+        public double LeachCl => TD_soldrain[SoluteIndex("Cl")];
+
+        /// <summary>Amount of NO3 not adsorbed (ppm).</summary>
+        public double[] ConcWaterNO3 => ConcWaterSolute(SoluteIndex("NO3"));
+
+        /// <summary>Amount of NH4 not adsorbed (ppm).</summary>
+        public double[] ConcWaterNH4 => ConcWaterSolute(SoluteIndex("NH4"));
+
+        /// <summary>Amount of Urea not adsorbed (ppm).</summary>
+        public double[] ConcWaterUrea => ConcWaterSolute(SoluteIndex("Urea"));
+
+        /// <summary>Amount of CL not adsorbed (ppm).</summary>
+        public double[] ConcWaterCl => ConcWaterSolute(SoluteIndex("Cl"));
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]

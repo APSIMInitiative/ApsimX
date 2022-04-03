@@ -86,7 +86,7 @@ namespace UserInterface.Views
             scroller.PropagateNaturalHeight = true;
             scroller.PropagateNaturalWidth = true;
 
-            mainWidget.Destroyed += OnWidgetDestroyed;
+            mainWidget.Destroyed += mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -100,6 +100,8 @@ namespace UserInterface.Views
 
             // Dispose of current properties table.
             box.Remove(propertyTable);
+            propertyTable.DetachAllHandlers();
+            propertyTable.Destroy();
             propertyTable.Dispose();
 
             // Construct a new properties table.
@@ -107,7 +109,7 @@ namespace UserInterface.Views
             //propertyTable.RowHomogeneous = true;
             propertyTable.RowSpacing = 5;
 
-            propertyTable.Destroyed += OnWidgetDestroyed;
+            propertyTable.Destroyed += PropertyTable_Destroyed;
             box.Add(propertyTable);
 
             int nrow = 0;
@@ -128,6 +130,7 @@ namespace UserInterface.Views
                     entry.GrabFocus();
             }
         }
+
 
         /// <summary>
         /// Adds a group of properties to the GtkTable, starting at the specified row.
@@ -549,12 +552,19 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
-        protected void OnWidgetDestroyed(object sender, EventArgs e)
+        protected void mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (sender is Widget widget)
-            {
-                widget.DetachAllHandlers();
-            }
+            propertyTable.Destroy();
+            propertyTable.Dispose();
+            mainWidget.DetachAllHandlers();
+            mainWidget.Destroyed -= mainWidget_Destroyed;
+
+        }
+
+        protected void PropertyTable_Destroyed(object sender, EventArgs e)
+        {
+            propertyTable.DetachAllHandlers();
+            propertyTable.Destroyed -= PropertyTable_Destroyed;
         }
 
         /// <summary>

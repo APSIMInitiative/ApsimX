@@ -658,6 +658,11 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
+                if(pool.Age == 0)
+                {
+                    pool.Growth = pool.Amount;
+                }
+
                 // allow decaying or no pools currently available
                 if (PastureDecays || Pools.Count() == 0)
                     Pools.Insert(0, pool);

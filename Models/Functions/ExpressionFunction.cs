@@ -167,6 +167,9 @@ namespace Models.Functions
             string st = Expression.Replace(".Value()", "");
             st = st.Replace("*", "x");
             yield return new Paragraph($"{Name} = {st}");
+
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
         }
     }
 }

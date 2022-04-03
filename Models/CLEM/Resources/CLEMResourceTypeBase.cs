@@ -35,9 +35,8 @@ namespace Models.CLEM.Resources
             get 
             { 
                 if(!EquivalentMarketStoreDetermined)
-                {
                     FindEquivalentMarketStore();
-                }
+
                 return !(EquivalentMarketStore is null); 
             } 
         }
