@@ -7690,7 +7690,16 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.6"
                   ],
                   "Name": "Gregory",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Suneca",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7940,8 +7949,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
                     "[Phenology].CAMP.FLNparams.LV = 6.5",
                     "[Phenology].CAMP.FLNparams.LN = 9.5",
                     "[Phenology].CAMP.FLNparams.SV = 11.5",
@@ -9948,14 +9958,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.5633530493006",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.245575047413057",
-                    "[Phenology].CAMP.FLNparams.LV = 6.1",
-                    "[Phenology].CAMP.FLNparams.LN = 9.5",
-                    "[Phenology].CAMP.FLNparams.SV = 11.5",
-                    "[Phenology].CAMP.FLNparams.SN = 13.9",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 6",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 144",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8"
+                    "[Phenology].CAMP.FLNparams.LV = 7.5",
+                    "[Phenology].CAMP.FLNparams.LN = 11.5",
+                    "[Phenology].CAMP.FLNparams.SV = 8.5",
+                    "[Phenology].CAMP.FLNparams.SN = 14.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 190",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
                   ],
                   "Name": "Strzelecki",
                   "Children": [],
@@ -10102,20 +10112,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.LV = 5.5",
-                    "[Phenology].CAMP.FLNparams.LN = 9.5",
-                    "[Phenology].CAMP.FLNparams.SV = 7.2",
-                    "[Phenology].CAMP.FLNparams.SN = 9.7",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 293",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-                  ],
-                  "Name": "Suneca"
                 },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
