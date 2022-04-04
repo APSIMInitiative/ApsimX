@@ -7288,7 +7288,16 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Planet",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Planet",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -7372,7 +7381,16 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Spartacus",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Core.Alias, Models",
+                          "Name": "Spartacus",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
