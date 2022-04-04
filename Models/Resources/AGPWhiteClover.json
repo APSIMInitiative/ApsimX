@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 148,
+  "Version": 149,
   "Name": "Simulations",
   "Children": [
     {
@@ -82,9 +82,9 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Leaf",
-          "NConcOptimum": 0.050,
+          "NConcOptimum": 0.05,
           "NConcMinimum": 0.0275,
-          "NConcMaximum": 0.060,
+          "NConcMaximum": 0.06,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -135,8 +135,8 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
-          "NConcOptimum": 0.020,
-          "NConcMinimum": 0.010,
+          "NConcOptimum": 0.02,
+          "NConcMinimum": 0.01,
           "NConcMaximum": 0.025,
           "Children": [
             {
@@ -188,9 +188,9 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stolon",
-          "NConcOptimum": 0.020,
-          "NConcMinimum": 0.010,
-          "NConcMaximum": 0.030,
+          "NConcOptimum": 0.02,
+          "NConcMinimum": 0.01,
+          "NConcMaximum": 0.03,
           "FractionStanding": 0.3,
           "Children": [
             {
