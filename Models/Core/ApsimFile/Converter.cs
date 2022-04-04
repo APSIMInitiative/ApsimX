@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 148; } }
+        public static int LatestVersion { get { return 149; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3914,6 +3914,31 @@ namespace Models.Core.ApsimFile
             foreach (JObject xyPairs in JsonUtilities.ChildrenRecursively(root, "XYPairs"))
                 foreach (JObject graph in JsonUtilities.ChildrenOfType(xyPairs, "Graph"))
                     JsonUtilities.RemoveChild(xyPairs, JsonUtilities.Name(graph));
+        }
+
+        /// <summary>
+        /// Change EmergingPhase to use a child Target IFunction rather than built in shootlag, shootrate.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion149(JObject root, string fileName)
+        {
+            foreach (JObject emergingPhase in JsonUtilities.ChildrenRecursively(root, "EmergingPhase"))
+            {
+                var shootLag = emergingPhase["ShootLag"].ToString();
+                var shootRate = emergingPhase["ShootRate"].ToString();
+                emergingPhase.Remove("ShootLag");
+                emergingPhase.Remove("ShootRate");
+
+                var target = JsonUtilities.CreateNewChildModel(emergingPhase, "Target", "Models.Functions.AddFunction");
+                JsonUtilities.AddConstantFunctionIfNotExists(target, "ShootLag", shootLag);
+                var depthxRate = JsonUtilities.CreateNewChildModel(target, "DepthxRate", "Models.Functions.MultiplyFunction");
+                
+                var sowingDepthReference = JsonUtilities.CreateNewChildModel(depthxRate, "SowingDepth", "Models.Functions.VariableReference");
+                sowingDepthReference["VariableName"] = "[Plant].SowingData.Depth";
+
+                JsonUtilities.AddConstantFunctionIfNotExists(depthxRate, "ShootRate", shootRate);
+            }
         }
 
         /// <summary>
