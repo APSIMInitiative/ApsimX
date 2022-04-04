@@ -6921,7 +6921,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 7.9",
                     "[Phenology].CAMP.FLNparams.LN = 17.3",
@@ -6941,7 +6941,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4.5",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
@@ -6963,7 +6963,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4.5",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
@@ -7018,7 +7018,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 14.27272727272727",
                     "[Phenology].CAMP.FLNparams.LN = 15.625",
@@ -7103,7 +7103,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7.6",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 6.8",
                     "[Phenology].CAMP.FLNparams.LN = 6.8",
@@ -7183,7 +7183,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 7.545454545454546",
                     "[Phenology].CAMP.FLNparams.LN = 10.71428571428571",
@@ -7232,7 +7232,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 90",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
@@ -7472,14 +7472,14 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.48",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
                     "[Phenology].CAMP.FLNparams.LV = 6.5",
-                    "[Phenology].CAMP.FLNparams.LN = 9.5",
-                    "[Phenology].CAMP.FLNparams.SV = 11.5",
-                    "[Phenology].CAMP.FLNparams.SN = 10.5",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 274",
+                    "[Phenology].CAMP.FLNparams.LN = 9.0",
+                    "[Phenology].CAMP.FLNparams.SV = 10.0",
+                    "[Phenology].CAMP.FLNparams.SN = 12.5",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
@@ -8144,6 +8144,22 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 18",
+                    "[Grain].MaximumNConc.FixedValue = 0.02",
+                    "[Phenology].CAMP.FLNparams.LV = 7",
+                    "[Phenology].CAMP.FLNparams.LN = 13.0",
+                    "[Phenology].CAMP.FLNparams.SV = 11.0",
+                    "[Phenology].CAMP.FLNparams.SN = 17.0"
+                  ],
+                  "Name": "Rex",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
                     "[Grain].MaximumNConc.FixedValue = 0.02",
                     "[Phenology].CAMP.FLNparams.LV = 7",
@@ -8160,14 +8176,14 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Grain].MaximumNConc.FixedValue = 0.02",
                     "[Phenology].CAMP.FLNparams.LV = 7",
                     "[Phenology].CAMP.FLNparams.LN = 13.0",
                     "[Phenology].CAMP.FLNparams.SV = 11.0",
                     "[Phenology].CAMP.FLNparams.SN = 17.0"
                   ],
-                  "Name": "Stephens",
+                  "Name": "Hyslop",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8228,6 +8244,21 @@
                     "[Phenology].CAMP.FLNparams.SN = 19.0"
                   ],
                   "Name": "Ararat",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "[Phenology].CAMP.FLNparams.LV = 9",
+                    "[Phenology].CAMP.FLNparams.LN = 9.0",
+                    "[Phenology].CAMP.FLNparams.SV = 9.0",
+                    "[Phenology].CAMP.FLNparams.SN = 9.0"
+                  ],
+                  "Name": "Tybalt",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
