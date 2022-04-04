@@ -131,7 +131,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("OilPalm"),
                 StandardPmfPlantRow("Peanut"),
                 StandardPmfPlantRow("Pinus"),
-                StandardPmfPlantRow("Plantain"),
+                StandardPmfPlantRow("PlantainForage"),
                 StandardPmfPlantRow("Potato"),
                 StandardPmfPlantRow("RedClover"),
                 StandardPmfPlantRow("SCRUM"),

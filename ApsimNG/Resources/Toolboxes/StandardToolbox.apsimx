@@ -685,10 +685,10 @@
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>
-      <Name>Plantain</Name>
+      <Name>PlantainForage</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ResourceName>Plantain</ResourceName>
-      <CropType>Plantain</CropType>
+      <ResourceName>PlantainForage</ResourceName>
+      <CropType>PlantainForage</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>

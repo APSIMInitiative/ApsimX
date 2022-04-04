@@ -791,7 +791,7 @@
                 },
                 {
                   "$type": "Models.Surface.ResidueType, Models",
-                  "fom_type": "plantain",
+                  "fom_type": "plantainForage",
                   "derived_from": "base_type",
                   "fraction_C": 0.0,
                   "po4ppm": 0.0,
@@ -54184,7 +54184,7 @@
                           "LLMetadata": null,
                           "KLMetadata": null,
                           "XFMetadata": null,
-                          "Name": "PlantainSoil",
+                          "Name": "PlantainForageSoil",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -54858,7 +54858,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\r\nusing System.Linq;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Plantain;\r\n        //[Link] private Plant AGPWhiteClover;\r\n        //[Link] Plant WhiteClover;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n\r\n        [Separator(\"======= Sowing conditions =======\")]\r\n        [Description(\"Start of sowing window (dd-mmm)\")] public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (dd-mmm)\")] public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")] public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")] public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")] public int RainDays { get; set;}\r\n        [Description(\"Must sow at the end of the window?\")] public answerType mustSow { get; set; }\r\n        [Description(\"Frequency of sowing (years)\")] public int SowingFreq { get; set; }\r\n    \r\n\r\n        [Separator(\"======= Sowing data =======\")]\r\n        [Description(\"Cultivar to be sown\")] public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")] public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")] public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")] public double Population { get; set;}    \r\n\r\n        [Separator(\"======= Sowing fertiliser =======\")]\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] public double Amount { get; set;}\r\n\r\n\r\n        public double CropAge { get; set; }\r\n\r\n           public enum answerType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            CropAge = SowingFreq + 1.0;\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            CropAge += 1.0 / 365.25;\r\n\r\n            bool doSowing = false;\r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate)&& !Plantain.IsAlive)\r\n                doSowing = true;\r\n            if ((MathUtilities.Sum(waterBalance.ESW) < MinESW) || (accumulatedRain.Sum < MinRain))\r\n                doSowing = false;\r\n            if ((mustSow == answerType.yes) && (DateUtilities.DatesEqual(EndDate, Clock.Today)))\r\n                doSowing = true;\r\n            if (CropAge < SowingFreq)\r\n                doSowing = false;\r\n            \r\n            if (doSowing)\r\n            {\r\n               //WhiteClover.Sow(population: 500, cultivar: \"Kopu\", depth: 5, rowSpacing: 150);\r\n               Plantain.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);\r\n               Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);    \r\n               CropAge = 0.0;\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using Models.Interfaces;\r\nusing System.Linq;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant PlantainForage;\r\n        //[Link] private Plant AGPWhiteClover;\r\n        //[Link] Plant WhiteClover;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n\r\n        [Separator(\"======= Sowing conditions =======\")]\r\n        [Description(\"Start of sowing window (dd-mmm)\")] public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (dd-mmm)\")] public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")] public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")] public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")] public int RainDays { get; set;}\r\n        [Description(\"Must sow at the end of the window?\")] public answerType mustSow { get; set; }\r\n        [Description(\"Frequency of sowing (years)\")] public int SowingFreq { get; set; }\r\n    \r\n\r\n        [Separator(\"======= Sowing data =======\")]\r\n        [Description(\"Cultivar to be sown\")] public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")] public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")] public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")] public double Population { get; set;}    \r\n\r\n        [Separator(\"======= Sowing fertiliser =======\")]\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] public double Amount { get; set;}\r\n\r\n\r\n        public double CropAge { get; set; }\r\n\r\n           public enum answerType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            CropAge = SowingFreq + 1.0;\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            CropAge += 1.0 / 365.25;\r\n\r\n            bool doSowing = false;\r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate)&& !PlantainForage.IsAlive)\r\n                doSowing = true;\r\n            if ((MathUtilities.Sum(waterBalance.ESW) < MinESW) || (accumulatedRain.Sum < MinRain))\r\n                doSowing = false;\r\n            if ((mustSow == answerType.yes) && (DateUtilities.DatesEqual(EndDate, Clock.Today)))\r\n                doSowing = true;\r\n            if (CropAge < SowingFreq)\r\n                doSowing = false;\r\n            \r\n            if (doSowing)\r\n            {\r\n               //WhiteClover.Sow(population: 500, cultivar: \"Kopu\", depth: 5, rowSpacing: 150);\r\n               PlantainForage.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);\r\n               Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);    \r\n               CropAge = 0.0;\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -54920,8 +54920,8 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "ResourceName": "Plantain",
-                  "Name": "Plantain",
+                  "ResourceName": "PlantainForage",
+                  "Name": "PlantainForage",
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -55156,7 +55156,7 @@
                           "LLMetadata": null,
                           "KLMetadata": null,
                           "XFMetadata": null,
-                          "Name": "PlantainSoil",
+                          "Name": "PlantainForageSoil",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -55806,7 +55806,7 @@
                     "[Stock].CondScoreAll as ConditionScoreAlley",
                     "[GrazeVineyardAlley].Script.HarvestableBiomass as HarvestableBiomassAlley",
                     "[GrazeVineyardAlley].Script.CurrentLocation as StockLocationAlley",
-                    "[Plantain].AboveGround.Wt"
+                    "[PlantainForage].AboveGround.Wt"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
