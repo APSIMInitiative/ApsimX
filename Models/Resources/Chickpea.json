@@ -8633,7 +8633,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 500",
                     "[Phenology].FloralInitiation.Target.FixedValue = 100",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 13.17, 17",
@@ -8689,7 +8689,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 15.62, 17",
@@ -8717,7 +8717,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 14.31, 17",
@@ -8748,7 +8748,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 13.45, 17",
@@ -8779,7 +8779,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 13.45, 17",
@@ -8854,7 +8854,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 15.62, 17",
@@ -8880,7 +8880,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 550",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 15.62, 17",
@@ -8908,7 +8908,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].FloralInitiation.Target.FixedValue = 100",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 12.51, 17",
                     "[Phenology].Budding.Target.XYPairs.Y = 466, 50, 50",
@@ -8960,7 +8960,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].FloralInitiation.Target.FixedValue = 100",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 12.51, 17",
                     "[Phenology].Budding.Target.XYPairs.Y = 466, 50, 50",
