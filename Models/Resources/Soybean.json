@@ -23,14 +23,14 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -38,7 +38,6 @@
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
                       "Name": "AllocateFixationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -46,7 +45,6 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -54,26 +52,23 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
                       "Name": "NutrientConstrainedAllocationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -81,26 +76,21 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
                   "Name": "ArbitrationMethod",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -110,33 +100,31 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
                       "Name": "AllocateFixationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -144,40 +132,34 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
                   "Name": "ArbitrationMethod",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -185,12 +167,10 @@
                   "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
                   "Name": "AllocateUptakesMethod",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -198,7 +178,6 @@
               "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
               "Name": "WaterUptakeMethod",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -206,12 +185,10 @@
               "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
               "Name": "NitrogenUptakeMethod",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -224,7 +201,6 @@
               "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system.\n\n![Alt Text](Diagrams_soy_phenology_comparison.png)\n\n**Figure [FigureNumber]:** Comparison of soybean phenological stages for APSIM Classic and APSIM Next Generation.",
               "Name": "Introduction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -233,7 +209,6 @@
               "Text": "The key differences for cultivars are mostly phenological parameters (e.g., Vegetative.Target, ReproductivePhotoperiodModifier). In some cases, some additional parameters have been changed, see parameter values in the cultivar section. ",
               "Name": "Memo",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -256,9 +231,9 @@
                     20.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "Response",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -267,12 +242,10 @@
                   "TempRangeFactors": null,
                   "Name": "InterpolationMethod",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -290,9 +263,9 @@
                     1.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -301,7 +274,6 @@
                   "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -310,12 +282,10 @@
                   "VariableName": "[Phenology].Photoperiod",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -338,9 +308,9 @@
                     20.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "Response",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -349,7 +319,6 @@
                   "TempRangeFactors": null,
                   "Name": "InterpolationMethod",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -358,12 +327,10 @@
                   "Text": "Cardinal temperatures for vegetative and reproductive thermal time are the same except the range of 0-15� C. A base temperature of 10� C is used for vegetative phase, which temperature has been used to calibrate 56 soybean cultivars in the USA ([ARCHONTOULIS2014465]) and 72 soybean cultivars in China ([WU2019125940]). The small changes in cardinal temperatures for reproductive thermal time was important for solving issues related to photoperiod response for some Australian cultivars. Such a differentiation in base temperature between V and R stages is supported by [BootChapter1998], DSSAT-CROPGRO soybean model, who showed that cardinal temperatures may differ for vegetative and reproductive development for soybean. This is something to further explore as new data from other environments are added to the APSIM NG database.\n\n",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -381,9 +348,9 @@
                     1.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -392,7 +359,6 @@
                   "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -401,12 +367,10 @@
                   "VariableName": "[Phenology].Photoperiod",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -425,12 +389,10 @@
                       "VariableName": "[Phenology].VegetativeThermalTime",
                       "Name": "Base",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -449,7 +411,6 @@
                           "VariableName": "[Phenology].VegetativeThermalTime",
                           "Name": "Base",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -458,17 +419,14 @@
                           "VariableName": "[Phenology].VegetativePhotoperiodModifier",
                           "Name": "PPModifier",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -487,7 +445,6 @@
                           "VariableName": "[Phenology].ReproductiveThermalTime",
                           "Name": "Base",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -496,22 +453,18 @@
                           "VariableName": "[Phenology].ReproductivePhotoperiodModifier",
                           "Name": "PPModifier",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -521,7 +474,6 @@
               "DayLength": 0.0,
               "Name": "Photoperiod",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -531,7 +483,6 @@
               "End": "Germination",
               "Name": "Germinating",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -547,7 +498,6 @@
                   "VariableName": "[Phenology].VegetativeThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -594,7 +544,6 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -610,7 +559,6 @@
                   "Units": null,
                   "Name": "Target",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -619,12 +567,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -639,7 +585,6 @@
                   "Text": "\r\nThe duration of the grain filling phase has been taken from the model of Robertson et al (2002).",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -649,7 +594,6 @@
                   "Units": null,
                   "Name": "Target",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -658,12 +602,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -678,7 +620,6 @@
                   "Text": "\r\nThe duration of the grain filling phase has been taken from the model of Robertson et al (2002).",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -688,7 +629,6 @@
                   "Units": null,
                   "Name": "Target",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -697,12 +637,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -722,7 +660,6 @@
                       "Units": null,
                       "Name": "FractionofGrainfilling",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -731,12 +668,10 @@
                       "VariableName": "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue",
                       "Name": "EntireGrainfilling",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -745,12 +680,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -770,7 +703,6 @@
                       "Units": null,
                       "Name": "FractionofMidToLateGrainfilling",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -783,7 +715,6 @@
                           "VariableName": "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue",
                           "Name": "EntireGrainfilling",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -792,17 +723,14 @@
                           "VariableName": "[Phenology].EarlyGrainFilling.Target",
                           "Name": "EarlyGrainfilling",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -811,12 +739,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -836,7 +762,6 @@
                       "Units": null,
                       "Name": "EntireGrainfillPeriod",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -845,7 +770,6 @@
                       "VariableName": "[Phenology].EarlyGrainFilling.Target",
                       "Name": "EarlyGrainFillingTarget",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -854,12 +778,10 @@
                       "VariableName": "[Phenology].MidGrainFilling.Target",
                       "Name": "MidGrainFillingTarget",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -868,12 +790,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -889,7 +809,6 @@
                   "Units": null,
                   "Name": "Target",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -898,12 +817,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -919,7 +836,6 @@
                   "Units": null,
                   "Name": "Target",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -928,12 +844,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -948,12 +862,10 @@
                   "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -968,7 +880,6 @@
                   "Text": "\r\nA function is used to provide emergence date as days after sowing(DAS).",
                   "Name": "memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -978,7 +889,6 @@
                   "Units": null,
                   "Name": "PreEventValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -987,12 +897,10 @@
                   "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1007,7 +915,6 @@
                   "Text": "\r\nA function is used to provide flowering date as days after sowing(DAS).",
                   "Name": "memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1017,7 +924,6 @@
                   "Units": null,
                   "Name": "PreEventValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1026,12 +932,10 @@
                   "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1046,7 +950,6 @@
                   "Text": "\r\nA function is used to provide maturity date as days after sowing(DAS).",
                   "Name": "memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1056,7 +959,6 @@
                   "Units": null,
                   "Name": "PreEventValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1065,17 +967,14 @@
                   "VariableName": "[Plant].DaysAfterSowing",
                   "Name": "PostEventValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1095,7 +994,6 @@
           "KDead": 0.2,
           "LAIDead": 0.0,
           "DMSupply": null,
-          "DMDemandPriorityFactor": null,
           "NSupply": null,
           "DMDemand": null,
           "NDemand": null,
@@ -1117,12 +1015,10 @@
                       "Text": "This value has been fitted to available data. In contrast to Classic, the RUE value in NG refers to the whole plant (above and below ground) and the calibrated value is 1.2 g/MJ. There are no literature references for whole plant RUE in soybean. To come up with this value we considered: RUE for above ground biomass ([SINCLAIR198929]; [VANROEKEL20141189]), biomass and root data from Iowa FACTS experiments and model fitting to available data.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1145,9 +1041,9 @@
                         1.0,
                         0.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1156,12 +1052,10 @@
                       "Text": "The function for temperature effect on RUE comes from APSIM classic, which seems to work well across diverse environments. We did not find any comments/suggestions in the published papers suggesting alternative ones, so for now we used the same function. As more data from different environments are added to APSIM database, it will be possible to further test the photosynthetic temperature response in the future. ",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1181,9 +1075,9 @@
                         1.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1192,12 +1086,10 @@
                       "VariableName": "[Leaf].Photosynthesis.VPD",
                       "Name": "XValue",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1217,9 +1109,9 @@
                         1.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1228,12 +1120,10 @@
                       "VariableName": "[Leaf].Fn",
                       "Name": "XValue",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1251,9 +1141,9 @@
                         0.0,
                         1.0
                       ],
+                      "XVariableName": null,
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1262,12 +1152,10 @@
                       "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1276,7 +1164,6 @@
                   "PhotosyntheticPathway": "C3",
                   "Name": "FCO2",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1285,12 +1172,10 @@
                   "VariableName": "[Leaf].RadiationIntercepted",
                   "Name": "RadnInt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1303,12 +1188,10 @@
                   "VariableName": "[Leaf].Photosynthesis.FCO2",
                   "Name": "PhotosynthesisCO2Modifier",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1321,7 +1204,6 @@
                   "VariableName": "[Leaf].SpecificArea",
                   "Name": "SLA",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1330,12 +1212,10 @@
                   "VariableName": "[Leaf].Live.Wt",
                   "Name": "LeafLiveWt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1348,7 +1228,6 @@
                   "VariableName": "[Leaf].Photosynthesis.FT",
                   "Name": "RUE_FT",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1361,7 +1240,6 @@
                       "VariableName": "[Leaf].Photosynthesis.FN",
                       "Name": "RUE_FN",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1370,17 +1248,14 @@
                       "VariableName": "[Leaf].Photosynthesis.FVPD",
                       "Name": "RUE_FVPD",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1393,7 +1268,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1407,9 +1281,9 @@
                     0.6,
                     0.4
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1418,12 +1292,10 @@
                   "VariableName": "[Soybean].SowingData.RowSpacing",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1436,7 +1308,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1460,9 +1331,9 @@
                     900.0,
                     1000.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1471,12 +1342,10 @@
                   "VariableName": "[Phenology].Stage",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1500,7 +1369,6 @@
                       "VariableName": "[Phenology].VegetativeThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1509,17 +1377,14 @@
                       "VariableName": "[Leaf].Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1534,12 +1399,10 @@
                   "Text": "This model assumes that all metabolic and storage N is available for reallocation from senescing leaves.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1559,12 +1422,10 @@
                       "Units": null,
                       "Name": "Rate",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1583,7 +1444,6 @@
                           "VariableName": "[Phenology].ThermalTime",
                           "Name": "TT",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1596,7 +1456,6 @@
                               "Expression": "[Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
                               "Name": "TTRequired",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -1605,17 +1464,14 @@
                               "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
                               "Name": "TTComplete",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1624,7 +1480,6 @@
                       "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1633,17 +1488,14 @@
                       "Text": "There is no data on detachment rates and so a simple value was chosen to ensure that leaves were not retained in the canopy. In the future, with more data available a thermal time basis leaf detachment rate will be explored. ",
                       "Name": "Memo1",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1653,7 +1505,6 @@
               "Units": "/d",
               "Name": "DetachmentRate",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1663,7 +1514,6 @@
               "Units": null,
               "Name": "InitialWt",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1676,7 +1526,6 @@
                   "VariableName": "[Leaf].SpecificArea",
                   "Name": "SLA",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1685,12 +1534,10 @@
                   "VariableName": "[Leaf].Dead.Wt",
                   "Name": "LeafDeadWt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1710,9 +1557,9 @@
                     0.05,
                     0.03
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1721,7 +1568,6 @@
                   "VariableName": "[Phenology].Stage",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1730,12 +1576,10 @@
                   "Text": "These values have been fitted to the available data. The fitted values are within the observed maximum and minimum values obtained in the FACTS soybean experiments ([ARCHONTOULIS2020721]). \n\n",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1755,9 +1599,9 @@
                     0.05,
                     0.03
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1766,12 +1610,10 @@
                   "VariableName": "[Phenology].Stage",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1781,7 +1623,6 @@
               "Units": null,
               "Name": "MinimumNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1791,7 +1632,6 @@
               "Units": "0-1",
               "Name": "MaintenanceRespiration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1801,7 +1641,6 @@
               "Units": "0-1",
               "Name": "DMConversionEfficiency",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1817,7 +1656,6 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Harvest",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1829,12 +1667,10 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Cut",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1844,7 +1680,6 @@
               "Units": null,
               "Name": "NRetranslocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1854,7 +1689,6 @@
               "Units": null,
               "Name": "DMReallocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1864,7 +1698,6 @@
               "Units": null,
               "Name": "DMRetranslocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1874,7 +1707,6 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1884,7 +1716,6 @@
               "Units": null,
               "Name": "CarbonConcentration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1901,7 +1732,6 @@
                       "VariableName": "[Leaf].DeltaLAI",
                       "Name": "DeltaLAI",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1910,7 +1740,6 @@
                       "VariableName": "[Leaf].SpecificArea",
                       "Name": "SLA",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1919,7 +1748,6 @@
                       "Text": "Growth in leaf area is used to calculate the leaf dry matter demand. The same was assumed in the original crop models in APSIM. Further model development can be taken once new experimental data for metabolic, structural and storage forms are provided.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1928,12 +1756,10 @@
                       "Text": "DeltaLAI describes the LAI variation over the cycle and is calculated using the Area of Largest Leaf, relative leaf area, plant number, branch number and leaf appearance rate (thermal time/phyllochron).",
                       "Name": "Memo1",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1943,7 +1769,6 @@
                   "Units": null,
                   "Name": "Storage",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1953,27 +1778,37 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1990,7 +1825,6 @@
                       "VariableName": "[Leaf].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1999,12 +1833,10 @@
                       "VariableName": "[Leaf].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2021,7 +1853,6 @@
                           "VariableName": "[Leaf].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2030,12 +1861,10 @@
                           "VariableName": "[Leaf].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2044,12 +1873,10 @@
                       "VariableName": "[Leaf].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2063,7 +1890,6 @@
                       "Units": null,
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2072,32 +1898,41 @@
                       "VariableName": "[Leaf].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2110,7 +1945,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2124,9 +1958,9 @@
                     1.0,
                     0.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2135,12 +1969,10 @@
                   "VariableName": "[Weather].MinT",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2153,7 +1985,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2167,9 +1998,9 @@
                     0.03,
                     0.03
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2178,12 +2009,10 @@
                   "VariableName": "[Leaf].LAI",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2196,7 +2025,6 @@
                   "Text": "DeltaLAI describes the LAI variation over the cycle and is calculated using the Area of Largest Leaf, relative leaf area, plant number, branch number and leaf appearance rate (thermal time/phyllochron).",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2215,7 +2043,6 @@
                           "VariableName": "[Leaf].AreaLargestLeaf",
                           "Name": "AreaLargestLeaf",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2238,7 +2065,6 @@
                                       "Text": "",
                                       "Name": "Memo",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -2256,9 +2082,9 @@
                                         1.0,
                                         0.83
                                       ],
+                                      "XVariableName": null,
                                       "Name": "XYPairs",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -2267,17 +2093,14 @@
                                       "VariableName": "[Leaf].NodeNumber",
                                       "Name": "XValue",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2293,17 +2116,14 @@
                                   "Units": null,
                                   "Name": "RelativeArea",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2312,7 +2132,6 @@
                           "VariableName": "[Soybean].SowingData.Population",
                           "Name": "PlantNumber",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2336,9 +2155,9 @@
                                 2.0,
                                 2.0
                               ],
+                              "XVariableName": null,
                               "Name": "XYPairs",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2347,12 +2166,10 @@
                               "VariableName": "[Leaf].NodeNumber",
                               "Name": "XValue",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2365,7 +2182,6 @@
                               "VariableName": "[Phenology].VegetativeThermalTime",
                               "Name": "TT",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2374,22 +2190,18 @@
                               "VariableName": "[Leaf].Phyllochron",
                               "Name": "Phyllochron",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2405,17 +2217,14 @@
                       "Units": null,
                       "Name": "Constant",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2425,7 +2234,6 @@
               "Units": null,
               "Name": "AreaLargestLeaf",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2435,12 +2243,10 @@
               "Units": null,
               "Name": "Phyllochron",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -2449,7 +2255,6 @@
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "DMSupply": null,
           "NSupply": null,
@@ -2457,19 +2262,15 @@
           "potentialDMAllocation": null,
           "Live": {
             "$type": "Models.PMF.Biomass, Models",
-            "DMDOfStructural": 0.6,
             "Name": "Biomass",
             "Children": [],
-            "IncludeInDocumentation": true,
             "Enabled": true,
             "ReadOnly": false
           },
           "Dead": {
             "$type": "Models.PMF.Biomass, Models",
-            "DMDOfStructural": 0.6,
             "Name": "Biomass",
             "Children": [],
-            "IncludeInDocumentation": true,
             "Enabled": true,
             "ReadOnly": false
           },
@@ -2481,7 +2282,6 @@
               "Units": null,
               "Name": "PotentialHarvestIndex",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2494,7 +2294,6 @@
                   "VariableName": "[Phenology].EarlyGrainFilling.Target",
                   "Name": "EarlyGrainFillingDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2503,7 +2302,6 @@
                   "VariableName": "[Phenology].MidGrainFilling.Target",
                   "Name": "MidGrainFillingDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2512,12 +2310,10 @@
                   "VariableName": "[Phenology].LateGrainFilling.Target",
                   "Name": "LateGrainFillingDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2540,7 +2336,6 @@
                           "VariableName": "[AboveGround].Wt",
                           "Name": "AboveGroundWt",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2553,7 +2348,6 @@
                               "VariableName": "[Grain].PotentialHarvestIndex",
                               "Name": "PotentialHarvestIndex",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2562,12 +2356,10 @@
                               "VariableName": "[Grain].FillingDuration",
                               "Name": "FillingDuration",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2576,22 +2368,18 @@
                           "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2601,7 +2389,6 @@
               "Units": null,
               "Name": "MinimumNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2611,7 +2398,6 @@
               "Units": null,
               "Name": "MaximumNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2621,7 +2407,6 @@
               "Units": null,
               "Name": "WaterContent",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2634,7 +2419,6 @@
                   "VariableName": "[Grain].MaximumNConc",
                   "Name": "NConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2643,7 +2427,6 @@
                   "VariableName": "[Grain].DMDemandFunction",
                   "Name": "DMDemand",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2652,12 +2435,10 @@
                   "VariableName": "[Grain].DMConversionEfficiency",
                   "Name": "DMConversionEfficiency",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2673,7 +2454,6 @@
                   "FractionDeadToResidue": 0.0,
                   "Name": "Harvest",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2685,12 +2465,10 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Cut",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2700,7 +2478,6 @@
               "Units": null,
               "Name": "DMConversionEfficiency",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2710,7 +2487,6 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2720,7 +2496,6 @@
               "Units": null,
               "Name": "CarbonConcentration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2733,7 +2508,6 @@
                   "VariableName": "[Grain].Wt",
                   "Name": "GrainWt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2742,12 +2516,10 @@
                   "VariableName": "[AboveGround].Wt",
                   "Name": "AboveGroundWt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2762,12 +2534,10 @@
                   "Text": "This parameter is not used.  Grain growth is calculated from harvest index increase.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2782,12 +2552,10 @@
                   "Text": "Grain number is not estimated by this model.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2797,20 +2565,34 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "Structural",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.BiomassDemand, Models",
@@ -2818,23 +2600,36 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "Structural",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -2843,7 +2638,6 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "GrowthRespiration": 0.0,
@@ -2851,74 +2645,150 @@
           "Name": "Root",
           "Children": [
             {
-              "$type": "Models.Functions.PhaseLookup, Models",
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "RootFrontVelocity",
               "Children": [
                 {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Germination",
-                  "End": "Emergence",
-                  "Name": "PreEmergence",
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "PotentialRootFrontVelocity",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 5.0,
-                      "Units": null,
-                      "Name": "Function",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Germination",
+                      "End": "Emergence",
+                      "Name": "PreEmergence",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 5.0,
+                          "Units": null,
+                          "Name": "Function",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "StartGrainFilling",
+                      "Name": "early",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 30.0,
+                          "Units": null,
+                          "Name": "Function",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "StartGrainFilling",
+                      "End": "Maturity",
+                      "Name": "late",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 5.0,
+                          "Units": null,
+                          "Name": "Function",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Emergence",
-                  "End": "StartGrainFilling",
-                  "Name": "early",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "WaterFactor",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 30.0,
-                      "Units": null,
-                      "Name": "Function",
+                      "$type": "Models.Functions.SoilWaterScale, Models",
+                      "Name": "SoilWaterScale",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        0.25,
+                        1.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[SoilWaterScale]",
+                      "Name": "XValue",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "StartGrainFilling",
-                  "End": "Maturity",
-                  "Name": "late",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "AFPSFactor",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 5.0,
-                      "Units": null,
-                      "Name": "Function",
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        0.03,
+                        1.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].AirFilledPoreSpace",
+                      "Name": "XValue",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2933,12 +2803,10 @@
                   "Text": "There is no intrinsic limit to maximum rooting depth.  Roots will be limited by the depth of the soil profile, or via values of XF in each layer.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2946,7 +2814,6 @@
               "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
               "Name": "RootShape",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2961,12 +2828,10 @@
                   "Text": "No modification to water extraction rate is assumed in this model.\r\n",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2984,9 +2849,9 @@
                     1.0,
                     3.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2995,12 +2860,10 @@
                   "VariableName": "[Leaf].LAI",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3015,12 +2878,10 @@
                   "Text": "Roots are assumed to simply senesce at a small and constant rate during the entire growth period.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3030,7 +2891,6 @@
               "Units": null,
               "Name": "MaximumNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3040,7 +2900,6 @@
               "Units": null,
               "Name": "MinimumNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3055,7 +2914,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3065,12 +2923,10 @@
                   "Units": null,
                   "Name": "Constant",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3080,7 +2936,6 @@
               "Units": null,
               "Name": "KNO3",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3095,12 +2950,10 @@
                   "Text": "The current model version considers only NO3 uptake but NH4 option can be activated by the user . We do not expect activation of NH4 to change total plant N uptake because the nitrification rate (conversion of NH4 to NO3) is very fast in the model. In the future we will re-valuate this. ",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3113,7 +2966,6 @@
                   "Text": "Default values for biomass removals for Root are only estimates with no data behind them.\r\nThey are just to consider potential root senescence in response to damage.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3125,7 +2977,6 @@
                   "FractionDeadToResidue": 0.0,
                   "Name": "Harvest",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3137,12 +2988,10 @@
                   "FractionDeadToResidue": 0.0,
                   "Name": "Cut",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3160,9 +3009,9 @@
                     0.0,
                     1.0
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3171,12 +3020,10 @@
                   "VariableName": "[Root].RWC",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3186,7 +3033,6 @@
               "Units": "m/g",
               "Name": "SpecificRootLength",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3196,7 +3042,6 @@
               "Units": null,
               "Name": "DMConversionEfficiency",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3206,7 +3051,6 @@
               "Units": null,
               "Name": "MaintenanceRespirationFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3216,7 +3060,6 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3226,7 +3069,6 @@
               "Units": null,
               "Name": "CarbonConcentration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3258,12 +3100,10 @@
                                   "Units": null,
                                   "Name": "Function",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3279,12 +3119,10 @@
                                   "Units": null,
                                   "Name": "Function",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3300,22 +3138,18 @@
                                   "Units": null,
                                   "Name": "Function",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3325,12 +3159,10 @@
                       "Units": null,
                       "Name": "StructuralFraction",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3340,7 +3172,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3358,7 +3189,6 @@
                           "Units": null,
                           "Name": "One",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -3367,37 +3197,45 @@
                           "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3414,7 +3252,6 @@
                       "VariableName": "[Root].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3423,12 +3260,10 @@
                       "VariableName": "[Root].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3445,7 +3280,6 @@
                           "VariableName": "[Root].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -3454,12 +3288,10 @@
                           "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3468,12 +3300,10 @@
                       "VariableName": "[Root].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3486,7 +3316,6 @@
                       "VariableName": "[Root].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3495,32 +3324,41 @@
                       "VariableName": "[Root].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3529,7 +3367,6 @@
               "VariableName": "[Root].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3543,7 +3380,6 @@
                   "Units": "g/plant",
                   "Name": "Structural",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3553,7 +3389,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3563,17 +3398,14 @@
                   "Units": null,
                   "Name": "Storage",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -3582,7 +3414,6 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "Name": "Nodule",
@@ -3592,7 +3423,6 @@
               "Text": "",
               "Name": "Memo",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3607,12 +3437,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3627,12 +3455,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3647,12 +3473,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3667,12 +3491,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3682,7 +3504,6 @@
               "Units": null,
               "Name": "NReallocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3697,7 +3518,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3707,12 +3527,10 @@
                   "Units": null,
                   "Name": "Constant",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3725,7 +3543,6 @@
                   "Text": "Default values for biomass removals for Root are only estimates with no data behind them.\r\nThey are just to consider potential root senescence in response to damage.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3737,7 +3554,6 @@
                   "FractionDeadToResidue": 0.0,
                   "Name": "Harvest",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3749,12 +3565,10 @@
                   "FractionDeadToResidue": 0.0,
                   "Name": "Cut",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3769,12 +3583,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3784,7 +3596,6 @@
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3794,7 +3605,6 @@
               "Units": "0-1",
               "Name": "MaintenanceRespirationFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3804,7 +3614,6 @@
               "Units": "0-1",
               "Name": "DMConversionEfficiency",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3814,7 +3623,6 @@
               "Units": null,
               "Name": "NRetranslocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3824,7 +3632,6 @@
               "Units": null,
               "Name": "DMReallocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3834,7 +3641,6 @@
               "Units": null,
               "Name": "DMRetranslocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3843,7 +3649,6 @@
               "VariableName": "[Nodule].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3853,7 +3658,6 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3863,7 +3667,6 @@
               "Units": null,
               "Name": "CarbonConcentration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3885,7 +3688,6 @@
                           "VariableName": "[AboveGroundLive].Wt",
                           "Name": "LiveBiomass",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -3905,12 +3707,10 @@
                                   "Units": null,
                                   "Name": "Rate",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -3926,22 +3726,18 @@
                                   "Units": null,
                                   "Name": "Rate",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3951,17 +3747,14 @@
                       "Units": "g/g",
                       "Name": "MaximumFixationRate",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3993,12 +3786,10 @@
                                   "Units": null,
                                   "Name": "Function",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4014,12 +3805,10 @@
                                   "Units": null,
                                   "Name": "Function",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4035,12 +3824,10 @@
                                   "Units": null,
                                   "Name": "Function",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4049,17 +3836,14 @@
                               "Text": "",
                               "Name": "Memo",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4074,17 +3858,14 @@
                           "Text": "",
                           "Name": "Memo",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4094,7 +3875,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4112,7 +3892,6 @@
                           "Units": null,
                           "Name": "One",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -4121,22 +3900,18 @@
                           "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4153,7 +3928,6 @@
                       "VariableName": "[Nodule].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4162,12 +3936,10 @@
                       "VariableName": "[Nodule].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4184,7 +3956,6 @@
                           "VariableName": "[Nodule].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -4193,12 +3964,10 @@
                           "VariableName": "[Nodule].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4207,12 +3976,10 @@
                       "VariableName": "[Nodule].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4225,7 +3992,6 @@
                       "VariableName": "[Nodule].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4234,22 +4000,18 @@
                       "VariableName": "[Nodule].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -4259,7 +4021,6 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "IsAboveGround": true,
@@ -4276,12 +4037,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4296,12 +4055,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4316,12 +4073,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4330,7 +4085,6 @@
               "VariableName": "[Shell].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4345,12 +4099,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4365,12 +4117,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4385,7 +4135,6 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4395,12 +4144,10 @@
                   "Units": null,
                   "Name": "Constant",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4416,7 +4163,6 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Harvest",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4428,12 +4174,10 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Cut",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4460,7 +4204,6 @@
                               "VariableName": "[Phenology].ThermalTime",
                               "Name": "TT",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4473,7 +4216,6 @@
                                   "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                   "Name": "ReproductiveTT",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4482,17 +4224,14 @@
                                   "Expression": "[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                   "Name": "ReproductiveTT1Complete",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -4502,22 +4241,18 @@
                           "Units": null,
                           "Name": "One",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4527,7 +4262,6 @@
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4537,7 +4271,6 @@
               "Units": "0-1",
               "Name": "MaintenanceRespirationFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4547,7 +4280,6 @@
               "Units": "0-1",
               "Name": "DMConversionEfficiency",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4557,7 +4289,6 @@
               "Units": null,
               "Name": "DMReallocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4567,7 +4298,6 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4577,7 +4307,6 @@
               "Units": null,
               "Name": "CarbonConcentration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4587,7 +4316,6 @@
               "Units": null,
               "Name": "PotentialHarvestIndex",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4600,7 +4328,6 @@
                   "VariableName": "[Phenology].EarlyPodDevelopment.Target",
                   "Name": "EarlyPodDevelopmentDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4609,7 +4336,6 @@
                   "VariableName": "[Phenology].EarlyGrainFilling.Target",
                   "Name": "EarlyGrainFillingDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4618,12 +4344,10 @@
                   "VariableName": "[Phenology].MidGrainFilling.Target",
                   "Name": "MidGrainFillingDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4654,7 +4378,6 @@
                                   "VariableName": "[AboveGround].Wt",
                                   "Name": "AboveGroundWt",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4667,7 +4390,6 @@
                                       "VariableName": "[Shell].PotentialHarvestIndex",
                                       "Name": "PotentialHarvestIndex",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -4676,12 +4398,10 @@
                                       "VariableName": "[Shell].FillingDuration",
                                       "Name": "FillingDuration",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -4690,22 +4410,18 @@
                                   "VariableName": "[Phenology].ThermalTime",
                                   "Name": "ThermalTime",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4720,12 +4436,10 @@
                           "Text": "",
                           "Name": "Memo",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4734,12 +4448,10 @@
                       "Text": "Shell harvest index is used to calculate shell biomass demand, which follows the same approach than grain harvest index. It represents the fraction of shell biomass in relation to total aboveground biomass.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4749,7 +4461,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4767,7 +4478,6 @@
                           "Units": null,
                           "Name": "One",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -4776,37 +4486,45 @@
                           "VariableName": "[Shell].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4823,7 +4541,6 @@
                       "VariableName": "[Shell].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4832,12 +4549,10 @@
                       "VariableName": "[Shell].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4850,7 +4565,6 @@
                       "VariableName": "[Shell].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4859,12 +4573,10 @@
                       "VariableName": "[Shell].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4874,27 +4586,37 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4902,7 +4624,6 @@
               "$type": "Models.PMF.RetranslocateNonStructural, Models",
               "Name": "RetranslocateNitrogen",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4916,7 +4637,6 @@
                   "Units": "g/m^2",
                   "Name": "Structural",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4926,7 +4646,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4936,27 +4655,31 @@
                   "Units": null,
                   "Name": "Storage",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
               "Name": "Photosynthesis",
-              "FixedValue": "0"
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Shell].MinimumNConc",
               "Name": "initialNConcFunction",
-              "VariableName": "[Shell].MinimumNConc"
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -4966,7 +4689,6 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
-          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "IsAboveGround": true,
@@ -4977,7 +4699,6 @@
               "Text": "",
               "Name": "Memo",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4992,12 +4713,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5012,12 +4731,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5037,17 +4754,14 @@
                       "Units": null,
                       "Name": "RetranslocationFactor",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5067,9 +4781,9 @@
                     0.02,
                     0.015
                   ],
+                  "XVariableName": null,
                   "Name": "XYPairs",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5078,12 +4792,10 @@
                   "VariableName": "[Phenology].Stage",
                   "Name": "XValue",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5098,12 +4810,10 @@
                   "Text": "",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5118,7 +4828,6 @@
                   "Text": "There is no evidence of stem N storage during grain filling. Also, there is no stem structural growth during this time.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5128,12 +4837,10 @@
                   "Units": null,
                   "Name": "Constant",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5149,7 +4856,6 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Harvest",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5161,12 +4867,10 @@
                   "FractionDeadToResidue": 1.0,
                   "Name": "Cut",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5193,7 +4897,6 @@
                               "VariableName": "[Phenology].ThermalTime",
                               "Name": "TT",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -5206,7 +4909,6 @@
                                   "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                   "Name": "PostCanopyTT",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -5215,17 +4917,14 @@
                                   "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                   "Name": "PostCanopyTTComplete",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -5235,22 +4934,18 @@
                           "Units": null,
                           "Name": "One",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5260,7 +4955,6 @@
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5270,7 +4964,6 @@
               "Units": "0-1",
               "Name": "MaintenanceRespirationFunction",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5280,7 +4973,6 @@
               "Units": "0-1",
               "Name": "DMConversionEfficiency",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5290,7 +4982,6 @@
               "Units": null,
               "Name": "DMReallocationFactor",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5299,7 +4990,6 @@
               "VariableName": "[Stem].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5309,7 +4999,6 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5319,7 +5008,6 @@
               "Units": null,
               "Name": "CarbonConcentration",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5340,7 +5028,6 @@
                           "Text": "",
                           "Name": "memo",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -5356,12 +5043,10 @@
                               "Units": null,
                               "Name": "Fraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -5377,17 +5062,14 @@
                               "Units": null,
                               "Name": "Fraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5396,12 +5078,10 @@
                       "VariableName": "[Stem].PotentialGrowth",
                       "Name": "DMDemand",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5411,7 +5091,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5424,7 +5103,6 @@
                       "VariableName": "[Stem].PotentialGrowth",
                       "Name": "DMDemand",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5438,7 +5116,6 @@
                           "Units": null,
                           "Name": "One",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -5447,37 +5124,45 @@
                           "VariableName": "[Stem].DMDemands.Structural.Fraction",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5494,7 +5179,6 @@
                       "VariableName": "[Stem].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5503,12 +5187,10 @@
                       "VariableName": "[Stem].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5525,7 +5207,6 @@
                           "VariableName": "[Stem].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -5534,12 +5215,10 @@
                           "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5548,12 +5227,10 @@
                       "VariableName": "[Stem].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5566,7 +5243,6 @@
                       "VariableName": "[Stem].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5575,32 +5251,41 @@
                       "VariableName": "[Stem].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStructuralPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "QStoragePriority",
-                  "FixedValue": "1"
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5617,7 +5302,6 @@
                       "Text": "",
                       "Name": "memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5633,12 +5317,10 @@
                           "Units": null,
                           "Name": "StemFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5654,22 +5336,18 @@
                           "Units": null,
                           "Name": "StemFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5677,7 +5355,6 @@
               "$type": "Models.PMF.RetranslocateNonStructural, Models",
               "Name": "RetranslocateNitrogen",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5691,7 +5368,6 @@
                   "Units": "g/m^2",
                   "Name": "Structural",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5701,7 +5377,6 @@
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5711,73 +5386,64 @@
                   "Units": null,
                   "Name": "Storage",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
               "Name": "Photosynthesis",
-              "FixedValue": "0"
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Stem].MinimumNConc",
               "Name": "initialNConcFunction",
-              "VariableName": "[Stem].MinimumNConc"
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Grain",
+            "Shell"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true,
           "Name": "AboveGround",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false,
-          "OrganNames": [
-            "Leaf",
-            "Stem",
-            "Grain",
-            "Shell"
-          ],
-          "IncludeLive": true,
-          "IncludeDead": true
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
+          "OrganNames": [
+            "Root",
+            "Nodule"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true,
           "Name": "BelowGround",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false,
-          "OrganNames": [
-            "Root",
-            "Nodule"
-          ],
-          "IncludeLive": true,
-          "IncludeDead": true
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
-          "Name": "AboveGroundLive",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false,
           "OrganNames": [
             "Leaf",
             "Stem",
@@ -5785,17 +5451,31 @@
             "Shell"
           ],
           "IncludeLive": true,
-          "IncludeDead": false
+          "IncludeDead": false,
+          "Name": "AboveGroundLive",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Grain",
+            "Shell",
+            "Root",
+            "Nodule"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true,
           "Name": "Total",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
           "OrganNames": [
             "Leaf",
             "Stem",
@@ -5805,37 +5485,14 @@
             "Nodule"
           ],
           "IncludeLive": true,
-          "IncludeDead": true
-        },
-        {
-          "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
+          "IncludeDead": false,
           "Name": "TotalLive",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false,
-          "OrganNames": [
-            "Leaf",
-            "Stem",
-            "Grain",
-            "Shell",
-            "Root",
-            "Nodule"
-          ],
-          "IncludeLive": true,
-          "IncludeDead": false
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
-          "Name": "TotalDead",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false,
           "OrganNames": [
             "Leaf",
             "Stem",
@@ -5845,23 +5502,24 @@
             "Nodule"
           ],
           "IncludeLive": false,
-          "IncludeDead": true
+          "IncludeDead": true,
+          "Name": "TotalDead",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": null,
-          "DMDOfStructural": 0.6,
-          "Name": "Pod",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false,
           "OrganNames": [
             "Shell",
             "Grain"
           ],
           "IncludeLive": true,
-          "IncludeDead": true
+          "IncludeDead": true,
+          "Name": "Pod",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.Functions.Constant, Models",
@@ -5869,7 +5527,6 @@
           "Units": null,
           "Name": "MortalityRate",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -5897,7 +5554,6 @@
                   ],
                   "Name": "Buchanan",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5914,7 +5570,6 @@
                   ],
                   "Name": "Djakal",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5934,7 +5589,6 @@
                   ],
                   "Name": "Davis",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5951,7 +5605,6 @@
                   ],
                   "Name": "Hooper_MG40",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5968,7 +5621,6 @@
                   ],
                   "Name": "Stephens_MG40",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5989,12 +5641,10 @@
                       "Text": "Early-maturing, photoperiod-insensitive cultivar developed in Sweden for high latitude environments",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6016,12 +5666,10 @@
                       "Text": "Indeterminate breeding selection from the national soybean breeding program combining phytophthora resistance, earliness,\nculinary quality, and yield",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6042,12 +5690,10 @@
                       "Text": "Brown hilum cultivar, adapted to southern New South Wales, released by K McWhirter in 1982",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6069,12 +5715,10 @@
                       "Text": "Culinary cultivar released in 2006 by CSIRO with broad adaptation from northern New South Wales to northern Queensland",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6096,12 +5740,10 @@
                       "Text": "Light hilum cultivar released by theNewSouth Wales Department of Agriculture for the coastal Northern Rivers District inNewSouth Wales",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6118,7 +5760,6 @@
                   ],
                   "Name": "Soya791",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6135,7 +5776,6 @@
                   ],
                   "Name": "Manark",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6152,7 +5792,6 @@
                   ],
                   "Name": "Warrigal",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6169,7 +5808,6 @@
                   ],
                   "Name": "Leichhardt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6186,12 +5824,10 @@
                   ],
                   "Name": "Djakal1",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6211,7 +5847,6 @@
                   ],
                   "Name": "Trial_MG00",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6227,7 +5862,6 @@
                   ],
                   "Name": "Lambert_MG0",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6243,7 +5877,6 @@
                   ],
                   "Name": "IA1006_MG10",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6259,7 +5892,6 @@
                   ],
                   "Name": "IA2008_MG20",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6275,7 +5907,6 @@
                   ],
                   "Name": "PioneerP22T61_MG22",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6291,7 +5922,6 @@
                   ],
                   "Name": "PioneerP22T69R_MG22",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6307,7 +5937,6 @@
                   ],
                   "Name": "Pioneer92MGI_MG26",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6323,7 +5952,6 @@
                   ],
                   "Name": "PioneerP92Y75_MG27",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6339,7 +5967,6 @@
                   ],
                   "Name": "Macon_MG30",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6358,7 +5985,6 @@
                   ],
                   "Name": "PioneerP93M11_MG31",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6374,7 +6000,6 @@
                   ],
                   "Name": "Becks321NRR_MG32",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6390,7 +6015,6 @@
                   ],
                   "Name": "PioneerP932T16R_MG32",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6406,7 +6030,6 @@
                   ],
                   "Name": "Becks367NRR_MG37",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6422,7 +6045,6 @@
                   ],
                   "Name": "AsgrowAG4403_MG40",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6438,7 +6060,6 @@
                   ],
                   "Name": "HornbeckHBK4891_MG40",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6454,7 +6075,6 @@
                   ],
                   "Name": "Pioneer94B01_MG40",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6470,7 +6090,6 @@
                   ],
                   "Name": "PioneerP9504_MG50",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6486,7 +6105,6 @@
                   ],
                   "Name": "AsgrowAG5701_MG50",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6502,7 +6120,6 @@
                   ],
                   "Name": "Hutcheson_MG50",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6518,12 +6135,10 @@
                   ],
                   "Name": "NK622_MG60",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6547,7 +6162,6 @@
                   ],
                   "Name": "Nandou12",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6567,7 +6181,6 @@
                   ],
                   "Name": "Texuan13",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6587,7 +6200,6 @@
                   ],
                   "Name": "Jiuyuehuang",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6607,12 +6219,10 @@
                   ],
                   "Name": "Hedou19",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6632,7 +6242,6 @@
                   ],
                   "Name": "Generic_MG000",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6648,7 +6257,6 @@
                   ],
                   "Name": "Generic_MG00",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6664,7 +6272,6 @@
                   ],
                   "Name": "Generic_MG0",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6680,7 +6287,6 @@
                   ],
                   "Name": "Generic_MG1",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6696,7 +6302,6 @@
                   ],
                   "Name": "Generic_MG2",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6712,7 +6317,6 @@
                   ],
                   "Name": "Generic_MG3",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6728,7 +6332,6 @@
                   ],
                   "Name": "Generic_MG4",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6744,7 +6347,6 @@
                   ],
                   "Name": "Generic_MG5",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6760,7 +6362,6 @@
                   ],
                   "Name": "Generic_MG6",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6776,7 +6377,6 @@
                   ],
                   "Name": "Generic_MG7",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6792,7 +6392,6 @@
                   ],
                   "Name": "Generic_MG8",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6808,7 +6407,6 @@
                   ],
                   "Name": "Generic_MG9",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6824,22 +6422,18 @@
                   ],
                   "Name": "Generic_MG10",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
