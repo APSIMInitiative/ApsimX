@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 423,
-  "Version": 148,
+  "ExplorerWidth": 430,
+  "Version": 149,
   "Name": "Simulations",
   "Children": [
     {
@@ -722,8 +722,6 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
-                  "ShootLag": 15.0,
-                  "ShootRate": 0.6,
                   "Start": "Germination",
                   "End": "Emergence",
                   "TTForTimeStep": 0.0,
@@ -734,6 +732,48 @@
                       "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AddFunction, Models",
+                      "Name": "Target",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 15.0,
+                          "Units": null,
+                          "Name": "ShootLag",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DepthxRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Plant].SowingData.Depth",
+                              "Name": "SowingDepth",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.6,
+                              "Units": null,
+                              "Name": "ShootRate",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2655,29 +2695,56 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "RootFrontVelocity",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical sorghum yield trends in the US corn belt.\r\n",
-                      "Name": "memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Germination",
-                      "End": "StartGrainFill",
-                      "Name": "PreGrainFill",
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "PotentialRootFrontVelocity",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 27.0,
-                          "Units": null,
-                          "Name": "Function",
+                          "$type": "Models.Memo, Models",
+                          "Text": "Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day in their analysis of historical sorghum yield trends in the US corn belt.\r\n",
+                          "Name": "memo",
                           "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Germination",
+                          "End": "StartGrainFill",
+                          "Name": "PreGrainFill",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 27.0,
+                              "Units": null,
+                              "Name": "Function",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "StartGrainFill",
+                          "End": "Maturity",
+                          "Name": "GrainfillToMaturity",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Function",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2686,16 +2753,29 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartGrainFill",
-                      "End": "Maturity",
-                      "Name": "GrainfillToMaturity",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "RootDepthStressFactor",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Function",
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.25
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].SWAvailabilityRatio",
+                          "Name": "XValue",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -3201,38 +3281,6 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "RootDepthStressFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.25
-                      ],
-                      "Y": [
-                        0.0,
-                        1.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].SWAvailabilityRatio",
-                      "Name": "XValue",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
