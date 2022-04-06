@@ -1157,7 +1157,7 @@
                       "XVariableName": null,
                       "Name": "Response",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": true
                     },
                     {
@@ -1165,36 +1165,12 @@
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": true
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": true
-                },
-                {
-                  "$type": "Models.Functions.SubtractFunction, Models",
-                  "Name": "TempDiff",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Weather].MaxT",
-                      "Name": "MaxT",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Weather].MinT",
-                      "Name": "MinT",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -1748,7 +1724,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Memo, Models",
-                                      "Text": "",
+                                      "Text": "Values were sourced from Thomas Dissertation that includes 3 experiments that look at different irrigation regimes/timings/cultivars and compares mungbean to soybean.\nThese experiments were used to build the original generic legume model ([robertson_simulation_2002], [ThomasThesis_2000]).",
                                       "Name": "Memo",
                                       "Children": [],
                                       "Enabled": true,
@@ -1803,14 +1779,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Values were sourced from Thomas Dissertation that includes 3 experiments that look at different irrigation regimes/timings/cultivars and compares mungbean to soybean.\nThese experiments were used to build the original generic legume model ([robertson_simulation_2002], [ThomasThesis_2000]).",
-                              "Name": "Thomas Dissertation data description",
-                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -2846,40 +2814,6 @@
                       "$type": "Models.Memo, Models",
                       "Text": "Values were sourced from additional phenology study conducted at Gatton, QLD in 2021.",
                       "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "VPEffect",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        5.0,
-                        10.0,
-                        15.0
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0,
-                        1.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Weather].VP",
-                      "Name": "XValue",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -6749,7 +6683,7 @@
             "[Weather].MaxT",
             "[Soil].Temperature.Value",
             "([Weather].MaxT-[Weather].MinT) as TempDiff",
-            "[Phenology].TempDiff",
+            "",
             "[Phenology].Photoperiod",
             "[Mungbean].Root.NSupply",
             "[Soil].SoilWater.Eo",
@@ -12826,16 +12760,6 @@
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": null,
-                              "Position": 2,
-                              "Inverted": false,
-                              "CrossesAtZero": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null
                             }
                           ],
                           "LegendPosition": 0,
@@ -12897,34 +12821,6 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Observed",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 2,
-                              "ColourArgb": -16776961,
-                              "FactorToVaryColours": "SimulationName",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "DailyReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Root.RootFrontVelocity",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted1",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -16878,7 +16774,11 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp2WaterIrrCultivarBerken",
+                            "exp2WaterRFCultivarBerken",
+                            "exp2WaterTermStressCultivarBerken"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "RadiationInterception",
                           "Children": [
@@ -16980,7 +16880,11 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp2WaterIrrCultivarBerken",
+                            "exp2WaterRFCultivarBerken",
+                            "exp2WaterTermStressCultivarBerken"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "LiveLeafNContent",
                           "Children": [
@@ -17281,22 +17185,16 @@
                               "Minimum": null,
                               "Maximum": null,
                               "Interval": null
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": null,
-                              "Position": 2,
-                              "Inverted": false,
-                              "CrossesAtZero": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null
                             }
                           ],
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp2WaterIrrCultivarBerken",
+                            "exp2WaterRFCultivarBerken",
+                            "exp2WaterTermStressCultivarBerken"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "Total Soil Water",
                           "Children": [
@@ -17352,34 +17250,6 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Observed",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 2,
-                              "ColourArgb": -16776961,
-                              "FactorToVaryColours": "SimulationName",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "DailyReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Root.RootFrontVelocity",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted1",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -18938,7 +18808,12 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp2WaterRFCultivarBerken",
+                            "exp2WaterRFCultivarEmerald",
+                            "exp2WaterTermStressCultivarBerken",
+                            "exp2WaterTermStressCultivarEmerald"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "HI",
                           "Children": [
@@ -21463,7 +21338,12 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": [],
+                          "DisabledSeries": [
+                            "exp3SowDec17IrrCultivarEmerald",
+                            "exp3SowDec3ROCultivarEmerald",
+                            "exp3SowDec17ROCultivarEmerald",
+                            "exp3SowDec30ROCultivarEmerald"
+                          ],
                           "LegendOutsideGraph": false,
                           "Name": "RadiationInterception",
                           "Children": [
@@ -25560,7 +25440,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "These trials took place in Gatton on a vertisol at the Gilbert Site 2018-2021 looking at 6 cultivars (Jade, Crystal, CeleraII, Opal, Onyx, Berken) planted at 5-6 times in rainfed and irrigated (one year). The data has not been published yet, but was collected and will be published by Kylie Wenham. Berken was likely not a pure seed and cannot be compared to the results of Thomas' dissertation. The first year of the experiment was excluded from the model dataset because the data was concluded to be unreliable.\n",
+                  "Text": "These trials took place in Gatton on a vertisol at the Gilbert Site 2018-2021 looking at 6 cultivars (Jade, Crystal, CeleraII, Opal, Onyx, Berken) planted at 5-6 times in rainfed and irrigated (one year). The data has not been published yet, but was collected and will be published by Kylie Wenham. Berken was likely not a pure seed and cannot be compared to the results of Thomas' dissertation and so was removed from the model-building dataset. The first and second years of the experiment were entirely or patrially excluded from the model dataset because the data was concluded to be unreliable.\n",
                   "Name": "TOS data description",
                   "Children": [],
                   "Enabled": true,
@@ -28237,7 +28117,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[SowingRule].Script.CultivarName=Jade",
+                              "Specification": "[SowingRule].Script.CultivarName=Jade,Crystal,CeleraII,Onyx,Opal",
                               "Name": "Cv",
                               "Children": [],
                               "Enabled": true,
@@ -29976,7 +29856,7 @@
                             },
                             {
                               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "Mungbean.Leaf.LAI",
+                              "Title": "Weather.MinT",
                               "Position": 2,
                               "Inverted": false,
                               "CrossesAtZero": false,
@@ -29996,7 +29876,7 @@
                               "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
-                              "YAxis": 2,
+                              "YAxis": 0,
                               "ColourArgb": -16776961,
                               "FactorToVaryColours": "SimulationName",
                               "FactorToVaryMarkers": null,
@@ -30023,7 +29903,7 @@
                                   "SimulationName": "TOSyear3SowOct20CvJade",
                                   "Name": "EventNamesOnGraph",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
@@ -30034,7 +29914,7 @@
                               "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
-                              "YAxis": 2,
+                              "YAxis": 0,
                               "ColourArgb": -16776961,
                               "FactorToVaryColours": "SimulationName",
                               "FactorToVaryMarkers": null,
@@ -30062,21 +29942,21 @@
                               "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
-                              "YAxis": 0,
+                              "YAxis": 2,
                               "ColourArgb": -16777216,
                               "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 11,
                               "MarkerSize": 0,
-                              "Line": 0,
+                              "Line": 2,
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Weather.MinT",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": true,
+                              "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -30090,21 +29970,21 @@
                               "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
-                              "YAxis": 0,
+                              "YAxis": 2,
                               "ColourArgb": -16777216,
                               "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 11,
                               "MarkerSize": 0,
-                              "Line": 0,
+                              "Line": 2,
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Weather.Rain",
+                              "YFieldName": "Weather.MaxT",
                               "X2FieldName": null,
                               "Y2FieldName": null,
-                              "ShowInLegend": true,
+                              "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
@@ -30118,7 +29998,7 @@
                               "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
-                              "YAxis": 0,
+                              "YAxis": 2,
                               "ColourArgb": -3376729,
                               "FactorToVaryColours": null,
                               "FactorToVaryMarkers": null,
@@ -30139,7 +30019,7 @@
                               "Filter": null,
                               "Name": "Predicted111",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
@@ -30231,6 +30111,81 @@
                               "Filter": "",
                               "Name": "Observed",
                               "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 2,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Onyx",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16776961,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 8,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "PredictedObservedHarvest",
+                              "XFieldName": "Observed.Yield",
+                              "YFieldName": "Predicted.Yield",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Series",
+                              "Children": [
+                                {
+                                  "$type": "Models.Regression, Models",
+                                  "ForEachSeries": true,
+                                  "showOneToOne": true,
+                                  "showEquation": true,
+                                  "Name": "Regression",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -34092,7 +34047,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Pod.N",
+                              "YFieldName": "Mungbean.Pod.NConc",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": true,
@@ -34120,7 +34075,7 @@
                               "LineThickness": 0,
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Pod.N",
+                              "YFieldName": "Mungbean.Pod.Nconc",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
@@ -34552,7 +34507,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Leaf.N",
+                              "YFieldName": "Mungbean.Leaf.Nconc",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": true,
@@ -34580,7 +34535,7 @@
                               "LineThickness": 0,
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Leaf.N",
+                              "YFieldName": "Mungbean.Leaf.Live.NConc",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
@@ -34644,7 +34599,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Stem.N",
+                              "YFieldName": "Mungbean.Stem.Nconc",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": true,
@@ -34672,7 +34627,7 @@
                               "LineThickness": 0,
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Mungbean.Stem.N",
+                              "YFieldName": "Mungbean.Stem.Live.Nconc",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
@@ -36819,16 +36774,6 @@
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Weather.MinT",
-                      "Position": 2,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
                     }
                   ],
                   "LegendPosition": 2,
@@ -36890,62 +36835,6 @@
                       "CumulativeX": false,
                       "Filter": "",
                       "Name": "Observed",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Weather.MinT",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": "[Mungbean.Leaf.NodeNumber]>0",
-                      "Name": "Predicted1",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Weather.MaxT",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": "[Mungbean.Leaf.NodeNumber]>0",
-                      "Name": "Predicted11",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -37751,7 +37640,7 @@
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
-                  "ColourArgb": -16776961,
+                  "ColourArgb": -16747854,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
@@ -37764,7 +37653,7 @@
                   "YFieldName": "Predicted.Yield",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": false,
+                  "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
@@ -38044,7 +37933,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "StemvsLeaf",
+              "Name": "LeafvsBM",
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -38064,7 +37953,7 @@
                   "YFieldName": "Mungbean.Leaf.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": true,
+                  "ShowInLegend": false,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
@@ -38119,7 +38008,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "StemvsBM",
+              "Name": "LeafvsStem",
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -38135,11 +38024,11 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "TableName": "Observed",
-                  "XFieldName": "Mungbean.AboveGround.Wt",
-                  "YFieldName": "Mungbean.Stem.Wt",
+                  "XFieldName": "Mungbean.Stem.Wt",
+                  "YFieldName": "Mungbean.Leaf.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": true,
+                  "ShowInLegend": false,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
@@ -38745,14 +38634,14 @@
                                     300.0
                                   ],
                                   "NO3N": [
-                                    15.0,
-                                    9.0,
-                                    7.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
                                     4.0,
                                     2.0,
-                                    0.08,
-                                    0.08,
-                                    0.08,
+                                    5.0,
+                                    5.0,
+                                    5.0,
                                     0.08
                                   ],
                                   "NH4N": [
@@ -44678,13 +44567,13 @@
                                     300.0
                                   ],
                                   "NO3N": [
-                                    5.0,
-                                    5.0,
-                                    5.0,
+                                    10.0,
+                                    9.0,
+                                    7.0,
                                     4.0,
                                     2.0,
-                                    2.0,
-                                    2.0,
+                                    0.08,
+                                    0.08,
                                     0.08,
                                     0.08
                                   ],
@@ -44694,8 +44583,8 @@
                                     2.0,
                                     3.0,
                                     2.0,
-                                    2.0,
-                                    2.0,
+                                    1.0,
+                                    1.0,
                                     1.0,
                                     1.0
                                   ],
@@ -44804,23 +44693,23 @@
                                     0.05,
                                     0.148,
                                     0.153,
-                                    0.16,
-                                    0.17,
-                                    0.18,
-                                    0.19,
-                                    0.2,
-                                    0.2
+                                    0.153,
+                                    0.153,
+                                    0.153,
+                                    0.153,
+                                    0.153,
+                                    0.153
                                   ],
                                   "LL15": [
                                     0.124,
                                     0.148,
                                     0.153,
-                                    0.16,
-                                    0.17,
-                                    0.18,
-                                    0.19,
-                                    0.2,
-                                    0.2
+                                    0.153,
+                                    0.153,
+                                    0.153,
+                                    0.153,
+                                    0.153,
+                                    0.153
                                   ],
                                   "DUL": [
                                     0.3,
@@ -50805,7 +50694,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "CSIRO large-scale, primarily single year field studies that were looking to see what the leading yield limiters were. The data was organized by Brook Anderson (CSIRO) and is being written up by Marisa Collins (LaTrobe) and Lindsay Bell (CSIRO). The cultivar used was Jade with the exception of one site year where they used Crystal.",
+                  "Text": "CSIRO large-scale, primarily single year field studies that were looking to see what the leading yield limiters were. The data was organized by Brook Anderson (CSIRO) and is being written up by Marisa Collins (LaTrobe) and Lindsay Bell (CSIRO). The cultivar used was Jade with the exception of one site year where they used Crystal. Total biomass and days to maturity data were removed from the model-building dataset as well as a few treatments from the Pampas site after discussion with Lindsay Bell about the unreliability of this data.",
                   "Name": "Mungbean Yield Gap Study",
                   "Children": [],
                   "Enabled": true,
@@ -53402,35 +53291,6 @@
                                           "$type": "Models.Operation, Models",
                                           "Date": "2015-12-08",
                                           "Action": "[InitialWaterReset].Script.ResetWater(0,11)",
-                                          "Enabled": true
-                                        }
-                                      ],
-                                      "Name": "reset",
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Factorial.CompositeFactor, Models",
-                                  "Specifications": [
-                                    "[SowingRule].Script.SowingDate=2017-1-06",
-                                    "[Operations]"
-                                  ],
-                                  "Paths": null,
-                                  "Values": null,
-                                  "Name": "2016_17",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Operations, Models",
-                                      "Operation": [
-                                        {
-                                          "$type": "Models.Operation, Models",
-                                          "Date": "2017-01-06",
-                                          "Action": "[InitialWaterReset].Script.ResetWater(0,33)",
                                           "Enabled": true
                                         }
                                       ],
@@ -61668,6 +61528,19 @@
               "ReadOnly": false
             }
           ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Map, Models",
+          "Zoom": 1.0,
+          "Center": {
+            "$type": "Models.Mapping.Coordinate, Models",
+            "Latitude": 0.0,
+            "Longitude": 0.0
+          },
+          "Name": "Map",
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
