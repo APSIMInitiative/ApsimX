@@ -165,13 +165,10 @@ namespace Models.CLEM.Activities
                 // report activity performed details.
                 ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                 {
-                    Activity = new BlankActivity()
-                    {
-                        Status = ActivityStatus.Timer,
-                        Name = this.Name,
-                    }
+                    Name = this.Name,
+                    Status = ActivityStatus.Timer,
+                    Id = this.UniqueID.ToString(),
                 };
-                activitye.Activity.UniqueID = this.UniqueID;
                 this.OnActivityPerformed(activitye);
             }
         }

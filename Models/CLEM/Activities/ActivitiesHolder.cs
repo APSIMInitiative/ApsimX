@@ -55,8 +55,9 @@ namespace Models.CLEM.Activities
         /// Details of the last activity performed
         /// </summary>
         [JsonIgnore]
-        public CLEMActivityBase LastActivityPerformed { get; set; }
-        
+        public ActivityPerformedEventArgs LastActivityPerformed { get; set; }
+//        public CLEMActivityBase LastActivityPerformed { get; set; }
+
         /// <summary>
         /// Shortfall occurred 
         /// </summary>
@@ -125,9 +126,12 @@ namespace Models.CLEM.Activities
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
             {
-                Activity = timeStep
+                Name = timeStep.Name,
+                Status = timeStep.Status,
+                Id = timeStep.UniqueID.ToString(),
+                //Activity = timeStep
             };
-            LastActivityPerformed = timeStep;
+            LastActivityPerformed = ea;
             OnActivityPerformed(ea);
         }
 
@@ -138,7 +142,7 @@ namespace Models.CLEM.Activities
         public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
             // save 
-            LastActivityPerformed = (e as ActivityPerformedEventArgs).Activity;
+            LastActivityPerformed = e; // (e as ActivityPerformedEventArgs).Activity;
             // call ActivityPerformedEventhandler
             OnActivityPerformed(e);
         }

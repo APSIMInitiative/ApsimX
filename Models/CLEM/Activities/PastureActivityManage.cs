@@ -368,13 +368,10 @@ namespace Models.CLEM.Activities
             // report activity performed.
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
-                Activity = new BlankActivity()
-                {
-                    Status = zoneCLEM.IsEcologicalIndicatorsCalculationMonth()? ActivityStatus.Calculation: ActivityStatus.Success,
-                    Name = this.Name
-                }
+                Name = this.Name,
+                Status = zoneCLEM.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
+                Id = this.UniqueID.ToString(),
             };
-            activitye.Activity.UniqueID = this.UniqueID;
         }
 
         /// <summary>

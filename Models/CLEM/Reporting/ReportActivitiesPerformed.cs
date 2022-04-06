@@ -82,7 +82,7 @@ namespace Models.CLEM.Reporting
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
                 "[Activities].LastActivityPerformed.Status as Status",
-                "[Activities].LastActivityPerformed.UniqueIDString as UniqueID"
+                "[Activities].LastActivityPerformed.Id as UniqueID"
             };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };

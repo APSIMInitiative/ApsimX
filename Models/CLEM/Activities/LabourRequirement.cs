@@ -74,6 +74,10 @@ namespace Models.CLEM.Activities
         ///<inheritdoc/>
         public bool AllowsPartialResourcesAvailable { get { return OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources || OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications; } }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ActivityStatus Status { get; set; }
+
         /// <summary>
         /// An identifier for this Labour requirement based on parent requirements
         /// </summary>

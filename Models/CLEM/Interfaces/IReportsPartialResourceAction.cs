@@ -21,5 +21,10 @@ namespace Models.CLEM.Interfaces
         /// Indicates if the activity supports partial resources actions
         /// </summary>
         public bool AllowsPartialResourcesAvailable { get;}
+
+        /// <summary>
+        /// Current status of this activity component for managing resources
+        /// </summary>
+        public ActivityStatus Status { get; set; }
     }
 }

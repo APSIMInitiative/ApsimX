@@ -189,9 +189,7 @@ namespace Models.CLEM.Activities
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - weanShort.Available / weanShort.Required));
 
                 if(numberToSkip == numberToDo || sucklingsToCheck == sucklingToSkip)
-                    this.Status = ActivityStatus.Warning;
-                else
-                    this.Status = ActivityStatus.Partial;
+                    Status = ActivityStatus.Warning;
             }
         }
 

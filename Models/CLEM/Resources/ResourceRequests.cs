@@ -160,10 +160,25 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class ActivityPerformedEventArgs : EventArgs
     {
+        ///// <summary>
+        ///// Activity details
+        ///// </summary>
+        //public CLEMActivityBase Activity { get; set; }
+
         /// <summary>
-        /// Activity details
+        /// Name of activity
         /// </summary>
-        public CLEMActivityBase Activity { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Status at time of reporting
+        /// </summary>
+        public ActivityStatus Status { get; set; }
+
+        /// <summary>
+        /// Activity unique Id
+        /// </summary>
+        public string Id { get; set; }
     }
 
 

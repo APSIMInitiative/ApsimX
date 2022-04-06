@@ -317,7 +317,7 @@ namespace Models.CLEM.Resources
             foreach (ResourceRequest request in requests.Where(a => a.Required > a.Available))
             {
                 // Check if transmutation would be successful 
-                if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
+                if ((request.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped && request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
                     // get resource type if not already provided from request
                     if (!(request.Resource is IResourceType resourceTypeInShortfall))

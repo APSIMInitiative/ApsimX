@@ -441,16 +441,13 @@ namespace Models.CLEM.Activities
                 if (timer.ActivityDue)
                 {
                     // report activity performed.
-                    ActivityPerformedEventArgs timerActivity = new ActivityPerformedEventArgs
+                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = (timer as IModel).Name
-                        }
+                        Name = (timer as IModel).Name,
+                        Status = ActivityStatus.Timer,
+                        Id = (timer as CLEMModel).UniqueID.ToString(),
                     };
-                    timerActivity.Activity.UniqueID = (timer as CLEMModel).UniqueID;
-                    ActivitiesHolder?.ReportActivityPerformed(timerActivity);
+                    ActivitiesHolder?.ReportActivityPerformed(activitye);
                 }
             }
             // call activity performed for all children of type CLEMActivityBase
@@ -514,7 +511,7 @@ namespace Models.CLEM.Activities
                     }
 
                     // add resources needed based on method supplied by activity
-                    // set the metric values for identifiabel children as they will follow in next loop
+                    // set the metric values for identifiable children as they will follow in next loop
                     var requests = RequestResourcesForTimestep();
                     if (requests != null)
                         ResourceRequestList.AddRange(requests);
@@ -542,44 +539,47 @@ namespace Models.CLEM.Activities
                         }
                     }
 
-                    // check availability
+                    // check availability and ok to proceed 
                     CheckResources(ResourceRequestList, Guid.NewGuid());
-
-                    // exit if identifiable components are partially provided and this parent activity does not allow shortfalls to be handled
-                    var shortfallRequests = ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);
-
 
                     // adjust if needed using method supplied by activity
                     AdjustResourcesForTimestep();
 
-                    // take resources
-                    bool tookRequestedResources = TakeResources(ResourceRequestList, false);
-
-                    // if no resources required perform Activity if code is present.
-                    // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                    if (tookRequestedResources || (ResourceRequestList.Count == 0))
+                    if (ReportShortfalls(ResourceRequestList, Guid.NewGuid()) == false)
                     {
-                        PerformTasksForTimestep(); //based on method supplied by activity
-
-                        // for all companion models to generate create resources where needed
-                        if (this is IHandlesActivityCompanionModels)
+                        // take resources
+                        // if no resources required perform Activity if code is present.
+                        // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+                        if (TakeResources(ResourceRequestList, false) || (ResourceRequestList.Count == 0))
                         {
-                            // get all companion models except filter groups
-                            foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                            PerformTasksForTimestep(); //based on method supplied by activity
+
+                            // for all companion models to generate create resources where needed
+                            if (this is IHandlesActivityCompanionModels)
                             {
-                                if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                                // get all companion models except filter groups
+                                foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                                 {
-                                    var unitsProvided = ValueForCompanionModel(companionChild);
-                                    // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
-                                    if (MathUtilities.IsNegative(unitsProvided))
-                                        if(companionChild is CLEMActivityBase)
-                                            (companionChild as CLEMActivityBase).Status = ActivityStatus.Warning;
-                                    else
-                                        companionChild.PerformTasksForTimestep(unitsProvided);
+                                    if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                                    {
+                                        var unitsProvided = ValueForCompanionModel(companionChild);
+                                        // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
+                                        if (MathUtilities.IsNegative(unitsProvided))
+                                        {
+                                            if (companionChild is CLEMActivityBase)
+                                                (companionChild as CLEMActivityBase).Status = ActivityStatus.Warning;
+                                            else
+                                            {
+                                                // TODO check if skipped
+
+                                                companionChild.PerformTasksForTimestep(unitsProvided);
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
+                        }
                     }
                     return;
                 }
@@ -602,16 +602,17 @@ namespace Models.CLEM.Activities
             if (ResourceRequestList != null && ResourceRequestList.Any())
             {
                 // does shortfall work by resource?
-
-                var shortfallRequests =  ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).ToList();
+                var shortfallRequests =  ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);
                 if (shortfallRequests.Any())
                 {
-                    min = shortfallRequests.Select(a => a.Available / a.Required).Min();
-                    foreach (var request in ResourceRequestList.Where(a => MathUtilities.IsGreaterThan(a.Available/ a.Required, min)))
+                    ResourceRequest minRequest = shortfallRequests.OrderBy(a => a.Available / a.Required).FirstOrDefault();
+                    min = minRequest.Available / minRequest.Required;
+                    foreach (var request in ResourceRequestList.Where(a => a != minRequest && MathUtilities.IsGreaterThan(a.Available/ a.Required, min)))
                         request.Required *= min;
 
                     // recalculate shortfalls in case any reduction in required removed request from shortfalls
-                    return ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).OrderBy(a => a.Available/ a.Required);
+                    return shortfallRequests.ToList();
+                    //ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).OrderBy(a => a.Available/ a.Required);
                 } 
             }
             return new List<ResourceRequest>();
@@ -927,16 +928,65 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Report shrtfalls and provide status to undertake tasks
+        /// </summary>
+        /// <param name="resourceRequests">List of requests</param>
+        /// <param name="uniqueActivityID">Unique id for the activity</param>
+        public bool ReportShortfalls(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
+        {
+            bool deficitFound = false;
+            bool componentError = false;
+            // report any resource defecits here including if activity is skip of shortfall
+            foreach (var item in resourceRequests.Where(a => MathUtilities.IsPositive(a.Required - a.Available)))
+            {
+                if ((item.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                {
+                    string warn = $"Insufficient [r={item.ResourceType.Name}] from [a={item.ActivityModel.Name}] {((item.ActivityModel != this) ? $" in [a={NameWithParent}]" : "")}{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
+                    (item.ActivityModel as IReportPartialResourceAction).Status = ActivityStatus.Critical;
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                    componentError = true;
+                }
+
+                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+
+                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
+                {
+                    ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
+                    if (marketActivities != null)
+                        marketActivities.ReportActivityShortfall(rrEventArgs);
+                }
+                else
+                    ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
+
+                if (Status != ActivityStatus.Skipped)
+                    Status = ActivityStatus.Partial;
+                deficitFound = true;
+            }
+            if (componentError)
+            {
+                string errorMessage = $"Insufficient resources for components of [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources.{Environment.NewLine}See CLEM component Messages for details of all resource shortfalls";
+                Status = ActivityStatus.Critical;
+                throw new ApsimXException(this, errorMessage);
+            }
+
+            if (!deficitFound && Status != ActivityStatus.Skipped)
+                Status = ActivityStatus.Success;
+
+            return (Status == ActivityStatus.Skipped);
+        }
+
+        /// <summary>
         /// Determine resources available and perform transmutation if needed.
         /// </summary>
         /// <param name="resourceRequests">List of requests</param>
         /// <param name="uniqueActivityID">Unique id for the activity</param>
-        public void CheckResources(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
+        public bool CheckResources(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
         {
             if (resourceRequests is null || !resourceRequests.Any())
             {
+                // nothing to do
                 this.Status = ActivityStatus.NotNeeded;
-                return;
+                return true;
             }
 
             foreach (ResourceRequest request in resourceRequests)
@@ -954,61 +1004,116 @@ namespace Models.CLEM.Activities
                 else
                 {
                     if (request.ResourceType == typeof(Labour))
-                        // get available labour based on rules.
-                        request.Available = TakeLabour(request, false, this, Resources, this.AllowsPartialResourcesAvailable);
+                        // get available labour based on rules nad filter groups
+                        request.Available = TakeLabour(request, false, this, Resources, (request.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
                     else
                         request.Available = TakeNonLabour(request, false);
                 }
             }
 
+            // for testing. report any requests with no activity model provided 
+            if (resourceRequests.Where(a => a.ActivityModel is null).Any())
+                throw new NotImplementedException($"Unknown ActivityModel in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
+
+            // report any requests with a non CLEMactivityBase activity model provided
+            var wrongType = resourceRequests.Where(a => (a.ActivityModel is IReportPartialResourceAction) == false);
+            if (wrongType.Any())
+                throw new NotImplementedException($"Unsupported ActivityModel type [{string.Join("]&[", wrongType.Select(a => a.ActivityModel.GetType().ToString()))}] in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
+
             // get requests needing transmutaion - must be flagged UseResourcesAvailable
             IEnumerable<ResourceRequest> shortfallsToTransmute = resourceRequests.Where(a => MathUtilities.IsNegative(a.Available - a.Required) ? (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable : false);
-            //IEnumerable<ResourceRequest> shortfallRequests = resourceRequests.Where(a => MathUtilities.IsGreaterThan(a.Required, a.Available) && (a.ActivityModel as CLEMActivityBase).OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity);
             if (shortfallsToTransmute.Any())
                 // check what transmutations can occur
                 Resources.TransmutateShortfall(shortfallsToTransmute);
+
+            // if still in shortfall after attempting to to transmute and ShortfallAction is skipped set ability to transmute to false
+            foreach (var skipped in shortfallsToTransmute.Select(a => a.ActivityModel).OfType<IReportPartialResourceAction>())
+            {
+                skipped.Status = (skipped.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)?ActivityStatus.Skipped:ActivityStatus.Partial;
+            }
 
             // check if need to do transmutations
             int countTransmutationsSuccessful = shortfallsToTransmute.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
             bool allTransmutationsSuccessful = (shortfallsToTransmute.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
 
-            // OR at least one transmutation successful and PerformWithPartialResources
-            if ((shortfallsToTransmute.Any() && (shortfallsToTransmute.Count() == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources))
+            // if error and stop on shortfall and shortfalls still occur after any transmutation
+            if (shortfallsToTransmute.Any())
             {
-                // do transmutations.
-                // this uses the current zone resources, but will find markets if needed in the process
-                Resources.TransmutateShortfall(shortfallsToTransmute, false);
-
-                // recheck resource amounts now that resources have been topped up
-                foreach (ResourceRequest request in resourceRequests)
+                if (!allTransmutationsSuccessful)
                 {
-                    // get resource
-                    request.Available = 0;
-                    if (request.Resource != null)
-                        // get amount available
-                        request.Available = Math.Min(request.Resource.Amount, request.Required);
+                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                    {
+                        string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for the activity";
+                        Status = ActivityStatus.Critical;
+                        throw new ApsimXException(this, errorMessage);
+                    }
+                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+                    {
+                        Status = ActivityStatus.Skipped;
+                    }
+                }
+                // if we get to this point we have handled situation where shortfalls occurred and skip or error set as OnPartialResourceAction
+                // OR at least one transmutation successful and PerformWithPartialResources
+                if (Status != ActivityStatus.Skipped)
+                {
+                    // do transmutations.
+                    // this uses the current zone resources, but will find markets if needed in the process
+                    Resources.TransmutateShortfall(shortfallsToTransmute, false);
+
+                    // recheck resource amounts now that resources have been topped up
+                    foreach (ResourceRequest request in resourceRequests)
+                    {
+                        // get resource
+                        if (request.Resource != null)
+                        {
+                            request.Available = 0;
+                            // get amount available
+                            request.Available = Math.Min(request.Resource.Amount, request.Required);
+                        }
+                    }
                 }
             }
 
-            bool deficitFound = false;
-            // report any resource defecits here
-            foreach (var item in resourceRequests.Where(a => MathUtilities.IsPositive(a.Required - a.Available)))
-            {
-                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+            //bool deficitFound = false;
+            //bool componentError = false;
+            //// report any resource defecits here including if activity is skip of shortfall
+            //foreach (var item in resourceRequests.Where(a => MathUtilities.IsPositive(a.Required - a.Available)))
+            //{
+            //    if((item.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+            //    {
+            //        string warn = $"Insufficient [r={item.ResourceType.Name}] from [a={item.ActivityModel.Name}] {((item.ActivityModel != this) ? $" in [a={NameWithParent}]" : "")}{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
+            //        (item.ActivityModel as IReportPartialResourceAction).Status = ActivityStatus.Critical;
+            //        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+            //        componentError = true;
+            //    }
 
-                if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
-                {
-                    ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
-                    if(marketActivities != null)
-                        marketActivities.ReportActivityShortfall(rrEventArgs);
-                }
-                else
-                    ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
-                Status = ActivityStatus.Partial;
-                deficitFound = true;
-            }
-            if(!deficitFound)
-                this.Status = ActivityStatus.Success;
+            //    ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+
+            //    if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
+            //    {
+            //        ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
+            //        if(marketActivities != null)
+            //            marketActivities.ReportActivityShortfall(rrEventArgs);
+            //    }
+            //    else
+            //        ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
+                
+            //    if(Status != ActivityStatus.Skipped)
+            //        Status = ActivityStatus.Partial;
+            //    deficitFound = true;
+            //}
+            //if(componentError)
+            //{
+            //    string errorMessage = $"Insufficient resources for components of [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources.{Environment.NewLine}See CLEM component Messages for details of all resource shortfalls";
+            //    Status = ActivityStatus.Critical;
+            //    throw new ApsimXException(this, errorMessage);
+            //}
+
+            //if (!deficitFound && Status != ActivityStatus.Skipped)
+            //    Status = ActivityStatus.Success;
+
+            // false if skipped to ignore next section and take resources or perform any tasks
+            return (Status != ActivityStatus.Skipped);
         }
 
         /// <summary>
@@ -1026,66 +1131,57 @@ namespace Models.CLEM.Activities
 
             // remove activity resources 
 
-#if DEBUG
-            // if no shortfalls or not skip activity if they are present
-            var shortfallRequests = resourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required));
+//#if DEBUG
+//            // if no shortfalls or not skip activity if they are present
+//            var shortfallRequests = resourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required));
 
-            // for testing. report any requests with no activity model 
-            if (resourceRequestList.Where(a => a.ActivityModel is null).Any())
-                throw new NotImplementedException($"Unknown ActivityModel in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
-            
-            // report any requests with a non CLEMactivityBase activity model
-            var wrongType = resourceRequestList.Where(a => (a.ActivityModel is IReportPartialResourceAction) == false);
-            if (wrongType.Any())
-                throw new NotImplementedException($"Unsupported ActivityModel type [{string.Join("]&[",wrongType.Select(a => a.ActivityModel.GetType().ToString()))}] in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
-
-            // set warning status on all shortfall requests marked as skip if this is the last chance
-            if (triggerActivityPerformed)
-            {
-                foreach (var skipped in shortfallRequests.Select(a => a.ActivityModel).OfType<CLEMActivityBase>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity))
-                    skipped.Status = ActivityStatus.Skipped;
-            }
-#endif
+//            // set warning status on all shortfall requests marked as skip if this is the last chance
+//            if (triggerActivityPerformed)
+//            {
+//                foreach (var skipped in shortfallRequests.Select(a => a.ActivityModel).OfType<CLEMActivityBase>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity))
+//                    skipped.Status = ActivityStatus.Skipped;
+//            }
+//#endif
             // remove all shortfall requests marked as skip
             resourceRequestList.RemoveAll(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity);
             var requestsToWorkWith = resourceRequestList;
 
             if (requestsToWorkWith.Any())
             {
-                var requestsToStop = requestsToWorkWith.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop);
-                // check if deficit and performWithPartial
-                if (requestsToStop.Any())
-                {
-                    foreach (var stopRequest in requestsToStop)
-                    {
-                        (stopRequest.ActivityModel as CLEMActivityBase).Status = ActivityStatus.Warning;
-                        string warn = $"Insufficient [r={stopRequest.ResourceType.Name}] from [a={stopRequest.ActivityModel.Name}] {((stopRequest.ActivityModel != this)?$" in [a={NameWithParent}]":"")}{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
-                    }
-                    string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for this activity or companion components{Environment.NewLine}See CLEM component Messages for details of all recource shortfalls";
-                    Status = ActivityStatus.Critical;
-                    throw new ApsimXException(this, errorMessage);
-                }
+                //var requestsToStop = requestsToWorkWith.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop);
+                //// check if deficit and performWithPartial
+                //if (requestsToStop.Any())
+                //{
+                //    foreach (var stopRequest in requestsToStop)
+                //    {
+                //        (stopRequest.ActivityModel as CLEMActivityBase).Status = ActivityStatus.Warning;
+                //        string warn = $"Insufficient [r={stopRequest.ResourceType.Name}] from [a={stopRequest.ActivityModel.Name}] {((stopRequest.ActivityModel != this)?$" in [a={NameWithParent}]":"")}{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
+                //        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                //    }
+                //    string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for this activity or companion components{Environment.NewLine}See CLEM component Messages for details of all recource shortfalls";
+                //    Status = ActivityStatus.Critical;
+                //    throw new ApsimXException(this, errorMessage);
+                //}
 
-                // check for any shortfalls if in identifiable child models if skip or error and stop for parent activity that has not been considered.
-                var requestsToPartial = requestsToWorkWith.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
-                if (requestsToPartial.Any())
-                {
-                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
-                    {
-                        Status = ActivityStatus.Skipped;
-                        return false;
-                    }
-                    else
-                    {
-                        if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
-                        {
-                            string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for this activity or companion components{Environment.NewLine}See CLEM component Messages for details of all recource shortfalls";
-                            Status = ActivityStatus.Critical;
-                            throw new ApsimXException(this, errorMessage);
-                        }
-                    }
-                }
+                //// check for any shortfalls if in identifiable child models if skip or error and stop for parent activity that has not been considered.
+                //var requestsToPartial = requestsToWorkWith.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
+                //if (requestsToPartial.Any())
+                //{
+                //    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+                //    {
+                //        Status = ActivityStatus.Skipped;
+                //        return false;
+                //    }
+                //    else
+                //    {
+                //        if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                //        {
+                //            string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for this activity or companion components{Environment.NewLine}See CLEM component Messages for details of all recource shortfalls";
+                //            Status = ActivityStatus.Critical;
+                //            throw new ApsimXException(this, errorMessage);
+                //        }
+                //    }
+                //}
 
                 // all ok with this activity partial resources setting and all identifiable components.
                 foreach (ResourceRequest request in requestsToWorkWith)
@@ -1097,7 +1193,7 @@ namespace Models.CLEM.Activities
                     { 
                         if (request.ResourceType == typeof(Labour))
                             // get available labour based on rules.
-                            request.Available = TakeLabour(request, true, this, Resources, this.AllowsPartialResourcesAvailable);
+                            request.Available = TakeLabour(request, true, this, Resources, (request.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
                         else
                             request.Available = TakeNonLabour(request, true);
                     }
@@ -1116,7 +1212,9 @@ namespace Models.CLEM.Activities
         {
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
-                Activity = this
+                Name = this.Name,
+                Status = this.Status,
+                Id = this.UniqueID.ToString(),
             };
             ActivitiesHolder?.ReportActivityPerformed(activitye);
         }
@@ -1130,7 +1228,10 @@ namespace Models.CLEM.Activities
             this.Status = status;
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
-                Activity = new ActivityFolder() { Name = this.Name, Status = status }
+                Name = this.Name,
+                Status = status,
+                Id = this.UniqueID.ToString(),
+                //                Activity = new ActivityFolder() { Name = this.Name, Status = status }
             };
             ActivitiesHolder?.ReportActivityPerformed(activitye);
         }
