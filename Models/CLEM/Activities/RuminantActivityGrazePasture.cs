@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             //Create list of children by breed
-            string currentUid = UniqueID.ToString();
+            Guid currentUid = UniqueID;
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                     TransactionCategory = TransactionCategory
                 };
                 currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
-                grazePastureHerd.SetGuID(currentUid);
+                grazePastureHerd.UniqueID = currentUid;
 
                 grazePastureHerd.SetLinkedModels(Resources);
                 grazePastureHerd.InitialiseHerd(true, true);

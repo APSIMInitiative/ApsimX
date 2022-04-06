@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
                 this.InitialiseHerd(true, true);
                 // create activity for each pasture type (and common land) and breed at startup
                 // do not include common land pasture..
-                string currentUid = UniqueID.ToString();
+                Guid currentUid = UniqueID;
                 foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
                     RuminantActivityGrazePasture grazePasture = new RuminantActivityGrazePasture
@@ -82,11 +82,11 @@ namespace Models.CLEM.Activities
                         OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
                     };
                     currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
-                    grazePasture.SetGuID(currentUid);
+                    grazePasture.UniqueID = currentUid;
                     grazePasture.SetLinkedModels(Resources);
                     grazePasture.InitialiseHerd(true, true);
 
-                    string currentHerdUid = currentUid;
+                    Guid currentHerdUid = currentUid;
                     foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
                     {
                         RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
                             TransactionCategory = TransactionCategory
                         };
                         currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
-                        grazePastureHerd.SetGuID(currentHerdUid);
+                        grazePastureHerd.UniqueID = currentHerdUid;
                         grazePastureHerd.SetLinkedModels(Resources);
 
                         if (grazePastureHerd.Clock == null)

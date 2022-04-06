@@ -70,13 +70,13 @@ namespace Models.CLEM.Activities
         /// Create a GuID string based on next unique ID
         /// </summary>
         /// <returns></returns>
-        public string NextGuID
+        public Guid NextGuID
         {
             get 
             {
                 int current = nextUniqueID;
                 nextUniqueID++;
-                return $"{current.ToString().PadLeft(8, '0')}-0000-0000-0000-000000000000";
+                return Guid.Parse($"{current.ToString().PadLeft(8, '0')}-0000-0000-0000-000000000000");
             }
         }
 
@@ -86,15 +86,16 @@ namespace Models.CLEM.Activities
         /// <param name="guid">GuID to add to</param>
         /// <param name="level">Level to add to</param>
         /// <returns>New GuID</returns>
-        public string AddToGuID(string guid, int level)
+        public Guid AddToGuID(Guid guid, int level)
         {
+            string guidString = guid.ToString();
             if (level > 0 & level <= 3)
             {
-                List<string> parts = guid.Split('-').ToList();
+                List<string> parts = guidString.Split('-').ToList();
                 int number = Convert.ToInt32(parts[level]);
                 number++;
                 parts[level] = number.ToString().PadLeft(4, '0');
-                return string.Join('-', parts);
+                return Guid.Parse(string.Join('-', parts));
             }
             else
                 throw new ArgumentException("Add to GuID only supports levels 1 to 3");
@@ -108,7 +109,7 @@ namespace Models.CLEM.Activities
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
             foreach (var activity in FindAllDescendants<CLEMModel>())
-                activity.SetGuID(NextGuID);
+                activity.UniqueID = NextGuID;
         }
 
         /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>

@@ -26,7 +26,6 @@ namespace Models.CLEM
         [NonSerialized]
         public ISummary Summary = null;
 
-        private Guid id = Guid.NewGuid();
         [NonSerialized]
         private IEnumerable<IActivityTimer> activityTimers = null;
 
@@ -50,19 +49,16 @@ namespace Models.CLEM
         public WarningLog Warnings = WarningLog.GetInstance(50);
 
         /// <summary>
-        /// Allows unique id of activity to be set 
-        /// </summary>
-        /// <param name="id"></param>
-        public void SetGuID(string id)
-        {
-            this.id = Guid.Parse(id);
-        }
-
-        /// <summary>
         /// Model identifier
         /// </summary>
         [JsonIgnore]
-        public string UniqueID { get { return id.ToString(); } }
+        public Guid UniqueID { get; set; } = Guid.NewGuid();
+
+        /// <summary>
+        /// Model identifier as string for reporting as UniqueID.ToString() throws ambiguous property error
+        /// </summary>
+        [JsonIgnore]
+        public string UniqueIDString { get { return UniqueID.ToString(); } }
 
         /// <summary>
         /// Parent CLEM Zone
@@ -520,7 +516,7 @@ namespace Models.CLEM
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
                             htmlWriter.Write(">Skip");
                             break;
-                        case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
+                        case OnPartialResourcesAvailableActionTypes.UseAvailableResources:
                             htmlWriter.Write(">Partial");
                             break;
                         default:

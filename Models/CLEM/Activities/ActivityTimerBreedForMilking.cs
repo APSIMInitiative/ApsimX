@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                         Name = this.Name,
                     }
                 };
-                activitye.Activity.SetGuID(this.UniqueID);
+                activitye.Activity.UniqueID = this.UniqueID;
                 this.OnActivityPerformed(activitye);
             }
         }
