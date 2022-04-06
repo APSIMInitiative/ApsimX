@@ -8188,6 +8188,22 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25",
+                    "[Grain].MaximumNConc.FixedValue = 0.02",
+                    "[Phenology].CAMP.FLNparams.LV = 7",
+                    "[Phenology].CAMP.FLNparams.LN = 13.0",
+                    "[Phenology].CAMP.FLNparams.SV = 11.0",
+                    "[Phenology].CAMP.FLNparams.SN = 17.0"
+                  ],
+                  "Name": "Stephens",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8202,8 +8218,9 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 9",
                     "[Phenology].CAMP.FLNparams.LN = 16.0",
                     "[Phenology].CAMP.FLNparams.SV = 12.0",
@@ -8219,8 +8236,9 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 9",
                     "[Phenology].CAMP.FLNparams.LN = 16.0",
                     "[Phenology].CAMP.FLNparams.SV = 12.0",
@@ -8236,8 +8254,9 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
                     "[Phenology].CAMP.FLNparams.LV = 9",
                     "[Phenology].CAMP.FLNparams.LN = 16.0",
                     "[Phenology].CAMP.FLNparams.SV = 12.0",
@@ -8252,11 +8271,16 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                    "[Phenology].CAMP.FLNparams.LV = 9",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90.0",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
+                    "[Phenology].CAMP.FLNparams.LV = 9.0",
                     "[Phenology].CAMP.FLNparams.LN = 9.0",
                     "[Phenology].CAMP.FLNparams.SV = 9.0",
-                    "[Phenology].CAMP.FLNparams.SN = 9.0"
+                    "[Phenology].CAMP.FLNparams.SN = 9.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 225",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Tybalt",
                   "Children": [],
