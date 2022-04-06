@@ -437,6 +437,9 @@ namespace UserInterface.Views
                     case "NoTask":
                         iconName = "NoTask";
                         break;
+                    case "Skipped":
+                        iconName = "Skipped";
+                        break;
                 }
                 (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+iconName+".png");
             }
