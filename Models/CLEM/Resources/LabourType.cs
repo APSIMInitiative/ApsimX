@@ -11,9 +11,7 @@ using System.IO;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the initialisation parameters for a land type person who can do labour 
-    /// who is a family member.
-    /// eg. AdultMale, AdultFemale etc.
+    /// This stores the initialisation parameters for a labour type (person) who can do labour 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -97,7 +95,7 @@ namespace Models.CLEM.Resources
                 if(adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship identified with \"AE\" in the component name.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
@@ -211,7 +209,7 @@ namespace Models.CLEM.Resources
         public double LastActivityRequestAmount { get; set; }
 
         /// <summary>
-        /// The number of hours provided to the current activity
+        /// The number of days provided to the current activity
         /// </summary>
         [JsonIgnore]
         public double LastActivityLabour { get; set; }
