@@ -38,6 +38,13 @@ namespace Models.CLEM
         public SummarizeRuminantHerdStyle GroupStyle { get; set; }
 
         /// <summary>
+        /// Include total population column
+        /// </summary>
+        [Description("Include total population column")]
+        public bool IncludeTotalColumn { get; set; }
+
+
+        /// <summary>
         /// Report item was generated event handler
         /// </summary>
         public event EventHandler OnReportItemGenerated;
@@ -170,6 +177,37 @@ namespace Models.CLEM
                 foreach (var item in result)
                 {
                     ReportDetails = item.Info;
+                    ReportItemGenerated(ReportDetails);
+                }
+
+                if(IncludeTotalColumn)
+                {
+                    var herdGroups = herd.GroupBy(a => a.HerdName);
+                    var herdResult = herdGroups.Select(group => new
+                    {
+                        Group = group.Key,
+                        Info = new HerdReportItemGeneratedEventArgs
+                        {
+                            TimeStep = timestep,
+                            Breed = "All",
+                            Herd = group.Key,
+                            Sex = "All",
+                            Group = group.Key,
+                            Number = group.Count(),
+                            Age = group.Average(a => a.Age),
+                            AverageWeight = group.Average(a => a.Weight),
+                            AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
+                            AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
+                            AverageIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageProportionPotentialIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageWeightGain = group.Average(a => a.WeightGain),
+                            AdultEquivalents = group.Sum(a => a.AdultEquivalent),
+                            NumberPregnant = group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count(),
+                            NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
+                            NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
+                        }
+                    });
+                    ReportDetails = herdResult.FirstOrDefault().Info;
                     ReportItemGenerated(ReportDetails);
                 }
             }
