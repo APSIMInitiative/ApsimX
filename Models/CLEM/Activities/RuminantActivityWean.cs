@@ -12,6 +12,7 @@ using Models.CLEM.Reporting;
 using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -89,7 +90,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
-                case "RuminantActivityFee":
+                case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
@@ -181,13 +182,16 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var sucklingShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number sucklings checked").FirstOrDefault();
                 if(sucklingShort != null)
-                    sucklingToSkip = Convert.ToInt32(sucklingsToCheck * sucklingShort.Required / sucklingShort.Provided);
+                    sucklingToSkip = Convert.ToInt32(sucklingsToCheck * (1 - sucklingShort.Available / sucklingShort.Required));
 
                 var weanShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number weaned").FirstOrDefault();
                 if (weanShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * weanShort.Required / weanShort.Provided);
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - weanShort.Available / weanShort.Required));
 
-                this.Status = ActivityStatus.Partial;
+                if(numberToSkip == numberToDo || sucklingsToCheck == sucklingToSkip)
+                    this.Status = ActivityStatus.Warning;
+                else
+                    this.Status = ActivityStatus.Partial;
             }
         }
 
@@ -243,7 +247,7 @@ namespace Models.CLEM.Activities
                         this.Status = ActivityStatus.Partial;
                 }
                 else
-                    this.Status = ActivityStatus.Partial;
+                    this.Status = ActivityStatus.Warning;
             }
             else
                 this.Status = ActivityStatus.NotNeeded;

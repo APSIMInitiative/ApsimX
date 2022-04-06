@@ -86,7 +86,7 @@ namespace Models.CLEM
             if (MathUtilities.IsPositive(request.Required))
             {
                 request.FilterDetails = groupings;
-                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, (request.ActivityModel is CLEMActivityBase)?(request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable:false);
             }
             return (request.Provided >= request.Required);
         }
