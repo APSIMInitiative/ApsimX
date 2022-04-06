@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
-    public abstract class CLEMActivityBase: CLEMModel
+    public abstract class CLEMActivityBase: CLEMModel, IReportPartialResourceAction
     {
         /// <summary>
         /// A protected link to the CLEM resource holder
@@ -50,12 +50,13 @@ namespace Models.CLEM.Activities
         [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 
-        /// <summary>
-        /// Insufficient resources available action
-        /// </summary>
+        /// <inheritdoc/>
         [Description("Insufficient resources available action")]
         [Models.Core.Display(Order = 1000)]
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
+
+        ///<inheritdoc/>
+        public bool AllowsPartialResourcesAvailable { get { return OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources || OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications; } }
 
         /// <summary>
         /// Current list of resources requested by this activity
@@ -281,8 +282,8 @@ namespace Models.CLEM.Activities
                         case "LabourRequirement":
                             companionModelsPresent.Add(componentType.Name, LocateCompanionModels<LabourRequirement>());
                             break;
-                        case "RuminantActivityFee":
-                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantActivityFee>());
+                        case "ActivityFee":
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<ActivityFee>());
                             break;
                         case "TruckingSettings":
                             companionModelsPresent.Add(componentType.Name, LocateCompanionModels<TruckingSettings>());
@@ -448,7 +449,7 @@ namespace Models.CLEM.Activities
                             Name = (timer as IModel).Name
                         }
                     };
-                    timerActivity.Activity.SetGuID((timer as CLEMModel).UniqueID);
+                    timerActivity.Activity.UniqueID = (timer as CLEMModel).UniqueID;
                     ActivitiesHolder?.ReportActivityPerformed(timerActivity);
                 }
             }
@@ -504,7 +505,7 @@ namespace Models.CLEM.Activities
                     // get ready for time step
                     PrepareForTimestep();
 
-                    // get all companion related expense requests
+                    // allow all companion models to prepare after initial parent info calculated
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
@@ -537,10 +538,6 @@ namespace Models.CLEM.Activities
                                         ResourceRequestList.Add(request);
                                     }
                                 }
-                                else
-                                {
-
-                                }
                             }
                         }
                     }
@@ -548,7 +545,11 @@ namespace Models.CLEM.Activities
                     // check availability
                     CheckResources(ResourceRequestList, Guid.NewGuid());
 
-                    // adjust if needed based on method supplied by activity
+                    // exit if identifiable components are partially provided and this parent activity does not allow shortfalls to be handled
+                    var shortfallRequests = ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications);
+
+
+                    // adjust if needed using method supplied by activity
                     AdjustResourcesForTimestep();
 
                     // take resources
@@ -568,25 +569,18 @@ namespace Models.CLEM.Activities
                             {
                                 if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                                 {
-                                    var unitsProvided = valuesForCompanionModels[(companionChild.GetType().Name, companionChild.Identifier ?? "", companionChild.Units ?? "")];
-                                    if (unitsProvided is null)
-                                        throw new ApsimXException(this, $"Units for [{companionChild.GetType().Name}]-[{companionChild.Identifier ?? "BLANK"}]-[{companionChild.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before use.{Environment.NewLine}Code issue. See Developers");
-                                    else
-                                    {
-                                        // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
-                                        if (MathUtilities.IsNegative(unitsProvided ?? 0) && companionChild is CLEMActivityBase)
+                                    var unitsProvided = ValueForCompanionModel(companionChild);
+                                    // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
+                                    if (MathUtilities.IsNegative(unitsProvided))
+                                        if(companionChild is CLEMActivityBase)
                                             (companionChild as CLEMActivityBase).Status = ActivityStatus.Warning;
-                                        else
-                                        {
-                                            companionChild.PerformTasksForTimestep(unitsProvided ?? 0);
-                                        }
-                                    }
+                                    else
+                                        companionChild.PerformTasksForTimestep(unitsProvided);
                                 }
                             }
                         }
 
                     }
-
                     return;
                 }
             }
@@ -597,25 +591,27 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine the min proportion shortfall for the current resource request
-        /// Only considers those coming from the companion model childen
+        /// Determine the min proportion shortfall for the current resource requests
+        /// Considers those coming from the companion models and this activity
         /// </summary>
-        /// <param name="affectsActivityOnly">Only uses companion model flags as affects Activity in calculations if True</param>
         /// <param name="reduceAllIdentifableShortfalls"></param>
         /// <returns>Minimum proportion found</returns>
-        public IEnumerable<ResourceRequest> MinimumShortfallProportion(bool affectsActivityOnly = true, bool reduceAllIdentifableShortfalls = true)
+        public IEnumerable<ResourceRequest> MinimumShortfallProportion(bool reduceAllIdentifableShortfalls = true)
         {
             double min = 1;
             if (ResourceRequestList != null && ResourceRequestList.Any())
             {
-                var shortfallRequests =  ResourceRequestList.Where(a => Math.Round(Math.Max(0, a.Provided - a.Required), 4) > 0 && a.AdditionalDetails is IActivityCompanionModel && (!affectsActivityOnly || (a.AdditionalDetails as IActivityCompanionModel).ShortfallCanAffectParentActivity)).ToList();
+                // does shortfall work by resource?
+
+                var shortfallRequests =  ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).ToList();
                 if (shortfallRequests.Any())
                 {
-                    min = shortfallRequests.Select(a => a.Provided / a.Required).Min();
-                    foreach (var request in ResourceRequestList.Where(a => a.Provided / a.Required != min && a.AdditionalDetails is IActivityCompanionModel && (!affectsActivityOnly || (a.AdditionalDetails as IActivityCompanionModel).ShortfallCanAffectParentActivity)))
-                        request.Required = Math.Min(request.Provided, request.Required * min);
+                    min = shortfallRequests.Select(a => a.Available / a.Required).Min();
+                    foreach (var request in ResourceRequestList.Where(a => MathUtilities.IsGreaterThan(a.Available/ a.Required, min)))
+                        request.Required *= min;
 
-                    return shortfallRequests.OrderBy(a => a.Provided / a.Required);
+                    // recalculate shortfalls in case any reduction in required removed request from shortfalls
+                    return ResourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).OrderBy(a => a.Available/ a.Required);
                 } 
             }
             return new List<ResourceRequest>();
@@ -665,15 +661,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        ///// <summary>
-        ///// Base method to determine the number of days labour required based on Activity requirements and labour settings.
-        ///// Functionality provided in derived classes
-        ///// </summary>
-        //protected virtual LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    return null;
-        //}
-
         /// <summary>
         /// Method to determine the list of resources and amounts needed. 
         /// Functionality provided in derived classes
@@ -707,45 +694,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        ///// <summary>
-        ///// A common method to get the labour resource requests for the activity.
-        ///// </summary>
-        ///// <returns></returns>
-        //protected List<ResourceRequest> GetLabourRequiredForActivity()
-        //{
-        //    List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
-        //    foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
-        //    {
-        //        LabourRequiredArgs daysResult = GetDaysLabourRequired(item);
-        //        if (daysResult?.DaysNeeded > 0)
-        //        {
-        //            foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
-        //            {
-        //                int numberOfPpl = 1;
-        //                if (item.ApplyToAll)
-        //                    // how many matches
-        //                    numberOfPpl = fg.Filter(Resources.FindResourceGroup<Labour>().Items).Count();
-        //                for (int i = 0; i < numberOfPpl; i++)
-        //                {
-        //                    labourResourceRequestList.Add(new ResourceRequest()
-        //                    {
-        //                        AllowTransmutation = true,
-        //                        Required = daysResult.DaysNeeded,
-        //                        ResourceType = typeof(Labour),
-        //                        ResourceTypeName = "",
-        //                        ActivityModel = this,
-        //                        FilterDetails = new List<object>() { fg },
-        //                        Category = daysResult.Category,
-        //                        RelatesToResource = daysResult.RelatesToResource
-        //                    }
-        //                    ); ;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return labourResourceRequestList;
-        //}
-
         /// <summary>
         /// Method to provide the proportional limit based on labour shortfall
         /// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
@@ -762,7 +710,7 @@ namespace Models.CLEM.Activities
                 double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
 
                 foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
-                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).ShortfallCanAffectParentActivity)
+                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
                         proportion *= item.Provided / item.Required;
                 return proportion;
             }
@@ -788,7 +736,7 @@ namespace Models.CLEM.Activities
             {
                 if (resourceType == typeof(LabourType))
                 {
-                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).ShortfallCanAffectParentActivity)
+                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
                         proportion *= item.Provided / item.Required;
                 }
                 else // all other types
@@ -805,7 +753,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return FindAllChildren<LabourRequirement>().Where(a => a.ShortfallCanAffectParentActivity).Any();
+                return FindAllChildren<LabourRequirement>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).Any();
             }
         }
 
@@ -816,9 +764,9 @@ namespace Models.CLEM.Activities
         /// <param name="removeFromResource">Determines if only calculating available labour or labour removed</param>
         /// <param name="callingModel">Model calling this method</param>
         /// <param name="resourceHolder">Location of resource holder</param>
-        /// <param name="partialAction">Action on partial resources available</param>
+        /// <param name="allowPartialAction">Does this activity support partial action on resource shortfall</param>
         /// <returns></returns>
-        public static double TakeLabour(ResourceRequest request, bool removeFromResource, IModel callingModel, ResourcesHolder resourceHolder, OnPartialResourcesAvailableActionTypes partialAction )
+        public static double TakeLabour(ResourceRequest request, bool removeFromResource, CLEMModel callingModel, ResourcesHolder resourceHolder, bool allowPartialAction )
         {
             double amountProvided = 0;
             double amountNeeded = request.Required;
@@ -875,16 +823,16 @@ namespace Models.CLEM.Activities
             while (current != null && amountProvided < amountNeeded)
             {
                 IEnumerable<LabourType> items = resourceHolder.FindResource<Labour>().Items;
-                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumDaysPerPerson));
+                items = items.Where(a => (a.LastActivityRequestID != callingModel.UniqueID) || (a.LastActivityRequestID == callingModel.UniqueID && a.LastActivityRequestAmount < lr.MaximumDaysPerPerson));
                 items = current.Filter(items);
 
                 // search for people who can do whole task first
-                while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson) >= request.Required).Any())
+                while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson) >= request.Required).Any())
                 {
                     // get labour least available but with the amount needed
-                    LabourType lt = items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson) >= request.Required).OrderBy(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson)).FirstOrDefault();
+                    LabourType lt = items.Where(a => a.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson) >= request.Required).OrderBy(a => a.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson)).FirstOrDefault();
 
-                    double amount = Math.Min(amountNeeded - amountProvided, lt.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson));
+                    double amount = Math.Min(amountNeeded - amountProvided, lt.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson));
 
                     // limit to max allowed per person
                     amount = Math.Min(amount, lr.MaximumDaysPerPerson);
@@ -899,7 +847,7 @@ namespace Models.CLEM.Activities
                     removeRequest.Required = amount;
                     if (removeFromResource)
                     {
-                        lt.LastActivityRequestID = request.ActivityID;
+                        lt.LastActivityRequestID = callingModel.UniqueID;
                         lt.LastActivityRequestAmount = amount;
                         lt.Remove(removeRequest);
                         request.Provided += removeRequest.Provided;
@@ -908,17 +856,17 @@ namespace Models.CLEM.Activities
                 }
 
                 // if still needed and allow partial resource use.
-                if (partialAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+                if (allowPartialAction)
                 {
                     if (amountProvided < amountNeeded)
                     {
                         // then search for those that meet criteria and can do part of task
-                        foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson))) 
+                        foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson))) 
                         {
                             if (amountProvided >= amountNeeded)
                                 break;
 
-                            double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson));
+                            double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(callingModel.UniqueID, lr.MaximumDaysPerPerson));
 
                             // limit to max allowed per person
                             amount = Math.Min(amount, lr.MaximumDaysPerPerson);
@@ -930,9 +878,9 @@ namespace Models.CLEM.Activities
                                 removeRequest.Required = amount;
                                 if (removeFromResource)
                                 {
-                                    if(item.LastActivityRequestID != request.ActivityID)
+                                    if(item.LastActivityRequestID != callingModel.UniqueID)
                                         item.LastActivityRequestAmount = 0;
-                                    item.LastActivityRequestID = request.ActivityID;
+                                    item.LastActivityRequestID = callingModel.UniqueID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
                                     request.Provided += removeRequest.Provided;
@@ -1007,28 +955,29 @@ namespace Models.CLEM.Activities
                 {
                     if (request.ResourceType == typeof(Labour))
                         // get available labour based on rules.
-                        request.Available = TakeLabour(request, false, this, Resources, this.OnPartialResourcesAvailableAction);
+                        request.Available = TakeLabour(request, false, this, Resources, this.AllowsPartialResourcesAvailable);
                     else
                         request.Available = TakeNonLabour(request, false);
                 }
             }
 
-            // are all resources available
-            IEnumerable<ResourceRequest> shortfallRequests = resourceRequests.Where(a => a.Required > a.Available);
-            if (shortfallRequests.Any())
+            // get requests needing transmutaion - must be flagged UseResourcesAvailable
+            IEnumerable<ResourceRequest> shortfallsToTransmute = resourceRequests.Where(a => MathUtilities.IsNegative(a.Available - a.Required) ? (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable : false);
+            //IEnumerable<ResourceRequest> shortfallRequests = resourceRequests.Where(a => MathUtilities.IsGreaterThan(a.Required, a.Available) && (a.ActivityModel as CLEMActivityBase).OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity);
+            if (shortfallsToTransmute.Any())
                 // check what transmutations can occur
-                Resources.TransmutateShortfall(shortfallRequests);
+                Resources.TransmutateShortfall(shortfallsToTransmute);
 
             // check if need to do transmutations
-            int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
-            bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
+            int countTransmutationsSuccessful = shortfallsToTransmute.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
+            bool allTransmutationsSuccessful = (shortfallsToTransmute.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
 
             // OR at least one transmutation successful and PerformWithPartialResources
-            if ((shortfallRequests.Any() && (shortfallRequests.Count() == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+            if ((shortfallsToTransmute.Any() && (shortfallsToTransmute.Count() == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources))
             {
                 // do transmutations.
                 // this uses the current zone resources, but will find markets if needed in the process
-                Resources.TransmutateShortfall(shortfallRequests, false);
+                Resources.TransmutateShortfall(shortfallsToTransmute, false);
 
                 // recheck resource amounts now that resources have been topped up
                 foreach (ResourceRequest request in resourceRequests)
@@ -1043,7 +992,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequests.Where(a => (a.Required - a.Available) > 0.000001))
+            foreach (var item in resourceRequests.Where(a => MathUtilities.IsPositive(a.Required - a.Available)))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
@@ -1076,23 +1025,70 @@ namespace Models.CLEM.Activities
                 return false;
 
             // remove activity resources 
+
+#if DEBUG
             // if no shortfalls or not skip activity if they are present
             var shortfallRequests = resourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required));
-            if (shortfallRequests.Any() == false | (shortfallRequests.Any() & OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity))
+
+            // for testing. report any requests with no activity model 
+            if (resourceRequestList.Where(a => a.ActivityModel is null).Any())
+                throw new NotImplementedException($"Unknown ActivityModel in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
+            
+            // report any requests with a non CLEMactivityBase activity model
+            var wrongType = resourceRequestList.Where(a => (a.ActivityModel is IReportPartialResourceAction) == false);
+            if (wrongType.Any())
+                throw new NotImplementedException($"Unsupported ActivityModel type [{string.Join("]&[",wrongType.Select(a => a.ActivityModel.GetType().ToString()))}] in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
+
+            // set warning status on all shortfall requests marked as skip if this is the last chance
+            if (triggerActivityPerformed)
             {
+                foreach (var skipped in shortfallRequests.Select(a => a.ActivityModel).OfType<CLEMActivityBase>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity))
+                    skipped.Status = ActivityStatus.Skipped;
+            }
+#endif
+            // remove all shortfall requests marked as skip
+            resourceRequestList.RemoveAll(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity);
+            var requestsToWorkWith = resourceRequestList;
+
+            if (requestsToWorkWith.Any())
+            {
+                var requestsToStop = requestsToWorkWith.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop);
                 // check if deficit and performWithPartial
-                if (shortfallRequests.Any() && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                if (requestsToStop.Any())
                 {
-                    string resourcelist = string.Join("][r=", resourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required)).Select(a => a.ResourceType.Name));
-                    if (resourcelist.Length > 0)
+                    foreach (var stopRequest in requestsToStop)
                     {
-                        string errorMessage = $"Insufficient [r={resourcelist}] for [a={this.NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
-                        Status = ActivityStatus.Critical;
-                        throw new ApsimXException(this, errorMessage);
+                        (stopRequest.ActivityModel as CLEMActivityBase).Status = ActivityStatus.Warning;
+                        string warn = $"Insufficient [r={stopRequest.ResourceType.Name}] from [a={stopRequest.ActivityModel.Name}] {((stopRequest.ActivityModel != this)?$" in [a={NameWithParent}]":"")}{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                    }
+                    string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for this activity or companion components{Environment.NewLine}See CLEM component Messages for details of all recource shortfalls";
+                    Status = ActivityStatus.Critical;
+                    throw new ApsimXException(this, errorMessage);
+                }
+
+                // check for any shortfalls if in identifiable child models if skip or error and stop for parent activity that has not been considered.
+                var requestsToPartial = requestsToWorkWith.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable);
+                if (requestsToPartial.Any())
+                {
+                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+                    {
+                        Status = ActivityStatus.Skipped;
+                        return false;
+                    }
+                    else
+                    {
+                        if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                        {
+                            string errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for this activity or companion components{Environment.NewLine}See CLEM component Messages for details of all recource shortfalls";
+                            Status = ActivityStatus.Critical;
+                            throw new ApsimXException(this, errorMessage);
+                        }
                     }
                 }
 
-                foreach (ResourceRequest request in resourceRequestList)
+                // all ok with this activity partial resources setting and all identifiable components.
+                foreach (ResourceRequest request in requestsToWorkWith)
                 {
                     // get resource
                     request.Provided = 0;
@@ -1101,7 +1097,7 @@ namespace Models.CLEM.Activities
                     { 
                         if (request.ResourceType == typeof(Labour))
                             // get available labour based on rules.
-                            request.Available = TakeLabour(request, true, this, Resources, this.OnPartialResourcesAvailableAction);
+                            request.Available = TakeLabour(request, true, this, Resources, this.AllowsPartialResourcesAvailable);
                         else
                             request.Available = TakeNonLabour(request, true);
                     }
@@ -1109,6 +1105,7 @@ namespace Models.CLEM.Activities
             }
             else
                 Status = ActivityStatus.Ignored;
+
             return Status != ActivityStatus.Ignored;
         }
 

@@ -141,7 +141,7 @@ namespace Models.CLEM.Activities
                 // reduce limiters based on financial shortfall
                 if (financeProvided < financeRequired)
                 {
-                    if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+                    if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources)
                     {
                         Status = ActivityStatus.Partial;
                         int currentmonth = clock.Today.Month;

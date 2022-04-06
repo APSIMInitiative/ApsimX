@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
                                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                                         Status = ActivityStatus.Ignored;
                                         break;
-                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
+                                    case OnPartialResourcesAvailableActionTypes.UseAvailableResources:
                                         Status = ActivityStatus.Partial;
                                         break;
                                     default:

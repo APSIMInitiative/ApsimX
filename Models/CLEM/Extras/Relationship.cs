@@ -25,6 +25,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(RuminantActivityRequestPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
+    [ValidParent(ParentType = typeof(Labour))]
     [Description("Specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
@@ -47,10 +48,6 @@ namespace Models.CLEM
             get { return ""; }
             set {; }
         }
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public bool ShortfallCanAffectParentActivity { get; set; }
 
         /// <summary>
         /// X values of relationship

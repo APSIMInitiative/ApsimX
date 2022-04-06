@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
             // get all shortfalls
             double labourLimit = this.LabourLimitProportion;
 
-            if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+            if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources)
             {
                 manureStore.Collect(manureStore.Name, labourLimit, this);
                 if (labourLimit == 1)

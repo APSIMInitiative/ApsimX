@@ -22,11 +22,6 @@ namespace Models.CLEM.Interfaces
         string Units { get; set; }
 
         /// <summary>
-        /// Determines whether a shortfall of this child request will affect the activity if possible
-        /// </summary>
-        bool ShortfallCanAffectParentActivity { get; set; }
-
-        /// <summary>
         /// Label to assign each transactions resulting from this component of an activity in ledgers
         /// </summary>
         string TransactionCategory { get; set; }

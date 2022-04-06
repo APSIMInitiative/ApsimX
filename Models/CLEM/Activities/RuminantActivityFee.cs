@@ -58,12 +58,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
 
-        /// <inheritdoc/>
-        [Description("Allow finance shortfall to affect activity")]
-        [Required]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool ShortfallCanAffectParentActivity { get; set; }
-
         /// <summary>
         /// Store finance type to use
         /// </summary>

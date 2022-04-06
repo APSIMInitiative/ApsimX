@@ -46,7 +46,12 @@ namespace Models.CLEM
         /// <summary>
         /// Indicates activity was place holder or parent activity
         /// </summary>
-        NoTask
+        NoTask,
+        /// <summary>
+        /// Insufficient resources so activity skipped
+        /// </summary>
+        Skipped,
+
     }
 
     /// <summary>
@@ -428,7 +433,7 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Possible actions when only partial requested resources are available
+    /// Possible actions when only partial resources requested are available
     /// </summary>
     public enum OnPartialResourcesAvailableActionTypes
     {
@@ -441,9 +446,13 @@ namespace Models.CLEM
         /// </summary>
         SkipActivity,
         /// <summary>
-        /// Receive resources available and perform activity
+        /// Use available resources to perform activity
         /// </summary>
-        UseResourcesAvailable
+        UseAvailableResources,
+        /// <summary>
+        /// Use available resources with shortfall influencing other activities
+        /// </summary>
+        UseAvailableWithImplications,
     }
 
     /// <summary>

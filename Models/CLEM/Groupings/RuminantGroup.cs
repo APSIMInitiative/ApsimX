@@ -67,10 +67,6 @@ namespace Models.CLEM.Groupings
             set { ; }
         }
 
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public bool ShortfallCanAffectParentActivity { get; set; }
-
         /// <summary>
         /// Constructor to apply defaults
         /// </summary>

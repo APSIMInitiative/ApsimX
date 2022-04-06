@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             double labourlimit = this.LabourLimitProportion;
             double units = 0;
-            if (labourlimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+            if (labourlimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources)
             {
                 units = unitsAvailableForSale * labourlimit;
                 if (price.UseWholePackets)

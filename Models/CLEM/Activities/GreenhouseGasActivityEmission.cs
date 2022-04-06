@@ -69,10 +69,6 @@ namespace Models.CLEM.Activities
         public string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool ShortfallCanAffectParentActivity { get; set; }
-
-        /// <inheritdoc/>
         public void PrepareForTimestep()
         {
         }
