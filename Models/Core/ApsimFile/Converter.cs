@@ -3918,6 +3918,7 @@ namespace Models.Core.ApsimFile
 
         /// <summary>
         /// Change EmergingPhase to use a child Target IFunction rather than built in shootlag, shootrate.
+        /// Also add a seed mortality function to plant models.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">File name.</param>
@@ -3938,6 +3939,12 @@ namespace Models.Core.ApsimFile
                 sowingDepthReference["VariableName"] = "[Plant].SowingData.Depth";
 
                 JsonUtilities.AddConstantFunctionIfNotExists(depthxRate, "ShootRate", shootRate);
+            }
+
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+            {
+                if (JsonUtilities.ChildWithName(plant, "MortalityRate") != null)
+                    JsonUtilities.AddConstantFunctionIfNotExists(plant, "SeedMortality", "0.0");
             }
         }
 

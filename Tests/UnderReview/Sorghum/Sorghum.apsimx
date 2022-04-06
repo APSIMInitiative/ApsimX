@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 430,
+  "ExplorerWidth": 474,
   "Version": 149,
   "Name": "Simulations",
   "Children": [
@@ -9300,6 +9300,15 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "MortalityRate",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "SeedMortalityRate",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
