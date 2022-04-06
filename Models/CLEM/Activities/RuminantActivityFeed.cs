@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
-                case "RuminantActivityFee":
+                case "ActivityFee":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number fed",
@@ -193,7 +193,7 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "LabourGroup":
-                    case "RuminantActivityFee":
+                    case "ActivityFee":
                         switch (valueToSupply.Key.identifier)
                         {
                             case "Number fed":

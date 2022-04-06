@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
                         },
                         units: new List<string>()
                         );
-                case "RuminantActivityFee":
+                case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
@@ -374,7 +374,7 @@ namespace Models.CLEM.Activities
                     Name = this.Name
                 }
             };
-            activitye.Activity.SetGuID(this.UniqueID);
+            activitye.Activity.UniqueID = this.UniqueID;
         }
 
         /// <summary>

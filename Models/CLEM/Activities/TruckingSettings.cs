@@ -115,10 +115,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public string Units { get; set; }
 
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public bool ShortfallCanAffectParentActivity { get; set; }
-
         // load unit by weight limit, floor area.
         // relationship to calculate proportion of load per individual
         // loading unit load limit (individuals, weight, floor area)
@@ -151,7 +147,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
-                case "RuminantActivityFee":
+                case "ActivityFee":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>() {
@@ -357,7 +353,7 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "LabourGroup":
-                    case "RuminantActivityFee":
+                    case "ActivityFee":
                     case "GreenhouseGasActivityEmission":
                         switch (valueToSupply.Key.unit)
                         {

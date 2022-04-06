@@ -401,7 +401,7 @@ namespace Models.CLEM.Activities
                         },
                         units: new List<string>()
                         );
-                case "RuminantActivityFee":
+                case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
