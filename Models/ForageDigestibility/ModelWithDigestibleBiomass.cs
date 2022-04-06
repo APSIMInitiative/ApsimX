@@ -45,7 +45,7 @@ namespace Models.ForageDigestibility
                     {
                         var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
                         var consumableAmount = Math.Max(0.0, material.Total.Wt * materialParameters.FractionConsumable - minimumConsumable);
-                        var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 0);
+                        var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0, 0.000000001);
                         
                         yield return new DigestibleBiomass(new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.Digestibility),
                                                            materialParameters);
@@ -74,7 +74,7 @@ namespace Models.ForageDigestibility
                                                double PreferenceForLeafOverStems = 1.0,
                                                ISummary summary = null)
         {
-            if (!MathUtilities.FloatsAreEqual(amountToRemove, 0.0))
+            if (!MathUtilities.FloatsAreEqual(amountToRemove, 0.0, 0.000000001))
             {
                 var allMaterial = Material.ToList();
 
@@ -85,13 +85,13 @@ namespace Models.ForageDigestibility
 
                 // Compute the fraction of each tissue to be removed
                 var fracRemoving = new List<FractionDigestibleBiomass>();
-                if (MathUtilities.FloatsAreEqual(amountToRemove - harvestableWt, 0.0))
+                if (MathUtilities.FloatsAreEqual(amountToRemove - harvestableWt, 0.0, 0.000000001))
                 {
                     // All existing DM is removed
                     amountToRemove = harvestableWt;
                     foreach (var material in allMaterial)
                     {
-                        double frac = MathUtilities.Divide(material.Consumable.Wt, harvestableWt, 0.0);
+                        double frac = MathUtilities.Divide(material.Consumable.Wt, harvestableWt, 0.0, 0.000000001);
                         fracRemoving.Add(new FractionDigestibleBiomass(material, frac));
                     }
                 }
@@ -133,7 +133,7 @@ namespace Models.ForageDigestibility
                     //   computing new ones at each iteration.
                     int count = 1;
                     totalFrac = totalFrac = fracRemoving.Sum(m => m.Fraction);
-                    while (!MathUtilities.FloatsAreEqual(1.0 - totalFrac, 0.0))
+                    while (!MathUtilities.FloatsAreEqual(1.0 - totalFrac, 0.0, 0.000000001))
                     {
                         count += 1;
                         foreach (var f in fracRemoving)
@@ -158,15 +158,16 @@ namespace Models.ForageDigestibility
                 var liveMaterial = fracRemoving.Where(f => f.Material.IsLive).ToList();
                 foreach (var live in liveMaterial)
                 {
-                    var dead = fracRemoving.Find(frac => frac.Material.Name == live.Material.Name &&
-                                                                 !frac.Material.IsLive);
+                    var dead = fracRemoving.Find(frac => frac.Material.Name == live.Material.Name && !frac.Material.IsLive);
                     if (dead == null)
+                    {
                         throw new Exception("Cannot find associated dead material while removing biomass in SimpleGrazing");
+                    }
 
                     RemoveBiomass(live.Material.Name, new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Total.Wt, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Total.Wt, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Total.Wt, 0.0, 0.000000001)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Total.Wt, 0.0, 0.000000001))
                     });
                 }
 
@@ -179,7 +180,7 @@ namespace Models.ForageDigestibility
                         RemoveBiomass(dead.Material.Name, new OrganBiomassRemovalType()
                         {
                             FractionLiveToRemove = 0,
-                            FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0))
+                            FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0, 0.000000001))
                         });
                     }
                 }
@@ -187,10 +188,14 @@ namespace Models.ForageDigestibility
                 // Set outputs and check balance
                 var defoliatedDM = preRemovalDMShoot - Material.Sum(m => m.Consumable.Wt);
                 var defoliatedN = preRemovalNShoot - Material.Sum(m => m.Consumable.N);
-                if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
+                if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove, 0.000001))
+                {
                     throw new Exception("Removal of DM resulted in loss of mass balance");
+                }
                 else
-                    summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM*10).ToString("#0.0") + "kg/ha", MessageType.Information);
+                {
+                    summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM * 10).ToString("#0.0") + "kg/ha", MessageType.Information);
+                }
 
                 return new DigestibleBiomass(new DamageableBiomass(Name, new Biomass()
                 {
