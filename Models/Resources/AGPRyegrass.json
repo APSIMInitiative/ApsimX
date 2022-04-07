@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 148,
+  "Version": 149,
   "Name": "Simulations",
   "Children": [
     {
@@ -135,7 +135,7 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
-          "NConcOptimum": 0.020,
+          "NConcOptimum": 0.02,
           "NConcMinimum": 0.007,
           "NConcMaximum": 0.025,
           "Children": [
@@ -242,7 +242,7 @@
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
           "Name": "Root",
-          "NConcOptimum": 0.020,
+          "NConcOptimum": 0.02,
           "NConcMinimum": 0.006,
           "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 90.0,
