@@ -703,7 +703,7 @@ namespace Models.Core.ApsimFile
 
             // Get sample thickness and bulk density.
             var sampleThickness = sample["Thickness"].Values<double>().ToArray();
-            var sampleBD = Soils.Standardiser.Layers.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last());
+            var sampleBD = Soils.Standardiser.Layers.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last(), true);
 
             for (int i = 0; i < values.Count; i++)
                 values[i] = values[i].Value<double>() * 100 / (sampleBD[i] * sampleThickness[i]);
@@ -756,7 +756,7 @@ namespace Models.Core.ApsimFile
                         var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                         var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                         var values = no3Values.Values<double>().ToArray();
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0, true);
                         no3Values = new JArray(mappedValues);
 
                         // Move from sample to analysis
@@ -783,7 +783,7 @@ namespace Models.Core.ApsimFile
                         var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                         var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                         var values = nh4Values.Values<double>().ToArray();
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2, true);
                         nh4Values = new JArray(mappedValues);
 
                         // Move from sample to analysis
@@ -1153,7 +1153,7 @@ namespace Models.Core.ApsimFile
                         var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSand"] = new JArray(mappedValues);
                     }
 
@@ -1162,7 +1162,7 @@ namespace Models.Core.ApsimFile
                         var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSilt"] = new JArray(mappedValues);
                     }
 
@@ -1171,7 +1171,7 @@ namespace Models.Core.ApsimFile
                         var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
                     }
 
