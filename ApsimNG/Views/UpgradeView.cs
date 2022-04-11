@@ -227,9 +227,9 @@
             if (oldVersions.Active && allUpgrades.Length < 1)
                 minRevision = -1;
             else if (!oldVersions.Active && upgrades.Length < 1)
-                minRevision = version.Revision;
+                minRevision = version.Build;
 
-            upgrades = WebUtilities.PostRestService<Upgrade[]>($"https://builds.apsim.info/api/nextgen/list?min={version.Revision}");
+            upgrades = WebUtilities.PostRestService<Upgrade[]>($"https://builds.apsim.info/api/nextgen/list?min={version.Build}");
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
                 string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.Revision}";
