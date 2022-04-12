@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Views
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -221,15 +222,14 @@
         /// </summary>
         private void PopulateUpgradeList()
         {
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            // version = new Version(0, 0, 0, 652);  
-            int minRevision;
             if (oldVersions.Active && allUpgrades.Length < 1)
-                minRevision = -1;
+                allUpgrades = GetUpgrades(-1).ToArray();
             else if (!oldVersions.Active && upgrades.Length < 1)
-                minRevision = version.Build;
+            {
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                upgrades = GetUpgrades(version.Build).ToArray();
+            }
 
-            upgrades = WebUtilities.PostRestService<Upgrade[]>($"https://builds.apsim.info/api/nextgen/list?min={version.Build}");
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
                 string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.Revision}";
@@ -237,6 +237,11 @@
             }
             if (listmodel.IterNChildren() > 0)
                 listview1.SetCursor(new TreePath("0"), null, false);
+        }
+
+        private IReadOnlyList<Upgrade> GetUpgrades(int minRevision)
+        {
+            return WebUtilities.PostRestService<List<Upgrade>>($"https://builds.apsim.info/api/nextgen/list?min={minRevision}");
         }
 
         private int GetSelIndex()
