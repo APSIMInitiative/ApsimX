@@ -329,7 +329,8 @@ namespace UserInterface.Views
                 else
                 {
                 }
-                if (autoNewline)
+                // Don't insert auto newlines after the last block in the document.
+                if (autoNewline && !(block.Parent is MarkdownDocument && block.Parent.LastChild == block))
                     textView.Buffer.Insert(ref insertPos, "\n\n");
             }
 
