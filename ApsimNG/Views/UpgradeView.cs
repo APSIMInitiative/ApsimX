@@ -239,6 +239,14 @@
                 listview1.SetCursor(new TreePath("0"), null, false);
         }
 
+        /// <summary>
+        /// Retrieve list of available upgrades from the upgrade server which
+        /// are more recent than the specified revision number.
+        /// </summary>
+        /// <param name="minRevision">
+        /// Retrieve all upgrades which are more recent than this revision
+        /// number. Set to -1 for all upgrades.
+        /// </param>
         private IReadOnlyList<Upgrade> GetUpgrades(int minRevision)
         {
             return WebUtilities.PostRestService<List<Upgrade>>($"https://builds.apsim.info/api/nextgen/list?min={minRevision}");
