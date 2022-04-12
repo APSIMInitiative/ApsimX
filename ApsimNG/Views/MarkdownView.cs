@@ -61,7 +61,10 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            Initialise(owner, new ScrolledWindow());
+            Initialise(owner, new ScrolledWindow()
+            {
+                PropagateNaturalHeight = true
+            });
         }
 
         /// <summary>Constructor</summary>
