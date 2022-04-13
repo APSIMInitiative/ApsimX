@@ -15,7 +15,7 @@ namespace Models.Functions.RootShape
     [ValidParent(ParentType = typeof(Root))]
     public class RootShapeSemiCircle : RootShapeCylinder
     {
-        /// <summary>Calculates the root area for a layer of soil</summary>
+        /// <summary>Calculates the proportion of the layer's volume occupied by roots.</summary>
         public double CalcRootProportion(ZoneState zone, int layer)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
@@ -42,6 +42,17 @@ namespace Models.Functions.RootShape
 
             foreach (var tag in DocumentChildren<IModel>())
                 yield return tag;
+        }
+
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        public override void CalcRootVolumeProportionInLayers(ZoneState zone)
+        {
+            var physical = zone.Soil.FindChild<Soils.IPhysical>();
+            for (int i = 0; i < physical.Thickness.Length; i++)
+                zone.RootProportionVolume[i] = CalcRootProportion(zone, i);
         }
 
         private double CalcRootAreaSemiCircleMaize(ZoneState zone, double top, double bottom, double hDist)

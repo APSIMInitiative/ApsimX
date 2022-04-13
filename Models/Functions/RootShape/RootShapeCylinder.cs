@@ -37,6 +37,15 @@ namespace Models.Functions.RootShape
             }
         }
 
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        public virtual void CalcRootVolumeProportionInLayers(ZoneState zone)
+        {
+            zone.RootProportionVolume = zone.RootProportions;
+        }
+
         /// <summary>Document the model.</summary>
         public override IEnumerable<ITag> Document()
         {
