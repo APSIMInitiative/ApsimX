@@ -3591,13 +3591,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
-                  "Name": "RootShape",
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "KLModifier",
                   "Children": [
