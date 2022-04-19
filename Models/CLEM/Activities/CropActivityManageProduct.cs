@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
 
         private IFileCrop fileCrop;
         private CropActivityManageCrop parentManagementActivity;
-        private ActivityCutAndCarryLimiter limiter;
+        private ActivityCarryLimiter limiter;
         private bool rotationReady = false;
         private string addReason = "Harvest";
         private double amountToDo;
@@ -233,7 +233,7 @@ namespace Models.CLEM.Activities
             UnitsToHaConverter = (parentManagementActivity.LinkedLandItem.Parent as Land).UnitsOfAreaToHaConversion;
 
             // locate a cut and carry limiter associated with this event.
-            limiter = LocateCutAndCarryLimiter(this);
+            limiter = ActivityCarryLimiter.Locate(this);
 
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
@@ -389,22 +389,6 @@ namespace Models.CLEM.Activities
                 ManageActivityResourcesAndTasks();
         }
 
-        /// <summary>
-        /// Method to locate a ActivityCutAndCarryLimiter
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private ActivityCutAndCarryLimiter LocateCutAndCarryLimiter(IModel model)
-        {
-            // search children
-            ActivityCutAndCarryLimiter limiterFound = model.FindAllChildren<ActivityCutAndCarryLimiter>().Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
-            if (limiterFound == null)
-                if(model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
-                    limiterFound = LocateCutAndCarryLimiter(model.Parent);
-            return limiterFound;
-        }
-
-
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
@@ -464,7 +448,7 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
                 if (tagsShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Required / tagsShort.Provided));
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
 
                 this.Status = ActivityStatus.Partial;
             }
