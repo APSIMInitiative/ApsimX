@@ -44,7 +44,7 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.Required as Required",
                 "[Activities].LastShortfallResourceRequest.Provided as Provided",
                 "[Activities].LastShortfallResourceRequest.Available as Available",
-                //"[Activities].LastShortfallResourceRequest.ActivityModel.Status as Action",
+                "[Activities].LastShortfallResourceRequest.ActivityModel.Status as Action",
             };
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };

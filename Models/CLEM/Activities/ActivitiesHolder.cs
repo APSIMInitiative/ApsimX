@@ -56,7 +56,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public ActivityPerformedEventArgs LastActivityPerformed { get; set; }
-//        public CLEMActivityBase LastActivityPerformed { get; set; }
 
         /// <summary>
         /// Shortfall occurred 
@@ -129,7 +128,6 @@ namespace Models.CLEM.Activities
                 Name = timeStep.Name,
                 Status = timeStep.Status,
                 Id = timeStep.UniqueID.ToString(),
-                //Activity = timeStep
             };
             LastActivityPerformed = ea;
             OnActivityPerformed(ea);

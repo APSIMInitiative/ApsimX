@@ -22,11 +22,6 @@ namespace Models.CLEM.Interfaces
         string Units { get; set; }
 
         /// <summary>
-        /// Label to assign each transactions resulting from this component of an activity in ledgers
-        /// </summary>
-        string TransactionCategory { get; set; }
-
-        /// <summary>
         /// Method to prepare for the times step after parent activity preparation 
         /// </summary>
         public void PrepareForTimestep();

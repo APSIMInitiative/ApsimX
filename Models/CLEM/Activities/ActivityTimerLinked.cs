@@ -85,8 +85,6 @@ namespace Models.CLEM.Activities
         {
             GetAllTimersAvailable();
             linkedTimer = timersAvailable.Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingTimerName).FirstOrDefault() as IActivityTimer;
-
-            //throw new NotImplementedException("This timer is in developement and not yet available");
         }
 
         /// <inheritdoc/>

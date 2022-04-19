@@ -27,12 +27,6 @@ namespace Models.CLEM.Activities
             throw new NotImplementedException();
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {

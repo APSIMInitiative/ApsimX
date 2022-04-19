@@ -140,19 +140,6 @@ namespace Models.CLEM.Activities
                         },
                         units: new List<string>()
                         );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number milked",
-                            "Litres milked",
-                        },
-                        units: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "per L milked"
-                        }
-                        );
                 default:
                     return new LabelsForCompanionModels();
             }

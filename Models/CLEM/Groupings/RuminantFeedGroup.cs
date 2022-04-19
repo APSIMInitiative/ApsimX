@@ -75,7 +75,7 @@ namespace Models.CLEM.Groupings
         [Description("Category for transactions")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
-        public override string TransactionCategory { get; set; }
+        public string TransactionCategory { get; set; }
 
         /// <summary>
         /// Constructor

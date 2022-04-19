@@ -87,7 +87,6 @@ namespace Models.CLEM.Activities
             resourceRequest = null;
             if (MathUtilities.IsPositive(argument))
             {
-                Status = ActivityStatus.NotNeeded;
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
                 {
@@ -109,7 +108,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (resourceRequest != null)
+            if (resourceRequest != null && argument != 0)
             {
                 bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
                 SetStatusSuccessOrPartial(shortfalls);
