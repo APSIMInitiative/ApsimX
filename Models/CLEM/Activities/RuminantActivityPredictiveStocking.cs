@@ -92,6 +92,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityPredictiveStocking()
         {
             TransactionCategory = "Livestock.Manage.[Destock]";
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
@@ -165,12 +166,6 @@ namespace Models.CLEM.Activities
             foreach (GrazeFoodStoreType pasture in paddocks)
             {
                 IEnumerable<Ruminant> paddockIndividuals = uniqueIndividuals.Where(a => a.Location == pasture.Name);
-
-                //// multiple breeds are currently not supported as we need to work out what to do with diferent AEs
-                //if (paddockGroup.GroupBy(a => a.Breed).Count() > 1)
-                //{
-                //    throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\r\nActivity:" + this.Name + ", Paddock: " + paddockGroup.Key);
-                //}
 
                 // total adult equivalents not marked for sale of all breeds on pasture for utilisation
                 double totalAE = paddockIndividuals.Sum(a => a.AdultEquivalent);
@@ -249,15 +244,27 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required" && a.CompanionModelDetails.unit != "per AE").FirstOrDefault();
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required" && a.CompanionModelDetails.unit != "per head").FirstOrDefault();
                 if (numberShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented destocking");
+                    }
+                }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required" && a.CompanionModelDetails.unit == "per AE").FirstOrDefault();
                 if (amountShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
+                    if (MathUtilities.FloatsAreEqual(amountToSkip, amountToDo))
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented destocking");
+                    }
+                }
             }
         }
 
@@ -298,137 +305,12 @@ namespace Models.CLEM.Activities
                 }
 
                 AeDestocked = amountDone;
-                if (number == numberToDo && MathUtilities.FloatsAreEqual(amountDone, amountToDo))
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial(number == numberToDo && MathUtilities.FloatsAreEqual(amountDone, amountToDo) == false);
 
                 // fire event to allow reporting of findings
                 OnReportStatus(new EventArgs());
             }
         }
-
-
-        ///// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMAnimalStock")]
-        //private void OnCLEMAnimalStock(object sender, EventArgs e)
-        //{
-        //    AeToDestock = 0;
-        //    AeDestocked = 0;
-        //    // this event happens after management has marked individuals for purchase or sale.
-        //    if (clock.Today.Month == (int)AssessmentMonth)
-        //    {
-        //        this.Status = ActivityStatus.NotNeeded;
-        //        // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
-
-        //        foreach (var paddockGroup in HerdResource.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
-        //        {
-        //            // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
-        //            if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
-        //            {
-        //                throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\r\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
-        //            }
-
-        //            // total adult equivalents not marked for sale of all breeds on pasture for utilisation
-        //            double totalAE = paddockGroup.Where(a => a.SaleFlag == HerdChangeReason.None).Sum(a => a.AdultEquivalent);
-
-        //            double shortfallAE = 0;
-        //            // Determine total feed requirements for dry season for all ruminants on the pasture
-        //            // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
-
-        //            GrazeFoodStoreType pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-        //            double pastureBiomass = pasture.Amount;
-
-        //            // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
-        //            // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.
-        //            double detachrate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
-        //            // Assume a consumption rate of 2% of body weight.
-        //            double feedRequiredAE = paddockGroup.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * 30.4; //  2% of AE animal per day
-        //            for (int i = 0; i <= this.DrySeasonLength; i++)
-        //            {
-        //                // only include detachemnt if current biomass is positive, not already overeaten
-        //                if (MathUtilities.IsPositive(pastureBiomass))
-        //                    pastureBiomass *= (1.0 - detachrate);
-
-        //                if (i > 0) // not in current month as already consumed by this time.
-        //                    pastureBiomass -= (feedRequiredAE * totalAE);
-        //            }
-
-        //            // Shortfall in Fodder in kg per hectare
-        //            // pasture at end of period in kg/ha
-        //            double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
-        //            PasturePredicted = pastureShortFallKgHa;
-        //            // shortfall from low limit
-        //            pastureShortFallKgHa = Math.Max(0, FeedLowLimit - pastureShortFallKgHa);
-        //            // Shortfall in Fodder in kg for paddock
-        //            double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
-
-        //            if (MathUtilities.FloatsAreEqual(pastureShortFallKg, 0))
-        //                return;
-
-        //            // number of AE to sell to balance shortfall_kg over entire season
-        //            shortfallAE = pastureShortFallKg / (feedRequiredAE* this.DrySeasonLength);
-        //            AeToDestock = shortfallAE;
-
-        //            // get prediction
-        //            HandleDestocking(shortfallAE, paddockGroup.Key);
-
-        //            // fire event to allow reporting of findings
-        //            OnReportStatus(new EventArgs());
-        //        }
-        //    }
-        //    else
-        //        this.Status = ActivityStatus.Ignored;
-        //}
-
-        //private void HandleDestocking(double animalEquivalentsforSale, string paddockName)
-        //{
-        //    if (animalEquivalentsforSale <= 0)
-        //    {
-        //        AeDestocked = 0;
-        //        this.Status = ActivityStatus.Ignored;
-        //        return;
-        //    }
-
-        //    // move to underutilised paddocks
-        //    // TODO: This can be added later as an activity including spelling
-
-        //    // remove all potential purchases from list as they can't be supported.
-        //    // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-        //    HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
-
-        //    // remove individuals to sale as specified by destock groups
-        //    foreach (var item in FindAllChildren<RuminantGroup>())
-        //    {
-        //        // works with current filtered herd to obey filtering.
-        //        var herd = item.Filter(CurrentHerd(false))
-        //            .Where(a => a.Location == paddockName && !a.ReadyForSale);
-
-        //        foreach (Ruminant ruminant in herd)
-        //        {
-        //            if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
-        //            {
-        //                animalEquivalentsforSale -= ruminant.AdultEquivalent;
-        //                ruminant.SaleFlag = HerdChangeReason.DestockSale;
-        //            }
-
-        //            if (MathUtilities.IsLessThanOrEqual(animalEquivalentsforSale, 0))
-        //            {
-        //                AeDestocked = 0;
-        //                this.Status = ActivityStatus.Success;
-        //                return;
-        //            }
-        //        }
-        //    }
-
-        //    AeDestocked = AeToDestock - animalEquivalentsforSale;
-        //    this.Status = ActivityStatus.Partial;
-            
-        //    // handling of sucklings with sold female is in RuminantActivityBuySell
-        //    // buy or sell is handled by the buy sell activity
-        //}
 
         /// <inheritdoc/>
         public event EventHandler ReportStatus;
@@ -438,27 +320,6 @@ namespace Models.CLEM.Activities
         {
             ReportStatus?.Invoke(this, e);
         }
-
-        //#region validation
-
-        ///// <summary>
-        ///// Validate this model
-        ///// </summary>
-        ///// <param name="validationContext"></param>
-        ///// <returns></returns>
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    // check that this model contains children RuminantDestockGroups with filters
-        //    var results = new List<ValidationResult>();
-        //    // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
-        //    if (this.FindAllChildren<RuminantGroup>().Count() == 0)
-        //    {
-        //        string[] memberNames = new string[] { "Ruminant group" };
-        //        results.Add(new ValidationResult("At least one [f=RuminantGroup] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
-        //    }
-        //    return results;
-        //}
-        //#endregion
 
         #region descriptive summary
 

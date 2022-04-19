@@ -23,8 +23,16 @@ namespace Models.CLEM.Activities
     [Description("Process one resource into another resource with associated labour and costs")]
     [HelpUri(@"Content/Features/Activities/All resources/ProcessResource.htm")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivityProcess : CLEMActivityBase
+    public class ResourceActivityProcess : CLEMActivityBase, IHandlesActivityCompanionModels
     {
+        private double amountToDo;
+        private double amountToSkip;
+        private ResourceRequest resourceRequest;
+        [JsonIgnore]
+        private IResourceType resourceTypeProcessModel { get; set; }
+        [JsonIgnore]
+        private IResourceType resourceTypeCreatedModel { get; set; }
+
         /// <summary>
         /// Resource type to process
         /// </summary>
@@ -55,18 +63,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double Reserve { get; set; }
 
-        /// <summary>
-        /// Resource to process
-        /// </summary>
-        [JsonIgnore]
-        private IResourceType resourceTypeProcessModel { get; set; }
-
-        /// <summary>
-        /// Resource created
-        /// </summary>
-        [JsonIgnore]
-        private IResourceType resourceTypeCreatedModel { get; set; }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -86,24 +82,91 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        units: new List<string>() {
+                            "fixed",
+                            "per amount to process"
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
+
+            amountToSkip = 0;
+            amountToDo = resourceTypeProcessModel.Amount;
+            if (Reserve > 0)
+            {
+                amountToDo = Math.Min(amountToDo, Reserve);
+            }
+
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "amount":
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+
+            if (amountToDo > 0)
+            {
+                resourceRequest = new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = amountToDo,
+                    Resource = resourceTypeProcessModel,
+                    ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
+                    ResourceTypeName = (resourceTypeProcessModel as Model).Name,
+                    ActivityModel = this,
+                    Category = TransactionCategory,
+                    RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
+                };
+                resourcesNeeded.Add(resourceRequest);
+            }
+            return resourcesNeeded;
+        }
+
+        /// <inheritdoc/>
         protected override void AdjustResourcesForTimestep()
         {
-            // get labour shortfall
-            double labprop = this.LimitProportion(typeof(LabourType));
-            // get finance shortfall
-            double finprop = this.LimitProportion(typeof(FinanceType));
-
-            // reduce amount used
-            double limit = Math.Min(labprop, finprop);
-
-            if(limit<1)
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                // find process resource entry in resource list
-                ResourceRequest rr = ResourceRequestList.Where(a => a.ResourceType == resourceTypeProcessModel.GetType()).FirstOrDefault();
-                if (rr != null)
+                var unitShort = shortfalls.FirstOrDefault();
+                if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity || OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {
-                    // reduce amount required
-                    rr.Required *= limit;
+                    resourceRequest.Required = 0;
+                    Status = ActivityStatus.Skipped;
+                }
+                else
+                {
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - unitShort.Available / unitShort.Required));
+                    resourceRequest.Required -= amountToSkip;
+                    if (unitShort.Available == 0)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
                 }
             }
         }
@@ -111,122 +174,13 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            // processed resource should already be taken
-            Status = ActivityStatus.NotNeeded;
-            // add created resources
-            ResourceRequest rr = ResourceRequestList.Where(a => (a.Resource != null && a.Resource.GetType() == resourceTypeProcessModel.GetType())).FirstOrDefault();
-            if (rr != null)
+            // processed resource should already be taken if all was ok
+            if (resourceRequest != null && resourceRequest.Provided > 0)
             {
-                resourceTypeCreatedModel.Add(rr.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
-                if(rr.Provided > 0)
-                {
-                    Status = ActivityStatus.Success;
-                }
+                // add created resources
+                resourceTypeCreatedModel.Add(resourceRequest.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
+                SetStatusSuccessOrPartial(amountToSkip > 0);
             }
-        }
-
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double daysNeeded;
-
-        //    // get amount to processed
-        //    double amountToProcess = resourceTypeProcessModel.Amount;
-        //    if (Reserve > 0)
-        //    {
-        //        amountToProcess = Math.Min(amountToProcess, Reserve);
-        //    }
-
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perUnit:
-        //            daysNeeded = amountToProcess / requirement.UnitSize * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, (resourceTypeCreatedModel as CLEMModel).NameWithParent);
-        //}
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
-        {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-
-            double amountToProcess = resourceTypeProcessModel.Amount;
-            if (Reserve > 0)
-            {
-                amountToProcess = Math.Min(amountToProcess, Reserve);
-            }
-
-            // get finances required.
-            foreach (ResourceActivityFee item in this.FindAllChildren<ResourceActivityFee>())
-            {
-                if (ResourceRequestList == null)
-                {
-                    ResourceRequestList = new List<ResourceRequest>();
-                }
-
-                double sumneeded = 0;
-                switch (item.PaymentStyle)
-                {
-                    case ResourcePaymentStyleType.Fixed:
-                        sumneeded = item.Amount;
-                        break;
-                    case ResourcePaymentStyleType.perUnit:
-                        sumneeded = amountToProcess*item.Amount;
-                        break;
-                    case ResourcePaymentStyleType.perBlock:
-                        ResourcePricing price = resourceTypeProcessModel.Price(PurchaseOrSalePricingStyleType.Both);
-                        double blocks = amountToProcess / price.PacketSize;
-                        if(price.UseWholePackets)
-                        {
-                            blocks = Math.Truncate(blocks);
-                        }
-                        sumneeded = blocks * item.Amount;
-                        break;
-                    default:
-                        throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [a={2}]", item.PaymentStyle, item.Name, this.Name));
-                }
-                if (sumneeded > 0)
-                {
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = sumneeded,
-                        Resource = item.BankAccount,
-                        ResourceType = typeof(Finance),
-                        ResourceTypeName = item.BankAccount.Name,
-                        ActivityModel = this,
-                        FilterDetails = null,
-                        Category = TransactionCategory,
-                        RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
-                    }
-                    );
-                }
-            }
-
-            // get process resource required
-            if (amountToProcess > 0)
-            {
-                resourcesNeeded.Add(
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = true,
-                        Required = amountToProcess,
-                        Resource = resourceTypeProcessModel,
-                        ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
-                        ResourceTypeName = (resourceTypeProcessModel as Model).Name,
-                        ActivityModel = this,
-                        Category = TransactionCategory,
-                        RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
-                    }
-                );
-            }
-            return resourcesNeeded;
         }
 
         #region descriptive summary

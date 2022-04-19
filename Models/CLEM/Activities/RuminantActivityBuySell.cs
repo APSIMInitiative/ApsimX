@@ -174,7 +174,7 @@ namespace Models.CLEM.Activities
             numberTrucksToSkipIndividuals = 0;
             fundsNeededPurchaseSkipIndividuals = 0;
 
-            IEnumerable<Ruminant> herd = new List<Ruminant>();
+            IEnumerable<Ruminant> herd;
             switch (task)
             {
                 case "Buy":
@@ -347,25 +347,6 @@ namespace Models.CLEM.Activities
             // remove any additional individuals from end based on trucks to skip
 
             //TODO: need to decide whether to readjust to new min load and truck rules after reduction.
-            //double skippedTrucks = 0;
-            //if(MathUtilities.IsGreaterThan(numberTrucksToSkip, 0))
-            //{
-            //    skippedTrucks = uniqueIndividuals.TakeLast(numberToSkip).Sum(a => a.Weight) / trucking.Number450kgPerTruck;
-            //    numberTrucksToSkip -= skippedTrucks;
-            //    numberTrucksToSkip = Math.Max(0, numberTrucksToSkip);
-            //    if(MathUtilities.IsGreaterThan(numberTrucksToSkip, 0))
-            //    {
-            //        // reduce herd to cover skipped trucks
-            //        double weightToReduce = numberTrucksToSkip * trucking.Number450kgPerTruck;
-            //        foreach (var ind in uniqueIndividuals.SkipLast(numberToSkip).Reverse())
-            //        {
-            //            numberTrucksToSkipIndividuals++;
-            //            weightToReduce -= ind.Weight;
-            //            if (MathUtilities.IsLessThanOrEqual(weightToReduce, 0))
-            //                break;
-            //        }
-            //    }
-            //}
 
             // further limit buy purchase shortfalls buy reducing the herd (unique individuals) to new level
             if (task == "Buy")
@@ -493,7 +474,6 @@ namespace Models.CLEM.Activities
             if (numberToDo - numberToSkip > 0)
                 ProcessAnimals();
         }
-
 
         #region descriptive summary
 

@@ -10,12 +10,11 @@ using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Manage trade herd activity</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <summary>Add individual ruminants to the purchase request list</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -23,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manage a herd of individuals as trade herd")]
-    [Version(1, 0, 1, "")]
+    [Version(1, 1, 0, "Replaces old Trade herd approach")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuy.htm")]
     public class RuminantActivityRequestPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
@@ -32,6 +31,9 @@ namespace Models.CLEM.Activities
         private RuminantType herdToUse;
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
+        private int numberToDo;
+        private int numberToSkip;
+        private double calculatedNumber = 0;
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchases in for grazing
@@ -42,6 +44,12 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
+        /// <summary>
+        /// Tag label
+        /// </summary>
+        [Description("Label of tag to assign")]
+        public string TagLabel { get; set; }
+
         // TODO: decide how many to stock.
         // stocking rate for paddock
         // fixed number
@@ -51,8 +59,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityRequestPurchase()
         {
-            this.SetDefaults();
-            TransactionCategory = "Livestock.Buy";
+            SetDefaults();
+            TransactionCategory = "Livestock.Purchase";
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
@@ -65,11 +74,16 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() { "Number to stock vs pasture" },
+                        units: new List<string>()
+                        );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Number purchased",
+                            "Number to purchase",
                         },
                         units: new List<string>() {
                             "fixed",
@@ -87,13 +101,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, false);
+            InitialiseHerd(false, false);
 
             // get herd to add to 
             herdToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            if(!herdToUse.PricingAvailable())
-                Summary.WriteMessage(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]", MessageType.Warning);
+            //if(!herdToUse.PricingAvailable())
+            //    Summary.WriteMessage(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]", MessageType.Warning);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -103,12 +117,12 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
-                var ah = this.FindInScope<ActivitiesHolder>();
+                var ah = FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
 
-            numberToStock = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
+            numberToStock = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
             if(numberToStock != null)
             {
                 if (grazeStore != "")
@@ -123,29 +137,78 @@ namespace Models.CLEM.Activities
             ManageActivityResourcesAndTasks();
         }
 
-
-        /// <summary>An event handler to call for all herd management activities</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalManage")]
-        private void OnCLEMAnimalManage(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // purchase details only on timer
-            if(TimingOK)
+            numberToSkip = 0;
+            double number = 0;
+            calculatedNumber = 0;
+            if (numberToStock != null && foodStore != null)
+                //NOTE: ensure calculation method in relationship is fixed values
+                calculatedNumber = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
+
+            foreach (SpecifyRuminant purchaseSpecific in FindAllChildren<SpecifyRuminant>())
             {
-                this.Status = ActivityStatus.NotNeeded;
-                // remove any old potential sales from list as these will be updated here
-                HerdResource.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
+                RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
+                if (calculatedNumber > 0)
+                    number += Math.Round(calculatedNumber * purchaseSpecific.Proportion);
+                else
+                    number += Math.Round(purchasetype.Number * purchaseSpecific.Proportion);
+            }
+            numberToDo = (int)number;
 
-                foreach (SpecifyRuminant purchaseSpecific in this.FindAllChildren<SpecifyRuminant>())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
                 {
-                    RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
-                    double number = purchasetype.Number;
-                    if(numberToStock != null && foodStore != null)
-                        //NOTE: ensure calculation method in relationship is fixed values
-                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per head":
+                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
+        }
 
-                    number *= purchaseSpecific.Proportion;
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForTimestep()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var purchaseShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number to purchase").FirstOrDefault();
+                if (purchaseShort != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - purchaseShort.Available / purchaseShort.Required));
+
+                if (numberToSkip == numberToDo)
+                {
+                    Status = ActivityStatus.Warning;
+                    AddStatusMessage("Resource shortfall prevented any action");
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            if (numberToDo - numberToSkip > 0)
+            {
+                int purchased = 0;
+
+                foreach (SpecifyRuminant purchaseSpecific in FindAllChildren<SpecifyRuminant>())
+                {
+                    double number = 0;
+                    RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
+                    if (calculatedNumber > 0)
+                        number = Math.Round(calculatedNumber * purchaseSpecific.Proportion);
+                    else
+                        number = Math.Round(purchasetype.Number * purchaseSpecific.Proportion);
 
                     for (int i = 0; i < Math.Ceiling(number); i++)
                     {
@@ -165,8 +228,9 @@ namespace Models.CLEM.Activities
                         ruminant.Location = grazeStore;
                         ruminant.PreviousWeight = ruminant.Weight;
 
-                        // add trade tag for this trade activity
-                        ruminant.Attributes.Add($"Trade:{Name}");
+                        if((TagLabel??"") != "")
+                            // add trade tag for this trade activity
+                            ruminant.Attributes.Add(TagLabel);
 
                         if (ruminant is RuminantFemale female)
                         {
@@ -175,8 +239,9 @@ namespace Models.CLEM.Activities
                         }
 
                         HerdResource.PurchaseIndividuals.Add(ruminant);
-                        this.Status = ActivityStatus.Success;
+                        purchased++;
                     }
+                    SetStatusSuccessOrPartial(purchased != numberToDo);
                 }
             }
         }
@@ -191,11 +256,11 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
-            var specifyRuminants = this.FindAllChildren<SpecifyRuminant>();
+            var specifyRuminants = FindAllChildren<SpecifyRuminant>();
             if (specifyRuminants.Count() == 0)
             {
                 string[] memberNames = new string[] { "PurchaseDetails" };
-                results.Add(new ValidationResult("At least one trade purchase description is required. Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
+                results.Add(new ValidationResult($"You must specify details for the individuals to be purchased.{Environment.NewLine}Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
             }
             else
             {
@@ -215,6 +280,15 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+            if (FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").Any())
+            {
+                double cumulativeProp = specifyRuminants.Select(a => a.Proportion).Sum();
+                if(MathUtilities.FloatsAreEqual(cumulativeProp, 1.0) == false)
+                {
+                    string[] memberNames = new string[] { "SpecifyRuminant proportions" };
+                    results.Add(new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames));
+                }
+            }
             return results;
         }
         #endregion
@@ -226,7 +300,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The following individuals were be requested for purchase ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The following individuals will be requested for purchase ");
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
@@ -238,7 +312,7 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("</div>");
 
-                Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
+                Relationship numberRelationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
                 if (numberRelationship != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

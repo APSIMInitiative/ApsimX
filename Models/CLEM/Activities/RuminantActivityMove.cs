@@ -150,12 +150,16 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var moveShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number moved").FirstOrDefault();
                 if (moveShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * moveShort.Required / moveShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - moveShort.Available / moveShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
             }
         }
-
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
@@ -175,10 +179,7 @@ namespace Models.CLEM.Activities
 
                     moved++;
                 }
-                if (moved == numberToDo)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial(moved != numberToDo);
             }
         }
 

@@ -163,6 +163,18 @@ namespace Models.CLEM.Resources
         public double PurchaseAge { get; set; }
 
         /// <summary>
+        /// Number of months since purchased
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSincePurchase
+        {
+            get
+            {
+                return Convert.ToInt32(Math.Round(Age - PurchaseAge, 4));
+            }
+        }
+
+        /// <summary>
         /// Weight (kg)
         /// </summary>
         /// <units>kg</units>

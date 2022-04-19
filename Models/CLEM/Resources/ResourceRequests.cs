@@ -176,6 +176,11 @@ namespace Models.CLEM.Resources
         public ActivityStatus Status { get; set; }
 
         /// <summary>
+        /// Status at time of reporting
+        /// </summary>
+        public string StatusMessage { get; }
+
+        /// <summary>
         /// Activity unique Id
         /// </summary>
         public string Id { get; set; }

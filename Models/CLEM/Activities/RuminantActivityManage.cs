@@ -373,6 +373,7 @@ namespace Models.CLEM.Activities
         {
             this.SetDefaults();
             TransactionCategory = "Livestock.Manage";
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
@@ -846,6 +847,8 @@ namespace Models.CLEM.Activities
             {
                 string warn = $"Resource shortfalls found in child components with ShortfallAffectsActivity set to [True] will not influence the tasks performed by [a={NameWithParent}].{Environment.NewLine}All [ShortfallAffectsActivity] settings have been ignored.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                Status = ActivityStatus.Warning;
+                AddStatusMessage("Shortfalls ignored. See CLEM Messages");
             }
         }
 
@@ -1352,7 +1355,6 @@ namespace Models.CLEM.Activities
                 if (RetainMaleReplacementBreedersFromSaleHerd)
                     IdentifyFemaleReplacementBreedersFromSaleHerd();
             }
-
         }
 
         private void IdentifyMaleReplacementBreedersFromSaleHerd()

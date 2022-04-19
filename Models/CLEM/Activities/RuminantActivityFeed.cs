@@ -248,12 +248,12 @@ namespace Models.CLEM.Activities
                     string warn = $"Resource shortfalls reduced the number of animals fed in [a={NameWithParent}] based on specified [ShortfallAffectsActivity] set to true for identifier [Number fed].{Environment.NewLine}The individuals fed will be restricted, but the model does not currenty adjust the amount of feed handled to match the reduced number of individuals";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
 
-                    numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
                 }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Feed provided").FirstOrDefault();
                 if (amountShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
 
                 if(numberToDo == numberToSkip)
                 {
@@ -410,11 +410,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            if (numberFed == numberToDo)
-                SetStatusSuccessOrPartial();
-            else
-                Status = ActivityStatus.Partial;
-
+            SetStatusSuccessOrPartial(numberFed != numberToDo);
         }
 
         #region validation

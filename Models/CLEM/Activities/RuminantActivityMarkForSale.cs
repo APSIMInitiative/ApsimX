@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Allows specification of sale reason for reporting")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
-    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
         private int numberToSkip;
@@ -57,6 +57,8 @@ namespace Models.CLEM.Activities
         public RuminantActivityMarkForSale()
         {
             TransactionCategory = "Livestock.Manage.[Sell]";
+            // activity is performed in ManageAnimals
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -68,9 +70,6 @@ namespace Models.CLEM.Activities
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( true, false);
-
-            // activity is performed in ManageAnimals
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
@@ -144,9 +143,14 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number identified").FirstOrDefault();
                 if (tagsShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * tagsShort.Required / tagsShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - tagsShort.Available / tagsShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
             }
         }
 
@@ -161,32 +165,9 @@ namespace Models.CLEM.Activities
                     ruminant.SaleFlag = SaleFlagToUse;
                     number++;
                 }
-                if (number == numberToDo)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial(number != numberToDo);
             }
         }
-
-        #region validation
-
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (!FindAllChildren<RuminantGroup>().Any())
-            {
-                string[] memberNames = new string[] { "Specify individuals" };
-                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be marked in [a={Name}]. Provide at least an empty RuminantGroup to mark all individuals.", memberNames));
-            }
-            return results;
-        }
-
-        #endregion
 
         #region descriptive summary
 

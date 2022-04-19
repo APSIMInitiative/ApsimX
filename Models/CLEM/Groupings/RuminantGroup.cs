@@ -42,30 +42,8 @@ namespace Models.CLEM.Groupings
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
-    public class RuminantGroup : FilterGroup<Ruminant>, IActivityCompanionModel
+    public class RuminantGroup : FilterGroup<Ruminant>
     {
-        /// <summary>
-        /// An identifier for this FilterGroup based on parent requirements
-        /// </summary>
-        [Description("Group identifier")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
-        public string Identifier { get; set; }
-
-        /// <summary>
-        /// Label to assign each transaction created by this activity child component in ledgers
-        /// </summary>
-        [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
-        [Models.Core.Display(Order = 500)]
-        public virtual string TransactionCategory { get; set; }
-
-        /// <inheritdoc/>
-        [XmlIgnore]
-        public string Units 
-        { 
-            get { return ""; }
-            set { ; }
-        }
 
         /// <summary>
         /// Constructor to apply defaults
@@ -73,24 +51,7 @@ namespace Models.CLEM.Groupings
         public RuminantGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Select.[Ruminants]";
             this.SetDefaults();
-        }
-
-        /// <inheritdoc/>
-        public virtual void PrepareForTimestep()
-        {
-        }
-
-        /// <inheritdoc/>
-        public virtual List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
-        {
-            return new List<ResourceRequest>();
-        }
-
-        /// <inheritdoc/>
-        public virtual void PerformTasksForTimestep(double activityMetric)
-        {
         }
 
         #region descriptive summary

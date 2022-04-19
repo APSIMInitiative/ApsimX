@@ -11,6 +11,7 @@ using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -32,7 +33,6 @@ namespace Models.CLEM.Activities
         private int numberToSkip;
         private double amountToDo;
         private double amountToSkip;
-
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
 
@@ -123,13 +123,11 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var shorts = shortfalls.Where(a => a.CompanionModelDetails.unit == "per head").FirstOrDefault();
                 if (shorts != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * shorts.Required / shorts.Provided);
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - shorts.Available / shorts.Required));
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.unit == "per AE").FirstOrDefault();
                 if (amountShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
             }
         }
 
@@ -138,10 +136,7 @@ namespace Models.CLEM.Activities
         {
             if (numberToDo - numberToSkip > 0)
             {
-                if (numberToSkip == 0 && amountToSkip == 0)
-                    Status = ActivityStatus.Success;
-                else
-                    Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial(MathUtilities.IsPositive(numberToSkip + amountToSkip));
             }
         }
 

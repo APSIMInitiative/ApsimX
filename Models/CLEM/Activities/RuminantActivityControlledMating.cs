@@ -214,13 +214,25 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number mated").FirstOrDefault();
                 if (numberShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any mating");
+                    }
+                }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number conceived").FirstOrDefault();
                 if (amountShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
+                    if (amountToSkip > 0)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any mating");
+                    }
+                }
             }
         }
 
@@ -247,11 +259,7 @@ namespace Models.CLEM.Activities
                         ruminant.ActivityDeterminedConceptionRate = null;
                     }
                 }
-
-                if (mated == numberToDo || amountToDo <= 0)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial((mated == numberToDo || amountToDo <= 0) == false);
             }
             uniqueIndividuals = selectedBreeders;
         }
@@ -262,7 +270,7 @@ namespace Models.CLEM.Activities
         /// <returns>A list of breeders for the breeding activity to work with</returns>
         public IEnumerable<RuminantFemale> BreedersToMate()
         {
-            // fire all nneded processes to account for resources required
+            // fire all processes needed to account for resources required
             ManageActivityResourcesAndTasks();
             // return resulting list with conception precalculated back to the breeding activity.
             return uniqueIndividuals;

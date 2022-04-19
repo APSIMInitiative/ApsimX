@@ -121,6 +121,7 @@ namespace Models.CLEM.Activities
         {
             this.SetDefaults();
             TransactionCategory = "Livestock.Manage.[Destock]";
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         private ENSOState GetENSOMeasure()
@@ -152,6 +153,14 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
+                        units: new List<string>()
+                        );
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "PastureToStockingChangeElNino",
+                            "PastureToStockingChangeLaNina"
+                        },
                         units: new List<string>()
                         );
                 case "ActivityFee":
@@ -214,8 +223,8 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
 
             // try attach relationships
-            pastureToStockingChangeElNino = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nino")).FirstOrDefault();
-            pastureToStockingChangeLaNina = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nina")).FirstOrDefault();
+            pastureToStockingChangeElNino = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
+            pastureToStockingChangeLaNina = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
 
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             paddocks = Resources.FindResourceGroup<GrazeFoodStore>()?.FindAllChildren<GrazeFoodStoreType>();
@@ -356,13 +365,25 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var destockShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required").FirstOrDefault();
                 if (destockShort != null)
-                    destockToSkip = Convert.ToInt32(destockToDo * destockShort.Required / destockShort.Provided);
+                {
+                    destockToSkip = Convert.ToInt32(destockToDo * (1 - destockShort.Available / destockShort.Required));
+                    if (destockToSkip == destockToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented destocking");
+                    }
+                }
 
                 var restockShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Restock required").FirstOrDefault();
                 if (restockShort != null)
-                    restockToSkip = Convert.ToInt32(restockToDo * restockShort.Required / restockShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    restockToSkip = Convert.ToInt32(restockToDo * (1 - restockShort.Available / restockShort.Required));
+                    if (restockToSkip == restockToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented restocking");
+                    }
+                }
             }
         }
 
@@ -452,210 +473,13 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(destockDone + restockDone))
             { 
-                if (MathUtilities.FloatsAreEqual(destockToDo + restockToDo, destockDone + restockDone))
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                    SetStatusSuccessOrPartial(MathUtilities.FloatsAreEqual(destockToDo + restockToDo, destockDone + restockDone) == false);
 
                 // TODO add resport status
                 // fire event to allow reporting of findings
                 //OnReportStatus(new EventArgs());
             }
-
         }
-
-        ///// <summary>An event handler to call for all resources other than food for feeding activity</summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMAnimalStock")]
-        //private void OnCLEMAnimalStock(object sender, EventArgs e)
-        //{
-        //    AeToDestock = 0;
-        //    AeDestocked = 0;
-        //    AeToRestock = 0;
-        //    AeRestocked = 0;
-
-        //    // this event happens after management has marked individuals for purchase or sale.
-        //    if (this.TimingOK)
-        //    {
-        //        // Get ENSO forcase for current time
-        //        ENSOState forecastEnsoState = GetENSOMeasure();
-
-        //        this.Status = ActivityStatus.NotNeeded;
-
-        //        // calculate dry season pasture available for each managed paddock holding stock
-        //        foreach (var newgroup in HerdResource.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
-        //        {
-        //            double aELocationNeeded = 0;
-
-        //            // total adult equivalents of all breeds on pasture for utilisation
-        //            double totalAE = newgroup.Sum(a => a.AdultEquivalent);
-        //            // determine AE marked for sale and purchase of managed herd
-        //            double markedForSaleAE = newgroup.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
-        //            double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
-
-        //            double herdChange = 1.0;
-        //            bool relationshipFound = false;
-        //            switch (forecastEnsoState)
-        //            {
-        //                case ENSOState.Neutral:
-        //                    break;
-        //                case ENSOState.ElNino:
-        //                    if (!(pastureToStockingChangeElNino is null))
-        //                    {
-        //                        GrazeFoodStoreType pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-        //                        double kgha = pasture.TonnesPerHectare * 1000;
-        //                        herdChange = pastureToStockingChangeElNino.SolveY(kgha);
-        //                        relationshipFound = true;
-        //                    }
-        //                    break;
-        //                case ENSOState.LaNina:
-        //                    if (!(pastureToStockingChangeLaNina is null))
-        //                    {
-        //                        GrazeFoodStoreType pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-        //                        double kgha = pasture.TonnesPerHectare * 1000;
-        //                        herdChange = pastureToStockingChangeLaNina.SolveY(kgha);
-        //                        relationshipFound = true;
-        //                    }
-        //                    break;
-        //                default:
-        //                    break;
-        //            }
-        //            if (!relationshipFound)
-        //            {
-        //                string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState== ENSOState.ElNino)? "El Niño":"La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
-        //                this.Status = ActivityStatus.Warning;
-        //                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-        //            }
-
-        //            if (MathUtilities.IsGreaterThan(herdChange, 1.0))
-        //            {
-        //                aELocationNeeded = Math.Max(0, (totalAE * herdChange) - purchaseAE);
-        //                AeToRestock += aELocationNeeded;
-        //                double notHandled = HandleRestocking(aELocationNeeded, newgroup.Key, newgroup.FirstOrDefault());
-        //                AeRestocked += (aELocationNeeded - notHandled);
-        //            }
-        //            else if(MathUtilities.IsLessThan(herdChange,1.0))
-        //            {
-        //                aELocationNeeded = Math.Max(0, (totalAE * (1 - herdChange)) - markedForSaleAE);
-        //                AeToDestock += aELocationNeeded;
-        //                double notHandled = HandleDestocking(AeToDestock, newgroup.Key);
-        //                AeDestocked += (aELocationNeeded - notHandled);
-        //            }
-        //        }
-
-        //        if(this.Status != ActivityStatus.Warning & AeToDestock + AeToRestock > 0)
-        //        {
-        //            if(MathUtilities.FloatsAreEqual(Math.Max(0,AeToRestock - AeRestocked) + Math.Max(0, AeToDestock - AeDestocked), 0))
-        //                this.Status = ActivityStatus.Success;
-        //            else
-        //                this.Status = ActivityStatus.Partial;
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Method to perform destocking
-        ///// </summary>
-        ///// <param name="animalEquivalentsForSale"></param>
-        ///// <param name="paddockName"></param>
-        ///// <returns>The AE that were not handled</returns>
-        //private double HandleDestocking(double animalEquivalentsForSale, string paddockName)
-        //{
-        //    if (animalEquivalentsForSale <= 0)
-        //        return 0;
-
-        //    // move to underutilised paddocks
-        //    // TODO: This can be added later as an activity including spelling
-
-        //    // remove all potential purchases from list as they can't be supported.
-        //    // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-        //    HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
-
-        //    var destockGroups = FindAllChildren<RuminantGroup>();
-        //    if (!destockGroups.Any())
-        //    {
-        //        string warn = $"No [f=FilterGroup]s with were provided in [a={this.Name}]\r\nNo destocking will be performed.";
-        //        this.Status = ActivityStatus.Warning;
-        //        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-        //    }
-
-        //    foreach (var item in destockGroups)
-        //    {
-        //        // works with current filtered herd to obey filtering.
-        //        var herd = item.Filter(CurrentHerd(false))
-        //            .Where(a => a.Location == paddockName && !a.ReadyForSale);
-
-        //        foreach (Ruminant ruminant in herd)
-        //        {
-        //            if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
-        //            {
-        //                animalEquivalentsForSale -= ruminant.AdultEquivalent;
-        //                ruminant.SaleFlag = HerdChangeReason.DestockSale;
-        //            }
-
-        //            if (MathUtilities.IsLessThanOrEqual(animalEquivalentsForSale, 0))
-        //            {
-        //                this.Status = ActivityStatus.Success;
-        //                return 0;
-        //            }
-        //        }
-        //    }
-
-        //    return animalEquivalentsForSale;
-
-        //    // handling of sucklings with sold female is in RuminantActivityBuySell
-        //    // buy or sell is handled by the buy sell activity
-        //}
-
-        //private double HandleRestocking(double animalEquivalentsToBuy, string paddockName, Ruminant exampleRuminant)
-        //{
-        //    if (animalEquivalentsToBuy <= 0) 
-        //        return 0;
-
-        //    GrazeFoodStoreType foodStore = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, paddockName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-        //    // ensure min pasture for restocking
-        //    if ((foodStore == null) || MathUtilities.IsGreaterThan(foodStore.TonnesPerHectare * 1000, MinimumFeedBeforeRestock))
-        //    {
-        //        var specifyComponents = FindAllChildren<SpecifyRuminant>();
-        //        if (specifyComponents.Count() == 0)
-        //        {
-        //            string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
-        //            this.Status = ActivityStatus.Warning;
-        //            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-        //        }
-
-        //        // buy animals specified in restock ruminant groups
-        //        foreach (SpecifyRuminant item in specifyComponents)
-        //        {
-        //            double sumAE = 0;
-        //            double limitAE = animalEquivalentsToBuy * item.Proportion;
-
-        //            while (MathUtilities.IsLessThan(sumAE, limitAE) && MathUtilities.IsPositive(animalEquivalentsToBuy))
-        //            {
-        //                Ruminant newIndividual = item.Details.CreateIndividuals(1, null).FirstOrDefault();
-        //                newIndividual.Location = paddockName;
-        //                newIndividual.BreedParams = item.BreedParams;
-        //                newIndividual.HerdName = item.BreedParams.Name;
-        //                newIndividual.PurchaseAge = newIndividual.Age;
-        //                newIndividual.SaleFlag = HerdChangeReason.RestockPurchase;
-
-        //                if(MathUtilities.FloatsAreEqual(newIndividual.Weight, 0))
-        //                {
-        //                    throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
-        //                }
-
-        //                HerdResource.PurchaseIndividuals.Add(newIndividual);
-        //                double indAE = newIndividual.AdultEquivalent;
-        //                animalEquivalentsToBuy -= indAE;
-        //                sumAE += indAE;
-        //            }
-        //        }
-        //        return Math.Max(0,animalEquivalentsToBuy);
-        //    }
-        //    return animalEquivalentsToBuy;
-        //}
 
         #region descriptive summary
 
@@ -687,8 +511,8 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI less than <span class=\"setvalue\">{SOIForElNino}</span></div>");
 
                 // relationship to use
-                var relationship = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nino")).FirstOrDefault();
-                if(relationship is null)
+                var relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
+                if (relationship is null)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
                 else
                 {
@@ -705,7 +529,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI greater than <span class=\"setvalue\">{SOIForLaNina}</span></div>");
 
                 // relationship to use
-                relationship = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nina")).FirstOrDefault();
+                relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
                 if (relationship is null)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
                 else

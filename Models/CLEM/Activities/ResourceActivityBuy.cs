@@ -23,13 +23,15 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/All resources/BuyResource.htm")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivityBuy : CLEMActivityBase
+    public class ResourceActivityBuy : CLEMActivityBase, IHandlesActivityCompanionModels
     {
-        private double units;
+        private double unitsToDo;
+        private double unitsToSkip;
         private ResourcePricing price;
         private FinanceType bankAccount;
         private IResourceType resourceToBuy;
-        private double unitsCanAfford;
+        private ActivityFee fee;
+        private ResourceRequest marketRequest = null;
 
         /// <summary>
         /// Bank account to use
@@ -81,135 +83,132 @@ namespace Models.CLEM.Activities
             // no market price found... look in local resources and allow 0 price if not found
             if(price is null)
                 price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
+
+            // if there's a bank account and no suitable fee add an ActivityFee
+            if(bankAccount == null)
+            {
+                var activityFee = FindAllChildren<ActivityFee>().Where(a => a.Identifier == "Amount to buy" && a.Units == "per packet").FirstOrDefault();
+                if (activityFee is null)
+                {
+                    fee = new ActivityFee()
+                    {
+                        Name = "PurchaseFee",
+                        TransactionCategory = $"{TransactionCategory}.Fee",
+                        Amount = price.PricePerPacket,
+                        Parent = this,
+                        BankAccountName = AccountName,
+                        Identifier = "Amount to buy",
+                        Units = "per packet",
+                        UniqueID = ActivitiesHolder.AddToGuID(UniqueID, 1)
+                    };
+                    Children.Insert(0, fee);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "LabourRequirement":
+                case "ActivityFee":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "Amount to buy",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per packet",
+                            "amount"
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
+            unitsToSkip = 0;
             List<ResourceRequest> requests = new List<ResourceRequest>();
 
             // calculate units
-            units = Units;
+            unitsToDo = Units;
             if (price!=null && price.UseWholePackets)
-                units = Math.Truncate(Units);
+                unitsToDo = Math.Truncate(unitsToDo);
 
-            unitsCanAfford = units;
-            if (units > 0 & (resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
+            // if market then ensure then try and take request from market to determine shortfalls
+            if(unitsToDo > 0)
             {
-                // determine how many units we can afford
-                double cost = units * price.PricePerPacket;
-                if (cost > bankAccount.FundsAvailable)
+                if ((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
                 {
-                    unitsCanAfford = bankAccount.FundsAvailable / price.PricePerPacket;
-                    if(price.UseWholePackets)
-                        unitsCanAfford = Math.Truncate(unitsCanAfford);
+                    CLEMResourceTypeBase mkt = (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore;
+                    marketRequest = new ResourceRequest()
+                    {
+                        AllowTransmutation = true,
+                        Required = unitsToDo * price.PacketSize * this.FarmMultiplier,
+                        Resource = mkt as IResourceType,
+                        ResourceType = mkt.Parent.GetType(),
+                        ResourceTypeName = (mkt as IModel).Name,
+                        Category = "Purchase " + (resourceToBuy as Model).Name,
+                        ActivityModel = this
+                    };
+                    requests.Add(marketRequest);
                 }
-
-                CLEMResourceTypeBase mkt = (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore;
-
-                requests.Add(new ResourceRequest()
-                {
-                    AllowTransmutation = true,
-                    Required = unitsCanAfford * price.PacketSize * this.FarmMultiplier,
-                    Resource = mkt as IResourceType,
-                    ResourceType = mkt.Parent.GetType(),
-                    ResourceTypeName = (mkt as IModel).Name,
-                    Category = "Purchase " + (resourceToBuy as Model).Name,
-                    ActivityModel = this
-                });
             }
+
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "amount":
+                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo * price.PacketSize;
+                        break;
+                    case "per packet":
+                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+
             return requests;
         }
-
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double daysNeeded;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perUnit:
-        //            daysNeeded = units * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, (resourceToBuy as CLEMModel).NameWithParent);
-        //}
 
         /// <inheritdoc/>
         protected override void AdjustResourcesForTimestep()
         {
-            // adjust amount needed by labour shortfall.
-            double labprop = this.LabourLimitProportion;
-
-            // get additional reduction based on labour cost shortfall as cost has already been accounted for
-            double priceprop = 1;
-            if (labprop < 1)
+            // check finance and labour reduction
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                if(unitsCanAfford < units)
-                    priceprop = unitsCanAfford / units;
-
-                if(labprop < priceprop)
+                var unitShort = shortfalls.FirstOrDefault();
+                unitsToSkip = Convert.ToInt32(unitsToDo * (1 - unitShort.Available / unitShort.Required));
+                if (unitShort.Available == 0)
                 {
-                    unitsCanAfford = units * labprop;
-                    if(price.UseWholePackets)
-                        unitsCanAfford = Math.Truncate(unitsCanAfford);
+                    Status = ActivityStatus.Warning;
+                    AddStatusMessage("Resource shortfall prevented any action");
                 }
-            }
 
-            if (unitsCanAfford > 0 & (resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
-            {
-                // find resource entry in market if present and reduce
-                ResourceRequest rr = ResourceRequestList.Where(a => a.Resource == (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore).FirstOrDefault();
-                if(rr.Required != unitsCanAfford * price.PacketSize * this.FarmMultiplier)
-                    rr.Required = unitsCanAfford * price.PacketSize * this.FarmMultiplier;
+                if (marketRequest != null)
+                    marketRequest.Required *= (1 - unitShort.Available / unitShort.Required);
             }
-            return;
         }
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            Status = ActivityStatus.NotNeeded;
-            // take local equivalent of market from resource
-
-            double provided = 0;
-            if ((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
+            if (unitsToDo > 0)
             {
-                // find resource entry in market if present and reduce
-                ResourceRequest rr = ResourceRequestList.Where(a => a.Resource == (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore).FirstOrDefault();
-                provided = rr.Provided / this.FarmMultiplier;
+                resourceToBuy.Add((unitsToDo - unitsToSkip) * price.PacketSize, this, "", TransactionCategory);
+                SetStatusSuccessOrPartial(unitsToSkip > 0);
             }
-            else
-                provided = unitsCanAfford * price.PacketSize;
-
-            if (provided > 0)
-            {
-                resourceToBuy.Add(provided, this, "", TransactionCategory);
-                Status = ActivityStatus.Success;
-            }
-
-            // make financial transactions
-            if (bankAccount != null)
-            {
-                ResourceRequest payment = new ResourceRequest()
-                {
-                    AllowTransmutation = false,
-                    MarketTransactionMultiplier = this.FarmMultiplier,
-                    Required = provided / price.PacketSize * price.PricePerPacket,
-                    Resource = bankAccount,
-                    ResourceType = typeof(Finance),
-                    ResourceTypeName = bankAccount.Name,
-                    Category = TransactionCategory,
-                    RelatesToResource = (resourceToBuy as CLEMModel).NameWithParent,
-                    ActivityModel = this
-                };
-                bankAccount.Remove(payment);
-            }
-
         }
 
         #region descriptive summary

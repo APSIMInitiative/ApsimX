@@ -54,6 +54,8 @@ namespace Models.CLEM.Activities
         public RuminantActivityTag()
         {
             TransactionCategory = "Livestock.Manage.[Tag]";
+            // activity is performed in ManageAnimals
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -65,8 +67,6 @@ namespace Models.CLEM.Activities
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
-            // activity is performed in ManageAnimals
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
@@ -143,9 +143,14 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number tagged/untagged").FirstOrDefault();
                 if (tagsShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * tagsShort.Required / tagsShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - tagsShort.Available / tagsShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
             }
         }
 
@@ -168,10 +173,7 @@ namespace Models.CLEM.Activities
                     }
                     tagged++;
                 }
-                if (tagged == numberToDo)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial(tagged != numberToDo);
             }
         }
 

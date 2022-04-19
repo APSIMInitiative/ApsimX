@@ -23,8 +23,13 @@ namespace Models.CLEM.Interfaces
         public bool AllowsPartialResourcesAvailable { get;}
 
         /// <summary>
-        /// Current status of this activity component for managing resources
+        /// Current status of this activity component
         /// </summary>
         public ActivityStatus Status { get; set; }
+
+        /// <summary>
+        /// Additional message relating to current status of this activity component
+        /// </summary>
+        public string StatusMessage { get; }
     }
 }

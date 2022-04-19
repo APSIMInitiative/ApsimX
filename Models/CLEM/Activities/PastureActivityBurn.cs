@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -23,11 +25,14 @@ namespace Models.CLEM.Activities
     [Description("Apply controlled burning to a specified graze food store (i.e. native pasture paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/BurnPasture.htm")]
-    public class PastureActivityBurn: CLEMActivityBase
+    public class PastureActivityBurn: CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private GrazeFoodStoreType pasture;
         private GreenhouseGasesType methaneStore;
         private GreenhouseGasesType n2oStore;
+        private double areaToDo;
+        private double pastureToDo;
+        private double areaToSkip;
 
         /// <summary>
         /// Minimum proportion green for fire to carry
@@ -91,83 +96,91 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        units: new List<string>() {
+                            "fixed",
+                            "ha to burn",
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
+        }
+
+        /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-            return resourcesNeeded;
+            areaToSkip = 0;
+            areaToDo = pasture.Manager.Area;
+            // proportion green
+            double greenPasture = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.Amount);
+            pastureToDo = pasture.Amount;
+            if (pastureToDo > 0)
+            {
+                if (MathUtilities.IsGreaterThan(greenPasture / pastureToDo, MinimumProportionGreen))
+                {
+                    areaToSkip = areaToDo;
+                    Status = ActivityStatus.Warning;
+                    AddStatusMessage("Too green to burn");
+                }
+            }
+
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "ha to burn":
+                        valuesForCompanionModels[valueToSupply.Key] = areaToDo - areaToSkip;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
         }
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            // labour is consumed and shortfall has no impact at present
-            // could lead to other paddocks burning in future.
-
-            if(Status != ActivityStatus.Partial)
-                Status = ActivityStatus.NotNeeded;
-
-            // proportion green
-            double green = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.Amount);
-            double total = pasture.Amount;
-            if (total>0)
+            if(areaToDo - areaToSkip > 0)
             {
-                if(green / total <= MinimumProportionGreen)
+                // remove biomass
+                pasture.Remove(new ResourceRequest()
                 {
-                    // TODO add weather to calculate fire intensity
-                    // TODO calculate patchiness from intensity
-                    // TODO influence trees and weeds
-
-                    // burn
-                    // remove biomass
-                    pasture.Remove(new ResourceRequest()
-                    {
-                        ActivityModel = this,
-                        Required = total,
-                        AllowTransmutation = false,
-                        Category = TransactionCategory,
-                        ResourceTypeName = PaddockName,
-                        Resource = pasture
-                    }
-                    );
-
-                    // add emissions
-                    double burnkg = total * 0.76 * 0.46; // burnkg * burning efficiency * carbon content
-                    if (methaneStore != null)
-                        //TODO change emissions for green material
-                        methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
-
-                    if (n2oStore != null)
-                        n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
-
-                    // TODO: add fertilisation to pasture for given period.
-
-                    Status = ActivityStatus.Success;
+                    ActivityModel = this,
+                    Required = pastureToDo,
+                    AllowTransmutation = false,
+                    Category = TransactionCategory,
+                    ResourceTypeName = PaddockName,
+                    Resource = pasture
                 }
+                );
+
+                // add emissions
+                double burnkg = pastureToDo * 0.76 * 0.46; // burnkg * burning efficiency * carbon content
+                if (methaneStore != null)
+                    //TODO change emissions for green material
+                    methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
+
+                if (n2oStore != null)
+                    n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
+
+                // TODO: add fertilisation to pasture for given period.
+
             }
+            SetStatusSuccessOrPartial(areaToSkip > 0);
         }
-
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double daysNeeded;
-        //    double numberUnits;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perHa:
-        //            numberUnits = (pasture.Manager.Area * Resources.FindResource<Land>().UnitsOfAreaToHaConversion) / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //                numberUnits = Math.Ceiling(numberUnits);
-
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
-        //}
 
         #region descriptive summary
 

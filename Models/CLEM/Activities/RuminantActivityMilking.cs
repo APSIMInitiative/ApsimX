@@ -8,6 +8,7 @@ using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Groupings;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -161,13 +162,25 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number milked").FirstOrDefault();
                 if (numberShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Litres milked").FirstOrDefault();
                 if (amountShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
-
-                this.Status = ActivityStatus.Partial;
+                {
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
+                    if (MathUtilities.FloatsAreEqual(amountToSkip, amountToDo))
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
             }
         }
 
@@ -191,10 +204,7 @@ namespace Models.CLEM.Activities
                 // add clip to stores
                 (milkStore as IResourceType).Add(amountDone, this, this.PredictedHerdName, TransactionCategory);
 
-                if (number == numberToDo && amountToDo <= 0)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
             }
         }
 

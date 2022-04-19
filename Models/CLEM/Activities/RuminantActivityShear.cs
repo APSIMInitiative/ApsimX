@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -174,13 +175,19 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number shorn").FirstOrDefault();
                 if (numberShort != null)
-                    numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
 
                 var kgShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Weight of fleece").FirstOrDefault();
                 if (kgShort != null)
-                    amountToSkip = Convert.ToInt32(amountToDo * kgShort.Required / kgShort.Provided);
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - kgShort.Available / kgShort.Required));
 
-                this.Status = ActivityStatus.Partial;
+                if(numberToSkip + amountToSkip > 0)
+                    Status = ActivityStatus.Partial;
+                else if(MathUtilities.FloatsAreEqual(numberToSkip + amountToSkip, numberToDo + amountToDo) == false)
+                {
+                    Status = ActivityStatus.Critical;
+                    AddStatusMessage("Resource shortfall prevented any action");
+                }
             }
         }
 
@@ -209,10 +216,7 @@ namespace Models.CLEM.Activities
                 (WoolStoreType as IResourceType).Add(kgWoolShorn, this, this.PredictedHerdName, TransactionCategory);
                 (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdName, TransactionCategory);
 
-                if (shorn == numberToDo && amountToDo <= 0)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
+                SetStatusSuccessOrPartial(shorn != numberToDo || MathUtilities.IsPositive(amountToDo));
             }
         }
 
