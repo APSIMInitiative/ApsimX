@@ -103,17 +103,10 @@ namespace Models.CLEM.Activities
                     seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
                 }
 
-                foreach (var seq in sequenceTimerList)
-                {
-                    string sequence = seq.Sequence;
-                    if (seqStart > seq.Sequence.Length)
-                    {
-                        sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(seqStart??0 / (double)seq.Sequence.Length))));
-                    }
-                    if (sequence.Substring(seqStart ?? 0,1) == "0")
-                        return false;
-                }
-                return (seqStart != null);
+                if(seqStart != null)
+                    return ActivityTimerSequence.IsInSequence(sequenceTimerList, seqStart);
+
+                return false;
             }
         }
 

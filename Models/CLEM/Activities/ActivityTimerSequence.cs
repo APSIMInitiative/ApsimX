@@ -17,6 +17,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ActivityTimerCropHarvest))]
+    [ValidParent(ParentType = typeof(ActivityTimerMonthRange))]
     [Description("This component adds a timer sequence to a parent timer")]
     [HelpUri(@"Content/Features/Timers/Sequence.htm")]
     [Version(1, 0, 1, "")]
@@ -98,6 +99,38 @@ namespace Models.CLEM.Activities
             return results;
         }
         #endregion
+
+        /// <summary>
+        /// Method to determine if an index is ok within a list of timer sequences
+        /// </summary>
+        /// <param name="timerSequences">List of sequences to consider</param>
+        /// <param name="index">Index in sequence </param>
+        /// <param name="reverseDirection">Work backward through sequence switch</param>
+        /// <returns>Boolean indicating if ok in all sequences</returns>
+        public static bool IsInSequence(IEnumerable<ActivityTimerSequence> timerSequences, int? index, bool reverseDirection = false)
+        {
+            if (timerSequences != null)
+            {
+                foreach (var seq in timerSequences)
+                {
+                    string sequence = seq.Sequence;
+                    if (reverseDirection)
+                    {
+                        char[] array = sequence.ToCharArray();
+                        Array.Reverse(array);
+                        sequence = new String(array);
+                    }
+                    if (index > seq.Sequence.Length)
+                    {
+                        sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(index ?? 0 / (double)seq.Sequence.Length))));
+                    }
+                    if (sequence.Substring(index ?? 0, 1) == "0")
+                        return false;
+                }
+                return (index != null);
+            }
+            return true;
+        }
 
         #region descriptive summary
 

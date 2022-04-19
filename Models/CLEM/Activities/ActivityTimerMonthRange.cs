@@ -8,6 +8,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using Models.CLEM.Reporting;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Activities
 {
@@ -34,6 +35,7 @@ namespace Models.CLEM.Activities
 
         private int startMonth;
         private int endMonth;
+        private IEnumerable<ActivityTimerSequence> sequenceTimerList;
 
         /// <summary>
         /// Notify CLEM that this Timer was performed
@@ -85,6 +87,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("StartOfSimulation")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            sequenceTimerList = FindAllChildren<ActivityTimerSequence>();
             startMonth = (int)StartMonth;
             endMonth = (int)EndMonth;
         }
@@ -95,12 +98,21 @@ namespace Models.CLEM.Activities
             if (startMonth <= endMonth)
             {
                 if ((date.Month >= startMonth) & (date.Month <= endMonth))
-                    due = true;
+                    due = ActivityTimerSequence.IsInSequence(sequenceTimerList, date.Month - startMonth);
             }
             else
             {
                 if ((date.Month <= endMonth) | (date.Month >= startMonth))
-                    due = true;
+                {
+                    int? index;
+                    if (date.Month >= startMonth)
+                        index = date.Month - startMonth;
+                    else
+                    {
+                        index = 12 - startMonth + date.Month;
+                    }
+                    due = ActivityTimerSequence.IsInSequence(sequenceTimerList, index);
+                }
             }
             return due;
         }
