@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
             {
                 if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
                 {
-                    limiterFound = LocateCarryLimiter(model.Parent);
+                    limiterFound = ActivityCarryLimiter.Locate(model.Parent);
                 }
             }
             return limiterFound;
