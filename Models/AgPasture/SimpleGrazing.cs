@@ -95,7 +95,7 @@ namespace Models.AgPasture
         [Separator("Settings for the 'Simple Rotation'")]
         [Description("Frequency of grazing (days) or \"end of month\"")]
         [Units("days")]
-        [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
+        [Display(EnabledCallback = nameof(IsSimpleGrazingTurnedOn))]
         public string SimpleGrazingFrequencyString { get; set; }
 
         /// <summary></summary>
@@ -139,13 +139,13 @@ namespace Models.AgPasture
         [Separator("Optional rules for rotation length")]
         [Description("Monthly maximum rotation length (days)")]
         [Units("days")]
-        [Display(EnabledCallback = "IsTargetMassTurnedOn,IsFlexibleGrazingTurnedOn")]
+        [Display(EnabledCallback = nameof(IsMaximumRotationLengthArrayTurnedOn))]
         public double[] MaximumRotationLengthArray { get; set; }
 
         /// <summary></summary>
         [Description("Monthly minimum rotation length (days)")]
         [Units("days")]
-        [Display(EnabledCallback = "IsTargetMassTurnedOn,IsFlexibleGrazingTurnedOn")]
+        [Display(EnabledCallback = nameof(IsMinimumRotationLengthArrayTurnedOn))]
         public double[] MinimumRotationLengthArray { get; set; }
 
         /// <summary></summary>
@@ -260,6 +260,16 @@ namespace Models.AgPasture
                 return double.IsNaN(CNRatioDung) || CNRatioDung == 0;
             }
         }
+
+        /// <summary>
+        /// Is maximum rotation length input array enabled in the GUI?
+        /// </summary>
+        public bool IsMaximumRotationLengthArrayTurnedOn => IsTargetMassTurnedOn || IsFlexibleGrazingTurnedOn;
+
+        /// <summary>
+        /// Is minimum rotation length array enabled in the GUI?
+        /// </summary>
+        public bool IsMinimumRotationLengthArrayTurnedOn => IsTargetMassTurnedOn || IsFlexibleGrazingTurnedOn;
 
         /// <summary></summary>
         public bool IsTramplingTurnedOn { get { return TramplingOn; } }
@@ -481,7 +491,7 @@ namespace Models.AgPasture
             summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME), MessageType.Diagnostic);
 
             // Reduce plant population if necessary.
-            if (FractionPopulationDecline > 0)
+            if (MathUtilities.IsGreaterThan(FractionPopulationDecline, 0.0))
             {
                 foreach (var forage in allForages)
                 {
@@ -556,7 +566,7 @@ namespace Models.AgPasture
                 (DaysSinceGraze >= simpleGrazingFrequency && simpleGrazingFrequency > 0))
             {
                 residualBiomass = SimpleGrazingResidual;
-                if (PreGrazeHarvestableDM > SimpleMinGrazable)
+                if (MathUtilities.IsGreaterThan(PreGrazeHarvestableDM, SimpleMinGrazable))
                     return true;
                 else
                 {
@@ -612,7 +622,7 @@ namespace Models.AgPasture
             // What about non harvestable biomass?
             // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
 
-            if (removeAmount > 0)
+            if (MathUtilities.IsGreaterThan(removeAmount*0.1, 0.0))
             {
                 // Remove a proportion of required DM from each species
                 double totalHarvestableWt = 0.0;
@@ -630,9 +640,9 @@ namespace Models.AgPasture
                     var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
-                    if (amountToRemove > 0)
+                    if (MathUtilities.IsGreaterThan(amountToRemove*0.1, 0.0))
                     {
-                        var grazed = allForages[i].RemoveBiomass(amountToRemove/10);
+                        var grazed = allForages[i].RemoveBiomass(amountToRemove*0.1);
                         double grazedDigestibility = grazed.Digestibility;
                         var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
@@ -645,7 +655,7 @@ namespace Models.AgPasture
                 }
 
                 // Check the amount grazed is the same as requested amount to graze.
-                if (!MathUtilities.FloatsAreEqual(GrazedDM, removeAmount))
+                if (!MathUtilities.FloatsAreEqual(GrazedDM, removeAmount, 0.0001))
                     throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
 
                 double returnedToSoilWt = 0;

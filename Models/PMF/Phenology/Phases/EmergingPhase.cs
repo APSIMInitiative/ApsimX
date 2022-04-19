@@ -33,18 +33,11 @@ namespace Models.PMF.Phen
         [Link]
         Plant plant = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction target = null;
+
         // 2. Public properties
         //-----------------------------------------------------------------------------------------------------------------
-    
-        /// <summary>Gets or sets the lag for shoot development.</summary>
-        [Units("oCd")]
-        [Description("ShootLag")]
-        public double ShootLag { get; set; }
-
-        /// <summary>Gets or sets the shoot growth rate.</summary>
-        [Units("oCd/mm")]
-        [Description("ShootRate")]
-        public double ShootRate { get; set; }
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -143,7 +136,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters data)
         {
-            Target = ShootLag + data.Depth * ShootRate;
+            Target = target.Value();
         }
 
         /// <summary>Document the model.</summary>
@@ -153,8 +146,6 @@ namespace Models.PMF.Phen
             yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and simulates time to {End.ToLower()} as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
             yield return new Paragraph($"*Target* = *SowingDepth* x *ShootRate* + *ShootLag*");
             yield return new Paragraph($"Where:");
-            yield return new Paragraph($"*ShootRate* = {ShootRate} (deg day/mm),");
-            yield return new Paragraph($"*ShootLag* = {ShootLag} (deg day), ");
             yield return new Paragraph($"*SowingDepth* (mm) is sent from the manager with the sowing event.");
 
             // Write memos.

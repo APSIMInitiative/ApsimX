@@ -13,7 +13,7 @@
     /// An class for encapsulating a list of simulations that are ready
     /// to be run. An instance of this class can be used with a job runner.
     /// </summary>
-    public class Runner
+    public class Runner : IRunner
     {
         /// <summary>The descriptions of simulations that we are going to run.</summary>
         private List<IJobManager> jobs = new List<IJobManager>();

@@ -100,6 +100,8 @@ namespace UserInterface.Views
 
             // Dispose of current properties table.
             box.Remove(propertyTable);
+            propertyTable.DetachAllHandlers();
+            propertyTable.Destroy();
             propertyTable.Dispose();
 
             // Construct a new properties table.
@@ -289,6 +291,8 @@ namespace UserInterface.Views
                 default:
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
             }
+
+            component.Sensitive = property.Enabled;
 
             // Set the widget's name to the property name.
             // This allows us to provide the property name when firing off
