@@ -18,12 +18,12 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourRequirement))]
     [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
-    [ValidParent(ParentType = typeof(LabourFilterGroup))]
+    [ValidParent(ParentType = typeof(LabourGroup))]
     [ValidParent(ParentType = typeof(TransmuteLabour))]
     [Description("Defines specific individuals from the labour pool to undertake labour")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFilterGroup.htm")]
-    public class LabourFilterGroup : FilterGroup<LabourType>
+    public class LabourGroup : FilterGroup<LabourType>
     {
         #region descriptive summary
 
@@ -58,7 +58,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (Parent.GetType() == typeof(LabourFilterGroup))            
+            if (Parent.GetType() == typeof(LabourGroup))            
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             
             html += "\r\n<div class=\"filterborder clearfix\">";

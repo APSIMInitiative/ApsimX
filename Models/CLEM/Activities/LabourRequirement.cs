@@ -22,34 +22,11 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(IHandlesActivityCompanionModels))]
-    //[ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    //[ValidParent(ParentType = typeof(CropActivityTask))]
-    //[ValidParent(ParentType = typeof(RuminantActivityGrazeAll))]
-    //[ValidParent(ParentType = typeof(RuminantActivityGrazePasture))]
-    //[ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    //[ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
-    //[ValidParent(ParentType = typeof(RuminantActivityMilking))]
-    //[ValidParent(ParentType = typeof(RuminantActivityWean))]
-    //[ValidParent(ParentType = typeof(ManureActivityCollectAll))]
-    //[ValidParent(ParentType = typeof(ManureActivityCollectPaddock))]
-    //[ValidParent(ParentType = typeof(RuminantActivityMove))]
-    //[ValidParent(ParentType = typeof(ResourceActivitySell))]
-    //[ValidParent(ParentType = typeof(ResourceActivityBuy))]
-    //[ValidParent(ParentType = typeof(ResourceActivityProcess))]
-    //[ValidParent(ParentType = typeof(PastureActivityCutAndCarry))]
-    //[ValidParent(ParentType = typeof(LabourActivityTask))]
-    //[ValidParent(ParentType = typeof(LabourActivityOffFarm))]
-    //[ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
     [Description("Defines the amount and type of labour required for an activity. This component must have at least one LabourFilterGroup as a child")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
-    public class LabourRequirement: CLEMModel, IValidatableObject, IActivityCompanionModel, IReportPartialResourceAction
+    public class LabourRequirement: CLEMActivityBase, IValidatableObject, IActivityCompanionModel, IReportPartialResourceAction
     {
-        /// <summary>
-        /// Link to resources
-        /// </summary>
-        [Link]
-        public ResourcesHolder Resources = null;
         private double maximumDaysPerPerson = 0;
         private double maximumDaysPerGroup = 0;
         private double minimumDaysPerPerson = 0;
@@ -61,22 +38,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         public LabourRequirement()
         {
+            AllocationStyle = ResourceAllocationStyle.Manual;
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
             TransactionCategory = "[Task].[Labour]";
             this.SetDefaults();
         }
-
-        /// <inheritdoc/>
-        [Description("Insufficient resources available action")]
-        [Models.Core.Display(Order = 1000)]
-        public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
-
-        ///<inheritdoc/>
-        public bool AllowsPartialResourcesAvailable { get { return OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources || OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications; } }
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public ActivityStatus Status { get; set; }
 
         /// <summary>
         /// An identifier for this Labour requirement based on parent requirements
@@ -158,14 +124,6 @@ namespace Models.CLEM.Activities
         [Category("Labour", "Rate")]
         public bool ApplyToAll { get; set; }
 
-        /// <summary>
-        /// Label to assign each transaction created by this activity child component in ledgers
-        /// </summary>
-        [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
-        [Models.Core.Display(Order = 500)]
-        public virtual string TransactionCategory { get; set; }
-
         /// <inheritdoc/>
         public string Measure { get { return "none"; } }
 
@@ -226,13 +184,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public void PrepareForTimestep()
-        {
-
-        }
-
-        /// <inheritdoc/>
-        public List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
             resourceList.Clear();
             IEnumerable<LabourType> labourers = labourResource?.Items.Where(a => a.Hired != true);
@@ -261,7 +213,7 @@ namespace Models.CLEM.Activities
             {
                 CLEMActivityBase handlesActivityComponents = this.Parent as CLEMActivityBase;
 
-                foreach (LabourFilterGroup fg in FindAllChildren<LabourFilterGroup>())
+                foreach (LabourGroup fg in FindAllChildren<LabourGroup>())
                 {
                     int numberOfPpl = 1;
                     if (ApplyToAll)
@@ -278,18 +230,12 @@ namespace Models.CLEM.Activities
                             ActivityModel = this,
                             FilterDetails = new List<object>() { fg },
                             Category = this.TransactionCategory,
-//                            RelatesToResource = daysResult.RelatesToResource
                         }
                         ); ;
                     }
                 }
             }
             return resourceList;
-        }
-
-        /// <inheritdoc/>
-        public void PerformTasksForTimestep(double activityMetric)
-        {
         }
 
         #region validation
@@ -310,24 +256,24 @@ namespace Models.CLEM.Activities
                 Summary.WriteMessage(this, "No [r=LabourResourceTypes] are provided in the [r=Labour] resource. All [LabourRequirement] will be ignored.", MessageType.Warning);
 
             // check filter groups present
-            if (!FindAllChildren<LabourFilterGroup>().Any())
+            if (!FindAllChildren<LabourGroup>().Any())
             {
                 string[] memberNames = new string[] { "Labour filter group" };
                 results.Add(new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", memberNames));
             }
 
             // check for individual nesting.
-            foreach (LabourFilterGroup fg in this.FindAllChildren<LabourFilterGroup>())
+            foreach (LabourGroup fg in this.FindAllChildren<LabourGroup>())
             {
-                LabourFilterGroup currentfg = fg;
-                while (currentfg != null && currentfg.FindAllChildren<LabourFilterGroup>().Any())
+                LabourGroup currentfg = fg;
+                while (currentfg != null && currentfg.FindAllChildren<LabourGroup>().Any())
                 {
-                    if (currentfg.FindAllChildren<LabourFilterGroup>().Count() > 1)
+                    if (currentfg.FindAllChildren<LabourGroup>().Count() > 1)
                     {
                         string[] memberNames = new string[] { "Labour requirement" };
                         results.Add(new ValidationResult(String.Format("Invalid nested labour filter groups in [f={0}] for [a={1}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", currentfg.Name, this.Name), memberNames));
                     }
-                    currentfg = currentfg.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
+                    currentfg = currentfg.FindAllChildren<LabourGroup>().FirstOrDefault();
                 }
             }
 
@@ -403,7 +349,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
                 htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
 
-                if (this.FindAllChildren<LabourFilterGroup>().Count() == 0)
+                if (this.FindAllChildren<LabourGroup>().Count() == 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                     htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");

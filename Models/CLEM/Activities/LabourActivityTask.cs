@@ -50,33 +50,15 @@ namespace Models.CLEM.Activities
             {
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>()
-                        {
-
-                        },
+                        identifiers: new List<string>(),
                         units: new List<string>() {
-                            "fixed",
-                            "per ha",
+                            "fixed"
                         }
                         );
                 default:
                     return new LabelsForCompanionModels();
             }
         }
-
-
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    // get all days required as fixed only option from requirement
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            return new LabourRequiredArgs(requirement.LabourPerUnit, TransactionCategory, null);
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //}
 
         #region descriptive summary
 

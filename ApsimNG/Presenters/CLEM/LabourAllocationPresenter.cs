@@ -293,12 +293,12 @@ namespace UserInterface.Presenters
                             {
                                 tblstr.WriteLine("<td>");
                                 // for each filter group
-                                foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                                foreach (var item in labourRequirement.FindAllChildren<LabourGroup>())
                                 {
                                     tblstr.Write("<div>");
                                     int level = 0;
                                     // while nested 
-                                    var nested = labourRequirement.FindChild<LabourFilterGroup>();
+                                    var nested = labourRequirement.FindChild<LabourGroup>();
                                     bool found = false;
                                     while (nested != null)
                                     {
@@ -310,7 +310,7 @@ namespace UserInterface.Presenters
                                             break;
                                         }
                                         nested.ClearRules();
-                                        nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
+                                        nested = nested.FindAllChildren<LabourGroup>().FirstOrDefault();
                                     }
                                     if (found)
                                         tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
@@ -459,7 +459,7 @@ namespace UserInterface.Presenters
                             foreach (LabourType lt in labourList)
                             {
                                 // for each filter group
-                                foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                                foreach (var item in labourRequirement.FindAllChildren<LabourGroup>())
                                 {
                                     string levelstring = "";
                                     bool found = false;
@@ -477,7 +477,7 @@ namespace UserInterface.Presenters
                                             break;
                                         }
                                         nested.ClearRules();
-                                        nested = nested.FindChild<LabourFilterGroup>();
+                                        nested = nested.FindChild<LabourGroup>();
                                     }
                                     tblstr.Write($" {(found ? levelstring : "0")} |");
                                 }

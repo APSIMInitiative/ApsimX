@@ -489,63 +489,6 @@ namespace Models.CLEM.Activities
             return requests;
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    var group = people?.Items.Where(a => a.Hired != true);
-        //    decimal head = 0;
-        //    double adultEquivalents = 0;
-        //    foreach (var child in FindAllChildren<LabourFeedGroup>())
-        //    {
-        //        var subgroup = child.Filter(group);
-        //        head += subgroup.Sum(a => a.Individuals);
-        //        adultEquivalents += subgroup.Sum(a => a.TotalAdultEquivalents);
-        //    }
-
-        //    double daysNeeded = 0;
-        //    double numberUnits = 0;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perHead:
-        //            numberUnits = Convert.ToDouble(head, System.Globalization.CultureInfo.InvariantCulture) / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //                numberUnits = Math.Ceiling(numberUnits);
-
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perAE:
-        //            numberUnits = adultEquivalents / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //                numberUnits = Math.Ceiling(numberUnits);
-
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, "Feeding", null);
-        //}
-
-        /// <inheritdoc/>
-        protected override void AdjustResourcesForTimestep()
-        {
-            // reduce by the smallest of finance and labour limits 
-            // The other resource will not be retuned but is lost in transactions
-            var financeLimit = LimitProportion(typeof(Finance));
-            if (LabourLimitProportion < 1 || financeLimit < 1)
-            {
-                double limiter = Math.Min(LabourLimitProportion, financeLimit);
-                if (limiter < 1)
-                    foreach (ResourceRequest item in ResourceRequestList)
-                        if (item.ResourceType != typeof(HumanFoodStoreType))
-                            item.Provided *= limiter;
-            }
-            return;
-        }
-
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
