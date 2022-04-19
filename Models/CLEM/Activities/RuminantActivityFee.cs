@@ -23,11 +23,12 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
-    public class RuminantActivityFee: CLEMActivityBase, IActivityCompanionModel
+    public class RuminantActivityFee: CLEMActivityBase, IActivityCompanionModel, IValidatableObject
     {
         [Link]
         private ResourcesHolder resources = null;
-        private ResourceRequest resourceRequest; 
+        private ResourceRequest resourceRequest;
+        private FinanceType bankAccount;
 
         /// <summary>
         /// An identifier for this Fee based on parent requirements
@@ -59,11 +60,6 @@ namespace Models.CLEM.Activities
         public double Amount { get; set; }
 
         /// <summary>
-        /// Store finance type to use
-        /// </summary>
-        public FinanceType BankAccount;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantActivityFee()
@@ -79,7 +75,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            bankAccount = resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -92,7 +88,7 @@ namespace Models.CLEM.Activities
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
                 {
-                    Resource = BankAccount,
+                    Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     AllowTransmutation = true,
                     Required = charge,
@@ -115,6 +111,22 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(shortfalls);
             }
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            string[] memberNames = new string[] { "RuminantActivityFee no longer supported" };
+            results.Add(new ValidationResult("This component is no longer supported. Please use [a=ActivityFee] component using the interface or change CLEM.Activities.RuminantActivityFee to CLEM.Activities.ActivityFee in apsimx simulation file.", memberNames));
+            return results;
+        }
+        #endregion
+
 
         #region descriptive summary
 

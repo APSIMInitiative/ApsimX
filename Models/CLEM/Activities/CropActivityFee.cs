@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [Description("A fee required to perform a crop management task")]
     [HelpUri(@"Content/Features/Activities/Crop/CropFee.htm")]
     [Version(1, 0, 1, "")]
-    public class CropActivityFee: CLEMActivityBase, IActivityCompanionModel
+    public class CropActivityFee: CLEMActivityBase, IActivityCompanionModel, IValidatableObject
     {
         private string relatesToResourceName = "";
         private ResourceRequest resourceRequest;
@@ -112,6 +112,21 @@ namespace Models.CLEM.Activities
             bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
             SetStatusSuccessOrPartial(shortfalls);
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            string[] memberNames = new string[] { "CropActivityFee no longer supported" };
+            results.Add(new ValidationResult("This component is no longer supported. Please use [a=ActivityFee] component using the interface or change CLEM.Activities.CropActivityFee to CLEM.Activities.ActivityFee in apsimx simulation file.", memberNames));
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

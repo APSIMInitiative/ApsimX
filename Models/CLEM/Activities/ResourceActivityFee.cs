@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [Description("Provides a fee required to perform processing of a resource")]
     [HelpUri(@"Content/Features/Activities/All resources/ResourceFee.htm")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivityFee: CLEMModel
+    public class ResourceActivityFee: CLEMModel, IValidatableObject
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -41,14 +41,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
-
-        /// <summary>
-        /// Payment style
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(ResourcePaymentStyleType.Fixed)]
-        [Description("Payment style")]
-        [Required]
-        public ResourcePaymentStyleType PaymentStyle { get; set; }
 
         /// <summary>
         /// Amount
@@ -82,6 +74,21 @@ namespace Models.CLEM.Activities
             BankAccount = resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            string[] memberNames = new string[] { "ResourceActivityFee no longer supported" };
+            results.Add(new ValidationResult("This component is no longer supported. Please use [a=ActivityFee] component using the interface or change CLEM.Activities.ResourceActivityFee to CLEM.Activities.ActivityFee in apsimx simulation file.", memberNames));
+            return results;
+        }
+        #endregion
+
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -91,7 +98,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ");
-                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
+                htmlWriter.Write("from ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
