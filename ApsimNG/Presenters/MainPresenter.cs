@@ -1141,12 +1141,13 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
+                string fileName = this.AskUserForOpenFileName("APSIM Classic Files|*.apsim");
                 this.view.ShowWaitCursor(true);
                 this.Import(fileName);
 
                 string newFileName = Path.ChangeExtension(fileName, ".apsimx");
                 this.OpenApsimXFileInTab(newFileName, this.view.IsControlOnLeft(sender));
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
             catch (Exception err)
             {
