@@ -173,7 +173,7 @@
             {
                 if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
                 {
-                    Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                    IModel model = MainMenu.FindRunnable(explorerPresenter.CurrentNode);
                     var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();
