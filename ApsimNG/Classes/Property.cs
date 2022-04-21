@@ -149,6 +149,7 @@ namespace UserInterface.Classes
             DisplayMethod = displayType;
             DropDownOptions = dropDownOptions?.ToArray();
             Separators = separators?.ToList();
+            Enabled = true;
         }
 
         /// <summary>
