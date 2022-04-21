@@ -238,13 +238,6 @@ namespace Models.PMF.Struct
 			}
 		}
 
-		[EventSubscribe("DoUpdate")]
-		private void UpdateVars(object sender, EventArgs args)
-		{
-			foreach (Culm culm in culms.Culms)
-				culm.UpdateVars();
-		}
-
 		private double CalculateFtn()
 		{
 			// Estimate tillering given latitude, density, time of planting and

@@ -1006,13 +1006,6 @@ namespace Models.PMF.Organs
 
         }
 
-        [EventSubscribe("PrePhenology")]
-        private void OnPrePhenology(object sender, EventArgs args)
-        {
-            culms.FinalLeafNo = numberOfLeaves.Value();
-            culms.CalculatePotentialArea();
-        }
-
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1023,6 +1016,8 @@ namespace Models.PMF.Organs
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
+                culms.FinalLeafNo = numberOfLeaves.Value();
+                culms.CalculatePotentialArea();
                 DltPotentialLAI = culms.dltPotentialLAI;
                 DltStressedLAI = culms.dltStressedLAI;
 
