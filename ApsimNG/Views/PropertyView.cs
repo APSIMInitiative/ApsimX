@@ -63,6 +63,17 @@ namespace UserInterface.Views
         private Dictionary<Guid, string> originalEntryText = new Dictionary<Guid, string>();
 
         /// <summary>
+        /// List of old property tables to be disposed of when this PropertyView
+        /// instance is disposed of.
+        /// </summary>
+        private readonly List<Grid> oldPropertyTables = new List<Grid>();
+
+        /// <summary>
+        /// Flag to prevent double disposal.
+        /// </summary>
+        private bool isDisposed;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="owner">The owning view.</param>
@@ -100,9 +111,13 @@ namespace UserInterface.Views
 
             // Dispose of current properties table.
             box.Remove(propertyTable);
-            propertyTable.DetachAllHandlers();
-            propertyTable.Destroy();
-            propertyTable.Dispose();
+
+            // We don't really want to destroy the old property table yet,
+            // because it may have pending events. Destroying the widget in such
+            // a scenario can lead to undesirable results (such as a crash). To
+            // avoid this, we just add the table into a list of widgets to be
+            // cleaned up later.
+            oldPropertyTables.Add(propertyTable);
 
             // Construct a new properties table.
             propertyTable = new Grid();
@@ -131,6 +146,32 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Dispose of old property tables.
+        /// </summary>
+        /// <param name="disposing">
+        /// True iff being called by manually (as opposed to by the garbage
+        /// collector) This doesn't really matter for the purposes of this
+        /// particular Dispose() implementation.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                isDisposed = true;
+                box.Remove(propertyTable);
+                oldPropertyTables.Add(propertyTable);
+
+                foreach (Grid grid in oldPropertyTables)
+                {
+                    grid.DetachAllHandlers();
+                    grid.Destroy();
+                    grid.Dispose();
+                }
+
+                base.Dispose(disposing);
+            }
+        }
 
         /// <summary>
         /// Adds a group of properties to the GtkTable, starting at the specified row.
