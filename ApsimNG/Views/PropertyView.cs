@@ -69,6 +69,11 @@ namespace UserInterface.Views
         private readonly List<Grid> oldPropertyTables = new List<Grid>();
 
         /// <summary>
+        /// Flag to prevent double disposal.
+        /// </summary>
+        private bool isDisposed;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="owner">The owning view.</param>
@@ -110,10 +115,8 @@ namespace UserInterface.Views
             // We don't really want to destroy the old property table yet,
             // because it may have pending events. Destroying the widget in such
             // a scenario can lead to undesirable results (such as a crash). To
-            // avoid this, we detach the event handlers now, so that no new
-            // events can accumulate, and we just add the table into a list of
-            // widgets to be cleaned up later.
-            propertyTable.DetachAllHandlers();
+            // avoid this, we just add the table into a list of widgets to be
+            // cleaned up later.
             oldPropertyTables.Add(propertyTable);
 
             // Construct a new properties table.
@@ -153,12 +156,21 @@ namespace UserInterface.Views
         /// </param>
         protected override void Dispose(bool disposing)
         {
-            foreach (Grid grid in oldPropertyTables)
+            if (!isDisposed)
             {
-                grid.Destroy();
-                grid.Dispose();
+                isDisposed = true;
+                box.Remove(propertyTable);
+                oldPropertyTables.Add(propertyTable);
+
+                foreach (Grid grid in oldPropertyTables)
+                {
+                    grid.DetachAllHandlers();
+                    grid.Destroy();
+                    grid.Dispose();
+                }
+
+                base.Dispose(disposing);
             }
-            base.Dispose(disposing);
         }
 
         /// <summary>
