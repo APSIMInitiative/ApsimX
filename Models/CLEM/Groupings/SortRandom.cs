@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     [Description("Shuffle (randomises) individuals in the fiter group")]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/SortRandomise.htm")]
-    public class SortRandom : CLEMModel, IValidatableObject, ISort
+    public class SortRandom : CLEMModel, ISort
     {
         /// <inheritdoc/>
         public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
@@ -50,25 +50,6 @@ namespace Models.CLEM.Groupings
 
         #endregion
 
-        #region validation
-
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            if (Parent.FindAllChildren<CLEMModel>().Last() != this)
-            {
-                string[] memberNames = new string[] { "RandomSort" };
-                results.Add(new ValidationResult($"The sort item [f={Name}] must be the last component in its group", memberNames));
-            }
-            return results;
-        }
-        #endregion
     }
 
 }
