@@ -1049,7 +1049,7 @@ namespace Models.CLEM.Activities
 
                             // Remove from herd not for sale
                             foreach (var removeFilter in customFilters["RemoveBreedersFromHerd"])
-                                foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).OrderBy(a => a.Class).Take(excessBreeders).ToList())
+                                foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).Take(excessBreeders).ToList())
                                 {
                                     female.SaleFlag = HerdChangeReason.ExcessBreederSale;
                                     excessBreeders--;
