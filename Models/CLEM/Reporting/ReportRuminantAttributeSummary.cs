@@ -163,12 +163,12 @@ namespace Models.CLEM.Reporting
             if (!this.FindAllChildren<RuminantGroup>().Any())
             {
                 string[] memberNames = new string[] { "Missing ruminant filter group" };
-                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{this.Name}] requires at least one filter group to identify individuals to report", memberNames));
+                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires at least one filter group to identify individuals to report", memberNames));
             }
-            if (this.FindAllChildren<Report>().Where(a => a.Name == "Report").Any())
+            if (!this.FindAllChildren<Report>().Where(a => a.Name == this.Name).Any())
             {
                 string[] memberNames = new string[] { "Missing report" };
-                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{this.Name}] requires an [APSIM.Report] as a child named [Report] to process output. Add a new report below this activity.", memberNames));
+                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires an [APSIM.Report] as a child named [{Name}] to process output. Add a new report below this activity.", memberNames));
             }
             return results;
         }
