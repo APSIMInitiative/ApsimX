@@ -211,12 +211,22 @@ namespace UserInterface.Intellisense
         /// gtk_source_completion_proposal_get_info() is used as the content of
         /// the GtkLabel.
         /// </summary>
-        /// <param name="proposal"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// This implementation is essentially the same as the default behvaiour
+        /// when this method is not implemented (ie when it returns null),
+        /// except that I've set UseMarkup to false, to ensure that generic
+        /// members/parameters are displayed correctly without being parsed as
+        /// markup.
+        /// </remarks>
+        /// <param name="proposal">The completion proposal.</param>
         public Widget GetInfoWidget(ICompletionProposal proposal)
         {
-            // tbi
-            return null;
+            return new Label()
+            {
+                UseMarkup = false,
+                Text = proposal.Info,
+                Visible = true
+            };
         }
 
         /// <summary>
