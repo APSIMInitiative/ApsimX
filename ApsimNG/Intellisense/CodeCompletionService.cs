@@ -26,7 +26,6 @@ namespace UserInterface.Intellisense
         /// </summary>
         private static readonly SymbolDisplayParameterOptions parameterOptions = SymbolDisplayParameterOptions.IncludeDefaultValue
                                                                                | SymbolDisplayParameterOptions.IncludeName
-                                                                               | SymbolDisplayParameterOptions.IncludeOptionalBrackets
                                                                                | SymbolDisplayParameterOptions.IncludeParamsRefOut
                                                                                | SymbolDisplayParameterOptions.IncludeType;
 
