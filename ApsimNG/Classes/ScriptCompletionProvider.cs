@@ -171,9 +171,10 @@ namespace UserInterface.Intellisense
                 // gets hidden/removed when the sourceview loses focus.
                 methodSignaturePopup.AttachedTo = view;
 
+                methodSignaturePopup.ShowAll();
+
                 // Move the info window to the location of the cursor.
                 methodSignaturePopup.MoveToIter(view, iter);
-                methodSignaturePopup.ShowAll();
             }
 
             // Return false, to allow the sourceview to automatically handle
