@@ -95,11 +95,6 @@
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
 
-        /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("0-1")]
-        public IFunction RootDepthStressFactor = null;
-
         /// <summary>The maximum N concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
@@ -255,6 +250,17 @@
                 for (int i = 0; i < PlantZone.Physical.Thickness.Length; i++)
                     value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.Physical.Thickness[i];
                 return value;
+            }
+        }
+
+        /// <summary>Air filled pore space factor (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double AirFilledPoreSpace
+        {
+            get
+            {
+                var i = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+                return MathUtilities.Divide(PlantZone.Physical.SATmm[i] - PlantZone.WaterBalance.SWmm[i], PlantZone.Physical.Thickness[i], 0.0);
             }
         }
 

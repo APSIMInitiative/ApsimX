@@ -58,6 +58,8 @@
         /// <summary>Row filter edit box.</summary>
         private LabelView statusLabel;
 
+        private ViewBase view = null;
+
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
 
@@ -90,7 +92,7 @@
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             dataStore = model as IDataStore;
-            var view = v as ViewBase;
+            view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
             intellisense = new IntellisensePresenter(view as ViewBase);
@@ -136,6 +138,7 @@
             rowFilterEditBox.Leave -= OnColumnFilterChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
+            view.Dispose();
             CleanupSheet();
         }
 

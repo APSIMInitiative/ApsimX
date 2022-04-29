@@ -1072,6 +1072,7 @@
         /// <param name="onLeft">Is the tab in the left tab control?</param>
         public void CloseTab(int index, bool onLeft)
         {
+            int nPages = view.PageCount(onLeft);
             List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
             presenters[index].Detach();
             presenters.RemoveAt(index);
@@ -1079,7 +1080,12 @@
             // Need to add an offset to account for the home tab. E.g. presenter
             // 0 (ie .apsimx file 0) will be the second tab in the notebook (ie
             // index 1).
-            view.RemoveTab(index + 1, onLeft);
+
+            // The tab should have been removed by the call to Detach
+            // But check to be sure a tab has actually been closed and, if not, remove it now
+
+            if (view.PageCount(onLeft) == nPages)
+                view.RemoveTab(index + 1, onLeft);  
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
@@ -1135,12 +1141,13 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
+                string fileName = this.AskUserForOpenFileName("APSIM Classic Files|*.apsim");
                 this.view.ShowWaitCursor(true);
                 this.Import(fileName);
 
                 string newFileName = Path.ChangeExtension(fileName, ".apsimx");
                 this.OpenApsimXFileInTab(newFileName, this.view.IsControlOnLeft(sender));
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
             catch (Exception err)
             {

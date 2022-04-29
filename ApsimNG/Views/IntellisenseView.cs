@@ -364,18 +364,14 @@
         /// <summary>
         /// Safely disposes of several objects.
         /// </summary>
-        public void Cleanup()
+        protected override void Dispose(bool disposing)
         {
             completionForm.FocusOutEvent -= OnLeaveCompletion;
             completionView.ButtonPressEvent -= OnButtonPress;
             completionView.KeyPressEvent -= OnContextListKeyDown;
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
-            if (completionForm.IsRealized)
-                completionForm.Dispose();
-            completionView.Dispose();
-            completionForm.Dispose();
-            completionForm = null;
+            base.Dispose(disposing);
         }
 
         /// <summary>
