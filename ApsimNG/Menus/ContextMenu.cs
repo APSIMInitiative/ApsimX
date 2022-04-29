@@ -26,6 +26,7 @@
     using APSIM.Interop.Documentation;
     using System.Threading.Tasks;
     using System.Threading;
+    using APSIM.Server.Sensibility;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -172,7 +173,7 @@
             {
                 if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
                 {
-                    Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                    IModel model = MainMenu.FindRunnable(explorerPresenter.CurrentNode);
                     var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();
@@ -448,7 +449,8 @@
                 Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Soil;
                 if (currentSoil != null)
                 {
-                    SoilChecker.CheckWithStandardisation(currentSoil);
+                    ISummary summary = currentSoil.FindInScope<ISummary>(this.explorerPresenter.CurrentNodePath);
+                    SoilChecker.CheckWithStandardisation(currentSoil, summary);
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
             }
@@ -698,7 +700,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true)]
+        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true, ShortcutKey = "Ctrl+N")]
         public void AddModel(object sender, EventArgs e)
         {
             try
@@ -883,12 +885,32 @@
         }
 
         /// <summary>
+        /// Ensure that the selected simulation will reset its state correctly
+        /// when used by an apsim server.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [ContextMenu(MenuName = "Verify Server Compatibility", FollowsSeparator = true)]
+        public void CheckServerCompatibility(object sender, EventArgs args)
+        {
+            try
+            {
+                SimulationChecker checker = new SimulationChecker(explorerPresenter.CurrentNode, false);
+                RunCommand command = new RunCommand("State validation", checker, explorerPresenter);
+                command.Do();
+            }
+            catch (Exception error)
+            {
+                explorerPresenter.MainPresenter.ShowError(error);
+            }
+        }
+
+        /// <summary>
         /// Event handler for a User interface "Create documentation from simulations" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Create documentation",
-                     AppliesTo = new Type[] { typeof(Simulations) },
                      FollowsSeparator = true)]
         public void CreateFileDocumentation(object sender, EventArgs e)
         {
@@ -897,7 +919,8 @@
                 explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                IModel modelToDocument = explorerPresenter.CurrentNode;
+                IModel modelToDocument = explorerPresenter.CurrentNode.Clone();
+                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");

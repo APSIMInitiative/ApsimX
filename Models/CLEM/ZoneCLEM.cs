@@ -236,8 +236,10 @@ namespace Models.CLEM
             // some values assigned in commencing will not be checked before processing, but will be caught here
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
-            if (!Validate(this, "", this, summary))
-                ReportInvalidParameters(this);
+
+            // not all errors will be reported in validation so perform in two steps
+            Validate(this, "", this, summary);
+            ReportInvalidParameters(this);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
             if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
@@ -268,16 +270,31 @@ namespace Models.CLEM
             // get all validations 
             var errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter "));
 
-            // create combined inner exception
-            string innerExceptionString = "";
-            foreach (var error in errorsThisSim)
-                innerExceptionString += $"{error.Text}{Environment.NewLine}";
+            // report error and stop
+            if (errorsThisSim.Any())
+            {
+                // create combined inner exception
+                string innerExceptionString = "";
+                foreach (var error in errorsThisSim)
+                    innerExceptionString += $"{error.Text}{Environment.NewLine}";
+
+                Exception innerException = new Exception(innerExceptionString);
+                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
+            }
+
+            // get all other errors 
+            errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter "));
 
             // report error and stop
             if (errorsThisSim.Any())
             {
+                // create combined inner exception
+                string innerExceptionString = "";
+                foreach (var error in errorsThisSim)
+                    innerExceptionString += $"{error.Text}{Environment.NewLine}";
+
                 Exception innerException = new Exception(innerExceptionString);
-                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details", innerException);
+                throw new ApsimXException(model, $"{errorsThisSim.Count()} error{(errorsThisSim.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
 

@@ -22,7 +22,7 @@ Any recent PC with a minimum of 2Gb of RAM.
 
 ### Installation
 
-Installers for Windows, MacOS, and (Debian) Linux are available [here](http://apsimdev.apsim.info/APSIM.Registration.Portal/Main.aspx)
+Installers for Windows, MacOS, and (Debian) Linux are available [here](https://registration.apsim.info)
 
 Instructions for compiling from source are available [here](https://apsimnextgeneration.netlify.app/development/contribute/compile/)
 

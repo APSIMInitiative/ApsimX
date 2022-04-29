@@ -1005,6 +1005,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -2415,6 +2422,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -3788,6 +3802,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -4339,7 +4360,6 @@
               "Notes": null,
               "SelectedTab": "Properties",
               "CurrentAncestorList": [
-                "ZoneCLEM",
                 "FileCrop"
               ],
               "Name": "FileForage",
@@ -4352,7 +4372,6 @@
               "Notes": null,
               "SelectedTab": null,
               "CurrentAncestorList": [
-                "ZoneCLEM",
                 "ResourcesHolder"
               ],
               "Name": "Resources",
@@ -4364,8 +4383,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ResourcesHolder",
                     "Land"
                   ],
                   "Name": "Land",
@@ -4379,8 +4396,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
                         "Land",
                         "LandType"
                       ],
@@ -4432,8 +4447,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ResourcesHolder",
                     "RuminantHerd"
                   ],
                   "Name": "Ruminants",
@@ -4513,8 +4526,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
                         "RuminantHerd",
                         "RuminantType"
                       ],
@@ -4526,8 +4537,6 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
                             "RuminantHerd",
                             "RuminantType",
                             "RuminantInitialCohorts"
@@ -4546,8 +4555,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "RuminantInitialCohorts",
@@ -4570,8 +4577,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "RuminantInitialCohorts",
@@ -4594,8 +4599,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "RuminantInitialCohorts",
@@ -4618,8 +4621,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "RuminantInitialCohorts",
@@ -4639,8 +4640,6 @@
                           "Notes": null,
                           "SelectedTab": "Summary",
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
                             "RuminantHerd",
                             "RuminantType",
                             "AnimalPricing"
@@ -4655,8 +4654,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -4673,8 +4670,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4698,8 +4693,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -4716,8 +4709,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4738,8 +4729,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4763,8 +4752,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -4781,8 +4768,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4803,8 +4788,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4828,8 +4811,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -4846,8 +4827,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4868,8 +4847,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4893,8 +4870,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -4911,8 +4886,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4936,8 +4909,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -4954,8 +4925,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -4976,8 +4945,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -5001,8 +4968,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
                                 "AnimalPricing",
@@ -5019,8 +4984,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -5041,8 +5004,6 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
                                     "AnimalPricing",
@@ -5070,8 +5031,6 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
                             "RuminantHerd",
                             "RuminantType",
                             "RuminantConceptionCurve"
@@ -5094,8 +5053,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ResourcesHolder",
                     "GrazeFoodStore"
                   ],
                   "Name": "GrazeFoodStore",
@@ -5121,8 +5078,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
                         "GrazeFoodStore",
                         "GrazeFoodStoreType"
                       ],
@@ -5140,8 +5095,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ResourcesHolder",
                     "AnimalFoodStore"
                   ],
                   "Name": "AnimalFoodStore",
@@ -5155,8 +5108,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
                         "AnimalFoodStore",
                         "AnimalFoodStoreType"
                       ],
@@ -5171,8 +5122,6 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
                             "AnimalFoodStore",
                             "AnimalFoodStoreType",
                             "Transmutation"
@@ -5189,8 +5138,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
                                 "AnimalFoodStore",
                                 "AnimalFoodStoreType",
                                 "Transmutation",
@@ -5237,8 +5184,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ActivitiesHolder",
                     "CropActivityManageCrop"
                   ],
                   "Name": "Native Pasture on farm",
@@ -5251,13 +5196,18 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
                         "CropActivityManageCrop",
                         "CropActivityManageProduct"
                       ],
@@ -5277,8 +5227,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ActivitiesHolder",
                     "ActivityFolder"
                   ],
                   "Name": "Manage herd",
@@ -5292,6 +5240,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ActivityFolder",
                         "RuminantActivityGrow"
                       ],
                       "Name": "Grow all ruminants",
@@ -5309,6 +5258,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ActivityFolder",
                         "RuminantActivityMove"
                       ],
                       "Name": "Move to pasture",
@@ -5319,6 +5269,7 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ActivityFolder",
                             "RuminantActivityMove",
                             "RuminantGroup"
                           ],
@@ -5339,8 +5290,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
                         "ActivityFolder",
                         "RuminantActivityGrazeAll"
                       ],
@@ -5390,6 +5339,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ActivityFolder",
                         "RuminantActivityManage"
                       ],
                       "Name": "Manage numbers",
@@ -5401,6 +5351,8 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ActivityFolder",
+                            "RuminantActivityManage",
                             "ActivityTimerInterval"
                           ],
                           "Name": "every August",
@@ -5415,6 +5367,7 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ActivityFolder",
                             "RuminantActivityManage",
                             "SpecifyRuminant"
                           ],
@@ -5432,6 +5385,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ActivityFolder",
                                 "RuminantActivityManage",
                                 "SpecifyRuminant",
                                 "RuminantTypeCohort"
@@ -5452,6 +5406,7 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ActivityFolder",
                             "RuminantActivityManage",
                             "SpecifyRuminant"
                           ],
@@ -5469,6 +5424,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ActivityFolder",
                                 "RuminantActivityManage",
                                 "SpecifyRuminant",
                                 "RuminantTypeCohort"
@@ -5494,8 +5450,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
                         "ActivityFolder",
                         "RuminantActivityBuySell"
                       ],
@@ -5513,8 +5467,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
                         "ActivityFolder",
                         "RuminantActivityBreed"
                       ],
@@ -5529,8 +5481,6 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
                             "ActivityFolder",
                             "RuminantActivityBreed",
                             "RuminantActivityControlledMating"
@@ -5544,8 +5494,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
                                 "ActivityFolder",
                                 "RuminantActivityBreed",
                                 "RuminantActivityControlledMating",
@@ -5575,8 +5523,6 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ActivitiesHolder",
                     "SummariseRuminantHerd"
                   ],
                   "Name": "SummariseHerd",
@@ -5622,7 +5568,7 @@
                   "ReportAnimalWeight": false,
                   "ReportLandEntire": false,
                   "ReportLabourIndividuals": false,
-                  "SelectedTab": "Properties",
+                  "SelectedTab": "Data",
                   "VariableNames": [
                     "Land",
                     "GrazeFoodStore",
@@ -6712,6 +6658,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -8215,6 +8168,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -8462,7 +8422,7 @@
                         },
                         {
                           "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
-                          "Identifier": "",
+                          "Identifier": "RemoveBreedersFromHerd",
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [

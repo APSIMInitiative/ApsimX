@@ -358,9 +358,9 @@ namespace Models.Soils
         private double a_to_evap_fact = 0.44;
 
         /// <summary>
-        /// coef. in exp effect of canopy on
+        /// coef. in exp effect of canopy on soil water evaporation. In previous version initialised to 1.7.
         /// </summary>
-        private double canopy_eos_coef = 0;
+        private double canopy_eos_coef = 1.7;
 
         /// <summary>
         /// The effect of residue and canopy cover is implemented as in the soilwat model.
@@ -408,12 +408,12 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double ersoil = 0.000001;
+        public double ersoil { get; set; } = 0.000001;
 
         /// <summary>
         /// 
         /// </summary>
-        private double ernode = 0.000001;
+        public double ernode { get; set; } = 0.000001;
 
         /// <summary>
         /// 
@@ -433,7 +433,7 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double slcerr = 0.000001;
+        public double slcerr { get; set; } = 0.000001;
         
         /// <summary>
         /// 
@@ -1448,11 +1448,11 @@ namespace Models.Soils
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
                 double solconc = 0.0;
-                if (solute_names[solnum] == "no3")
+                if (solute_names[solnum].Equals("no3", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NO3;
-                else if (solute_names[solnum] == "nh4")
+                else if (solute_names[solnum].Equals("nh4", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NH4;
-                else if (solute_names[solnum] == "cl")
+                else if (solute_names[solnum].Equals("cl", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.CL;
 
                 if (solconc > 0.0)
@@ -2004,7 +2004,7 @@ namespace Models.Soils
 
         private int SoluteIndex(string soluteName)
         {
-            int soluteIndex = Array.IndexOf(solute_names, soluteName);
+            int soluteIndex = Array.FindIndex(solute_names, s => s.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
             if (soluteIndex == -1)
                 throw new Exception($"Invalid solute name: {soluteName}");
             return soluteIndex;
@@ -2306,10 +2306,15 @@ namespace Models.Soils
                 SwimSoluteParameters soluteParam = FindInScope<SwimSoluteParameters>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                for (int j = 0; j < soluteParam.FIP.Length; j++)
+                    if (soluteParam.FIP[j] < 1.0)
+                        throw new Exception("In the current implementation FIP must be equal to 1 to enforce a linear isotherm. Nonlinear isotherms were causing mass balance errors - this might be resolved in the future, " + solute_names[i]);
                 fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
+                ex[i] = MathUtilities.Multiply(exco[i], soilPhysical.BD);
                 cslgw[i] = soluteParam.WaterTableConcentration;
                 d0[i] = soluteParam.D0;
+
             }
         }
 
@@ -3224,20 +3229,22 @@ namespace Models.Soils
                 {
                     psiValue = _psi[node]; // Initial estimate
                 }
-                
 
 
 
-                for (int iter = 0; iter < maxIterations; iter++)
+                int iter = 0;
+                double est = 0.0;
+
+                for (iter = 0; iter < maxIterations; iter++)
                 {
-                    double est = SimpleTheta(node, psiValue);
+                    est = SimpleTheta(node, psiValue);
                     double m = (SimpleTheta(node, psiValue + dpsi) - est) / dpsi;
 
                     if (Math.Abs(est - theta) < tolerance)
                         break;
                     psiValue -= Math.Min(-dpsi,(est - theta) / m);
-                    //psiValue -= (est - theta) / m;
                 }
+                //summary.WriteMessage(this, $"We want this stuff, {(est - theta)}, {iter}, {psiValue}", MessageType.Diagnostic);
                 return psiValue;
             }
         }
@@ -3930,7 +3937,10 @@ namespace Models.Soils
 
                 //Peter's CHANGE 21/10/98 to ensure zero exchange is treated as linear
                 //         if (p%fip(solnum,j).eq.1.) then
-                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)))
+                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance))    //exco=0
+                    || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)) // fip=1
+
+                    ) // solute amount is zero  2022-01-06 Val Snow added this to avoid crashes when solutes initiated with zero concentraion  || (MathUtilities.FloatsAreEqual(csl[solnum][j], 0.0, 1e-6))
                 {
                     //           linear exchange isotherm
                     c2[i] = 1.0;
@@ -4134,7 +4144,7 @@ namespace Models.Soils
                     j = 0;
                     for (int i = 0; i <= n; i++)
                     {
-                        if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
+                        if (i > 0 && !MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                         {
                             if (i > 0)
                                 j++;
@@ -4324,7 +4334,7 @@ namespace Models.Soils
 
             if (solnum >= 0)
             {
-                solute_n = solutes[solnum].kgha;
+                solute_n = (double[])solutes[solnum].kgha.Clone();
 
                 for (int node = 0; node <= n; node++)
                 {
@@ -5630,6 +5640,7 @@ namespace Models.Soils
                 double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness, divideTolerance);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
+                run_has_started = false;
             }
         }
 
@@ -5651,7 +5662,7 @@ namespace Models.Soils
         public double[] FlowUrea => TD_sflow[SoluteIndex("Urea")];
 
         /// <summary>CL movement out of a layer. </summary>
-        public double[] FlowCL => TD_sflow[SoluteIndex("CL")];
+        public double[] FlowCl => TD_sflow[SoluteIndex("Cl")];
 
         /// <summary>NO3 movement out of a sub surface drain. </summary>
         public double SubsurfaceDrainNO3 => TD_slssof[SoluteIndex("NO3")];
@@ -5675,7 +5686,7 @@ namespace Models.Soils
         public double LeachUrea => TD_soldrain[SoluteIndex("Urea")];
 
         /// <summary>CL leached from the bottom of the profile.</summary>
-        public double LeachCL => TD_soldrain[SoluteIndex("CL")];
+        public double LeachCl => TD_soldrain[SoluteIndex("Cl")];
 
         /// <summary>Amount of NO3 not adsorbed (ppm).</summary>
         public double[] ConcWaterNO3 => ConcWaterSolute(SoluteIndex("NO3"));
@@ -5687,7 +5698,7 @@ namespace Models.Soils
         public double[] ConcWaterUrea => ConcWaterSolute(SoluteIndex("Urea"));
 
         /// <summary>Amount of CL not adsorbed (ppm).</summary>
-        public double[] ConcWaterCL => ConcWaterSolute(SoluteIndex("CL"));
+        public double[] ConcWaterCl => ConcWaterSolute(SoluteIndex("Cl"));
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]

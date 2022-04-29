@@ -13,7 +13,7 @@ namespace APSIM.Server
     /// </summary>
     public class ServerJobRunner : JobRunner
     {
-        public IEnumerable<IReplacement> Replacements { get; set; }
+        public IEnumerable<IReplacement> Replacements { get; set; } = Enumerable.Empty<IReplacement>();
         private List<(IRunnable, IJobManager)> jobs = new List<(IRunnable, IJobManager)>();
 
         /// <summary>

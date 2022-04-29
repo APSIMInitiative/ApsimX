@@ -63,6 +63,17 @@ namespace UserInterface.Views
         private Dictionary<Guid, string> originalEntryText = new Dictionary<Guid, string>();
 
         /// <summary>
+        /// List of old property tables to be disposed of when this PropertyView
+        /// instance is disposed of.
+        /// </summary>
+        private readonly List<Grid> oldPropertyTables = new List<Grid>();
+
+        /// <summary>
+        /// Flag to prevent double disposal.
+        /// </summary>
+        private bool isDisposed;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="owner">The owning view.</param>
@@ -86,7 +97,7 @@ namespace UserInterface.Views
             scroller.PropagateNaturalHeight = true;
             scroller.PropagateNaturalWidth = true;
 
-            mainWidget.Destroyed += OnWidgetDestroyed;
+            mainWidget.Destroyed += mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -100,14 +111,20 @@ namespace UserInterface.Views
 
             // Dispose of current properties table.
             box.Remove(propertyTable);
-            propertyTable.Dispose();
+
+            // We don't really want to destroy the old property table yet,
+            // because it may have pending events. Destroying the widget in such
+            // a scenario can lead to undesirable results (such as a crash). To
+            // avoid this, we just add the table into a list of widgets to be
+            // cleaned up later.
+            oldPropertyTables.Add(propertyTable);
 
             // Construct a new properties table.
             propertyTable = new Grid();
             //propertyTable.RowHomogeneous = true;
             propertyTable.RowSpacing = 5;
 
-            propertyTable.Destroyed += OnWidgetDestroyed;
+            propertyTable.Destroyed += PropertyTable_Destroyed;
             box.Add(propertyTable);
 
             int nrow = 0;
@@ -126,6 +143,33 @@ namespace UserInterface.Views
                 Widget widget = propertyTable.GetChildAt(col, row);
                 if (widget is Entry entry)
                     entry.GrabFocus();
+            }
+        }
+
+        /// <summary>
+        /// Dispose of old property tables.
+        /// </summary>
+        /// <param name="disposing">
+        /// True iff being called by manually (as opposed to by the garbage
+        /// collector) This doesn't really matter for the purposes of this
+        /// particular Dispose() implementation.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                isDisposed = true;
+                box.Remove(propertyTable);
+                oldPropertyTables.Add(propertyTable);
+
+                foreach (Grid grid in oldPropertyTables)
+                {
+                    grid.DetachAllHandlers();
+                    grid.Destroy();
+                    grid.Dispose();
+                }
+
+                base.Dispose(disposing);
             }
         }
 
@@ -288,6 +332,8 @@ namespace UserInterface.Views
                 default:
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
             }
+
+            component.Sensitive = property.Enabled;
 
             // Set the widget's name to the property name.
             // This allows us to provide the property name when firing off
@@ -549,12 +595,19 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
-        protected void OnWidgetDestroyed(object sender, EventArgs e)
+        protected void mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (sender is Widget widget)
-            {
-                widget.DetachAllHandlers();
-            }
+            propertyTable.Destroy();
+            propertyTable.Dispose();
+            mainWidget.DetachAllHandlers();
+            mainWidget.Destroyed -= mainWidget_Destroyed;
+
+        }
+
+        protected void PropertyTable_Destroyed(object sender, EventArgs e)
+        {
+            propertyTable.DetachAllHandlers();
+            propertyTable.Destroyed -= PropertyTable_Destroyed;
         }
 
         /// <summary>

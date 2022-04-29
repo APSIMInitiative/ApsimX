@@ -795,7 +795,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Does some cleanup work on the Grid.
         /// </summary>
-        public void Dispose()
+        public void DoDisposal()
         {
             ClearGridColumns();
             gridmodel.Dispose();
@@ -814,7 +814,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments.</param>
         private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            Dispose();
+            DoDisposal();
         }
 
     }

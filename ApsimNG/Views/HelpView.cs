@@ -24,7 +24,7 @@ Holzworth, Dean, N.I.Huth, J.Fainges, H.Brown, E.Zurcher, R.Cichota, S.Verrall, 
 
 The APSIM Initiative would appreciate an acknowledgement in your research paper if you or your team have utilised APSIM in its development. For ease, we suggest the following wording:
 
-<i>Acknowledgment is made to the APSIM Initiative which takes responsibility for quality assurance and a structured innovation programme for APSIM's modelling software, which is provided free for research and development use (see apsimdev.apsim.info for details)</i>";
+<i>Acknowledgment is made to the APSIM Initiative which takes responsibility for quality assurance and a structured innovation programme for APSIM's modelling software, which is provided free for research and development use (see apsim.info for details)</i>";
 
         /// <summary>
         /// Window in which help info is displayed.

@@ -78,9 +78,9 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public bool DoTransmute(ResourceRequest request, double shortfallPacketsNeeded, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
+        public bool DoTransmute(ResourceRequest request, double shortfall, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
         {
-            request.Required = shortfallPacketsNeeded * AmountPerPacket;
+            request.Required = shortfall / shortfallPacketSize * AmountPerPacket;
 
             if (request.Required > 0)
             {
