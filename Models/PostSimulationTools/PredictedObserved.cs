@@ -233,9 +233,6 @@ namespace Models.PostSimulationTools
                     List<string> unitFieldNames = new List<string>();
                     List<string> unitNames = new List<string>();
 
-                    // write units to table.
-                    reader.Refresh();
-
                     foreach (string fieldName in commonCols)
                     {
                         string units = reader.Units(PredictedTableName, fieldName);

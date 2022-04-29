@@ -41,12 +41,6 @@ namespace Models.CLEM.Reporting
         private ISummary summary = null;
 
         /// <summary>
-        /// Style of transaction report to use
-        /// </summary>
-        [Description("Style of report")]
-        public ReportTransactionStyle ReportStyle { get; set; }
-
-        /// <summary>
         /// Gets or sets report groups for outputting
         /// </summary>
         [Description("Resource group")]
@@ -56,10 +50,18 @@ namespace Models.CLEM.Reporting
         public string ResourceGroupsToReport { get; set; }
 
         /// <summary>
+        /// Style of transaction report to use
+        /// </summary>
+        [Description("Style of report")]
+        [Category("General", "Resources")]
+        public ReportTransactionStyle ReportStyle { get; set; }
+
+        /// <summary>
         /// Report all losses as -ve values
         /// </summary>
         [Summary]
         [Description("Report losses as negative")]
+        [Category("General", "Extras")]
         public bool ReportLossesAsNegative { get; set; }
 
         /// <summary>
@@ -67,13 +69,23 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Summary]
         [Description("Include resource pricing")]
+        [Category("General", "Extras")]
         public bool IncludePrice { get; set; }
+
+        /// <summary>
+        /// Include financial year
+        /// </summary>
+        [Summary]
+        [Description("Include financial year")]
+        [Category("General", "Extras")]
+        public bool IncludeFinancialYear { get; set; }
 
         /// <summary>
         /// Include unit conversion if available
         /// </summary>
         [Summary]
         [Description("Include all unit conversions")]
+        [Category("General", "Extras")]
         public bool IncludeConversions { get; set; }
 
         /// <inheritdoc/>
@@ -98,6 +110,13 @@ namespace Models.CLEM.Reporting
             {
                 "[Clock].Today as Date"
             };
+            if(IncludeFinancialYear)
+            {
+                Finance financeStore = resources.FindResourceGroup<Finance>();
+                if (financeStore != null)
+                    variableNames.Add($"[Resources].{financeStore.Name}.FinancialYear as FY");
+            }
+
             List<string> eventNames = new List<string>();
 
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")

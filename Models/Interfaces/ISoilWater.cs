@@ -38,6 +38,12 @@
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         double Drainage { get; }
 
+        /// <summary>Subsurface drain (mm)</summary>
+        double SubsurfaceDrain { get; }
+
+        /// <summary>Pond depth (mm).</summary>
+        double Pond { get; }
+
         /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
         double Salb { get; }
 
@@ -49,9 +55,12 @@
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
         double LeachNH4 { get; }
-        
+
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         double LeachUrea { get; }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
+        double LeachCl { get; }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         double[] FlowNO3 { get; }

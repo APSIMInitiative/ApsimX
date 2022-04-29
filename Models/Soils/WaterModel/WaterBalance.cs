@@ -276,6 +276,10 @@ namespace Models.WaterModel
         [JsonIgnore]
         public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
 
+        /// <summary>Subsurface drain (mm)</summary>
+        [JsonIgnore]
+        public double SubsurfaceDrain => 0;
+
         /// <summary>Evaporation (mm).</summary>
         [JsonIgnore]
         public double Evaporation { get { return evaporationModel.Es; } }
@@ -372,6 +376,10 @@ namespace Models.WaterModel
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
+        [JsonIgnore]
+        public double LeachCl => 0.0; 
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]

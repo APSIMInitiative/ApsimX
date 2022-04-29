@@ -183,12 +183,12 @@
             {
                 btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
                 captureRules.Dispose();
-                VerbosityDropDown.MainWidget.Dispose();
-                MessagesFilter.MainWidget.Dispose();
+                VerbosityDropDown.Dispose();
+                MessagesFilter.Dispose();
                 simulationFilter.Dispose();
-                SimulationDropDown.MainWidget.Dispose();
+                SimulationDropDown.Dispose();
                 mainControl.Dispose();
-                ((ViewBase)SummaryDisplay).MainWidget.Dispose();
+                ((ViewBase)SummaryDisplay).Dispose();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }
