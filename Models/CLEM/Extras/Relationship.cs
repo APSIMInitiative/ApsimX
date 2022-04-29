@@ -22,7 +22,7 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityRequestPurchase))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [ValidParent(ParentType = typeof(Labour))]

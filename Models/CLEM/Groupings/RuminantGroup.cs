@@ -34,7 +34,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityShear))]
     [ValidParent(ParentType = typeof(RuminantActivityTag))]
-    [ValidParent(ParentType = typeof(RuminantActivityRequestPurchase))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]

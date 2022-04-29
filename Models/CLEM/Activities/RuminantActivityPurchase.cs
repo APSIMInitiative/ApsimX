@@ -24,8 +24,8 @@ namespace Models.CLEM.Activities
     [Description("Manage a herd of individuals as trade herd")]
     [Version(1, 1, 0, "Replaces old Trade herd approach")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuy.htm")]
-    public class RuminantActivityRequestPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPurchase.htm")]
+    public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private string grazeStore = "";
         private RuminantType herdToUse;
@@ -57,7 +57,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantActivityRequestPurchase()
+        public RuminantActivityPurchase()
         {
             SetDefaults();
             TransactionCategory = "Livestock.Purchase";
@@ -83,7 +83,6 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Number to purchase",
                         },
                         units: new List<string>() {
                             "fixed",
