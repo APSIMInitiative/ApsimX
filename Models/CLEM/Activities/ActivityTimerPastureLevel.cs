@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</span> ");
                 }
                 htmlWriter.Write(" kg per hectare</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }

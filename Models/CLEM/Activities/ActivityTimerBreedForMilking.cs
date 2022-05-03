@@ -221,7 +221,7 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
                 }
                 htmlWriter.Write("\r\n</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
 
                 return htmlWriter.ToString();

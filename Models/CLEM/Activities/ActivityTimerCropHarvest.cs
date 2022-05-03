@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)");
                     htmlWriter.Write("</div>");
                 }
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
 
                 return htmlWriter.ToString(); 

@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
                 if (StartDate != startDate || EndDate != endDate)
                     htmlWriter.Write(" (modified for monthly timestep)");
                 htmlWriter.Write("</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }

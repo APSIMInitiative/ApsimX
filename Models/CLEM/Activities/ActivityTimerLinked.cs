@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Linked to ");
                 htmlWriter.Write("</span></div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString();
             }

@@ -179,7 +179,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("NOT SET");
                 }
                 htmlWriter.Write("</span></div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }

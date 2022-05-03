@@ -148,7 +148,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(EndMonth.ToString() + "</span>");
                 }
                 htmlWriter.Write("</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }

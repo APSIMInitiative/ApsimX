@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
                     }
                 }
                 htmlWriter.Write("\r\n</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                 {
                     htmlWriter.Write(" - DISABLED!");
                 }
