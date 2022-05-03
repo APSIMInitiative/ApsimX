@@ -12,6 +12,11 @@ namespace Models.CLEM.Interfaces
     public interface IFilterGroup : IModel
     {
         /// <summary>
+        /// Perform a shuffle before sorting to remove inherent order from adding to herd
+        /// </summary>
+        bool RandomiseBeforeSorting { get; set; }
+
+        /// <summary>
         /// Maps the property name to its reflected PropertyInfo
         /// </summary>
         [JsonIgnore]
