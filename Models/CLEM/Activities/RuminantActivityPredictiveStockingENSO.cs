@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "Relationship":
                     return new LabelsForCompanionModels(
@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
                             "PastureToStockingChangeElNino",
                             "PastureToStockingChangeLaNina"
                         },
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -170,7 +170,7 @@ namespace Models.CLEM.Activities
                             "Destock required",
                             "Restock required"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per AE"
                         }

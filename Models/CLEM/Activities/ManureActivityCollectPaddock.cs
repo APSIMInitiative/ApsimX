@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "kg to collect",
                         }
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                 amountToDo = Math.Max(amountToDo, canBeCarried);
             }
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)

@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
                 case "Relationship":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() { "Adult equivalent" },
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 default:
                     return new LabelsForCompanionModels();

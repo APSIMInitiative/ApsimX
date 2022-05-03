@@ -77,10 +77,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Labour unit type
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
-        [Description("Units to use")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Description("Measure to use")]
         [Category("Labour", "Units")]
-        public string Units { get; set; }
+        public string Measure { get; set; }
 
         /// <summary>
         /// Labour limit style
@@ -123,9 +123,6 @@ namespace Models.CLEM.Activities
         [Required]
         [Category("Labour", "Rate")]
         public bool ApplyToAll { get; set; }
-
-        /// <inheritdoc/>
-        public string Measure { get { return "none"; } }
 
         /// <summary>
         /// Get the calculated maximum days per person for activity from CalculateLimits
@@ -191,7 +188,7 @@ namespace Models.CLEM.Activities
             double daysNeeded = 0;
             double numberUnits = 0;
 
-            switch (Units)
+            switch (Measure)
             {
                 case "Fixed":
                     daysNeeded = LabourPerUnit * activityMetric;
@@ -206,7 +203,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * LabourPerUnit;
                     break;
                 default:
-                    throw new NotImplementedException($"Unknown unit [{Units}] requested in [{GetType().Name}]:[{NameWithParent}]");
+                    throw new NotImplementedException($"Unknown unit [{Measure}] requested in [{GetType().Name}]:[{NameWithParent}]");
             }
 
             if (MathUtilities.IsPositive(daysNeeded))
@@ -291,14 +288,14 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
                 // get amount
                 htmlWriter.Write($"{LabourPerUnit}</span> days labour is required");
-                if ((Units??"Unknown").ToUpper() != "Fixed")
+                if ((Measure??"Unknown").ToUpper() != "Fixed")
                 {
                     if (UnitSize == 1)
                         htmlWriter.Write(" for each ");
                     else
                         htmlWriter.Write($" for every <span class=\"setvalue\">{UnitSize:#,##0.##}</span>");
 
-                    htmlWriter.Write($"<span class=\"setvalue\">{Units}</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span>");
                     if (WholeUnitBlocks)
                         htmlWriter.Write(" and will be supplied in blocks");
                 }

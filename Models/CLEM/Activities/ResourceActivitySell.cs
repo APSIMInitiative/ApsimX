@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per packet",
                             "amount"
@@ -160,7 +160,7 @@ namespace Models.CLEM.Activities
             if (price.UseWholePackets)
                 unitsToDo = Math.Truncate(unitsToDo);
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)

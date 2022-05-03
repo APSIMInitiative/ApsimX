@@ -43,7 +43,7 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         [XmlIgnore]
-        public string Units
+        public string Measure
         {
             get { return ""; }
             set {; }

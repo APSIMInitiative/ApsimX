@@ -138,7 +138,7 @@ namespace Models.CLEM.Activities
                             "Utilisation % to change in Land condition index relationship",
                             "Utilisation % to change in Grass basal area relationship"
                         },
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 default:
                     return new LabelsForCompanionModels();

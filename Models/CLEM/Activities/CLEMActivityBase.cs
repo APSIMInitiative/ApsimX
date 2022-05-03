@@ -243,8 +243,8 @@ namespace Models.CLEM.Activities
                 {
                     case CompanionModelLabelType.Identifiers:
                         return labels.Identifiers;
-                    case CompanionModelLabelType.Units:
-                        return labels.Units;
+                    case CompanionModelLabelType.Measure:
+                        return labels.Measures;
                     default:
                         break;
                 }
@@ -368,12 +368,12 @@ namespace Models.CLEM.Activities
                 {
                     filters.Add(id, iChildren);
                     // if this type provides units for use by children add them
-                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Units).Any();
+                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Measure).Any();
                     if (unitsProvided)
                     {
                         foreach (var item in iChildren)
                         {
-                            string unitsLabel = (unitsProvided ? item.Units : "");
+                            string unitsLabel = (unitsProvided ? item.Measure : "");
                             if (!valuesForCompanionModels.ContainsKey((typeof(T).Name, id, unitsLabel)))
                                 valuesForCompanionModels.Add((typeof(T).Name, id, unitsLabel), 0);
                         } 
@@ -496,11 +496,11 @@ namespace Models.CLEM.Activities
         /// <returns>Current metric for the child</returns>
         public double ValueForCompanionModel(IActivityCompanionModel companionModel)
         {
-            if(!valuesForCompanionModels.ContainsKey((companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Units ?? "")))
-                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
-            var unitsProvided = valuesForCompanionModels[(companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Units ?? "")];
+            if(!valuesForCompanionModels.ContainsKey((companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")))
+                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
+            var unitsProvided = valuesForCompanionModels[(companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")];
             if (unitsProvided is null)
-                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
+                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
             return unitsProvided.Value;
         }
 
@@ -545,7 +545,7 @@ namespace Models.CLEM.Activities
                                     {
                                         if(request.ActivityModel is null)
                                             request.ActivityModel = this;
-                                        request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Units);
+                                        request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Measure);
                                         ResourceRequestList.Add(request);
                                     }
                                 }
@@ -652,12 +652,12 @@ namespace Models.CLEM.Activities
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 
-                    var units = DefineCompanionModelLabels(iChild.GetType().Name).Units;
-                    test = ((iChild.Units ?? "") == "") == units.Any();
-                    test2 = units.Any() && ((iChild.Units ?? "") != "") && !units.Contains(iChild.Units ?? "");
+                    var units = DefineCompanionModelLabels(iChild.GetType().Name).Measures;
+                    test = ((iChild.Measure ?? "") == "") == units.Any();
+                    test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
                     if (test | test2)
                     {
-                        string warn = $"The units [{(((iChild.Units ?? "") == "") ? "BLANK" : iChild.Units)}] specified in [{iChild.GetType().Name}]:[{iChild.Name}] are not valid for the parent activity [{GetType().Name}]:[a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        string warn = $"The units [{(((iChild.Measure ?? "") == "") ? "BLANK" : iChild.Measure)}] specified in [{iChild.GetType().Name}]:[{iChild.Name}] are not valid for the parent activity [{GetType().Name}]:[a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 

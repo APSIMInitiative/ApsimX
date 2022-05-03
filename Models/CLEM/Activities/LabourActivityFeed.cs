@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
                 case "LabourFeedGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         {
                             "SpecifiedDailyAmountPerIndividual",
                             "SpecifiedDailyAmountPerAE"
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
                             "Number fed",
                             "Feed provided"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per kg feed"

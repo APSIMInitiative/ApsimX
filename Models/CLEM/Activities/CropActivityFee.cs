@@ -38,9 +38,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Payment style
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
-        [Description("Payment style")]
-        public string Units { get; set; }
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Description("Measure to use")]
+        public string Measure { get; set; }
 
         /// <summary>
         /// Account to use

@@ -19,7 +19,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Type of measure
         /// </summary>
-        string Units { get; set; }
+        string Measure { get; set; }
 
         /// <summary>
         /// Method to prepare for the times step after parent activity preparation 
@@ -48,7 +48,7 @@ namespace Models.CLEM.Interfaces
         /// A method to return the list of unit types relavent to the parent activity
         /// </summary>
         /// <returns>A list of units as stings</returns>
-        List<string> ParentSuppliedUnits();
+        List<string> ParentSuppliedMeasures();
     }
 }
 

@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
                             "Number mated",
                             "Number conceived"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                         }
@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
             uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;

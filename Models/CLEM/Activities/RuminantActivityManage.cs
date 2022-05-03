@@ -400,7 +400,7 @@ namespace Models.CLEM.Activities
                             "SelectFutureSiresFromGrowOut",
                             "SelectMalesForGrowOut"
                         },
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -418,7 +418,7 @@ namespace Models.CLEM.Activities
                             "Stock - female breeder purchases",
                             "Stock - sire purchases",
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                         }
@@ -737,7 +737,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = -99999;

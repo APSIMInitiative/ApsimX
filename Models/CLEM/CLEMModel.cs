@@ -204,10 +204,10 @@ namespace Models.CLEM
         /// A method to return the list of units relavent to this parent activity
         /// </summary>
         /// <returns>A list of units</returns>
-        public List<string> ParentSuppliedUnits()
+        public List<string> ParentSuppliedMeasures()
         {
             if (this is IActivityCompanionModel && Parent != null && Parent is IHandlesActivityCompanionModels)
-                return (Parent as IHandlesActivityCompanionModels).DefineCompanionModelLabels(GetType().Name).Units;
+                return (Parent as IHandlesActivityCompanionModels).DefineCompanionModelLabels(GetType().Name).Measures;
             else
                 return new List<string>();
         }
@@ -264,14 +264,14 @@ namespace Models.CLEM
 
             if (htmlTags)
             {
-                if (value != null && value != "")
+                if (value != null && value != "" && value != "NaN")
                     return $"<span class=\"{spanClass}\">{value}</span>";
                 else
                     return $"<span class=\"{errorClass}\">{errorString}</span>";
             }
             else
             {
-                if (value != null && value != "")
+                if (value != null && value != "" && value != "NaN")
                     return value.ToString();
                 else
                     return errorString;
@@ -518,6 +518,9 @@ namespace Models.CLEM
                             break;
                         case OnPartialResourcesAvailableActionTypes.UseAvailableResources:
                             htmlWriter.Write(">Partial");
+                            break;
+                        case OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications:
+                            htmlWriter.Write(">Impact");
                             break;
                         default:
                             break;

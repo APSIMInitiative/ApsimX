@@ -113,7 +113,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public string Units { get; set; }
+        public string Measure { get; set; }
 
         // load unit by weight limit, floor area.
         // relationship to calculate proportion of load per individual
@@ -145,12 +145,12 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per truck",
@@ -162,7 +162,7 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per truck",
                             "per km trucked",
@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
                 case "GreenhouseGasActivityEmission":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per truck",
                             "per km trucked",

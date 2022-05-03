@@ -65,10 +65,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
         /// </summary>
-        [Description("Name of GrazeFoodStore (paddock) to place weaners in")]
+        [Description("GrazeFoodStore (paddock) to place weaners")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", "Leave at current location", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Leave at current location")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individual's location required")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
         public string GrazeFoodStoreName { get; set; }
       
         /// <summary>
@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
                             "Number sucklings checked",
                             "Number weaned"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head"
                         }
@@ -156,9 +156,9 @@ namespace Models.CLEM.Activities
             IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
-            numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0; 
+            numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
@@ -261,20 +261,20 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
                 {
-                    htmlWriter.Write("<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months");
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge.ToString("#0.#"), "Age not set")} months");
                     if (Style == WeaningStyle.AgeOrWeight)
                         htmlWriter.Write(" or  ");
                 }
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
                 {
-                    htmlWriter.Write("<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg");
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningWeight.ToString("##0.##"), "Weight not set")} kg");
                 }
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
                 if (GrazeFoodStoreName == "Leave at current location")
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">remain at the location they were weaned");
+                    htmlWriter.Write("remain at the location they were weaned");
                 }
                 else
                 {
@@ -285,7 +285,7 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
                 }
                 htmlWriter.Write("</div>");
-                // warn if natural weaning will take place
+                // ToDo: warn if natural weaning will take place
                 return htmlWriter.ToString(); 
             }
         } 

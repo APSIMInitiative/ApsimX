@@ -103,15 +103,14 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Destock required"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per AE"
@@ -216,7 +215,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)

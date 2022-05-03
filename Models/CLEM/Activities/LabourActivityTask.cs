@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed"
                         }
                         );

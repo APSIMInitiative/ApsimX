@@ -80,7 +80,7 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() ,
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
                             "Number identified",
                             "Number checked",
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head"
                         }
@@ -115,7 +115,7 @@ namespace Models.CLEM.Activities
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
@@ -174,7 +174,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as [{SaleFlagToUse}] in the following groups:</div>";
+            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as <span class=\"setvalue\">{SaleFlagToUse}] in the following groups:</div>";
         } 
         #endregion
     }

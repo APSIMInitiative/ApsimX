@@ -46,9 +46,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Payment style
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
-        [Description("Payment style")]
-        public string Units { get; set; }
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Description("Measure to use")]
+        public string Measure { get; set; }
 
         /// <summary>
         /// Amount
@@ -70,6 +70,7 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
             TransactionCategory = "[Fee]";
             AllocationStyle = ResourceAllocationStyle.Manual;
+            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -124,7 +125,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Units}</span> ");
+                htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span> ");
                 htmlWriter.Write(" from ");
 
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
@@ -132,7 +133,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
 
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-                htmlWriter.Write(" for all transactions</div>");
+                htmlWriter.Write(" for all transactions</div>\r\n");
                 return htmlWriter.ToString();
             }
         }

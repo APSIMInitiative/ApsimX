@@ -56,7 +56,7 @@ namespace Models.CLEM.Activities
                             "labour available",
                             "labour used"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per day",
                             "per total charged"
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
             }
             amountToDo = totaldays;
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)
@@ -168,134 +168,6 @@ namespace Models.CLEM.Activities
             if (amountToDo > 0)
                 SetStatusSuccessOrPartial(amountToSkip > 0);
         }
-
-        ///// <inheritdoc/>
-        //public override void PerformTasksForTimestep(double argument = 0)
-        //{
-        //    if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
-        //    {
-        //        Status = ActivityStatus.Warning;
-
-        //        // get amount of finance needed and provided
-        //        double financeRequired = 0;
-        //        double financeProvided = 0;
-        //        foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)))
-        //        {
-        //            financeRequired += item.Required;
-        //            financeProvided += item.Provided;
-        //            Status = ActivityStatus.NotNeeded;
-        //        }
-
-        //        if (financeRequired > 0)
-        //            Status = ActivityStatus.Success;
-
-        //        // reduce limiters based on financial shortfall
-        //        if (financeProvided < financeRequired)
-        //        {
-        //            if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources)
-        //            {
-        //                Status = ActivityStatus.Partial;
-        //                int currentmonth = clock.Today.Month;
-        //                double currentCost = 0;
-
-        //                // step through all hired labour in order and set limiter where needed
-        //                foreach (LabourType item in labour.Items.Where(a => a.Hired))
-        //                {
-        //                    // get days needed
-        //                    double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
-        //                    // calculate rate and amount needed
-        //                    double rate = item.PayRate();
-
-        //                    double cost = daysNeeded * rate;
-
-        //                    if (currentCost == financeProvided)
-        //                    {
-        //                        item.AvailabilityLimiter = 0;
-        //                        cost = 0;
-        //                    }
-        //                    else if (currentCost + cost > financeProvided)
-        //                    {
-        //                        //  reduce limit
-        //                        double excess = currentCost + cost - financeProvided;
-        //                        item.AvailabilityLimiter = (cost - excess) / cost;
-        //                        cost = financeProvided - currentCost;
-        //                    }
-        //                    currentCost += cost;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return;
-        //}
-
-        ///// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMHerdSummary")]
-        //private void OnCLEMHerdSummary(object sender, EventArgs e)
-        //{
-        //    if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByLabourUsedInTimeStep)
-        //    {
-        //        int currentmonth = clock.Today.Month;
-        //        double total = 0;
-        //        foreach (LabourType item in labour.Items.Where(a => a.Hired))
-        //        {
-        //            // get days needed
-        //            double daysUsed = item.LabourAvailability.GetAvailability(currentmonth - 1) - item.AvailableDays;
-
-        //            // calculate rate and amount needed
-        //            double rate = item.PayRate();
-        //            total += (daysUsed * rate);
-        //        }
-
-        //        // take hire cost
-        //        bankAccount.Remove(new ResourceRequest()
-        //        {
-        //            Resource = bankAccount,
-        //            ResourceType = typeof(Finance),
-        //            AllowTransmutation = false,
-        //            Required = total,
-        //            ResourceTypeName = this.AccountName,
-        //            ActivityModel = this,
-        //            Category = TransactionCategory
-        //        });
-        //    }
-        //}
-
-
-        ///// <inheritdoc/>
-        //public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
-        //{
-        //    List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-        //    if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
-        //    {
-        //        int currentmonth = clock.Today.Month;
-        //        double total = 0;
-        //        foreach (LabourType item in labour.Items.Where(a => a.Hired))
-        //        {
-        //            // get days needed
-        //            double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
-
-        //            // calculate rate and amount needed
-        //            double rate = item.PayRate();
-        //            total += (daysNeeded * rate);
-        //        }
-
-        //        // create resource request
-        //        resourcesNeeded.Add(new ResourceRequest()
-        //        {
-        //            Resource = bankAccount,
-        //            ResourceType = typeof(Finance),
-        //            AllowTransmutation = false,
-        //            Required = total,
-        //            ResourceTypeName = this.AccountName,
-        //            ActivityModel = this,
-        //            Category = TransactionCategory
-        //        }
-        //        );
-        //    }
-        //    return resourcesNeeded;
-        //}
 
         #region validation
         /// <summary>

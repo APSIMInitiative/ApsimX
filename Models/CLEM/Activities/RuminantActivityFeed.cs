@@ -106,7 +106,7 @@ namespace Models.CLEM.Activities
                 case "RuminantFeedGroupMonthly":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                     return new LabelsForCompanionModels(
@@ -114,7 +114,7 @@ namespace Models.CLEM.Activities
                             "Number fed",
                             "Feed provided"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per kg feed"
@@ -126,7 +126,7 @@ namespace Models.CLEM.Activities
                             "Number fed",
                             "Feed provided"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per kg feed"

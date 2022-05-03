@@ -87,7 +87,7 @@ namespace Models.CLEM.Activities
             // if there's a bank account and no suitable fee add an ActivityFee
             if(bankAccount == null)
             {
-                var activityFee = FindAllChildren<ActivityFee>().Where(a => a.Identifier == "Amount to buy" && a.Units == "per packet").FirstOrDefault();
+                var activityFee = FindAllChildren<ActivityFee>().Where(a => a.Measure == "per packet").FirstOrDefault();
                 if (activityFee is null)
                 {
                     fee = new ActivityFee()
@@ -97,8 +97,7 @@ namespace Models.CLEM.Activities
                         Amount = price.PricePerPacket,
                         Parent = this,
                         BankAccountName = AccountName,
-                        Identifier = "Amount to buy",
-                        Units = "per packet",
+                        Measure = "per packet",
                         UniqueID = ActivitiesHolder.AddToGuID(UniqueID, 1)
                     };
                     Children.Insert(0, fee);
@@ -114,10 +113,8 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                 case "ActivityFee":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Amount to buy",
-                        },
-                        units: new List<string>() {
+                        identifiers: new List<string>(),
+                        measures: new List<string>() {
                             "fixed",
                             "per packet",
                             "amount"
@@ -159,7 +156,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)

@@ -48,15 +48,15 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Payment style
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Units of measure required")]
-        [Description("Calculation style")]
-        public string Units { get; set; }
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Measure required")]
+        [Description("Measure to use")]
+        public string Measure { get; set; }
 
         /// <summary>
         /// Amount
         /// </summary>
-        [Description("Amount")]
+        [Description("Rate")]
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
 
@@ -83,13 +83,13 @@ namespace Models.CLEM.Activities
         public void PerformTasksForTimestep(double activityMetric)
         {
             double amountOfEmission;
-            switch (Units)
+            switch (Measure)
             {
                 case "fixed":
                     amountOfEmission = Amount;
                     break;
                 case "total provided":
-                    amountOfEmission = activityMetric;
+                    amountOfEmission = activityMetric * Amount;
                     break;
                 case "per tonne km":
                     amountOfEmission = activityMetric * Amount;
@@ -100,7 +100,7 @@ namespace Models.CLEM.Activities
                     }
                     break;
                 default:
-                    throw new NotImplementedException($"Unknown units [{((Units == "") ? "Blank" : Units)}] in [a={NameWithParent}]");
+                    throw new NotImplementedException($"Unknown units [{((Measure == "") ? "Blank" : Measure)}] in [a={NameWithParent}]");
             }
 
             if (emissionStore != null && MathUtilities.IsPositive(amountOfEmission))
@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Produce emissions at rate of ");
                 htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Units}</span></div>");
+                htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span></div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
                 htmlWriter.Write(" for all transactions</div>");

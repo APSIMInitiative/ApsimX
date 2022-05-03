@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
                             "Purchases",
                             "Sales"
                         },
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
                             "Purchases",
                             "Sales"
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "Value of individuals",
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                             "Purchases",
                             "Sales"
                         },
-                        units: new List<string>());
+                        measures: new List<string>());
                 default:
                     return new LabelsForCompanionModels();
             }
@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                             ResourceTypeName = BankAccountName,
                         });
                     }
-                    // provide updated units of measure for companion models
+                    // provide updated measure for companion models
                     foreach (var valueToSupply in valuesForCompanionModels.Where(a => a.Key.identifier == identifier).ToList())
                     {
                         int number = numberToDo;
@@ -278,7 +278,7 @@ namespace Models.CLEM.Activities
                         numberTrucked += trucking.IndividualsToBeTrucked.Count();
                     }
 
-                    // provide updated units of measure for companion models
+                    // provide updated measure for companion models
                     foreach (var valueToSupply in valuesForCompanionModels.Where(a => a.Key.identifier == identifier).ToList())
                     {
                         int number = numberToDo;

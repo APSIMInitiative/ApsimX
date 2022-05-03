@@ -843,9 +843,9 @@ namespace Models.CLEM
         /// </summary>
         Identifiers,
         /// <summary>
-        /// The units of measure available
+        /// The resource measures available
         /// </summary>
-        Units
+        Measure
     }
 
     /// <summary>
@@ -859,19 +859,19 @@ namespace Models.CLEM
         /// </summary>
         public List<string> Identifiers;
         /// <summary>
-        /// List of available units of measure
+        /// List of available measures
         /// </summary>
-        public List<string> Units;
+        public List<string> Measures;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="identifiers"></param>
-        /// <param name="units"></param>
-        public LabelsForCompanionModels(List<string> identifiers, List<string> units)
+        /// <param name="measures"></param>
+        public LabelsForCompanionModels(List<string> identifiers, List<string> measures)
         {
             Identifiers = identifiers;
-            Units = units;
+            Measures = measures;
         }
     }
 

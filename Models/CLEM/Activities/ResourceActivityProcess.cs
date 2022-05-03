@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per amount to process"
                         }
@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
                 amountToDo = Math.Min(amountToDo, Reserve);
             }
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)
@@ -120,7 +120,7 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "amount":
+                    case "per amount to process":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:

@@ -71,15 +71,14 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        units: new List<string>()
+                        measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Number moved",
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per head"
                         }
@@ -122,7 +121,7 @@ namespace Models.CLEM.Activities
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-            // provide updated units of measure for companion models
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
@@ -202,8 +201,6 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (PerformAtStartOfSimulation)
                     htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
-                if(!FindAllChildren<RuminantGroup>().Where(a => a.Enabled).Any())
-                    htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: No Rumiant Group has been supplied below. No individuals will be moved!</div>");
                 return htmlWriter.ToString(); 
             }
         } 

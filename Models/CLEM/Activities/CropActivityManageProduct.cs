@@ -183,7 +183,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>() {
 
                         },
-                        units: new List<string>() {
+                        measures: new List<string>() {
                             "fixed",
                             "per kg harvested",
                             "per ha",
@@ -414,7 +414,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for comapnion children
+            // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)

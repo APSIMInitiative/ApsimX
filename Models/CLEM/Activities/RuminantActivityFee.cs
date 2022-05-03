@@ -48,9 +48,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Payment style
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
-        [Description("Payment style")]
-        public string Units { get; set; }
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Description("Measure to use")]
+        public string Measure { get; set; }
 
         /// <summary>
         /// Amount
@@ -137,7 +137,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Units}</span> ");
+                htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span> ");
                 htmlWriter.Write(" from ");
 
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
