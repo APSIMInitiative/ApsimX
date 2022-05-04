@@ -267,7 +267,6 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
-            var rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
@@ -279,7 +278,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; ;
+                Depth = Depth + rootfrontvelocity * xf[RootLayer];
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)

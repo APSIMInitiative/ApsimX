@@ -223,10 +223,10 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowWaitCursor(true);
                     try
                     {
-                        upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+                        upgrades = WebUtilities.PostRestService<Upgrade[]>("https://builds.apsim.info/api/nextgen/list");
                         var upgradeNames = upgrades.Select(upgrade =>
                         {
-                            var name = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber + " " + upgrade.IssueTitle;
+                            var name = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.Issue + " " + upgrade.Title;
                             if (name.Length > 50)
                                 name = name.Remove(50);
                             return name;
@@ -343,7 +343,7 @@ namespace UserInterface.Presenters
             {
                 Directory.CreateDirectory(apsimReleaseDirectory);
 
-                var upgrade = upgrades.ToList().Find(u => versionNumber == u.ReleaseDate.ToString("yyyy.MM.dd.") + u.IssueNumber);
+                var upgrade = upgrades.ToList().Find(u => versionNumber == u.ReleaseDate.ToString("yyyy.MM.dd.") + u.Issue);
                 var releaseFileName = Path.Combine(apsimReleasesPath, versionNumber + ".exe");
 
                 // Download the release.
@@ -351,7 +351,7 @@ namespace UserInterface.Presenters
                 {
                     view.InvokeOnMainThread(delegate { statusLabel.Text = "Downloading the APSIM release..."; });
                     WebClient myWebClient = new WebClient();
-                    await myWebClient.DownloadFileTaskAsync(upgrade.ReleaseURL, releaseFileName);
+                    await myWebClient.DownloadFileTaskAsync(upgrade.DownloadLinkWindows, releaseFileName);
 
                     // Unpack the installer's bin directory.
                     var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

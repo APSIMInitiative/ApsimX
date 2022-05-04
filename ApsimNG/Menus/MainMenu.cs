@@ -11,6 +11,7 @@
     using global::UserInterface.Hotkeys;
     using Models.Core;
     using Models.Core.Run;
+    using Utility;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -122,7 +123,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Split Screen", "<Ctrl>t")]
+        [MainMenu("Split Screen")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             try
@@ -190,6 +191,10 @@
                 if (explorer == null)
                     return;
 
+                // Write .apsimx file to disk.
+                if (Configuration.Settings.AutoSave)
+                    explorer.Save();
+
                 IModel model = FindRunnable(explorer.CurrentNode);
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");
@@ -204,8 +209,10 @@
             }
         }
 
-        private IModel FindRunnable(IModel currentNode)
+        public static IModel FindRunnable(IModel currentNode)
         {
+            if (currentNode is Folder && currentNode.FindDescendant<ISimulationDescriptionGenerator>() != null)
+                return currentNode;
             IEnumerable<ISimulationDescriptionGenerator> runnableModels = currentNode.FindAllAncestors<ISimulationDescriptionGenerator>();
             if (currentNode is ISimulationDescriptionGenerator runnable)
                 runnableModels = runnableModels.Prepend(runnable);

@@ -271,6 +271,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// A label combining sex and class for reporting
+        /// </summary>
+        [FilterByProperty]
+        public string SexAndClass
+        {
+            get
+            {
+                return $"{Sex}.{Class}";
+            }
+        }
+
+
+        /// <summary>
         /// Determine the category of this individual
         /// </summary>
         [FilterByProperty]
