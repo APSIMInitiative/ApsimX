@@ -184,7 +184,7 @@ namespace UserInterface.Views
         {
             // Using a regular for loop is not practical because we can
             // sometimes have multiple rows per property (e.g. if it has separators).
-            foreach (Property property in properties.Properties)
+            foreach (Property property in properties.Properties.Where(p => p.Visible))
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
@@ -221,7 +221,7 @@ namespace UserInterface.Views
                 propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
                 inputWidget.Hexpand = true;
 
-                startRow++;
+                startRow++; 
             }
 
             foreach (PropertyGroup subProperties in properties.SubModelProperties)
