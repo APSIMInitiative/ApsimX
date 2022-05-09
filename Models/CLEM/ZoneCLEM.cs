@@ -448,15 +448,23 @@ namespace Models.CLEM
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This simulation runs from ");
-                    if (clk.StartDate == null)
-                        htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
-                    else
+                    try
+                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>");
+                    }
+                    catch (Exception)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
+                    }
                     htmlWriter.Write(" to ");
-                    if (clk.EndDate == null)
-                        htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
-                    else
+                    try
+                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
+                    }
+                    catch (Exception)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
+                    }
                     htmlWriter.Write("\r\n</div>");
 
                     htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, markdown2Html));

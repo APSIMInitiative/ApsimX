@@ -330,7 +330,7 @@ namespace Models.Utilities
         private string GetRExePath()
         {
             string rScriptPath;
-            if (ProcessUtilities.CurrentOS.IsWindows)
+            if (OperatingSystem.IsWindows())
             {
                 // On Windows we search the registry for the install path
                 string installDirectory = GetRInstallDirectoryFromRegistry();
@@ -368,6 +368,7 @@ namespace Models.Utilities
         /// <summary>
         /// Gets the directory that the latest version of R is installed to.
         /// </summary>
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         private string GetRInstallDirectoryFromRegistry()
         {
             string registryKey = @"SOFTWARE\R-core";
@@ -418,6 +419,7 @@ namespace Models.Utilities
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         private List<string> GetSubKeys(string keyName)
         {
             try
@@ -468,6 +470,7 @@ namespace Models.Utilities
                 // Delete the installer if it already exists.
                 if (File.Exists(fileName))
                     File.Delete(fileName);
+#pragma warning disable SYSLIB0014
                 WebClient web = new WebClient();
                 web.DownloadFileCompleted += (sender, e) =>
                 {
@@ -481,6 +484,7 @@ namespace Models.Utilities
                     }
                 };
                 web.DownloadFileAsync(new Uri(windowsDownloadUrl), fileName);
+#pragma warning restore SYSLIB0014
             }
             else if (ProcessUtilities.CurrentOS.IsMac)
             {
