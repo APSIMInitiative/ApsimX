@@ -33,6 +33,14 @@ namespace Models.CLEM.Activities
         public double[] WeightLimitPerDay { get; set; }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityCarryLimiter()
+        {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
+        }
+
+        /// <summary>
         /// Get the amount of cut and carry available.
         /// </summary>
         /// <param name="weight"></param>
@@ -93,7 +101,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Limit cut and carry activities to ");
+                htmlWriter.Write($"Limit cut and carry activities to ");
                 if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");

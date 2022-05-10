@@ -139,22 +139,5 @@ namespace Models.CLEM.Activities
             }
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-                htmlWriter.Write(" for all transactions</div>");
-                return htmlWriter.ToString(); 
-            }
-        } 
-        #endregion
-
     }
 }

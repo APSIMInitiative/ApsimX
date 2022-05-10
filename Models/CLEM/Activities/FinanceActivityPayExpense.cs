@@ -87,9 +87,8 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)}");
+                htmlWriter.Write($" from {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

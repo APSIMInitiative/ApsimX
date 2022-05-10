@@ -64,6 +64,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerInterval()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 

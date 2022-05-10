@@ -346,7 +346,7 @@ namespace Models.CLEM.Activities
 
             // remove any additional individuals from end based on trucks to skip
 
-            //TODO: need to decide whether to readjust to new min load and truck rules after reduction.
+            //TODO: need to decide whether to re-adjust to new min load and truck rules after reduction.
 
             // further limit buy purchase shortfalls buy reducing the herd (unique individuals) to new level
             if (task == "Buy")

@@ -67,6 +67,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerPastureLevel()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 

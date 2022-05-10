@@ -849,6 +849,29 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Reporting style for Memos in Descriptive summary
+    /// </summary>
+    public enum DescriptiveSummaryMemoReportingType
+    {
+        /// <summary>
+        /// Present where they occur in the tree structure
+        /// </summary>
+        InPlace,
+        /// <summary>
+        /// Present at the top of the property list
+        /// </summary>
+        AtTop,
+        /// <summary>
+        /// Present at the bottom of the property list
+        /// </summary>
+        AtBottom,
+        /// <summary>
+        /// Do not present Memos
+        /// </summary>
+        Ignore
+    }
+
+    /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]

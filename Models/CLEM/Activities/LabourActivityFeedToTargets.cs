@@ -687,28 +687,29 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<LabourActivityFeedTarget>(), true, "childgroupactivityborder", "The following targets are applied:", "No LabourActivityFeedTarget was provided"),
+                (FindAllChildren<LabourActivityFeedTargetPurchase>(), true, "childgroupactivityborder", "The following purchases will be used to supply food:", "")
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Each Adult Equivalent is able to consume ");
-                if (DailyIntakeLimit > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(DailyIntakeLimit.ToString("#,##0.##"));
-                }
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET");
-
-                htmlWriter.Write("</span> kg per day");
+                htmlWriter.Write($"Each Adult Equivalent is able to consume {CLEMModel.DisplaySummaryValueSnippet(DailyIntakeLimit, warnZero:true)} kg per day");
                 if (DailyIntakeOtherSources > 0)
                 {
                     htmlWriter.Write("with <span class=\"setvalue\">");
                     htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
                     htmlWriter.Write("</span> provided from non-modelled sources");
                 }
-                htmlWriter.Write("</div>");
+                htmlWriter.Write(".</div>");
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included");
                 htmlWriter.Write("</div>");
@@ -729,37 +730,37 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
+        ///// <inheritdoc/>
+        //public override string ModelSummaryInnerClosingTags()
+        //{
+        //    return "\r\n</div>";
+        //}
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
-                htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
+        ///// <inheritdoc/>
+        //public override string ModelSummaryInnerOpeningTags()
+        //{
+        //    using (StringWriter htmlWriter = new StringWriter())
+        //    {
+        //        htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
+        //        htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
 
-                if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
-                    htmlWriter.Write("</div>");
-                }
+        //        if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+        //        {
+        //            htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+        //            htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
+        //            htmlWriter.Write("</div>");
+        //        }
 
-                if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
-                    htmlWriter.Write("</div>");
-                }
+        //        if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
+        //        {
+        //            htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+        //            htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
+        //            htmlWriter.Write("</div>");
+        //        }
 
-                return htmlWriter.ToString(); 
-            }
-        } 
+        //        return htmlWriter.ToString(); 
+        //    }
+        //} 
         #endregion
     }
 }

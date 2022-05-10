@@ -265,5 +265,15 @@ namespace Models.CLEM.Activities
                 }
             }
         }
+
+        /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<RuminantGroup>(), true, "activitygroupsborder", "Individuals will be selected from the following:", "")
+            };
+        }
+
     }
 }

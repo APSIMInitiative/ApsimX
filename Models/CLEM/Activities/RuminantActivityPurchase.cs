@@ -299,17 +299,8 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The following individuals will be requested for purchase ");
-                htmlWriter.Write("</div>");
-
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("Purchased individuals will be placed in ");
-                if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-                    htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
-
-                htmlWriter.Write("</div>");
+                htmlWriter.Write($"Purchased individuals will be placed in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}</div>");
 
                 Relationship numberRelationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
                 if (numberRelationship != null)

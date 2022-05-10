@@ -64,6 +64,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerDateRange()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 

@@ -261,29 +261,21 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
                 {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge.ToString("#0.#"), "Age not set")} months");
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge)} months");
                     if (Style == WeaningStyle.AgeOrWeight)
                         htmlWriter.Write(" or  ");
                 }
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningWeight.ToString("##0.##"), "Weight not set")} kg");
-                }
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningWeight)} kg");
+
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
                 if (GrazeFoodStoreName == "Leave at current location")
-                {
                     htmlWriter.Write("remain at the location they were weaned");
-                }
                 else
-                {
-                    htmlWriter.Write("be place in ");
-                    if (GrazeFoodStoreName == null || GrazeFoodStoreName == "" || GrazeFoodStoreName == "Not specified - general yards")
-                        htmlWriter.Write("<span class=\"resourcelink\">Not specified - general yards</span>");
-                    else
-                        htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
-                }
+                    htmlWriter.Write($"be place in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards:true)}");
+
                 htmlWriter.Write("</div>");
                 // ToDo: warn if natural weaning will take place
                 return htmlWriter.ToString(); 

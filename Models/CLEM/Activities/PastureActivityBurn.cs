@@ -67,6 +67,22 @@ namespace Models.CLEM.Activities
         public string NitrousOxideStoreName { get; set; }
 
         /// <summary>
+        /// Burning efficency
+        /// </summary>
+        [Description("Biomass burning efficiency")]
+        [System.ComponentModel.DefaultValue(0.76)]
+        [Required, GreaterThanValue(0)]
+        public double BurningEfficiency { get; set; }
+
+        /// <summary>
+        /// Carbon content
+        /// </summary>
+        [Description("Carbon content of fuel")]
+        [System.ComponentModel.DefaultValue(0.46)]
+        [Required, GreaterThanValue(0)]
+        public double CarbonContent { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public PastureActivityBurn()
@@ -106,7 +122,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         measures: new List<string>() {
                             "fixed",
-                            "ha to burn",
+                            "per ha to burn",
                         }
                         );
                 default:
@@ -140,7 +156,7 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "ha to burn":
+                    case "per ha to burn":
                         valuesForCompanionModels[valueToSupply.Key] = areaToDo - areaToSkip;
                         break;
                     default:
@@ -168,7 +184,7 @@ namespace Models.CLEM.Activities
                 );
 
                 // add emissions
-                double burnkg = pastureToDo * 0.76 * 0.46; // burnkg * burning efficiency * carbon content
+                double burnkg = pastureToDo * BurningEfficiency * CarbonContent; // burnkg * burning efficiency * carbon content
                 if (methaneStore != null)
                     //TODO change emissions for green material
                     methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
@@ -189,14 +205,10 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Burn ");
-
-                if (PaddockName == null || PaddockName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[Pasture NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
-
-                htmlWriter.Write("if less than <span class=\"setvalue\">" + (MinimumProportionGreen).ToString("0.#%") + "</span> green.</div>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Burn {DisplaySummaryResourceTypeSnippet(PaddockName, "Pasture Not Set", nullGeneralYards: false)}");
+                htmlWriter.Write($" if less than {DisplaySummaryValueSnippet(MinimumProportionGreen.ToString("0.#%"), warnZero: true)} green.");
+                htmlWriter.Write($" with a burning efficiency of {DisplaySummaryValueSnippet(BurningEfficiency, warnZero: true)} and ");
+                htmlWriter.Write($" and a carbon content of {DisplaySummaryValueSnippet(CarbonContent, warnZero: true)}");
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");

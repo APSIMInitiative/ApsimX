@@ -1513,12 +1513,6 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        ///<inheritdoc/>
-        public override List<Type> ChildrenToIgnoreInSummary()
-        {
-            return new List<Type>() { typeof(RuminantGroup) };
-        }
-
         /// <inheritdoc/>
         public override string ModelSummary()
         {
@@ -1755,93 +1749,107 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
 
                 if (notBeingMarked.Any())
-                    htmlWriter.Write($"<div class=\"warningbanner\">* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere:<br />{string.Join("<br />", notBeingMarked)}</div>");
+                    htmlWriter.Write($"<div class=\"clearfix warningbanner\">* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: <span class=\"highlightdiv\">{string.Join("</span><span class=\"highlightdiv\">", notBeingMarked)}</span></div>");
 
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Custom filtering rules</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+                //var filtersProvided = LocateCompanionModels<RuminantGroup>(); 
 
-                var filtersProvided = LocateCompanionModels<RuminantGroup>(); //(false);
+                //if (filtersProvided.Any())
+                //{
+                //    htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Custom filtering rules</div>");
+                //    htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
 
-                foreach (var identifier in CompanionModelLabels<RuminantGroup>(CompanionModelLabelType.Identifiers))
-                {
-                    if (filtersProvided.ContainsKey(identifier))
-                        if (IsCustomFilterTaskIncluded(identifier))
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                            var filter = filtersProvided[identifier];
-                            if (filter.Any())
-                            {
-                                htmlWriter.Write($"<b>{identifier}</b> will be further filtered by");
-                                foreach (var rumgroup in filter)
-                                    htmlWriter.Write(GetFullSummary(rumgroup, new List<string>(), htmlWriter.ToString()));
-                            }
-                            else
-                                htmlWriter.Write($"<b>{identifier}</b> uses the default selection criteria");
-                            htmlWriter.Write("</div>");
-                        }
-                }
+                //    foreach (var identifier in CompanionModelLabels<RuminantGroup>(CompanionModelLabelType.Identifiers))
+                //    {
+                //        if (filtersProvided.ContainsKey(identifier))
+                //            if (IsCustomFilterTaskIncluded(identifier))
+                //            {
+                //                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                //                var filter = filtersProvided[identifier];
+                //                if (filter.Any())
+                //                {
+                //                    htmlWriter.Write($"<b>{identifier}</b> will be further filtered by");
+                //                    foreach (var rumgroup in filter)
+                //                        htmlWriter.Write(GetFullSummary(rumgroup, new List<string>(), htmlWriter.ToString()));
+                //                }
+                //                else
+                //                    htmlWriter.Write($"<b>{identifier}</b> uses the default selection criteria");
+                //                htmlWriter.Write("</div>");
+                //            }
+                //    }
 
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">");
-                htmlWriter.Write("<div class=\"activityentry\">This section contains the SpecifyRuminant components used to define the individuals to be purchased (Breeding males and females), all filter groups to identify selling rules to reduce the herd, and any timers.</div>");
+                //    htmlWriter.Write("</div>");
+                //    htmlWriter.Write("</div>"); 
+                //}
 
                 return htmlWriter.ToString(); 
             }
         }
 
-        private bool IsCustomFilterTaskIncluded(string identifier)
+        /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            switch (identifier)
+            var childList = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+
+            var identifiers = LocateCompanionModels<RuminantGroup>().Select(a => a.Key);
+            foreach (var identifier in identifiers)
             {
-                case "RemoveBreedersFromPurchases":
-                    return ManageFemaleBreederNumbers;
-                case "RemoveBreedersFromHerd":
-                    return ManageFemaleBreederNumbers;
-                case "RemoveOldFemalesFromHerd":
-                    return MarkOldBreedersForSale;
-                case "RemoveOldSiresFromHerd":
-                    return MarkOldSiresForSale;
-                case "RemoveSiresFromPurchases":
-                    return ManageMaleBreederNumbers;
-                case "RemoveSiresFromHerd":
-                    return ManageMaleBreederNumbers;
-                case "SelectBreedersFromSales":
-                    return ManageFemaleBreederNumbers;
-                case "SelectBreedersFromHerd":
-                    return ManageFemaleBreederNumbers;
-                case "SelectYoungFemalesFromGrowOut":
-                    return ManageFemaleBreederNumbers & GrowOutYoungFemales;
-                case "SelectYoungFemalesFromSales":
-                    return ManageFemaleBreederNumbers;
-                case "SelectSiresFromSales":
-                    return ManageMaleBreederNumbers;
-                case "SelectFutureSiresFromSales":
-                    return ManageMaleBreederNumbers;
-                case "SelectFutureSiresFromGrowOut":
-                    return ManageMaleBreederNumbers & GrowOutYoungMales;
-                default:
-                    return false;
+                childList.Add((FindAllChildren<RuminantGroup>().Where(a => a.Identifier == identifier), true, "activitygroupsborder", $"Individuals selected for {identifier} will be futher refined by:", ""));
             }
+            childList.Add((FindAllChildren<SpecifyRuminant>(), true, "childgroupactivityborder", "The following SpecifyRuminant components will define the individuals to be purchased (Breeding males and females):", ""));
+            return childList;   
         }
 
-        private bool CreateFilterHTML(StringWriter stringWriter, Dictionary<string, IEnumerable<RuminantGroup>> filters, string identifier, string startText, string endText)
-        {
-            var filterGroup = filters[identifier].FirstOrDefault();
-            if (filterGroup != null && filterGroup.Identifier == identifier)
-            {
-                stringWriter.Write($"<div class=\"activityentry\">{startText} will be filtered and ordered using the <span class=\"filterlink\">{filterGroup.Name}</span> filter group with style <span class=\"setvalue\">{filterGroup.Identifier}</span>{endText}</div>");
-                return true;
-            }
-            return false;
-        }
+        //private bool IsCustomFilterTaskIncluded(string identifier)
+        //{
+        //    switch (identifier)
+        //    {
+        //        case "RemoveBreedersFromPurchases":
+        //            return ManageFemaleBreederNumbers;
+        //        case "RemoveBreedersFromHerd":
+        //            return ManageFemaleBreederNumbers;
+        //        case "RemoveOldFemalesFromHerd":
+        //            return MarkOldBreedersForSale;
+        //        case "RemoveOldSiresFromHerd":
+        //            return MarkOldSiresForSale;
+        //        case "RemoveSiresFromPurchases":
+        //            return ManageMaleBreederNumbers;
+        //        case "RemoveSiresFromHerd":
+        //            return ManageMaleBreederNumbers;
+        //        case "SelectBreedersFromSales":
+        //            return ManageFemaleBreederNumbers;
+        //        case "SelectBreedersFromHerd":
+        //            return ManageFemaleBreederNumbers;
+        //        case "SelectYoungFemalesFromGrowOut":
+        //            return ManageFemaleBreederNumbers & GrowOutYoungFemales;
+        //        case "SelectYoungFemalesFromSales":
+        //            return ManageFemaleBreederNumbers;
+        //        case "SelectSiresFromSales":
+        //            return ManageMaleBreederNumbers;
+        //        case "SelectFutureSiresFromSales":
+        //            return ManageMaleBreederNumbers;
+        //        case "SelectFutureSiresFromGrowOut":
+        //            return ManageMaleBreederNumbers & GrowOutYoungMales;
+        //        default:
+        //            return false;
+        //    }
+        //}
+
+        //private bool CreateFilterHTML(StringWriter stringWriter, Dictionary<string, IEnumerable<RuminantGroup>> filters, string identifier, string startText, string endText)
+        //{
+        //    var filterGroup = filters[identifier].FirstOrDefault();
+        //    if (filterGroup != null && filterGroup.Identifier == identifier)
+        //    {
+        //        stringWriter.Write($"<div class=\"activityentry\">{startText} will be filtered and ordered using the <span class=\"filterlink\">{filterGroup.Name}</span> filter group with style <span class=\"setvalue\">{filterGroup.Identifier}</span>{endText}</div>");
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            if (FindAllChildren<RuminantGroup>().Any())
-                return "</div>";
+            //if (FindAllChildren<RuminantGroup>().Any())
+            //    return "</div>";
             return "";
         }
 

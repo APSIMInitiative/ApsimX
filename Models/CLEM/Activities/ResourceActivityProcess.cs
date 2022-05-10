@@ -191,20 +191,19 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeProcessedName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" into ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeCreatedName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" at a rate of ");
                 if (ConversionRate <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">[RATE NOT SET]</span>");
+                    htmlWriter.Write("<span class=\"errorlink\">RATE NOT SET</span>");
                 else
                     htmlWriter.Write("1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>");
                 htmlWriter.Write("</div>");
                 if (Reserve > 0)
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("<span class=\"setvalue\">" + Reserve.ToString("0.###") + "</span> will be reserved.");
-                    htmlWriter.Write("</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">{CLEMModel.DisplaySummaryValueSnippet(Reserve, warnZero:true)}");
+                    htmlWriter.Write(" will be reserved.</div>");
                 }
                 return htmlWriter.ToString(); 
             }

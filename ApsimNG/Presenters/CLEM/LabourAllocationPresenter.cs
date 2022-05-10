@@ -164,7 +164,7 @@ namespace UserInterface.Presenters
                 htmlWriter.WriteLine("\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after changing settings and selecting the LabourAllocationsReport to see changes</span><br /><br />");
 
                 htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
-                htmlWriter.Write($"<div class=\"namediv\">Labour allocation summary</div>");
+                htmlWriter.Write($"<div class=\"namediv\">Labour allocation summary</div><br />");
                 htmlWriter.Write($"<div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\n<div class=\"defaultcontent\">");

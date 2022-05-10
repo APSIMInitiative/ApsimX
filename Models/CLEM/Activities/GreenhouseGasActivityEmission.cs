@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
                 case "fixed":
                     amountOfEmission = Amount;
                     break;
-                case "total provided":
+                case "per total provided":
                     amountOfEmission = activityMetric * Amount;
                     break;
                 case "per tonne km":
@@ -136,16 +136,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Produce emissions at rate of ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span></div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-                htmlWriter.Write(" for all transactions</div>");
-                return htmlWriter.ToString();
-            }
+            return $"\r\n<div class=\"activityentry\">Produce emissions at rate of {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)} {CLEMModel.DisplaySummaryValueSnippet(Measure)}";
         }
         #endregion
 

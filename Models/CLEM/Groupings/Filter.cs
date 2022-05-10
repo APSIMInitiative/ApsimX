@@ -23,6 +23,15 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
+        /// Constructor to apply defaults
+        /// </summary>
+        public Filter()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
+        }
+
+
+        /// <summary>
         /// The filter rule
         /// </summary>
         public Func<IFilterable, bool> Rule { get; protected set; }

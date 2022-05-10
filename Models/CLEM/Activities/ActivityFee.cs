@@ -53,7 +53,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Amount
         /// </summary>
-        [Description("Amount")]
+        [Description("Rate per measure")]
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
 
@@ -123,17 +123,10 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
-                htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span> ");
-                htmlWriter.Write(" from ");
-
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-                htmlWriter.Write(" for all transactions</div>\r\n");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, "Rate not set")} ");
+                if(Measure?.ToLower() != "")
+                    htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")} ");
+                htmlWriter.Write($"from {DisplaySummaryResourceTypeSnippet(BankAccountName)}</div>");
                 return htmlWriter.ToString();
             }
         }

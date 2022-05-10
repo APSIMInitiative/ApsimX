@@ -64,9 +64,12 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         ///<inheritdoc/>
-        public override List<Type> ChildrenToIgnoreInSummary()
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            return new List<Type>() { typeof(ISetAttribute) };
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
+            };
         }
 
         /// <inheritdoc/>

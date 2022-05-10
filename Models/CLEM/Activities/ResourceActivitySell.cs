@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
                         measures: new List<string>() {
                             "fixed",
                             "per packet",
-                            "amount"
+                            "sale value"
                         }
                         );
                 default:
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                     case "per packet":
                         valuesForCompanionModels[valueToSupply.Key] = unitsToDo;
                         break;
-                    case "amount":
+                    case "sale value":
                         valuesForCompanionModels[valueToSupply.Key] = unitsToDo * price.PacketSize;
                         break;
                     default:

@@ -48,6 +48,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         public event EventHandler ActivityPerformed;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityTimerLinked()
+        {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
+        }
+
         /// <inheritdoc/>
         public bool ActivityDue
         {
@@ -101,7 +109,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Linked to ");
+                htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString:"No timer selected")}");
                 htmlWriter.Write("</span></div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");

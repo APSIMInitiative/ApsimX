@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number tagged/untagged").FirstOrDefault();
+                var tagsShort = shortfalls.FirstOrDefault();
                 if (tagsShort != null)
                 {
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - tagsShort.Available / tagsShort.Required));
@@ -181,8 +181,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string tagstring = CLEMModel.DisplaySummaryValueSnippet(TagLabel, "Not set");
-            return $"\r\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
+            return $"\r\n<div class=\"activityentry\">{CLEMModel.DisplaySummaryValueSnippet(ApplicationStyle)} the tag {CLEMModel.DisplaySummaryValueSnippet(TagLabel)} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
         }
         #endregion
     }

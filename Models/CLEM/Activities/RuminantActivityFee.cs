@@ -142,10 +142,6 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-                htmlWriter.Write(" for all transactions</div>");
                 return htmlWriter.ToString(); 
             }
         } 

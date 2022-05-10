@@ -38,6 +38,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerSequence()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 

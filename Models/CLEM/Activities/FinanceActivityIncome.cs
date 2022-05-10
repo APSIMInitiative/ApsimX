@@ -77,13 +77,8 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> into ");
-                if (AccountName == null || AccountName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
-
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Earn {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
+                htmlWriter.Write($" paid into {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

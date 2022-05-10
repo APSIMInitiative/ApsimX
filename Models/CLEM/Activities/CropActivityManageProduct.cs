@@ -561,68 +561,61 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            string intro = (FindAllChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (TreesPerHa > 0)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">This is a tree crop with a density of {CLEMModel.DisplaySummaryValueSnippet(TreesPerHa)} per hectare</div>");
 
-                if (ProportionKept == 0)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
-                else
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
-
-                if (StoreItemName == null || StoreItemName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[STORE NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + StoreItemName + "</span>");
-
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : $"{CLEMModel.DisplaySummaryValueSnippet(ProportionKept, warnZero: true)} of this ") + "product is placed in ");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(StoreItemName, "Resource not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Data is retrieved from ");
-                if (ModelNameFileCrop == null || ModelNameFileCrop == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[CROP FILE NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"filelink\">" + ModelNameFileCrop + "</span>");
 
-                htmlWriter.Write(" using crop named ");
-                if (CropName == null || CropName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[CROP NAME NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"filelink\">" + CropName + "</span>");
-
-                htmlWriter.Write("\r\n</div>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Data is retrieved from {CLEMModel.DisplaySummaryValueSnippet(ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)}");
+                htmlWriter.Write($" using crop named {CLEMModel.DisplaySummaryValueSnippet(CropName)}");
+                htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return base.ModelSummaryClosingTags(); 
-        }
+        ///// <inheritdoc/>
+        //public override string ModelSummaryClosingTags()
+        //{
+        //    return base.ModelSummaryClosingTags(); 
+        //}
 
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            string html = "";
-            // if first child of mixed 
-            if (this.Parent.GetType() == typeof(CropActivityManageProduct))
-            {
-                if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
-                    // close off the parent item so it displays
-                    html += "\r\n</div>";
-            }
+        ///// <inheritdoc/>
+        //public override string ModelSummaryOpeningTags()
+        //{
+        //    string html = "";
+        //    // if first child of mixed 
+        //    if (this.Parent.GetType() == typeof(CropActivityManageProduct))
+        //    {
+        //        if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
+        //            // close off the parent item so it displays
+        //            html += "\r\n</div>";
+        //    }
 
-            bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
-            if (mixed)
-            {
-                html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
-                html += "\r\n<div class=\"cropmixedborder\">";
-            }
-            html += base.ModelSummaryOpeningTags();
-            return html;
-        } 
+        //    bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
+        //    if (mixed)
+        //    {
+        //        html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
+        //        html += "\r\n<div class=\"cropmixedborder\">";
+        //    }
+        //    html += base.ModelSummaryOpeningTags();
+        //    return html;
+        //} 
         #endregion
     }
 }

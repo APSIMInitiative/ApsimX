@@ -43,6 +43,11 @@ namespace Models.CLEM.Interfaces
         bool FormatForParentControl { get; }
 
         /// <summary>
+        /// Determines if this model reports memos in place
+        /// </summary>
+        DescriptiveSummaryMemoReportingType ReportMemosType { get; set; }
+
+        /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>

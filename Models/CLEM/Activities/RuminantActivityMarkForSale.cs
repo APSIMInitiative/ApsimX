@@ -86,8 +86,6 @@ namespace Models.CLEM.Activities
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Number identified",
-                            "Number checked",
                         },
                         measures: new List<string>() {
                             "fixed",
@@ -141,7 +139,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number identified").FirstOrDefault();
+                var tagsShort = shortfalls.FirstOrDefault();
                 if (tagsShort != null)
                 {
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - tagsShort.Available / tagsShort.Required));
@@ -174,7 +172,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as <span class=\"setvalue\">{SaleFlagToUse}] in the following groups:</div>";
+            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as {CLEMModel.DisplaySummaryValueSnippet(SaleFlagToUse.ToString(), "SaleFlag not set")}</div>";
         } 
         #endregion
     }

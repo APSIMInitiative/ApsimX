@@ -65,6 +65,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerBreedForMilking()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             base.SetDefaults();
         }
 

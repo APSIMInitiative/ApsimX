@@ -78,6 +78,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerResourceLevel()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 
@@ -144,8 +145,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform when ");
-                htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write($"Perform when {DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)} ");
                 string str = "";
                 switch (Operator)
                 {

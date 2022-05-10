@@ -323,6 +323,15 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<RuminantGroup>(), true, "childgroupactivityborder", "Individuals will be sold in the following order:", "")
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -335,34 +344,15 @@ namespace Models.CLEM.Activities
                 }
                 else
                     htmlWriter.Write("<span class=\"errorlink\">No month set");
-
                 htmlWriter.Write("</span></div>");
+                
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
-                htmlWriter.Write("<span class=\"setvalue\">");
-                htmlWriter.Write(FeedLowLimit.ToString("#,##0"));
-                htmlWriter.Write("</span> kg/ha at the end of this period");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(FeedLowLimit, warnZero: true)} kg/ha at the end of this period");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            string html = "";
-            html += "\r\n<div class=\"activitygroupsborder\">";
-            html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
-
-            if (FindAllChildren<RuminantGroup>().Count() == 0)
-                html += "\r\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
-            return html;
-        } 
         #endregion
 
     }

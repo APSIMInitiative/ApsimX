@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
                         measures: new List<string>() {
                             "fixed",
                             "per packet",
-                            "amount"
+                            "perchase value"
                         }
                         );
                 default:
@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "amount":
+                    case "purchase value":
                         valuesForCompanionModels[valueToSupply.Key] = unitsToDo * price.PacketSize;
                         break;
                     case "per packet":
@@ -215,12 +215,8 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Buy ");
-                if (Units <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">[VALUE NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + Units.ToString("0.###") + "</span>");
-                htmlWriter.Write(" packages of ");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Buy {CLEMModel.DisplaySummaryValueSnippet(Units, warnZero:true)} ");
+                htmlWriter.Write(" packets of ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" using ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));

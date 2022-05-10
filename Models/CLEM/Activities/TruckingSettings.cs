@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
         /// Truck tare mass
         /// </summary>
         [Category("Vehicle mass", "")]
-        [Description("Truck Tare Mass (half fuel)")]
+        [Description("Truck Tare Mass (avg fuel)")]
         [Required, GreaterThanEqualValue(0)]
         public double TruckTareMass { get; set; }
 
@@ -104,7 +104,7 @@ namespace Models.CLEM.Activities
         public double MinimumLoadUnitsBeforeTransporting { get; set; }
 
         /// <summary>
-        /// Minimum number of load units before transporting (0 continuous)
+        /// Minimum number of load units before adding a trailer if available (0 continuous)
         /// </summary>
         [Category("Load rules", "")]
         [Description("Minimum load units before adding trailer (0 continuous)")]
@@ -155,7 +155,7 @@ namespace Models.CLEM.Activities
                             "per head",
                             "per truck",
                             "per km trucked",
-                            "per loading unit",
+                            "per load (deck/pod)",
                             "per tonne km",
                         }
                         );
@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
                             "fixed",
                             "per truck",
                             "per km trucked",
-                            "per loading unit",
+                            "per load (deck/pod)",
                         }
                         );
                 case "GreenhouseGasActivityEmission":
@@ -340,7 +340,7 @@ namespace Models.CLEM.Activities
 
             truckDetails = EstimateTrucking();
 
-            //TODO: cehck 
+            //TODO: check 
             parentBuySellActivity.IndividualsToBeTrucked = parentBuySellActivity.IndividualsToBeTrucked.Except(individualsToBeTrucked.Take(truckDetails.individualsTransported));
 
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
@@ -353,8 +353,25 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "LabourGroup":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per truck":
+                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.trucks;
+                                break;
+                            case "per km trucked":
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
+                                break;
+                            case "per load (deck/pod)":
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                        }
+                        break;
                     case "ActivityFee":
-                    case "GreenhouseGasActivityEmission":
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
@@ -372,8 +389,27 @@ namespace Models.CLEM.Activities
                             case "per km trucked":
                                 valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
                                 break;
-                            case "per loading unit":
+                            case "per load (deck/pod)":
                                 valuesForCompanionModels[valueToSupply.Key] = truckDetails.loadUnits;
+                                break;
+                            case "per tonne km":
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                        }
+                        break;
+                    case "GreenhouseGasActivityEmission":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per truck":
+                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.trucks;
+                                break;
+                            case "per km trucked":
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
                                 break;
                             case "per tonne km":
                                 valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
@@ -420,112 +456,30 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("0.##") + "</span> km to market");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">It is {CLEMModel.DisplaySummaryValueSnippet(DistanceToMarket.ToString("0.##"))} km to market</div>");
+
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each load unit (pod/deck) holds {CLEMModel.DisplaySummaryValueSnippet(NumberPerLoadUnit, warnZero:true)} head (of specified individuals)");
+
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
+                if (MinimumLoadUnitsPerTruck > 0)
+                    htmlWriter.Write($" requires a minimum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
+                 htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
+                if (MinimumLoadUnitsBeforeTransporting > 0)
+                    htmlWriter.Write($" and requires at least {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
+                htmlWriter.Write(".</div>");
+
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each trailer holds {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero: true)} load units");
+                if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
+                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding the trailer");
+                htmlWriter.Write(".</div>");
+
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {CLEMModel.DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
+                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg) of each trailer.");
                 htmlWriter.Write("</div>");
 
-                //htmlWriter.Write("\r\n<div class=\"activityentry\">Each truck load can carry ");
-                //if (Number450kgPerTruck == 0)
-                //    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
-                //else
-                //    htmlWriter.Write("<span class=\"setvalue\">" + Number450kgPerTruck.ToString("0.###") + "</span>");
-
-                //htmlWriter.Write(" 450 kg individuals</div>");
-
-                //if (MathUtilities.IsPositive(MinimumLoadBeforeSelling) || MathUtilities.IsPositive(MinimumTrucksBeforeSelling))
-                //{
-                //    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                //    if (MinimumTrucksBeforeSelling > 0)
-                //        htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required");
-
-                //    if (MathUtilities.IsPositive(MinimumLoadBeforeSelling))
-                //    {
-                //        if (MathUtilities.IsPositive(MinimumTrucksBeforeSelling))
-                //            htmlWriter.Write(" and each ");
-                //        else
-                //            htmlWriter.Write("Each ");
-
-                //        htmlWriter.Write("truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full");
-                //    }
-                //    htmlWriter.Write(" for sales</div>");
-                //}
-
-                //if (MathUtilities.IsPositive(MinimumLoadBeforeBuying) || MathUtilities.IsPositive(MinimumTrucksBeforeBuying))
-                //{
-                //    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                //    if (MathUtilities.IsPositive(MinimumTrucksBeforeBuying))
-                //        htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required");
-
-                //    if (MathUtilities.IsPositive(MinimumLoadBeforeBuying))
-                //    {
-                //        if (MathUtilities.IsPositive(MinimumTrucksBeforeBuying))
-                //            htmlWriter.Write(" and each ");
-                //        else
-                //            htmlWriter.Write("Each ");
-
-                //        htmlWriter.Write("truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeBuying.ToString("0.##%") + "</span> full");
-                //    }
-                //    htmlWriter.Write(" for purchases</div>");
-                //}
-
-                //if (MathUtilities.IsPositive(TruckMethaneEmissions) || MathUtilities.IsPositive(TruckN2OEmissions))
-                //{
-                //    htmlWriter.Write("\r\n<div class=\"activityentry\">Each truck will emmit ");
-                //    if (TruckMethaneEmissions > 0)
-                //        htmlWriter.Write("<span class=\"setvalue\">" + TruckMethaneEmissions.ToString("0.###") + "</span> kg methane");
-
-                //    if (MathUtilities.IsPositive(TruckCO2Emissions))
-                //    {
-                //        if (MathUtilities.IsPositive(TruckMethaneEmissions))
-                //            htmlWriter.Write(", ");
-
-                //        htmlWriter.Write("<span class=\"setvalue\">" + TruckCO2Emissions.ToString("0.###") + "</span> kg carbon dioxide");
-                //    }
-                //    if (MathUtilities.IsPositive(TruckN2OEmissions))
-                //    {
-                //        if (TruckMethaneEmissions + TruckCO2Emissions > 0)
-                //            htmlWriter.Write(" and ");
-
-                //        htmlWriter.Write("<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg nitrous oxide");
-                //    }
-                //    htmlWriter.Write(" per km");
-                //    htmlWriter.Write("</div>");
-
-                //    if (MathUtilities.IsPositive(TruckMethaneEmissions))
-                //    {
-                //        htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
-                //        if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                //            htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
-                //        else
-                //            htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
-
-                //        htmlWriter.Write("</div>");
-                //    }
-                //    if (MathUtilities.IsPositive(TruckCO2Emissions))
-                //    {
-                //        htmlWriter.Write("\r\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ");
-                //        if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
-                //            htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].CO2</span> if present");
-                //        else
-                //            htmlWriter.Write($"<span class=\"resourcelink\">{CarbonDioxideStoreName}</span>");
-
-                //        htmlWriter.Write("</div>");
-                //    }
-                //    if (MathUtilities.IsPositive(TruckN2OEmissions))
-                //    {
-                //        htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
-                //        if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-                //            htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
-                //        else
-                //            htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
-
-                //        htmlWriter.Write("</div>");
-                //    }
-                //}
                 return htmlWriter.ToString(); 
             }
         }
-
-
 
         #endregion
 

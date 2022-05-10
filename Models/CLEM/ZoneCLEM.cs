@@ -33,6 +33,7 @@ namespace Models.CLEM
         private Summary summary = null;
         [Link]
         private Clock clock = null;
+        private string wholeSimulationSummaryFile = "";
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -104,8 +105,6 @@ namespace Models.CLEM
         /// <summary>Local altitude (meters above sea level).</summary>
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
-
-        private string wholeSimulationSummaryFile = "";
 
         /// <summary>
         /// Constructor
@@ -395,6 +394,10 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public bool FormatForParentControl { get { return CurrentAncestorList.Count > 0; } }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
+
         ///<inheritdoc/>
         public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
@@ -427,15 +430,15 @@ namespace Models.CLEM
                 if (rnd != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div>");
+                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div><br />");
                     htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with");
                     if (rnd.Seed == 0)
-                        htmlWriter.Write("Every run of this simulation will be different.");
+                        htmlWriter.Write("every run using a different sequence.");
                     else
-                        htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
+                        htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
                     htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, markdown2Html));
@@ -447,7 +450,7 @@ namespace Models.CLEM
                 if (clk != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div>");
+                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div><br />");
                     htmlWriter.Write("<div class=\"typediv\">Clock</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
@@ -570,7 +573,7 @@ namespace Models.CLEM
                     htmlWriter.Write(">");
                     htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write("<br /><div class=\"typediv\">" + this.GetType().Name + "</div>");
                 return htmlWriter.ToString();
             }
         }

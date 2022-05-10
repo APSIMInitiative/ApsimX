@@ -294,6 +294,16 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<LabourFeedGroup>(), true, "childgroupactivityborder", "The following groups will be fed:", "No LabourFeedGroup was provided"),
+            };
+        }
+
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())

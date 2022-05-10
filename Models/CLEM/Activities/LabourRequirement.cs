@@ -281,25 +281,42 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<LabourGroup>(), true, "childgroupactivityborder", "The required labour will be taken from the following groups:", "No LabourGroups provided to define labour")
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
-                // get amount
-                htmlWriter.Write($"{LabourPerUnit}</span> days labour is required");
-                if ((Measure??"Unknown").ToUpper() != "Fixed")
-                {
-                    if (UnitSize == 1)
-                        htmlWriter.Write(" for each ");
-                    else
-                        htmlWriter.Write($" for every <span class=\"setvalue\">{UnitSize:#,##0.##}</span>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(LabourPerUnit, "Rate not set")} day{((LabourPerUnit==1)?"":"s")} is required ");
 
-                    htmlWriter.Write($"<span class=\"setvalue\">{Measure}</span>");
+                if ((Measure??"").ToLower() != "fixed")
+                {
                     if (WholeUnitBlocks)
-                        htmlWriter.Write(" and will be supplied in blocks");
+                    {
+                        if (UnitSize == 1)
+                            htmlWriter.Write($"for each ");
+                        else
+                        {
+                            htmlWriter.Write($"as whole units of ");
+                            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(UnitSize, "Unit not set")} ");
+                        }
+                    }
+
+                    htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")}");
+                    if(ApplyToAll)
+                        htmlWriter.Write($" applied to each person specified");
                 }
-                htmlWriter.Write("</div>");
+                htmlWriter.Write($".</div>");
+
+
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
                 switch (LimitStyle)
                 {
@@ -317,12 +334,12 @@ namespace Models.CLEM.Activities
                 }
 
                 if (MaximumPerGroup > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span> day{((MaximumPerGroup == 1) ? "" : "s")} is required</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span> day{((MaximumPerGroup == 1) ? "" : "s")}</div>");
 
                 if (MinimumPerPerson > 0)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span> day{((MinimumPerPerson == 1) ? "" : "s")} is required</div>");
 
-                if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
+                if (MaximumPerPerson > 0 && MaximumPerPerson < 31)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span> days</div>");
 
                 if (ApplyToAll)
@@ -332,29 +349,23 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
+        ///// <inheritdoc/>
+        //public override string ModelSummaryInnerOpeningTags()
+        //{
+        //    using (StringWriter htmlWriter = new StringWriter())
+        //    {
+        //        //htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
+        //        htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
-                htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
-
-                if (this.FindAllChildren<LabourGroup>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
-                    htmlWriter.Write("</div>");
-                }
-                return htmlWriter.ToString(); 
-            }
-        } 
+        //        if (this.FindAllChildren<LabourGroup>().Count() == 0)
+        //        {
+        //            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+        //            htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
+        //            htmlWriter.Write("</div>");
+        //        }
+        //        return htmlWriter.ToString(); 
+        //    }
+        //} 
         #endregion
 
 

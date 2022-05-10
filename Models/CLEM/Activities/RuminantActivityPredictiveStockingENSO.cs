@@ -43,6 +43,8 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
         private List<(string paddockName, double AE, double AeChange)> paddockChanges;
         private IEnumerable<GrazeFoodStoreType> paddocks;
+        private string fullFilename;
+        private Dictionary<DateTime, double> ForecastSequence;
 
         /// <summary>
         /// File containing SOI measure from BOM http://www.bom.gov.au/climate/influences/timeline/
@@ -110,9 +112,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public double AeRestocked { get; private set; }
-
-        private string fullFilename;
-        private Dictionary<DateTime, double> ForecastSequence;
 
         /// <summary>
         /// Constructor
@@ -475,9 +474,8 @@ namespace Models.CLEM.Activities
             { 
                     SetStatusSuccessOrPartial(MathUtilities.FloatsAreEqual(destockToDo + restockToDo, destockDone + restockDone) == false);
 
-                // TODO add resport status
+                // TODO wire up add report status as per Predictive stocking
                 // fire event to allow reporting of findings
-                //OnReportStatus(new EventArgs());
             }
         }
 
@@ -489,12 +487,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 bool extracomps = false;
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Monthly SOI data are provided by ");
-                if (MonthlySOIFile == null || MonthlySOIFile == "")
-                    htmlWriter.Write("<span class=\"errorlink\">File not set</span>");
-                else
-                    htmlWriter.Write("<span class=\"filelink\">" + MonthlySOIFile + "</span>");
-
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Monthly SOI data are provided by {CLEMModel.DisplaySummaryValueSnippet(MonthlySOIFile, "File not set", HTMLSummaryStyle.FileReader)}");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The mean of the previous ");
                 if(AssessMonths == 0)

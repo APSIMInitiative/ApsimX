@@ -189,16 +189,10 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Move the following groups to ");
-                if (ManagedPastureName == null || ManagedPastureName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">General yards</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ManagedPastureName + "</span>");
-
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Move individuals to {DisplaySummaryResourceTypeSnippet(ManagedPastureName, nullGeneralYards: true)}");
                 if (MoveSucklings)
                     htmlWriter.Write(" moving sucklings with mother");
-
-                htmlWriter.Write("</div>");
+                htmlWriter.Write(".</div>");
                 if (PerformAtStartOfSimulation)
                     htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
                 return htmlWriter.ToString(); 

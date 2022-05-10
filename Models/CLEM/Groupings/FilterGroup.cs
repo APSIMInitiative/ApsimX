@@ -64,6 +64,7 @@ namespace Models.CLEM
         /// </summary>
         public FilterGroup()
         {
+            base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
         }
 
         /// <inheritdoc/>

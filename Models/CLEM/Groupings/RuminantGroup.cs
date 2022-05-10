@@ -44,16 +44,6 @@ namespace Models.CLEM.Groupings
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
     public class RuminantGroup : FilterGroup<Ruminant>
     {
-
-        /// <summary>
-        /// Constructor to apply defaults
-        /// </summary>
-        public RuminantGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            this.SetDefaults();
-        }
-
         #region descriptive summary
 
             /// <inheritdoc/>
@@ -71,15 +61,19 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using StringWriter htmlWriter = new StringWriter();
-            htmlWriter.Write("<div class=\"filtername\">");
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                htmlWriter.Write($"{Name}");
-            htmlWriter.Write($"</div>");
-            return htmlWriter.ToString();
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                    htmlWriter.Write($"{Name}");
+                if ((Identifier ?? "") != "")
+                    htmlWriter.Write($" - for {Identifier}");
+
+                htmlWriter.Write($"</div>");
+                return htmlWriter.ToString();
+            }
         }
 
         #endregion
-
     }
 }

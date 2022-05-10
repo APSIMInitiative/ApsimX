@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         measures: new List<string>() {
                             "fixed",
-                            "kg to collect",
+                            "per kg collected",
                         }
                         );
                 default:
@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "kg to collect":
+                    case "per kg collected":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
@@ -126,7 +126,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number tagged/untagged").FirstOrDefault();
+                var tagsShort = shortfalls.FirstOrDefault();
                 amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
                 if (amountToSkip < 0)
                 {

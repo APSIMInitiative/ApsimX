@@ -170,12 +170,6 @@ namespace Models.CLEM.Activities
             {
                 if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
                     htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not Set"));
-                    htmlWriter.Write(" for all transactions</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         } 

@@ -135,8 +135,8 @@ namespace Models.CLEM.Activities
                 case "Relationship":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
-                            "Utilisation % to change in Land condition index relationship",
-                            "Utilisation % to change in Grass basal area relationship"
+                            "Utilisation % to change in Land condition index",
+                            "Utilisation % to change in Grass basal area"
                         },
                         measures: new List<string>()
                         );
@@ -157,27 +157,27 @@ namespace Models.CLEM.Activities
             if (relationshipLC == null)
             {
                 string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
-                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index relationship]", memberNames));
+                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames));
             }
             else
             {
                 if (LandConditionIndex == null)
                 {
                     string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
-                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index relationship]", memberNames));
+                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames));
                 }
             }
             if (relationshipGBA == null)
             {
                 string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
-                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area relationship]", memberNames));
+                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames));
             }
             else
             {
                 if (GrassBasalArea == null)
                 {
                     string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
-                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area relationship]", memberNames));
+                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames));
                 }
             }
             if (filePasture == null)
@@ -202,16 +202,14 @@ namespace Models.CLEM.Activities
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index relationship").FirstOrDefault();
+            relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
             if (relationshipLC != null)
                 LandConditionIndex = relationshipLC.FindChild<RelationshipRunningValue>();
 
-            relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area relationship").FirstOrDefault();
+            relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
             if (relationshipGBA != null)
                 GrassBasalArea = relationshipGBA.FindChild<RelationshipRunningValue>();
 
-            // LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
-            //GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             filePasture = zoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
@@ -470,6 +468,15 @@ namespace Models.CLEM.Activities
         }
 
         #region descriptive summary
+
+        /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
+            };
+        }
 
         /// <inheritdoc/>
         public override string ModelSummary()

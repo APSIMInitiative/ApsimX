@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         measures: new List<string>() {
                             "fixed",
-                            "kg to harvest",
+                            "per kg collected",
                         }
                         );
                 default:
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "kg to harvest":
+                    case "per kg collected":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
@@ -213,7 +213,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number tagged/untagged").FirstOrDefault();
+                var tagsShort = shortfalls.FirstOrDefault();
                 amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
                 if (amountToSkip < 0)
                 {
@@ -260,20 +260,20 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("Cut ");
+                htmlWriter.Write($"Cut {CLEMModel.DisplaySummaryValueSnippet(Supply, warnZero:true)}");
                 switch (CutStyle)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#,##0.##") + "</span> kg ");
+                        htmlWriter.Write(" kg ");
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">live weight</span> ");
+                        htmlWriter.Write(" of herd <span class=\"setvalue\">live weight</span> ");
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">potential intake</span> ");
+                        htmlWriter.Write(" of herd <span class=\"setvalue\">potential intake</span> ");
                         break;
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">remaining intake required</span> ");
+                        htmlWriter.Write(" of herd <span class=\"setvalue\">remaining intake required</span> ");
                         break;
                     default:
                         break;
@@ -282,7 +282,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("from ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" and carry to ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Fodd store not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Store not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

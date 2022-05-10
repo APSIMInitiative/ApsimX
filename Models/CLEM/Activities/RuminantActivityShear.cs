@@ -10,6 +10,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using APSIM.Shared.Utilities;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -87,7 +88,7 @@ namespace Models.CLEM.Activities
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number shorn",
-                            "Weight of fleece"
+                            "Fleece weight"
                         },
                         measures: new List<string>() {
                             "fixed",
@@ -145,7 +146,7 @@ namespace Models.CLEM.Activities
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
-                    case "Weight of fleece":
+                    case "Fleece weight":
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
@@ -225,14 +226,16 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
-            html += "\r\n<div class=\"activityentry\">Shear selected herd and place wool clip in ";
-            html += CLEMModel.DisplaySummaryValueSnippet(WoolProductStoreName, "Store Type not set");
-            html += " and place cashmere clip in ";
-            html += CLEMModel.DisplaySummaryValueSnippet(CashmereProductStoreName, "Store Type not set");
-            html += "</div>";
-            return html;
-        } 
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Shear selected herd and place wool clip in ");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WoolProductStoreName, "Store Type not set")}");
+                htmlWriter.Write(" and cashmere clip in ");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(CashmereProductStoreName, "Store Type not set")}");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString();
+            }
+        }
         #endregion
 
     }

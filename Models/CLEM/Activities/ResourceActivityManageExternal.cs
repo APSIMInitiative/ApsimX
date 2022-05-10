@@ -77,10 +77,10 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         measures: new List<string>() {
                             "fixed",
-                            "amount incoming",
-                            "amount outgoing",
-                            "dollar value incoming",
-                            "dollar value outgoing",
+                            "per amount incoming",
+                            "per amount outgoing",
+                            "per dollar value incoming",
+                            "per dollar value outgoing",
                         }
                         );
                 default:
@@ -227,16 +227,16 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "amount incoming":
+                    case "per amount incoming":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo[1, 0];
                         break;
-                    case "dollar value incoming":
+                    case "per dollar value incoming":
                         valuesForCompanionModels[valueToSupply.Key] = valueToDo[1, 0];
                         break;
-                    case "amount outgoing":
+                    case "per amount outgoing":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo[0, 0];
                         break;
-                    case "dollar value outgoing":
+                    case "per dollar value outgoing":
                         valuesForCompanionModels[valueToSupply.Key] = valueToDo[0, 0];
                         break;
                     default:
@@ -273,9 +273,6 @@ namespace Models.CLEM.Activities
                             case "amount":
                                 amountToDo[i, 1] = Convert.ToInt32(amountToDo[i, 0] * (1 - unitShort.Available / unitShort.Required));
                                 break;
-                            //case "dollar":
-                            //    valueToDo[i, 1] = Convert.ToInt32(valueToDo[i, 0] * (1 - unitShort.Available / unitShort.Required));
-                            //    break;
                             default:
                                 throw new NotImplementedException($"Cannot use {unitShort.CompanionModelDetails.identifier} unit to influence ResourceActivitymanageExternal when shortfalls occur in [a={NameWithParent}]");
                         }
@@ -398,141 +395,6 @@ namespace Models.CLEM.Activities
             SetStatusSuccessOrPartial(amountToDo[0,1]+amountToDo[1,1] > 0);
         }
 
-
-        ///// <summary>
-        ///// Method used to perform activity if it can occur as soon as resources are available.
-        ///// </summary>
-        //public override void PerformTasksForTimestep(double argument = 0)
-        //{
-        //    // get labour shortfall
-        //    double labourLimit = this.LabourLimitProportion;
-        //    // get finance purchase shortfall
-        //    double financeLimit = (spent - earned > 0) ? Math.Min(bankAccount.Amount, spent - earned) / (spent - earned) : 1;
-
-        //    if (resourceList.Count() == 0)
-        //    {
-        //        if (currentEntries.Count > 0)
-        //            this.Status = ActivityStatus.Warning;
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        if (financeLimit < 1)
-        //        {
-        //            ResourceRequest purchaseRequest = new ResourceRequest
-        //            {
-        //                ActivityModel = this,
-        //                Required = spent - earned,
-        //                Available = bankAccount.Amount,
-        //                Provided = bankAccount.Amount,
-        //                AllowTransmutation = false,
-        //                ResourceType = typeof(Finance),
-        //                ResourceTypeName = AccountName,
-        //                Category = "External purchases"
-        //            };
-        //            ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-        //            ActivitiesHolder.ReportActivityShortfall(rre);
-        //        }
-
-        //        if (financeLimit < 1 || labourLimit < 1)
-        //        {
-        //            switch (OnPartialResourcesAvailableAction)
-        //            {
-        //                case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-        //                    string shortfallResources = (financeLimit < 1) ? "[r=Finance]":"";
-        //                    shortfallResources += (labourLimit < 1) ?"[r=Labour]":"";
-        //                    string errorMessage = $"Insufficient [r={shortfallResources}] for [a={this.NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
-        //                    Status = ActivityStatus.Critical;
-        //                    throw new ApsimXException(this, errorMessage);
-        //                case OnPartialResourcesAvailableActionTypes.SkipActivity:
-        //                    this.Status = ActivityStatus.Ignored;
-        //                    return;
-        //                default:
-        //                    break;
-        //            }
-        //            this.Status = ActivityStatus.Partial;
-        //        }
-        //        else
-        //            this.Status = ActivityStatus.Success;
-
-        //        // loop through all resources to exchange and make transactions
-        //        for (int i = 0; i < currentEntries.Count; i++)
-        //        {
-        //            if (resourceList[i] is null)
-        //                this.Status = ActivityStatus.Warning;
-        //            else
-        //            {
-        //                // matching resource was found
-        //                double amount = Convert.ToDouble(currentEntries[i][fileResource.AmountColumnName], CultureInfo.InvariantCulture);
-        //                bool isSale = (amount < 0);
-        //                amount = Math.Abs(amount);
-        //                ResourcePricing price = null;
-        //                if (bankAccount != null && !(resourceList[i] is FinanceType))
-        //                {
-        //                    price = resourceList[i].Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
-        //                }
-        //                // transactions
-        //                if (isSale)
-        //                {
-        //                    // sell, so limit to labour and amount available
-        //                    amount = Math.Min(amount * labourLimit, resourceList[i].Amount);
-        //                    if (amount > 0)
-        //                    {
-        //                        if (price != null)
-        //                        {
-        //                            double packets = amount / price.PacketSize;
-        //                            if (price.UseWholePackets)
-        //                            {
-        //                                packets = Math.Truncate(packets);
-        //                                amount = packets * price.PacketSize;
-        //                            }
-        //                            bankAccount.Add(packets * price.PricePerPacket, this, (resourceList[i] as CLEMModel).NameWithParent, "External output");
-        //                        }
-        //                        ResourceRequest sellRequest = new ResourceRequest
-        //                        {
-        //                            ActivityModel = this,
-        //                            Required = amount,
-        //                            AllowTransmutation = false,
-        //                            Category = "External output",
-        //                            RelatesToResource = (resourceList[i] as CLEMModel).NameWithParent
-        //                        };
-        //                        resourceList[i].Remove(sellRequest);
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    // limit to labour and financial constraints as this is a purchase
-        //                    amount *= Math.Min(labourLimit, financeLimit);
-        //                    if (amount > 0)
-        //                    {
-        //                        if (price != null)
-        //                        {
-        //                            // need to limit amount by financial constraints
-        //                            double packets = amount / price.PacketSize;
-        //                            if (price.UseWholePackets)
-        //                            {
-        //                                packets = Math.Truncate(packets);
-        //                            }
-        //                            amount = packets * price.PacketSize;
-        //                            ResourceRequest sellRequestDollars = new ResourceRequest
-        //                            {
-        //                                ActivityModel = this,
-        //                                Required = packets * price.PacketSize,
-        //                                AllowTransmutation = false,
-        //                                Category = "External input",
-        //                                RelatesToResource = (resourceList[i] as CLEMModel).NameWithParent
-        //                            };
-        //                            bankAccount.Remove(sellRequestDollars);
-        //                        }
-        //                        resourceList[i].Add(amount, this, (resourceList[i] as CLEMModel).NameWithParent, "External input");
-        //                    }
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //}
 
         #region descriptive summary
 
