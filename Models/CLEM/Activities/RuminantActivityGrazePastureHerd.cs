@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityGrazePastureHerd()
         {
-            TransactionCategory = "Livestock.[Graze]";
+            TransactionCategory = "Livestock.Grazing";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

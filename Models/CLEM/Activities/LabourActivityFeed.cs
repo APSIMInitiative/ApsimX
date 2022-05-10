@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
         public LabourActivityFeed()
         {
             this.SetDefaults();
-            TransactionCategory = "Labour.[Feed]";
+            TransactionCategory = "Crop.[Type].[FeedPeople]";
         }
 
         /// <inheritdoc/>

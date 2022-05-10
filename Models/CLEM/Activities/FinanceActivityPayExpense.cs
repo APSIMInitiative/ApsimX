@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
         public FinanceActivityPayExpense()
         {
             this.SetDefaults();
-            TransactionCategory = "Expense";
+            TransactionCategory = "[General].Expense";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

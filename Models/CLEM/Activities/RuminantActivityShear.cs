@@ -70,7 +70,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityShear()
         {
-            TransactionCategory = "Livestock.[Shear]";
+            TransactionCategory = "Livestock.[Type].Shear";
         }
 
         /// <inheritdoc/>

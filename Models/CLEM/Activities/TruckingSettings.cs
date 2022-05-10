@@ -133,7 +133,7 @@ namespace Models.CLEM.Activities
         public TruckingSettings()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Livestock.Trucking";
+            TransactionCategory = "Livestock.[All].Trucking";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

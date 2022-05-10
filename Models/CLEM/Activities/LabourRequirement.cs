@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-            TransactionCategory = "[Task].[Labour]";
+            TransactionCategory = "[General].[Type].[Action]";
             this.SetDefaults();
         }
 

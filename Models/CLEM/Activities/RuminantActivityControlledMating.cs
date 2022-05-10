@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         {
             SetDefaults();
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Livestock.Manage.[Mating]";
+            TransactionCategory = "Livestock.[Type].Breeding";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

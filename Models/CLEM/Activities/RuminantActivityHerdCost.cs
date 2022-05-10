@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityHerdCost()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.[Cost]";
+            TransactionCategory = "Livestock.[Type].[Action]";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

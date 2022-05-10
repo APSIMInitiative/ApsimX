@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public PastureActivityManage()
         {
-            TransactionCategory = "Pasture.Manage";
+            TransactionCategory = "Pasture.[Paddock].Manage";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

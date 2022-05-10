@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityFeed()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.[Feed]";
+            TransactionCategory = "Livestock.[Type].Feeding";
         }
 
         /// <inheritdoc/>

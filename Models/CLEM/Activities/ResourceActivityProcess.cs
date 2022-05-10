@@ -78,7 +78,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ResourceActivityProcess()
         {
-            TransactionCategory = "Process";
+            TransactionCategory = "[General].[Type].Process";
         }
 
         /// <inheritdoc/>

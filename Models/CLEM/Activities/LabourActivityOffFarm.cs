@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public LabourActivityOffFarm()
         {
-            TransactionCategory = "Income";
+            TransactionCategory = "[General].[OffFarm].Income";
         }
 
         /// <inheritdoc/>

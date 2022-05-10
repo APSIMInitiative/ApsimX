@@ -53,7 +53,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityTag()
         {
-            TransactionCategory = "Livestock.Manage.[Tag]";
+            TransactionCategory = "Livestock.[Type].Tag";
             // activity is performed in ManageAnimals
             this.AllocationStyle = ResourceAllocationStyle.Manual;
         }

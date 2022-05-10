@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         public CropActivityManageCrop()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-            TransactionCategory = "Crop";
+            TransactionCategory = "Crop.[Type]";
         }
 
         /// <summary>An event handler to allow us to initialise</summary>

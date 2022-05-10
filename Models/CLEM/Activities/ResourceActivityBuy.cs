@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ResourceActivityBuy()
         {
-            TransactionCategory = "Expense";
+            TransactionCategory = "[General].[Type].Purchase";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

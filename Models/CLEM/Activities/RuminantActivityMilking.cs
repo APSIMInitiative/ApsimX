@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityMilking()
         {
-            TransactionCategory = "Livestock.Milking";
+            TransactionCategory = "Livestock.[Type].Milking";
         }
 
         /// <inheritdoc/>

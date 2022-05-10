@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityMove()
         {
-            TransactionCategory = "Livestock.Manage.[Move]";
+            TransactionCategory = "Livestock.[Type].Move";
         }
 
         /// <inheritdoc/>

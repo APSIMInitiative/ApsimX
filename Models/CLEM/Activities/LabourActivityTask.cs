@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         public LabourActivityTask()
         {
             this.SetDefaults();
-            TransactionCategory = "Labour.[Task]";
+            TransactionCategory = "[General].[Type].[Action]";
         }
 
         /// <inheritdoc/>

@@ -56,7 +56,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityMarkForSale()
         {
-            TransactionCategory = "Livestock.Manage.[Sell]";
+            TransactionCategory = "Livestock.[Type].Sell";
             // activity is performed in ManageAnimals
             AllocationStyle = ResourceAllocationStyle.Manual;
         }

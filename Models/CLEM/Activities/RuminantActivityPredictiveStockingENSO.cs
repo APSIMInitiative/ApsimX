@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityPredictiveStockingENSO()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage.[Destock]";
+            TransactionCategory = "Livestock.[Type].Destock";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

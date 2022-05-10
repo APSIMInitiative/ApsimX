@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
         public PastureActivityBurn()
         {
             this.SetDefaults();
-            TransactionCategory = "Pasture.Burn";
+            TransactionCategory = "Pasture.[Paddock].Burn";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ManureActivityCollectAll()
         {
-            TransactionCategory = "Manure";
+            TransactionCategory = "Livestock.All.Manure";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

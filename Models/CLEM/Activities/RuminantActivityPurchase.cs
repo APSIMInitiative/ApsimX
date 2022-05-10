@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityPurchase()
         {
             SetDefaults();
-            TransactionCategory = "Livestock.Purchase";
+            TransactionCategory = "Livestock.[Type].Purchase";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

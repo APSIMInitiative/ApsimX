@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
         public ActivityFee()
         {
             this.SetDefaults();
-            TransactionCategory = "[Fee]";
+            TransactionCategory = "[General].[Type].[Action]";
             AllocationStyle = ResourceAllocationStyle.Manual;
             ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }

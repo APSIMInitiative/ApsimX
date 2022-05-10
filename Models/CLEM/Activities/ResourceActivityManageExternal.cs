@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ResourceActivityManageExternal()
         {
-            TransactionCategory = "Imports";
+            TransactionCategory = "[General].[Type].Imports";
         }
 
         /// <inheritdoc/>

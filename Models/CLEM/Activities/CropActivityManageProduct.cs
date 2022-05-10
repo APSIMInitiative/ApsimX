@@ -168,7 +168,7 @@ namespace Models.CLEM.Activities
         public CropActivityManageProduct()
         {
             this.SetDefaults();
-            TransactionCategory = "Crop.[Product]";
+            TransactionCategory = "Crop.[Type].[Product]";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

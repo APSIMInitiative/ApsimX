@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         {
             this.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-            TransactionCategory = "Crop.[Activity]";
+            TransactionCategory = "Crop.[Type].[Action]";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

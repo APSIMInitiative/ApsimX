@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityFee()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.[Fee]";
+            TransactionCategory = "Livestock.[Type].[Action]";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

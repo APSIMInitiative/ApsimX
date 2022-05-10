@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
         public GreenhouseGasActivityEmission()
         {
             this.SetDefaults();
-            TransactionCategory = "GreenhouseGas.[Emission]";
+            TransactionCategory = "[General].[Type].[EmissionType]";
         }
 
         #region descriptive summary
