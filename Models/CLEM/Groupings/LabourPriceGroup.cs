@@ -47,18 +47,7 @@ namespace Models.CLEM.Groupings
             if (!FormatForParentControl)
             {
                 html += "\r\n<div class=\"activityentry\">";
-                html += "Pay ";
-                if (Value.ToString() == "0")
-                {
-                    html += "<span class=\"errorlink\">NOT SET";
-                }
-                else
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += Value.ToString("#,0.##");
-                }
-                html += "</span> for a days work";
-                html += "</div>";
+                html += $"Pay {CLEMModel.DisplaySummaryValueSnippet(Value, warnZero:true)} for a days work</div>";
             }
             return html;
         }
@@ -69,16 +58,7 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (FormatForParentControl)
             {
-                if (Value.ToString() == "0")
-                {
-                    html += "</td><td><span class=\"errorlink\">NOT SET";
-                }
-                else
-                {
-                    html += "</td><td><span class=\"setvalue\">";
-                    html += this.Value.ToString("#,0.##");
-                }
-                html += "</span></td>";
+                html += $"</td><td>{CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)}</td>";
                 html += "</tr>";
             }
             else

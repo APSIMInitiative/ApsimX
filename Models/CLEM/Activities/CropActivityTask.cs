@@ -168,7 +168,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
+                if (this.FindAllChildren<ActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
                     htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
                 return htmlWriter.ToString(); 
             }

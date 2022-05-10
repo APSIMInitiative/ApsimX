@@ -67,7 +67,7 @@ namespace Models.CLEM.Groupings
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
                     htmlWriter.Write($"{Name}");
                 if ((Identifier ?? "") != "")
-                    htmlWriter.Write($" - for {Identifier}");
+                    htmlWriter.Write($" - applies to {Identifier}");
 
                 htmlWriter.Write($"</div>");
                 return htmlWriter.ToString();
