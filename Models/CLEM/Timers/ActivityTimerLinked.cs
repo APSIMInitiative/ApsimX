@@ -18,7 +18,7 @@ namespace Models.CLEM.Timers
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This timer provides a link to another existing timer")]
+    [Description("This timer provides a link to an existing timer")]
     [HelpUri(@"Content/Features/Timers/Linked.htm")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
@@ -67,7 +67,7 @@ namespace Models.CLEM.Timers
 
         private void GetAllTimersAvailable()
         {
-            timersAvailable = FindAncestor<Zone>().FindAllDescendants<IActivityTimer>();
+            timersAvailable = FindAncestor<Zone>().FindAllDescendants<IActivityTimer>().Where(a => (a as IModel).Enabled);
         }
 
         private List<string> GetAllTimerNames()

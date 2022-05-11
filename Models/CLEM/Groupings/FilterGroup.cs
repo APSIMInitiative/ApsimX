@@ -91,7 +91,8 @@ namespace Models.CLEM
         {
             filterRules = null;
             sortList = null;
-            InitialiseFilters();
+            if(!GetType().Name.Contains("Linked"))
+                InitialiseFilters();
         }
 
         /// <summary>

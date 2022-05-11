@@ -279,7 +279,8 @@ namespace Models.CLEM.Activities
                     switch (componentType.Name)
                     {
                         case "RuminantGroup":
-                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantGroup>());
+                        case "RuminantGroupLinked":
+                            companionModelsPresent.Add("RuminantGroup", LocateCompanionModels<RuminantGroup>());
                             break;
                         case "RuminantFeedGroup":
                         case "RuminantFeedGroupMonthly":
@@ -640,7 +641,10 @@ namespace Models.CLEM.Activities
             {
                 foreach (var iChild in FindAllChildren<IActivityCompanionModel>())
                 {
-                    var identifiers = DefineCompanionModelLabels(iChild.GetType().Name).Identifiers;
+                    // standardise the type if needed
+                    string iChildType = (iChild is RuminantGroupLinked) ? "RuminantGroup" : iChild.GetType().Name;
+
+                    var identifiers = DefineCompanionModelLabels(iChildType).Identifiers;
 
                     // tests for invalid identifier
                     bool test = ((iChild.Identifier ?? "") == "") == identifiers.Any();
@@ -652,7 +656,7 @@ namespace Models.CLEM.Activities
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 
-                    var units = DefineCompanionModelLabels(iChild.GetType().Name).Measures;
+                    var units = DefineCompanionModelLabels(iChildType).Measures;
                     test = ((iChild.Measure ?? "") == "") == units.Any();
                     test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
                     if (test | test2)
