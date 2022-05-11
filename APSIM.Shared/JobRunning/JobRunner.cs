@@ -186,6 +186,7 @@
                     // Run job.
                     Prepare(job);
                     Run(job);
+                    Cleanup(job);
                 }
                 catch (Exception err)
                 {
@@ -221,6 +222,12 @@
         /// </summary>
         /// <param name="job">The job to be run.</param>
         protected virtual void Run(IRunnable job) => job.Run(cancelToken);
+
+        /// <summary>
+        /// Cleanup a job.
+        /// </summary>
+        /// <param name="job">The job to be cleaned up.</param>
+        protected virtual void Cleanup(IRunnable job) => job.Cleanup();
 
         /// <summary>
         /// Invoke the job completed event.

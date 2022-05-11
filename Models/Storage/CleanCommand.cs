@@ -62,6 +62,14 @@ namespace Models.Storage
         }
 
         /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
         /// Clean all existing data in the given table for the specified simulation names.
         /// </summary>
         /// <param name="tableName">Name of the table to clean.</param>

@@ -30,5 +30,10 @@
                 throw new Exception("Intentional exception");
             HasRun = true;
         }
+
+        public void Cleanup()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
