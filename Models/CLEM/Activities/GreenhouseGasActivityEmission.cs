@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityGrow))]
-    [ValidParent(ParentType = typeof(TruckingSettings))]
+    [ValidParent(ParentType = typeof(RuminantTrucking))]
     [ValidParent(ParentType = typeof(PastureActivityBurn))]
     [Description("Define an emission based on parent activity details")]
     [Version(1, 1, 0, "Implements event based activity control")]

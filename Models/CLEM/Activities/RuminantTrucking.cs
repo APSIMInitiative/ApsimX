@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
-    public class TruckingSettings : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
+    public class RuminantTrucking : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
     {
         private int numberToDo;
         private int parentNumberToDo;
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor
         /// </summary>
-        public TruckingSettings()
+        public RuminantTrucking()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             TransactionCategory = "Livestock.[All].Trucking";

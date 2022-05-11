@@ -1,13 +1,11 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Limiters
 {
     /// <summary>
     /// Limits the total carried across a range of activities

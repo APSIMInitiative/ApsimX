@@ -1,4 +1,6 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Reporting;
+using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -7,9 +9,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
-using Models.CLEM.Reporting;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on monthly interval

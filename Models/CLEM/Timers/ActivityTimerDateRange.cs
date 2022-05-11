@@ -8,8 +8,9 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Reporting;
+using Models.CLEM.Activities;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on date range

@@ -9,7 +9,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
-using Models.CLEM.Groupings;
 
 namespace Models.CLEM
 {

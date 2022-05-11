@@ -1,17 +1,16 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq.Expressions;
-using Display = Models.Core.DisplayAttribute;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on resource
@@ -50,7 +49,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Operator to use for filtering")]
         [Required]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
         private object[] GetOperators() => new object[]
         {

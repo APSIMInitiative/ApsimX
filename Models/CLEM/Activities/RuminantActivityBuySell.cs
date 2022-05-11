@@ -33,8 +33,8 @@ namespace Models.CLEM.Activities
     public class RuminantActivityBuySell : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private FinanceType bankAccount = null;
-        private IEnumerable<TruckingSettings> truckingBuy = null;
-        private IEnumerable<TruckingSettings> truckingSell = null;
+        private IEnumerable<RuminantTrucking> truckingBuy = null;
+        private IEnumerable<RuminantTrucking> truckingSell = null;
         private int numberToDo;
         private int numberToSkip;
         private double numberTrucks;
@@ -130,8 +130,8 @@ namespace Models.CLEM.Activities
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get trucking settings
-            truckingBuy = GetCompanionModelsByIdentifier<TruckingSettings>(false, false, "Purchases");
-            truckingSell = GetCompanionModelsByIdentifier<TruckingSettings>(false, false, "Sales");
+            truckingBuy = GetCompanionModelsByIdentifier<RuminantTrucking>(false, false, "Purchases");
+            truckingSell = GetCompanionModelsByIdentifier<RuminantTrucking>(false, false, "Sales");
 
             // check if pricing is present
             if (bankAccount != null)
