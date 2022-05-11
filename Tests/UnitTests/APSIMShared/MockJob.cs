@@ -33,7 +33,6 @@
 
         public void Cleanup()
         {
-            throw new NotImplementedException();
         }
     }
 }
