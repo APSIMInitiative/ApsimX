@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM
+namespace Models.CLEM.Reporting
 {
     /// <summary>
     /// Summary statistics of a list
+    /// Used with ReportRuminantAttributeSummary
     /// </summary>
     [Serializable]
     public class ListStatistics
