@@ -1,64 +1,51 @@
-﻿using Models.CLEM.Interfaces;
-using Models.CLEM.Activities;
-using Models.CLEM.Reporting;
-using Models.CLEM.Resources;
+﻿using Models.CLEM.Activities;
 using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Provides a link to an existing ruminant group to identify individual ruminants
+    /// Provides a link to an existing labour group to identify individual ruminants
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
-    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
-    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
-    [ValidParent(ParentType = typeof(RuminantActivityManage))]
-    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
-    [ValidParent(ParentType = typeof(RuminantActivityMilking))]
-    [ValidParent(ParentType = typeof(RuminantActivityMove))]
-    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
-    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityShear))]
-    [ValidParent(ParentType = typeof(RuminantActivityTag))]
-    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
-    [ValidParent(ParentType = typeof(RuminantActivityWean))]
-    [ValidParent(ParentType = typeof(TransmuteRuminant))]
-    [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
-    [Description("This filter group provides a link to an existing ruminant group")]
-    [HelpUri(@"Content/Features/Filters/Groups/RuminantGroupLinked.htm")]
-    public class RuminantGroupLinked: RuminantGroup, IValidatableObject
+    [ValidParent(ParentType = typeof(LabourRequirement))]
+    [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
+    [ValidParent(ParentType = typeof(LabourGroup))]
+    [ValidParent(ParentType = typeof(TransmuteLabour))]
+    [Description("This filter group provides a link to an existing labour group")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Filters/Groups/LabourGroupLinked.htm")]
+    public class LabourGroupLinked: LabourGroup, IValidatableObject
     {
         [NonSerialized]
-        private IEnumerable<RuminantGroup> groupsAvailable;
+        private IEnumerable<LabourGroup> groupsAvailable;
         [NonSerialized]
-        private RuminantGroup linkedGroup;
+        private LabourGroup linkedGroup;
 
         /// <summary>
         /// Linked existing timer
         /// </summary>
-        [Description("Existing ruminant group to use")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetAllRuminantGroupNames")]
+        [Description("Existing labour group to use")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetAllLabourGroupNames")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "An existing group must be selected")]
         public string ExistingGroupName { get; set; }
 
-        private void GetAllRuminantGroupsAvailable()
+        private void GetAllLabourGroupsAvailable()
         {
-            groupsAvailable = FindAncestor<Zone>().FindAllDescendants<RuminantGroup>().Where(a => a.Enabled);
+            groupsAvailable = FindAncestor<Zone>().FindAllDescendants<LabourGroup>().Where(a => a.Enabled);
         }
 
-        private List<string> GetAllRuminantGroupNames()
+        private List<string> GetAllLabourGroupNames()
         {
-            GetAllRuminantGroupsAvailable();
+            GetAllLabourGroupsAvailable();
             return groupsAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}").ToList();
         }
 
@@ -68,12 +55,12 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("StartOfSimulation")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GetAllRuminantGroupsAvailable();
-            linkedGroup = groupsAvailable.Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
+            GetAllLabourGroupsAvailable();
+            linkedGroup = groupsAvailable.Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<T> Filter<T>(IEnumerable<T> source) 
+        public override IEnumerable<T> Filter<T>(IEnumerable<T> source)
         {
             return linkedGroup.Filter<T>(source);
         }
@@ -109,7 +96,7 @@ namespace Models.CLEM.Groupings
             return results;
         }
         #endregion
- 
+
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -141,27 +128,23 @@ namespace Models.CLEM.Groupings
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"filtername\">");
-                //if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                htmlWriter.Write($"{Name}");
-                if ((Identifier ?? "") != "")
-                    htmlWriter.Write($" - applies to {Identifier} and");
-                htmlWriter.Write($" linked to </div>");
+                htmlWriter.Write($"<div class=\"filtername\">{Name} is linked to </div>");
 
-                var foundGroup = FindAncestor<Zone>().FindAllDescendants<RuminantGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
+                var foundGroup = FindAncestor<Zone>().FindAllDescendants<LabourGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
                 if (foundGroup != null)
                     htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
                 else
                 {
-                    if((ExistingGroupName??"")=="")
-                        htmlWriter.Write("<div class=\"errorbanner\">Linked RuminantGroup not specified</div>");
+                    if ((ExistingGroupName ?? "") == "")
+                        htmlWriter.Write("<div class=\"errorbanner\">Linked LabourGroup not specified</div>");
                     else
-                        htmlWriter.Write($"<div class=\"errorbanner\">Linked RuminantGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
+                        htmlWriter.Write($"<div class=\"errorbanner\">Linked LabourGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
                 }
                 return htmlWriter.ToString();
             }
         }
 
         #endregion
+
     }
 }

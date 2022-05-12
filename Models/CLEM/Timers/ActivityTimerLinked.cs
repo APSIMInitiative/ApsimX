@@ -19,7 +19,7 @@ namespace Models.CLEM.Timers
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This timer provides a link to an existing timer")]
-    [HelpUri(@"Content/Features/Timers/Linked.htm")]
+    [HelpUri(@"Content/Features/Timers/LinkedTimer.htm")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -149,15 +149,20 @@ namespace Models.CLEM.Timers
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            // check that this activity has a parent of type CropActivityManageProduct
+        
+            if(linkedTimer is null)
+            {
+                string[] memberNames = new string[] { "Linked timer" };
+                string errorMsg = string.Empty;
+                if (ExistingTimerName is null)
+                    errorMsg = "No existing timer has been specified";
+                else
+                    errorMsg = $"The timer {ExistingTimerName} could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled timer in the simulation tree below the same ZoneCLEM";
 
-            //string[] memberNames = new string[] { "CropActivityManageProduct parent" };
-            //results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
-
+                results.Add(new ValidationResult(errorMsg, memberNames));
+            }
             return results;
         }
         #endregion
-
-
     }
 }
