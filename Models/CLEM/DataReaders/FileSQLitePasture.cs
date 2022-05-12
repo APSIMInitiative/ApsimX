@@ -222,7 +222,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault() as RainfallShuffler;
+            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
         }
 
         /// <summary>
@@ -663,21 +663,24 @@ namespace Models.CLEM
 
             if (shuffler != null)
             {
-                int shuffleStartYear = shuffler.ShuffledYears.Where(a => a.Year == startYear).FirstOrDefault().RandomYear;
-                int shuffleEndYear = shuffler.ShuffledYears.Where(a => a.Year == endYear).FirstOrDefault().RandomYear;
+                // need to check for all random year month matches in database
+                // this takes into account keeping seasonal rainfall together while shuffling the years
 
-                // first year
-                sqlQuery += " AND (( " + YearColumnName + " = " + shuffleStartYear + " AND " + MonthColumnName + " >= " + startMonth + ")";
-
-                // any middle years
-                for (int i = startYear+1; i < endYear; i++)
+                DateTime currentDate = ecolCalculationDate;
+                sqlQuery += " AND (";
+                bool firstEntry = true;
+                while (currentDate <= endDate)
                 {
-                    sqlQuery += " OR ( " + YearColumnName + " = " + shuffler.ShuffledYears[i] + ")";
+                    if(!firstEntry)
+                        sqlQuery += " OR ";
+                    firstEntry = false;
+                    var foundEntry = shuffler.ShuffledYears.Where(a => a.Year == currentDate.Year && a.Month == currentDate.Month).FirstOrDefault();
+                    if(foundEntry != null)
+                        sqlQuery += "( " + YearColumnName + " = " + foundEntry.RandomYear + " AND " + MonthColumnName + " = " + currentDate.Month + ")";
+
+                    currentDate = currentDate.AddMonths(1);
                 }
-
-                //last year
-                sqlQuery += " OR ( " + YearColumnName + " = " + shuffleEndYear + " AND " + MonthColumnName + " <= " + endMonth + "))";
-
+                sqlQuery += ");";
             }
             else
             {
