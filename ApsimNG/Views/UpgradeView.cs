@@ -318,9 +318,8 @@
 
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
                     Upgrade upgrade = upgradeList[selIndex];
-                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.Issue;
 
-                    if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
+                    if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog($"Are you sure you want to upgrade to version {upgrade.Version}?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
                     {
                         // Write to the registration database.
