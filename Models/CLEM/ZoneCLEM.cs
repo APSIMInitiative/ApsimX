@@ -336,7 +336,6 @@ namespace Models.CLEM
             if (model is CLEMModel)
                 (model as CLEMModel).CLEMParentName = parentZone.Name;
             modelPath += starter+model.Name+"]";
-            modelPath = modelPath.Replace("][", "]&shy;[");
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
