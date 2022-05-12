@@ -252,9 +252,11 @@ namespace Models.Core
                     IDataStore storage = this.FindInScope<IDataStore>();
                     if (storage != null)
                         Services.Add(this.FindInScope<IDataStore>());
-                    Services.Add(new ScriptCompiler());
                 }
             }
+
+            if (!Services.OfType<ScriptCompiler>().Any())
+                Services.Add(new ScriptCompiler());
 
             var links = new Links(Services);
             var events = new Events(this);
@@ -265,7 +267,7 @@ namespace Models.Core
                 events.ConnectEvents();
 
                 // Resolve all links
-                links.Resolve(this, true);
+                links.Resolve(this, true, throwOnFail: true);
 
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
