@@ -139,6 +139,11 @@ namespace Models.Core
         public string EnabledCallback { get; set; }
 
         /// <summary>
+        /// Specifies a callback method that will be called by GUI to determine if this property is visible.
+        /// </summary>
+        public string VisibleCallback { get; set; }
+
+        /// <summary>
         /// Used in conjuction with <see cref="DisplayType.CultivarName"/>.
         /// Specifies the name of a plant whose cultivars should be displayed.
         /// </summary>

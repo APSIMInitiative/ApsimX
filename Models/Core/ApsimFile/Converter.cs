@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 149; } }
+        public static int LatestVersion { get { return 150; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3945,6 +3945,32 @@ namespace Models.Core.ApsimFile
             {
                 if (JsonUtilities.ChildWithName(plant, "MortalityRate") != null)
                     JsonUtilities.AddConstantFunctionIfNotExists(plant, "SeedMortality", "0.0");
+            }
+        }
+
+        /// <summary>
+        /// The previous converter function added a constant called
+        /// SeedMortality, which should have been called SeedMortalityRate.
+        /// Unfortunately, the cat is already out of the bag, so I've fixed this
+        /// by writing a new converter function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion150(JObject root, string fileName)
+        {
+            const string correctName = "SeedMortalityRate";
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+            {
+                if (JsonUtilities.Children(plant).Count > 0)
+                {
+                    JObject seedMortality = JsonUtilities.ChildWithName(plant, "SeedMortality", ignoreCase: true);
+                    if (seedMortality == null)
+                        // If no seed mortality exists, add it in with the right name.
+                        JsonUtilities.AddConstantFunctionIfNotExists(plant, correctName, 0);
+                    else
+                        // We already have a seed mortality. Just rename it.
+                        JsonUtilities.RenameModel(seedMortality, correctName);
+                }
             }
         }
 

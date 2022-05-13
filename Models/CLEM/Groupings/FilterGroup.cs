@@ -25,6 +25,11 @@ namespace Models.CLEM
         [NonSerialized]
         private protected IEnumerable<ISort> sortList = null;
 
+        /// <inheritdoc/>
+        [Description("Remove inherent order before sorting")]
+        [Core.Display(Order = 7000)]
+        public bool RandomiseBeforeSorting { get; set; }
+
         /// <summary>
         /// The properties available for filtering
         /// </summary>
@@ -145,7 +150,7 @@ namespace Models.CLEM
 
             if(sortList?.Any()??false)
                 // add sorting and take specified
-                filtered = filtered.Sort(sortList);
+                filtered = filtered.Sort(sortList, RandomiseBeforeSorting);
 
             // do all takes and skips
             foreach (var take in FindAllChildren<TakeFromFiltered>())

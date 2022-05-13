@@ -165,6 +165,12 @@ namespace Models.Core
         public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
 
         /// <summary>
+        /// Called when models should disconnect from events to which they've
+        /// dynamically subscribed.
+        /// </summary>
+        public event EventHandler UnsubscribeFromEvents;
+
+        /// <summary>
         /// Simulation has completed. Clear scope and locator
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -246,9 +252,11 @@ namespace Models.Core
                     IDataStore storage = this.FindInScope<IDataStore>();
                     if (storage != null)
                         Services.Add(this.FindInScope<IDataStore>());
-                    Services.Add(new ScriptCompiler());
                 }
             }
+
+            if (!Services.OfType<ScriptCompiler>().Any())
+                Services.Add(new ScriptCompiler());
 
             var links = new Links(Services);
             var events = new Events(this);
@@ -259,7 +267,7 @@ namespace Models.Core
                 events.ConnectEvents();
 
                 // Resolve all links
-                links.Resolve(this, true);
+                links.Resolve(this, true, throwOnFail: true);
 
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
@@ -320,6 +328,14 @@ namespace Models.Core
                     throw new AggregateException(simulationError, cleanupError);
                 }
             }
+        }
+
+        /// <summary>
+        /// Cleanup the simulation after the run.
+        /// </summary>
+        public void Cleanup()
+        {
+            UnsubscribeFromEvents?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

@@ -62,15 +62,19 @@ namespace UnitTests
             DataTable messages = storage.Reader.GetData("_Messages");
 
             // Clock will write its own "Simulation terminated normally" message.
-            Assert.AreEqual(4, messages.Rows.Count);
+            Assert.AreEqual(5, messages.Rows.Count);
 
-            Assert.AreEqual(message1, messages.Rows[0][6]);
-            Assert.AreEqual(message2, messages.Rows[1][6]);
-            // rows[2] will be the "Simulation terminated normally" message.
-            Assert.AreEqual(message3, messages.Rows[3][6]);
+            // The first row will be a warning caused by the lack of a
+            // microclimate model.
 
-            // The third row should not be written by SummaryWriter.
-            Assert.AreNotEqual(writer.Name, messages.Rows[2]["ComponentName"]);
+            Assert.AreEqual(message1, messages.Rows[1][6]);
+            Assert.AreEqual(message2, messages.Rows[2][6]);
+
+            // The fourth row should not be written by SummaryWriter.
+            Assert.AreNotEqual(writer.Name, messages.Rows[3]["ComponentName"]);
+
+            // The fifth will be the "Simulation terminated normally" message.
+            Assert.AreEqual(message3, messages.Rows[4][6]);
         }
 
         [Serializable]

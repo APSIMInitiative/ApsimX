@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
 
     {
-        private List<SetAttributeWithValue> attributeList;
+        private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
 
@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
-        public List<SetAttributeWithValue> SireAttributes => attributeList;
+        public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>
         /// Constructor
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
-            attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
+            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 

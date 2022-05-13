@@ -17,7 +17,7 @@ namespace APSIM.Server
     /// <summary>
     /// An APSIM Server.
     /// </summary>
-    public class ApsimServer
+    public class ApsimServer : IDisposable
     {
         /// <summary>
         /// Server options.
@@ -183,6 +183,14 @@ namespace APSIM.Server
                 Console.WriteLine(message);
             else
                 Console.WriteLine($"Verbose mode is disabled but here ya go anyway: {message}");
+        }
+
+        /// <summary>
+        /// Cleanup the simulations, disconnect events, etc.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            jobRunner.Dispose();
         }
     }
 }
