@@ -21,7 +21,6 @@
     /// The LifeCycle model is initialised with no members in any phase and the Infest() method must 
     /// be called to insert members into a phase.  
     /// </summary>
-
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

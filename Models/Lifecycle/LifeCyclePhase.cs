@@ -33,7 +33,6 @@
     /// Each LifeCyclePhase specifies a NameOfPhaseForProgeny and when Reproduciton returns a positive,
     /// a cohort of this many individuals is initiated in the corresponding LifeCyclePhaseForProgeny.
     /// </summary>
-
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

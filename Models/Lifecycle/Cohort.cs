@@ -6,7 +6,6 @@
     /// <summary>
     /// A class that holds the status of a group of individules (cohort) of the same developmental stage
     /// </summary>
-
     [Serializable]
     public class Cohort
     {

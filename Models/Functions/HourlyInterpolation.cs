@@ -14,7 +14,6 @@ namespace Models.Functions
     /// This class uses aggregates, using a child aggregation function, sub-daily values from a child response function..
     /// Each of the interpolated values are passed into the response function and then given to the aggregation function.
     /// </summary>
-
     [Serializable]
     [Description("Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps and returns either the sum or average depending on the AgrevationMethod selected")]
     [ViewName("UserInterface.Views.PropertyView")]

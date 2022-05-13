@@ -12,7 +12,6 @@
     /// be added and the ProportionOfProgeny property determines what proportion of the
     /// total progeny are added to this ReproductionDestinationPhase
     /// </summary>
-
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

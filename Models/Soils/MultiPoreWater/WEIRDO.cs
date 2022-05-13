@@ -226,7 +226,6 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] SW { get; set; }
         ///<summary> Who knows</summary>
-
         public double[] SWCON { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]

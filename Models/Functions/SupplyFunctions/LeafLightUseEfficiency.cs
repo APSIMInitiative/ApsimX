@@ -15,7 +15,6 @@ namespace Models.Functions.SupplyFunctions
     /// For C4 crops, LUE does not change with CO2 concentration and temperature.
     /// The current version for C3 crop was based on Bauman et al (2001) ORYZA2000.
     /// </summary>
-
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -33,7 +32,6 @@ namespace Models.Functions.SupplyFunctions
         /// <param name="Temp"></param>
         /// <param name="fCO2"></param>
         /// <returns></returns>
-
         public double Value(double Temp, double fCO2)
         {
             double CO2PhotoCmp0, CO2PhotoCmp, EffPAR;

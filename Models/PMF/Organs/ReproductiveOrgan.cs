@@ -98,7 +98,6 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
-        
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
