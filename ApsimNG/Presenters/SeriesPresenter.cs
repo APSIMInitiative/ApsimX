@@ -206,7 +206,6 @@
             }
         }
 
-        #region Events from the view
 
         /// <summary>Series type has been changed by the user.</summary>
         /// <param name="sender">Event sender</param>
@@ -478,7 +477,6 @@
             }
         }
 
-        #endregion
 
         /// <summary>Populate the views series editor with the current selected series.</summary>
         private void PopulateView()

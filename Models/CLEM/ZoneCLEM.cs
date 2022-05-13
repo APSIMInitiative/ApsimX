@@ -173,7 +173,6 @@ namespace Models.CLEM
                 this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
         }
 
-        #region validation
 
         /// <summary>
         /// Validate object
@@ -357,9 +356,7 @@ namespace Models.CLEM
             }
             return valid;
         }
-        #endregion
 
-        #region Descriptive summary
 
         /// <summary>
         /// Summary style to use for this component
@@ -556,7 +553,6 @@ namespace Models.CLEM
         {
             return this.Name;
         }
-        #endregion
 
     }
 }

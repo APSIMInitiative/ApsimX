@@ -25,7 +25,6 @@ namespace Models.CLEM.Groupings
     [HelpUri(@"Content/Features/Filters/Groups/LabourFilterGroup.htm")]
     public class LabourFilterGroup : FilterGroup<LabourType>
     {
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -68,6 +67,5 @@ namespace Models.CLEM.Groupings
             
             return html;
         } 
-        #endregion
     }
 }

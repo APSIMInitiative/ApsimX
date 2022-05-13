@@ -792,7 +792,6 @@
             }
         }
 
-        #region Code related to Edit menu
 
         /// <summary>
         /// Add a menu item to the menu
@@ -1054,6 +1053,5 @@
                 ShowError(err);
             }
         }
-        #endregion
     }
 }

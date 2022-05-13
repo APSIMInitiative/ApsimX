@@ -58,7 +58,6 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
         public string Category { get; set; }
 
-        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -80,7 +79,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         } 
-        #endregion
 
         /// <summary>
         /// Constructor
@@ -190,7 +188,6 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -208,7 +205,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
 
     }
 }

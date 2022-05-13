@@ -13,7 +13,6 @@ namespace Models.Soils
     [Serializable]
     public class Pore: Model
     {
-        #region Class descriptors
         private double FloatingPointTolerance = 0.0000000001;
         /// <summary>The layer that this pore compartment is located in</summary>
         [JsonIgnore]
@@ -26,9 +25,7 @@ namespace Models.Soils
         /// </summary>
         [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
         public bool IncludeSorption { get; set; }
-        #endregion
 
-        #region Pore Geometry
         /// <summary>The diameter of the upper boundry of the pore</summary>
         [JsonIgnore]
         [Units("um")]
@@ -49,9 +46,7 @@ namespace Models.Soils
         [JsonIgnore]
         [Units("/m2")]
         public double Number { get { return Volume / (Area / 1e12); } }
-        #endregion
 
-        #region Porosity and Water
         /// <summary>
         /// The depth of the soil layer this pore compartment sits within
         /// </summary>
@@ -126,9 +121,7 @@ namespace Models.Soils
         [JsonIgnore]
         [Units("ml/ml")]
         public double AirDepth { get { return AirFilledVolume * Thickness; } }
-        #endregion
 
-        #region Pore hydraulics
         /// <summary>
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
         /// divide values from Arya 1999 etal by 10000 to convert from cm to um
@@ -228,9 +221,7 @@ namespace Models.Soils
                 return Math.Max(0, PoiseuilleFlow) * TensionFactor;
             }
         }
-        #endregion
 
-        #region Plant water extraction
         /// <summary>Factor to scale potential water extraction in each pore </summary>
         public double ExtractionMultiplier { get; set; }
 
@@ -254,6 +245,5 @@ namespace Models.Soils
                 double PotentialRootUptake = WaterDepth * UptakeProp;
                 return Math.Min(PotentialRootUptake, WaterDepth); }
         }
-        #endregion
     }
 }

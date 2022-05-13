@@ -63,7 +63,6 @@ namespace Models.CLEM
             TransactionCategory = "Transmutation";
         }
 
-        #region validation
 
         /// <summary>
         /// Validate this object
@@ -80,9 +79,7 @@ namespace Models.CLEM
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -125,7 +122,6 @@ namespace Models.CLEM
             }
         }
 
-        #endregion
     }
 
 }

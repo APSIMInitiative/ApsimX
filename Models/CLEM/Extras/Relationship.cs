@@ -99,7 +99,6 @@ namespace Models.CLEM
                 return YValues[k + 1];
         }
 
-        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -135,9 +134,7 @@ namespace Models.CLEM
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -242,6 +239,5 @@ namespace Models.CLEM
             }
         }
 
-        #endregion
     }
 }

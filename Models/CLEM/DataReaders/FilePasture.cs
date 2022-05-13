@@ -714,7 +714,6 @@ namespace Models.CLEM
             }
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -732,7 +731,6 @@ namespace Models.CLEM
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 
     /// <summary>

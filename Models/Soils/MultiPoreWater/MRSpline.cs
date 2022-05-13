@@ -16,7 +16,6 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class MRSpline : Model
     {
-        #region External links
 
         /// <summary>Access the WEIRDO model.</summary>
         [Link]
@@ -26,9 +25,7 @@ namespace Models.Soils
         [Link]
         private IPhysical soilPhysical = null;
 
-        #endregion
 
-        #region Internal States
         ///// <summary>The de lk</summary>
         /// <summary>
         /// The de lk
@@ -72,9 +69,7 @@ namespace Models.Soils
         /// Water potential at saturation
         /// </summary>
         const double psis = -10;
-        #endregion
 
-        #region public methods
         /// <summary>
         /// Simples the theta.
         /// </summary>
@@ -206,7 +201,6 @@ namespace Models.Soils
                 Y1[layer, 5] = 0.0;
             }
         }
-        #endregion
 
     }
 }

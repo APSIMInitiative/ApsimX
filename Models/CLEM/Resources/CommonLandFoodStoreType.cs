@@ -184,7 +184,6 @@ namespace Models.CLEM.Resources
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
 
-        #region validation
 
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -231,9 +230,7 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
-        #endregion
 
-        #region transactions
 
         /// <summary>
         /// Graze food add method.
@@ -344,9 +341,7 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -382,6 +377,5 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 }

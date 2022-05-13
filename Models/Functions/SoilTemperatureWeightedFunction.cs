@@ -21,7 +21,6 @@ namespace Models.Functions
         {
             maxt_soil_surface = 15;
         }
-        #region Class Data Members
 
         /// <summary>The day before yesterday</summary>
         private double DayBeforeYesterday = 0;
@@ -38,7 +37,6 @@ namespace Models.Functions
         [Units("oC")]
         double maxt_soil_surface { get; set; }  //Fixme.  Need to connect to soil temp model when it is working
 
-        #endregion
 
         /// <summary>EventHandler for OnPrepare.</summary>
         /// <param name="sender">The sender.</param>

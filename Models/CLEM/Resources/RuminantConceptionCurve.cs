@@ -65,7 +65,6 @@ namespace Models.CLEM.Resources
             return rate / 100;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -73,6 +72,5 @@ namespace Models.CLEM.Resources
             return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
         }
 
-        #endregion
     }
 }

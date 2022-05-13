@@ -29,7 +29,6 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class WEIRDO : Model, ISoilWater
     {
-        #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         public double PrecipitationInterception { get; set; }
         ///<summary> This doesn't do anything currently</summary>
@@ -279,9 +278,7 @@ namespace Models.Soils
         public void Tillage(TillageType Data) { }
         ///<summary> Who knows</summary>
         public void Tillage(string DefaultTillageName) { }
-        #endregion
 
-        #region Class Dependancy Links
 
         [Link]
         private Sample initial = null;
@@ -300,14 +297,10 @@ namespace Models.Soils
         [Link]
         private IPhysical soilPhysical = null;
 
-        #endregion
 
-        #region Class Events
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler ReportDetails;
-        #endregion
 
-        #region Structures
         /// <summary>
         /// This is the data structure that represents the soils layers and pore cagatories in each layer
         /// </summary>
@@ -320,9 +313,7 @@ namespace Models.Soils
         /// Contains data extrapolated out to 6 min values
         /// </summary>
         public HourlyData SubHourly;
-        #endregion
 
-        #region Parameters
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
         [Description("ConductC (*e^-10")]
         [Display(Format = "N2")]
@@ -411,9 +402,7 @@ namespace Models.Soils
         public double ExtractionMultiplier { get; set; }
 
 
-        #endregion
 
-        #region Outputs
         /// <summary>
         /// The amount of water extracted from the soil by the crop
         /// </summary>
@@ -518,9 +507,7 @@ namespace Models.Soils
         [JsonIgnore]
         [Units("0-1")]
         public double[] MatrixRelativeWater { get; set;}
-        #endregion
 
-        #region Properties
         /// <summary>
         /// The number of layers in the soil profile
         /// </summary>
@@ -571,9 +558,7 @@ namespace Models.Soils
         private double[] SaturatedWaterDepth { get; set; }
         private double[] HourlyWaterExtraction { get; set; }
         private double[] RootLengthDensity { get; set; }
-        #endregion
 
-        #region Event Handlers
         /// <summary>
         /// Called when [simulation commencing].
         /// Goes through and creates instances of all the properties of MultiPoreWater model
@@ -773,9 +758,7 @@ namespace Models.Soils
                 //Fix me.  Need to subtract out canopy interception also
             }
         }
-        #endregion
 
-        #region Water Balance Methods
 
         internal void SetLayerThickness(double[] targetThickness)
         {
@@ -1126,9 +1109,7 @@ namespace Models.Soils
             UpdateProfileValues();
         }
 
-        #endregion
 
-        #region Internal States
         private double FloatingPointTolerance = 0.0000000001;
         /// <summary>
         /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
@@ -1162,9 +1143,7 @@ namespace Models.Soils
         /// <remarks>Not imlpemented</remarks>
         public double[] SoluteFlowEfficiency { get; set; }
 
-        #endregion
 
-        #region Internal Properties and Methods
         /// <summary>
         /// Goes through all profile and pore properties and updates their values using soil parameters.  
         /// Must be called after any soil parameters are chagned if the effect of the changes is to work correctly.
@@ -1393,6 +1372,5 @@ namespace Models.Soils
                 }
             }
         }
-        #endregion
     }
 }

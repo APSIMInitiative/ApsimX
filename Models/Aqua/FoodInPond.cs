@@ -26,7 +26,6 @@ namespace Models.Aqua
         {
 
 
-        #region Links
 
 
         ///// <summary>The clock</summary>
@@ -39,7 +38,6 @@ namespace Models.Aqua
         //private ISummary Summary = null;
 
 
-        #endregion
 
 
 
@@ -59,7 +57,6 @@ namespace Models.Aqua
 
 
 
-        #region Clock Event Handlers
 
 
         [EventSubscribe("StartOfSimulation")]
@@ -71,7 +68,6 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
@@ -84,7 +80,6 @@ namespace Models.Aqua
 
 
 
-    #region Food in the Pond
 
 
 
@@ -129,7 +124,6 @@ namespace Models.Aqua
 
 
 
-        #region Food Manipulation Methods
 
 
         /// <summary>
@@ -167,12 +161,10 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
 
-        #region Feed Manipulation Methods
 
 
 
@@ -270,14 +262,12 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
 
 
 
-        #region Outputs
 
 
 
@@ -357,14 +347,12 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
 
 
 
-        #region Array Outputs
 
 
 
@@ -488,7 +476,6 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
@@ -498,7 +485,6 @@ namespace Models.Aqua
 
 
 
-    #endregion
 
 
 
@@ -506,7 +492,6 @@ namespace Models.Aqua
 
 
 
-    #region An Individual Feed Type
 
 
     /// <summary>
@@ -619,7 +604,6 @@ namespace Models.Aqua
 
         }
 
-    #endregion
 
 
 

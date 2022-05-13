@@ -111,7 +111,6 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -161,6 +160,5 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

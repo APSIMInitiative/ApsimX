@@ -124,7 +124,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Pasture.Manage";
         }
 
-        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -151,7 +150,6 @@ namespace Models.CLEM.Activities
             return results;
         }
 
-        #endregion
         
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
@@ -437,7 +435,6 @@ namespace Models.CLEM.Activities
             Area = LinkedLandItem.AreaAvailable;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -466,6 +463,5 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

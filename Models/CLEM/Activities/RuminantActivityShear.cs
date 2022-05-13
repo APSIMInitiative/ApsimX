@@ -202,7 +202,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -213,7 +212,6 @@ namespace Models.CLEM.Activities
             html += "</div>";
             return html;
         } 
-        #endregion
 
     }
 }

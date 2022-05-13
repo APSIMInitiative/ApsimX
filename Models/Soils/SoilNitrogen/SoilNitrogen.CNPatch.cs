@@ -29,7 +29,6 @@ namespace Models.Soils
             public soilCNPatch(SoilNitrogen MainSoilNitrogen)
             { g = MainSoilNitrogen; }
 
-            #region Patch general variables
 
             /// <summary>
             /// Name of this patch
@@ -51,13 +50,9 @@ namespace Models.Soils
             /// </summary>
             private SoilNitrogen g;
 
-            #endregion
 
-            #region Input variables
 
-            #region Get/set variables
 
-            #region Values for mineral N
 
             /// <summary>Amount of soil urea nitrogen (kgN/ha)</summary>
             public double[] urea;
@@ -79,9 +74,7 @@ namespace Models.Soils
             /// </summary>
             internal double totalMineralNInRootZone = 0.0;
 
-            #endregion
 
-            #region Values for soil organic C and N
 
             /// <summary>
             /// Amount of C for each soil layer in each FOM pool
@@ -128,20 +121,14 @@ namespace Models.Soils
             /// </summary>
             public double[] inert_n;
 
-            #endregion
 
-            #region Values for soil pH
 
             /// <summary>Soil pH value</summary>
             public double[] pH;
 
-            #endregion
 
-            #endregion
 
-            #region Settable only variables
 
-            #region Deltas in mineral nitrogen
 
             /// <summary>
             /// Variations in urea as given by another component
@@ -239,9 +226,7 @@ namespace Models.Soils
                 }
             }
 
-            #endregion
 
-            #region Delta soil organic C and N
 
             /// <summary>
             /// Variation in soil FOM C as sent by another component
@@ -281,15 +266,10 @@ namespace Models.Soils
                 }
             }
 
-            #endregion
 
-            #endregion
 
-            #endregion
 
-            #region Outputs variables
 
-            #region Outputs for Nitrogen
 
             /// <summary>
             /// Total N in soil
@@ -497,9 +477,7 @@ namespace Models.Soils
             /// </summary>
             public double[] no3_ChangedOther;
 
-            #endregion
 
-            #region Outputs for Carbon
 
             /// <summary>
             /// Total carbon amount in the soil
@@ -596,22 +574,16 @@ namespace Models.Soils
                 }
             }
 
-            #endregion
 
-            #region Factors and other outputs
 
             /// <summary>
             /// amount of P coverted by residue mineralisation
             /// </summary>
             public double[] soilp_dlt_org_p;
 
-            #endregion
 
-            #endregion
 
-            #region Internal variables
 
-            #region Residue decomposition information
 
             /// <summary>
             /// Actual residue C decomposition (kg/ha)
@@ -628,9 +600,7 @@ namespace Models.Soils
             /// </summary>
             public SurfaceOrganicMatterDecompType SurfOMActualDecomposition;
 
-            #endregion
 
-            #region Miscelaneous
 
             /// <summary>
             /// Total C content at the beginning of the day
@@ -652,11 +622,8 @@ namespace Models.Soils
             /// </summary>
             public double[] TodaysInitialNO3;
 
-            #endregion
 
-            #endregion
 
-            #region General methods and variable handlers
 
             /// <summary>
             /// Computes the amount of NH4 and NO3 in the root zone
@@ -866,11 +833,8 @@ namespace Models.Soils
                 }
             }
 
-            #endregion
 
-            #region Auxiliary functions
 
-            #endregion
         }
     }
 }

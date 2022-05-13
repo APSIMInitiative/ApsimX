@@ -81,7 +81,6 @@ namespace Models.CLEM.Activities
                 fileResource = parentZone.FindAllChildren<FileResource>(ResourceDataReader).FirstOrDefault() as FileResource;
         }
 
-        #region validation
 
         /// <summary>
         /// Validate this object
@@ -98,7 +97,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         } 
-        #endregion
 
         /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
@@ -333,7 +331,6 @@ namespace Models.CLEM.Activities
 
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -354,7 +351,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
 
     }
 }

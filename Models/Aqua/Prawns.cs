@@ -29,7 +29,6 @@ namespace Models.Aqua
 
 
 
-        #region Links
 
 
         ///// <summary>The clock</summary>
@@ -49,13 +48,11 @@ namespace Models.Aqua
         private ISummary Summary = null;
 
 
-        #endregion
 
 
 
 
 
-        #region Module Constants
 
 
         /// <summary>
@@ -270,13 +267,11 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
 
 
-        #region Local Variables
 
         /// <summary>
         /// Convert from kg to grams
@@ -340,13 +335,11 @@ namespace Models.Aqua
         Feed deadPrawnsAsFeed;
 
 
-        #endregion
 
 
 
 
 
-        #region Prawn Class
 
 
 
@@ -399,14 +392,12 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
 
 
 
-        #region Stress Methods
 
 
         /// <summary>
@@ -461,14 +452,12 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
 
 
 
-        #region Consumption, Intake, Digestion Methods
 
 
         /// <summary>
@@ -587,12 +576,10 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
 
-        #region Growth Methods
 
 
         /// <summary>
@@ -693,12 +680,10 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
 
-        #region Mortality Methods
 
 
         /// <summary>
@@ -757,12 +742,10 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
 
-        #region Output Methods
 
 
         private Feed FeedConsumed(PrawnCohort Prawns, Feed ConsumedFeedPP)
@@ -820,12 +803,10 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
 
-        #region Outputs
 
 
 
@@ -1005,12 +986,10 @@ namespace Models.Aqua
         public int Deaths { get { return deaths; } }
 
 
-        #endregion
 
 
 
 
-        #region Clock Event Handlers
 
 
 
@@ -1130,13 +1109,11 @@ namespace Models.Aqua
         }
 
 
-        #endregion
 
 
 
 
 
-        #region Manager Commands
 
 
         /// <summary>
@@ -1163,7 +1140,6 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
         }

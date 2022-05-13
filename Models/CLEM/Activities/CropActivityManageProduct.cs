@@ -566,7 +566,6 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -606,9 +605,7 @@ namespace Models.CLEM.Activities
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -673,6 +670,5 @@ namespace Models.CLEM.Activities
             html += base.ModelSummaryOpeningTags();
             return html;
         } 
-        #endregion
     }
 }

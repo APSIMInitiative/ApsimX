@@ -25,7 +25,6 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => RandomNumberGenerator.Generator.Next();
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -47,9 +46,7 @@ namespace Models.CLEM.Groupings
             return "";
         }
 
-        #endregion
 
-        #region validation
 
         /// <summary>
         /// Validate this component
@@ -67,7 +64,6 @@ namespace Models.CLEM.Groupings
             }
             return results;
         }
-        #endregion
     }
 
 }

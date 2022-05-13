@@ -125,7 +125,6 @@ namespace Models.CLEM.Resources
             SetDefaults();
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -136,9 +135,7 @@ namespace Models.CLEM.Resources
             var results = new List<ValidationResult>();
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -214,7 +211,6 @@ namespace Models.CLEM.Resources
             return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
-        #endregion
 
 
     }

@@ -150,7 +150,6 @@ namespace Models.CLEM.Reporting
                 ReportHerd();
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -175,7 +174,6 @@ namespace Models.CLEM.Reporting
             return results;
         }
 
-        #endregion
 
         /// <summary>
         /// Function to report herd individuals each month

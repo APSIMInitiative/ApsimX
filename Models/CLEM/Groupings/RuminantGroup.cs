@@ -50,7 +50,6 @@ namespace Models.CLEM.Groupings
             this.SetDefaults();
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -79,7 +78,6 @@ namespace Models.CLEM.Groupings
         }
 
 
-        #endregion
 
     }
 }

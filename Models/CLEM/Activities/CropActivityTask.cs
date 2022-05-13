@@ -150,7 +150,6 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, relatesToResourceName);
         }
 
-        #region validation
 
         /// <summary>
         /// Validate model
@@ -176,9 +175,7 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -196,6 +193,5 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

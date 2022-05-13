@@ -101,7 +101,6 @@ namespace Models.CLEM.Resources
         }
 
 
-        #region Transactions
 
         /// <summary>
         /// Last transaction received
@@ -218,7 +217,6 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        #endregion
 
     }
 }

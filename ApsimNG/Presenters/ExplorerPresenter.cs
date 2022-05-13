@@ -838,7 +838,6 @@
             return this.view as ExplorerView;
         }
 
-        #region Events from view
 
         /// <summary>A node has been dragged over another node. Allow drop?</summary>
         /// <param name="sender">Sending node</param>
@@ -1072,9 +1071,7 @@
             }
         }
 
-        #endregion
 
-        #region Privates        
 
         /// <summary>
         /// A helper function for creating a node description object for the specified model.
@@ -1168,7 +1165,6 @@
             return $"ApsimNG.Resources.TreeViewImages.{name}{extension}";
         }
 
-        #endregion
     }
 
     /// <summary>

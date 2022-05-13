@@ -248,7 +248,6 @@ namespace Models.CLEM.Resources
             return ind.CurrentPrice;
         }
 
-        #region validation
 
         /// <summary>
         /// Model Validation
@@ -285,9 +284,7 @@ namespace Models.CLEM.Resources
             return results;
         }
 
-        #endregion
 
-        #region transactions
 
         /// <summary>
         /// Add resource
@@ -327,7 +324,6 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        #endregion
 
         /// <summary>
         /// Current number of individuals of this herd.
@@ -376,7 +372,6 @@ namespace Models.CLEM.Resources
             ConceptionStatusChanged?.Invoke(this, e);
         }
 
-        #region Grow Activity
 
         /// <summary>
         /// Energy maintenance efficiency coefficient
@@ -743,9 +738,7 @@ namespace Models.CLEM.Resources
         [Description("Cashmere coefficient")]
         [Required]
         public double CashmereCoefficient { get; set; }
-        #endregion
 
-        #region Breed activity
 
         /// <summary>
         /// Advanced conception parameters if present
@@ -875,9 +868,7 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
 
-        #endregion
 
-        #region other
 
         // add intercept again if next methane equation requires an intercept value
 
@@ -889,9 +880,7 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MethaneProductionCoefficient { get; set; }
 
-        #endregion
 
-        #region descriptive summary 
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -900,6 +889,5 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        #endregion
     }
 }

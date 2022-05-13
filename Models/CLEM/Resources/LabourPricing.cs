@@ -30,7 +30,6 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
-        #region validation
 
         /// <summary>
         /// Validate model
@@ -54,9 +53,7 @@ namespace Models.CLEM.Resources
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -88,6 +85,5 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        #endregion
     }
 }

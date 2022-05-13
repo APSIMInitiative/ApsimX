@@ -33,9 +33,7 @@ namespace Models.Soils
         [Link] 
         private IPhysical soilPhysical = null;
 
-        #region Parameters and inputs provided by the user or APSIM
 
-        #region Parameters used on initialisation only
 
         // local latitude
         private double _latitude = -999.0;
@@ -46,9 +44,7 @@ namespace Models.Soils
         // annual amplitude of the mean monthly air temperature (oC)
         private double _amp = -999.0;
 
-        #endregion
 
-        #region Parameters that do or may change during simulation
 
         // today's net solar radiation
         private double _radn = 0.0;
@@ -74,11 +70,8 @@ namespace Models.Soils
 
         private double[] _sw_dep;
 
-        #endregion
 
-        #endregion
 
-        #region Internal variables
 
         // estimated soil surface temperatures (oC)
         private double[] surf_temp;
@@ -89,9 +82,7 @@ namespace Models.Soils
         // average air temperature (oC)
         private double ave_temp;
 
-        #endregion
 
-        #region Internal constants
 
         // Maximum number of days in a year
         private const int MaxDaysInYear = 366;
@@ -122,7 +113,6 @@ namespace Models.Soils
         private const int ndays = 5;
 
 
-        #endregion
 
         /// <summary>Clears this instance.</summary>
         private void Clear()

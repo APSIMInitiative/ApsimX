@@ -111,7 +111,6 @@ namespace Models.CLEM.Resources
                 annualNUsed = 0;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -185,6 +184,5 @@ namespace Models.CLEM.Resources
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

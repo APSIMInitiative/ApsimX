@@ -48,7 +48,6 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -80,6 +79,5 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 }

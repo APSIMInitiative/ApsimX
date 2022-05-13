@@ -21,7 +21,6 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Zone))]
     public class SimpleTree : Model, IPlant, ICanopy, IUptake
     {
-        #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get; set; }
@@ -68,7 +67,6 @@ namespace Models.PMF
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        #endregion
 
         /// <summary>The plant type.</summary>
         public string PlantType { get => "SimpleTree"; }

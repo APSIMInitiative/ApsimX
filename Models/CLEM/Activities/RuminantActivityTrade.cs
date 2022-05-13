@@ -68,7 +68,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Trade";
         }
 
-        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -112,7 +111,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         } 
-        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -219,7 +217,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -258,6 +255,5 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

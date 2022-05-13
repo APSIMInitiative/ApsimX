@@ -347,7 +347,6 @@ namespace Models
     public class Sugarcane : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
 
-        #region Canopy interface
 
         /// <summary>
         /// Canopy type
@@ -432,10 +431,8 @@ namespace Models
         [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in Sugarcane
 
-        #endregion
 
 
-        #region Links
 
 
         /// <summary>
@@ -484,7 +481,6 @@ namespace Models
         [Link(ByName = true)]
         private ISolute NH4 = null;
 
-        #endregion
 
         /// <summary>The plant type.</summary>
         public string PlantType { get => "Sugarcane"; }
@@ -498,7 +494,6 @@ namespace Models
         //CONSTANTS
 
 
-        #region Constants (Hard Coded)
 
 
         //!     ================================================================
@@ -666,13 +661,10 @@ namespace Models
         const int flowering_to_crop_end = flowering;
 
 
-        #endregion
 
 
-        #region Module Constants (from SIM file but it gets from INI file)
 
 
-        #region Upper and Lower Bound Constants (for Sugar, Soil and Met variables)
 
         //*     ===========================================================
         //      subroutine sugar_read_constants ()
@@ -1120,11 +1112,9 @@ namespace Models
         public double NH4_min_lb { get; set; }
 
 
-        #endregion
 
 
 
-        #region Crop Constants (for Plant/Ratoon)
 
     
         //[XmlElement("plant")]   //this let you override what xml element to look for in the xml. Instead of looking for the variable name.
@@ -1151,11 +1141,9 @@ namespace Models
         [JsonIgnore]
         private CropConstants crop;
 
-        #endregion
 
 
 
-        #region Cultivar Constants (for each cultivar)
 
 
         /// <summary>
@@ -1172,12 +1160,10 @@ namespace Models
         [JsonIgnore]
         private CultivarConstants cult;
 
-        #endregion
 
 
 
 
-        #region Root Constants (different if using (SoilWat or SWIM) or Eo modules in the simulation)
 
         //*     ===========================================================
         //      subroutine sugar_read_root_params ()        //*     Crop initialisation - get root profile parameters
@@ -1280,19 +1266,16 @@ namespace Models
         public double[] rlv_init { get; set; }
 
 
-        #endregion
 
 
 
 
-        #endregion
 
 
 
 
         //CONSTRUCTOR
 
-        #region Constructor
 
 
         /// <summary>
@@ -1314,7 +1297,6 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
@@ -1323,7 +1305,6 @@ namespace Models
         //DAILY INPUTS FROM OTHER MODULES
 
 
-        #region Meteorology Inputs
 
 
 
@@ -1341,11 +1322,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region SoilWat Inputs
 
 
         //*     ===========================================================
@@ -1457,11 +1436,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region SoilN Inputs
 
         //! soil nitrogen module
         //! --------------------
@@ -1474,7 +1451,6 @@ namespace Models
 
         //TODO: put 'st' back into sugar_zero_soil_globals() when you uncomment the stuff above.
 
-        #endregion
 
 
 
@@ -1483,7 +1459,6 @@ namespace Models
         //SETTABLE VARIABLES IN THIS MODULE  (THESE ARE ALSO OUTPUTS)
 
 
-        #region Set My Variables
 
 
 
@@ -1585,7 +1560,6 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
@@ -1594,7 +1568,6 @@ namespace Models
         //MODEL
 
 
-        #region Local Variables
 
 
 
@@ -2199,10 +2172,8 @@ namespace Models
 
 
 
-        #endregion
 
 
-        #region Functions to Zero Variables
 
 
         /// <summary>
@@ -2467,20 +2438,15 @@ namespace Models
 
 
 
-        #endregion
-
-
-        #region Bound Checking
 
 
 
-        #endregion
 
 
-        #region Helper Functions
 
 
-        #region ConvertModule.f90 (FortranInfrastructure)
+
+
 
         /// <summary>
         /// The SMM2M
@@ -2533,12 +2499,10 @@ namespace Models
         public const double g2t = 1.0 / t2g;             //! grams to tonnes
 
 
-        #endregion
 
 
 
 
-        #region Science.f90 (FortranInfrastructure)
 
         /// <summary>
         /// Root_proportions the specified layer_ob.
@@ -2955,10 +2919,8 @@ namespace Models
 
 
 
-        #endregion
 
 
-        #region Data.f90 (FortranInfrastructure)
 
 
 
@@ -3337,7 +3299,6 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
@@ -3522,14 +3483,11 @@ namespace Models
         //    }
 
 
-        #endregion
 
 
 
-        #region Crop Science Functions (Prepare Event)
 
 
-        #region Nitrogen Stress Factor Calculations
 
 
         /// <summary>
@@ -3609,11 +3567,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Temperature Stress Factor Calculations
 
 
         /// <summary>
@@ -3656,11 +3612,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Radiation Interception by Leaves
 
 
         /// <summary>
@@ -3727,11 +3681,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Transpiration Efficiency  (based on today's weather)
 
 
         /// <summary>
@@ -3888,11 +3840,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region SW Demand (Atomospheric Potential)
 
 
         /// <summary>
@@ -3967,11 +3917,9 @@ namespace Models
 
             }
 
-        #endregion
 
 
 
-        #region Nitrogen Demand
 
         /// <summary>
         /// Sugar_nit_demand_ests the specified i_dm_green.
@@ -4124,20 +4072,16 @@ namespace Models
 
 
 
-        #endregion
-
-
-
-        #endregion
-
-
-
-        #region Crop Science Functions (Process Event)
 
 
 
 
-        #region Root Growth
+
+
+
+
+
+
 
 
         /// <summary>
@@ -4428,12 +4372,10 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
-        #region Potential Water Available to Roots (Water Supply)
 
 
         /// <summary>
@@ -4753,11 +4695,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Actual Water Extraction by Plant (Water Uptake)  (Limited by Roots ability to extract and Plant Demand (ie.SW Demand))
 
 
         /// <summary>
@@ -4856,12 +4796,10 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
 
-        #region Water Stress Factor Calculations
 
 
 
@@ -5061,11 +4999,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region  Set Minimum stuctural stem sucrose
 
 
         /// <summary>
@@ -5105,11 +5041,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Phenological Growth (Process Event)
 
 
 
@@ -5642,11 +5576,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Crop Height  (Process Event)
 
         /// <summary>
         /// Cproc_canopy_heights the specified i_canopy_height.
@@ -5706,11 +5638,9 @@ namespace Models
             return l_dlt_canopy_height;
             }
 
-        #endregion
 
 
 
-        #region Leaf Number
 
 
 
@@ -5880,11 +5810,9 @@ namespace Models
 
             }
 
-        #endregion
 
 
 
-        #region Leaf Area (Potential)
 
         //void sugar_init_leaf_area(double c_initial_tpla, double i_current_stage, double i_plants, ref double o_lai, ref double[] o_leaf_area)
         //    {
@@ -6069,12 +5997,10 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
-        #region Potential Transpiration (reduced by available water supply from roots)
 
 
 
@@ -6137,12 +6063,10 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
-        #region Water Logging
 
 
 
@@ -6293,11 +6217,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Biomass (Dry Matter) Growth
 
 
         /// <summary>
@@ -6429,11 +6351,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Biomass(Dry Matter) Growth Actual
 
         /// <summary>
         /// Sugar_dm_inits the specified c_dm_cabbage_init.
@@ -6540,13 +6460,11 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
 
-        #region Leaf Area Stressed
 
 
         //*     ===========================================================
@@ -6595,13 +6513,11 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
 
-        #region Biomass(Dry Matter) Partitioning
 
 
 
@@ -6855,11 +6771,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region BIOMASS(DRY MATTER) RETRANSLOCATION
 
 
         //*     ===========================================================
@@ -6895,12 +6809,10 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
-        #region Leaf Area Actual
 
 
         /// <summary>
@@ -6976,12 +6888,10 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
-        #region Root Distribution
 
 
         /// <summary>
@@ -7107,11 +7017,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Leaf Senescence
 
 
         /// <summary>
@@ -7426,12 +7334,10 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
 
-        #region Biomass Senescence
 
 
 
@@ -7596,11 +7502,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Root Length Senescence
 
 
         /// <summary>
@@ -7652,12 +7556,10 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
 
-        #region Nitrogen Retranslocation
 
 
         /// <summary>
@@ -7761,10 +7663,8 @@ namespace Models
 
 
 
-        #endregion
 
 
-        #region Nitrogen Supply
 
 
         /// <summary>
@@ -8184,10 +8084,8 @@ namespace Models
 
 
 
-        #endregion
 
 
-        #region Nitrogen Initalisation
 
 
 
@@ -8247,10 +8145,8 @@ namespace Models
 
 
 
-        #endregion
 
 
-        #region Nitrogen Uptake
 
 
 
@@ -8595,11 +8491,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Nitrogen Partitioning
 
 
         /// <summary>
@@ -8665,11 +8559,9 @@ namespace Models
 
             }
 
-        #endregion
 
 
 
-        #region Water Content of Cane
 
 
         /// <summary>
@@ -8750,11 +8642,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Plant Death
 
 
 
@@ -9016,11 +8906,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Reallocate Cabbage
 
 
         /// <summary>
@@ -9081,11 +8969,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Detachment (of Leaf and Cabbage)
 
 
 
@@ -9300,15 +9186,12 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Cleanup after processes (Do some Housekeeping)
 
 
 
-        #region Update Variables
 
         /// <summary>
         /// Sugar_updates the specified io_canopy_height.
@@ -10077,12 +9960,10 @@ namespace Models
 
 
 
-        #endregion
 
 
 
 
-        #region Calculate Totals Variables
 
 
         /// <summary>
@@ -10175,12 +10056,10 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
 
-        #region Report Events That Occurred Today and Status of Variables
 
 
         /// <summary>
@@ -10300,15 +10179,12 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #endregion
 
 
 
-        #endregion
 
 
 
@@ -10318,7 +10194,6 @@ namespace Models
         //OUTPUTS FROM THIS MODULE
 
 
-        #region Functions used in Send My Variables
 
 
 
@@ -10350,11 +10225,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Send My Variables
 
 
         //*     ================================================================
@@ -12017,11 +11890,9 @@ namespace Models
 
 
 
-        #endregion
 
 
 
-        #region Implement the ICrop Interface
 
         /// <summary>
         /// MicroClimate will get 'CropType' and use it to look up
@@ -12128,7 +11999,6 @@ namespace Models
 
 
 
-        #endregion
 
 
 
@@ -12136,11 +12006,9 @@ namespace Models
         //EVENT HANDLERS
 
 
-        #region Clock Event Handlers
 
 
 
-        #region Functions used in Clock Handlers
 
 
         /// <summary>
@@ -12310,7 +12178,6 @@ namespace Models
 
 
 
-        #endregion
 
 
 
@@ -13019,14 +12886,11 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Manager Event Handlers
 
 
-        #region Functions used in Manager Event Handlers
 
 
 
@@ -13836,7 +13700,6 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
@@ -13954,11 +13817,9 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
-        #region Erosion Event Handler
 
 
 
@@ -14094,7 +13955,6 @@ namespace Models
 
 
 
-        #endregion
 
 
 
@@ -14102,7 +13962,6 @@ namespace Models
         //EVENTS - SENDING
 
 
-        #region Event Declarations (sent by this Module)
 
 
 
@@ -14160,13 +14019,11 @@ namespace Models
             }
 
 
-        #endregion
 
 
 
 
 
-        #region Events sent to Change Other Modules
 
 
         /// <summary>
@@ -14595,7 +14452,6 @@ namespace Models
 
 
 
-        #endregion
 
         /// <summary>
         /// Biomass has been removed from the plant.

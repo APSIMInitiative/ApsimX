@@ -47,7 +47,6 @@
         // refer to nodes within the soil.
         //
         // ------------------------------------------------------------------------------------------------------------
-        #region constants
         private bool doInit1Stuff = false;      // NEW
                                                 // Two representations are distinguished for the profile.
                                                 // a) Soil layers, each with a top and bottom boundary and a depth. Index range of 1..NumLayer
@@ -115,7 +114,6 @@
         private double canopyHeight = 0.0;    // (m) height of canopy above ground
         private double soilRoughnessHeight = 0.0;    // (mm) height of soil roughness
         private double[] clay;                // Proportion of clay in each layer of profile (0-1)
-        #endregion
         
         //[Input()]
         private const int timestep = 1440;     // timestep in minutes
@@ -176,7 +174,6 @@
         
         private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
 
-        #region outputs
 
         /// <summary>
         /// Temperature at end of last time-step within a day - midnight
@@ -362,9 +359,7 @@
             }
         }
 
-        #endregion
 
-        #region events
 
         [EventSubscribe("DoSoilTemperature")]
         private void OnProcess(object sender, EventArgs e)
@@ -419,7 +414,6 @@
         } // OnInit2
 
 
-        #endregion
 
         /// <summary>
         /// initialise global variables to initial values

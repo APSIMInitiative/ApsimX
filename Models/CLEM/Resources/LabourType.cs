@@ -263,7 +263,6 @@ namespace Models.CLEM.Resources
             return (Parent as Labour).PayRate(this);
         }
 
-        #region Transactions
 
         /// <summary>
         /// Add to labour store of this type
@@ -370,9 +369,7 @@ namespace Models.CLEM.Resources
             TransactionOccurred?.Invoke(this, e);
         }
 
-        #endregion
 
-        #region IResourceType
 
         /// <summary>
         /// Implemented Initialise method
@@ -399,9 +396,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -449,6 +444,5 @@ namespace Models.CLEM.Resources
                 return base.ModelSummaryOpeningTags();
         }
 
-        #endregion
     }
 }

@@ -106,7 +106,6 @@ namespace Models.CLEM.Resources
             return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
-        #region validation
 
         /// <summary>
         /// Validation of this resource
@@ -130,7 +129,6 @@ namespace Models.CLEM.Resources
             return results;
         }
 
-        #endregion
 
         /// <summary>An event handler to allow us to create labour list when simualtion commences</summary>
         /// <param name="sender">The sender.</param>
@@ -427,7 +425,6 @@ namespace Models.CLEM.Resources
                 return 0;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -460,6 +457,5 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 }

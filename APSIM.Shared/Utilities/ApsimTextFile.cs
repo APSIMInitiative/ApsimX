@@ -821,7 +821,6 @@ namespace APSIM.Shared.Utilities
         }
 
 
-        #region Excel File Reader Function
 
         /// <summary>
         /// This is used to read an excel file, extracting header, unit and constant information
@@ -1025,7 +1024,6 @@ namespace APSIM.Shared.Utilities
             }
         }
 
-        #endregion
     }
 }
 

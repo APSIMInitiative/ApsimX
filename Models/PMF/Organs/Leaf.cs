@@ -92,7 +92,6 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
 
-        #region Canopy interface
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return parentPlant.PlantType; } }
 
@@ -203,9 +202,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        #endregion
 
-        #region Has Water Demand Interface
 
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
@@ -217,13 +214,10 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double WaterAllocation { get; set; }
 
-        #endregion
 
-        #region Links
         /// <summary>The structure</summary>
         [Link]
         public Structure Structure = null;
-        #endregion
 
         /// <summary>Gets the LAI of the main stem </summary>
         [Units("m^2/m^2")]
@@ -263,7 +257,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        #region Structures
         /// <summary>
         /// Leaf cohort parameters.
         /// </summary>
@@ -462,9 +455,7 @@ namespace Models.PMF.Organs
 
             }
         }
-        #endregion
 
-        #region Parameters
 
         /// <summary>The initial leaves</summary>
         [DoNotDocument]
@@ -529,9 +520,7 @@ namespace Models.PMF.Organs
         private bool needToRecalculateLiveDead = true;
         private Biomass liveBiomass = new Biomass();
         private Biomass deadBiomass = new Biomass();
-        #endregion
 
-        #region States
 
         /// <summary>The leaves</summary>
         public List<LeafCohort> Leaves = new List<LeafCohort>();
@@ -544,9 +533,7 @@ namespace Models.PMF.Organs
         public double FractionNextleafExpanded = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
-        #endregion
 
-        #region Outputs
         //Note on naming convention.  
         //Variables that represent the number of units per meter of area these are called population (Popn suffix) variables 
         //Variables that represent the number of leaf cohorts (integer) in a particular state on an individual main-stem are cohort variables (CohortNo suffix)
@@ -1219,9 +1206,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        #endregion
 
-        #region Functions
 
         /// <summary>1 based rank of the current leaf.</summary>
         private int CurrentRank { get; set; }
@@ -1476,9 +1461,7 @@ namespace Models.PMF.Organs
             
             
         }
-        #endregion
 
-        #region Arbitrator methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
@@ -1941,9 +1924,7 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
-        #endregion
 
-        #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
@@ -2072,7 +2053,6 @@ namespace Models.PMF.Organs
             Detached.Clear();
             Removed.Clear();
         }
-        #endregion
 
 
         /// <summary>Document this model.</summary>

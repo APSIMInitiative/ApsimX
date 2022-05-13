@@ -112,7 +112,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public event EventHandler AllocationReported;
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -136,6 +135,5 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 }

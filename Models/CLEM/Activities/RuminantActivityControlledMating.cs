@@ -81,7 +81,6 @@ namespace Models.CLEM.Activities
             breedingParent = this.Parent as RuminantActivityBreed;
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -98,7 +97,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
         /// <summary>An event handler to perfrom actions needed at the start of the time step</summary>
         /// <param name="sender">The sender.</param>
@@ -283,7 +281,6 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -312,7 +309,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString();
             }
         }
-        #endregion
 
 
     }

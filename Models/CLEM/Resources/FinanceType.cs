@@ -114,7 +114,6 @@ namespace Models.CLEM.Resources
                 Add(OpeningBalance, this, "", "Opening balance");
         }
 
-        #region Transactions
 
         /// <summary>
         /// Back account transaction occured
@@ -247,9 +246,7 @@ namespace Models.CLEM.Resources
             amount = Math.Round(newAmount, 2, MidpointRounding.ToEven);
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -287,7 +284,6 @@ namespace Models.CLEM.Resources
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
 
     }
 }

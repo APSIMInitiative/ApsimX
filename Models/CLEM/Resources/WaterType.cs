@@ -58,7 +58,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #region transactions
 
         /// <summary>
         /// Back account transaction occured
@@ -159,7 +158,6 @@ namespace Models.CLEM.Resources
             Amount = newAmount;
         }
 
-        #endregion
 
     }
 }
