@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
         /// <param name="filters">The filter groups to include</param>
         /// <param name="herd">the individuals to filter</param>
         /// <returns>A list of unique individuals</returns>
-        public IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<RuminantGroup> filters, IEnumerable<T> herd) where T: Ruminant 
+        public static IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<RuminantGroup> filters, IEnumerable<T> herd) where T: Ruminant 
         {
             // no filters provided
             if (!filters.Any())

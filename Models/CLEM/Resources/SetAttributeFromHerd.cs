@@ -82,16 +82,11 @@ namespace Models.CLEM.Resources
         {
             if (createNewInstance || lastInstance is null)
             {
-                // get all individual Attributes
-                var attributeInds = ruminantActivity.CurrentHerd().Where(a => a.Attributes.Exists(AttributeName));
-                if (filterGroups.Any())
-                {
-                    attributeInds = filterGroups.FirstOrDefault().Filter(attributeInds);
-                }
+                // get all individual Attributes from unique individuals across all filter gorups provided 
+                var attributeInds = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups, ruminantActivity.CurrentHerd().Where(a => a.Attributes.Exists(AttributeName)));
                 var inds = attributeInds.Select(a => (float)a.Attributes.GetValue(AttributeName).StoredValue);
 
                 Single valuef = 0;
-
                 switch (CalculationStyle)
                 {
                     case SetAttributeFromHerdType.Mean:
