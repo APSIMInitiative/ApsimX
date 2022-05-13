@@ -60,7 +60,6 @@ namespace Models.Functions.SupplyFunctions
                 double Ft = (0.6667 - 0.0067 * Temp) / (0.6667 - 0.0067 * 20);
                 EffPAR = LUEref * Ft * (1.0 - Math.Exp(-0.00305 * fCO2 - 0.222)) / (1.0 - Math.Exp(-0.00305 * 340.0 - 0.222));
             }
-
             else if (pathway == "C4")
             {
                 CO2PhotoCmp = 0.0;

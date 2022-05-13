@@ -854,7 +854,6 @@ namespace Models.Functions.SupplyFunctions
                 double Ft = (0.6667 - 0.0067 * Temp) / (0.6667 - 0.0067 * 20);
                 EffPAR = LUEref * Ft * (1.0 - Math.Exp(-0.00305 * fCO2 - 0.222)) / (1.0 - Math.Exp(-0.00305 * 340.0 - 0.222));
             }
-
             else if (Pathway == "C4")
             {
                 CO2PhotoCmp = 0.0;
@@ -911,7 +910,6 @@ namespace Models.Functions.SupplyFunctions
                 //For C4 crop, AgPasture Proposed by Cullen et al. (2009) based on FACE experiments
                 CO2Func = CO2 / (CO2 + 150) * (CO2ref + 150) / CO2ref;
             }
-
             else
                 throw new ApsimXException(this, "Need to be C3 or C4");
 

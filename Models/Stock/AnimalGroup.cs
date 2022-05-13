@@ -643,7 +643,6 @@ namespace Models.GrazPlan
                 this.Young = null;
                 this.Lactation = 0;
             }
-
             else if ((Young != null) && ((weanMales && (this.Young.MaleNo > 0))
                                        || (weanFemales && (this.Young.FemaleNo > 0))))
             {
@@ -2359,7 +2358,6 @@ namespace Models.GrazPlan
             Deaths = NoLosses;
             if ((Young == null) && (NoLosses > 0))
                 SplitSex(maleLosses, femaleLosses, false, Diffs);
-
             else if ((Young != null) && (femaleLosses + YoungLosses > 0))
             {
                 if (femaleLosses > 0)                                               // For now, unweaned young of dying animals 
@@ -2456,7 +2454,6 @@ namespace Models.GrazPlan
                         newGroups.Add(DystGroup);
                     } ////  IF (NoLosses > 0)
                 } //// IF (NoYoung = 1) 
-
                 else if (NoFoetuses >= 2)                                          // Deaths of sheep with multiple young      
                 {                                                                  // due to pregnancy toxaemia              
                     ToxaemiaRate = StdMath.SIG((midLatePregWeight - BaseWeight) / normalWeight,
