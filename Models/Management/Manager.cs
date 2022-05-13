@@ -223,9 +223,8 @@
                             value = "";
                         else if (value is IModel)
                             value = "[" + (value as IModel).Name + "]";
-                        Parameters.Add(new KeyValuePair<string, string>
-                                            (property.Name,
-                                             ReflectionUtilities.ObjectToString(value)));
+                        Parameters.Add(new KeyValuePair<string, string>(property.Name,
+                            ReflectionUtilities.ObjectToString(value)));
                     }
                 }
             }

@@ -219,8 +219,7 @@
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                 {
                     // Write a script to get random numbers from R.
-                    string script = string.Format
-                        ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                    string script = string.Format($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
                         $"library('boot')" + Environment.NewLine +
                          $"library('sensitivity')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
@@ -483,8 +482,7 @@
         /// </summary>
         private string GetSobolRScript()
         {
-            string script = string.Format
-                ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+            string script = string.Format($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
                  $"library('boot')" + Environment.NewLine +
                  $"library('sensitivity')" + Environment.NewLine +
                  "n <- {0}" + Environment.NewLine +
