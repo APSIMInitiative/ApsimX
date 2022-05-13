@@ -602,7 +602,11 @@ namespace Models.CLEM.Activities
             // weight based mortality
             List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
             // set died flag
-            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
+            died.Select(a =>
+            {
+                a.SaleFlag = HerdChangeReason.DiedUnderweight;
+                return a;
+            }).ToList();
             ruminantHerd.RemoveRuminant(died, this);
 
             // base mortality adjusted for condition
@@ -631,7 +635,11 @@ namespace Models.CLEM.Activities
             }
 
             died = herd.Where(a => a.Died).ToList();
-            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            died.Select(a =>
+            {
+                a.SaleFlag = HerdChangeReason.DiedMortality;
+                return a;
+            }).ToList();
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings

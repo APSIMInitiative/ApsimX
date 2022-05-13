@@ -48,7 +48,11 @@
         public int NumPaths
         {
             get { return _numPaths; }
-            set { _numPaths = value; ParametersHaveChanged = true; }
+            set
+            {
+                _numPaths = value;
+                ParametersHaveChanged = true;
+            }
         }
 
         /// <summary>The number of intervals</summary>
@@ -56,7 +60,11 @@
         public int NumIntervals
         {
             get { return _numIntervals; }
-            set { _numIntervals = value; ParametersHaveChanged = true; }
+            set
+            {
+                _numIntervals = value;
+                ParametersHaveChanged = true;
+            }
         }
 
         /// <summary>The jump parameter</summary>
@@ -64,7 +72,11 @@
         public int Jump
         {
             get { return _jump; }
-            set { _jump = value; ParametersHaveChanged = true; }
+            set
+            {
+                _jump = value;
+                ParametersHaveChanged = true;
+            }
         }
 
         /// <summary>Name of table in DataStore to read from.</summary>
@@ -76,7 +88,11 @@
         public string TableName
         {
             get { return _tableName; }
-            set { _tableName = value; ParametersHaveChanged = true; }
+            set
+            {
+                _tableName = value;
+                ParametersHaveChanged = true;
+            }
         }
         /// <summary>The name of the variable to use to aggregiate each Morris analysis.</summary>
         /// <remarks>
@@ -87,7 +103,11 @@
         public string AggregationVariableName
         {
             get { return _aggregationVariableName; }
-            set { _aggregationVariableName = value; ParametersHaveChanged = true; }
+            set
+            {
+                _aggregationVariableName = value;
+                ParametersHaveChanged = true;
+            }
         }
 
         /// <summary>
