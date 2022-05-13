@@ -96,7 +96,7 @@ namespace Models.CLEM.Activities
                             "Value of individuals",
                         }
                         );
-                case "TruckingSettings":
+                case "RuminantTrucking":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Purchases",

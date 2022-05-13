@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         /// An identifier for this Labour requirement based on parent requirements
         /// </summary>
         [Description("Labour identifier")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>

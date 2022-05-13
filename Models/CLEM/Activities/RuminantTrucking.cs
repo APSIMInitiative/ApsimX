@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         [Category("General", "")]
         [Description("Purchase or sales identifier")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>

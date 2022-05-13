@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// An identifier for this emission based on parent requirements
         /// </summary>
         [Description("Emission identifier")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>

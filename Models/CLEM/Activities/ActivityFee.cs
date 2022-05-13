@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// An identifier for this Fee based on parent requirements
         /// </summary>
         [Description("Fee identifier")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>

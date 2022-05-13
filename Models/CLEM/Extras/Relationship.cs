@@ -38,7 +38,7 @@ namespace Models.CLEM
         /// An identifier for this Relationship based on parent requirements
         /// </summary>
         [Description("Relationship identifier")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <inheritdoc/>

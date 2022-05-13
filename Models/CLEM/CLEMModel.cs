@@ -206,6 +206,17 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// A method to detemrine whether any identifiers have been provided by the parent
+        /// Used to hide unnecessary property display in UI
+        /// </summary>
+        /// <returns></returns>
+        public bool ParentSuppliedIdentifiersPresent()
+        {
+            var psi = ParentSuppliedIdentifiers();
+            return (psi != null && psi.Any());
+        }
+
+        /// <summary>
         /// A method to return the list of units relavent to this parent activity
         /// </summary>
         /// <returns>A list of units</returns>
