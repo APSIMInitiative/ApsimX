@@ -228,6 +228,17 @@ namespace Models.CLEM
                 return new List<string>();
         }
 
+        /// <summary>
+        /// A method to detemrine whether any measures have been provided by the parent
+        /// Used to hide unnecessary property display in UI
+        /// </summary>
+        /// <returns></returns>
+        public bool ParentSuppliedMeasuresPresent()
+        {
+            var psm = ParentSuppliedMeasures();
+            return (psm != null && psm.Any());
+        }
+
         #region descriptive summary
 
         /// <summary>

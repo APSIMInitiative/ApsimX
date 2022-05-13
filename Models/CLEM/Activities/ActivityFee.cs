@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Payment style
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
         [Description("Measure to use")]
         public string Measure { get; set; }
 

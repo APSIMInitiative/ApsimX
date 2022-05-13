@@ -77,7 +77,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Labour unit type
         /// </summary>
-        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
         [Description("Measure to use")]
         [Category("Labour", "Units")]
         public string Measure { get; set; }
