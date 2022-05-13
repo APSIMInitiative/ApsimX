@@ -8,7 +8,6 @@ namespace Models.DCAPST.Environment
     /// </summary>
     public class WaterInteraction : IWaterInteraction
     {
-        #region Constants
         /// <summary>
         /// Boltzmann's constant
         /// </summary>
@@ -43,8 +42,6 @@ namespace Models.DCAPST.Environment
         /// Hours to seconds unit conversion
         /// </summary>
         private readonly double hrs_to_seconds = 3600;
-
-        #endregion
 
         /// <summary> Environment temperature model </summary>
         private readonly ITemperature temp;

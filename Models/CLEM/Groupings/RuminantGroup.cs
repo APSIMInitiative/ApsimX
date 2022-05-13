@@ -90,9 +90,6 @@ namespace Models.CLEM.Groupings
             return htmlWriter.ToString();
         }
 
-        #endregion
-
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -114,7 +111,5 @@ namespace Models.CLEM.Groupings
             }
             return results;
         }
-        #endregion
-
     }
 }

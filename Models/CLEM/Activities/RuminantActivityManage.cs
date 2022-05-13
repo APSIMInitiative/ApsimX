@@ -378,7 +378,6 @@ namespace Models.CLEM.Activities
                     return new List<string>();
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>

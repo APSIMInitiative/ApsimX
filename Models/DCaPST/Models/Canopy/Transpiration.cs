@@ -16,7 +16,6 @@ namespace Models.DCAPST.Canopy
         /// <summary>
         /// The pathway parameters
         /// </summary>
-
         public IPathwayParameters Pathway { get; private set; }
 
         /// <summary>

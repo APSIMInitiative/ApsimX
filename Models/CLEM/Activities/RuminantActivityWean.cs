@@ -71,7 +71,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Manage";
         }
 
-        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -87,7 +86,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

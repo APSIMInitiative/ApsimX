@@ -1013,8 +1013,6 @@ namespace Models.Soils
 
 
 
-        #region Parameters for co-denitrification and associated N2O emissions
-
         /// <summary>
         /// Denitrification rate coefficient (kg soil/mg C/day).
         /// </summary>
@@ -6815,6 +6813,4 @@ namespace Models.Soils
         /// <summary>The sw</summary>
         public double SW;
     }
-
-
 }

@@ -147,7 +147,6 @@ namespace Models.CLEM.Activities
             return null;
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -168,9 +167,7 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
         /// <inheritdoc/>
         public override string ModelSummary()
         {

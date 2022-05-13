@@ -67,7 +67,7 @@ namespace Models.DCAPST.Environment
         /// </summary>
         public void UpdateRadiationValues(double time)
         {
-            if (time < 0 || 24 < time) throw new Exception("Time must be between 0 and 24");
+            if (time < 0 || time > 24) throw new Exception("Time must be between 0 and 24");
             //if (RPAR <= 0) throw new Exception("RPAR must be greater than 0");
             //if (RPAR > 1) throw new Exception("RPAR must not exceed 1.0");
 

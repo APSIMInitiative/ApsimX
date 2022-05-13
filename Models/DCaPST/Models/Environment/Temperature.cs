@@ -86,7 +86,7 @@ namespace Models.DCAPST.Environment
         /// </summary>
         public void UpdateAirTemperature(double time)
         {
-            if (time < 0 || 24 < time) throw new Exception("The time must be between 0 and 24");
+            if (time < 0 ||  time > 24) throw new Exception("The time must be between 0 and 24");
 
             double timeOfMinT = 12.0 - solar.DayLength / 2.0 + ZLag;
             double deltaT = MaxTemperature - MinTemperature;

@@ -65,7 +65,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Manage";
         }
 
-        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -81,7 +80,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)

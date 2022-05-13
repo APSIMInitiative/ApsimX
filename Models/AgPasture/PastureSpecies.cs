@@ -193,8 +193,6 @@ namespace Models.AgPasture
         }
 
 
-            #region ICrop implementation  --------------------------------------------------------------------------------------
-
             /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
             /// <remarks>
             /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
@@ -3196,9 +3194,6 @@ namespace Models.AgPasture
 
 
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
         /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
         internal void EvaluateNitrogenDemand()
         {
@@ -3749,9 +3744,6 @@ namespace Models.AgPasture
                 StructuralN = defoliatedN,
             };
         }
-
-        #endregion  --------------------------------------------------------------------------------------------------------
-
 
         /// <summary>Computes a growth factor for annual species, related to phenology/population.</summary>
         /// <returns>A growth factor (0-1)</returns>

@@ -51,7 +51,6 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
 
-        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
