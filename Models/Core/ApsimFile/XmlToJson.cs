@@ -553,7 +553,7 @@
                         if (childXmlName != string.Empty || GetTypeFromName(childXmlNode.Name) != null)
                         {
                             int i = 1;
-                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == GetSoilCropName(childXmlName))))
+                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && (c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == GetSoilCropName(childXmlName)))))
                             {
                                 bool alreadyAdded = newArray.FirstOrDefault(c => c["Name"].ToString() == childXmlName) != null;
 
