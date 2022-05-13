@@ -1,5 +1,4 @@
-﻿
-namespace Models.Utilities
+﻿namespace Models.Utilities
 {
     using APSIM.Shared.Utilities;
     using Models.Core;

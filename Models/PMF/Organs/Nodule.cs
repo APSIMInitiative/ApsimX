@@ -1,5 +1,4 @@
-﻿
-namespace Models.PMF.Organs
+﻿namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
     using Models.Core;

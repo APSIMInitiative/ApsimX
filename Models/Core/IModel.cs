@@ -1,5 +1,4 @@
-﻿
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;

@@ -1,6 +1,4 @@
-﻿
-
-namespace Models.Soils.NutrientPatching
+﻿namespace Models.Soils.NutrientPatching
 {
     using Core;
     using Interfaces;

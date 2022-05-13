@@ -1,6 +1,4 @@
-﻿
-
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using APSIM.Shared.Utilities;
     using Models.Core;

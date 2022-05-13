@@ -1,6 +1,4 @@
-﻿
-
-namespace Models.Core.ApsimFile
+﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
     using Models.Factorial;
