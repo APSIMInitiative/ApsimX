@@ -100,6 +100,3 @@ namespace Models.Functions.DemandFunctions
         }
     }
 }
-
-
-

@@ -649,4 +649,3 @@ namespace Models.Agroforestry
         public double[] RLD;
     }
 }
-

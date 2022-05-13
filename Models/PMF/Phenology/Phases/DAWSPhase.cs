@@ -102,6 +102,3 @@ namespace Models.PMF.Phen
         private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
     }
 }
-
-
-
