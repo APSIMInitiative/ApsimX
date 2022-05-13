@@ -292,7 +292,7 @@ namespace Models.CLEM.Activities
                         case "ActivityFee":
                             companionModelsPresent.Add(componentType.Name, LocateCompanionModels<ActivityFee>());
                             break;
-                        case "TruckingSettings":
+                        case "RuminantTrucking":
                             companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantTrucking>());
                             break;
                         case "GreenhouseGasActivityEmission":
