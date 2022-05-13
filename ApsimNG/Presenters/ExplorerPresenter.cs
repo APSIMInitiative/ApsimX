@@ -150,7 +150,7 @@
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
             this.CommandHistory = new CommandHistory(this.view.Tree);
-            this.mainMenu = new MainMenu(this);
+            this.mainMenu = new MainMenu(MainPresenter);
             this.ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
 
@@ -233,7 +233,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Dispose();
+                (this.view as Views.ExplorerView).Dispose();
             }
 
             this.ContextMenu = null;
@@ -245,27 +245,20 @@
 
         public bool FileHasPendingChanges()
         {
-            try
-            {
-                // Need to hide the right hand panel because some views may not save
-                // their contents until they get a 'Detach' call.
-                this.HideRightHandPanel();
+            // Need to hide the right hand panel because some views may not save
+            // their contents until they get a 'Detach' call.
+            this.HideRightHandPanel();
 
-                // Check the command history (beta feature - see comment in the
-                // property description for more details).
-                if (Configuration.Settings.UseFastFileClose)
-                    return CommandHistory.Modified;
+            // Check the command history (beta feature - see comment in the
+            // property description for more details).
+            if (Configuration.Settings.UseFastFileClose)
+                return CommandHistory.Modified;
 
-                // The fallback is to write the file to json then compare to the
-                // file on disk.
-                string newSim = FileFormat.WriteToString(ApsimXFile);
-                string origSim = File.ReadAllText(ApsimXFile.FileName);
-                return string.Compare(newSim, origSim) != 0;
-            }
-            finally
-            {
-                this.ShowRightHandPanel();
-            }
+            // The fallback is to write the file to json then compare to the
+            // file on disk.
+            string newSim = FileFormat.WriteToString(ApsimXFile);
+            string origSim = File.ReadAllText(ApsimXFile.FileName);
+            return string.Compare(newSim, origSim) != 0;
         }
 
         /// <summary>
@@ -888,6 +881,7 @@
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
+                    desc.ShortcutKey = mainMenuName.Hotkey;
 
                     descriptions.Add(desc);
                 }
@@ -962,12 +956,7 @@
                     string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
 
                     ICommand cmd = null;
-                    if (e.Copied)
-                    {
-                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
-                        CommandHistory.Add(command, true);
-                    }
-                    else if (e.Moved)
+                    if (e.Moved)
                     {
                         if (fromParentPath != toParentPath)
                         {
@@ -978,6 +967,16 @@
                                 CommandHistory.Add(cmd);
                             }
                         }
+                    }
+                    else if (e.Copied)
+                    {
+                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
+                        CommandHistory.Add(command, true);
+                    }
+                    else if (e.Linked)
+                    {
+                        // tbi
+                        MainPresenter.ShowMessage("Linked models TBI", Simulation.MessageType.Information);
                     }
                     view.Tree.ExpandChildren(toParent.FullPath, false);
                 }

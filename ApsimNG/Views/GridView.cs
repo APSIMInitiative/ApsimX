@@ -20,6 +20,51 @@
     public class GridView : ViewBase, IGridView
     {
         /// <summary>
+        /// A keyboard shortcut in the gridview.
+        /// </summary>
+        private class Shortcut
+        {
+            /// <summary>
+            /// The menu item with which this shortcut is associated.
+            /// </summary>
+            public Widget MenuItem { get; private set; }
+
+            /// <summary>
+            /// The shortcut key which activates this menu item.
+            /// </summary>
+            public uint Key { get; private set; }
+
+            /// <summary>
+            /// The modifier for the keyboard shortcut which activates this menu item.
+            /// </summary>
+            public Gdk.ModifierType Modifier { get; private set; }
+
+            /// <summary>
+            /// Creates a new <see cref="Shortcut"/> instance.
+            /// </summary>
+            /// <param name="widget">The menu item with which this shortcut is associated.</param>
+            /// <param name="key">The shortcut key which activates this menu item.</param>
+            /// <param name="modifier">The modifier for the keyboard shortcut which activates this menu item.</param>
+            public Shortcut(Widget widget, uint key, Gdk.ModifierType modifier)
+            {
+                MenuItem = widget;
+                Key = key;
+                Modifier = modifier;
+            }
+        }
+
+        /// <summary>
+        /// The list of shortcuts currently attached to context menu items on the
+        /// grid view. We maintain this list, so that when we dispose of the view,
+        /// we can detach the gtk keyboard accelerators from the AccelGroup using
+        /// the official API, and thus avoid double-disposal of the GLib signals,
+        /// which can result in a segfault (see #7089):
+        /// 
+        /// https://github.com/APSIMInitiative/ApsimX/issues/7089
+        /// </summary>
+        private List<Shortcut> shortcuts = new List<Shortcut>();
+
+        /// <summary>
         /// Iff true, the user can add new rows to the grid.
         /// </summary>
         private bool canGrow = true;
@@ -1011,7 +1056,7 @@
         /// <summary>
         /// Does some cleanup work on the Grid.
         /// </summary>
-        public void Dispose()
+        public void DoDisposal()
         {
             if (splitter.Child1.Visible)
             {
@@ -1032,31 +1077,13 @@
 
             Grid.Drawn -= GridviewExposed;
 
-            // It's good practice to disconnect the event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in popupMenu)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                            (w as MenuItem).AccelCanActivate -= CanActivateAccel;
-                        }
-                    }
-                }
-            }
+            // Detaching signal handlers, now without reflection.
+            foreach (Shortcut shortcut in shortcuts)
+                shortcut.MenuItem.RemoveAccelerator(accel, shortcut.Key, shortcut.Modifier);
+
             ClearGridColumns();
             gridModel.Dispose();
+            popupMenu.Clear();
             popupMenu.Dispose();
             accel.Dispose();
             if (table != null)
@@ -1166,7 +1193,7 @@
         {
             try
             {
-                Dispose();
+                DoDisposal();
             }
             catch (Exception err)
             {
@@ -2045,6 +2072,7 @@
                 {
                     Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
                     item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                    shortcuts.Add(new Shortcut(item, (uint)accelKey, modifier));
                 }
                 catch
                 {

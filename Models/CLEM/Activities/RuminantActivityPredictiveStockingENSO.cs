@@ -302,10 +302,10 @@ namespace Models.CLEM.Activities
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
-            var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantGroupStyle.Remove);
+            var destockGroups = FindAllChildren<RuminantGroup>();
             if (!destockGroups.Any())
             {
-                string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
+                string warn = $"No [f=FilterGroup]s with were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
@@ -448,9 +448,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
                 // Destock
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                var rumGrps = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantGroupStyle.Remove);
+                var rumGrps = FindAllChildren<RuminantGroup>();
                 if (rumGrps.Count() == 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> were provided</span>. No destocking will be performed</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> were provided</span>. No destocking will be performed</div>");
                 else
                 {
                     extracomps = true;

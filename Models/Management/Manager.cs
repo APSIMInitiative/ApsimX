@@ -108,6 +108,7 @@
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             afterCreation = true;
 
             // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been

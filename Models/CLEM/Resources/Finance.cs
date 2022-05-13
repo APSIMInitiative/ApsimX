@@ -2,6 +2,8 @@
 using Models.Core;
 using Models.Core.Attributes;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -17,18 +19,55 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Finance/Finance.htm")]
     public class Finance : ResourceBaseWithTransactions
     {
+        [Link]
+        Clock Clock = null;
+
         /// <summary>
         /// Currency used
         /// </summary>
         [Description("Name of currency")]
         public string CurrencyName { get; set; }
 
+        /// <summary>
+        /// Start of financial year
+        /// </summary>
+        [Description("Start of financial year")]
+        [System.ComponentModel.DefaultValueAttribute(7)]
+        [Required, Month]
+        public MonthsOfYear FirstMonthOfFinancialYear { get; set; }
+
+        /// <summary>
+        /// Method to determine the financial year from a given date
+        /// </summary>
+        /// <returns>The financial year</returns>
+        public int FinancialYear
+        {
+            get
+            {
+                if (Clock.Today.Month < (int)FirstMonthOfFinancialYear)
+                    return Clock.Today.Year - 1;
+                else
+                    return Clock.Today.Year;
+            }
+        }
+
+        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = $"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>";
-            return html;
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write($"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>");
+            htmlWriter.Write($"<div class=\"activityentry\">The financial year starts in ");
+            if (FirstMonthOfFinancialYear == 0)
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+            else
+            {
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(FirstMonthOfFinancialYear.ToString() + "</span>");
+            }
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
 
 

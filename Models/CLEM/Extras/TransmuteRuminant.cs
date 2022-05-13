@@ -69,16 +69,16 @@ namespace Models.CLEM
         public string FinanceTypeForTransactionsName { get; set; }
 
         ///<inheritdoc/>
-        public bool DoTransmute(ResourceRequest request, double shortfallPacketsNeeded, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
+        public bool DoTransmute(ResourceRequest request, double shortfall, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
         {
             double needed = 0;
             switch (TransmuteStyle)
             {
                 case TransmuteStyle.Direct:
-                    needed = shortfallPacketSize * AmountPerPacket;
+                    needed = shortfall / shortfallPacketSize * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
-                    needed = shortfallPacketsNeeded* shortfallPricing.CurrentPrice;
+                    needed = shortfall / shortfallPacketSize * shortfallPricing.CurrentPrice;
                     break;
                 default:
                     break;
@@ -110,7 +110,7 @@ namespace Models.CLEM
                             }
                             break;
                         case TransmuteStyle.UsePricing:
-                            available += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale)?.CurrentPrice ?? 0;
+                            available += ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale)?.CurrentPrice ?? 0;
                             break;
                         default:
                             break;
@@ -140,7 +140,7 @@ namespace Models.CLEM
                     ResourceRequest financeRequest = new ResourceRequest()
                     {
                         Resource = financeType,
-                        Required = shortfallPacketsNeeded * shortfallPacketSize * shortfallPricing.CurrentPrice,
+                        Required = shortfall / shortfallPacketSize * shortfallPricing.CurrentPrice,
                         RelatesToResource = request.ResourceTypeName,
                         ResourceType = typeof(Finance),
                         ActivityModel = request.ActivityModel,

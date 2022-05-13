@@ -18,6 +18,7 @@ namespace Models.CLEM.Groupings
     [Description("Defines the number of individuals to take")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/TakeFromFiltered.htm")]
     public class TakeFromFiltered : CLEMModel, IValidatableObject
     {
         /// <summary>

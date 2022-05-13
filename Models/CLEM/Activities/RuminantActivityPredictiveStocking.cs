@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
     /// <summary>It will check all paddocks that the specified herd are grazing</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -105,14 +105,8 @@ namespace Models.CLEM.Activities
             if (this.FindAllChildren<RuminantGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult("At least one [f=RuminantGroup] with a [Destock] reason and a [f=RuminantFilter] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
+                results.Add(new ValidationResult("At least one [f=RuminantGroup] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
             }
-            else if (this.FindAllChildren<RuminantGroup>().Where(a => a.Reason != RuminantGroupStyle.Remove).Count() > 0)
-            {
-                string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult("Only [f=RuminantGroup] with a [Destock] reason are permitted under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
-            }
-
             return results;
         } 
 
@@ -218,7 +212,7 @@ namespace Models.CLEM.Activities
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantGroupStyle.Remove))
+            foreach (var item in FindAllChildren<RuminantGroup>())
             {
                 // works with current filtered herd to obey filtering.
                 var herd = item.Filter(CurrentHerd(false))

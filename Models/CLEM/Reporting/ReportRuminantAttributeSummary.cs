@@ -75,13 +75,6 @@ namespace Models.CLEM.Reporting
         public ReportRuminantAttributeSummary()
         {
             SetDefaults();
-
-            Report report = this.FindChild<Report>();
-            if (report is null)
-            {
-                report = new Report() { Parent = this };
-                this.Children.Add(report);
-            }
         }
 
         /// <summary>
@@ -169,7 +162,12 @@ namespace Models.CLEM.Reporting
             if (!this.FindAllChildren<RuminantGroup>().Any())
             {
                 string[] memberNames = new string[] { "Missing ruminant filter group" };
-                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{this.Name}] requires at least one filter group to identify individuals to report", memberNames));
+                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires at least one filter group to identify individuals to report", memberNames));
+            }
+            if (!this.FindAllChildren<Report>().Where(a => a.Name == this.Name).Any())
+            {
+                string[] memberNames = new string[] { "Missing report" };
+                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires an [APSIM.Report] as a child named [{Name}] to process output. Add a new report below this activity.", memberNames));
             }
             return results;
         }

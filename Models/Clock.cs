@@ -174,6 +174,12 @@ namespace Models
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
 
+        /// <summary>
+        /// Occurs when dcaps performs its calculations. This needs to happen
+        /// between DoPotentialPlantGrowth and DoPotentialPlantPartitioning.
+        /// </summary>
+        public event EventHandler DoDCAPST;
+
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
         /// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
@@ -288,11 +294,11 @@ namespace Models
             if (CLEMInitialiseActivity != null)
                 CLEMInitialiseActivity.Invoke(this, args);
 
-            if (FinalInitialise != null)
-                FinalInitialise.Invoke(this, args);
-
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);
+
+            if (FinalInitialise != null)
+                FinalInitialise.Invoke(this, args);
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
@@ -349,6 +355,8 @@ namespace Models
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
+
+                DoDCAPST?.Invoke(this, args);
 
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);

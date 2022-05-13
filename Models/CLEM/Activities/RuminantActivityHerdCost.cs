@@ -51,13 +51,7 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of fee for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
-
+        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -86,7 +80,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityHerdCost()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.Cost";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

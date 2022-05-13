@@ -12,10 +12,20 @@ namespace Models.CLEM.Interfaces
     public interface IFilterGroup : IModel
     {
         /// <summary>
+        /// Perform a shuffle before sorting to remove inherent order from adding to herd
+        /// </summary>
+        bool RandomiseBeforeSorting { get; set; }
+
+        /// <summary>
         /// Maps the property name to its reflected PropertyInfo
         /// </summary>
         [JsonIgnore]
         IEnumerable<string> Parameters { get; }
+
+        /// <summary>
+        /// Retrieves a list of parameters available from the generic type being filtered
+        /// </summary>
+        IEnumerable<string> GetParameterNames();
 
         /// <summary>
         /// Retrieves information on a property

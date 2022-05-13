@@ -89,8 +89,8 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
-                value += ind.GetDietDetails(metric) * (reportPerAE?ind.AdultEquivalent:1);
-            return value;
+                value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
+            return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
         }
 
         /// <summary>
@@ -308,7 +308,7 @@ namespace Models.CLEM.Resources
             double ae = 0;
             foreach (LabourType person in Items)
                 if (!person.Hired | (includeHired))
-                    ae += (CalculateAE(person.AgeInMonths)??1)*person.Individuals;
+                    ae += (CalculateAE(person.AgeInMonths)??1)*Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
             return ae;
         }
 

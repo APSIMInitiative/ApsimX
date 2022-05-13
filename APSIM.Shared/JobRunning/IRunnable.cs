@@ -21,5 +21,10 @@
         /// <summary>Called to start the job. Can throw on error.</summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         void Run(System.Threading.CancellationTokenSource cancelToken);
+
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        void Cleanup();
     }
 }

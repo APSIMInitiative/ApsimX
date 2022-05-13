@@ -62,6 +62,12 @@ namespace Models.CLEM.Resources
         }
 
 
+        ///<inheritdoc/>
+        public override List<Type> ChildrenToIgnoreInSummary()
+        {
+            return new List<Type>() { typeof(ISetAttribute) };
+        }
+
         /// <inheritdoc/>
         public override string ModelSummary()
         {

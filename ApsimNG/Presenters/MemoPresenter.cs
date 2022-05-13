@@ -75,28 +75,7 @@
         {
             try
             {
-                string url = "https://apsimnextgeneration.netlify.com/usage/memo/";
-                if (ProcessUtilities.CurrentOS.IsLinux)
-                {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    process.StartInfo.FileName = "xdg-open";
-                    process.StartInfo.Arguments = url;
-                    process.Start();
-                }
-                else if (ProcessUtilities.CurrentOS.IsMac)
-                {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.FileName = "open";
-                    process.StartInfo.Arguments = url;
-                    process.Start();
-                }
-                else
-                {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    process.StartInfo.FileName = url;
-                    process.Start();
-                }
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/memo/");
             }
             catch (Exception err)
             {

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using System.Diagnostics;
 
 namespace Models.CLEM.Activities
 {
@@ -26,8 +27,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
-        [Link]
-        private Clock clock = null;
+        private CropActivityManageProduct ManageProductActivity;
+        private IEnumerable<ActivityTimerSequence> sequenceTimerList;
 
         /// <summary>
         /// Months before harvest to start performing activities
@@ -43,12 +44,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqual("OffsetMonthHarvestStart", ErrorMessage = "Offset from harvest to end activity must be greater than or equal to offset to start activity.")]
         public int OffsetMonthHarvestStop { get; set; }
     
-        private CropActivityManageProduct ManageProductActivity;
-        private List<ActivityTimerSequence> sequenceTimerList;
-        private int lastDate = 0;
-        private bool lastStatus = false;
-        private int[] month;
-
         /// <summary>
         /// Notify CLEM that this activity was performed.
         /// </summary>
@@ -68,7 +63,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            sequenceTimerList = FindAllChildren<ActivityTimerSequence>().ToList<ActivityTimerSequence>();
+            sequenceTimerList = FindAllChildren<ActivityTimerSequence>();
         }
 
         /// <summary>
@@ -79,145 +74,46 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if(ManageProductActivity.ActivityEnabled)
+                int? seqStart = null; 
+                (int? previous, int? first, int? current, int? last) harvestOffsets = ManageProductActivity.HarvestOffset;
+
+                // if next harvest (offset.first) is between bounds
+                if (harvestOffsets.first >= OffsetMonthHarvestStart && harvestOffsets.first <= OffsetMonthHarvestStop)
                 {
-                    int today = clock.Today.Year * 12 + clock.Today.Month;
-                    // check and return status if already calculated
-                    if (lastDate == today)
+                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                }
+                // within period after harvest
+                if (harvestOffsets.last > 0 && harvestOffsets.last >= OffsetMonthHarvestStart && harvestOffsets.last <= OffsetMonthHarvestStop)
+                {
+                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                }
+                // if within the period up to next harvest
+                if (harvestOffsets.current < 0 && harvestOffsets.current >= OffsetMonthHarvestStart && harvestOffsets.current <= OffsetMonthHarvestStop)
+                {
+                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                }
+                // at time of current harvest
+                if (harvestOffsets.current >= OffsetMonthHarvestStart && harvestOffsets.current <= OffsetMonthHarvestStop)
+                {
+                    seqStart = harvestOffsets.current - OffsetMonthHarvestStart;
+                }
+                // if withing the period after the previous 
+                if (harvestOffsets.previous >= OffsetMonthHarvestStart && harvestOffsets.previous <= OffsetMonthHarvestStop)
+                {
+                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                }
+
+                foreach (var seq in sequenceTimerList)
+                {
+                    string sequence = seq.Sequence;
+                    if (seqStart > seq.Sequence.Length)
                     {
-                        return lastStatus;
+                        sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(seqStart??0 / (double)seq.Sequence.Length))));
                     }
-                    lastDate = today;
-                    month = CalculateMonthBounds(today);
-
-                    if (month[0] <= today && month[1] >= today)
-                    {
-                        // report activity performed details.
-                        ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                        {
-                            Activity = new BlankActivity()
-                            {
-                                Status = ActivityStatus.Timer,
-                                Name = this.Name,
-                            }
-                        };
-                        // check if timer sequence ok
-                        if (sequenceTimerList.Count > 0)
-                        {
-                            // get month index in sequence
-                            int sequenceIndex = today - month[0];
-                            foreach (var sequence in sequenceTimerList)
-                            {
-                                if (!sequence.TimerOK(sequenceIndex))
-                                {
-                                    // report activity performed.
-                                    activitye.Activity.Status = ActivityStatus.NotNeeded;
-                                    activitye.Activity.SetGuID(this.UniqueID);
-                                    this.OnActivityPerformed(activitye);
-                                    lastStatus = false;
-                                    return false;
-                                }
-                            }
-                        }
-                        lastStatus = true;
-                        return true;
-                    }
-                    lastStatus = false;
+                    if (sequence.Substring(seqStart ?? 0,1) == "0")
+                        return false;
                 }
-                return false;
-            }
-        }
-
-        private int[] CalculateMonthBounds(int todayInt)
-        {
-            int[] range = new int[2] { OffsetMonthHarvestStart, OffsetMonthHarvestStop };
-            DateTime[] dates = new DateTime[2];
-            int[] month = new int[2];
-
-            // fill in the start and end dates of the harvest period
-            // uses first and last tag information or single entry if no harvest tags supplied
-
-            if (ManageProductActivity.HarvestTagsUsed)
-            {
-                // if all before and up to harvest
-                if (ManageProductActivity.StartCurrentSequenceHarvest != null && OffsetMonthHarvestStart < 0 && OffsetMonthHarvestStop <=0)
-                {
-                    dates[0] = ManageProductActivity.StartCurrentSequenceHarvest.HarvestDate;
-                    dates[1] = ManageProductActivity.StartCurrentSequenceHarvest.HarvestDate;
-                }
-                else if (ManageProductActivity.EndCurrentSequenceHarvest != null && OffsetMonthHarvestStart >= 0 && OffsetMonthHarvestStop > 0)
-                {
-                    dates[0] = ManageProductActivity.EndCurrentSequenceHarvest.HarvestDate;
-                    dates[1] = ManageProductActivity.EndCurrentSequenceHarvest.HarvestDate;
-                }
-                else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart == 0 && OffsetMonthHarvestStop == 0)
-                {
-                    dates[0] = ManageProductActivity.NextHarvest.HarvestDate;
-                    dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
-                }
-                else
-                {
-                    if (ManageProductActivity.PreviousHarvest != null && OffsetMonthHarvestStop > 0)
-                    {
-                        // compare with previous harvest
-                        dates[0] = ManageProductActivity.PreviousHarvest.HarvestDate;
-                        dates[1] = ManageProductActivity.PreviousHarvest.HarvestDate;
-                    }
-                    else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart <= 0)
-                    {
-                        // compare with next harvest 
-                        dates[0] = ManageProductActivity.NextHarvest.HarvestDate;
-                        dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
-                    }
-                    else
-                        return new int[] {0,0 };
-                }
-            }
-            else
-            {
-                int check = 0;
-                if (ManageProductActivity.PreviousHarvest != null)
-                {
-                    check = ManageProductActivity.PreviousHarvest.HarvestDate.Year * 12 + ManageProductActivity.PreviousHarvest.HarvestDate.Month;
-                    check = todayInt - check;
-                }
-                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0 & check <= OffsetMonthHarvestStop)
-                {
-                    // compare with previous harvest
-                    dates[0] = ManageProductActivity.PreviousHarvest.HarvestDate;
-                    dates[1] = ManageProductActivity.PreviousHarvest.HarvestDate;
-                }
-                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
-                {
-                    // compare with next harvest 
-                    dates[0] = ManageProductActivity.NextHarvest.HarvestDate;
-                    dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
-                }
-                else
-                    return new int[] { 0, 0 };
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                DateTime checkDate = dates[i].AddMonths(range[i]);
-                month[i] = (checkDate.Year * 12 + checkDate.Month);
-            }
-            return month;
-        }
-
-        /// <summary>
-        /// Method to determine whether the activity has past based on current date and harvest details from parent.
-        /// </summary>
-        /// <returns>Whether the activity is past</returns>
-        public bool ActivityPast
-        {
-            get
-            {
-                int today = clock.Today.Year * 12 + clock.Today.Month;
-                if (lastDate != today)
-                    month = CalculateMonthBounds(today);
-
-                return (month[0] < today && month[1] < today);
+                return (seqStart != null);
             }
         }
 

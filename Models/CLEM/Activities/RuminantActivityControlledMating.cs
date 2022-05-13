@@ -1,4 +1,5 @@
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -25,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
     {
-        private List<SetAttributeWithValue> attributeList;
+        private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
 
@@ -33,6 +34,7 @@ namespace Models.CLEM.Activities
         /// Maximum age for mating (months)
         /// </summary>
         [Description("Maximum female age for mating")]
+        [Category("General", "All")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(120)]
         public double MaximumAgeMating { get; set; }
@@ -41,6 +43,7 @@ namespace Models.CLEM.Activities
         /// Number joinings per male
         /// </summary>
         [Description("Number of joinings per male")]
+        [Category("Genetics", "All")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1)]
         public int JoiningsPerMale { get; set; }
@@ -48,7 +51,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
-        public List<SetAttributeWithValue> SireAttributes => attributeList;
+        public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>
         /// Constructor
@@ -69,7 +72,7 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
 
-            attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
+            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 

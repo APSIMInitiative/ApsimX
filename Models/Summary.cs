@@ -89,18 +89,6 @@
             CreateInitialConditionsTable();
         }
 
-        /// <summary>Invoked when a simulation is completed.</summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            // The messages table will be automatically cleaned prior to a simulation
-            // run, so we don't need to delete existing data in this call to WriteTable().
-            if (messages != null)
-                storage?.Writer?.WriteTable(messages, false);
-        }
-
         /// <summary>Initialise the summary messages table.</summary>
         private void Initialise()
         {
@@ -123,20 +111,35 @@
         {
             if (Verbosity >= messageType)
             {
+                if (storage == null)
+                {
+                    if (author == null)
+                        throw new Exception("No datastore is available!");
+                    else
+                        throw new ApsimXException(author, "No datastore is available!");
+                }
+
                 Initialise();
 
-                if (storage == null)
-                    throw new ApsimXException(author, "No datastore is available!");
-                string modelPath = author.FullPath;
-                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
+                // Clone() will copy the schema (ie columns) but not the data.
+                DataTable table = messages.Clone();
 
-                var newRow = messages.NewRow();
-                newRow[0] = simulation.Name;
-                newRow[1] = relativeModelPath;
-                newRow[2] = clock.Today;
-                newRow[3] = message;
-                newRow[4] = (int)messageType;
-                messages.Rows.Add(newRow);
+                // Remove the path of the simulation within the .apsimx file.
+                string relativeModelPath = null;
+                if (author != null)
+                    relativeModelPath = author.FullPath.Replace($"{simulation.FullPath}.", string.Empty);
+
+                DataRow row = table.NewRow();
+                row[0] = simulation.Name;
+                row[1] = relativeModelPath;
+                row[2] = clock.Today;
+                row[3] = message;
+                row[4] = (int)messageType;
+                table.Rows.Add(row);
+
+                // The messages table will be automatically cleaned prior to a simulation
+                // run, so we don't need to delete existing data in this call to WriteTable().
+                storage?.Writer?.WriteTable(table, false);
             }
         }
 
@@ -234,6 +237,8 @@
         public IEnumerable<Message> GetMessages(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            if (storage == null)
+                yield break;
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
             if (messages == null)
                 yield break;
@@ -258,6 +263,8 @@
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            if (storage == null)
+                yield break;
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
             if (table == null)
                 yield break;

@@ -74,6 +74,9 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double Drainage { get; set; }
+        /// <summary>Subsurface drain (mm)</summary>
+        [JsonIgnore]
+        public double SubsurfaceDrain { get; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] DULmm { get; set; }
@@ -122,6 +125,11 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double LeachUrea { get; set; }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
+        [JsonIgnore]
+        public double LeachCl { get; set; }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] LL15mm { get; set; }
@@ -185,7 +193,7 @@ namespace Models.Soils
 
         ///<summary> Who knows</summary>
         [JsonIgnore]
-        public double pond { get; set; }
+        public double Pond { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double pond_evap { get; set; }
@@ -677,7 +685,7 @@ namespace Models.Soils
         {
             //First we work out how much water is reaching the soil surface each hour
             doPrecipitation();
-            SODPondDepth = pond;
+            SODPondDepth = Pond;
             double SoilWaterContentSOD = MathUtilities.Sum(SWmm);
             for (int h = 0; h < 24; h++)
             {
@@ -697,18 +705,18 @@ namespace Models.Soils
                 {
                     SetRepellencyFactor();
                     InitialProfileWater = MathUtilities.Sum(SWmm);
-                    InitialPondDepth = pond;
+                    InitialPondDepth = Pond;
                     InitialResidueWater = ResidueWater;
                     doGravitionalPotential();
                     //Update the depth of Surface water that may infiltrate this timeStep
                     if (TimeStepSplits == 1)
-                        pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
+                        Pond += Hourly.Rainfall[h] + Hourly.Irrigation[h];
                     else
-                        pond += SubHourly.Rainfall[Subh] + SubHourly.Irrigation[Subh];
+                        Pond += SubHourly.Rainfall[Subh] + SubHourly.Irrigation[Subh];
                     //Then we work out how much of this may percolate into the profile this TimeStep
                     doPercolationCapacity(TimeStepSplits);
                     //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                    double TimeStepInfiltration = Math.Min(pond, potentialInfiltration);
+                    double TimeStepInfiltration = Math.Min(Pond, potentialInfiltration);
                     if ((TimeStepInfiltration > 0) && (CalculateInfiltration))
                         doInfiltration(TimeStepInfiltration, h, TimeStepSplits, Subh);
                     //Next we redistribute water down the profile for draiange processes
@@ -723,7 +731,7 @@ namespace Models.Soils
                 ClearSubHourlyData();
             }
             DoDetailReport("Final",0,0);
-            EODPondDepth = pond;
+            EODPondDepth = Pond;
             Infiltration = MathUtilities.Sum(Hourly.Infiltration);
             Drainage = MathUtilities.Sum(Hourly.Drainage);
             double SoilWaterContentEOD = MathUtilities.Sum(SWmm);
@@ -928,7 +936,7 @@ namespace Models.Soils
             }
             //Add infiltration to daily sum for reporting
             Hourly.Infiltration[h] += WaterToInfiltrate;
-            pond -= WaterToInfiltrate;
+            Pond -= WaterToInfiltrate;
 
             Hourly.Drainage[h] += RemainingInfiltration;
             if (SPH != 1)
@@ -995,11 +1003,11 @@ namespace Models.Soils
         /// </summary>
         private void doEvaporation()
         {
-            double EvaporationSupplyHourly = SWmm[0] + pond; //Water can evaporation from the surface layer or the pond
+            double EvaporationSupplyHourly = SWmm[0] + Pond; //Water can evaporation from the surface layer or the pond
             EvaporationHourly = Math.Min(Eos / 24, EvaporationSupplyHourly);  //Actual evaporation from the soil is constrained by supply from soil and pond and by demand from the atmosphere
-            double PondEvapHourly = Math.Min(EvaporationHourly, pond); //Evaporate from the pond first
+            double PondEvapHourly = Math.Min(EvaporationHourly, Pond); //Evaporate from the pond first
             pond_evap += PondEvapHourly;
-            pond -= PondEvapHourly;
+            Pond -= PondEvapHourly;
             EvaporationHourly -= PondEvapHourly;
             double EsRemaining = EvaporationHourly;
             for (int c = 0; (c < PoreCompartments && EsRemaining > 0); c++) //If Evaopration demand not satisified by pond, evaporate from largest pores first. 
@@ -1157,7 +1165,7 @@ namespace Models.Soils
             }
 
             MoistureRelease.SetHydraulicProperties();
-            pond = 0;
+            Pond = 0;
             for (int l = 0; l < ProfileLayers; l++)
             {
                 double AccumWaterVolume = 0;
@@ -1296,7 +1304,7 @@ namespace Models.Soils
                              + Rain + Irrig;
             double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
             //double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
-            double WaterOut = ProfileWaterAtCalcEnd + pond + ResidueWater + Drain;
+            double WaterOut = ProfileWaterAtCalcEnd + Pond + ResidueWater + Drain;
             if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
                 throw new Exception(this + " " + Process + " calculations are violating mass balance");           
         }

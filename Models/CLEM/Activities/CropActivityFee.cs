@@ -24,6 +24,8 @@ namespace Models.CLEM.Activities
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
     {
         private string relatesToResourceName = "";
+        private bool timingIssueReported = false;
+        private CropActivityManageProduct managingParent;
 
         /// <summary>
         /// Account to use
@@ -70,29 +72,9 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
-        }
-
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
-
-            if (!productParent.IsTreeCrop)
-            {
-                if (this.PaymentStyle == CropPaymentStyleType.perTree)
-                {
-                    string[] memberNames = new string[] { this.Name + ".PaymentStyle" };
-                    results.Add(new ValidationResult("The payment style " + this.PaymentStyle.ToString() + " is not supported for crops defined as non tree crops", memberNames));
-                }
-            }
-            return results;
+            managingParent = FindAncestor<CropActivityManageProduct>();
+            if(managingParent != null)
+                relatesToResourceName = managingParent.StoreItemName;
         }
 
         /// <inheritdoc/>
@@ -143,11 +125,52 @@ namespace Models.CLEM.Activities
                     Category = TransactionCategory
                 }
                 );
+                if (managingParent.CurrentlyManaged)
+                {
+                    if (sumneeded > 0)
+                        Status = ActivityStatus.Success;
+                    else
+                        Status = ActivityStatus.NotNeeded;
+                }
+                else
+                {
+                    Status = ActivityStatus.Warning;
+                    if (!timingIssueReported)
+                    {
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        timingIssueReported = true;
+                    }
+                }
+
                 return resourcesNeeded;
             }
             return null;
         }
 
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
+
+            if (!productParent.IsTreeCrop)
+            {
+                if (this.PaymentStyle == CropPaymentStyleType.perTree)
+                {
+                    string[] memberNames = new string[] { this.Name + ".PaymentStyle" };
+                    results.Add(new ValidationResult("The payment style " + this.PaymentStyle.ToString() + " is not supported for crops defined as non tree crops", memberNames));
+                }
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
         /// <inheritdoc/>
         public override string ModelSummary()
         {

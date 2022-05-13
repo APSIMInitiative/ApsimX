@@ -137,6 +137,13 @@
             get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterception; }
         }
 
+        /// <summary>Gets the amount of radiation intercepted by the green elements of canopy (MJ/m2).</summary>
+        [Units("MJ/m^2")]
+        public double RadiationInterceptionOnGreen
+        {
+            get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterceptionOnGreen; }
+        }
+
         /// <summary>Gets the total Penman-Monteith potential evapotranspiration (MJ/m2).</summary>
         [Description("Total Penman-Monteith potential evapotranspiration")]
         [Units("MJ/m^2")]

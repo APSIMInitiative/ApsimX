@@ -201,7 +201,7 @@
             }
         }
 
-        /// <summary>Gets the intercepted radiation.</summary>
+        /// <summary>Gets the total canopy intercepted radiation.</summary>
         [Description("Intercepted radiation")]
         [Units("MJ/m2")]
         public double RadiationInterception
@@ -212,6 +212,20 @@
                 for (int i = 0; i <= numLayers - 1; i++)
                     for (int j = 0; j <= Canopies.Count - 1; j++)
                         totalInterception += Canopies[j].Rs[i];
+                return totalInterception;
+            }
+        }
+
+        /// <summary>Gets the radiation intercepted by green canopy.</summary>
+        [Units("MJ/m2")]
+        public double RadiationInterceptionOnGreen
+        {
+            get
+            {
+                double totalInterception = 0.0;
+                for (int i = 0; i <= numLayers - 1; i++)
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                        totalInterception += Canopies[j].Rs[i] * RadnGreenFraction(j);
                 return totalInterception;
             }
         }

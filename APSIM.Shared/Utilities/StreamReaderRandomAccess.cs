@@ -1,167 +1,240 @@
+using APSIM.Shared.Extensions;
 using System.IO;
 using System.Text;
 using System;
-using System.Globalization;
 
 namespace APSIM.Shared.Utilities
 {
+    /// <summary>
+    /// A random-access stream reader.
+    /// </summary>
+    /// <remarks>
+    /// I'm not sure that this class is actually necessary. The only caller is
+    /// <see cref="ApsimTextFile"/>, and I suspect that it could be refactored
+    /// to just use a StreamReader directly.
+    /// </remarks>
     [Serializable]
     class StreamReaderRandomAccess
     {
-        const int BUFFER_SIZE = 1024;
+        /// <summary>
+        /// Maximum allowed buffer size.
+        /// </summary>
+        private const int maxBufferSize = 1024;
 
+        /// <summary>
+        /// The internal stream reader.
+        /// </summary>
+        private StreamReader file = null;
 
-        private StreamReader g_file = null;
-        private int g_position = 0;
-        private char[] g_buffer = new char[BUFFER_SIZE + 1];
-        private int g_bufferSize = 0;
-        private int g_offset = 0;
-        private bool g_eofFlag = true;
-        private StringBuilder g_lineBuffer = new StringBuilder(BUFFER_SIZE);
-        private int g_bufferOffset = 0;
+        /// <summary>
+        /// The current buffer read from the file.
+        /// </summary>
+        private char[] buffer = new char[maxBufferSize + 1];
 
+        /// <summary>
+        /// Current position in the buffer. This is in number of characters.
+        /// </summary>
+        private long position = 0;
+
+        /// <summary>
+        /// Current position in the buffer, in number of bytes.
+        /// </summary>
+        private long positionBytes = 0;
+
+        /// <summary>
+        /// Current position in the file. This is in number of bytes.
+        /// </summary>
+        private long offset = 0;
+
+        /// <summary>
+        /// The offset of the buffer within the stream. This is in number of bytes.
+        /// </summary>
+        private long bufferOffset = 0;
+
+        /// <summary>
+        /// The size of the buffer. Note that the actual buffer array can be
+        /// larger than this, but will be padded with zeroes at the end.
+        /// </summary>
+        private int bufferSize = 0;
+
+        /// <summary>
+        /// Length of the byte order mark at the start of the stream, or 0 if
+        /// the stream doesn't contain a byte order mark.
+        /// </summary>
+        private uint bomLength = 0;
+
+        /// <summary>
+        /// Initialises a new instance of <see cref="StreamReaderRandomAccess"/>
+        /// to read from a file.
+        /// </summary>
+        /// <param name="filename">Path to a file.</param>
         public StreamReaderRandomAccess(string filename)
         {
             Open(filename);
         }
 
+        /// <summary>
+        /// Initialises a new instance of <see cref="StreamReaderRandomAccess"/>
+        /// to read from a stream.
+        /// </summary>
+        /// <param name="stream">A stream.</param>
         public StreamReaderRandomAccess(Stream stream)
         {
             Open(stream);
         }
 
-        private void Open(string filename)
+        /// <summary>
+        /// Current position in the stream.
+        /// </summary>
+        public long Position
         {
-
-            if ((g_file != null)) Close();
-
-            g_file = new StreamReader(filename);
-            g_position = 0;
-            g_eofFlag = false;
-            g_bufferSize = 0;
-            g_bufferOffset = 0;
-
-            LoadBuffer();
-
-        }
-
-        private void Open(Stream stream)
-        {
-
-            if ((g_file != null)) Close();
-
-            g_file = new StreamReader(stream);
-            g_position = 0;
-            g_eofFlag = false;
-            g_bufferSize = 0;
-            g_bufferOffset = 0;
-
-            LoadBuffer();
-
-        }
-
-        public bool Close()
-        {
-
-            g_file.Close();
-            g_file = null;
-            g_position = 0;
-            g_eofFlag = true;
-            g_bufferSize = 0;
-
-            return true;
-
-        }
-
-        public int Position
-        {
-            get { return g_offset; }
+            get
+            {
+                return offset;
+            }
             set
             {
                 Seek(value, SeekOrigin.Begin);
-                g_eofFlag = false;
+                EndOfStream = false;
             }
         }
-        public void Seek(int Offset, System.IO.SeekOrigin Origin)
-        {
-            g_eofFlag = false;
-            g_offset = (int)g_file.BaseStream.Seek(Offset, Origin);
 
-            g_file.DiscardBufferedData();
+        /// <summary>
+        /// True iff current position is at end of stream/file.
+        /// </summary>
+        public bool EndOfStream { get; private set; }
+
+        /// <summary>
+        /// Close the stream (and its underlying file if it has one).
+        /// </summary>
+        public void Close()
+        {
+            file.Close();
+            file = null;
+            position = 0;
+            positionBytes = 0;
+            EndOfStream = true;
+            bufferSize = 0;
+        }
+
+        /// <summary>
+        /// Seek to a position in the stream.
+        /// </summary>
+        /// <param name="seekPosition">A byte offset relative to the origin position.</param>
+        /// <param name="origin">Reference point used to obtain the new position.</param>
+        public void Seek(long seekPosition, SeekOrigin origin)
+        {
+            EndOfStream = false;
+            offset = file.BaseStream.Seek(seekPosition, origin);
+
+            file.DiscardBufferedData();
 
             LoadBuffer();
         }
 
+        /// <summary>
+        /// Return a string containing all characters between the current
+        /// position and the next newline character, or the end of the stream,
+        /// whichever comes first.
+        /// </summary>
         public string ReadLine()
         {
             if (EndOfStream)
                 return "";
-            g_lineBuffer.Length = 0;
+
+            StringBuilder lineBuffer = new StringBuilder();
 
             char ch = '\0';
-            bool flag = false;
+            bool endOfLine = false;
+            int numBytesRead = 0;
+            long offsetStart = bufferOffset + positionBytes;
 
-            while (!flag)
+            while (!endOfLine)
             {
-
-                ch = g_buffer[g_position];
+                ch = buffer[position];
 
                 if (ch == '\r')
-                { }   // do nothing - skip cr
-
+                {
+                    // Ignore CR.
+                }
                 else if (ch == '\n')
                 {
-                    flag = true;
+                    endOfLine = true;
                 }
                 else
                 {
-                    g_lineBuffer.Append(ch);
+                    lineBuffer.Append(ch);
                 }
 
-                g_position = g_position + 1;
+                position++;
 
-                if (g_position == g_bufferSize)
+                int numBytes = file.CurrentEncoding.GetByteCount(ch);
+                positionBytes += numBytes;
+                numBytesRead += numBytes;
+
+                // If we've reached the end of the buffer, we read a new buffer
+                // from the underlying stream.
+                if (position == bufferSize)
                 {
-                    if (!LoadBuffer())
-                    {
-                        break; // TODO: might not be correct. Was : Exit While
-                    }
+                    LoadBuffer();
+                    if (EndOfStream)
+                        endOfLine = true;
                 }
             }
 
-
-            if (flag)
-            {
-                g_offset = g_bufferOffset + g_position;
-                return g_lineBuffer.ToString();
-            }
-
-            return "";
+            // Update the offset. Note that offet is measured in bytes, whereas
+            // position is measured in characters. These will be different in
+            // multi-byte encodings. Note also that the buffer offset will
+            // change when we reach the end of the buffer, so we need to use the
+            // buffer offset from before we started reading.
+            offset = offsetStart + numBytesRead;
+            return lineBuffer.ToString();
         }
 
-        private bool LoadBuffer()
+        /// <summary>
+        /// Open a file.
+        /// </summary>
+        /// <param name="filename">Path to a file.</param>
+        private void Open(string filename)
         {
-
-            g_bufferOffset = Convert.ToInt32(g_file.BaseStream.Position, CultureInfo.InvariantCulture);
-            g_position = 0;
-            g_bufferSize = g_file.Read(g_buffer, 0, BUFFER_SIZE);
-
-            if (g_bufferSize == 0)
-            {
-                g_eofFlag = true;
-                return false;
-            }
-
-            return true;
-
+            Open(File.OpenRead(filename));
         }
 
-        public bool EndOfStream
+        /// <summary>
+        /// Open a stream. Closes the old stream if it's not already closed.
+        /// </summary>
+        /// <param name="stream">A stream.</param>
+        private void Open(Stream stream)
         {
-            get
-            {
-                return g_eofFlag;
-            }
+            if (file != null)
+                Close();
+
+            if (stream.Position == 0)
+                bomLength = stream.GetBomLength();
+
+            file = new StreamReader(stream);
+            position = 0;
+            positionBytes = 0;
+            EndOfStream = false;
+            bufferSize = 0;
+            bufferOffset = 0;
+
+            LoadBuffer();
+        }
+
+        /// <summary>
+        /// Read up to <see cref="maxBufferSize"/> characters from the
+        /// underyling stream and store them in <see cref="buffer"/>.
+        /// </summary>
+        private void LoadBuffer()
+        {
+            bufferOffset = bomLength + file.BaseStream.Position;
+            position = 0;
+            positionBytes = 0;
+            bufferSize = file.Read(buffer, 0, maxBufferSize);
+
+            if (bufferSize == 0)
+                EndOfStream = true;
         }
     }
 }

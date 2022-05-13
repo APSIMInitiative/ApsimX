@@ -15,6 +15,7 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
+    [ValidParent(ParentType = typeof(Soil))]
     public class Solute : Model, ISolute
     {
         [Link]

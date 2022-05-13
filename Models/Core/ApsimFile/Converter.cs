@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 147; } }
+        public static int LatestVersion { get { return 150; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -703,7 +703,7 @@ namespace Models.Core.ApsimFile
 
             // Get sample thickness and bulk density.
             var sampleThickness = sample["Thickness"].Values<double>().ToArray();
-            var sampleBD = Soils.Standardiser.Layers.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last());
+            var sampleBD = Soils.Standardiser.Layers.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last(), true);
 
             for (int i = 0; i < values.Count; i++)
                 values[i] = values[i].Value<double>() * 100 / (sampleBD[i] * sampleThickness[i]);
@@ -756,7 +756,7 @@ namespace Models.Core.ApsimFile
                         var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                         var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                         var values = no3Values.Values<double>().ToArray();
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0, true);
                         no3Values = new JArray(mappedValues);
 
                         // Move from sample to analysis
@@ -783,7 +783,7 @@ namespace Models.Core.ApsimFile
                         var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                         var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                         var values = nh4Values.Values<double>().ToArray();
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2, true);
                         nh4Values = new JArray(mappedValues);
 
                         // Move from sample to analysis
@@ -1153,7 +1153,7 @@ namespace Models.Core.ApsimFile
                         var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSand"] = new JArray(mappedValues);
                     }
 
@@ -1162,7 +1162,7 @@ namespace Models.Core.ApsimFile
                         var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeSilt"] = new JArray(mappedValues);
                     }
 
@@ -1171,7 +1171,7 @@ namespace Models.Core.ApsimFile
                         var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
                         if (values.Length < physicalThickness.Length)
                             Array.Resize(ref values, chemicalThickness.Length);
-                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                         physical["ParticleSizeClay"] = new JArray(mappedValues);
                     }
 
@@ -3899,6 +3899,78 @@ namespace Models.Core.ApsimFile
                     foreach (JValue variable in variables)
                         if (variable.Value is string)
                             variable.Value = ((string)variable.Value).Replace("log(", "log10(");
+            }
+        }
+
+        /// <summary>
+        /// Remove all graphs which are children of XYPairs. An older version
+        /// contained a bug which inserted duplicate graphs here. (Duplicate
+        /// models will now cause a file to fail to run.)
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion148(JObject root, string fileName)
+        {
+            foreach (JObject xyPairs in JsonUtilities.ChildrenRecursively(root, "XYPairs"))
+                foreach (JObject graph in JsonUtilities.ChildrenOfType(xyPairs, "Graph"))
+                    JsonUtilities.RemoveChild(xyPairs, JsonUtilities.Name(graph));
+        }
+
+        /// <summary>
+        /// Change EmergingPhase to use a child Target IFunction rather than built in shootlag, shootrate.
+        /// Also add a seed mortality function to plant models.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion149(JObject root, string fileName)
+        {
+            foreach (JObject emergingPhase in JsonUtilities.ChildrenRecursively(root, "EmergingPhase"))
+            {
+                var shootLag = emergingPhase["ShootLag"].ToString();
+                var shootRate = emergingPhase["ShootRate"].ToString();
+                emergingPhase.Remove("ShootLag");
+                emergingPhase.Remove("ShootRate");
+
+                var target = JsonUtilities.CreateNewChildModel(emergingPhase, "Target", "Models.Functions.AddFunction");
+                JsonUtilities.AddConstantFunctionIfNotExists(target, "ShootLag", shootLag);
+                var depthxRate = JsonUtilities.CreateNewChildModel(target, "DepthxRate", "Models.Functions.MultiplyFunction");
+                
+                var sowingDepthReference = JsonUtilities.CreateNewChildModel(depthxRate, "SowingDepth", "Models.Functions.VariableReference");
+                sowingDepthReference["VariableName"] = "[Plant].SowingData.Depth";
+
+                JsonUtilities.AddConstantFunctionIfNotExists(depthxRate, "ShootRate", shootRate);
+            }
+
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+            {
+                if (JsonUtilities.ChildWithName(plant, "MortalityRate") != null)
+                    JsonUtilities.AddConstantFunctionIfNotExists(plant, "SeedMortality", "0.0");
+            }
+        }
+
+        /// <summary>
+        /// The previous converter function added a constant called
+        /// SeedMortality, which should have been called SeedMortalityRate.
+        /// Unfortunately, the cat is already out of the bag, so I've fixed this
+        /// by writing a new converter function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion150(JObject root, string fileName)
+        {
+            const string correctName = "SeedMortalityRate";
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+            {
+                if (JsonUtilities.Children(plant).Count > 0)
+                {
+                    JObject seedMortality = JsonUtilities.ChildWithName(plant, "SeedMortality", ignoreCase: true);
+                    if (seedMortality == null)
+                        // If no seed mortality exists, add it in with the right name.
+                        JsonUtilities.AddConstantFunctionIfNotExists(plant, correctName, 0);
+                    else
+                        // We already have a seed mortality. Just rename it.
+                        JsonUtilities.RenameModel(seedMortality, correctName);
+                }
             }
         }
 

@@ -22,6 +22,11 @@ namespace Models.CLEM
         [NonSerialized]
         private protected IEnumerable<ISort> sortList = null;
 
+        /// <inheritdoc/>
+        [Description("Remove inherent order before sorting")]
+        [Core.Display(Order = 7000)]
+        public bool RandomiseBeforeSorting { get; set; }
+
         /// <summary>
         /// The properties available for filtering
         /// </summary>
@@ -30,13 +35,23 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public IEnumerable<string> Parameters => properties.Keys;
+        public IEnumerable<string> Parameters => properties?.Keys;
+
+        /// <inheritdoc/>
+        public IEnumerable<string> GetParameterNames()
+        {
+            if (properties is null)
+                InitialiseFilters(false);
+
+            return properties.Keys;
+        }
+
 
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) 
         {
             if (properties is null)
-                InitialiseFilters();
+                InitialiseFilters(false);
 
             return properties[name]; 
         }
@@ -48,15 +63,6 @@ namespace Models.CLEM
         {
             foreach (Filter filter in FindAllChildren<Filter>())
                 filter.ClearRule();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterGroup()
-        {
-            // needed for UI to access property lists
-           // InitialiseFilters();
         }
 
         ///<inheritdoc/>
@@ -71,7 +77,7 @@ namespace Models.CLEM
         /// <summary>
         /// Initialise filter rules and dropdown lists of properties available for TFilter
         /// </summary>
-        public void InitialiseFilters()
+        public void InitialiseFilters(bool includeBuildRules = true)
         {
             properties = typeof(TFilter)
                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
@@ -99,7 +105,8 @@ namespace Models.CLEM
             foreach (Filter filter in FindAllChildren<Filter>())
             {
                 filter.Initialise();
-                filter.BuildRule();
+                if (includeBuildRules)
+                    filter.BuildRule();
             }
 
             sortList = FindAllChildren<ISort>();
@@ -117,7 +124,7 @@ namespace Models.CLEM
 
             if(sortList?.Any()??false)
                 // add sorting and take specified
-                filtered = filtered.Sort(sortList);
+                filtered = filtered.Sort(sortList, RandomiseBeforeSorting);
 
             // do all takes and skips
             foreach (var take in FindAllChildren<TakeFromFiltered>())
@@ -131,7 +138,7 @@ namespace Models.CLEM
                         break;
                     case TakeFromFilterStyle.TakeIndividuals:
                     case TakeFromFilterStyle.SkipIndividuals:
-                        number = take.NumberToTake(0);
+                        number = take.NumberToTake(filtered.Count());
                         break;
                 }
                 switch (take.TakeStyle)

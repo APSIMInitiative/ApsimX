@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
                 foreach (var ind in herd)
                 {
                     aESum += ind.AdultEquivalent;
-                    var pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                    var pricing = ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     if (pricing != null)
                         saleValue += pricing.CalculateValue(ind);
 
@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
                                 head++;
                                 aESum += ind.AdultEquivalent;
                                 load450kgs += ind.Weight / 450.0;
-                                var pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                                var pricing = ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                                 if (pricing != null)
                                 {
                                     saleValue += pricing.CalculateValue(ind);
@@ -276,9 +276,9 @@ namespace Models.CLEM.Activities
                     double value = 0;
                     AnimalPriceGroup pricing = null;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
-                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, "Male.IsSire", "true");
+                        pricing = newind.BreedParams.GetPriceGroupOfIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, "Male.IsSire", "true");
                     else
-                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
+                        pricing = newind.BreedParams.GetPriceGroupOfIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
 
                     if (pricing != null)
                         value = pricing.CalculateValue(newind);
@@ -392,9 +392,9 @@ namespace Models.CLEM.Activities
                                 double value = 0;
                                 AnimalPriceGroup pricing = null;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
-                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, "IsSire", "true");
+                                    pricing = ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, "IsSire", "true");
                                 else
-                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
+                                    pricing = ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
 
                                 if (pricing != null)
                                     value = pricing.CalculateValue(ind);

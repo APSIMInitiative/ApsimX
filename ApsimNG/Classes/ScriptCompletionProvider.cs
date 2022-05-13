@@ -127,6 +127,7 @@ namespace UserInterface.Intellisense
             this.ShowError = ShowError;
             this.view = view;
             view.Completion.ShowHeaders = false;
+            view.KeyPressEvent += OnCompletionInfoKeyPress;
         }
 
         /// <summary>
@@ -169,11 +170,11 @@ namespace UserInterface.Intellisense
                 // We need to attach the popup window to the sourceview, so it
                 // gets hidden/removed when the sourceview loses focus.
                 methodSignaturePopup.AttachedTo = view;
-                view.KeyPressEvent += OnCompletionInfoKeyPress;
+
+                methodSignaturePopup.ShowAll();
 
                 // Move the info window to the location of the cursor.
                 methodSignaturePopup.MoveToIter(view, iter);
-                methodSignaturePopup.ShowAll();
             }
 
             // Return false, to allow the sourceview to automatically handle
@@ -186,10 +187,10 @@ namespace UserInterface.Intellisense
         {
             try
             {
-                if (args.Event.Key == Gdk.Key.Escape)
+                if (methodSignaturePopup != null && args.Event.Key == Gdk.Key.Escape)
                 {
-                    methodSignaturePopup.Hide();
                     methodSignaturePopup.Dispose();
+                    methodSignaturePopup = null;
                 }
             }
             catch (Exception err)
@@ -210,12 +211,22 @@ namespace UserInterface.Intellisense
         /// gtk_source_completion_proposal_get_info() is used as the content of
         /// the GtkLabel.
         /// </summary>
-        /// <param name="proposal"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// This implementation is essentially the same as the default behvaiour
+        /// when this method is not implemented (ie when it returns null),
+        /// except that I've set UseMarkup to false, to ensure that generic
+        /// members/parameters are displayed correctly without being parsed as
+        /// markup.
+        /// </remarks>
+        /// <param name="proposal">The completion proposal.</param>
         public Widget GetInfoWidget(ICompletionProposal proposal)
         {
-            // tbi
-            return null;
+            return new Label()
+            {
+                UseMarkup = false,
+                Text = proposal.Info,
+                Visible = true
+            };
         }
 
         /// <summary>
@@ -277,10 +288,17 @@ namespace UserInterface.Intellisense
                     return;
 
                 IEnumerable<NeedContextItemsArgs.ContextItem> contextItems = task.Result.OrderBy(c => c.Name);
+                // Iff owned is true, the list will be freed by calls to Dispose().
+                bool owned = true;
+                // Iff elementsOwned is true, the list elements will be freed
+                // when the list is freed, which will result in double disposal
+                // of the list elements.
+                bool elementsOwned = false;
+
                 List proposals = new List(contextItems.Select(c => new CompletionProposalAdapter(new CustomScriptCompletionProposal(c))).ToArray(),
                                           typeof(CompletionProposalAdapter),
-                                          true,
-                                          true);
+                                          owned,
+                                          elementsOwned);
                 context.AddProposals(this, proposals, true);
             }
             catch (Exception err)

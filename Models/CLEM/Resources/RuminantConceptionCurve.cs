@@ -44,9 +44,9 @@ namespace Models.CLEM.Resources
         public double ConceptionRateIntercept { get; set; }
 
         /// <summary>
-        /// Conception rate assymtote of breeder
+        /// Conception rate asymptote of breeder
         /// </summary>
-        [Description("Conception rate assymtote")]
+        [Description("Conception rate asymptote")]
         [Required]
         public double ConceptionRateAsymptote { get; set; }
 

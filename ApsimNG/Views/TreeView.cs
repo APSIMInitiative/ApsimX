@@ -171,6 +171,7 @@ namespace UserInterface.Views
                         // use_align to false should cause the tree to perform the minimum amount
                         // of scrolling necessary to bring the cell onscreen).
                         treeview1.ScrollToCell(pathToSelect, null, false, 0, 0);
+                        treeview1.GrabFocus();
                     }
                 }
             }
@@ -948,10 +949,11 @@ namespace UserInterface.Views
                         dropArgs.NodePath = GetFullPath(path);
 
                         dropArgs.DragObject = dragDropData;
-                        if (e.Context.SelectedAction == Gdk.DragAction.Copy)
-                            dropArgs.Copied = true;
-                        else if (e.Context.SelectedAction == Gdk.DragAction.Move)
+                        Gdk.DragAction action = e.Context.SelectedAction;
+                        if ( (action & Gdk.DragAction.Move) == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
+                        else if ( (action & Gdk.DragAction.Copy) == Gdk.DragAction.Copy)
+                            dropArgs.Copied = true;
                         else
                             dropArgs.Linked = true;
                         Droped(this, dropArgs);

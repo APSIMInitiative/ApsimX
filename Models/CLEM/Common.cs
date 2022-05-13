@@ -122,45 +122,6 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Reasons link to herd change for use with manual mark for sale
-    /// </summary>
-    public enum MarkForSaleReason
-    {
-        /// <summary>
-        /// Reason not provided
-        /// </summary>
-        NotProvided = 0,
-        /// <summary>
-        /// Individual sold as marked for sale
-        /// </summary>
-        MarkedSale = 4,
-        /// <summary>
-        /// Individual reached sale weight or age
-        /// </summary>
-        AgeWeightSale = 12,
-        /// <summary>
-        /// Individual consumed by household
-        /// </summary>
-        Consumed = 15,
-        /// <summary>
-        /// Destocking sale
-        /// </summary>
-        DestockSale = 16,
-        /// <summary>
-        /// Dry breeder sold
-        /// </summary>
-        DryBreederSale = 6,
-        /// <summary>
-        /// Individual reached maximim age and sold
-        /// </summary>
-        MaxAgeSale = 10,
-        /// <summary>
-        /// Trade individual sold weight/age
-        /// </summary>
-        TradeSale = 5 
-    }
-
-    /// <summary>
     /// Mustering timing type
     /// </summary>
     public enum MusterTimingType
@@ -628,7 +589,7 @@ namespace Models.CLEM
     /// <summary>
     /// Style to identify different ruminant groups needed by activities
     /// </summary>
-    public enum RuminantGroupStyle
+    public enum RuminantGroupStyleSecondary
     {
         /// <summary>
         /// No style specified
@@ -636,74 +597,60 @@ namespace Models.CLEM
         NotSpecified = 0,
 
         /// <summary>
-        /// Remove
-        /// </summary>
-        Remove = 5,
-
-        /// <summary>
         /// Select females to remove
         /// </summary>
-        RemoveFemales = 10,
-
-        /// <summary>
-        /// Female breeders to remove
-        /// </summary>
-        RemoveFemaleBreeders = 12,
+        Females = 100,
 
         /// <summary>
         /// Female pre-breeders to remove
         /// </summary>
-        RemoveFemalePreBreeders = 14,
+        FemalePreBreeders = 110,
+
+        /// <summary>
+        /// Female breeders to remove
+        /// </summary>
+        FemaleBreeders = 120,
 
         /// <summary>
         /// Select males to remove
         /// </summary>
-        RemoveMales = 20,
-
-        /// <summary>
-        /// Male breeders to remove
-        /// </summary>
-        RemoveMaleBreeders = 22,
+        Males = 200,
 
         /// <summary>
         /// Male pre-breeders to remove
         /// </summary>
-        RemoveMalePreBreeders = 24,
+        MalePreBreeders = 210,
 
         /// <summary>
-        /// Select
+        /// Male breeders to remove
         /// </summary>
-        Select = 55,
+        MaleBreeders = 220,
+    }
+
+    /// <summary>
+    /// Tertiary style to identify different ruminant groups needed by activities
+    /// </summary>
+    public enum RuminantGroupStyleTertiary
+    {
+        /// <summary>
+        /// No style specified
+        /// </summary>
+        NotSpecified = 0,
 
         /// <summary>
-        /// Select females
+        /// From the specified herd available
         /// </summary>
-        SelectFemales = 60,
+        FromHerd = 10,
 
         /// <summary>
-        /// Select female breeders
+        /// From only individuals flagged for sale
         /// </summary>
-        SelectFemaleBreeders = 62,
+        FromSales = 20,
 
         /// <summary>
-        /// Select female pre-breeders
+        /// From the current list of potential purchases
         /// </summary>
-        SelectFemalePreBreeders = 64,
-
-        /// <summary>
-        /// Select females
-        /// </summary>
-        SelectMales = 70,
-
-        /// <summary>
-        /// Select female breeders
-        /// </summary>
-        SelectMaleBreeders = 72,
-
-        /// <summary>
-        /// Select female pre-breeders
-        /// </summary>
-        SelectMalePreBreeders = 74,
+        FromPurchases = 30,
     }
 
     /// <summary>
@@ -842,9 +789,9 @@ namespace Models.CLEM
     public enum RuminantClass
     {
         /// <summary>
-        /// Calf
+        /// Suckling
         /// </summary>
-        Calf,
+        Suckling,
         /// <summary>
         /// Weaner
         /// </summary>
@@ -918,6 +865,29 @@ namespace Models.CLEM
         /// Take/Skip from end
         /// </summary>
         End
+    }
+
+    /// <summary>
+    /// The overall style of ruminants required
+    /// </summary>
+    public enum GetRuminantHerdSelectionStyle
+    {
+        /// <summary>
+        /// All individuals currently in herd both including marked for sale
+        /// </summary>
+        AllOnFarm,
+        /// <summary>
+        /// Individuals in purchase list yet to be bought
+        /// </summary>
+        ForPurchase,
+        /// <summary>
+        /// Individuals currently marked for sale in the herd
+        /// </summary>
+        MarkedForSale,
+        /// <summary>
+        /// Individuals not marked for sale in the herd
+        /// </summary>
+        NotMarkedForSale,
     }
 
 }

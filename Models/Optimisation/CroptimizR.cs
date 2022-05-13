@@ -552,6 +552,14 @@ namespace Models.Optimisation
         }
 
         /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
         /// Run all child simulations with the given optimal values,
         /// and store the results in the given checkpoint name.
         /// </summary>

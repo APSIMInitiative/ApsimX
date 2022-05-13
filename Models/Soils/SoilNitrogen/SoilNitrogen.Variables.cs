@@ -126,7 +126,7 @@ namespace Models.Soils
         [Units("g/g")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [JsonIgnore]
-        public double DefaultCarbonInSoilOM = 0.588;
+        public double DefaultCarbonInSoilOM { get; set; } = 0.588;
 
         /// <summary>
         /// Default carbon weight fraction in FOM (g/g).
@@ -137,14 +137,14 @@ namespace Models.Soils
         [Units("g/g")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [JsonIgnore]
-        public double DefaultCarbonInFOM = 0.4;
+        public double DefaultCarbonInFOM { get; set; } = 0.4;
 
         /// <summary>
         /// Default initial pH, used case no pH is initialised in model.
         /// </summary>
         [Units("")]
         [JsonIgnore]
-        public double DefaultInitialpH = 6.0;
+        public double DefaultInitialpH { get; set; } = 6.0;
 
         /// <summary>
         /// Threshold for raising a warning due to small negative values.
@@ -175,7 +175,7 @@ namespace Models.Soils
         [Bounds(Lower = 5, Upper = 30)]
         [Units("g/g")]
         [JsonIgnore]
-        public double[] HumusCNr = { 10.0, 11.0 };
+        public double[] HumusCNr { get; set; } = { 10.0, 11.0 };
 
         /// <summary>
         /// The C:N ratio of soil microbial biomass.
@@ -186,7 +186,7 @@ namespace Models.Soils
         [Bounds(Lower = 5, Upper = 15)]
         [Units("")]
         [JsonIgnore]
-        public double MBiomassCNr = 8.0;
+        public double MBiomassCNr { get; set; } = 8.0;
 
         /// <summary>
         /// Proportion of biomass-C in the initial mineralisable humic-C (g/g).
@@ -194,7 +194,7 @@ namespace Models.Soils
         [Bounds(Lower = 0, Upper = 1)]
         [Units("g/g")]
         [JsonIgnore]
-        public double[] FBiom = { 0.05, 0.01 };
+        public double[] FBiom { get; set; } = { 0.05, 0.01 };
 
         /// <summary>
         /// Proportion of the initial total soil C that is inert, cannot be mineralised (g/g).
@@ -202,7 +202,7 @@ namespace Models.Soils
         [Bounds(Lower = 0, Upper = 1)]
         [Units("g/g")]
         [JsonIgnore]
-        public double[] FInert = { 0.5, 0.95 };
+        public double[] FInert { get; set; } = { 0.5, 0.95 };
 
 
 
@@ -212,7 +212,7 @@ namespace Models.Soils
         [Bounds(Lower = 0, Upper = 100000)]
         [Units("kg/ha")]
         [JsonIgnore]
-        public double InitialFOMWt = 2000;
+        public double InitialFOMWt { get; set; } = 2000;
 
         /// <summary>
         /// Initial depth over which FOM is distributed within the soil profile (mm).
@@ -223,7 +223,7 @@ namespace Models.Soils
         /// </remarks>
         [Units("mm")]
         [JsonIgnore]
-        public double InitialFOMDepth = -99.0;
+        public double InitialFOMDepth { get; set; } = -99.0;
 
         /// <summary>
         /// Exponent of function used to compute initial distribution of FOM in the soil.
@@ -231,12 +231,12 @@ namespace Models.Soils
         [Bounds(Lower = 0.01, Upper = 10.0)]
         [Units("")]
         [JsonIgnore]
-        public double InitialFOMDistCoefficient = 3.0;
+        public double InitialFOMDistCoefficient { get; set; } = 3.0;
 
         /// <summary>Initial C:N ratio of soil FOM (g/g).</summary>
         [Units("g/g")]
         [JsonIgnore]
-        public double InitialFOMCNr = 40.0;
+        public double InitialFOMCNr { get; set; } = 40.0;
 
         /// <summary>
         /// FOM type used on initialisation and reset.
@@ -308,7 +308,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double ResiduesRespirationFactor = 0.6;
+        public double ResiduesRespirationFactor { get; set; } = 0.6;
 
         /// <summary>
         /// Fraction of retained residue C transferred to microbial biomass (g/g).
@@ -319,7 +319,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double ResiduesFractionIntoBiomass = 0.9;
+        public double ResiduesFractionIntoBiomass { get; set; } = 0.9;
 
         /// <summary>
         /// Depth from which mineral N can be immobilised when decomposing surface residues (mm).
@@ -327,7 +327,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         [JsonIgnore]
-        public double ResiduesDecompDepth = 100;
+        public double ResiduesDecompDepth { get; set; } = 100;
 
 
 
@@ -337,7 +337,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
         [JsonIgnore]
-        public double[] Pool1FOMTurnOverRate = { 0.2, 0.1 };
+        public double[] Pool1FOMTurnOverRate { get; set; } = { 0.2, 0.1 };
 
         /// <summary>
         /// Optimum rate for decomposition of FOM pool 2 [cellulose], aerobic and anaerobic conditions (/day).
@@ -345,7 +345,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
         [JsonIgnore]
-        public double[] Pool2FOMTurnOverRate = { 0.05, 0.25 };
+        public double[] Pool2FOMTurnOverRate { get; set; } = { 0.05, 0.25 };
 
         /// <summary>
         /// Optimum rate for decomposition of FOM pool 3 [lignin], aerobic and anaerobic conditions (/day).
@@ -353,7 +353,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
         [JsonIgnore]
-        public double[] Pool3FOMTurnOverRate = { 0.0095, 0.003 };
+        public double[] Pool3FOMTurnOverRate { get; set; } = { 0.0095, 0.003 };
 
         /// <summary>
         /// Fraction of the FOM C decomposed lost to atmopshere due to respiration (g/g).
@@ -361,7 +361,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double FOMRespirationFactor = 0.6;
+        public double FOMRespirationFactor { get; set; } = 0.6;
 
         /// <summary>
         /// Fraction of the retained FOM C transferred to biomass (g/g).
@@ -372,7 +372,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double FOMFractionIntoBiomass = 0.9;
+        public double FOMFractionIntoBiomass { get; set; } = 0.9;
 
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 10.0)]
         [Units("")]
         [JsonIgnore]
-        public double FOMDecomp_CNCoefficient = 0.693;
+        public double FOMDecomp_CNCoefficient { get; set; } = 0.693;
 
         /// <summary>
         /// Value of C:N ratio above which decomposition rate of FOM declines.
@@ -389,7 +389,7 @@ namespace Models.Soils
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double FOMDecomp_CNThreshold = 25.0;
+        public double FOMDecomp_CNThreshold { get; set; } = 25.0;
 
         /// <summary>
         /// Data for calculating the temperature effect on FOM decomposition.
@@ -466,7 +466,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
         [JsonIgnore]
-        public double[] MBiomassTurnOverRate = { 0.0081, 0.004 };
+        public double[] MBiomassTurnOverRate { get; set; } = { 0.0081, 0.004 };
 
         /// <summary>
         /// Fraction of microbial biomass C mineralised that is lost to the atmosphere due to respiration (g/g).
@@ -474,7 +474,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double MBiomassRespirationFactor = 0.6;
+        public double MBiomassRespirationFactor { get; set; } = 0.6;
 
         /// <summary>
         /// Fraction of retained microbial biomass C that goes back to microbial biomass (g/g).
@@ -485,7 +485,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("g/g")]
         [JsonIgnore]
-        public double MBiomassFractionIntoBiomass = 0.6;
+        public double MBiomassFractionIntoBiomass { get; set; } = 0.6;
 
         /// <summary>
         /// Potential rate of active humus mineralisation, aerobic and anaerobic conditions (/day).
@@ -493,7 +493,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
         [JsonIgnore]
-        public double[] AHumusTurnOverRate = { 0.00015, 0.00007 };
+        public double[] AHumusTurnOverRate { get; set; } = { 0.00015, 0.00007 };
 
         /// <summary>
         /// Fraction of active humic C mineralised that is lost to the atmosphere due to respiration (g/g).
@@ -501,7 +501,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/g/")]
         [JsonIgnore]
-        public double AHumusRespirationFactor = 0.6;
+        public double AHumusRespirationFactor { get; set; } = 0.6;
 
 
         /// <summary>
@@ -584,7 +584,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/day")]
         [JsonIgnore]
-        public double UreaHydrol_MinRate = 0.25;
+        public double UreaHydrol_MinRate { get; set; } = 0.25;
 
         /// <summary>
         /// Parameter A for the potential urea hydrolysis function.
@@ -698,7 +698,7 @@ namespace Models.Soils
         /// </remarks>
         [Units("ppm/day")]
         [JsonIgnore]
-        public double NitrificationMaxPotential = 40.0;
+        public double NitrificationMaxPotential { get; set; } = 40.0;
 
         /// <summary>
         /// NH4 concentration at half potential nitrification, Michaelis-Menten dynamics (ppm).
@@ -709,7 +709,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm")]
         [JsonIgnore]
-        public double NitrificationNH4ForHalfRate = 90.0;
+        public double NitrificationNH4ForHalfRate { get; set; } = 90.0;
 
         /// <summary>
         /// Fraction of nitrification lost as denitrification
@@ -717,7 +717,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [JsonIgnore]
-        public double Nitrification_DenitLossFactor = 0.0;
+        public double Nitrification_DenitLossFactor { get; set; } = 0.0;
 
         /// <summary>
         /// Parameters to calculate the temperature effect on nitrification.
@@ -1013,6 +1013,7 @@ namespace Models.Soils
 
 
 
+        #region Parameters for co-denitrification and associated N2O emissions
 
         /// <summary>
         /// Denitrification rate coefficient (kg soil/mg C/day).
@@ -1033,7 +1034,7 @@ namespace Models.Soils
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
         [JsonIgnore]
-        public double[] Codenitrification_TOptmimun
+        private double[] Codenitrification_TOptmimun
         {
             get { return Codenitrification_TemperatureFactorData.xValueForOptimum; }
             set { Codenitrification_TemperatureFactorData.xValueForOptimum = value; }
@@ -1045,7 +1046,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_TFactorAtZero
+        private double[] Codenitrification_TFactorAtZero
         {
             get { return Codenitrification_TemperatureFactorData.yValueAtZero; }
             set { Codenitrification_TemperatureFactorData.yValueAtZero = value; }
@@ -1056,7 +1057,7 @@ namespace Models.Soils
         /// </summary>
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_TCurveCoeff
+        private double[] Codenitrification_TCurveCoeff
         {
             get { return Codenitrification_TemperatureFactorData.CurveExponent; }
             set { Codenitrification_TemperatureFactorData.CurveExponent = value; }
@@ -1076,7 +1077,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_NormWaterContents
+        private double[] Codenitrification_NormWaterContents
         {
             get { return Codenitrification_MoistureFactorData.xVals; }
             set { Codenitrification_MoistureFactorData.xVals = value; }
@@ -1088,7 +1089,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_MoistureFactors
+        private double[] Codenitrification_MoistureFactors
         {
             get { return Codenitrification_MoistureFactorData.yVals; }
             set { Codenitrification_MoistureFactorData.yVals = value; }
@@ -1105,7 +1106,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_pHValues
+        private double[] Codenitrification_pHValues
         {
             get { return Codenitrification_pHFactorData.xVals; }
             set { Codenitrification_pHFactorData.xVals = value; }
@@ -1117,7 +1118,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_pHFactors
+        private double[] Codenitrification_pHFactors
         {
             get { return Codenitrification_pHFactorData.yVals; }
             set { Codenitrification_pHFactorData.yVals = value; }
@@ -1134,7 +1135,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("ppm")]
         [JsonIgnore]
-        public double[] Codenitrification_NHNOValues
+        private double[] Codenitrification_NHNOValues
         {
             get { return Codenitrification_NH3NO2FactorData.xVals; }
             set { Codenitrification_NH3NO2FactorData.xVals = value; }
@@ -1146,7 +1147,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [JsonIgnore]
-        public double[] Codenitrification_NHNOFactors
+        private double[] Codenitrification_NHNOFactors
         {
             get { return Codenitrification_NH3NO2FactorData.yVals; }
             set { Codenitrification_NH3NO2FactorData.yVals = value; }
@@ -1160,7 +1161,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("kg/mg")]
         [JsonIgnore]
-        public double DenitrificationRateCoefficient = 0.0006;
+        public double DenitrificationRateCoefficient { get; set; } = 0.0006;
 
         /// <summary>
         /// Parameter A of linear function to compute soluble carbon.

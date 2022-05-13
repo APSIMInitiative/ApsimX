@@ -17,6 +17,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Description("Shuffle (randomises) individuals in the fiter group")]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/SortRandomise.htm")]
     public class SortRandom : CLEMModel, IValidatableObject, ISort
     {
         /// <inheritdoc/>

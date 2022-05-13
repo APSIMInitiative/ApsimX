@@ -213,7 +213,7 @@ namespace Models.CLEM.Resources
             set
             {
                 if(manager!=null)
-                    throw new ApsimXException(this, String.Format("Each [r=GrazeStoreType] can only be managed by a single activity./nTwo managing activities ([a={0}] and [a={1}]) are trying to manage [r={2}]", manager.Name, value.Name, this.Name));
+                    throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]");
                 manager = value;
             }
         }
@@ -657,6 +657,11 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
+                if(pool.Age == 0)
+                {
+                    pool.Growth = pool.Amount;
+                }
+
                 // allow decaying or no pools currently available
                 if (PastureDecays || Pools.Count() == 0)
                     Pools.Insert(0, pool);
