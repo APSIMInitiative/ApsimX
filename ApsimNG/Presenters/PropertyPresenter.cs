@@ -95,7 +95,9 @@ namespace UserInterface.Presenters
                     // Only show properties which have a getter and a setter.
                     .Where(p => p.CanRead && p.CanWrite)
                     // Order by line number of the description attribute.
-                    .OrderBy(p => p.GetCustomAttribute<DescriptionAttribute>().LineNumber);
+                    .OrderBy(p => p.GetCustomAttribute<DisplayAttribute>()?.Order??0)
+                    // Then order by line number of the description attribute.
+                    .ThenBy(p => p.GetCustomAttribute<DescriptionAttribute>().LineNumber);
 
             // Filter out properties which don't fit the user's custom filter.
             if (Filter != null)
@@ -145,6 +147,7 @@ namespace UserInterface.Presenters
         {
             view.SaveChanges();
             view.PropertyChanged -= OnViewChanged;
+            (view as ViewBase).Dispose();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
     

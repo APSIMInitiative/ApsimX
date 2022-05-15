@@ -27,6 +27,22 @@
         /// </summary>
         public string Name { get { return $"Sleep job ({durationOfSleep}ms)"; } }
 
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
+        /// Prepare the job for running.
+        /// </summary>
+        public void Prepare()
+        {
+            // Do nothing.
+        }
+
         /// <summary>Called to start the job. Can throw on error.</summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)

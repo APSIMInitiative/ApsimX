@@ -1,11 +1,11 @@
 ﻿namespace UserInterface.Views
 {
-    using Extensions;
     using Gtk;
     using Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using Utility;
 
     /// <summary>
     /// Encapsulates a toolstrip (button bar)
@@ -13,6 +13,7 @@
     public class ToolStripView : ViewBase, IToolStripView
     {
         private Toolbar toolStrip = null;
+        private AccelGroup accelerators;
 
         /// <summary>Constructor.</summary>
         public ToolStripView()
@@ -53,23 +54,21 @@
         /// <summary>Destroy the toolstrip</summary>
         public void Destroy()
         {
+            if (accelerators != null)
+            {
+                Window mainWindow = GetMainWindow();
+                if (mainWindow != null)
+                    mainWindow.RemoveAccelGroup(accelerators);
+                accelerators.Dispose();
+                accelerators = null;
+            }
+
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
-                {
-                    PropertyInfo pi = child.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(child);
-                        if (handlers != null && handlers.ContainsKey("clicked"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["clicked"];
-                            (child as ToolButton).Clicked -= handler;
-                        }
-                    }
-                }
+                    child.DetachHandlers();
                 toolStrip.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
         }
 
@@ -77,10 +76,11 @@
         /// <param name="menuDescriptions">Descriptions for each item.</param>
         public void Populate(List<MenuDescriptionArgs> menuDescriptions)
         {
+            accelerators = new AccelGroup();
             foreach (Widget child in toolStrip.Children)
             {
                 toolStrip.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
@@ -115,11 +115,24 @@
                     button.Homogeneous = false;
                     button.LabelWidget = new Label(description.Name);
                     button.Clicked += description.OnClick;
+                    if (!string.IsNullOrWhiteSpace(description.ShortcutKey))
+                    {
+                        Gtk.Accelerator.Parse(description.ShortcutKey, out uint key, out Gdk.ModifierType modifier);
+                        button.AddAccelerator("clicked", accelerators, key, modifier, AccelFlags.Visible);
+                    }
                     item = button;
                 }
                 toolStrip.Add(item);
             }
+            Window mainWindow = GetMainWindow();
+            if (mainWindow != null)
+                mainWindow.AddAccelGroup(accelerators);
             toolStrip.ShowAll();
+        }
+
+        private Window GetMainWindow()
+        {
+            return ((ViewBase)MasterView).MainWidget.Toplevel as Window;
         }
     }
 }

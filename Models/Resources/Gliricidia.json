@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 133,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -32,6 +32,16 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": true
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.Functions.AccumulateFunction, Models",
@@ -144,8 +154,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 1.0,
-              "ShootRate": 0.0,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -157,6 +165,48 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -332,7 +382,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -358,7 +409,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -393,7 +445,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -419,7 +472,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -437,7 +491,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -483,62 +538,68 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead",
-            "[Root].Live",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Total",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stem].Live",
-            "[Root].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.Functions.DivideFunction, Models",
@@ -569,17 +630,20 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stem].Dead",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.Organs.PerennialLeaf, Models",
@@ -1367,7 +1431,7 @@
           "Name": "Root",
           "Children": [
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
               "Name": "RootShape",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1669,7 +1733,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -1756,6 +1820,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1763,7 +1842,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -1864,6 +1943,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1917,11 +2011,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -2170,7 +2259,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -2267,6 +2356,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2274,7 +2378,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -2375,6 +2479,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2437,27 +2556,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Stem].MinimumNConc"
-            },
-            {
-              "$type": "Models.PMF.BiomassDemand, Models",
-              "Name": "dmDemandPriorityFactors",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Structural",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "1"
-                }
-              ]
             }
           ],
           "IncludeInDocumentation": false,

@@ -4,9 +4,11 @@
     using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
     using Models.Soils;
     using NUnit.Framework;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>This is a test class for the simulation structure manager.</summary>
     [TestFixture]
@@ -147,6 +149,44 @@
             Assert.NotNull(file.Children);
             Assert.AreEqual(1, file.Children.Count);
             Assert.AreEqual(typeof(Models.PMF.Plant), file.Children[0].GetType());
+        }
+
+        [Serializable]
+        private class Model0 : Model
+        {
+            [EventSubscribe("StartOfSimulation")]
+            private void StartOfSim(object sender, EventArgs args)
+            {
+                IModel parent = FindAncestor<Zone>();
+                Structure.Add(new Model1(), parent);
+            }
+        }
+
+        [Serializable]
+        private class Model1 : Model
+        {
+            [Link] private Model2 model = null;
+            public IModel Model => model;
+        }
+
+        private class Model2 : Model
+        {
+        }
+
+        /// <summary>
+        /// Attempt to add a node to a simulation at runtime, and ensure that a
+        /// failure to resolve links in the added node causes an exception to be
+        /// thrown.
+        /// </summary>
+        [Test]
+        public void AddNodeWithMissingLink()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+            Zone sim = sims.FindDescendant<Zone>();
+            Structure.Add(new Model0(), sim);
+            Runner runner = new Runner(sims);
+            List<Exception> errors = runner.Run();
+            Assert.AreEqual(1, errors.Count);
         }
     }
 }

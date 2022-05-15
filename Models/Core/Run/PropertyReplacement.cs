@@ -5,6 +5,7 @@
     /// <summary>
     /// This class encapsulates an instruction to replace a property value.
     /// </summary>
+    [Serializable]
     public class PropertyReplacement : IReplacement
     {
         /// <summary>
@@ -45,6 +46,33 @@
                 if (variable != null)
                     variable.Value = replacement;
             }
+        }
+
+        /// <summary>
+        /// Check value-equality with another property replacement instance.
+        /// </summary>
+        /// <param name="obj">The second object instance.</param>
+        public override bool Equals(object obj)
+        {
+            if (obj is PropertyReplacement property)
+            {
+                if (path != property.path)
+                    return false;
+                if (replacement == null && property.replacement == null)
+                    return true;
+                if (replacement == null || property.replacement == null)
+                    return false;
+                return replacement.Equals(property.replacement);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get a hash code for this property replacement instance.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return (path, replacement).GetHashCode();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Models.PMF
 {
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
@@ -7,15 +8,13 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name] 
-    /// [Name] overrides the following properties:
-    /// 
-    /// [Command]
+    /// A cultivar model - used to override properties of another model
+    /// (typically a plant) at runtime.
     /// </summary>
     /// <remarks>
-    /// A cultivar includes \p Aliases to indicate other common names
-    /// and \p Commands to specify genotypic parameters.
-    /// The format of \p Commands is "name=value". The "name" of parameter
+    /// A cultivar includes aliases to indicate other common names
+    /// and Commands to specify genotypic parameters.
+    /// The format of Commands is "name=value". The "name" of parameter
     /// should include the full path under Plant function,
     /// e.g. [Phenology].Vernalisation.PhotopSens = 3.5.
     /// </remarks>
@@ -127,13 +126,29 @@
         /// </summary>
         public void Unapply()
         {
-            for (int i = 0; i < this.properties.Count; i++)
+            // Unapply the cultivars in the reverse order to which they were applied.
+            // Otherwise, if two commands modify the same property, the unapply
+            // operation will not work as expected.
+            for (int i = properties.Count - 1; i >= 0; i--)
             {
                 this.properties[i].Value = this.oldPropertyValues[i];
             }
 
             this.properties.Clear();
             this.oldPropertyValues.Clear();
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            if (Command != null && Command.Any())
+            {
+                yield return new Paragraph($"{Name} overrides the following properties:");
+                foreach (string command in Command)
+                    yield return new Paragraph(command);
+            }
         }
     }
 }

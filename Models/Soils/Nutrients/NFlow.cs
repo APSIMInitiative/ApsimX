@@ -8,7 +8,6 @@ namespace Models.Soils.Nutrients
     using Interfaces;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]

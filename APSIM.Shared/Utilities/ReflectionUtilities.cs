@@ -342,13 +342,14 @@
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <param name="includePrivates">Serialise private members as well as publics?</param>
+        /// <param name="includeChildren">Serialize child models as well?</param>
         /// <returns>The string representation of the object.</returns>
-        public static string JsonSerialise(object source, bool includePrivates)
+        public static string JsonSerialise(object source, bool includePrivates, bool includeChildren = true)
         {
             return JsonConvert.SerializeObject(source, Formatting.Indented,
                     new JsonSerializerSettings
                     {
-                        ContractResolver = new DynamicContractResolver(includePrivates),
+                        ContractResolver = new DynamicContractResolver(includePrivates, includeChildren),
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     });
         }
@@ -357,30 +358,33 @@
         private class DynamicContractResolver : DefaultContractResolver
         {
             private BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            private readonly bool includeChildren;
 
-            public DynamicContractResolver(bool includePrivates)
+            public DynamicContractResolver(bool includePrivates, bool includeChildren)
             {
+                this.includeChildren = includeChildren;
                 if (includePrivates)
                     bindingFlags |= BindingFlags.NonPublic;
             }
 
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
-                var props = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
-                            .Union(
-                            GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
-                            ).ToList();
+                IEnumerable<JsonProperty> fields = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                IEnumerable<JsonProperty> properties = GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                if (!includeChildren)
+                    properties = properties.Where(p => p.PropertyName != "Children");
+                List<JsonProperty> props = fields.Union(properties).ToList();
+
                 // If this type overrides a base class's property or field, then this list
                 // will contain multiple properties with the same name, which causes a
                 // serialization exception when we go to serialize these properties. The
                 // solution is to group the properties by name and take the last of each
                 // group so we end up with the most derived property.
                 props = props.GroupBy(p => p.PropertyName).Select(g => g.Last()).ToList();
-                props.ForEach(p => { p.Writable = true; p.Readable = true; });
-                return props.Where(p => p.PropertyName != "Parent").ToList();
+                props.ForEach(p => { p.Writable = true; });
+                return props.Where(p => p.PropertyName != "Parent" && p.Readable).ToList();
             }
         }
-
 
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'
@@ -661,6 +665,24 @@
                         return reader.ReadToEnd();
 
             return null;
+        }
+
+        /// <summary>
+        /// Copy the contents of a resource into a file on disk.
+        /// </summary>
+        /// <param name="assembly">Assembly to which the resource belongs.</param>
+        /// <param name="resource">Name of the resource.</param>
+        /// <param name="file">Path to the file to be written.</param>
+        public static void WriteResourceToFile(Assembly assembly, string resource, string file)
+        {
+            using (Stream reader = assembly.GetManifestResourceStream(resource))
+            {
+                using (FileStream writer = File.Create(file))
+                {
+                    reader.Seek(0, SeekOrigin.Begin);
+                    reader.CopyTo(writer);
+                }
+            }
         }
     }
 }

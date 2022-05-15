@@ -43,7 +43,7 @@
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.Services);
-                links.Resolve(modelToAdd, true);
+                links.Resolve(modelToAdd, true, throwOnFail: true);
                 var events = new Events(modelToAdd);
                 events.ConnectEvents();
 
@@ -64,11 +64,10 @@
             // The strategy here is to try and add the string as if it was a APSIM Next Gen.
             // string (json or xml). If that throws an exception then try adding it as if
             // it was an APSIM 7.10 string (xml). If that doesn't work throw 'invalid format' exception.
-            List<Exception> creationExceptions;
             IModel modelToAdd = null;
             try
             {
-                modelToAdd = FileFormat.ReadFromString<IModel>(st, out creationExceptions);
+                modelToAdd = FileFormat.ReadFromString<IModel>(st, e => throw e, false);
             }
             catch (Exception err)
             {
@@ -86,7 +85,7 @@
                 var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
                 rootNode.RemoveAll();
                 rootNode.AppendChild(convertedNode);
-                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, out creationExceptions);
+                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, e => throw e, false);
                 if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
                     throw new Exception("Cannot add model. Invalid model being added.");
                 modelToAdd = newSimulationModel.Children[0];

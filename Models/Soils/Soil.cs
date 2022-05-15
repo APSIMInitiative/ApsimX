@@ -19,6 +19,9 @@
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     public class Soil : Model
     {
+        [Link]
+        private ISummary summary = null;
+
         /// <summary>Gets or sets the record number.</summary>
         [Summary]
         [Description("Record number")]
@@ -115,7 +118,7 @@
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            SoilChecker.Check(this);
+            SoilChecker.Check(this, summary);
         }
     }
 }

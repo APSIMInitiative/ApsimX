@@ -3,6 +3,7 @@ namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The IModel interface specifies the properties and methods that all
@@ -29,11 +30,6 @@ namespace Models.Core
         /// Gets or sets a value indicating whether a model is hidden from the user.
         /// </summary>
         bool IsHidden { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
-        /// </summary>
-        bool IncludeInDocumentation { get; set; }
 
         /// <summary>
         /// Gets or sets whether the model is enabled
@@ -297,5 +293,13 @@ namespace Models.Core
         /// e.g. add / remove models.
         /// </summary>
         void OnPreLink();
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        IEnumerable<ITag> Document();
     }
 }

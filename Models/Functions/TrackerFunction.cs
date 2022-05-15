@@ -9,7 +9,6 @@
     using System.Globalization;
 
     /// <summary>
-    /// # [Name]
     /// A function that accumulates values from child functions
     /// </summary>
     [Serializable]
@@ -75,11 +74,13 @@
             return 0;
         }
 
-        /// <summary>Invoked when simulation commences</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
         {
             events.Subscribe(StartEventName, OnStartEvent);
             events.Subscribe(EndEventName, OnEndEvent);

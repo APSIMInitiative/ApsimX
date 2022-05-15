@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.JobRunning;
     using Models.Core.ApsimFile;
+    using Models.PostSimulationTools;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -171,7 +172,6 @@
             startTime = DateTime.Now;
             Status = "Finding simulations to run";
 
-            List<Exception> exceptions = null;
             try
             {
                 if (relativeTo == null)
@@ -179,9 +179,8 @@
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
-                    if (exceptions.Count > 0)
-                        throw exceptions[0];
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+                    relativeTo = sims;
                 }
 
                 if (relativeTo != null)
@@ -219,17 +218,34 @@
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
+                    // Find a storage model.
+                    storage = rootModel.FindChild<IDataStore>();
+
                     // Find simulations to run.
                     if (runSimulations)
-                        foreach (IRunnable job in FindListOfSimulationsToRun(relativeTo, simulationNamesToRun))
-                            Add(job);
+                    {
+                        var jobs = FindListOfSimulationsToRun(relativeTo, simulationNamesToRun).ToList();
 
+                        if (storage != null)
+                        {
+                            var names = new List<string>();
+                            foreach (var job in jobs)
+                            {
+                                if (job is SimulationDescription)
+                                {
+                                    var description = job as SimulationDescription;
+                                    foreach (var name in description.Descriptors.Where(d => d.Name == "SimulationName").Select(d => d.Value))
+                                        names.Add(name);
+                                }
+                            }
+                            storage.Writer.Clean(names, false);
+                        }
+                        foreach (IRunnable job in jobs)
+                            Add(job);
+                    }
                     
                     if (numJobsToRun == 0)
                        Add(new EmptyJob());
-
-                    // Find a storage model.
-                    storage = rootModel.FindChild<IDataStore>();
                 }
             }
             catch (Exception readException)
@@ -285,7 +301,7 @@
         {
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
-            foreach (IPostSimulationTool tool in rootModel.FindAllDescendants<IPostSimulationTool>())
+            foreach (IPostSimulationTool tool in FindPostSimulationTools())
             {
                 storage?.Writer.WaitForIdle();
                 storage?.Reader.Refresh();
@@ -294,11 +310,11 @@
                 Exception exception = null;
                 try
                 {
-                    if (rootModel is Simulations)
-                        (rootModel as Simulations).Links.Resolve(tool as IModel);
-                    if ((tool as IModel).Enabled)
+                    if (tool.Enabled)
                     {
                         Status = $"Running post-simulation tool {(tool as IModel).Name}";
+                        if (rootModel is Simulations)
+                            (rootModel as Simulations).Links.Resolve(tool as IModel);
                         tool.Run();
                     }
                 }
@@ -308,6 +324,13 @@
                     AddException(err);
                 }
             }
+        }
+
+        private IEnumerable<IPostSimulationTool> FindPostSimulationTools()
+        {
+            return relativeTo.FindAllInScope<IPostSimulationTool>()
+                            .Where(t => t.FindAllAncestors()
+                                         .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
         /// <summary>Run all tests.</summary>

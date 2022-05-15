@@ -600,7 +600,6 @@
                 "[Eucalyptus].CoarseRoot.Wt",
                 "[Eucalyptus].Total.N",
                 "[Eucalyptus].Branch.Wt",
-                "[Eucalyptus].Wood.Wt",
                 "[Eucalyptus].Leaf.Transpiration",
                 "[Eucalyptus].Leaf.CoverGreen",
                 "[Eucalyptus].Leaf.LAI",

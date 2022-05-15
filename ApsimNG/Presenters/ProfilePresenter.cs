@@ -13,6 +13,8 @@
     using System.Linq;
     using System.Reflection;
     using Views;
+    using APSIM.Shared.Graphing;
+    using Series = Models.Series;
 
     /// <summary>
     /// This presenter talks to a ProfileView to display profile (layered) data in a grid.
@@ -84,8 +86,8 @@
         {
             this.model = model as Model;
             this.view = view as IProfileView;
-            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
             this.explorerPresenter = explorerPresenter;
+            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
 
             this.view.ShowView(false);
 
@@ -148,8 +150,8 @@
                             cropLLSeries.Marker = MarkerType.None;
                             cropLLSeries.Type = SeriesType.Scatter;
                             cropLLSeries.ShowInLegend = true;
-                            cropLLSeries.XAxis = Axis.AxisType.Top;
-                            cropLLSeries.YAxis = Axis.AxisType.Left;
+                            cropLLSeries.XAxis = AxisPosition.Top;
+                            cropLLSeries.YAxis = AxisPosition.Left;
                             cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".Physical.DepthMidPoints";
                             cropLLSeries.XFieldName = ((profileGrid.Properties[i].Object as IModel)).FullPath + "." + profileGrid.Properties[i].Name;
                             //cropLLSeries.XFieldName = ((property.Object as Model)).FullPath + "." + property.Name;
@@ -159,7 +161,7 @@
                         }
                     }
 
-                    this.graph.LegendPosition = Graph.LegendPositionType.RightTop;
+                    this.graph.LegendPosition = LegendPosition.RightTop;
                     explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                     graphPresenter.LegendInsideGraph = false;

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtk;
-#if NETFRAMEWORK
-using Mono.TextEditor;
-#else
+
 using GtkSource;
-#endif
+
 using Cairo;
 using UserInterface.Views;
 using UserInterface.Extensions;
@@ -69,32 +67,31 @@ namespace Utility
             btnReplaceAll.Clicked -= BtnReplaceAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
+            Utility.GtkUtil.DetachAllHandlers(window1);
         }
 
         public void Destroy()
         {
-            window1.Cleanup();
+            Utility.GtkUtil.DetachAllHandlers(window1);
+            window1.Destroy();
+            window1.Dispose();
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
         {
-#if NETCOREAPP
+
             context.Highlight = false;
-#endif
+
             window1.Hide();
             args.RetVal = true;
         }
 
-#if NETCOREAPP
+
         private SearchContext context;
 
         private SourceView editor;
         public SourceView Editor
-#else
 
-        private TextEditor editor;
-        public TextEditor Editor
-#endif
         {
             get { return editor; }
             set
@@ -111,22 +108,19 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(Editor.Toplevel as Window, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
-            md.Cleanup();
+            md.Dispose();
         }
 
         private void UpdateTitleBar()
         {
             string text = ReplaceMode ? "Find & replace" : "Find";
-#if NETFRAMEWORK
-            if (editor != null && editor.FileName != null)
-                text += " - " + System.IO.Path.GetFileName(editor.FileName);
-#endif
+
             if (this.selectionOnly)
                 text += " (selection only)";
             window1.Title = text;
         }
 
-#if NETCOREAPP
+
         public void ShowFor(SourceView sourceView, SearchContext theContext, bool replaceMode)
         {
             Editor = sourceView;
@@ -159,41 +153,7 @@ namespace Utility
             window1.Show();
             txtLookFor.GrabFocus();
         }
-#else
-        public void ShowFor(TextEditor editor, bool replaceMode)
-        {
-            Editor = editor;
-            this.selectionOnly = false;
-            window1.TransientFor = Editor.Toplevel as Window;
-            Mono.TextEditor.Selection selected = Editor.MainSelection;
-            if (Editor.SelectedText != null)
-            {
-                if (selected.MaxLine == selected.MinLine)
-                    txtLookFor.Text = Editor.SelectedText;
-                else
-                {
-                    Editor.SearchEngine.SearchRequest.SearchRegion = Editor.SelectionRange;
-                    this.selectionOnly = true;
-                }
-            }
-            else
-            {
-                // Get the current word that the caret is on
-                Caret caret = Editor.Caret;
-                int start = Editor.GetTextEditorData().FindCurrentWordStart(caret.Offset);
-                int end = Editor.GetTextEditorData().FindCurrentWordEnd(caret.Offset);
-                txtLookFor.Text = Editor.GetTextBetween(start, end);
-            }
-            ReplaceMode = replaceMode;
-            editor.HighlightSearchPattern = true;
 
-            window1.Parent = editor.Toplevel;
-            UpdateTitleBar();
-            window1.WindowPosition = WindowPosition.CenterOnParent;
-            window1.Show();
-            txtLookFor.GrabFocus();
-        }
-#endif
 
         public bool ReplaceMode
         {
@@ -217,7 +177,7 @@ namespace Utility
             FindNext(false, true, "Text not found");
         }
 
-#if NETCOREAPP
+
         public bool FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
             context.Settings.SearchText = txtLookFor.Text;
@@ -252,48 +212,23 @@ namespace Utility
             }
             return true;
         }
-#else
-        public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
-        {
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-            if (string.IsNullOrEmpty(txtLookFor.Text))
-            {
-                ShowMsg("No string specified to look for!");
-                return null;
-            }
 
-            SearchResult range = null;
-            if (searchForward)
-                range = Editor.FindNext(true);
-            else
-                range = Editor.FindPrevious(true);
-            if (range == null && messageIfNotFound != null)
-                ShowMsg(messageIfNotFound);
-            else
-                Editor.ScrollTo(range.Offset);
-            return range;
-        }
-#endif
         private void BtnHighlightAll_Click(object sender, EventArgs e)
         {
-#if NETCOREAPP
+
             context.Highlight = true;
-#else
-            editor.HighlightSearchPattern = true;
-#endif
+
             BtnFindNext_Click(sender, e);
         }
         private void BtnCancel_Click(object sender, EventArgs e)
         {
-#if NETCOREAPP
+
             context.Highlight = false;
-#endif
+
             window1.Hide();
         }
 
-#if NETCOREAPP
+
         private void BtnReplace_Click(object sender, EventArgs e)
         {
             context.Settings.SearchText = txtLookFor.Text;
@@ -329,28 +264,7 @@ namespace Utility
             else
                 ShowMsg(string.Format("Replaced {0} occurrences.", count));
         }
-#else
-        private void BtnReplace_Click(object sender, EventArgs e)
-        {
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-            if (!Editor.Replace(txtReplaceWith.Text))
-                ShowMsg("Search text not found.");
-        }
 
-        private void BtnReplaceAll_Click(object sender, EventArgs e)
-        {
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-            int count = Editor.ReplaceAll(txtReplaceWith.Text);
-            if (count == 0)
-                ShowMsg("No occurrences found.");
-            else
-                ShowMsg(string.Format("Replaced {0} occurrences.", count));
-        }
-#endif
 
         public string LookFor { get { return txtLookFor.Text; } }
     }

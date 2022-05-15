@@ -10,12 +10,13 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name]
     /// A post processing model that produces simulation stats.
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Serializable]
     public class SimulationStats : Model, IPostSimulationTool
     {

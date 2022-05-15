@@ -76,10 +76,7 @@
         public void FileFormat_ReadFromString()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(json, out creationExceptions);
-            Assert.AreEqual(creationExceptions.Count, 0);
-
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
             Assert.IsNotNull(simulations);
             Assert.AreEqual(simulations.Children.Count, 1);
             var simulation = simulations.Children[0];
@@ -99,8 +96,8 @@
         public void FileFormat_CheckThatModelsCanThrowExceptionsDuringCreation()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(json, out creationExceptions);
+            List<Exception> creationExceptions = new List<Exception>();
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false);
             Assert.AreEqual(creationExceptions.Count, 1);
             Assert.IsTrue(creationExceptions[0].Message.StartsWith("Errors found"));
 
@@ -148,14 +145,8 @@
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, json);
 
-            Assembly models = typeof(IModel).Assembly;
-            string modelsExe = AppDomain.CurrentDomain.GetAssemblies().First(a => string.Equals(a.FullName, models.FullName, StringComparison.Ordinal)).Location;
-
-            var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(modelsExe, fileName, Path.GetTempPath(), true);
-            proc.WaitForExit();
-
-            Assert.AreNotEqual(0, proc.ExitCode, "A file ran without error when an exception should have been thrown while opening the file.");
+            int result = Models.Program.Main(new[] { fileName });
+            Assert.AreEqual(1, result);
         }
 
         /// <summary>A class that implements IDontSerialiseChildren.</summary>
