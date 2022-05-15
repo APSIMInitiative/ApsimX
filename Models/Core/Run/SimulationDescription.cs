@@ -128,6 +128,15 @@
             Run(cancelToken);
         }
 
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
+            SimulationToRun.Cleanup();
+        }
+
         /// <summary>Run the simulation.</summary>
         /// <param name="cancelToken"></param>
         public void Run(CancellationTokenSource cancelToken)

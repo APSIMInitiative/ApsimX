@@ -27,6 +27,14 @@ namespace Models.Core.Run
         }
 
         /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
         /// Name of the job.
         /// </summary>
         public string Name { get { return "Empty Job"; } }

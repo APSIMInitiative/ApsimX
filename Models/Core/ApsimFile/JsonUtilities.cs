@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -423,6 +424,18 @@ namespace Models.Core.ApsimFile
                     SetValues(report, "VariableNames", variableNames);
             }
             return replacementMade;
+        }
+
+        /// <summary>
+        /// Add a constant function to the specified JSON model token.
+        /// </summary>
+        /// <param name="modelToken">The APSIM model token.</param>
+        /// <param name="name">The name of the constant function</param>
+        /// <param name="fixedValue">The fixed value of the constant function</param>
+        public static void AddConstantFunctionIfNotExists(JObject modelToken, string name, double fixedValue)
+        {
+            string stringValue = fixedValue.ToString(CultureInfo.InvariantCulture);
+            AddConstantFunctionIfNotExists(modelToken, name, stringValue);
         }
 
         /// <summary>

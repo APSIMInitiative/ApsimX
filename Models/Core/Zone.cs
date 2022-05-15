@@ -18,6 +18,12 @@
     [ScopedModel]
     public class Zone : Model, IZone
     {
+        /// <summary>
+        /// Link to summary, for error/warning reporting.
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
+
         /// <summary>Area of the zone.</summary>
         [Description("Area of zone (ha)")]
         virtual public double Area { get; set; }
@@ -50,6 +56,7 @@
             if (Area <= 0)
                 throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
             Validate();
+            CheckSensibility();
         }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -85,6 +92,15 @@
             double totalSubzoneArea = subPaddocks.Sum(z => z.Area);
             if (totalSubzoneArea > Area)
                 throw new Exception($"Error in zone {this.FullPath}: total area of child zones ({totalSubzoneArea} ha) exceeds that of parent ({Area} ha)");
+        }
+
+        /// <summary>
+        /// Check the sensibility of the zone. Write any warnings to the summary log.
+        /// </summary>
+        private void CheckSensibility()
+        {
+            if (FindInScope<MicroClimate>() == null)
+                summary.WriteMessage(this, "MicroClimate not found", MessageType.Warning);
         }
 
         /// <summary>

@@ -113,6 +113,11 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootProportions</summary>
         public double[] RootProportions { get; set; }
 
+        /// <summary>
+        /// Proportion of the layer volume occupied by root, for each layer.
+        /// </summary>
+        public double[] RootProportionVolume { get; set; }
+
         /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
         public double[] LLModifier { get; set; }
 
@@ -226,6 +231,7 @@ namespace Models.PMF.Organs
                     RightDist = plant.SowingData.RowSpacing * 0.5;
                 }
             }
+            root.RootShape.CalcRootProportionInLayers(this);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -236,6 +242,7 @@ namespace Models.PMF.Organs
             DeltaNO3 = new double[Physical.Thickness.Length];
             DeltaNH4 = new double[Physical.Thickness.Length];
             RootProportions = new double[Physical.Thickness.Length];
+            RootProportionVolume = new double[Physical.Thickness.Length];
             LLModifier = new double[Physical.Thickness.Length];
 
             Depth = 0.0;
@@ -301,6 +308,7 @@ namespace Models.PMF.Organs
 
             RootFront = Depth;
             root.RootShape.CalcRootProportionInLayers(this);
+            root.RootShape.CalcRootVolumeProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen

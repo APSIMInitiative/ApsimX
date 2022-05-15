@@ -144,5 +144,13 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
+        }
     }
 }

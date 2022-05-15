@@ -316,7 +316,7 @@ namespace APSIM.Server
         /// Dispose of the job manager by deleting the namespace and all pods
         /// therein.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             // RemoveWorkers();
             WriteToLog("Deleting namespace...");

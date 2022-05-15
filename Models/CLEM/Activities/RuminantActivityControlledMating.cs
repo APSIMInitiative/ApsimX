@@ -1,4 +1,5 @@
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -25,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
     {
-        private List<SetAttributeWithValue> attributeList;
+        private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
 
@@ -50,7 +51,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
-        public List<SetAttributeWithValue> SireAttributes => attributeList;
+        public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>
         /// Constructor
@@ -71,7 +72,7 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
 
-            attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
+            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
