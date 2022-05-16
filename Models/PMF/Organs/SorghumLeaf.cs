@@ -105,6 +105,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStressFunction = null;
 
+        [Link(Type = LinkType.Path, Path = "[Phenology].PhenoNitrogenStress")]
+        private IFunction nPhenoStressFunction { get; set; }
+
         /// <summary>Link to biomass removal model</summary>
         [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
@@ -1069,13 +1072,7 @@ namespace Models.PMF.Organs
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-KDead * LAIDead), 0.0, 0.999999999);
 
             NitrogenPhotoStress = nPhotoStressFunction.Value();
-
-            NitrogenPhenoStress = 1.0;
-            if (phenology.Between("Emergence", "FlagLeaf"))
-            {
-                var phenoStress = (0.5 + 0.5 / 0.3 * (SLN - 0.7));
-                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.5, 1.0);
-            }
+            NitrogenPhenoStress = nPhenoStressFunction.Value();
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
