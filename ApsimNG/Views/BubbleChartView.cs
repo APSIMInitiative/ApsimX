@@ -6,12 +6,14 @@ namespace UserInterface.Views
     using Interfaces;
     using EventArguments;
     using EventArguments.DirectedGraph;
-    using ApsimNG.Classes.DirectedGraph;
+    using APSIM.Interop.Visualisation;
     using Gtk;
     using Models.Management;
     using Models;
     using Extensions;
     using Utility;
+    using APSIM.Shared.Graphing;
+    using Node = APSIM.Shared.Graphing.Node;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -87,7 +89,8 @@ namespace UserInterface.Views
             VBox arcSelBox = new VBox();
 
             Label l1 = new Label("Rules");
-            arcSelBox.PackStart(l1, true, true, 0); l1.Show();
+            l1.Xalign = 0;
+            arcSelBox.PackStart(l1, true, true, 0);
             RuleList = new EditorView(owner);
             RuleList.TextHasChangedByUser += OnRuleChanged;
             //RuleList.ScriptMode = false;
@@ -95,16 +98,16 @@ namespace UserInterface.Views
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
             rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-#if NETFRAMEWORK
-            rules.AddWithViewport((RuleList as ViewBase).MainWidget);
-#else
+
             rules.Add((RuleList as ViewBase).MainWidget);
-#endif
+
             (RuleList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(rules, true, true, 0); rules.Show();
+            arcSelBox.PackStart(rules, true, true, 0);
+            rules.Show();
 
             Label l2 = new Label("Actions");
-            arcSelBox.PackStart(l2, true, true, 0); l2.Show();
+            l2.Xalign = 0;
+            arcSelBox.PackStart(l2, true, true, 0);
             ActionList = new EditorView(owner);
             ActionList.TextHasChangedByUser += OnActionChanged;
             //ActionList.ScriptMode = false;
@@ -112,11 +115,9 @@ namespace UserInterface.Views
             ScrolledWindow actions = new ScrolledWindow();
             actions.ShadowType = ShadowType.EtchedIn;
             actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-#if NETFRAMEWORK
-            actions.AddWithViewport((ActionList as ViewBase).MainWidget);
-#else
+
             actions.Add((ActionList as ViewBase).MainWidget);
-#endif
+
             (ActionList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(actions, true, true, 0); actions.Show();
             arcSelWdgt = arcSelBox as Widget;
@@ -124,39 +125,41 @@ namespace UserInterface.Views
             ctxBox.PackStart(arcSelWdgt, true, true, 0);
 
             // Node selection: 
-#if NETFRAMEWORK
-            Table t1 = new Table(3, 2, false);
-#else
+
             Grid t1 = new Grid();
-#endif
+
             Label l3 = new Label("Name");
             l3.Xalign = 0;
-            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l3, 0, 0, 1, 1);
+
             Label l4 = new Label("Description");
             l4.Xalign = 0;
-            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l4, 0, 1, 1, 1);
+
             Label l5 = new Label("Colour");
             l5.Xalign = 0;
-            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l5, 0, 2, 1, 1);
 
             nameEntry = new Entry();
             nameEntry.Changed += OnNameChanged;
             nameEntry.Xalign = 0;
+
             // Setting the WidthRequest to 350 will effectively
             // set the minimum size, beyond which it cannot be further
             // shrunk by dragging the HPaned's splitter.
             nameEntry.WidthRequest = 350;
-            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(nameEntry, 1, 0, 1, 1);
+
             descEntry = new Entry();
             descEntry.Xalign = 0;
             descEntry.Changed += OnDescriptionChanged;
             descEntry.WidthRequest = 350;
-            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(descEntry, 1, 1, 1, 1);
             colourChooser = new ColorButton();
             colourChooser.Xalign = 0;
             colourChooser.ColorSet += OnColourChanged;
             colourChooser.WidthRequest = 350;
-            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(colourChooser, 1, 2, 1, 1);
             nodeSelWdgt = t1;
             ctxBox.PackStart(t1, true, true, 0);
 
@@ -164,22 +167,23 @@ namespace UserInterface.Views
             Label l6 = new Label();
             l6.LineWrap = true;
             l6.Text = "<left-click>: select a node or arc.\n" +
-            "<right-click>: shows a context-sensitive menu.\n" +
-            "\n" +
-            "Once a node/arc is selected, it can be dragged to a new position.\n" +
-            "\n" +
-            "Nodes are created by right-clicking on a blank area.\n" +
-            "\n" +
+            "<right-click>: shows a context-sensitive menu.\n\n" +
+            "Once a node/arc is selected, it can be dragged to a new position.\n\n" +
+            "Nodes are created by right-clicking on a blank area.\n\n" +
             "Transition arcs are created by firstly selecting a source node,\n" +
-            "then right-clicking over a target node.\n";
+            "then right-clicking over a target node.";
             infoWdgt = l6 as Widget;
             infoWdgt.ShowAll();
-            Alignment infoWdgtWrapper = new Alignment(0, 0, 0, 0);
+            l6.Xalign = 0;
+            l6.Yalign = 0;
+            l6.Wrap = false;
+            Alignment infoWdgtWrapper = new Alignment(0, 0, 1, 0);
             infoWdgtWrapper.Add(infoWdgt);
             //ctxBox.PackStart(infoWdgt, true, true, 0);
             //vbox1.PackStart(ctxBox, false, false, 0);
 
             PropertiesView = new PropertyView(this);
+            ((ScrolledWindow)((ViewBase)PropertiesView).MainWidget).HscrollbarPolicy = PolicyType.Never;
             // settingsBox = new Table(2, 2, false);
             // settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             // combobox1 = new ComboBox();
@@ -275,7 +279,7 @@ namespace UserInterface.Views
             actions.Clear();
             nodeDescriptions.Clear();
             comboModel.Clear();
-            var graph = new Models.DirectedGraph();
+            var graph = new DirectedGraph();
 
             nodes.ForEach(node =>
             {
@@ -303,7 +307,7 @@ namespace UserInterface.Views
             ctxBox.Foreach(c => ctxBox.Remove(c)); 
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
-            Models.Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
+            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
             if (node != null)
             {
                 //ctxLabel.Text = "State";
@@ -321,11 +325,9 @@ namespace UserInterface.Views
                     descEntry.Changed += OnDescriptionChanged;
                 }
                 colourChooser.ColorSet -= OnColourChanged;
-#if NETFRAMEWORK
-                colourChooser.Color = Utility.Colour.ToGdk(node.Colour);
-#else
+
                 colourChooser.Rgba = node.Colour.ToRGBA();
-#endif
+
                 colourChooser.ColorSet += OnColourChanged;
 
                 ctxBox.PackStart(nodeSelWdgt, true, true, 0);
@@ -411,6 +413,7 @@ namespace UserInterface.Views
         {
             try
             {
+                (PropertiesView as ViewBase).Dispose();
                 mainWidget.Destroyed -= OnDestroyed;
                 
                 RuleList.TextHasChangedByUser -= OnRuleChanged;
@@ -427,6 +430,8 @@ namespace UserInterface.Views
 
                 ContextMenu.SelectionDone -= OnContextMenuDeactivated;
                 ContextMenu.Mapped -= OnContextMenuRendered;
+                ContextMenu.Clear();
+                ContextMenu.Dispose();
             }
             catch (Exception err)
             {
@@ -493,12 +498,10 @@ namespace UserInterface.Views
             {
                 if (graphView.SelectedObject != null)
                 {
-#if NETFRAMEWORK
-                    var colour = colourChooser.Color;
-#else
+
                     var colour = colourChooser.Rgba.ToColour().ToGdk();
-#endif
-                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colour);
+
+                    graphView.SelectedObject.Colour = Utility.Colour.FromGtk(colour);
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -659,7 +662,7 @@ namespace UserInterface.Views
             try
             {
                 // todo: set location to context menu location
-                var node = new Models.Node { Name = graphView.DirectedGraph.NextNodeID() };
+                var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }

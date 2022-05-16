@@ -13,13 +13,14 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType=typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         private string[] filenames;
@@ -141,7 +142,9 @@
                             {
                                 TruncateDates(table);
 
-                                storage.Writer.WriteTable(table);
+                                // Don't delete previous data existing in this table. Doing so would
+                                // cause problems when merging sheets from multiple excel files.
+                                storage.Writer.WriteTable(table, false);
                                 storage.Writer.WaitForIdle();
                             }
                         }

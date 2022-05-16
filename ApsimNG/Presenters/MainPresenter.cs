@@ -27,6 +27,8 @@
     /// </summary>
     public class MainPresenter
     {
+        private class MockModel : Model { }
+
         /// <summary>A list of presenters for tabs on the left.</summary>
         public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
@@ -44,7 +46,7 @@
         /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
-        public List<string> LastError { get; private set; }
+        public List<string> LastError { get; private set; } = new List<string>();
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -183,11 +185,9 @@
             };
 
             var compiler = new ScriptCompiler();
-#if NETFRAMEWORK
-            var results = compiler.Compile(code, new Model(), assemblies);
-#else
-            var results = compiler.Compile(code, new Model());
-#endif
+
+            var results = compiler.Compile(code, new MockModel());
+
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 
@@ -209,25 +209,32 @@
         /// </summary>
         public void ClearStatusPanel()
         {
-            view.ShowMessage(string.Empty, Simulation.ErrorLevel.Information);
+            LastError.Clear();
+            view.ClearStatusPanel();
         }
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
-        /// For error messages, use <see cref="ShowError(Exception)"/>.
+        /// For error messages, use <see cref="ShowError(Exception, bool)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
         /// <param name="messageType">The error level value</param>
-        public void ShowMessage(string message, Simulation.MessageType messageType)
+        /// <param name="overwrite">Overwrite existing messages?</param>
+        public void ShowMessage(string message, Simulation.MessageType messageType, bool overwrite = true)
         {
-            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+            MessageType errorType = MessageType.Information;
 
             if (messageType == Simulation.MessageType.Information)
-                errorType = Simulation.ErrorLevel.Information;
+                errorType = MessageType.Information;
             else if (messageType == Simulation.MessageType.Warning)
-                errorType = Simulation.ErrorLevel.Warning;
+                errorType = MessageType.Warning;
 
-            this.view.ShowMessage(message, errorType);
+            this.view.ShowMessage(message, errorType, overwrite);
+        }
+
+        public void HideProgressBar()
+        {
+            view.HideProgressBar();
         }
         
         /// <summary>
@@ -238,12 +245,12 @@
         /// <param name="messageType"></param>
         public void ShowMessage(List<string> messages, Simulation.MessageType messageType)
         {
-            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+            MessageType errorType = MessageType.Information;
 
             if (messageType == Simulation.MessageType.Information)
-                errorType = Simulation.ErrorLevel.Information;
+                errorType = MessageType.Information;
             else if (messageType == Simulation.MessageType.Warning)
-                errorType = Simulation.ErrorLevel.Warning;
+                errorType = MessageType.Warning;
 
             foreach (string msg in messages)
             {
@@ -253,21 +260,24 @@
 
         /// <summary>
         /// Displays a simple error message in the status bar, without a 'more information' button.
-        /// If you've just caught an exception, <see cref="ShowError(Exception)"/> is probably a better method to use.
+        /// If you've just caught an exception, <see cref="ShowError(Exception, bool)"/> is probably a better method to use.
         /// </summary>
         /// <param name="error"></param>
         public void ShowError(string error)
         {
-            LastError = new List<string>();
-            view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
+            LastError.Clear();
+            view.ShowMessage(error, MessageType.Error, withButton : false);
         }
 
         /// <summary>
         /// Displays an error message in the status bar, along with a button which brings up more info.
         /// </summary>
         /// <param name="error">The error to be displayed.</param>
-        public void ShowError(Exception error)
+        /// <param name="overwrite">Overwrite any existing error messages?</param>
+        public void ShowError(Exception error, bool overwrite = true)
         {
+            if (overwrite)
+                LastError.Clear();
             if (error != null)
             {
                 if (view == null)
@@ -277,14 +287,9 @@
                 }
                 else
                 {
-                    LastError = new List<string> { error.ToString() };
-                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                    LastError.Add(error.ToString());
+                    view.ShowMessage(GetExceptionMessage(error), MessageType.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
-            }
-            else
-            {
-                LastError = new List<string>();
-                ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }
 
@@ -305,14 +310,38 @@
                         ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
                     else
                         // only overwrite other messages the first time through the loop
-                        view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, overwrite && i == 0, true);
+                        view.ShowMessage(GetExceptionMessage(errors[i]), MessageType.Error, overwrite && i == 0, true);
                 }
             }
             else
             {
-                LastError = new List<string>();
+                LastError.Clear();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
+        }
+
+        /// <summary>
+        /// Get an exception's message along with the messages of any inner
+        /// exceptions in a format suitable for display in the GUI.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        private string GetExceptionMessage(Exception exception)
+        {
+            if (exception.InnerException == null)
+                return exception.Message;
+
+            string innerMessage = GetExceptionMessage(exception.InnerException);
+
+            if (string.IsNullOrEmpty(exception.Message))
+                return innerMessage;
+
+            // AggregateExceptions will include all inner exceptions' messages
+            // in their message. Therefore we don't need to fetch the inner
+            // exceptions' messages in such cases.
+            if (string.IsNullOrEmpty(innerMessage) || exception is AggregateException)
+                return exception.Message;
+
+            return $"{exception.Message} --> {innerMessage}";
         }
 
         /// <summary>
@@ -345,11 +374,22 @@
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent">The progress</param>
+        /// <param name="progress">The progress (0 - 1)</param>
         /// <param name="showStopButton">Should a stop button be displayed as well?</param>
-        public void ShowProgress(int percent, bool showStopButton = true)
+        public void ShowProgress(double progress, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent, showStopButton);
+            this.view.ShowProgress(progress, showStopButton);
+        }
+
+        /// <summary>
+        /// Add a status message. A message of null will clear the status message.
+        /// For error messages, use <see cref="ShowError(Exception, bool)"/>.
+        /// </summary>
+        /// <param name="message">The message test</param>
+        /// <param name="messageType">The error level value</param>
+        public void ShowProgressMessage(string message)
+        {
+            view.ShowProgressMessage(message);
         }
 
         /// <summary>
@@ -461,16 +501,12 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    List<Exception> creationExceptions;
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (creationExceptions.Count > 0)
-                    {
-                        ShowError(creationExceptions);
-                    }
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
+                    Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
                 catch (Exception err)
@@ -482,6 +518,26 @@
             }
 
             return presenter;
+        }
+
+        /// <summary>
+        /// Get the currently active explorer presenter instance.
+        /// Return null if none are active.
+        /// </summary>
+        public ExplorerPresenter GetCurrentExplorerPresenter()
+        {
+            (int index, bool onLeft) = view.GetCurrentTab();
+
+            // The view has an extra tab ("home") which is not included in
+            // the presenters list. Our index needs to account for this
+            // offset.
+            index--;
+
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            if (index < 0 || index >= presenters.Count)
+                return null;
+
+            return presenters[index] as ExplorerPresenter;
         }
 
         /// <summary>
@@ -519,15 +575,6 @@
         }
 
         /// <summary>
-        /// Closes the tab containing a specified object.
-        /// </summary>
-        /// <param name="o">The object (normally a Gtk Widget) being sought.</param>
-        public void CloseTabContaining(object o)
-        {
-            this.view.CloseTabContaining(o);
-        }
-
-        /// <summary>
         /// Gets the inner-most exception of an exception.
         /// </summary>
         /// <param name="error">An exception.</param>
@@ -548,58 +595,58 @@
             // Add the buttons into the main window.
             startPage.AddButton(
                                 "Open APSIM File",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenFile.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenFile.svg"),
                                           this.OnOpenApsimXFile);
 
             startPage.AddButton(
                                 "Open an example",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
             startPage.AddButton(
                                 "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnManagementToolboxClick);
 
             startPage.AddButton(
                                 "Training toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnTrainingToolboxClick);
 
             startPage.AddButton(
                                 "Import old .apsim file",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Import.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Import.svg"),
                                           this.OnImport);
 
             startPage.AddButton(
                                 "Upgrade",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                         this.OnUpgrade);
 
             startPage.AddButton(
                                 "View Cloud Jobs",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.svg"),
                                         this.OnViewCloudJobs);
 
 #if DEBUG
             startPage.AddButton(
                                 "Upgrade Resource Files",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                 this.OnShowConverter);
 #endif
 
             startPage.AddButton(
                                 "Settings",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"),
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.svg"),
                                 OnShowSettingsDialog);
             startPage.AddButton(
                             "Help",
-                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.svg"),
                             this.OnHelp);
             // Populate the view's listview.
             startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
@@ -682,6 +729,7 @@
                 {
                     this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
                     Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.Save();
                 }
             }
             catch (Exception err)
@@ -703,6 +751,7 @@
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     Utility.Configuration.Settings.DelMruFile(fileName);
+                    Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
             }
@@ -728,6 +777,7 @@
                     {
                         Utility.Configuration.Settings.DelMruFile(fileName);
                     }
+                    Configuration.Settings.Save();
 
                     this.UpdateMRUDisplay();
                 }
@@ -758,6 +808,7 @@
                         {
                             File.Move(fileName, newName);
                             Utility.Configuration.Settings.RenameMruFile(fileName, newName);
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -794,6 +845,7 @@
                         {
                             File.Copy(fileName, copyName);
                             Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -827,6 +879,7 @@
                         {
                             File.Delete(fileName);
                             Utility.Configuration.Settings.DelMruFile(fileName);
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -888,8 +941,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -902,7 +954,6 @@
         /// <returns>The explorer presenter.</returns>
         private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
-            this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
             ViewBase newView;
             IPresenter newPresenter;
             try
@@ -931,7 +982,6 @@
                 this.presenters2.Add(newPresenter);
             }
 
-            XmlDocument doc = new XmlDocument();
             newPresenter.Attach(simulations, newView, null);
 
             this.view.AddTab(name, null, newView.MainWidget, onLeftTabControl);
@@ -960,7 +1010,7 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
+                string fileName = this.AskUserForOpenFileName("ApsimX files|*.apsimx");
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);
@@ -989,6 +1039,7 @@
                 {
                     OpenApsimXFileInTab(fileName, onLeftTabControl);
                     Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.Save();
                 }
             }
             catch (Exception err)
@@ -1021,16 +1072,20 @@
         /// <param name="onLeft">Is the tab in the left tab control?</param>
         public void CloseTab(int index, bool onLeft)
         {
-            if (onLeft)
-            {
-                Presenters1[index].Detach();
-                Presenters1.RemoveAt(index);
-            }
-            else
-            {
-                presenters2[index].Detach();
-                presenters2.RemoveAt(index);
-            }
+            int nPages = view.PageCount(onLeft);
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            presenters[index].Detach();
+            presenters.RemoveAt(index);
+
+            // Need to add an offset to account for the home tab. E.g. presenter
+            // 0 (ie .apsimx file 0) will be the second tab in the notebook (ie
+            // index 1).
+
+            // The tab should have been removed by the call to Detach
+            // But check to be sure a tab has actually been closed and, if not, remove it now
+
+            if (view.PageCount(onLeft) == nPages)
+                view.RemoveTab(index + 1, onLeft);  
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
@@ -1086,12 +1141,13 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
+                string fileName = this.AskUserForOpenFileName("APSIM Classic Files|*.apsim");
                 this.view.ShowWaitCursor(true);
                 this.Import(fileName);
 
                 string newFileName = Path.ChangeExtension(fileName, ".apsimx");
                 this.OpenApsimXFileInTab(newFileName, this.view.IsControlOnLeft(sender));
+                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
             catch (Exception err)
             {
@@ -1132,31 +1188,8 @@
             {
                 bool onLeftTabControl = view.IsControlOnLeft(sender);
                 // Clear the message window
-                view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+                view.ShowMessage(" ", MessageType.Information);
                 CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Toggles between the default and dark themes.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnToggleTheme(object sender, EventArgs e)
-        {
-            try
-            {
-                Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
-                view.ToggleTheme(sender, e);
-                // Might be better to restart automatically (after asking the user),
-                // but I haven't been able to figure out a reliable cross-platform 
-                // way of attaching the debugger to the new process. I leave this
-                // as an exercise to the reader.
-                view.ShowMsgDialog("Theme changes will be applied upon restarting Apsim.", "Theme Changes", Gtk.MessageType.Info, Gtk.ButtonsType.Ok);
             }
             catch (Exception err)
             {
@@ -1196,7 +1229,7 @@
             try
             {
                 string initialPath = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples"), null);
-                string fileName = AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+                string fileName = AskUserForOpenFileName("ApsimX files|*.apsimx", initialPath);
 
                 if (fileName != null)
                 {
@@ -1242,8 +1275,8 @@
             {
                 int version = Models.Core.ApsimFile.Converter.LatestVersion;
                 ClearStatusPanel();
-                string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string resources = Path.Combine(bin, "..", "Models", "Resources");
+                string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
+                string resources = Path.Combine(apsimx, "Models", "Resources");
                 if (!Directory.Exists(resources))
                     throw new Exception("Unable to locate resources directory");
                 IEnumerable<string> files = Directory.EnumerateFiles(resources, "*.json", SearchOption.AllDirectories);
@@ -1257,9 +1290,9 @@
                     var converter = Converter.DoConvert(contents, version, file);
                     if (converter.DidConvert)
                         File.WriteAllText(file, converter.Root.ToString());
-                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
+                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                 }
-                view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);
+                view.ShowMessage("Successfully upgraded all files.", MessageType.Information);
             }
             catch (Exception err)
             {
@@ -1278,7 +1311,7 @@
             {
                 // Get the version of the current assembly.
                 Version version = Assembly.GetExecutingAssembly().GetName().Version;
-                if (version.Revision == 0)
+                if (version.Build == 0)
                 {
                     ShowError("You are on a custom build. You cannot upgrade.");
                 }

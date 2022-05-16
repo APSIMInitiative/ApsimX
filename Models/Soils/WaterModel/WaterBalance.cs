@@ -1,4 +1,4 @@
-﻿namespace Models.WaterModel
+namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Interfaces;
@@ -276,6 +276,10 @@
         [JsonIgnore]
         public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
 
+        /// <summary>Subsurface drain (mm)</summary>
+        [JsonIgnore]
+        public double SubsurfaceDrain => 0;
+
         /// <summary>Evaporation (mm).</summary>
         [JsonIgnore]
         public double Evaporation { get { return evaporationModel.Es; } }
@@ -372,6 +376,10 @@
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
+        [JsonIgnore]
+        public double LeachCl => 0.0; 
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -770,7 +778,7 @@
         ///<summary>Perform a reset</summary>
         public void Reset()
         {
-            summary.WriteMessage(this, "Resetting Soil Water Balance");
+            summary.WriteMessage(this, "Resetting Soil Water Balance", MessageType.Diagnostic);
             Initialise();
         }
 
@@ -808,7 +816,7 @@
 
             var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}", 
                                      reduction, Data.cn_rain);
-            summary.WriteMessage(this, line);
+            summary.WriteMessage(this, line, MessageType.Diagnostic);
         }
 
         ///<summary>Perform tillage</summary>

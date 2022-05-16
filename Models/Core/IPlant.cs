@@ -1,4 +1,7 @@
-﻿namespace Models.Core
+﻿using Models.PMF;
+using System.Collections.Generic;
+
+namespace Models.Core
 {
     /// <summary>
     /// The ICrop interface specifies the properties and methods that all
@@ -18,7 +21,13 @@
         string[] CultivarNames { get; }
 
         /// <summary>Get above ground biomass</summary>
-        PMF.Biomass AboveGround { get; }
+        IBiomass AboveGround { get; }
+
+        /// <summary>Daily soil water uptake from each soil layer (mm)</summary>
+        IReadOnlyList<double> WaterUptake { get; }
+
+        /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
+        IReadOnlyList<double> NitrogenUptake { get; }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
@@ -28,7 +37,8 @@
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">The bud number.</param>
-        void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1);
+        /// <param name="seeds">The number of seeds sown (/m2).</param>
+        void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0);
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         bool IsReadyForHarvesting { get; }

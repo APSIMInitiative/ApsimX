@@ -13,13 +13,18 @@
     /// An class for encapsulating a list of simulations that are ready
     /// to be run. An instance of this class can be used with a job runner.
     /// </summary>
-    public class Runner
+    public class Runner : IRunner
     {
         /// <summary>The descriptions of simulations that we are going to run.</summary>
         private List<IJobManager> jobs = new List<IJobManager>();
         
         /// <summary>The job runner being used.</summary>
         private JobRunner jobRunner = null;
+
+        /// <summary>
+        /// Use the pre-set job runner?
+        /// </summary>
+        private bool useFixedRunner;
 
         /// <summary>The stop watch we can use to time all runs.</summary>
         private DateTime startTime;
@@ -42,6 +47,12 @@
             /// <summary>Run using multiple cores - each job asynchronously.</summary>
             MultiThreaded
         }
+
+        /// <summary>
+        /// If provided, this will be invoked whenever an error occurs.
+        /// </summary>
+        /// <value></value>
+        public Action<Exception> ErrorHandler { get; set; }
 
         /// <summary>
         /// Gets the aggregate progress of all jobs as a real number in range [0, 1].
@@ -200,6 +211,19 @@
             }
         }
 
+        /// <summary>
+        /// Use the given job runner to run jobs.
+        /// </summary>
+        /// <param name="runner">The job runner to be used.</param>
+        public void Use(JobRunner runner)
+        {
+            jobRunner = runner;
+            useFixedRunner = true;
+            jobRunner.JobCompleted += OnJobCompleted;
+            jobRunner.AllCompleted += OnAllCompleted;
+            jobs.ForEach(j => jobRunner.Add(j));
+        }
+
         /// <summary>Invoked every time a job has completed.</summary>
         public event EventHandler<JobCompleteArguments> SimulationCompleted;
 
@@ -235,26 +259,30 @@
         public List<Exception> Run()
         {
             startTime = DateTime.Now;
+            ExceptionsThrown = new List<Exception>();
 
             if (jobs.Count > 0)
             {
-                jobRunner = null;
-
-                switch (runType)
+                if (!useFixedRunner)
                 {
-                    case RunTypeEnum.SingleThreaded:
-                        jobRunner = new JobRunner(numProcessors:1);
-                        break;
-                    case RunTypeEnum.MultiThreaded:
-                        jobRunner = new JobRunner(numberOfProcessors);
-                        break;
+                    jobRunner = null;
+
+                    switch (runType)
+                    {
+                        case RunTypeEnum.SingleThreaded:
+                            jobRunner = new JobRunner(numProcessors:1);
+                            break;
+                        case RunTypeEnum.MultiThreaded:
+                            jobRunner = new JobRunner(numberOfProcessors);
+                            break;
+                    }
+
+                    jobRunner.JobCompleted += OnJobCompleted;
+                    jobRunner.AllCompleted += OnAllCompleted;
+
+                    // Run all simulations.
+                    jobs.ForEach(j => jobRunner.Add(j));
                 }
-
-                jobRunner.JobCompleted += OnJobCompleted;
-                jobRunner.AllCompleted += OnAllCompleted;
-
-                // Run all simulations.
-                jobs.ForEach(j => jobRunner.Add(j));
                 jobRunner.Run(wait);
             }
             else
@@ -272,7 +300,7 @@
             {
                 jobRunner.AllCompleted -= OnAllCompleted;
                 jobRunner?.Stop();
-                jobRunner = null;
+                // jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
             }
         }
@@ -330,6 +358,8 @@
                 if (ExceptionsThrown == null)
                     ExceptionsThrown = new List<Exception>();
                 ExceptionsThrown.Add(err);
+                if (ErrorHandler != null)
+                    ErrorHandler(err);
             }
         }
 

@@ -13,7 +13,7 @@ namespace APSIM.Shared.Utilities
     /// <summary>
     /// Some utilities for manipulating a data table.
     /// </summary>
-    public class DataTableUtilities
+    public static class DataTableUtilities
     {
         /// <summary>
         /// Add a value to the specified data table
@@ -450,7 +450,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Get a list of column names
         /// </summary>
-        static public string[] GetColumnNames(DataTable table)
+        static public string[] GetColumnNames(this DataTable table)
         {
             if (table != null)
             {
@@ -741,6 +741,21 @@ namespace APSIM.Shared.Utilities
                 }
                 to.Rows.Add(newRow);
             }
+        }
+
+        /// <summary>
+        /// Merge a collection of data tables.
+        /// </summary>
+        /// <param name="tables">The tables to be merged.</param>
+        public static DataTable Merge(IEnumerable<DataTable> tables)
+        {
+            if (tables == null)
+                return null;
+
+            DataTable result = new DataTable(tables.FirstOrDefault()?.TableName);
+            foreach (DataTable table in tables)
+                result.Merge(table);
+            return result;
         }
 
         /// <summary>

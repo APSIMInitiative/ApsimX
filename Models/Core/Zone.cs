@@ -7,7 +7,6 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// # [Name]
     /// A generic system that can have children
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]
@@ -17,8 +16,14 @@
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
-    public class Zone : Model, IZone, ICustomDocumentation
+    public class Zone : Model, IZone
     {
+        /// <summary>
+        /// Link to summary, for error/warning reporting.
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
+
         /// <summary>Area of the zone.</summary>
         [Description("Area of zone (ha)")]
         virtual public double Area { get; set; }
@@ -51,6 +56,7 @@
             if (Area <= 0)
                 throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
             Validate();
+            CheckSensibility();
         }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -77,20 +83,6 @@
             Locator().Set(namePath, this, value);
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
-        }
-
         /// <summary>
         /// Ensure that child zones' total area does not exceed this zone's area.
         /// </summary>
@@ -103,11 +95,21 @@
         }
 
         /// <summary>
+        /// Check the sensibility of the zone. Write any warnings to the summary log.
+        /// </summary>
+        private void CheckSensibility()
+        {
+            if (FindInScope<MicroClimate>() == null)
+                summary.WriteMessage(this, "MicroClimate not found", MessageType.Warning);
+        }
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             Validate();
             base.OnCreated();
         }

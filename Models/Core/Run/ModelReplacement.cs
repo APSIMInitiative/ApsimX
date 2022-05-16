@@ -7,6 +7,7 @@
     /// <summary>
     /// This class encapsulates an instruction to replace a model.
     /// </summary>
+    [Serializable]
     public class ModelReplacement : IReplacement
     {
         /// <summary>
@@ -96,6 +97,28 @@
             foreach (var model in newModel.FindAllDescendants().ToList())
                 model.OnCreated();
         }
-    }
 
+        /// <summary>
+        /// Determine value-equality to another object.
+        /// </summary>
+        /// <param name="obj">The other object.</param>
+        public override bool Equals(object obj)
+        {
+            if (obj is ModelReplacement model)
+            {
+                return path == model.path && replacement.Equals(model.replacement);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get a hash code for this model replacement instance.
+        /// Different instance which are equal in value should return
+        /// the same hash code.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return (path, replacement).GetHashCode();
+        }
+    }
 }

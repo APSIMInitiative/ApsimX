@@ -50,13 +50,11 @@ namespace UserInterface.Views
                     if (numGraphs % numCols > 0)
                         numRows++;
 
-#if NETFRAMEWORK
-                    Table panel = new Table((uint)numRows, (uint)numCols, true);
-#else
+
                     Grid panel = new Grid();
                     panel.RowHomogeneous = true;
                     panel.ColumnHomogeneous = true;
-#endif
+
                     for (int n = 0; n < numGraphs; n++)
                     {
                         GraphPresenter presenter = new GraphPresenter();
@@ -66,23 +64,19 @@ namespace UserInterface.Views
                         GraphView view = new GraphView();
                         presenter.Attach(tab.Graphs[n].Graph, view, tab.Presenter, tab.Graphs[n].Cache);
                         GraphViewCreated?.Invoke(this, new CustomDataEventArgs<IGraphView>(view));
+                        view.ShowControls(false);
 
                         tab.Graphs[n].Presenter = presenter;
                         tab.Graphs[n].View = view;
 
-#if NETFRAMEWORK
-                        uint i = (uint)(n / numCols);
-                        uint j = (uint)(n % numCols);
-#else
+
                         int i = n / numCols;
                         int j = n % numCols;
-#endif
 
-#if NETFRAMEWORK
-                        panel.Attach(view.MainWidget, j, j + 1, i, i + 1);
-#else
+
+
                         panel.Attach(view.MainWidget, j, i, 1, 1);
-#endif
+
                     }
 
                     Label tabLabel = new Label(tab.SimulationName);

@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
@@ -6,7 +7,6 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Return the value of a nominated internal \ref Models.PMF.Plant "Plant" numerical variable
     /// </summary>
     /// \warning You have to specify the full path of numerical variable, which starts from the child of \ref Models.PMF.Plant "Plant".
@@ -15,7 +15,7 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of a nominated internal Plant numerical variable")]
-    public class VariableReference : Model, IFunction, ICustomDocumentation
+    public class VariableReference : Model, IFunction
     {
         [Link]
         ILocator locator = null;
@@ -66,21 +66,13 @@ namespace Models.Functions
             }
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName, ".Value()") + "</i>", indent));
-            }
+            string variable = StringUtilities.RemoveTrailingString(VariableName, ".Value()");
+            yield return new Paragraph($"*{Name} = {variable}*");
         }
 
     }

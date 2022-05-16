@@ -30,7 +30,7 @@
             {
               "$type": "Models.Functions.AccumulateFunction, Models",
               "StartStageName": "Germination",
-              "EndStageName": "Old",
+              "EndStageName": "EndReproductive",
               "ResetStageName": null,
               "FractionRemovedOnCut": 0.0,
               "FractionRemovedOnHarvest": 0.0,

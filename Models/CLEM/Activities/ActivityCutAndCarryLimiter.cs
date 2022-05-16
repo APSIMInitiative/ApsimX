@@ -22,6 +22,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityCutAndCarryLimiter: CLEMModel
     {
+        private double amountUsedThisMonth = 0;
+
         /// <summary>
         /// Monthly weight limit (kg/day)
         /// </summary>
@@ -29,8 +31,6 @@ namespace Models.CLEM.Activities
         [ArrayItemCount(12)]
         [Units("kg/day")]
         public double[] WeightLimitPerDay { get; set; }
-
-        private double amountUsedThisMonth = 0;
 
         /// <summary>
         /// Get the amount of cut and carry available.
@@ -62,20 +62,15 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
+
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 htmlWriter.Write("\r\n<div class=\"filter\">");
@@ -86,9 +81,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(WeightLimitPerDay.ToString());
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not Set");
-                }
+
                 htmlWriter.Write("</span> dry kg/day ");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n</div>");
@@ -96,20 +90,14 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
             return "";
         } 

@@ -13,6 +13,8 @@
     using Views;
     using Commands;
     using Models.Storage;
+    using APSIM.Shared.Graphing;
+    using Series = Models.Series;
 
     /// <summary>
     /// A presenter class for graph series.
@@ -291,8 +293,8 @@
         /// <param name="e">Event arguments</param>
         private void OnLineThicknessChanged(object sender, EventArgs e)
         {
-            LineThicknessType lineThickness;
-            if (Enum.TryParse<LineThicknessType>(this.seriesView.LineThickness.SelectedValue, out lineThickness))
+            LineThickness lineThickness;
+            if (Enum.TryParse<LineThickness>(this.seriesView.LineThickness.SelectedValue, out lineThickness))
             {
                 this.SetModelProperty("LineThickness", lineThickness);
             }
@@ -303,8 +305,8 @@
         /// <param name="e">Event arguments</param>
         private void OnMarkerSizeChanged(object sender, EventArgs e)
         {
-            MarkerSizeType markerSize;
-            if (Enum.TryParse<MarkerSizeType>(this.seriesView.MarkerSize.SelectedValue, out markerSize))
+            MarkerSize markerSize;
+            if (Enum.TryParse<MarkerSize>(this.seriesView.MarkerSize.SelectedValue, out markerSize))
             {
                 this.SetModelProperty("MarkerSize", markerSize);
             }
@@ -346,10 +348,10 @@
         /// <param name="e">Event arguments</param>
         private void OnXOnTopChanged(object sender, EventArgs e)
         {
-            Axis.AxisType axisType = Axis.AxisType.Bottom;
+            AxisPosition axisType = AxisPosition.Bottom;
             if (this.seriesView.XOnTop.Checked)
             {
-                axisType = Axis.AxisType.Top;
+                axisType = AxisPosition.Top;
             }
 
             this.SetModelProperty("XAxis", axisType);
@@ -360,10 +362,10 @@
         /// <param name="e">Event arguments</param>
         private void OnYOnRightChanged(object sender, EventArgs e)
         {
-            Axis.AxisType axisType = Axis.AxisType.Left;
+            AxisPosition axisType = AxisPosition.Left;
             if (this.seriesView.YOnRight.Checked)
             {
-                axisType = Axis.AxisType.Right;
+                axisType = AxisPosition.Right;
             }
 
             this.SetModelProperty("YAxis", axisType);
@@ -488,7 +490,7 @@
             warnings.AddRange(PopulateColourDropDown());
 
             // Populate line thickness drop down.
-            List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));
+            List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThickness)));
             if (!thicknesses.Contains(series.LineThickness.ToString()) && !string.IsNullOrEmpty(series.LineThickness.ToString()))
             {
                 // This should never happen...if one of these values is ever removed, a converter should be written.
@@ -499,7 +501,7 @@
             this.seriesView.LineThickness.SelectedValue = series.LineThickness.ToString();
 
             // Populate marker size drop down.
-            List<string> sizes = new List<string>(Enum.GetNames(typeof(MarkerSizeType)));
+            List<string> sizes = new List<string>(Enum.GetNames(typeof(MarkerSize)));
             if (!sizes.Contains(series.MarkerSize.ToString()) && !string.IsNullOrEmpty(series.MarkerSize.ToString()))
             {
                 // This should never happen...if one of these values is ever removed, a converter should be written.
@@ -521,8 +523,8 @@
             this.seriesView.SeriesType.SelectedValue = series.Type.ToString();
 
             // Populate checkboxes.
-            this.seriesView.XOnTop.Checked = series.XAxis == Axis.AxisType.Top;
-            this.seriesView.YOnRight.Checked = series.YAxis == Axis.AxisType.Right;
+            this.seriesView.XOnTop.Checked = series.XAxis == AxisPosition.Top;
+            this.seriesView.YOnRight.Checked = series.YAxis == AxisPosition.Right;
             this.seriesView.ShowInLegend.Checked = series.ShowInLegend;
             this.seriesView.IncludeSeriesNameInLegend.Checked = series.IncludeSeriesNameInLegend;
             this.seriesView.XCumulative.Checked = series.CumulativeX;

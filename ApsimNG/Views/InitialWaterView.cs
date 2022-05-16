@@ -75,7 +75,7 @@
                 frameRadio1.Toggled -= FrameRadio_Toggled;
                 comboModel.Dispose();
                 comboRender.Dispose();
-                graphView1.MainWidget.Cleanup();
+                graphView1.Dispose();
                 graphView1 = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

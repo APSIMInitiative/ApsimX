@@ -11,5 +11,10 @@ namespace Models.Interfaces
         /// <param name="zone">The ZoneState.</param>
         void CalcRootProportionInLayers(ZoneState zone);
 
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        void CalcRootVolumeProportionInLayers(ZoneState zone);
     }
 }

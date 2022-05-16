@@ -56,6 +56,7 @@
             tree.DragStarted += OnDragStart;
             tree.DoubleClicked += OnAddButtonClicked;
             filterEdit.Changed += OnFilterChanged;
+            filterEdit.MainWidget.GrabFocus();
         }
 
         /// <summary>Populate the tree control.</summary>
@@ -165,10 +166,9 @@
                         selectedModelType.ResourceString != null &&
                         selectedModelType.ResourceString.Contains('.'))
                     {
-                        List<Exception> exceptions;
                         var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
                                                                                selectedModelType.ResourceString);
-                        child = FileFormat.ReadFromString<Model>(contents, out exceptions);
+                        child = FileFormat.ReadFromString<Model>(contents, e => throw e, false);
                         if (child.Children.Count == 1)
                             child = child.Children[0];
                     }

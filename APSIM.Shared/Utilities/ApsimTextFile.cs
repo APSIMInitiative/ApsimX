@@ -91,7 +91,7 @@ namespace APSIM.Shared.Utilities
         private DateTime _LastDate;
 
         /// <summary>The first line position</summary>
-        private int FirstLinePosition;
+        private long FirstLinePosition;
 
         /// <summary>The words</summary>
         private StringCollection Words = new StringCollection();
@@ -607,7 +607,7 @@ namespace APSIM.Shared.Utilities
 
             string Line = inData.ReadLine();
 
-            if (Line == null || Line.Length == 0)
+            if (string.IsNullOrWhiteSpace(Line))
                 return false;
 
             if (Line.IndexOf("!") > 0) //used to ignore "!" in a row
@@ -643,7 +643,7 @@ namespace APSIM.Shared.Utilities
             if (inData.EndOfStream)
                 return "?";
 
-            int Pos = inData.Position;
+            long Pos = inData.Position;
 
             StringCollection Words = new StringCollection();
             while (GetNextLine(inData, ref Words) && (Words[w] == "?" || Words[w] == "*")) ;
@@ -722,7 +722,7 @@ namespace APSIM.Shared.Utilities
                 string ColumnName = table.Columns[col].ColumnName;
                 if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (ColumnTypes[col] == typeof(DateTime))
+                    if (table.Columns[col].DataType == typeof(DateTime) || ColumnTypes[col] == typeof(DateTime))
                         return (DateTime)table.Rows[rowIndex][col];
                     else
                         return DateTime.Parse(table.Rows[rowIndex][col].ToString(), CultureInfo.InvariantCulture);
@@ -809,13 +809,13 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>Return the current file position</summary>
-        public int GetCurrentPosition()
+        public long GetCurrentPosition()
         {
             return inStreamReader.Position;
         }
 
         /// <summary>Seek to the specified file position</summary>
-        public void SeekToPosition(int position)
+        public void SeekToPosition(long position)
         {
             inStreamReader.Seek(position, SeekOrigin.Begin);
         }

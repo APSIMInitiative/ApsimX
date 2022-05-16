@@ -8,7 +8,6 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name]
     /// The module MICROMET, described here, has been developed to allow the calculation of 
     /// potential transpiration for multiple competing canopies that can be either layered or intermingled.
     /// </summary>
@@ -26,6 +25,10 @@
         /// <summary>The weather</summary>
         [Link]
         private IWeather weather = null;
+
+        /// <summary>The soil water model</summary>
+        [Link]
+        private ISoilWater soilWater = null;
 
         /// <summary>The sun set angle (degrees)</summary>
         private const double sunSetAngle = 0.0;
@@ -65,12 +68,6 @@
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
-
-        /// <summary>Gets or sets the soil_albedo.</summary>
-        [Description("Soil albedo")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("MJ/MJ")]
-        public double soil_albedo { get; set; }
 
         /// <summary>Fraction of solar radiation reaching the soil surface that results in soil heating</summary>
         [Description("Fraction of solar radiation reaching the soil surface that results in soil heating")]
@@ -137,7 +134,14 @@
         [Units("MJ/m^2")]
         public double RadiationInterception
         {
-            get { return microClimatesZones[0].RadiationInterception; }
+            get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterception; }
+        }
+
+        /// <summary>Gets the amount of radiation intercepted by the green elements of canopy (MJ/m2).</summary>
+        [Units("MJ/m^2")]
+        public double RadiationInterceptionOnGreen
+        {
+            get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterceptionOnGreen; }
         }
 
         /// <summary>Gets the total Penman-Monteith potential evapotranspiration (MJ/m2).</summary>
@@ -226,6 +230,8 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            if (ReferenceHeight < 1 || ReferenceHeight > 10)
+                throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
                 microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
@@ -262,7 +268,7 @@
             // Light distribution is now complete so calculate remaining micromet equations
             foreach (var ZoneMC in microClimatesZones)
             {
-                ZoneMC.CalculateEnergyTerms(soil_albedo);
+                ZoneMC.CalculateEnergyTerms(soilWater.Salb);
                 ZoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
                 ZoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
                 ZoneMC.CalculateGc(dayLengthEvap);

@@ -22,7 +22,7 @@
             if (graphXmL != null)
             {
                 List<Exception> errors = null;
-                Models.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph>(graphXmL, out errors);
+                Models.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph>(graphXmL, e => throw e, false);
                 if (errors != null && errors.Any())
                     throw errors.First();
                 graph.ParentAllDescendants();

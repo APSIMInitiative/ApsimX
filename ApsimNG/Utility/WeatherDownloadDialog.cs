@@ -1,4 +1,4 @@
-﻿
+
 namespace Utility
 {
     using APSIM.Shared.Utilities;
@@ -10,12 +10,14 @@ namespace Utility
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Text.RegularExpressions;
     using UserInterface.Commands;
     using UserInterface.Extensions;
     using UserInterface.Presenters;
     using UserInterface.Views;
+    using MessageType = Gtk.MessageType;
 
     class WeatherDownloadDialog
     {
@@ -33,8 +35,8 @@ namespace Utility
         private RadioButton radioSiloDataDrill = null;
         private RadioButton radioSiloPatchPoint = null;
         private RadioButton radioNASA = null;
-        private Calendar calendarStart = null;
-        private Calendar calendarEnd = null;
+        private Gtk.Calendar calendarStart = null;
+        private Gtk.Calendar calendarEnd = null;
         private Entry entryFilePath = null;
         private Button btnBrowse = null;
         private Entry entryEmail = null;
@@ -74,8 +76,8 @@ namespace Utility
             btnCancel = (Button)builder.GetObject("btnCancel");
             btnGetPlacename = (Button)builder.GetObject("btnGetPlacename");
             btnGetLocation = (Button)builder.GetObject("btnGetLocation");
-            calendarStart = (Calendar)builder.GetObject("calendarStart");
-            calendarEnd = (Calendar)builder.GetObject("calendarEnd");
+            calendarStart = (Gtk.Calendar)builder.GetObject("calendarStart");
+            calendarEnd = (Gtk.Calendar)builder.GetObject("calendarEnd");
             entryFilePath = (Entry)builder.GetObject("entryFilePath");
             btnBrowse = (Button)builder.GetObject("btnBrowse");
             entryEmail = (Entry)builder.GetObject("entryEmail");
@@ -102,14 +104,11 @@ namespace Utility
             {
                 if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
                 {
-#if NETFRAMEWORK
-            int xres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Width;
-            int yres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Height;
-#else
+
             Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)ViewBase.MasterView).MainWidget.Window).Workarea;
             int xres = workArea.Right;
             int yres = workArea.Bottom;
-#endif
+
                     dialog1.DefaultHeight = Math.Min(yres - dialogVBox.Allocation.Height, vbox1.Allocation.Height + dialogVBox.Allocation.Height);
                     dialog1.DefaultWidth = Math.Min(xres - dialogVBox.Allocation.Width, vbox1.Allocation.Width + 20);
                     scroller.SizeAllocated -= OnSizeAllocated;
@@ -142,7 +141,7 @@ namespace Utility
             MessageDialog md = new MessageDialog(dialog1, DialogFlags.Modal, type, ButtonsType.Ok, msg);
             md.Title = title;
             md.Run();
-            md.Cleanup();
+            md.Dispose();
         }
 
         /// <summary>
@@ -156,7 +155,7 @@ namespace Utility
         {
             try
             {
-                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLongitude))
                     return;
                 if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                 {
@@ -203,7 +202,7 @@ namespace Utility
                         explorerPresenter.CommandHistory.Add(command, true);
                     }
                 }
-                dialog1.Cleanup();
+                dialog1.Dispose();
             }
             catch (Exception err)
             {
@@ -236,7 +235,7 @@ namespace Utility
         {
             try
             {
-                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLongitude))
                     return;
                 string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
 
@@ -327,7 +326,7 @@ namespace Utility
         {
             try
             {
-                dialog1.Cleanup();
+                dialog1.Dispose();
             }
             catch (Exception err)
             {
@@ -574,11 +573,9 @@ namespace Utility
                     }
                     tree.Model = list;
                     tree.RowActivated += OnPatchPointSoilSelected;
-#if NETFRAMEWORK
-                    Box box = md.VBox;
-#else
+
                     Box box = md.ContentArea;
-#endif
+
                     box.PackStart(tree, true, true, 5);
                     box.ShowAll();
 
@@ -590,7 +587,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Cleanup();
+                    md.Dispose();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -658,8 +655,15 @@ namespace Utility
                 ShowMessage(MessageType.Warning, "NASA/CHRIPS data end date can be no later than yesterday", "Invalid end date");
                 return null;
             }
+
+            double latitude = double.Parse(entryLatitude.Text, CultureInfo.CurrentCulture);
+            double longitude = double.Parse(entryLongitude.Text, CultureInfo.CurrentCulture);
+
+            string latitudeStr = latitude.ToString(CultureInfo.InvariantCulture);
+            string longitudeStr = longitude.ToString(CultureInfo.InvariantCulture);
+
             string url = String.Format("https://worldmodel.csiro.au/gclimate?lat={0}&lon={1}&format=apsim&start={2:yyyyMMdd}&stop={3:yyyyMMdd}",
-                            entryLatitude.Text, entryLongitude.Text, startDate, endDate);
+                            latitudeStr, longitudeStr, startDate, endDate);
             MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
             stream.Position = 0;
             using (FileStream fs = new FileStream(dest, FileMode.OpenOrCreate))
@@ -687,9 +691,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GetGdkWindow() != null)
+                if (dialog1.Toplevel.Window != null)
                 {
-                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.Window.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

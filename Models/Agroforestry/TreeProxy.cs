@@ -15,7 +15,6 @@ using Models.Soils.Nutrients;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// # [Name]
     /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
     /// 
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:

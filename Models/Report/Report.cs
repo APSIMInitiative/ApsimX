@@ -3,6 +3,7 @@ namespace Models
     using APSIM.Shared.Utilities;
     using Models.CLEM;
     using Models.Core;
+    using Models.Functions;
     using Models.Storage;
     using Newtonsoft.Json;
     using System;
@@ -25,6 +26,10 @@ namespace Models
     [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
+        /// <summary>Link to script compiler.</summary>
+        [Link] 
+        ScriptCompiler compiler = null;
+
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
         public List<IReportColumn> Columns { get; private set; } = null;
@@ -32,9 +37,6 @@ namespace Models
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
-
-        /// <summary>List of strings representing dates to report on.</summary>
-        private List<string> dateStringsToReportOn = new List<string>();
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -54,26 +56,26 @@ namespace Models
 
         /// <summary>Link to an event service.</summary>
         [Link]
+        [NonSerialized]
         private IEvent events = null;
 
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [JsonIgnore] public int ActiveTabIndex = 0;
+        [JsonIgnore] 
+        public int ActiveTabIndex = 0;
 
         /// <summary>
         /// Gets or sets variable names for outputting
         /// </summary>
         [Summary]
-        [Description("Output variables")]
         public string[] VariableNames { get; set; }
 
         /// <summary>
         /// Gets or sets event names for outputting
         /// </summary>
         [Summary]
-        [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
         /// <summary>
@@ -85,41 +87,49 @@ namespace Models
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName{ get; set; }
 
-        /// <summary>An event handler to allow us to initialize ourselves.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
         [EventSubscribe("FinalInitialise")]
-        private void OnFinalInitialise(object sender, EventArgs e)
+        protected void OnFinalInitialise(object sender, EventArgs args)
         {
             DayAfterLastOutput = clock.Today;
-            dataToWriteToDb = null;
+        }
+
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
+        {
+            SubscribeToEvents();
+        }
+
+        /// <summary>
+        /// Subscribe to events provided
+        /// </summary>
+        protected void SubscribeToEvents()
+        {
+            // Cleanup event names.
+            EventNames = TidyUpEventNames();
 
             // Tidy up variable/event names.
             VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
 
             // Locate reporting variables.
             FindVariableMembers();
 
-            // Silently do nothing if no event names present.
-            if (EventNames == null || EventNames.Length < 1)
-                return;
-
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-                events.Subscribe(eventName, DoOutputEvent);
-        }
-
-        /// <summary>An event handler called at the end of each day.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("DoReport")]
-        private void OnDoReport(object sender, EventArgs e)
-        {
-            foreach (var dateString in dateStringsToReportOn)
+            // Parse the report frequency lines
+            foreach (string line in EventNames)
             {
-                if (DateUtilities.DatesAreEqual(dateString, clock.Today))
-                    DoOutput();
+                if (!DateReportFrequency.TryParse(line, this, events) &&
+                    !EventReportFrequency.TryParse(line, this, events) &&
+                    !ExpressionReportFrequency.TryParse(line, this, events, compiler))
+                    throw new Exception($"Invalid report frequency found: {line}");
             }
         }
 
@@ -127,7 +137,7 @@ namespace Models
         /// Sanitises the event names and removes duplicates/comments.
         /// </summary>
         /// <returns></returns>
-        protected string[] TidyUpEventNames()
+        private string[] TidyUpEventNames()
         {
             List<string> eventNames = new List<string>();
             for (int i = 0; i < EventNames?.Length; i++)
@@ -138,14 +148,9 @@ namespace Models
                 int commentIndex = eventName.IndexOf("//");
                 if (commentIndex >= 0)
                     eventName = eventName.Substring(0, commentIndex);
-
-                if (!string.IsNullOrWhiteSpace(eventName))
-                {
-                    if (DateUtilities.validateDateString(eventName) != null)
-                        dateStringsToReportOn.Add(eventName);                       
-                    else
-                        eventNames.Add(eventName.Trim());
-                }
+                eventName = eventName.Trim();
+                if (!string.IsNullOrEmpty(eventName))
+                    eventNames.Add(eventName);
             }
 
             return eventNames.ToArray();
@@ -154,14 +159,14 @@ namespace Models
         /// <summary>
         /// Sanitises the variable names and removes duplicates/comments.
         /// </summary>
-        protected string[] TidyUpVariableNames()
+        private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
             IModel zone = FindAncestor<Zone>();
             if (zone == null)
                 zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");
-            for (int i = 0; i < this.VariableNames.Length; i++)
+            for (int i = 0; i < this.VariableNames?.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
                 if (!isDuplicate && this.VariableNames[i] != string.Empty)
@@ -186,7 +191,7 @@ namespace Models
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
+        protected void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
                 storage.Writer.WriteTable(dataToWriteToDb);
@@ -290,7 +295,7 @@ namespace Models
 
 
         /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public void DoOutputEvent(object sender, EventArgs e)
+        public virtual void DoOutputEvent(object sender, EventArgs e)
         {
             DoOutput();
         }
@@ -298,7 +303,7 @@ namespace Models
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        protected void FindVariableMembers()
+        private void FindVariableMembers()
         {
             this.Columns = new List<IReportColumn>();
 
@@ -331,7 +336,7 @@ namespace Models
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        protected void FindFromTo(out string from, out string to)
+        private void FindFromTo(out string from, out string to)
         {
             // Find the first aggregation column.
             var firstAggregatedVariableName = VariableNames.ToList().Find(var => var.Contains(" from "));
@@ -394,7 +399,11 @@ namespace Models
                         table.Rows.Add(row);
                     }
                 }
-                storage.Writer.WriteTable(table);
+
+                // Report tables are automatically cleaned before the simulation is run,
+                // as an optimisation specifically designed for this call to WriteTable().
+                // Therefore, we do not need to delete existing data here.
+                storage.Writer.WriteTable(table, false);
             }
         }
     }
