@@ -1,0 +1,962 @@
+
+ [standard.manager.init]       
+
+     dateset = 0
+     emer_date = 0
+     endjuv_date = 0
+     anth_date = 0
+     mat_date = 0
+
+ [standard.manager.end_of_day]
+
+     if mungbean.stage = 3 and dateset = 0 then
+        emer_date = das
+        dateset = 1
+     endif
+
+     if mungbean.stage = 4 and dateset = 1 then
+        endjuv_date = das
+        dateset = 2
+     endif
+
+     if mungbean.stage = 6 and dateset = 2 then
+        anth_date = das
+        dateset = 3
+     endif
+      
+     if mungbean.stage = 9 and dateset = 3 then
+        mat_date = das
+        dateset = 4
+     endif
+
+if (mungbean.stage_name = 'maturity' or mungbean.plant_status = 'dead') then
+
+   report do_output
+   mungbean harvest 
+   mungbean kill_crop 
+   mungbean end_crop
+   dateset = 0
+
+endif
+
+[standard.soilwat2.parameters]
+insoil = 1
+runoff filename = blank
+
+[standard.residue2.parameters]
+residue_wt = 500
+residue_cnr = 40
+residue_type = wheat
+pot_decomp_rate = 0.1
+
+[standard.soiln2.parameters]
+root_wt = 0
+root_cn = 33
+nh4ppm = 1  1  1  1  1  1  1  1
+no3ppm = 2  2  2  2  2  2  2  2
+uppm   = 0  0  0  0  0  0  0  0
+
+!!!!!!!!!!!!!!!! APS1 - Gatton 1991 density !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[aps1d1.operatns.parameters]
+ 25  1991     soilwat2 set sw = 0.380   0.380   0.395   0.410   0.400   0.390   0.380   0.380
+ 32  1991     mungbean sow plants = 36.2,crop_class = plant, row_spacing = 320, sowing_depth = 50, cultivar = berken                          
+ 32  1991     irrigate apply  amount =  6.0 (mm) 
+ 36  1991     irrigate apply  amount = 10.0 (mm) 
+ 52  1991     irrigate apply  amount = 15.0 (mm) 
+ 57  1991     irrigate apply  amount = 15.0 (mm) 
+ 60  1991     irrigate apply  amount = 20.0 (mm) 
+ 67  1991     irrigate apply  amount = 15.0 (mm) 
+ 71  1991     irrigate apply  amount = 37.0 (mm) 
+ 74  1991     irrigate apply  amount = 18.0 (mm) 
+ 78  1991     irrigate apply  amount = 17.0 (mm) 
+ 80  1991     irrigate apply  amount = 16.0 (mm) 
+ 86  1991     irrigate apply  amount = 35.0 (mm) 
+ 93  1991     irrigate apply  amount = 12.0 (mm) 
+ 97  1991     irrigate apply  amount =  6.0 (mm) 
+102  1991     irrigate apply  amount = 16.0 (mm) 
+105  1991     irrigate apply  amount =  8.0 (mm) 
+109  1991     irrigate apply  amount = 10.0 (mm) 
+112  1991     irrigate apply  amount =  5.0 (mm) 
+125  1991     irrigate apply  amount = 35.0 (mm) 
+135  1991     irrigate apply  amount = 15.0 (mm) 
+
+[aps1d2.operatns.parameters]
+ 25  1991     soilwat2 set sw = 0.380   0.380   0.395   0.410   0.400   0.390   0.380   0.380 
+ 32  1991     mungbean sow plants = 10.7,crop_class = plant, row_spacing = 320, sowing_depth = 50, cultivar = berken                          
+ 32  1991     irrigate apply  amount =  6.0 (mm) 
+ 36  1991     irrigate apply  amount = 10.0 (mm) 
+ 52  1991     irrigate apply  amount = 15.0 (mm) 
+ 57  1991     irrigate apply  amount = 15.0 (mm) 
+ 60  1991     irrigate apply  amount = 20.0 (mm) 
+ 67  1991     irrigate apply  amount = 15.0 (mm) 
+ 71  1991     irrigate apply  amount = 37.0 (mm) 
+ 74  1991     irrigate apply  amount = 18.0 (mm) 
+ 78  1991     irrigate apply  amount = 17.0 (mm) 
+ 80  1991     irrigate apply  amount = 16.0 (mm) 
+ 86  1991     irrigate apply  amount = 35.0 (mm) 
+ 93  1991     irrigate apply  amount = 12.0 (mm) 
+ 97  1991     irrigate apply  amount =  6.0 (mm) 
+102  1991     irrigate apply  amount = 16.0 (mm) 
+105  1991     irrigate apply  amount =  8.0 (mm) 
+109  1991     irrigate apply  amount = 10.0 (mm) 
+112  1991     irrigate apply  amount =  5.0 (mm) 
+125  1991     irrigate apply  amount = 35.0 (mm) 
+135  1991     irrigate apply  amount = 15.0 (mm) 
+
+
+!!!!!!!!!!!!!!!! APS18 - Gatton 1993 weathering !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[aps18p1b.operatns.parameters]
+322  1993     soilwat2 set sw =  0.255   0.322   0.321   0.321   0.243   0.211   0.170   0.170
+308  1993     mungbean sow plants = 38.2,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = berken                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p2b.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+322  1993     mungbean sow plants = 43.2,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = berken                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p3b.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+348  1993     mungbean sow plants = 39.6,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = berken                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p4b.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+  4  1994     mungbean sow plants = 39.6,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = berken                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p5b.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+ 17  1994     mungbean sow plants = 35.4,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = berken                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p6b.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+ 32  1994     mungbean sow plants = 43.8,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = berken                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p1k.operatns.parameters]
+322  1993     soilwat2 set sw =  0.255   0.322   0.321   0.321   0.243   0.211   0.170   0.170
+308  1993     mungbean sow plants = 26.0,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = king                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p2k.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+322  1993     mungbean sow plants = 12.7,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = king                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p3k.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+348  1993     mungbean sow plants = 38.7,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = king                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p4k.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+  4  1994     mungbean sow plants = 28.6,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = king                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p5k.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+ 17  1994     mungbean sow plants = 27.6,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = king                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+[aps18p6k.operatns.parameters]
+322  1993     soilwat2 set sw =  0.273   0.332   0.372   0.372   0.340   0.359   0.170   0.170
+ 32  1994     mungbean sow plants = 32.7,crop_class = plant, row_spacing = 500, sowing_depth = 50, cultivar = king                          
+300  1993     irrigate apply  amount = 42.0 (mm) 
+314  1993     irrigate apply  amount = 15.0 (mm) 
+326  1993     irrigate apply  amount = 28.0 (mm) 
+335  1993     irrigate apply  amount = 14.0 (mm) 
+349  1993     irrigate apply  amount = 14.0 (mm) 
+357  1993     irrigate apply  amount = 14.0 (mm) 
+363  1993     irrigate apply  amount = 21.0 (mm) 
+  4  1994     irrigate apply  amount = 18.0 (mm) 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT1 1986/87 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt1c1p1.operatns.parameters]   
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  5  1987     mungbean sow plants = 38.0,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = berken                          
+
+[nt1c1p2.operatns.parameters]
+  1  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 36.0,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = berken                          
+
+[nt1c2p1.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  5  1987     mungbean sow plants = 33.5,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                      
+
+[nt1c2p2.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 36.0,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                          
+
+[nt1c3p1.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  5  1987     mungbean sow plants = 35.2,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = satin                     
+
+[nt1c3p2.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 40.8,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = satin                     
+
+[nt1c4p1.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  5  1987     mungbean sow plants = 33.9,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = shangtung                 
+
+[nt1c4p2.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 34.4,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = shangtung                          
+
+[nt1c5p1.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  5  1987     mungbean sow plants = 33.5,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = putland          
+
+[nt1c5p2.operatns.parameters]
+250  1986     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 33.2,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = putland                          
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT2 1986/87 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt2c2p1.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 15  1987     mungbean sow plants = 38.9,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                      
+
+[nt2c2p2.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 28  1987     mungbean sow plants = 33.4,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                          
+
+[nt2c2p3.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 41  1987     mungbean sow plants = 31.7,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                          
+
+[nt2c2p4.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 56  1987     mungbean sow plants = 32.9,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                          
+
+[nt2c3p1.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 15  1987     mungbean sow plants = 26.1,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = satin                 
+
+[nt2c3p2.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 28  1987     mungbean sow plants = 36.0,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = satin                          
+
+[nt2c3p3.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 41  1987     mungbean sow plants = 38.0,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = satin                          
+
+[nt2c3p4.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 56  1987     mungbean sow plants = 39.0,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = satin                          
+
+[nt2c5p1.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 15  1987     mungbean sow plants = 31.9,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = putland               
+
+[nt2c5p2.operatns.parameters]  
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 28  1987     mungbean sow plants = 34.1,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = putland                          
+
+[nt2c5p3.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 41  1987     mungbean sow plants = 32.9,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = putland                          
+
+[nt2c5p4.operatns.parameters]
+! 14  1987     soilwat2 set sw =  0.044   0.066   0.127   0.127   0.168   0.168   0.168   0.168   0.168
+ 56  1987     mungbean sow plants = 33.9,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = putland                          
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT3 1986/87 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt3c2p1.operatns.parameters]
+ 18  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 19  1987     mungbean sow plants = 40,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                      
+
+[nt3c2p2.operatns.parameters]
+ 18  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 40,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                      
+
+[nt3c2p3.operatns.parameters]
+ 18  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 46  1987     mungbean sow plants = 40,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = king                      
+
+[nt3c4p1.operatns.parameters]
+ 18  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 19  1987     mungbean sow plants = 40,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = shangtung                      
+
+[nt3c4p2.operatns.parameters]
+ 18  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 30  1987     mungbean sow plants = 40,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = shangtung                      
+
+[nt3c4p3.operatns.parameters]
+ 18  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 46  1987     mungbean sow plants = 40,crop_class = plant, row_spacing = 360, sowing_depth = 30, cultivar = shangtung                      
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT4 1989/90 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt4c2p1.irrigate.parameters]
+  automatic_irrigation = on
+  crit_fr_asw = 0.70
+  asw_depth = 1000
+
+[nt4c2p1.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  1  1990     residue2 set residue_wt = 4000.0 
+  4  1990     mungbean sow plants = 40, sowing_depth = 30, cultivar = king ,crop_class = plant                     
+356  1989     irrigate apply  amount = 37.0 (mm) 
+358  1989     irrigate apply  amount = 25.0 (mm) 
+361  1989     irrigate apply  amount = 35.0 (mm) 
+  3  1990     irrigate apply  amount = 15.0 (mm) 
+  4  1990     irrigate apply  amount = 15.0 (mm) 
+  6  1990     irrigate apply  amount =  8.0 (mm) 
+ 17  1990     irrigate apply  amount = 10.0 (mm) 
+ 20  1990     irrigate apply  amount = 23.0 (mm) 
+ 26  1990     irrigate apply  amount =  6.0 (mm) 
+ 30  1990     irrigate apply  amount =  7.0 (mm) 
+ 37  1990     irrigate apply  amount = 21.0 (mm) 
+ 40  1990     irrigate apply  amount = 16.0 (mm) 
+ 44  1990     irrigate apply  amount = 15.0 (mm) 
+
+[nt4c2p2.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  1  1990     residue2 set residue_wt = 4000.0 
+ 17  1990     mungbean sow plants = 40, sowing_depth = 30, cultivar = king ,crop_class = plant                     
+356  1989     irrigate apply  amount = 37.0 (mm) 
+358  1989     irrigate apply  amount = 25.0 (mm) 
+361  1989     irrigate apply  amount = 35.0 (mm) 
+  3  1990     irrigate apply  amount = 15.0 (mm) 
+  4  1990     irrigate apply  amount = 15.0 (mm) 
+  6  1990     irrigate apply  amount =  8.0 (mm) 
+ 17  1990     irrigate apply  amount = 10.0 (mm) 
+ 20  1990     irrigate apply  amount = 23.0 (mm) 
+ 26  1990     irrigate apply  amount =  6.0 (mm) 
+ 30  1990     irrigate apply  amount =  7.0 (mm) 
+ 37  1990     irrigate apply  amount = 21.0 (mm) 
+ 40  1990     irrigate apply  amount = 16.0 (mm) 
+ 44  1990     irrigate apply  amount = 15.0 (mm) 
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT5 1990/91 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt5c2p1.operatns.parameters]   
+250  1990     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 15  1991     mungbean sow plants = 38, sowing_depth = 30, cultivar = king,crop_class = plant                      
+
+[nt5c5p1.operatns.parameters]
+250  1990     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 15  1991     mungbean sow plants = 26, sowing_depth = 30, cultivar = putland,crop_class = plant               
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT6 1989/90 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt6c2w1.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 71  1990     mungbean sow plants = 40, sowing_depth = 30, cultivar = king,crop_class = plant                      
+ 65  1990     irrigate apply   amount = 7.0 (mm)
+ 71  1990     irrigate apply   amount = 7.0 (mm)
+ 72  1990     irrigate apply   amount = 7.0 (mm)
+ 76  1990     irrigate apply   amount = 7.0 (mm)
+ 79  1990     irrigate apply   amount = 7.0 (mm)
+ 82  1990     irrigate apply   amount = 7.0 (mm)
+ 90  1990     irrigate apply   amount = 7.0 (mm)
+ 94  1990     irrigate apply   amount = 6.0 (mm)
+ 97  1990     irrigate apply   amount =14.0 (mm)
+110  1990     irrigate apply   amount =20.0 (mm)
+102  1990     irrigate apply   amount =20.0 (mm)
+106  1990     irrigate apply   amount =15.0 (mm)
+108  1990     irrigate apply   amount =13.0 (mm)
+116  1990     irrigate apply   amount =21.0 (mm)
+122  1990     irrigate apply   amount =10.0 (mm)
+127  1990     irrigate apply   amount =24.0 (mm)
+128  1990     irrigate apply   amount =14.0 (mm)
+129  1990     irrigate apply   amount =19.0 (mm)
+134  1990     irrigate apply   amount =10.0 (mm)
+138  1990     irrigate apply   amount =20.0 (mm)
+141  1990     irrigate apply   amount =24.0 (mm)
+142  1990     irrigate apply   amount = 8.6 (mm)
+143  1990     irrigate apply   amount = 3.5 (mm)
+  
+[nt6c2w2.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 71  1990     mungbean sow plants = 40, sowing_depth = 30, cultivar = king,crop_class = plant                      
+ 65  1990     irrigate apply   amount = 7.0 (mm)
+ 71  1990     irrigate apply   amount = 7.0 (mm)
+ 72  1990     irrigate apply   amount = 7.0 (mm)
+ 76  1990     irrigate apply   amount = 7.0 (mm)
+ 79  1990     irrigate apply   amount = 7.0 (mm)
+ 82  1990     irrigate apply   amount = 7.0 (mm)
+ 90  1990     irrigate apply   amount = 7.0 (mm)
+ 94  1990     irrigate apply   amount = 6.0 (mm)
+ 97  1990     irrigate apply   amount =14.0 (mm)
+110  1990     irrigate apply   amount =20.0 (mm)
+102  1990     irrigate apply   amount =20.0 (mm)
+141  1990     irrigate apply   amount =24.0 (mm)
+142  1990     irrigate apply   amount = 8.6 (mm)
+143  1990     irrigate apply   amount = 3.5 (mm)
+ 
+[nt6c2w3.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 71  1990     mungbean sow plants = 40, sowing_depth = 30, cultivar = king,crop_class = plant                      
+ 65  1990     irrigate apply   amount = 7.0 (mm)
+ 71  1990     irrigate apply   amount = 7.0 (mm)
+ 72  1990     irrigate apply   amount = 7.0 (mm)
+ 76  1990     irrigate apply   amount = 7.0 (mm)
+ 79  1990     irrigate apply   amount = 7.0 (mm)
+ 82  1990     irrigate apply   amount = 7.0 (mm)
+ 90  1990     irrigate apply   amount = 7.0 (mm)
+ 94  1990     irrigate apply   amount = 6.0 (mm)
+ 97  1990     irrigate apply   amount =14.0 (mm)
+110  1990     irrigate apply   amount =20.0 (mm)
+102  1990     irrigate apply   amount =20.0 (mm)
+
+[nt6c5w1.operatns.parameters]  
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 65  1990     mungbean sow plants = 22, sowing_depth = 30, cultivar = putland,crop_class = plant               
+ 65  1990     irrigate apply   amount = 7.0 (mm)
+ 71  1990     irrigate apply   amount = 7.0 (mm)
+ 72  1990     irrigate apply   amount = 7.0 (mm)
+ 76  1990     irrigate apply   amount = 7.0 (mm)
+ 79  1990     irrigate apply   amount = 7.0 (mm)
+ 82  1990     irrigate apply   amount = 7.0 (mm)
+ 90  1990     irrigate apply   amount = 7.0 (mm)
+ 94  1990     irrigate apply   amount = 6.0 (mm)
+ 97  1990     irrigate apply   amount =14.0 (mm)
+110  1990     irrigate apply   amount =20.0 (mm)
+102  1990     irrigate apply   amount =20.0 (mm)
+106  1990     irrigate apply   amount =15.0 (mm)
+108  1990     irrigate apply   amount =13.0 (mm)
+116  1990     irrigate apply   amount =21.0 (mm)
+122  1990     irrigate apply   amount =10.0 (mm)
+127  1990     irrigate apply   amount =24.0 (mm)
+128  1990     irrigate apply   amount =14.0 (mm)
+129  1990     irrigate apply   amount =19.0 (mm)
+134  1990     irrigate apply   amount =10.0 (mm)
+138  1990     irrigate apply   amount =20.0 (mm)
+141  1990     irrigate apply   amount =24.0 (mm)
+142  1990     irrigate apply   amount = 8.6 (mm)
+143  1990     irrigate apply   amount = 3.5 (mm)
+
+[nt6c5w2.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 65  1990     mungbean sow plants = 22, sowing_depth = 30, cultivar = putland,crop_class = plant               
+ 65  1990     irrigate apply   amount = 7.0 (mm)
+ 71  1990     irrigate apply   amount = 7.0 (mm)
+ 72  1990     irrigate apply   amount = 7.0 (mm)
+ 76  1990     irrigate apply   amount = 7.0 (mm)
+ 79  1990     irrigate apply   amount = 7.0 (mm)
+ 82  1990     irrigate apply   amount = 7.0 (mm)
+ 90  1990     irrigate apply   amount = 7.0 (mm)
+ 94  1990     irrigate apply   amount = 6.0 (mm)
+ 97  1990     irrigate apply   amount =14.0 (mm)
+110  1990     irrigate apply   amount =20.0 (mm)
+102  1990     irrigate apply   amount =20.0 (mm)
+141  1990     irrigate apply   amount =24.0 (mm)
+142  1990     irrigate apply   amount = 8.6 (mm)
+143  1990     irrigate apply   amount = 3.5 (mm)
+
+[nt6c5w3.operatns.parameters]
+250  1989     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 65  1990     mungbean sow plants = 22, sowing_depth = 30, cultivar = putland,crop_class = plant               
+ 65  1990     irrigate apply   amount = 7.0 (mm)
+ 71  1990     irrigate apply   amount = 7.0 (mm)
+ 72  1990     irrigate apply   amount = 7.0 (mm)
+ 76  1990     irrigate apply   amount = 7.0 (mm)
+ 79  1990     irrigate apply   amount = 7.0 (mm)
+ 82  1990     irrigate apply   amount = 7.0 (mm)
+ 90  1990     irrigate apply   amount = 7.0 (mm)
+ 94  1990     irrigate apply   amount = 6.0 (mm)
+ 97  1990     irrigate apply   amount =14.0 (mm)
+110  1990     irrigate apply   amount =20.0 (mm)
+102  1990     irrigate apply   amount =20.0 (mm)
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT9   1988/89 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt9c2p1.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 15  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = king,crop_class = plant
+
+[nt9c2p2.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 33  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = king,crop_class = plant
+
+[nt9c2p3.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 47  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = king,crop_class = plant
+
+[nt9c3p2.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 33  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = satin,crop_class = plant
+
+[nt9c3p3.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 47  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = satin,crop_class = plant
+
+[nt9c5p1.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 15  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = putland,crop_class = plant
+
+[nt9c5p2.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 33  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = putland,crop_class = plant
+
+[nt9c5p3.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 47  1988     mungbean sow plants = 40, sowing_depth = 30, cultivar = putland,crop_class = plant
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT10   1988/89 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[nt10c2t1.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 1  1988     mungbean sow plants = 10, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = king
+
+[nt10c2t2.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 1  1988     mungbean sow plants = 20, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = king
+
+[nt10c2t3.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+  1  1988     mungbean sow plants = 40, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = king
+
+[nt10c2t4.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 17  1988     mungbean sow plants = 10, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = king
+
+[nt10c2t5.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 17  1988     mungbean sow plants = 20, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = king
+
+[nt10c2t6.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 17  1988     mungbean sow plants = 40, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = king
+
+[nt10c5t4.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 17  1988     mungbean sow plants = 10, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = putland
+
+[nt10c5t5.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 17  1988     mungbean sow plants = 20, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = putland
+
+[nt10c5t6.operatns.parameters]
+250  1987     soilwat2 set sw =  0.19    0.21    0.21    0.223   0.219   0.219   0.219   0.229   0.237
+ 17  1988     mungbean sow plants = 40, sowing_depth = 30,crop_class = plant, row_spacing = 360, cultivar = putland
+
+
+!!!!!!!!!!!!!!!!!!!!!!!! APS20  Downs 1993 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                 
+[aps20f1.operatns.parameters]     ! Mansbridge
+! 351 1993     soilwat2 set sw =   0.272   0.311   0.315   0.297   0.265    0.368    0.368     
+! current settings for SW grows a v.poor crop, therefore set close to DUl in top 4 layers
+ 351 1993     soilwat2 set sw =   0.400   0.400   0.400   0.400   0.265    0.368    0.368     
+ 351 1993     soiln2   set no3=   18.5    11.5    21.4    18.4    6.7      1.0      1.0       
+ 351 1993     mungbean sow plants = 30.8, sowing_depth = 40, cultivar = emerald,crop_class = plant, row_spacing = 230
+
+[aps20f2.operatns.parameters]     ! Muirhead
+! 361  1993    soilwat2 set sw =   0.277   0.358   0.320   0.299   0.305   0.368    0.368        
+! 361  1993    soilwat2 set sw =   0.300   0.358   0.320   0.299   0.305   0.368    0.368 ! layer 1 increased to get germ
+ 361  1993    soilwat2 set sw =   0.420   0.420   0.420   0.299   0.305   0.368    0.368 ! layers 1-3 increased to DUL
+ 361  1993    soiln2   set no3=   10.1    18.7    55.8    17.5    8.4     1.0      1.0       
+ 361  1993    mungbean sow plants = 16.3, sowing_depth = 40, cultivar = shangtung,crop_class = plant, row_spacing = 450                          
+
+[aps20f3.operatns.parameters]     ! Anderson
+ 351  1993    soilwat2 set sw =   0.309   0.333   0.276   0.287   0.325    0.400    0.420   
+ 351  1993    soiln2   set no3=   11.0    3.4     2.6     2.6     3.2      1.0      1.0
+ 351  1993    mungbean sow plants = 29.0, sowing_depth = 40, cultivar = celera,crop_class = plant, row_spacing = 350                          
+ 
+[aps20f4.operatns.parameters]     ! Vaughan
+ 352  1993    soilwat2 set sw =   0.327   0.403   0.398   0.356   0.362   0.368    0.368        
+ 352  1993    soiln2   set no3=   23.8    25.0    46.7    28.2    18.5    1.0      1.0       
+ 352  1993    mungbean sow plants = 23.5, sowing_depth = 40, cultivar = shangtung,crop_class = plant, row_spacing = 200                          
+ 
+[aps20f5.operatns.parameters]     ! Schelberg
+ 354  1993    soilwat2 set sw =   0.522   0.522   0.446   0.371   0.383    0.430    0.430   
+ 354  1993    soiln2   set no3=   2.9     11.7    26.0    7.7     0.7      1.0      1.0
+ 354  1993    mungbean sow plants = 18.5, sowing_depth = 40, cultivar = satin,crop_class = plant, row_spacing = 760                          
+
+[aps20f6.operatns.parameters]     ! RBazeley
+ 355  1993    soilwat2 set sw =   0.392   0.388   0.347   0.340   0.346   0.352    0.361  
+ 355  1993    soiln2   set no3=   15.4    34.0    56.7    10.1    2.3     1.0      1.0
+ 355  1993    mungbean sow plants = 32.0, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 450                          
+
+[aps20f7.operatns.parameters]     ! Sterling
+! 362  1993    soilwat2 set sw =   0.389   0.468   0.396   0.385   0.393   0.368    0.368  
+! layer 2 is at SAT, therefore change to be compatible with upper and lower layers
+ 362  1993    soilwat2 set sw =   0.389   0.368   0.396   0.385   0.393   0.368    0.368  
+ 362  1993    soiln2   set no3=   13.1    8.0     5.9     2.4     1.3     1.0      1.0
+ 362  1993    mungbean sow plants = 19.6, sowing_depth = 40, cultivar = emerald,crop_class = plant, row_spacing = 180                          
+
+[aps20f8.operatns.parameters]     ! ABazeley
+! 352  1993    soilwat2 set sw =   0.277   0.322   0.268   0.298   0.328   0.352    0.361
+! some layers are being set below LL, so try just a full profile to 60cm
+! 352  1993    soilwat2 set sw =   0.428   0.407   0.424   0.298   0.328   0.352    0.361
+! some layers are being set below LL, so try just a full profile to 40cm
+ 352  1993    soilwat2 set sw =   0.428   0.407   0.268   0.298   0.328   0.352    0.361
+ 352  1993    soiln2   set no3=   7.7     8.7     7.1     2.5     1.9     1.0      1.0   
+ 352  1993    mungbean sow plants = 19.3, sowing_depth = 40, cultivar = emerald,crop_class = plant, row_spacing = 460
+ 
+[aps20f9.operatns.parameters]     ! Croft
+ 352  1993    soilwat2 set sw =   0.389   0.484   0.465   0.396   0.358    0.400    0.420   
+ 352  1993    soiln2   set no3=   23.3    34.4    86.3    28.7    5.9      1.0       1.0
+ 352  1993    mungbean sow plants = 22.4, sowing_depth = 40, cultivar = satin,crop_class = plant, row_spacing = 970                          
+
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 1 Dec 1987 sowing RAINFED !!!!!!!!!!!!!!!!!!!!!!!!!
+! 1st Dec 87 sowing not published as too low popn used
+! same irrigation applied to rainfed and irrigated - good wet season
+                                 
+[rcm_L12r.operatns.parameters]
+ 335  1987     mungbean sow plants = 18, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 500
+ 341  1987     irrigate apply  amount = 12 (mm)
+ 342  1987     irrigate apply  amount = 15 (mm)
+ 344  1987     irrigate apply  amount = 15 (mm)
+       
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 5 Jan 1988 sowing RAINFED !!!!!!!!!!!!!!!!!!!!!!!!!
+! in Muchow et al (1993) FCR v32
+                                 
+[rcm_L13r.operatns.parameters]
+ 5  1988     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+ 6  1988     irrigate apply  amount = 11 (mm)
+ 
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 5 Jan 1988 sowing IRRIGATED !!!!!!!!!!!!!!!!!!!!!!!!!
+! in Muchow et al (1993) FCR v32
+                                 
+[rcm_L13i.operatns.parameters]
+ 5  1988     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+ 6  1988     irrigate apply  amount = 11 (mm)
+ 8  1988     irrigate apply  amount = 13 (mm)
+ 7  1988     irrigate apply  amount = 12 (mm)
+ 13 1988     irrigate apply  amount = 25 (mm)
+ 18 1988     irrigate apply  amount = 33 (mm)
+
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 10 Jan 1989 sowing RAINFED !!!!!!!!!!!!!!!!!!!!!!!!!
+! in Muchow et al (1993) FCR v33
+
+[rcm_L21r.operatns.parameters]
+ 10 1989     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+ 15 1989     irrigate apply  amount = 17 (mm)
+
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 7 Feb 1989 sowing RAINFED !!!!!!!!!!!!!!!!!!!!!!!!!
+! no irrigation at establishment because of good rain after sowing
+
+[rcm_L22r.operatns.parameters]
+ 38 1989     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 28 Feb 1989 sowing IRRIGATED !!!!!!!!!!!!!!!!!!!!!!
+                                 
+[rcm_L3i.operatns.parameters]
+ 59 1989     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+ 95 1989     irrigate apply  amount = 26 (mm)
+ 97 1989     irrigate apply  amount = 30 (mm)
+ 100 1989     irrigate apply  amount = 14 (mm)
+ 102 1989     irrigate apply  amount = 24 (mm)
+ 105 1989     irrigate apply  amount = 42 (mm)
+ 109 1989     irrigate apply  amount = 13 (mm)
+ 112 1989     irrigate apply  amount = 27 (mm)
+ 116 1989     irrigate apply  amount = 32 (mm)
+ 119 1989     irrigate apply  amount = 43 (mm)
+ 126 1989     irrigate apply  amount = 39 (mm)
+ 130 1989     irrigate apply  amount = 35 (mm)
+ 133 1989     irrigate apply  amount = 34 (mm)
+ 137 1989     irrigate apply  amount = 33 (mm)
+ 140 1989     irrigate apply  amount = 38 (mm)
+ 144 1989     irrigate apply  amount = 34 (mm)
+ 147 1989     irrigate apply  amount = 33 (mm)
+ 151 1989     irrigate apply  amount = 34 (mm)
+ 154 1989     irrigate apply  amount = 28 (mm)
+ 158 1989     irrigate apply  amount = 27 (mm)
+ 161 1989     irrigate apply  amount = 27 (mm)
+ 166 1989     irrigate apply  amount = 28 (mm)
+ 168 1989     irrigate apply  amount = 26 (mm)
+ 172 1989     irrigate apply  amount = 23 (mm)
+ 175 1989     irrigate apply  amount = 22 (mm)
+
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Katherine 28 Feb 1989 sowing RAINFED !!!!!!!!!!!!!!!!!!!!!!
+                                 
+[rcm_L3r.operatns.parameters]
+ 59  1989     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+ 109 1989     irrigate apply  amount = 44 (mm)
+ 140 1989     irrigate apply  amount = 38 (mm)
+
+!!!!!!!!!!!!!!!!!!!!!!!! RCM Gatton 9 Jan 1990 sowing IRRIGATED !!!!!!!!!!!!!!!!!!!!!!!!
+                                 
+[rcm_L4i.operatns.parameters]
+ 9  1990     mungbean sow plants = 35, sowing_depth = 40, cultivar = king,crop_class = plant, row_spacing = 360
+ 10 1990     irrigate apply  amount = 18 (mm)
+ 13 1990     irrigate apply  amount = 25 (mm)
+ 23 1990     irrigate apply  amount = 10 (mm)
+ 24 1990     irrigate apply  amount = 11 (mm)
+ 26 1990     irrigate apply  amount = 16 (mm)
+ 31 1990     irrigate apply  amount = 14 (mm)
+ 33 1990     irrigate apply  amount = 23 (mm)
+ 47 1990     irrigate apply  amount = 26 (mm)
+ 60 1990     irrigate apply  amount = 31 (mm)
+ 67 1990     irrigate apply  amount = 21 (mm)
+ 71 1990     irrigate apply  amount = 26 (mm)
+ 75 1990     irrigate apply  amount = 24 (mm)
+ 80 1990     irrigate apply  amount = 10 (mm)
+ 82 1990     irrigate apply  amount = 25 (mm)
+
+!!!!!!!!! RJL1_1: Irrigated sown 10 Dec 1976 Dalby after winter cereal !!!!!!!!!!!!!!
+                                 
+[rjl1_1.operatns.parameters]
+! set soil water at near end of winter cereal to lower limit for Waco
+269 1976     soilwat2 set sw =  0.220   0.342   0.385   0.386   0.429    0.430    0.430
+269 1976     residue2 add_residue dlt_residue_wt = 1500, dlt_residue_type = wheat, dlt_residue_cnr = 70
+344 1976     mungbean sow plants = 18.5, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 600
+349 1976     irrigate apply  amount = 30 (mm)
+  5 1977     irrigate apply  amount = 30 (mm)
+ 28 1977     irrigate apply  amount = 30 (mm)
+ 34 1977     irrigate apply  amount = 30 (mm)
+ 50 1977     irrigate apply  amount = 30 (mm)
+
+!!!!!!!!! RJL1_2: Double-cropped sown 10 Dec 1976-77 Dalby after winter cereal !!!!!!!!!!!!!!
+                                 
+[rjl1_2.operatns.parameters]
+! set soil water at near end of winter cereal to lower limit for Waco
+269 1976     soilwat2 set sw =  0.220   0.342   0.385   0.386   0.429    0.430    0.430
+269 1976     residue2 add_residue dlt_residue_wt = 1500, dlt_residue_type = wheat, dlt_residue_cnr = 70
+344 1976     mungbean sow plants = 18.5, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 600
+
+!!!!!!!!! RJL1_3: sown 10 Dec 1976-77 Dalby after winter fallow !!!!!!!!!!!!!!
+                                 
+[rjl1_3.operatns.parameters]
+! set soil water at end of previous summer crop to lower limit for Waco
+100 1976     soilwat2 set sw =  0.220   0.342   0.385   0.386   0.429    0.430    0.430
+100 1976     residue2 add_residue dlt_residue_wt = 5000, dlt_residue_type = sorghum, dlt_residue_cnr = 70
+344 1976     mungbean sow plants = 18.5, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 600
+
+!!!!!!!!! RJL1_4: Irrigated sown 10 Jan 1978 Dalby after winter cereal !!!!!!!!!!!!!!
+                                 
+[rjl1_4.operatns.parameters]
+! set soil water at near end of winter cereal to lower limit for Waco
+290 1977     soilwat2 set sw =  0.220   0.342   0.385   0.386   0.429    0.430    0.430
+290 1977     residue2 add_residue dlt_residue_wt = 1500, dlt_residue_type = wheat, dlt_residue_cnr = 70
+ 10 1978     mungbean sow plants = 10, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 600
+ 10 1978     irrigate apply  amount = 50 (mm)
+ 39 1978     irrigate apply  amount = 30 (mm)
+ 51 1978     irrigate apply  amount = 30 (mm)
+ 68 1978     irrigate apply  amount = 30 (mm)
+ 83 1978     irrigate apply  amount = 30 (mm)
+
+!!!!!!!!! RJL1_5: Double-cropped sown 10 Jan 1978 Dalby after winter cereal !!!!!!!!!!!!!!
+                                 
+[rjl1_5.operatns.parameters]
+! set soil water at near end of winter cereal to lower limit for Waco
+290 1977     residue2 add_residue dlt_residue_wt = 1500, dlt_residue_type = wheat, dlt_residue_cnr = 70
+290 1977     soilwat2 set sw =  0.220   0.342   0.385   0.386   0.429    0.430    0.430
+ 10 1978     mungbean sow plants = 10, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 600
+ 10 1978     irrigate apply  amount = 50 (mm)
+
+!!!!!!!!! RJL1_6: sown 10 Jan 1978 Dalby after winter fallow !!!!!!!!!!!!!!
+                                 
+[rjl1_6.operatns.parameters]
+! set soil water at end of previous summer crop to lower limit for Waco
+100 1977     soilwat2 set sw =  0.220   0.342   0.385   0.386   0.429    0.430    0.430
+100 1977     residue2 add_residue dlt_residue_wt = 5000, dlt_residue_type = sorghum, dlt_residue_cnr = 70
+ 10 1978     mungbean sow plants = 10, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 600
+ 10 1978     irrigate apply  amount = 50 (mm)
+
+!!!!!!!!!!!!!!!!! Bob Lawn RJL2 AJAR V34 Part III !!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!! Lawes irrigated !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[rjl2.irrigate.parameters]
+! assume automatic irrigation
+automatic_irrigation = on
+crit_fr_asw = 0.70
+asw_depth = 1000
+
+!!!!!!!!! RJL2_1: 18 Nov 1976 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_1.operatns.parameters]
+323 1976     mungbean sow plants = 20, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 1000
+
+!!!!!!!!! RJL2_2: 18 Nov 1976 sowing 27 plants/m2, 75 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_2.operatns.parameters]
+323 1976     mungbean sow plants = 27, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 750
+
+!!!!!!!!! RJL2_3: 18 Nov 1976 sowing 40 plants/m2, 50 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_3.operatns.parameters]
+323 1976     mungbean sow plants = 40, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 500
+
+!!!!!!!!! RJL2_4: 18 Nov 1976 sowing 80 plants/m2, 25 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_4.operatns.parameters]
+323 1976     mungbean sow plants = 80, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+!!!!!!!!! RJL2_5: 20 Dec 1976 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_5.operatns.parameters]
+355 1976     mungbean sow plants = 20, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 1000
+
+!!!!!!!!! RJL2_6: 20 Dec 1976 sowing 27 plants/m2, 75 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_6.operatns.parameters]
+355 1976     mungbean sow plants = 27, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 750
+
+!!!!!!!!! RJL2_7: 20 Dec 1976 sowing 40 plants/m2, 50 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_7.operatns.parameters]
+355 1976     mungbean sow plants = 40, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 500
+
+!!!!!!!!! RJL2_8: 20 Dec 1976 sowing 80 plants/m2, 25 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_8.operatns.parameters]
+355 1976     mungbean sow plants = 80, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+!!!!!!!!! RJL2_9: 24 Jan 1977 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_9.operatns.parameters]
+ 24 1977     mungbean sow plants = 20, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 1000
+
+!!!!!!!!! RJL2_10: 24 Jan 1977 sowing 27 plants/m2, 75 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_10.operatns.parameters]
+ 24 1977     mungbean sow plants = 27, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 750
+
+!!!!!!!!! RJL2_11: 24 Jan 1977 sowing 40 plants/m2, 50 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_11.operatns.parameters]
+ 24 1977     mungbean sow plants = 40, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 500
+
+!!!!!!!!! RJL2_12: 24 Jan 1977 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!!!!!
+                                 
+[rjl2_12.operatns.parameters]
+ 24 1977     mungbean sow plants = 80, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+!!!!!!!!! RCM1_1: 1 April 1980 sowing 35 plants/m2, 25 cm rows !!!!!!!!!!!!!!
+
+!!!!!!!!!!!!!!!!! Russ Muchow KRS expts RCM1 FCR v11 !!!!!!!!!!!!!!!
+
+[rcm1.irrigate.parameters]
+! assume automatic irrigation
+automatic_irrigation = on
+crit_fr_asw = 0.70
+asw_depth = 1000
+
+!!!!!!!!!!!!!!!!! irrigated !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                 
+[rcm1_1.operatns.parameters]
+ 91 1980     mungbean sow plants = 35, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+!!!!!!!!!!!!!!!!! dry !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                 
+[rcm1_2.operatns.parameters]
+ 91 1980     mungbean sow plants = 35, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+ 98 1980     irrigate apply amount = 50 (mm)
+105 1980     irrigate apply amount = 50 (mm)
+
+!!!!!!!!!!!!!!!!! wet/dry !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                 
+[rcm1_3.operatns.parameters]
+ 91 1980     mungbean sow plants = 35, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+ 98 1980     irrigate apply amount = 50 (mm)
+105 1980     irrigate apply amount = 50 (mm)
+112 1980     irrigate apply amount = 50 (mm)
+119 1980     irrigate apply amount = 50 (mm)
+126 1980     irrigate apply amount = 50 (mm)
+
+!!!!!!!!!!!!!!!!! Russ Muchow and David Charles-Edwards KRS expts RCM2 AJAR v33 !!!!!!!!!!!!!!!
+
+[rcm2.irrigate.parameters]
+! assume automatic irrigation
+automatic_irrigation = on
+crit_fr_asw = 0.70
+asw_depth = 1000
+                               
+[rcm2_1.operatns.parameters]
+ 11 1980     mungbean sow plants = 10, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+[rcm2_2.operatns.parameters]
+ 11 1980     mungbean sow plants = 19, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+[rcm2_3.operatns.parameters]
+ 11 1980     mungbean sow plants = 27, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+[rcm2_4.operatns.parameters]
+ 11 1980     mungbean sow plants = 39, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
+[rcm2_5.operatns.parameters]
+ 11 1980     mungbean sow plants = 50, sowing_depth = 40, cultivar = berken,crop_class = plant, row_spacing = 250
+
