@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 150; } }
+        public static int LatestVersion { get { return 151; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3972,6 +3972,83 @@ namespace Models.Core.ApsimFile
                         JsonUtilities.RenameModel(seedMortality, correctName);
                 }
             }
+        }
+
+        /// <summary>
+        /// Move solutes out from under nutrient into soil.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion151(JObject root, string fileName)
+        {
+            foreach (JObject nutrient in JsonUtilities.ChildrenRecursively(root, "Nutrient"))
+            {
+                var soil = JsonUtilities.Parent(nutrient) as JObject;
+                var physical = JsonUtilities.ChildWithName(soil, "Physical", ignoreCase: true);
+                var chemical = JsonUtilities.ChildWithName(soil, "Chemical", ignoreCase:true);
+                var samples = JsonUtilities.ChildrenOfType(soil, "Sample");
+
+                if (soil != null && physical != null && chemical != null)
+                {
+                    var soilChildren = soil["Children"] as JArray;
+                    var bdToken = physical["BD"] as JArray;
+                    if (soilChildren != null && bdToken != null)
+                    {
+                        var bd = bdToken.Values<double>().ToArray();
+
+                        // create a collection of JTokens to search for solute initialisation values.
+                        var tokensContainingValues = samples.Reverse<JObject>()
+                                                            .Concat(new JObject[] { chemical });
+
+                        soilChildren.Add(CreateSoluteToken(tokensContainingValues, "Urea", bd));
+                        soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NH4", bd));
+                        soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NO3", bd));
+
+                        var labileP = CreateSoluteToken(tokensContainingValues, "LabileP", bd);
+                        var unavailableP = CreateSoluteToken(tokensContainingValues, "UnavailableP", bd);
+                        if (labileP["Values"] as JArray != null && unavailableP["Values"] as JArray != null)
+                        {
+                            soilChildren.Add(labileP);
+                            soilChildren.Add(unavailableP);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Searches through a collection of tokens for one that contains a child soil layered variable.
+        /// </summary>
+        /// <param name="tokens">The tokens to search.</param>
+        /// <param name="soluteName">The name of the solute to find.</param>
+        /// <param name="bd">Bulk density values.</param>
+        /// <returns>The solute token.</returns>
+        private static JToken CreateSoluteToken(IEnumerable<JObject> tokens, string soluteName, double[] bd)
+        {
+            JArray thickness = null;
+            JArray values = null;
+            string units = "kgha";
+            foreach (var token in tokens)
+            {
+                values = token[soluteName] as JArray;
+                if (values == null)
+                {
+                    values = token[soluteName + "N"] as JArray;
+                    if (values != null)
+                        units = "ppm";
+                }
+                thickness = token["Thickness"] as JArray;
+                if (values != null && thickness != null)
+                    break;
+            }
+            return new JObject
+            {
+                ["$type"] = "Models.Soils.Nutrients.Solute, Models",
+                ["Name"] = soluteName,
+                ["Thickness"] = thickness,
+                ["InitialValues"] = values,
+                ["InitialValuesUnits"] = units
+            };
         }
 
         /// <summary>

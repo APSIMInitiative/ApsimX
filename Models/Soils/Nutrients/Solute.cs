@@ -16,7 +16,8 @@ namespace Models.Soils.Nutrients
     /// or losses from the system.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Nutrient))]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Solute : Model, ISolute
     {
@@ -27,8 +28,17 @@ namespace Models.Soils.Nutrients
         [Link] 
         private IPhysical soilPhysical = null;
 
-        [Link]
-        Sample initial = null;
+        /// <summary>
+        /// An enumeration for specifying soil water units
+        /// </summary>
+        public enum NUnitsEnum
+        {
+            /// <summary>Volumetric mm/mm</summary>
+            ppm,
+
+            /// <summary>kgha</summary>
+            kgha
+        }
 
         /// <summary>Default constructor.</summary>
         public Solute() { }
@@ -40,6 +50,35 @@ namespace Models.Soils.Nutrients
             kgha = value;
             Name = soluteName;
         }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("cm")]
+        [JsonIgnore]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
+        /// <summary>Thickness</summary>
+        [Summary]
+        [Units("mm")]
+        public double[] Thickness { get; set; }
+
+        /// <summary>Nitrate NO3.</summary>
+        [Description("Initial values")]
+        [Summary]
+        public double[] InitialValues { get; set; }
+
+        /// <summary>Units of the Initial values.</summary>
+        public NUnitsEnum InitialValuesUnits { get; set; }
 
         /// <summary>Solute amount (kg/ha)</summary>
         [JsonIgnore]
@@ -62,11 +101,12 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = initial.GetType().GetProperty(Name)?.GetValue(initial) as double[];
-            if (initialkgha == null)
-                kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
+            if (InitialValues == null)
+                kgha = new double[Thickness.Length];
+            else if (InitialValuesUnits == NUnitsEnum.kgha)
+                kgha = ReflectionUtilities.Clone(InitialValues) as double[];
             else
-                kgha = ReflectionUtilities.Clone(initialkgha) as double[];
+                kgha = SoilUtilities.ppm2kgha(Thickness, soilPhysical.BD, InitialValues);
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>

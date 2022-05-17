@@ -11,7 +11,7 @@ namespace Models.Soils.Nutrients
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Solute))]
+    [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
     public class NFlow : Model
@@ -59,20 +59,20 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs args)
         {
-            if (sourceSolute == null)
-            {
-                sourceSolute = FindInScope<ISolute>(Parent.Name);
-                destinationSolute = FindInScope<ISolute>(destinationName);
-            }
+            //if (sourceSolute == null)
+            //{
+            //    sourceSolute = FindInScope<ISolute>(sourceName);
+            //    destinationSolute = FindInScope<ISolute>(destinationName);
+            //}
 
-            double[] source = sourceSolute.kgha;
-            int numLayers = source.Length;
-            if (Value == null)
-                Value = new double[source.Length];
-            if (Natm == null)
-                Natm = new double[source.Length];
-            if (N2Oatm == null)
-                N2Oatm = new double[source.Length];
+            //double[] source = sourceSolute.kgha;
+            //int numLayers = source.Length;
+            //if (Value == null)
+            //    Value = new double[source.Length];
+            //if (Natm == null)
+            //    Natm = new double[source.Length];
+            //if (N2Oatm == null)
+            //    N2Oatm = new double[source.Length];
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Models.Soils.Nutrients
         {
             if (sourceSolute == null)
             {
-                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                sourceSolute = FindInScope<ISolute>(sourceName);
                 destinationSolute = FindInScope<ISolute>(destinationName);
             }
 
