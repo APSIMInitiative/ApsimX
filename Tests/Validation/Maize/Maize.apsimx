@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 149,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -5206,9 +5206,66 @@
                       "Name": "Vegetative",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Delta",
+                          "$type": "Models.Functions.BellCurveDeltaLAIFunction, Models",
+                          "Name": "BellCurveDeltaLAIFunction",
                           "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "LeafAppearanceRate",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Phyllochron",
+                                  "Name": "Phyllochron",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Maize].SowingData.Population",
+                              "Name": "Population",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "LargestLeafPosition",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].FinalLeafNumber",
+                                  "Name": "FinalLeafNumber",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.67,
+                                  "Units": null,
+                                  "Name": "RelativePositionOfLargestLeaf",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
                               "Name": "AreaMax",
@@ -5224,12 +5281,12 @@
                                     22.0
                                   ],
                                   "Y": [
-                                    32530.0,
-                                    39259.0,
-                                    49659.0,
-                                    60000.0,
-                                    75000.0,
-                                    90000.0
+                                    0.03253,
+                                    0.039259,
+                                    0.049659,
+                                    0.06,
+                                    0.075,
+                                    0.09
                                   ],
                                   "XVariableName": null,
                                   "Name": "XYPairs",
@@ -5250,79 +5307,36 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.PhaseLookup, Models",
-                              "Name": "RelativeArea",
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "Breadth",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Emergence",
-                                  "End": "FlagLeaf",
-                                  "Name": "BeforeFlagLeaf",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "RelativeArea",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "",
-                                          "Name": "Memo",
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            2.0,
-                                            7.0,
-                                            10.0,
-                                            18.0
-                                          ],
-                                          "Y": [
-                                            0.6666,
-                                            1.0,
-                                            1.0,
-                                            0.83
-                                          ],
-                                          "XVariableName": null,
-                                          "Name": "XYPairs",
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].NodeNumber",
-                                          "Name": "XValue",
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    5.0,
+                                    10.0,
+                                    15.0,
+                                    20.0,
+                                    25.0
                                   ],
+                                  "Y": [
+                                    -0.377,
+                                    -0.144,
+                                    -0.059,
+                                    -0.027,
+                                    -0.016
+                                  ],
+                                  "XVariableName": null,
+                                  "Name": "XYPairs",
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "FlagLeaf",
-                                  "End": "Maturity",
-                                  "Name": "AfterFlagLeaf",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.0,
-                                      "Units": null,
-                                      "Name": "RelativeArea",
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].FinalLeafNumber",
+                                  "Name": "XValue",
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -5331,34 +5345,27 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Maize].SowingData.Population",
-                              "Name": "PlantNumber",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.00025,
+                              "Units": null,
+                              "Name": "Skewness",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "LAR",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].ThermalTime",
-                                  "Name": "TT",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Phyllochron",
-                                  "Name": "Phyllochron",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Tips",
+                              "Name": "LeafTips",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Collars",
+                              "Name": "LeafCollars",
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
