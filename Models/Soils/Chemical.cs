@@ -34,29 +34,11 @@
         [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
-        [Description("NO3N")]
-        [Summary]
-        [Units("ppm")]
-        public double[] NO3N { get; set; }
-
-        /// <summary>Ammonia NH4</summary>
-        [Description("NH4N")]
-        [Summary]
-        [Units("ppm")]
-        public double[] NH4N { get; set; }
-
         /// <summary>pH</summary>
         [Summary]
         [Description("PH")]
         [Display(Format = "N1")]
         public double[] PH { get; set; }
-
-        /// <summary>Gets or sets the cl.</summary>
-        [Summary]
-        [Description("CL")]
-        [Units("mg/kg")]
-        public double[] CL { get; set; }
 
         /// <summary>Gets or sets the ec.</summary>
         [Summary]
@@ -69,25 +51,6 @@
         [Description("ESP")]
         [Units("%")]
         public double[] ESP { get; set; }
-
-        /// <summary>
-        /// Gets or sets Labile P (mg/kg)
-        /// </summary>
-        [Summary]
-        [Description("Labile P")]
-        [Units("mg/kg")]
-        [Display(Format = "N3")]
-        public double[] LabileP { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets Labile P (mg/kg)
-        /// </summary>
-        [Summary]
-        [Description("Unavailable P")]
-        [Units("mg/kg")]
-        [Display(Format = "N3")]
-        public double[] UnavailableP { get; set; }
 
         /// <summary>EC metadata</summary>
         public string[] ECMetadata { get; set; }

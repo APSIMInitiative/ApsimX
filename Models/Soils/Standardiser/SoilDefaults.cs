@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Soils.Nutrients;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -20,7 +21,7 @@
         public static void FillInMissingValues(Soil soil)
         {
             AddPredictedCrops(soil);
-            CheckAnalysisForMissingValues(soil);
+            CheckChemicalForMissingValues(soil);
 
             var water = soil.FindChild<Physical>();
             if (water != null)
@@ -48,6 +49,9 @@
             var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
                 CheckSampleForMissingValues(sample, soil);
+
+            foreach (Solute solute in soil.FindAllChildren<Solute>())
+                CheckSoluteForMissingValues(solute);
 
             // Make sure there are the correct number of KS values.
             if (water?.KS != null && water?.KS.Length > 0)
@@ -116,18 +120,30 @@
             return values.ToArray();
         }
 
-        /// <summary>Checks the analysis for missing values.</summary>
+        /// <summary>Checks the chemical for missing values.</summary>
         /// <param name="soil">The soil.</param>
-        private static void CheckAnalysisForMissingValues(Soil soil)
+        private static void CheckChemicalForMissingValues(Soil soil)
         {
-            var analysis = soil.FindChild<Chemical>();
+            var chemical = soil.FindChild<Chemical>();
 
-            analysis.CL = FillMissingValues(analysis.CL, analysis.Thickness.Length, 0);
-            analysis.EC = FillMissingValues(analysis.EC, analysis.Thickness.Length, 0);
-            analysis.ESP = FillMissingValues(analysis.ESP, analysis.Thickness.Length, 0);
-            analysis.PH = FillMissingValues(analysis.PH, analysis.Thickness.Length, 7.0);
-            analysis.NO3N = FillMissingValues(analysis.NO3N, analysis.Thickness.Length, 0.1);
-            analysis.NH4N = FillMissingValues(analysis.NH4N, analysis.Thickness.Length, 0.01);
+            chemical.EC = FillMissingValues(chemical.EC, chemical.Thickness.Length, 0);
+            chemical.ESP = FillMissingValues(chemical.ESP, chemical.Thickness.Length, 0);
+            chemical.PH = FillMissingValues(chemical.PH, chemical.Thickness.Length, 7.0);
+        }
+
+        /// <summary>Checks the solute for missing values.</summary>
+        /// <param name="solute">The solute.</param>
+        private static void CheckSoluteForMissingValues(Solute solute)
+        {
+            double defaultValue;
+            if (solute.Name.Equals("NO3", StringComparison.InvariantCultureIgnoreCase))
+                defaultValue = 0.1;
+            else if (solute.Name.Equals("NH4", StringComparison.InvariantCultureIgnoreCase))
+                defaultValue = 0.01;
+            else
+                defaultValue = 0.0;
+
+            solute.InitialValues = FillMissingValues(solute.InitialValues, solute.Thickness.Length, defaultValue);
         }
 
         /// <summary>Changes all missing values in an array to a valid value.</summary>
@@ -195,12 +211,15 @@
         {
             if (!MathUtilities.ValuesInArray(sample.SW))
                 sample.SW = null;
-            if (sample.NO3 != null && !MathUtilities.ValuesInArray(sample.NO3))
-                sample.NO3 = null;
-            if (sample.NH4 != null && !MathUtilities.ValuesInArray(sample.NH4))
-                sample.NH4 = null;
-            if (!MathUtilities.ValuesInArray(sample.CL))
-                sample.CL = null;
+            var no3 = soil.FindChild<Solute>("NO3");
+            if (no3 != null && !MathUtilities.ValuesInArray(no3.InitialValues))
+                no3.InitialValues = null;
+            var nh4 = soil.FindChild<Solute>("NH4");
+            if (nh4 != null && !MathUtilities.ValuesInArray(nh4.InitialValues))
+                nh4.InitialValues = null;
+            var cl = soil.FindChild<Solute>("CL");
+            if (cl != null && !MathUtilities.ValuesInArray(cl.InitialValues))
+                cl.InitialValues = null;
             if (!MathUtilities.ValuesInArray(sample.EC))
                 sample.EC = null;
             if (!MathUtilities.ValuesInArray(sample.ESP))
@@ -212,8 +231,8 @@
 
             if (sample.SW != null)
                 sample.SW = MathUtilities.FixArrayLength(sample.SW, sample.Thickness.Length);
-            if (sample.CL != null)
-                sample.CL = MathUtilities.FixArrayLength(sample.CL, sample.Thickness.Length);
+            if (cl != null && cl.InitialValues != null)
+                cl.InitialValues = MathUtilities.FixArrayLength(cl.InitialValues, sample.Thickness.Length);
             if (sample.EC != null)
                 sample.EC = MathUtilities.FixArrayLength(sample.EC, sample.Thickness.Length);
             if (sample.ESP != null)

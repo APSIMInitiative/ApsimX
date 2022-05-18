@@ -4036,16 +4036,17 @@ namespace Models.Core.ApsimFile
         {
             JArray thickness = null;
             JArray values = null;
-            string units = "kgha";
+            string units = "ppm";
             foreach (var token in tokens)
             {
                 values = token[soluteName] as JArray;
                 if (values == null)
-                {
                     values = token[soluteName + "N"] as JArray;
-                    if (values != null)
-                        units = "ppm";
-                }
+
+                if (token["$type"].ToString() == "Models.Soils.Sample, Models")
+                    units = "kgha";
+                else
+                    units = "ppm";
                 thickness = token["Thickness"] as JArray;
                 if (values != null && thickness != null)
                     break;

@@ -93,16 +93,24 @@
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 Carbon = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
                             },
-                            new Chemical()
+                            new Solute
                             {
+                                Name = "CL",
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-                                CL = new double[] { 38, double.NaN, 500, 490, 500, 500 }
+                                InitialValues = new double[] { 38, double.NaN, 500, 490, 500, 500 },
+                                InitialValuesUnits = Solute.UnitsEnum.ppm
                             },
+                            new Solute
+                            {
+                                Name = "NO3",
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                                InitialValues = new double[] { 23, 7, 2, 1, 1, 1 },
+                                InitialValuesUnits = Solute.UnitsEnum.kgha
+                            },                            
                             new Sample()
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SW = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
-                                NO3 = new double[] { 23, 7, 2, 1, 1, 1 },
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },

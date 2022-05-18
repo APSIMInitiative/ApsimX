@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Soils.Standardiser;
     using NUnit.Framework;
     using System;
@@ -45,11 +46,19 @@
                         Thickness = new double[] { 100, 300 },
                         Carbon = new double[] { 2, 1 }
                     },
-                    new Chemical
+                    new Solute
                     {
+                        Name = "NO3",
                         Thickness = new double[] { 100, 200 },
-                        NO3N = new double[] { 27, 10 },
-                        CL = new double[] { 38, double.NaN }
+                        InitialValues = new double[] { 27, 10 },
+                        InitialValuesUnits = Solute.UnitsEnum.kgha
+                    },
+                    new Solute
+                    {
+                        Name = "CL",
+                        Thickness = new double[] { 100, 200 },
+                        InitialValues = new double[] { 38, double.NaN },
+                        InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
                     new Sample
                     {
@@ -119,11 +128,19 @@
                         Thickness = new double[] { 100, 300 },
                         Carbon = new double[] { 2, 1 }
                     },
-                    new Chemical
+                    new Solute
                     {
+                        Name = "NO3",
                         Thickness = new double[] { 100, 200 },
-                        NO3N = new double[] { 27, 6 },
-                        CL = new double[] { 38, double.NaN }
+                        InitialValues = new double[] { 27, 6 },
+                        InitialValuesUnits = Solute.UnitsEnum.kgha
+                    },
+                    new Solute
+                    {
+                        Name = "CL",
+                        Thickness = new double[] { 100, 200 },
+                        InitialValues = new double[] { 38, double.NaN },
+                        InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
                     new Sample
                     {
@@ -174,15 +191,17 @@
 
             var initial = soil.Children[5] as Sample;
             var analysis = soil.Children[4] as Chemical;
+            var samples = soil.FindAllChildren<Solute>().ToArray();
 
             Assert.AreEqual(soil.FindAllChildren<Sample>().Count(), 1);
             Assert.AreEqual(initial.Name, "Initial");
             Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(initial.NO3, new double[] { 29.240000000000002, 2.432 });  // kg/ha
-            Assert.AreEqual(initial.NH4, new double[] { 1.4960000000000002, 0.4864 }); // kg/ha
             Assert.AreEqual(initial.OC, new double[] { 2.0, 0.9 });
             Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
             Assert.AreEqual(initial.EC, new double[] { 150, 200 });
+
+            Assert.AreEqual(samples[0].InitialValues, new double[] { 29.240000000000002, 2.432 });  // NO3 kg/ha
+            Assert.AreEqual(samples[1].InitialValues, new double[] { 1.4960000000000002, 0.4864 }); // NH4 kg/ha
 
             var soilOrganicMatter = soil.Children[3] as Organic;
             Assert.IsNull(soilOrganicMatter.Carbon);
@@ -241,10 +260,22 @@
                     new Chemical
                     {
                         Thickness = new double[] { 50, 50 },
-                        NO3N = new double[] { 27, 16 },
-                        NH4N = new double[] { 2, double.NaN },
                         PH = new double[] { 6.8, 6.9 },
                         EC = new double[] { 100, 200 }
+                    },
+                    new Solute
+                    {
+                        Name = "NO3",
+                        Thickness = new double[] { 50, 50 },
+                        InitialValues = new double[] { 27, 16 },
+                        InitialValuesUnits = Solute.UnitsEnum.ppm
+                    },
+                    new Solute
+                    {
+                        Name = "NH4",
+                        Thickness = new double[] { 50, 50 },
+                        InitialValues = new double[] { 2, double.NaN },
+                        InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
                     new Sample
                     {

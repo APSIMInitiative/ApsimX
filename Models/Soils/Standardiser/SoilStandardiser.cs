@@ -73,20 +73,10 @@
             }
             initial.Name = "Initial";
 
-            if (analysis.NO3N != null)
-                initial.NO3 = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.NO3N);
-            if (analysis.NH4N != null)
-                initial.NH4 = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.NH4N);
-            if (analysis.LabileP != null)
-                initial.LabileP = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.LabileP);
-            if (analysis.UnavailableP != null)
-                initial.UnavailableP = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.UnavailableP);
-
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
             initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
             initial.EC = MergeArrays(initial.EC, analysis.EC);
-            initial.CL = MergeArrays(initial.CL, analysis.CL);
 
             soilOrganicMatter.Carbon = null;
             //soil.Children.Remove(analysis);

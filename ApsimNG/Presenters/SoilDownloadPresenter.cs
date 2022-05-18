@@ -614,7 +614,8 @@ namespace UserInterface.Presenters
                 Organic organicMatter = new Organic();
                 WaterBalance soilWater = new WaterBalance();
                 InitialWater initialWater = new InitialWater();
-                Sample initialNitrogen = new Sample();
+                Solute no3 = new Solute();
+                Solute nh4 = new Solute();
                 Nutrient nutrient = new Nutrient();
                 nutrient.ResourceName = "Nutrient";
 
@@ -629,7 +630,8 @@ namespace UserInterface.Presenters
                 newSoil.Children.Add(organicMatter);
                 newSoil.Children.Add(analysis);
                 newSoil.Children.Add(initialWater);
-                newSoil.Children.Add(initialNitrogen);
+                newSoil.Children.Add(no3);
+                newSoil.Children.Add(nh4);
                 newSoil.Children.Add(new CERESSoilTemperature());
                 newSoil.ParentAllDescendants();
                 newSoil.OnCreated();
@@ -669,9 +671,10 @@ namespace UserInterface.Presenters
                 initialWater.FractionFull = 0.0;
 
                 // Initialise nitrogen to 0.0
-                initialNitrogen.Name = "Initial nitrogen";
-                initialNitrogen.NH4 = new double[layerCount];
-                initialNitrogen.NO3 = new double[layerCount];
+                no3.Name = "NO3";
+                no3.InitialValues = new double[layerCount];
+                nh4.Name = "NH4";
+                nh4.InitialValues = new double[layerCount];
 
                 double tAvg = (maxTemp + minTemp) / 2.0;
                 soilWater.CNCov = 0.0;

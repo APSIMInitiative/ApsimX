@@ -48,6 +48,18 @@ namespace Models.Soils
         [Link]
         public Sample initial = null;
 
+        /// <summary>Link to the NO3 solute.</summary>
+        [Link(ByName = true)]
+        public Solute nO3 = null;
+
+        /// <summary>Link to the NH4 solute.</summary>
+        [Link(ByName = true)]
+        public Solute nH4 = null;
+
+        /// <summary>Link to the Urea solute.</summary>
+        [Link(ByName = true)]
+        public Solute urea = null;
+
         /// <summary>Link to the soil.</summary>
         [Link]
         public Soil Soil = null;

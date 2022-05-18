@@ -5,6 +5,7 @@
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -226,10 +227,12 @@
                                 Thickness = new double[] { 100, 300 },
                                 Carbon = new double[] { 2, 1 }
                             },
-                            new Chemical
+                            new Solute
                             {
+                                Name = "CL",
                                 Thickness = new double[] { 100, 200 },
-                                CL = new double[] { 38, double.NaN }
+                                InitialValues = new double[] { 38, double.NaN },
+                                InitialValuesUnits = Solute.UnitsEnum.ppm
                             },
                             new Sample
                             {
@@ -241,7 +244,6 @@
                             new Sample
                             {
                                 Thickness = new double[] { 1000 },
-                                NO3 = new double[] { 27 },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric,
                                 Name = "Sample2"

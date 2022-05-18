@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Soils.Nutrients;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -153,9 +154,11 @@
                             message.AppendLine($"Soil water of {initial.SW[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
                     }
 
-                if (!MathUtilities.ValuesInArray(initial.NO3))
+                var no3 = soil.FindChild<Solute>("NO3");
+                if (!MathUtilities.ValuesInArray(no3.InitialValues))
                     message.AppendLine("No starting NO3 values found.");
-                if (!MathUtilities.ValuesInArray(initial.NH4))
+                var nh4 = soil.FindChild<Solute>("NH4");
+                if (!MathUtilities.ValuesInArray(nh4.InitialValues))
                     message.AppendLine("No starting NH4 values found.");
             }
 

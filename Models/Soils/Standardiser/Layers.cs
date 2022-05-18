@@ -6,6 +6,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
 
     /// <summary>Methods to standardise a soil ready for running in APSIM.</summary>
     [Serializable]
@@ -32,12 +33,15 @@
             foreach (Sample sample in soil.FindAllChildren<Sample>())
                 SetSampleThickness(sample, targetThickness, soil);
 
+            foreach (Solute solute in soil.FindAllChildren<Solute>())
+                SetSoluteThickness(solute, targetThickness);
+
             if (waterBalance is WaterModel.WaterBalance)
                 SetSoilWaterThickness(waterBalance as WaterModel.WaterBalance, targetThickness);
             if (weirdo != null)
                 weirdo.SetLayerThickness(targetThickness);
 
-            SetAnalysisThickness(analysisNode, targetThickness);
+            SetChemicalThickness(analysisNode, targetThickness);
             SetSoilOrganicMatterThickness(organicNode, targetThickness);
             SetPhysicalPropertiesThickness(physicalNode, targetThickness, soil);
             if (swim3 != null)
@@ -135,26 +139,31 @@
             }
         }
 
-        /// <summary>Sets the analysis thickness.</summary>
-        /// <param name="analysis">The analysis.</param>
-        /// <param name="thickness">The thickness to change the analysis to.</param>
-        private static void SetAnalysisThickness(Chemical analysis, double[] thickness)
+        /// <summary>Sets the chemical thickness.</summary>
+        /// <param name="chemical">The chemical.</param>
+        /// <param name="thickness">The thickness to change the chemical to.</param>
+        private static void SetChemicalThickness(Chemical chemical, double[] thickness)
         {
-            if (analysis != null && !MathUtilities.AreEqual(thickness, analysis.Thickness))
+            if (chemical != null && !MathUtilities.AreEqual(thickness, chemical.Thickness))
             {
+                chemical.EC = MapConcentration(chemical.EC, chemical.Thickness, thickness, MathUtilities.LastValue(chemical.EC));
+                chemical.ESP = MapConcentration(chemical.ESP, chemical.Thickness, thickness, MathUtilities.LastValue(chemical.ESP));
+                chemical.PH = MapConcentration(chemical.PH, chemical.Thickness, thickness, MathUtilities.LastValue(chemical.PH));
+                chemical.Thickness = thickness;
+            }
+        }
 
-                string[] metadata = StringUtilities.CreateStringArray("Mapped", thickness.Length);
 
-                analysis.NO3N = MapConcentration(analysis.NO3N, analysis.Thickness, thickness, 1.0);
-                analysis.NH4N = MapConcentration(analysis.NH4N, analysis.Thickness, thickness, 0.2);
-                analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
-                analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
-                analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
-                analysis.LabileP = MapConcentration(analysis.LabileP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.LabileP));
-                analysis.UnavailableP = MapConcentration(analysis.UnavailableP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.UnavailableP));
-
-                analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
-                analysis.Thickness = thickness;
+        /// <summary>Sets the analysis thickness.</summary>
+        /// <param name="solute">The solute.</param>
+        /// <param name="thickness">The thickness to change the analysis to.</param>
+        private static void SetSoluteThickness(Solute solute, double[] thickness)
+        {
+            if (solute != null && !MathUtilities.AreEqual(thickness, solute.Thickness))
+            {
+                solute.InitialValues = MapConcentration(solute.ppm, solute.Thickness, thickness, 1.0);
+                solute.InitialValuesUnits = Solute.UnitsEnum.ppm;
+                solute.Thickness = thickness;
             }
         }
 
@@ -168,16 +177,10 @@
             {
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
-                if (sample.NH4 != null)
-                    sample.NH4 = MapConcentration(sample.NH4, sample.Thickness, thickness, 0.2);
-                if (sample.NO3 != null)
-                    sample.NO3 = MapConcentration(sample.NO3, sample.Thickness, thickness, 1.0);
 
                 // The elements below will be overlaid over other arrays of values so we want 
                 // to have missing values (double.NaN) used at the bottom of the profile.
 
-                if (sample.CL != null)
-                    sample.CL = MapConcentration(sample.CL, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 if (sample.EC != null)
                     sample.EC = MapConcentration(sample.EC, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 if (sample.ESP != null)
@@ -186,10 +189,6 @@
                     sample.OC = MapConcentration(sample.OC, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 if (sample.PH != null)
                     sample.PH = MapConcentration(sample.PH, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
-                if (sample.LabileP != null)
-                    sample.LabileP = MapConcentration(sample.LabileP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
-                if (sample.UnavailableP != null)
-                    sample.UnavailableP = MapConcentration(sample.UnavailableP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 sample.Thickness = thickness;
             }
         }
