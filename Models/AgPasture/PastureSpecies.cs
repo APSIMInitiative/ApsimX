@@ -1740,28 +1740,28 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double GPP
         {
-            get { return grossPhotosynthesis / CarbonFractionInDM; }
+            get { return grossPhotosynthesis; }
         }
 
         /// <summary>Net primary productivity (kgC/ha).</summary>
         [Units("kg/ha")]
         public double NPP
         {
-            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) / CarbonFractionInDM; }
+            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance); }
         }
 
         /// <summary>Net above-ground primary productivity (kgC/ha).</summary>
         [Units("kg/ha")]
         public double NAPP
         {
-            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * fractionToShoot / CarbonFractionInDM; }
+            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * fractionToShoot; }
         }
 
         /// <summary>Net below-ground primary productivity (kgC/ha).</summary>
         [Units("kg/ha")]
         public double NBPP
         {
-            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * (1 - fractionToShoot) / CarbonFractionInDM; }
+            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * (1.0 - fractionToShoot); }
         }
 
         ////- N flows outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
