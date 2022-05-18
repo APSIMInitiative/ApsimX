@@ -753,11 +753,11 @@ namespace Models.AgPasture
         /// <summary>Reference daily DM turnover rate for shoot tissues (0-1).</summary>
         /// <remarks>This is closely related to the leaf appearance rate.</remarks>
         [Units("0-1")]
-        public double TissueTurnoverRateShoot { get; set; } = 0.05;
+        public double TissueTurnoverRefRateShoot { get; set; } = 0.05;
 
         /// <summary>Reference daily DM turnover rate for root tissues (0-1).</summary>
         [Units("0-1")]
-        public double TissueTurnoverRateRoot { get; set; } = 0.02;
+        public double TissueTurnoverRefRateRoot { get; set; } = 0.02;
 
         /// <summary>Relative turnover rate for emerging tissues (>0.0).</summary>
         [Units("-")]
@@ -765,7 +765,7 @@ namespace Models.AgPasture
 
         /// <summary>Reference daily detachment rate for dead tissues (0-1).</summary>
         [Units("0-1")]
-        public double DetachmentRateShoot { get; set; } = 0.08;
+        public double DetachmentRefRateShoot { get; set; } = 0.08;
 
         /// <summary>Minimum temperature for tissue turnover (oC).</summary>
         [Units("oC")]
@@ -1076,6 +1076,9 @@ namespace Models.AgPasture
         /// <summary>Daily DM turnover rate for stolon tissue (0-1).</summary>
         private double gamaS;
 
+        /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
+        private double ttfLeafNumber;
+
         /// <summary>Tissue turnover factor due to variations in temperature (0-1).</summary>
         private double ttfTemperature;
 
@@ -1086,7 +1089,7 @@ namespace Models.AgPasture
         private double ttfMoistureRoot;
 
         /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
-        private double ttfLeafNumber;
+        private double ttfMoistureLitter;
 
         /// <summary>Effect of defoliation on stolon turnover (0-1).</summary>
         private double cumDefoliationFactor;
@@ -2041,6 +2044,13 @@ namespace Models.AgPasture
             get { return gamaR; }
         }
 
+        /// <summary>Leaf Number factor for tissue turnover (0-1).</summary>
+        [Units("0-1")]
+        public double LeafNumberFactorTurnover
+        {
+            get { return ttfLeafNumber; }
+        }
+
         /// <summary>Temperature factor for tissue turnover (0-1).</summary>
         [Units("0-1")]
         public double TemperatureFactorTurnover
@@ -2048,11 +2058,25 @@ namespace Models.AgPasture
             get { return ttfTemperature; }
         }
 
-        /// <summary>Moisture factor for tissue turnover (0-1).</summary>
+        /// <summary>Moisture factor for shoot tissue turnover (0-1).</summary>
         [Units("0-1")]
-        public double MoistureFactorTurnover
+        public double MoistureFactorShootTurnover
         {
             get { return ttfMoistureShoot; }
+        }
+
+        /// <summary>Moisture factor for root tissue turnover (0-1).</summary>
+        [Units("0-1")]
+        public double MoistureFactorRootTurnover
+        {
+            get { return ttfMoistureRoot; }
+        }
+
+        /// <summary>Moisture factor for shoot tissue detachment (0-1).</summary>
+        [Units("0-1")]
+        public double MoistureFactorShootDetachment
+        {
+            get { return ttfMoistureLitter; }
         }
 
         ////- LAI and cover outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2880,7 +2904,7 @@ namespace Models.AgPasture
             // TODO: find a way to use today's GLFwater, or to compute an alternative one
 
             // Get the moisture factor for littering rate (detachment)
-            double ttfMoistureLitter = MoistureEffectOnDetachment();
+            ttfMoistureLitter = MoistureEffectOnDetachment();
 
             // Consider the number of leaves
             ttfLeafNumber = 3.0 / LiveLeavesPerTiller; // three refers to the number of stages used in the model
@@ -2893,7 +2917,7 @@ namespace Models.AgPasture
             double StockFac2Litter = TurnoverStockFactor * SR;
 
             // Turnover rate for leaf and stem tissues
-            gama = TissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
+            gama = TissueTurnoverRefRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
 
             // Get the factor due to defoliation (increases turnover)
             double defoliationFactor = DefoliationEffectOnTissueTurnover();
@@ -2910,13 +2934,13 @@ namespace Models.AgPasture
             }
 
             // Turnover rate for roots
-            gamaR = TissueTurnoverRateRoot * ttfTemperature * ttfMoistureRoot;
+            gamaR = TissueTurnoverRefRateRoot * ttfTemperature * ttfMoistureRoot;
             gamaR += TurnoverDefoliationRootEffect * defoliationFactor * (1.0 - gamaR);
 
             // Turnover rate for dead material (littering or detachment)
             double digestDead = (Leaf.DigestibilityDead * Leaf.DMDead) + (Stem.DigestibilityDead * Stem.DMDead);
             digestDead = MathUtilities.Divide(digestDead, Leaf.DMDead + Stem.DMDead, 0.0, Epsilon);
-            gamaD = DetachmentRateShoot * ttfMoistureLitter * digestDead / CarbonFractionInDM;
+            gamaD = DetachmentRefRateShoot * ttfMoistureLitter * digestDead / CarbonFractionInDM;
             gamaD += StockFac2Litter;
 
             if ((gama > 1.0) || (gamaS > 1.0) || (gamaD > 1.0) || (gamaR > 1.0))
