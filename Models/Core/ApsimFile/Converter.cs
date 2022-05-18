@@ -4000,10 +4000,19 @@ namespace Models.Core.ApsimFile
                         var tokensContainingValues = samples.Reverse<JObject>()
                                                             .Concat(new JObject[] { chemical });
 
+                        // iterate through existing solutes and store their initial values in the solute.
+                        foreach (var solute in JsonUtilities.ChildrenOfType(soil, "Solute"))
+                        {
+                            var newSolute = CreateSoluteToken(tokensContainingValues, solute["Name"].ToString(), bd);
+                            solute["Thickness"] = newSolute["Thickness"];
+                            solute["InitialValues"] = newSolute["InitialValues"];
+                            solute["InitialValuesUnits"] = newSolute["InitialValuesUnits"];
+                        }
+
+                        // Move solutes from nutrient to soil.
                         soilChildren.Add(CreateSoluteToken(tokensContainingValues, "Urea", bd));
                         soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NH4", bd));
                         soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NO3", bd));
-
                         var labileP = CreateSoluteToken(tokensContainingValues, "LabileP", bd);
                         var unavailableP = CreateSoluteToken(tokensContainingValues, "UnavailableP", bd);
                         if (labileP["Values"] as JArray != null && unavailableP["Values"] as JArray != null)

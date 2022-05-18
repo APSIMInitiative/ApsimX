@@ -28,6 +28,11 @@ namespace UserInterface.Presenters
         private IModel model;
 
         /// <summary>
+        /// Index of column that has had its header clicked.
+        /// </summary>
+        private VariableProperty propertyClickedByUser;
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model to connect to</param>
@@ -53,6 +58,8 @@ namespace UserInterface.Presenters
 
             grid.CellsChanged += OnCellsChanged;
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+            grid.GridColumnClicked += OnGridColumnClicked;
+            grid.PopupMenuClosing += OnPopupMenuClosing;
         }
 
         /// <summary>
@@ -74,6 +81,8 @@ namespace UserInterface.Presenters
                 base.Detach();
                 grid.CellsChanged -= OnCellsChanged;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                grid.GridColumnClicked -= OnGridColumnClicked;
+                grid.PopupMenuClosing -= OnPopupMenuClosing;
             }
             catch (NullReferenceException)
             {
@@ -266,7 +275,7 @@ namespace UserInterface.Presenters
                 columnName += "\n";
 
             if (property.Units != null)
-                columnName += $"({property.Units})";
+                columnName += property.UnitsLabel;
 
             return columnName;
         }
@@ -681,5 +690,48 @@ namespace UserInterface.Presenters
             if (changedModel == model || (changedModel is SoilCrop && model.Children.Contains(changedModel)))
                 PopulateGrid(model);
         }
+
+        /// <summary>
+        /// Popup menu is showing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnGridColumnClicked(object sender, GridColumnClickedArgs e)
+        {
+            if (e.OnHeader && e.Column.ColumnIndex < properties.Count)
+            {
+                propertyClickedByUser = properties[e.Column.ColumnIndex];
+                var allowableUnits = propertyClickedByUser.AllowableUnits;
+                if (allowableUnits.Length > 1)
+                {
+                    foreach (var units in allowableUnits)
+                        grid.AddContextOption(units.Name, units.Label, UnitsChangeClick, active: $"({units.Label})" == propertyClickedByUser.UnitsLabel);
+                }
+            }
+        }
+
+        /// <summary>
+        /// User has changed the units of a column. Save the units.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UnitsChangeClick(object sender, EventArgs e)
+        {
+            Gtk.CheckMenuItem selectedItem = sender as Gtk.CheckMenuItem;
+            propertyClickedByUser.Units = selectedItem.Name;
+            PopulateGrid(model);
+        }
+
+        /// <summary>
+        /// Popup menu is closing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPopupMenuClosing(object sender, EventArgs e)
+        {
+            grid.ClearContextActions(showDefault:true);
+        }
+
+
     }
 }

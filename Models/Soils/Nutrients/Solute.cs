@@ -31,12 +31,14 @@ namespace Models.Soils.Nutrients
         /// <summary>
         /// An enumeration for specifying soil water units
         /// </summary>
-        public enum NUnitsEnum
+        public enum UnitsEnum
         {
-            /// <summary>Volumetric mm/mm</summary>
+            /// <summary>ppm</summary>
+            [Description("ppm")]
             ppm,
 
             /// <summary>kgha</summary>
+            [Description("kg/ha")]
             kgha
         }
 
@@ -78,7 +80,7 @@ namespace Models.Soils.Nutrients
         public double[] InitialValues { get; set; }
 
         /// <summary>Units of the Initial values.</summary>
-        public NUnitsEnum InitialValuesUnits { get; set; }
+        public UnitsEnum InitialValuesUnits { get; set; }
 
         /// <summary>Solute amount (kg/ha)</summary>
         [JsonIgnore]
@@ -103,7 +105,7 @@ namespace Models.Soils.Nutrients
         {
             if (InitialValues == null)
                 kgha = new double[Thickness.Length];
-            else if (InitialValuesUnits == NUnitsEnum.kgha)
+            else if (InitialValuesUnits == UnitsEnum.kgha)
                 kgha = ReflectionUtilities.Clone(InitialValues) as double[];
             else
                 kgha = SoilUtilities.ppm2kgha(Thickness, soilPhysical.BD, InitialValues);

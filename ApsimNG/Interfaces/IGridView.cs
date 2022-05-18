@@ -46,6 +46,16 @@
         event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
+        /// Invoked when immediately before the popup menu is shown.
+        /// </summary>
+        event EventHandler<EventArgs> PopupMenuShowing;
+
+        /// <summary>
+        /// Invoked when immediately after the popup menu is shown.
+        /// </summary>
+        event EventHandler<EventArgs> PopupMenuClosing;
+
+        /// <summary>
         /// Gets or sets the data to use to populate the grid.
         /// </summary>
         System.Data.DataTable DataSource { get; set; }
@@ -113,7 +123,7 @@
         /// <summary>
         /// Clear all presenter defined context items.
         /// </summary>
-        void ClearContextActions(bool hideDefault);
+        void ClearContextActions(bool showDefault);
 
         /// <summary>
         /// Returns true if the grid row is empty.
