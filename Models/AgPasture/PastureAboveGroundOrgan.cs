@@ -328,9 +328,9 @@
         public void CalculateTissueTurnover(double[] turnoverRate)
         {
             EmergingTissue.DoTissueTurnover(turnoverRate[0], DevelopingTissue, NConcOptimum);
-            DevelopingTissue.DoTissueTurnover(turnoverRate[0], MatureTissue, NConcOptimum);
-            MatureTissue.DoTissueTurnover(turnoverRate[0], DeadTissue, NConcOptimum);
-            DeadTissue.DoTissueTurnover(turnoverRate[0], null, NConcMinimum);
+            DevelopingTissue.DoTissueTurnover(turnoverRate[1], MatureTissue, NConcOptimum);
+            MatureTissue.DoTissueTurnover(turnoverRate[2], DeadTissue, NConcOptimum);
+            DeadTissue.DoTissueTurnover(turnoverRate[3], null, NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
