@@ -829,14 +829,6 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double MaximumNFixation { get; set; } = 0.0;
 
-        /// <summary>Respiration cost factor due to the presence of symbiont bacteria (kgC/kgC in roots).</summary>
-        [Units("kg/kg")]
-        public double SymbiontCostFactor { get; set; } = 0.0;
-
-        /// <summary>Respiration cost factor due to the activity of symbiont bacteria (kgC/kgN fixed).</summary>
-        [Units("kg/kg")]
-        public double NFixingCostFactor { get; set; } = 0.0;
-
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) (0-1).</summary>
@@ -905,17 +897,6 @@ namespace Models.AgPasture
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
-
-        ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Maximum fraction of water or N in the soil that is available to plants.</summary>
-        /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
-        [Units("0-1")]
-        public double MaximumFractionAvailable { get; set; } = 0.999;
-
-        /// <summary>Exponent of function determining soil extractable N.</summary>
-        [Units("-")]
-        public double NuptakeSWFactor { get; set; } = 0.25;
 
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
