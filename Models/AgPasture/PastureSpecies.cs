@@ -2614,10 +2614,13 @@ namespace Models.AgPasture
             detachedRootDM = 0.0;
             detachedRootN = 0.0;
 
+            respirationMaintenance = 0.0;
+            respirationGrowth = 0.0;
+            remobilisedC = 0.0;
+
             demandOptimumN = 0.0;
             demandLuxuryN = 0.0;
             fixedN = 0.0;
-
             senescedNRemobilised = 0.0;
             luxuryNRemobilised = 0.0;
 
