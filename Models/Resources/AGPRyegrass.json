@@ -75,7 +75,7 @@
       "PlantHeightMaximum": 250.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.8,
-      "MinimumGreenWt": 25.0,
+      "MinimumGreenWt": 75.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "Children": [
