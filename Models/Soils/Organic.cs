@@ -13,6 +13,20 @@
     [ValidParent(ParentType=typeof(Soil))]
     public class Organic : Model
     {
+        /// <summary>
+        /// An enumeration for specifying organic carbon units
+        /// </summary>
+        public enum CarbonUnitsEnum
+        {
+            /// <summary>Organic carbon as total percent.</summary>
+            [Description("Total %")]
+            Total,
+
+            /// <summary>Organic carbon as walkley black percent.</summary>
+            [Description("Walkley Black %")]
+            WalkleyBlack
+        }
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
         [Units("cm")]
@@ -40,13 +54,15 @@
         [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>Carbon concentration (Total% 0.1 - 10%)</summary>
+        /// <summary>Carbon concentration</summary>
         [Summary]
         [Description("Organic Carbon")]
         [Bounds(Lower = 0.1, Upper = 10.0)]
         [Display(Format = "N2")]
-        [Units("Total%")]
         public double[] Carbon { get; set; }
+
+        /// <summary>The units of organic carbon.</summary>
+        public CarbonUnitsEnum CarbonUnits { get; set; }
 
         /// <summary>Carbon:nitrogen ratio.</summary>
         [Summary]

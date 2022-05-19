@@ -146,6 +146,7 @@
         {
             if (chemical != null && !MathUtilities.AreEqual(thickness, chemical.Thickness))
             {
+                chemical.PH = MapConcentration(chemical.PH, chemical.Thickness, thickness, 7.0);
                 chemical.EC = MapConcentration(chemical.EC, chemical.Thickness, thickness, MathUtilities.LastValue(chemical.EC));
                 chemical.ESP = MapConcentration(chemical.ESP, chemical.Thickness, thickness, MathUtilities.LastValue(chemical.ESP));
                 chemical.PH = MapConcentration(chemical.PH, chemical.Thickness, thickness, MathUtilities.LastValue(chemical.PH));
@@ -181,14 +182,6 @@
                 // The elements below will be overlaid over other arrays of values so we want 
                 // to have missing values (double.NaN) used at the bottom of the profile.
 
-                if (sample.EC != null)
-                    sample.EC = MapConcentration(sample.EC, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
-                if (sample.ESP != null)
-                    sample.ESP = MapConcentration(sample.ESP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
-                if (sample.OC != null)
-                    sample.OC = MapConcentration(sample.OC, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
-                if (sample.PH != null)
-                    sample.PH = MapConcentration(sample.PH, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 sample.Thickness = thickness;
             }
         }

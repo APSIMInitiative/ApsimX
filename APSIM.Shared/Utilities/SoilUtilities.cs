@@ -216,5 +216,41 @@
             return PAWC;
         }
 
+        /// <summary>
+        /// Convert organic carbon Walkley Black to Total %.
+        /// </summary>
+        /// <param name="values">Values to convert.</param>
+        public static double[] OCWalkleyBlackToTotal(double[] values)
+        {
+            return MathUtilities.Multiply_Value(values, 1.3);
+        }
+
+        /// <summary>
+        /// Convert organic carbon Total % to Walkley Black.
+        /// </summary>
+        /// <param name="values">Values to convert.</param>
+        public static double[] OCTotalToWalkleyBlack(double[] values)
+        {
+            return MathUtilities.Divide_Value(values, 1.3);
+        }
+
+        /// <summary>
+        /// Converts PH. CaCl2 to 1:5 water.
+        /// </summary>
+        /// <param name="values">Values to convert.</param>
+        public static double[] PHCaCl2ToWater(double[] values)
+        {
+            // pH in water = (pH in CaCl X 1.1045) - 0.1375
+            return MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(values, 1.1045), 0.1375);
+        }
+
+        /// <summary>
+        /// Gets PH. Units: (1:5 water)
+        /// </summary>
+        public static double[] PHWaterToCaCl2(double[] values)
+        {
+            // pH in CaCl = (pH in water + 0.1375) / 1.1045
+            return MathUtilities.Divide_Value(MathUtilities.AddValue(values, 0.1375), 1.1045);
+        }
     }
 }

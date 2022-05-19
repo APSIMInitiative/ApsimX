@@ -64,13 +64,11 @@
                     {
                         Thickness = new double[] { 500 },
                         SW = new double[] { 0.103 },
-                        OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Gravimetric
                     },
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric,
                         Name = "Sample1"
                     }
@@ -146,13 +144,11 @@
                     {
                         Thickness = new double[] { 500 },
                         SW = new double[] { 0.103 },
-                        OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Gravimetric
                     },
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric,
                         Name = "Sample1"
                     },
@@ -189,6 +185,8 @@
 
             SoilStandardiser.Standardise(soil);
 
+            var chemical = soil.Children[3] as Chemical;
+            var organic = soil.Children[4] as Organic;
             var initial = soil.Children[5] as Sample;
             var analysis = soil.Children[4] as Chemical;
             var samples = soil.FindAllChildren<Solute>().ToArray();
@@ -196,9 +194,9 @@
             Assert.AreEqual(soil.FindAllChildren<Sample>().Count(), 1);
             Assert.AreEqual(initial.Name, "Initial");
             Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(initial.OC, new double[] { 2.0, 0.9 });
-            Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
-            Assert.AreEqual(initial.EC, new double[] { 150, 200 });
+            Assert.AreEqual(organic.Carbon, new double[] { 2.0, 0.9 });
+            Assert.AreEqual(chemical.PH, new double[] { 6.4, 6.9 });
+            Assert.AreEqual(chemical.EC, new double[] { 150, 200 });
 
             Assert.AreEqual(samples[0].InitialValues, new double[] { 29.240000000000002, 2.432 });  // NO3 kg/ha
             Assert.AreEqual(samples[1].InitialValues, new double[] { 1.4960000000000002, 0.4864 }); // NH4 kg/ha
@@ -281,14 +279,7 @@
                     {
                         Thickness = new double[] { 100, 200 },
                         SW = new double[] { 0.1, 0.2 },
-                        OC = new double[] { double.NaN, 0.9 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
-                    },
-                    new Sample
-                    {
-                        Thickness = new double[] { 100, 200 },
-                        PH = new double[] { 6.4, double.NaN },
-                        Name = "Sample2"
                     }
                 }
             };

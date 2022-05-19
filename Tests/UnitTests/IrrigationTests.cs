@@ -111,7 +111,6 @@
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SW = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
-                                OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },
                             new Models.WaterModel.WaterBalance()

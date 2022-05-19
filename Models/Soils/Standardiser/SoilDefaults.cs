@@ -22,6 +22,7 @@
         {
             AddPredictedCrops(soil);
             CheckChemicalForMissingValues(soil);
+            CheckOrganicForMissingValues(soil);
 
             var water = soil.FindChild<Physical>();
             if (water != null)
@@ -204,6 +205,17 @@
             }
         }
 
+        /// <summary>Checks the organic for missing values.</summary>
+        /// <param name="soil">The soil.</param>
+        private static void CheckOrganicForMissingValues(Soil soil)
+        {
+            var organic = soil.FindChild<Organic>();
+            if (!MathUtilities.ValuesInArray(organic.Carbon))
+                organic.Carbon = null;
+            if (organic.Carbon != null)
+                organic.Carbon = MathUtilities.FixArrayLength(organic.Carbon, organic.Thickness.Length);
+        }
+
         /// <summary>Checks the sample for missing values.</summary>
         /// <param name="sample">The sample.</param>
         /// <param name="soil">The soil.</param>
@@ -220,27 +232,11 @@
             var cl = soil.FindChild<Solute>("CL");
             if (cl != null && !MathUtilities.ValuesInArray(cl.InitialValues))
                 cl.InitialValues = null;
-            if (!MathUtilities.ValuesInArray(sample.EC))
-                sample.EC = null;
-            if (!MathUtilities.ValuesInArray(sample.ESP))
-                sample.ESP = null;
-            if (!MathUtilities.ValuesInArray(sample.PH))
-                sample.PH = null;
-            if (!MathUtilities.ValuesInArray(sample.OC))
-                sample.OC = null;
 
             if (sample.SW != null)
                 sample.SW = MathUtilities.FixArrayLength(sample.SW, sample.Thickness.Length);
             if (cl != null && cl.InitialValues != null)
                 cl.InitialValues = MathUtilities.FixArrayLength(cl.InitialValues, sample.Thickness.Length);
-            if (sample.EC != null)
-                sample.EC = MathUtilities.FixArrayLength(sample.EC, sample.Thickness.Length);
-            if (sample.ESP != null)
-                sample.ESP = MathUtilities.FixArrayLength(sample.ESP, sample.Thickness.Length);
-            if (sample.PH != null)
-                sample.PH = MathUtilities.FixArrayLength(sample.PH, sample.Thickness.Length);
-            if (sample.OC != null)
-                sample.OC = MathUtilities.FixArrayLength(sample.OC, sample.Thickness.Length);
 
             var physical = soil.FindChild<Physical>();
             if (physical != null)
@@ -611,8 +607,9 @@
         private static void ModifyKLForSubSoilConstraints(SoilCrop crop, Soil soil)
         {
             var soilPhysical = soil.FindChild<IPhysical>();
-            var initialConditions = soil.Children.Find(child => child is Sample) as Sample;
-            double[] cl = initialConditions.CL;
+            var clNode = soil.FindChild<Solute>("CL");
+            var chemical = soil.FindChild<Chemical>();
+            double[] cl = clNode.InitialValues;
             if (MathUtilities.ValuesInArray(cl))
             {
                 crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soilPhysical.Thickness, StandardKL.Last());
@@ -621,7 +618,7 @@
             }
             else
             {
-                double[] esp = initialConditions.ESP;
+                double[] esp = chemical.ESP;
                 if (MathUtilities.ValuesInArray(esp))
                 {
                     crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soilPhysical.Thickness, StandardKL.Last());
@@ -630,7 +627,7 @@
                 }
                 else
                 {
-                    double[] ec = initialConditions.EC;
+                    double[] ec = chemical.EC;
                     if (MathUtilities.ValuesInArray(ec))
                     {
                         crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soilPhysical.Thickness, StandardKL.Last());

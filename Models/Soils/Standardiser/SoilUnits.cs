@@ -20,16 +20,24 @@
                 if (MathUtilities.ValuesInArray(sample.SW))
                     sample.SW = SWVolumetric(sample, soil);
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
+            }
 
+            var organic = soil.FindChild<Organic>();
+            if (organic != null)
+            {
                 // Convert OC to total (%)
-                if (MathUtilities.ValuesInArray(sample.OC))
-                    sample.OC = OCTotalPercent(sample.OC, sample.OCUnits);
-                sample.OCUnits = Sample.OCSampleUnitsEnum.Total;
+                if (organic.CarbonUnits == Organic.CarbonUnitsEnum.WalkleyBlack && MathUtilities.ValuesInArray(organic.Carbon))
+                    organic.Carbon = SoilUtilities.OCWalkleyBlackToTotal(organic.Carbon);
+                organic.CarbonUnits = Organic.CarbonUnitsEnum.Total;
+            }
 
+            var chemical = soil.FindChild<Chemical>();
+            if (chemical != null)
+            {
                 // Convert PH to water.
-                if (MathUtilities.ValuesInArray(sample.PH))
-                    sample.PH = PHWater(sample.PH, sample.PHUnits);
-                sample.PHUnits = Sample.PHSampleUnitsEnum.Water;
+                if (chemical.PHUnits == Chemical.PHUnitsEnum.CaCl2 && MathUtilities.ValuesInArray(chemical.PH))
+                    chemical.PH = SoilUtilities.PHCaCl2ToWater(chemical.PH);
+                chemical.PHUnits = Chemical.PHUnitsEnum.Water;
             }
         }
 
@@ -53,32 +61,6 @@
                 else
                     return MathUtilities.Divide(sample.SW, sample.Thickness); // from mm to mm/mm
             }
-        }
-
-        /// <summary>Converts OC to total %</summary>
-        /// <param name="oc">The oc.</param>
-        /// <param name="units">The current units.</param>
-        /// <returns>The converted values</returns>
-        private static double[] OCTotalPercent(double[] oc, Sample.OCSampleUnitsEnum units)
-        {
-            if (units == Sample.OCSampleUnitsEnum.Total || oc == null)
-                return oc;
-
-            // convert the numbers
-            return MathUtilities.Multiply_Value(oc, 1.3);
-        }
-
-        /// <summary>Converst PH to water units.</summary>
-        /// <param name="ph">The ph.</param>
-        /// <param name="units">The current units.</param>
-        /// <returns>The converted values</returns>
-        private static double[] PHWater(double[] ph, Sample.PHSampleUnitsEnum units)
-        {
-            if (units == Sample.PHSampleUnitsEnum.Water || ph == null)
-                return ph;
-
-            // pH in water = (pH in CaCl X 1.1045) - 0.1375
-            return MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(ph, 1.1045), 0.1375);
         }
     }
 }

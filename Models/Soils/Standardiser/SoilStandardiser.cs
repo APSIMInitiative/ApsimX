@@ -32,26 +32,6 @@
                     samples[0].SWUnits = samples[i].SWUnits;
                 }
 
-                if (MathUtilities.ValuesInArray(samples[i].OC))
-                {
-                    samples[0].OC = samples[i].OC;
-                    samples[0].OCUnits = samples[i].OCUnits;
-                }
-
-                if (MathUtilities.ValuesInArray(samples[i].PH))
-                {
-                    samples[0].PH = samples[i].PH;
-                    samples[0].PHUnits = samples[i].PHUnits;
-                }
-                if (MathUtilities.ValuesInArray(samples[i].ESP))
-                    samples[0].ESP = samples[i].ESP;
-
-                if (MathUtilities.ValuesInArray(samples[i].EC))
-                    samples[0].EC = samples[i].EC;
-
-                if (MathUtilities.ValuesInArray(samples[i].CL))
-                    samples[0].CL = samples[i].CL;
-
                 soil.Children.Remove(samples[i]);
             }
 
@@ -72,11 +52,6 @@
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
-
-            initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
-            initial.PH = MergeArrays(initial.PH, analysis.PH);
-            initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
-            initial.EC = MergeArrays(initial.EC, analysis.EC);
 
             soilOrganicMatter.Carbon = null;
             //soil.Children.Remove(analysis);

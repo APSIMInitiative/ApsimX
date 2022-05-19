@@ -152,12 +152,15 @@ namespace Models.Soils
             nLayers = dlayer.Length;
 
             // get the initial values 
-            oc = initial.OC;
+            oc = organic.Carbon;
             FBiom = organic.FBiom;
             FInert = organic.FInert;
-            HumusCNr = initial.OCNR;
+
+            var on = MathUtilities.Divide(oc, organic.SoilCNRatio);
+
+            HumusCNr = MathUtilities.Divide(oc, on);
             InitialFOMCNr = organic.FOMCNRatio;
-            ph = initial.PH;
+            ph = chemical.PH;
             NO3ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, nO3.InitialValues);
             NH4ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, nH4.InitialValues);
             ureappm = new double[soilPhysical.Thickness.Length];

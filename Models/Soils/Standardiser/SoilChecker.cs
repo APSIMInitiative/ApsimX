@@ -37,6 +37,8 @@
         {
             var weirdo = soil.FindChild<WEIRDO>();
             var initial = soil.FindChild<Sample>();
+            var organic = soil.FindChild<Organic>();
+            var chemical = soil.FindChild<Chemical>();
             var physical = soil.FindChild<IPhysical>();
             const double min_sw = 0.0;
             const double specific_bd = 2.65; // (g/cc)
@@ -121,22 +123,16 @@
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
                 }
 
-                if (initial.OC.Length == 0)
+                if (organic.Carbon.Length == 0)
                     message.AppendLine("Cannot find OC values in soil");
                 else
                     for (int layer = 0; layer != physical.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
-                        if (initial.OC[layer] == MathUtilities.MissingValue || double.IsNaN(initial.OC[layer]))
+                        if (organic.Carbon[layer] == MathUtilities.MissingValue || double.IsNaN(organic.Carbon[layer]))
                             message.AppendLine($"OC value missing in layer {layerNumber}");
-                        else if (MathUtilities.LessThan(initial.OC[layer], 0.01, 3))
-                            summary.WriteMessage(null, $"OC value of {initial.OC[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
-                        if (initial.PH[layer] == MathUtilities.MissingValue || double.IsNaN(initial.PH[layer]))
-                            message.AppendLine($"PH value missing in layer {layerNumber}");
-                        else if (MathUtilities.LessThan(initial.PH[layer], 3.5, 3))
-                            message.AppendLine($"PH value of {initial.PH[layer].ToString("f3")} in layer {layerNumber} is less than 3.5");
-                        else if (MathUtilities.GreaterThan(initial.PH[layer], 11, 3))
-                            message.AppendLine($"PH value of {initial.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
+                        else if (MathUtilities.LessThan(organic.Carbon[layer], 0.01, 3))
+                            summary.WriteMessage(null, $"OC value of {organic.Carbon[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
                     }
 
                 if (!MathUtilities.ValuesInArray(initial.SW))
@@ -153,6 +149,17 @@
                         else if (MathUtilities.LessThan(initial.SW[layer], physical.AirDry[layer], 3))
                             message.AppendLine($"Soil water of {initial.SW[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
                     }
+
+                for (int layer = 0; layer != physical.Thickness.Length; layer++)
+                {
+                    int layerNumber = layer + 1;
+                    if (chemical.PH[layer] == MathUtilities.MissingValue || double.IsNaN(chemical.PH[layer]))
+                        message.AppendLine($"PH value missing in layer {layerNumber}");
+                    else if (MathUtilities.LessThan(chemical.PH[layer], 3.5, 3))
+                        message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is less than 3.5");
+                    else if (MathUtilities.GreaterThan(chemical.PH[layer], 11, 3))
+                        message.AppendLine($"PH value of {chemical.PH[layer].ToString("f3")} in layer {layerNumber} is greater than 11");
+                }
 
                 var no3 = soil.FindChild<Solute>("NO3");
                 if (!MathUtilities.ValuesInArray(no3.InitialValues))

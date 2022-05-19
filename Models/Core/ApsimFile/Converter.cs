@@ -3986,9 +3986,10 @@ namespace Models.Core.ApsimFile
                 var soil = JsonUtilities.Parent(nutrient) as JObject;
                 var physical = JsonUtilities.ChildWithName(soil, "Physical", ignoreCase: true);
                 var chemical = JsonUtilities.ChildWithName(soil, "Chemical", ignoreCase:true);
+                var organic = JsonUtilities.ChildWithName(soil, "Organic", ignoreCase: true);
                 var samples = JsonUtilities.ChildrenOfType(soil, "Sample");
 
-                if (soil != null && physical != null && chemical != null)
+                if (soil != null && physical != null && chemical != null && organic != null)
                 {
                     var soilChildren = soil["Children"] as JArray;
                     var bdToken = physical["BD"] as JArray;
@@ -3999,6 +4000,19 @@ namespace Models.Core.ApsimFile
                         // create a collection of JTokens to search for solute initialisation values.
                         var tokensContainingValues = samples.Reverse<JObject>()
                                                             .Concat(new JObject[] { chemical });
+
+                        var ocValues = FindValuesToken(tokensContainingValues, "OC");
+                        if (ocValues != null)
+                        {
+                            var oc = JsonUtilities.Parent(ocValues);
+                            var mappedValues = Soils.Standardiser.Layers.MapConcentration(ocValues.Values<double>().ToArray(), 
+                                                                                          oc["Thickness"].Values<double>().ToArray(), 
+                                                                                          organic["Thickness"].Values<double>().ToArray(), 
+                                                                                          1.0, true);
+                            organic["Carbon"] = new JArray(mappedValues);
+                            organic["CarbonUnits"] = oc["OCUnits"].ToString();
+                        }
+
 
                         // iterate through existing solutes and store their initial values in the solute.
                         foreach (var solute in JsonUtilities.ChildrenOfType(soil, "Solute"))
@@ -4034,31 +4048,36 @@ namespace Models.Core.ApsimFile
         /// <returns>The solute token.</returns>
         private static JToken CreateSoluteToken(IEnumerable<JObject> tokens, string soluteName, double[] bd)
         {
-            JArray thickness = null;
-            JArray values = null;
+            JToken valuesToken = FindValuesToken(tokens, soluteName);
+            JToken token = JsonUtilities.Parent(valuesToken);
             string units = "ppm";
-            foreach (var token in tokens)
-            {
-                values = token[soluteName] as JArray;
-                if (values == null)
-                    values = token[soluteName + "N"] as JArray;
-
-                if (token["$type"].ToString() == "Models.Soils.Sample, Models")
-                    units = "kgha";
-                else
-                    units = "ppm";
-                thickness = token["Thickness"] as JArray;
-                if (values != null && thickness != null)
-                    break;
-            }
+            if (token["$type"].ToString() == "Models.Soils.Sample, Models")
+                units = "kgha";
+            else
+                units = "ppm";
             return new JObject
             {
                 ["$type"] = "Models.Soils.Nutrients.Solute, Models",
                 ["Name"] = soluteName,
-                ["Thickness"] = thickness,
-                ["InitialValues"] = values,
+                ["Thickness"] = token["Thickness"],
+                ["InitialValues"] = valuesToken,
                 ["InitialValuesUnits"] = units
             };
+        }
+
+        private static JToken FindValuesToken(IEnumerable<JObject> tokens, string elementName)
+        {
+            foreach (var token in tokens)
+            {
+                var values = token[elementName] as JArray;
+                if (values == null)
+                    values = token[elementName + "N"] as JArray;
+
+                var thickness = token["Thickness"] as JArray;
+                if (values != null && thickness != null)
+                    return values;
+            }
+            return null;
         }
 
         /// <summary>

@@ -44,9 +44,9 @@ namespace Models.Soils
         [Link]
         public Organic organic = null;
 
-        /// <summary>Link to the initial sample.</summary>
+        /// <summary>Link to the chemical.</summary>
         [Link]
-        public Sample initial = null;
+        public Chemical chemical = null;
 
         /// <summary>Link to the NO3 solute.</summary>
         [Link(ByName = true)]
