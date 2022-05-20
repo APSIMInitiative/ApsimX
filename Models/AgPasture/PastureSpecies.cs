@@ -2537,7 +2537,7 @@ namespace Models.AgPasture
                                    deadWt: 0.0, deadN: 0.0);
             roots[0].SetBiomassState(rootWt: MinimumGreenWt * MinimumGreenRootProp,
                                      rootN: MinimumGreenWt * MinimumGreenRootProp * roots[0].NConcOptimum,
-                                     rootDepth: roots[0].RootDepthMinimum);
+                                     rootDepth: roots[0].MinimumRootingDepth);
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
