@@ -158,21 +158,24 @@ namespace Models.AgPasture
             get { return myLightProfile; }
             set
             {
-                InterceptedRadn = 0.0;
-                myLightProfile = value;
-                foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
+                if (value != null)
                 {
-                    InterceptedRadn += canopyLayer.AmountOnGreen;
-                }
+                    InterceptedRadn = 0.0;
+                    myLightProfile = value;
+                    foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
+                    {
+                        InterceptedRadn += canopyLayer.AmountOnGreen;
+                    }
 
-                // stuff required to calculate photosynthesis using Ecomod approach
-                RadiationTopOfCanopy = myMetData.Radn;
-                fractionGreenCover = 1.0;
-                swardGreenCover = 0.0;
-                if (InterceptedRadn > 0.0)
-                {
-                    fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
-                    swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
+                    // stuff required to calculate photosynthesis using Ecomod approach
+                    RadiationTopOfCanopy = myMetData.Radn;
+                    fractionGreenCover = 1.0;
+                    swardGreenCover = 0.0;
+                    if (InterceptedRadn > 0.0)
+                    {
+                        fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
+                        swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
+                    }
                 }
 
                 // The approach for computing photosynthesis in Ecomod (from which AgPasture is adapted) uses radiation on top of
@@ -194,13 +197,13 @@ namespace Models.AgPasture
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
-            #region ICrop implementation  --------------------------------------------------------------------------------------
+        #region ICrop implementation  --------------------------------------------------------------------------------------
 
-            /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
-            /// <remarks>
-            /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
-            /// In AgPasture there is the parameter SpeciesFamily flagging whether a species is a grass or a legume...
-            /// </remarks>
+        /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
+        /// <remarks>
+        /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
+        /// In AgPasture there is the parameter SpeciesFamily flagging whether a species is a grass or a legume...
+        /// </remarks>
         public string PlantType { get; set; }
 
         /// <summary>Flag indicating whether the biomass is from a c4 plant or not</summary>

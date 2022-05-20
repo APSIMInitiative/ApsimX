@@ -82,8 +82,8 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Leaf",
+          "NConcMinimum": 0.0133,
           "NConcOptimum": 0.05,
-          "NConcMinimum": 0.0275,
           "NConcMaximum": 0.06,
           "Children": [
             {
@@ -135,9 +135,9 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.01,
-          "NConcMaximum": 0.025,
+          "NConcMinimum": 0.0067,
+          "NConcOptimum": 0.0225,
+          "NConcMaximum": 0.03,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -188,9 +188,9 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stolon",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.01,
-          "NConcMaximum": 0.03,
+          "NConcMinimum": 0.008,
+          "NConcOptimum": 0.025,
+          "NConcMaximum": 0.0325,
           "FractionStanding": 0.3,
           "Children": [
             {
@@ -242,9 +242,9 @@
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
           "Name": "Root",
+          "NConcMinimum": 0.01,
           "NConcOptimum": 0.0225,
-          "NConcMinimum": 0.0125,
-          "NConcMaximum": 0.0275,
+          "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 70.0,
           "RootDistributionExponent": 2.5,
           "RootBottomDistributionFactor": 1.05,
