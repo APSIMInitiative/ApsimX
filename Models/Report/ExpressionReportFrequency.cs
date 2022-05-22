@@ -21,6 +21,10 @@ namespace Models
         /// <returns>true if line was able to be parsed.</returns>
         public static bool TryParse(string line, Report report, IEvent events, ScriptCompiler compiler)
         {
+            line = line.Replace("if ", "")
+                       .Replace("[", "")
+                       .Replace("]", "");
+
             if (CSharpExpressionFunction.Compile(line, report, compiler, out IBooleanFunction function, out string errorMessages))
             {
                 new ExpressionReportFrequency(report, events, function);
