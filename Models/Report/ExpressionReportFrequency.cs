@@ -21,17 +21,13 @@ namespace Models
         /// <returns>true if line was able to be parsed.</returns>
         public static bool TryParse(string line, Report report, IEvent events, ScriptCompiler compiler)
         {
-            if (line.Trim().StartsWith("if "))
-            {
-                line = line.Replace("if ", "")
-                           .Replace("[", "")
-                           .Replace("]", "");
+            line = line.Replace("[", "")
+                       .Replace("]", "");
 
-                if (CSharpExpressionFunction.Compile(line, report, compiler, out IBooleanFunction function, out string errorMessages))
-                {
-                    new ExpressionReportFrequency(report, events, function);
-                    return true;
-                }
+            if (CSharpExpressionFunction.Compile(line, report, compiler, out IBooleanFunction function, out string errorMessages))
+            {
+                new ExpressionReportFrequency(report, events, function);
+                return true;
             }
             return false;
         }
