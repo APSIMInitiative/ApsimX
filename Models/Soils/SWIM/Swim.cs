@@ -3213,38 +3213,50 @@ namespace Models.Soils
             //   Calculate the suction for a given water content for a given node.
             const int maxIterations = 1000;
             const double tolerance = 1e-9;
-            const double dpsi = 0.01;
+            const double dpF = 0.01;
             double psiValue;
 
             if (theta == soilPhysical.SAT[node])
                 return 0.0;
             else
             {
-                //
                 if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
-                {
-                    psiValue = -100.0; // Initial estimate
-                }
+                    if (theta > soilPhysical.DUL[node])
+                        psiValue = PSIDul; // Initial estimate
+                    else if (theta < soilPhysical.LL15[node])
+                        psiValue = psi_ll15;
+                    else
+                    {
+                        double pFll15 = Math.Log10(-psi_ll15);
+                        double pFdul = Math.Log10(-PSIDul);
+                        double frac = (theta - soilPhysical.LL15[node]) / (soilPhysical.DUL[node] - soilPhysical.LL15[node]);
+                        double pFinit = pFll15 + frac * (pFdul - pFll15);
+                        psiValue = -Math.Pow(10, pFinit);
+                    }
                 else
-                {
                     psiValue = _psi[node]; // Initial estimate
-                }
 
-
-
-                int iter = 0;
-                double est = 0.0;
-
-                for (iter = 0; iter < maxIterations; iter++)
+                for (int iter = 0; iter < maxIterations; iter++)
                 {
-                    est = SimpleTheta(node, psiValue);
-                    double m = (SimpleTheta(node, psiValue + dpsi) - est) / dpsi;
+                    double est = SimpleTheta(node, psiValue);
+                    double pF = 0.000001;
+                    if (psiValue<0)
+                        pF = Math.Log10(-psiValue);
+                    double pF2 = pF + dpF;
+                    double psiValue2 = -Math.Pow(10, pF2);
+                    double est2 = SimpleTheta(node, psiValue2);
+
+                    double m = (est2 - est) / dpF;
 
                     if (Math.Abs(est - theta) < tolerance)
                         break;
-                    psiValue -= Math.Min(-dpsi,(est - theta) / m);
+                    double pFnew = pF - (est - theta) / m;
+                    if (pFnew > (Math.Log10(-psi0)))
+                        pF += dpF;  // This is not really adequate - just saying...
+                    else
+                        pF = pFnew;
+                    psiValue = -Math.Pow(10, pF);
                 }
-                //summary.WriteMessage(this, $"We want this stuff, {(est - theta)}, {iter}, {psiValue}", MessageType.Diagnostic);
                 return psiValue;
             }
         }
