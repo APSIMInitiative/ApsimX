@@ -317,92 +317,105 @@ namespace Models.CLEM.Resources
             foreach (ResourceRequest request in requests.Where(a => a.Required > a.Available))
             {
                 // Check if transmutation would be successful 
-                if ((request.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped && request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
+                if ((request.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped)
                 {
-                    // get resource type if not already provided from request
-                    if (!(request.Resource is IResourceType resourceTypeInShortfall))
+                    if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                     {
-                        if (request.ResourceTypeName.Contains('.'))
+                        // get resource type if not already provided from request
+                        if (!(request.Resource is IResourceType resourceTypeInShortfall))
                         {
-                            resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions,IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-                        }
-                        else
-                        {
-                            var resourceGroup = FindResource(request.ResourceType);
-                            if (resourceGroup != null)
-                                resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions,IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-                            else
-                                resourceTypeInShortfall = null;
-                        }
-                    }
-
-                    if (resourceTypeInShortfall != null)
-                    {
-                        if (queryOnly)
-                            // clear any transmutations before checking
-                            request.SuccessfulTransmutation = null;
-
-                        // get all transmutations if query only otherwise only successful transmutations previously checked
-                        var transmutationsAvailable = (resourceTypeInShortfall as IModel).FindAllChildren<Transmutation>().Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
-                        
-                        foreach (Transmutation transmutation in transmutationsAvailable)
-                        {
-                            var transmutesAvailable = transmutation.FindAllChildren<ITransmute>();
-
-                            // calculate the maximum amount of shortfall needed based on the transmute styles of all children
-                            double packetsNeeded = transmutesAvailable.Select(a => a.ShortfallPackets(request.Required - request.Available)).Max();
-
-                            bool allTransmutesSucceeed = true;
-                            foreach (ITransmute transmute in transmutesAvailable)
+                            if (request.ResourceTypeName.Contains('.'))
                             {
-                                if (transmute.TransmuteResourceType != null)
-                                {
-                                    // create new request for this transmutation cost
-                                    ResourceRequest transRequest = new ResourceRequest
-                                    {
-                                        Resource = transmute.TransmuteResourceType,
-                                        Required = packetsNeeded, // provide the amount of shortfall resource needed
-                                        RelatesToResource = request.ResourceTypeName,
-                                        ResourceType = transmute.ResourceGroup.GetType(),
-                                        ActivityModel = request.ActivityModel,
-                                        Category = transmutation.TransactionCategory,
-                                        AdditionalDetails = transmutation
-                                    };
+                                resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions, IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                            }
+                            else
+                            {
+                                var resourceGroup = FindResource(request.ResourceType);
+                                if (resourceGroup != null)
+                                    resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions, IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                else
+                                    resourceTypeInShortfall = null;
+                            }
+                        }
 
-                                    // amount left over after transmute. This will be amount of the resource if query is false as Required passed is 0
-                                    double activityCost = requests.Where(a => a.Resource == transmute.TransmuteResourceType).Sum(a => a.Required);
-                                    if (!transmute.DoTransmute(transRequest, request.Required - request.Available, activityCost, this, queryOnly))
+                        if (resourceTypeInShortfall != null)
+                        {
+                            if (queryOnly)
+                                // clear any transmutations before checking
+                                request.SuccessfulTransmutation = null;
+                            else
+                                request.ShortfallStatus = "Transmute failed";
+
+                            // get all transmutations if query only otherwise only successful transmutations previously checked
+                            var transmutationsAvailable = (resourceTypeInShortfall as IModel).FindAllChildren<Transmutation>().Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
+
+                            foreach (Transmutation transmutation in transmutationsAvailable)
+                            {
+                                var transmutesAvailable = transmutation.FindAllChildren<ITransmute>();
+
+                                // calculate the maximum amount of shortfall needed based on the transmute styles of all children
+                                double packetsNeeded = transmutesAvailable.Select(a => a.ShortfallPackets(request.Required - request.Available)).Max();
+
+                                bool allTransmutesSucceeed = true;
+                                foreach (ITransmute transmute in transmutesAvailable)
+                                {
+                                    if (transmute.TransmuteResourceType != null)
                                     {
+                                        // create new request for this transmutation cost
+                                        ResourceRequest transRequest = new ResourceRequest
+                                        {
+                                            Resource = transmute.TransmuteResourceType,
+                                            Required = packetsNeeded, // provide the amount of shortfall resource needed
+                                            RelatesToResource = request.ResourceTypeName,
+                                            ResourceType = transmute.ResourceGroup.GetType(),
+                                            ActivityModel = request.ActivityModel,
+                                            Category = transmutation.TransactionCategory,
+                                            AdditionalDetails = transmutation
+                                        };
+
+                                        // amount left over after transmute. This will be amount of the resource if query is false as Required passed is 0
+                                        double activityCost = requests.Where(a => a.Resource == transmute.TransmuteResourceType).Sum(a => a.Required);
+                                        if (!transmute.DoTransmute(transRequest, request.Required - request.Available, activityCost, this, queryOnly))
+                                        {
+                                            allTransmutesSucceeed = false;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // the transmute resource (B) was not found so we cannot complete this transmutation
                                         allTransmutesSucceeed = false;
+                                        break;
+                                    }
+                                }
+
+                                if (queryOnly)
+                                {
+                                    if (allTransmutesSucceeed)
+                                    {
+                                        // set request success
+                                        request.SuccessfulTransmutation = transmutation;
                                         break;
                                     }
                                 }
                                 else
                                 {
-                                    // the transmute resource (B) was not found so we cannot complete this transmutation
-                                    allTransmutesSucceeed = false;
-                                    break;
+                                    // assumed successful transaction based on where clause in transaction selection
+                                    // Add resource: tops up resource from transmutation so available in CheckResources
+                                    // if pricing based 
+                                    resourceTypeInShortfall.Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
+                                    if (allTransmutesSucceeed)
+                                    {
+                                        request.ShortfallStatus = "Transmuted";
+                                        // TODO: report shortfall as transmuted in shortfall report
+                                    }
                                 }
                             }
-
-                            if (queryOnly)
-                            {
-                                if (allTransmutesSucceeed)
-                                {
-                                    // set request success
-                                    request.SuccessfulTransmutation = transmutation;
-                                    break;
-                                }
-                            }
-                            else // assumed successful transaction based on where clause in transaction selection
-                                // Add resource: tops up resource from transmutation so available in CheckResources
-
-                                // if pricing based 
-
-                                (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0)?1: transmutation.TransmutationPacketSize), request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
                         }
                     }
                 }
+                else
+                    request.ShortfallStatus = "Skipped";
             }
         }
 

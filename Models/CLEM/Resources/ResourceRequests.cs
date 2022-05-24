@@ -89,6 +89,10 @@ namespace Models.CLEM.Resources
         /// The details if this request comes from an companion model managing resources
         /// </summary>
         public (string type, string identifier, string unit) CompanionModelDetails { get; set; }
+        /// <summary>
+        /// The final outcome if shortfall for reporting to shortfall reports
+        /// </summary>
+        public string ShortfallStatus { get; set; }
         ///<summary>
         /// ResourceRequest constructor
         ///</summary> 

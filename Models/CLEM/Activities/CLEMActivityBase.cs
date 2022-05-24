@@ -912,7 +912,6 @@ namespace Models.CLEM.Activities
                 if (Status != ActivityStatus.Skipped && (item.ActivityModel as IReportPartialResourceAction).OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
                 {
                     Status = ActivityStatus.Partial;
-                    //deficitFound = true;
                 }
             }
             if (componentError)
@@ -964,8 +963,6 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            //else
-            //    Status = ActivityStatus.Ignored;
 
             return Status != ActivityStatus.Ignored;
         }

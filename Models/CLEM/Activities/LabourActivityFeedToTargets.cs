@@ -730,37 +730,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        ///// <inheritdoc/>
-        //public override string ModelSummaryInnerClosingTags()
-        //{
-        //    return "\r\n</div>";
-        //}
-
-        ///// <inheritdoc/>
-        //public override string ModelSummaryInnerOpeningTags()
-        //{
-        //    using (StringWriter htmlWriter = new StringWriter())
-        //    {
-        //        htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
-        //        htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
-
-        //        if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
-        //        {
-        //            htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-        //            htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
-        //            htmlWriter.Write("</div>");
-        //        }
-
-        //        if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
-        //        {
-        //            htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-        //            htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
-        //            htmlWriter.Write("</div>");
-        //        }
-
-        //        return htmlWriter.ToString(); 
-        //    }
-        //} 
         #endregion
     }
 }
