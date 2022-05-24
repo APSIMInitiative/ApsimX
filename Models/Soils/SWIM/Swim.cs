@@ -3239,7 +3239,9 @@ namespace Models.Soils
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
                     double est = SimpleTheta(node, psiValue);
-                    double pF = Math.Log10(-psiValue);
+                    double pF = 0.000001;
+                    if (psiValue<0)
+                        pF = Math.Log10(-psiValue);
                     double pF2 = pF + dpF;
                     double psiValue2 = -Math.Pow(10, pF2);
                     double est2 = SimpleTheta(node, psiValue2);
