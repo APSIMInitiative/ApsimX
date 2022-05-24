@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 375,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -24,10 +24,10 @@
             "Classic",
             "Tile",
             "SurfaceOM",
-            "DrainSpaceUSA2",
-            "ClassicUSA2",
-            "WT_obsUSA3",
-            "WT_classicUSA3"
+            "DrainSpace",
+            "Classic",
+            "WT_obs",
+            "WT_classic"
           ],
           "Name": "ExcelInput",
           "Children": [],
@@ -36,8 +36,8 @@
         },
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "OutputfileUSA3",
-          "ObservedTableName": "WT_obsUSA3",
+          "PredictedTableName": "Outputfile",
+          "ObservedTableName": "WT_obs",
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
@@ -49,8 +49,8 @@
         },
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "WT_classicUSA3",
-          "ObservedTableName": "WT_obsUSA3",
+          "PredictedTableName": "WT_classic",
+          "ObservedTableName": "WT_obs",
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
