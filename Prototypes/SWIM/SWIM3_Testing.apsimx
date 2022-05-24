@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 148,
+  "ExplorerWidth": 300,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -19046,6 +19046,3962 @@
                     }
                   ],
                   "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
+          "Name": "InitialConditions",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 (Huth et al., 2012) allows three of the four lower boundary conditions described in Verburg et al. (1996) as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by Verburg et al. (1996) of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nThis test ensures that the code to initialise psi from initial values of theta is providing a close enough estimate.",
+              "Name": "Memo Initial Conditions",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.Experiment, Models",
+              "DisabledSimNames": null,
+              "Name": "E6",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factors, Models",
+                  "Name": "Factors",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[Soil]",
+                      "Name": "SoilType",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": null,
+                          "ASCSubOrder": null,
+                          "SoilType": null,
+                          "LocalName": null,
+                          "Site": null,
+                          "NearestTown": null,
+                          "Region": null,
+                          "State": null,
+                          "Country": null,
+                          "NaturalVegetation": null,
+                          "ApsoilNumber": null,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "LocationAccuracy": null,
+                          "YearOfSampling": null,
+                          "DataSource": null,
+                          "Comments": null,
+                          "Name": "Clay",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "ParticleSizeClay": [
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61
+                              ],
+                              "ParticleSizeSand": [
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77
+                              ],
+                              "ParticleSizeSilt": [
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Texture": null,
+                              "BD": [
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865
+                              ],
+                              "AirDry": [
+                                0.06,
+                                0.06,
+                                0.06,
+                                0.06,
+                                0.06,
+                                0.06,
+                                0.06,
+                                0.06
+                              ],
+                              "LL15": [
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231
+                              ],
+                              "DUL": [
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565
+                              ],
+                              "SAT": [
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58
+                              ],
+                              "KS": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
+                              "Name": "Physical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "ResourceName": "Nutrient",
+                              "Name": "Nutrient",
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "Carbon": [
+                                8.2,
+                                5.5,
+                                3.3,
+                                1.7,
+                                1.7
+                              ],
+                              "SoilCNRatio": [
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5
+                              ],
+                              "FBiom": [
+                                0.08,
+                                0.02,
+                                0.015,
+                                0.01,
+                                0.01
+                              ],
+                              "FInert": [
+                                0.58,
+                                0.7,
+                                0.77,
+                                0.9,
+                                0.99
+                              ],
+                              "FOM": [
+                                92.873,
+                                57.963,
+                                31.811,
+                                11.373,
+                                0.0
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "NO3N": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4N": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "PH": [
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "EC": null,
+                              "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "NO3": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701,
+                                1.701,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "LabileP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "UnavailableP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "SW": [
+                                0.58,
+                                0.5749,
+                                0.565,
+                                0.4417,
+                                0.231,
+                                0.0638,
+                                0.231,
+                                0.231
+                              ],
+                              "OC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "EC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "ESP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "PH": [
+                                5.7,
+                                5.3,
+                                5.9,
+                                6.6,
+                                6.7,
+                                6.7,
+                                6.7,
+                                6.7
+                              ],
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial values",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Swim3, Models",
+                              "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
+                              "theta": null,
+                              "psi": null,
+                              "Salb": 0.13,
+                              "CN2Bare": 50.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "KDul": 1.0,
+                              "PSIDul": -100.0,
+                              "VC": true,
+                              "DTMin": 0.0,
+                              "DTMax": 60.0,
+                              "MaxWaterIncrement": 5.0,
+                              "SpaceWeightingFactor": 0.0,
+                              "SoluteSpaceWeightingFactor": 1.0,
+                              "Dis": 0.0,
+                              "Disp": 1.0,
+                              "A": 2.0,
+                              "DTHC": 0.1,
+                              "DTHP": 2.0,
+                              "Diagnostics": false,
+                              "WaterTable": 0.0,
+                              "Name": "Swim3",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Cl",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "LabileP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "UnavailableP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Solute, Models",
+                              "Name": "Cl",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.LayerStructure, Models",
+                              "Depth": [
+                                "0-1",
+                                "1-3",
+                                "3-6",
+                                "6-10",
+                                "10-15",
+                                "15-20",
+                                "20-25",
+                                "25-30"
+                              ],
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "Name": "LayerStructure",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Name": "SoilTemperature",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": null,
+                          "ASCSubOrder": null,
+                          "SoilType": null,
+                          "LocalName": null,
+                          "Site": null,
+                          "NearestTown": null,
+                          "Region": null,
+                          "State": null,
+                          "Country": null,
+                          "NaturalVegetation": null,
+                          "ApsoilNumber": null,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "LocationAccuracy": null,
+                          "YearOfSampling": null,
+                          "DataSource": null,
+                          "Comments": null,
+                          "Name": "Loam",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "ParticleSizeClay": [
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61
+                              ],
+                              "ParticleSizeSand": [
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77
+                              ],
+                              "ParticleSizeSilt": [
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Texture": null,
+                              "BD": [
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865
+                              ],
+                              "AirDry": [
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02
+                              ],
+                              "LL15": [
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "DUL": [
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2
+                              ],
+                              "SAT": [
+                                0.35,
+                                0.35,
+                                0.35,
+                                0.35,
+                                0.35,
+                                0.35,
+                                0.35,
+                                0.35
+                              ],
+                              "KS": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
+                              "Name": "Physical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "ResourceName": "Nutrient",
+                              "Name": "Nutrient",
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "Carbon": [
+                                8.2,
+                                5.5,
+                                3.3,
+                                1.7,
+                                1.7
+                              ],
+                              "SoilCNRatio": [
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5
+                              ],
+                              "FBiom": [
+                                0.08,
+                                0.02,
+                                0.015,
+                                0.01,
+                                0.01
+                              ],
+                              "FInert": [
+                                0.58,
+                                0.7,
+                                0.77,
+                                0.9,
+                                0.99
+                              ],
+                              "FOM": [
+                                92.873,
+                                57.963,
+                                31.811,
+                                11.373,
+                                0.0
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "NO3N": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4N": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "PH": [
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "EC": null,
+                              "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "NO3": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701,
+                                1.701,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "LabileP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "UnavailableP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "SW": [
+                                0.35,
+                                0.2504,
+                                0.2,
+                                0.1489,
+                                0.1,
+                                0.0293,
+                                0.1,
+                                0.1
+                              ],
+                              "OC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "EC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "ESP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "PH": [
+                                5.7,
+                                5.3,
+                                5.9,
+                                6.6,
+                                6.7,
+                                6.7,
+                                6.7,
+                                6.7
+                              ],
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial values",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Swim3, Models",
+                              "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
+                              "theta": null,
+                              "psi": null,
+                              "Salb": 0.13,
+                              "CN2Bare": 50.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "KDul": 1.0,
+                              "PSIDul": -100.0,
+                              "VC": true,
+                              "DTMin": 0.0,
+                              "DTMax": 60.0,
+                              "MaxWaterIncrement": 5.0,
+                              "SpaceWeightingFactor": 0.0,
+                              "SoluteSpaceWeightingFactor": 1.0,
+                              "Dis": 0.0,
+                              "Disp": 1.0,
+                              "A": 2.0,
+                              "DTHC": 0.1,
+                              "DTHP": 2.0,
+                              "Diagnostics": false,
+                              "WaterTable": 0.0,
+                              "Name": "Swim3",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Cl",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "LabileP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "UnavailableP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Solute, Models",
+                              "Name": "Cl",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.LayerStructure, Models",
+                              "Depth": [
+                                "0-1",
+                                "1-3",
+                                "3-6",
+                                "6-10",
+                                "10-15",
+                                "15-20",
+                                "20-25",
+                                "25-30"
+                              ],
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "Name": "LayerStructure",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Name": "SoilTemperature",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": null,
+                          "ASCSubOrder": null,
+                          "SoilType": null,
+                          "LocalName": null,
+                          "Site": null,
+                          "NearestTown": null,
+                          "Region": null,
+                          "State": null,
+                          "Country": null,
+                          "NaturalVegetation": null,
+                          "ApsoilNumber": null,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "LocationAccuracy": null,
+                          "YearOfSampling": null,
+                          "DataSource": null,
+                          "Comments": null,
+                          "Name": "Sand",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "ParticleSizeClay": [
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61
+                              ],
+                              "ParticleSizeSand": [
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77
+                              ],
+                              "ParticleSizeSilt": [
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Texture": null,
+                              "BD": [
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865
+                              ],
+                              "AirDry": [
+                                0.005,
+                                0.005,
+                                0.005,
+                                0.005,
+                                0.005,
+                                0.005,
+                                0.005,
+                                0.005
+                              ],
+                              "LL15": [
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03
+                              ],
+                              "DUL": [
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08
+                              ],
+                              "SAT": [
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3
+                              ],
+                              "KS": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
+                              "Name": "Physical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "ResourceName": "Nutrient",
+                              "Name": "Nutrient",
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "Carbon": [
+                                8.2,
+                                5.5,
+                                3.3,
+                                1.7,
+                                1.7
+                              ],
+                              "SoilCNRatio": [
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5
+                              ],
+                              "FBiom": [
+                                0.08,
+                                0.02,
+                                0.015,
+                                0.01,
+                                0.01
+                              ],
+                              "FInert": [
+                                0.58,
+                                0.7,
+                                0.77,
+                                0.9,
+                                0.99
+                              ],
+                              "FOM": [
+                                92.873,
+                                57.963,
+                                31.811,
+                                11.373,
+                                0.0
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "NO3N": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4N": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "PH": [
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "EC": null,
+                              "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "NO3": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701,
+                                1.701,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "LabileP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "UnavailableP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "SW": [
+                                0.3,
+                                0.1474,
+                                0.08,
+                                0.0429,
+                                0.03,
+                                0.008,
+                                0.03,
+                                0.03
+                              ],
+                              "OC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "EC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "ESP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "PH": [
+                                5.7,
+                                5.3,
+                                5.9,
+                                6.6,
+                                6.7,
+                                6.7,
+                                6.7,
+                                6.7
+                              ],
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial values",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Swim3, Models",
+                              "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
+                              "theta": null,
+                              "psi": null,
+                              "Salb": 0.13,
+                              "CN2Bare": 50.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "KDul": 1.0,
+                              "PSIDul": -100.0,
+                              "VC": true,
+                              "DTMin": 0.0,
+                              "DTMax": 60.0,
+                              "MaxWaterIncrement": 5.0,
+                              "SpaceWeightingFactor": 0.0,
+                              "SoluteSpaceWeightingFactor": 1.0,
+                              "Dis": 0.0,
+                              "Disp": 1.0,
+                              "A": 2.0,
+                              "DTHC": 0.1,
+                              "DTHP": 2.0,
+                              "Diagnostics": false,
+                              "WaterTable": 0.0,
+                              "Name": "Swim3",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Cl",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "LabileP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "UnavailableP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Solute, Models",
+                              "Name": "Cl",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.LayerStructure, Models",
+                              "Depth": [
+                                "0-1",
+                                "1-3",
+                                "3-6",
+                                "6-10",
+                                "10-15",
+                                "15-20",
+                                "20-25",
+                                "25-30"
+                              ],
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "Name": "LayerStructure",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Name": "SoilTemperature",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Descriptors": null,
+                  "Name": "Base_InitialConditions",
+                  "Children": [
+                    {
+                      "$type": "Models.Climate.ControlledEnvironment, Models",
+                      "MaxT": 0.0,
+                      "MinT": 0.0,
+                      "Rain": 0.0,
+                      "Radn": 0.0,
+                      "PanEvap": 0.0,
+                      "VP": 0.0,
+                      "Wind": 0.0,
+                      "CO2": 0.0,
+                      "AirPressure": 1010.0,
+                      "DiffuseFraction": 0.0,
+                      "Latitude": 0.0,
+                      "Longitude": 0.0,
+                      "DayLength": 0.0,
+                      "SunRise": 0.0,
+                      "SunSet": 0.0,
+                      "Name": "Weather",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Clock, Models",
+                      "Start": "2000-01-01T00:00:00",
+                      "End": "2000-01-01T00:00:00",
+                      "Name": "Clock",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Summary, Models",
+                      "Verbosity": 100,
+                      "Name": "summaryfile",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                      "Name": "SoilArbitrator",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 0.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "SoilHeatFluxFraction": 0.0,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.0,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Zone, Models",
+                      "Area": 1.0,
+                      "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
+                      "Name": "paddock",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": null,
+                          "ASCSubOrder": null,
+                          "SoilType": null,
+                          "LocalName": null,
+                          "Site": null,
+                          "NearestTown": null,
+                          "Region": null,
+                          "State": null,
+                          "Country": null,
+                          "NaturalVegetation": null,
+                          "ApsoilNumber": null,
+                          "Latitude": 0.0,
+                          "Longitude": 0.0,
+                          "LocationAccuracy": null,
+                          "YearOfSampling": null,
+                          "DataSource": null,
+                          "Comments": null,
+                          "Name": "Soil",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "ParticleSizeClay": [
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61,
+                                17.61
+                              ],
+                              "ParticleSizeSand": [
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77,
+                                33.77
+                              ],
+                              "ParticleSizeSilt": [
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62,
+                                48.62
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Texture": null,
+                              "BD": [
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865,
+                                0.865
+                              ],
+                              "AirDry": [
+                                0.077,
+                                0.077,
+                                0.077,
+                                0.077,
+                                0.077
+                              ],
+                              "LL15": [
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231,
+                                0.231
+                              ],
+                              "DUL": [
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565
+                              ],
+                              "SAT": [
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58,
+                                0.58
+                              ],
+                              "KS": [
+                                216.0,
+                                216.0,
+                                216.0,
+                                216.0,
+                                216.0
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
+                              "Name": "Physical",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.231,
+                                    0.231,
+                                    0.231,
+                                    0.231,
+                                    0.231
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
+                                  "Name": "AgPRyegrassSoil",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.231,
+                                    0.231,
+                                    0.231,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
+                                  "Name": "AgPWhiteCloverSoil",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "ResourceName": "Nutrient",
+                              "Name": "Nutrient",
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "Carbon": [
+                                8.2,
+                                5.5,
+                                3.3,
+                                1.7,
+                                1.7
+                              ],
+                              "SoilCNRatio": [
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5,
+                                12.5
+                              ],
+                              "FBiom": [
+                                0.08,
+                                0.02,
+                                0.015,
+                                0.01,
+                                0.01
+                              ],
+                              "FInert": [
+                                0.58,
+                                0.7,
+                                0.77,
+                                0.9,
+                                0.99
+                              ],
+                              "FOM": [
+                                92.873,
+                                57.963,
+                                31.811,
+                                11.373,
+                                0.0
+                              ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
+                              "Name": "Organic",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "NO3N": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4N": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "PH": [
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5,
+                                6.5
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "EC": null,
+                              "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                150.0
+                              ],
+                              "NO3": [
+                                6.503,
+                                2.101,
+                                2.101,
+                                1.701,
+                                1.701
+                              ],
+                              "NH4": [
+                                0.599,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "LabileP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "UnavailableP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "SW": [
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565,
+                                0.565
+                              ],
+                              "OC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "EC": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "CL": [
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0
+                              ],
+                              "ESP": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "PH": [
+                                5.7,
+                                5.3,
+                                5.9,
+                                6.6,
+                                6.7
+                              ],
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial values",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Swim3, Models",
+                              "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
+                              "theta": null,
+                              "psi": null,
+                              "Salb": 0.13,
+                              "CN2Bare": 50.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "KDul": 1.0,
+                              "PSIDul": -100.0,
+                              "VC": true,
+                              "DTMin": 0.0,
+                              "DTMax": 60.0,
+                              "MaxWaterIncrement": 5.0,
+                              "SpaceWeightingFactor": 0.0,
+                              "SoluteSpaceWeightingFactor": 1.0,
+                              "Dis": 0.0,
+                              "Disp": 1.0,
+                              "A": 2.0,
+                              "DTHC": 0.1,
+                              "DTHP": 2.0,
+                              "Diagnostics": false,
+                              "WaterTable": 0.0,
+                              "Name": "Swim3",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "Cl",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "LabileP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SwimSoluteParameters, Models",
+                                  "WaterTableConcentration": 0.0,
+                                  "D0": 0.05,
+                                  "Depth": [
+                                    "0-6",
+                                    "6-17",
+                                    "17-31",
+                                    "31-55",
+                                    "55-70"
+                                  ],
+                                  "Thickness": [
+                                    60.0,
+                                    110.0,
+                                    140.0,
+                                    240.0,
+                                    150.0
+                                  ],
+                                  "Exco": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "FIP": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "UnavailableP",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Nutrients.Solute, Models",
+                              "Name": "Cl",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.LayerStructure, Models",
+                              "Depth": [
+                                "0-1",
+                                "1-3",
+                                "3-6",
+                                "6-10",
+                                "10-15",
+                                "15-20",
+                                "20-25",
+                                "25-30",
+                                "30-40",
+                                "40-50",
+                                "50-55",
+                                "55-60",
+                                "60-65",
+                                "65-70"
+                              ],
+                              "Thickness": [
+                                10.0,
+                                20.0,
+                                30.0,
+                                40.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                100.0,
+                                100.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "Name": "LayerStructure",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Name": "SoilTemperature",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "InitialResidueName": "grass",
+                          "InitialResidueType": "grass",
+                          "InitialResidueMass": 20.0,
+                          "InitialStandingFraction": 0.0,
+                          "InitialCPR": 0.0,
+                          "InitialCNR": 17.0,
+                          "ResourceName": "SurfaceOrganicMatter",
+                          "Name": "SurfaceOrganicMatter",
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today as Date",
+                            "[Swim3].psi",
+                            "[Swim3].theta",
+                            "sum([Soil].Swim3.SWmm) as TotalSW",
+                            "[Swim3].Drainage",
+                            "[Swim3].Es",
+                            "[Swim3].Runoff"
+                          ],
+                          "EventNames": [
+                            "[Clock].StartOfDay",
+                            "[Clock].EndOfDay"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "InitilisationReport",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] IClock Clock;\r\n        [Link] ISummary Summary;\n        [Link] Swim3 swim3;\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            if (!MathUtilities.FloatsAreEqual(swim3.psi[0],0.0,0.1))\n            \tthrow new Exception (\"Psi (\"+swim3.psi[0].ToString()+\") is not equal to expected value of 0 in layer 0\");\n\n            if (!MathUtilities.FloatsAreEqual(swim3.psi[1],-25.0,0.2))\n            \tthrow new Exception (\"Psi (\"+swim3.psi[1].ToString()+\") is not equal to expected value of -25 in layer 1\");\n\n            if (!MathUtilities.FloatsAreEqual(swim3.psi[2],-100.0,2))\n            \tthrow new Exception (\"Psi (\"+swim3.psi[2].ToString()+\") is not equal to expected value of -100 in layer 2\");\n\n            if (!MathUtilities.FloatsAreEqual(swim3.psi[3],-1000.0,10))\n            \tthrow new Exception (\"Psi (\"+swim3.psi[3].ToString()+\") is not equal to expected value of -1000 in layer 3\");\n\n            if (!MathUtilities.FloatsAreEqual(swim3.psi[4],-15000.0,15))\n            \tthrow new Exception (\"Psi (\"+swim3.psi[4].ToString()+\") is not equal to expected value of -10000 in layer 4\");\n\n            if (!MathUtilities.FloatsAreEqual(swim3.psi[5],-1000000.0,10000))\n            \tthrow new Exception (\"Psi (\"+swim3.psi[5].ToString()+\") is not equal to expected value of -100000 in layer 5\");\n\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [],
+                          "Name": "Manager",
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
+                  "Name": "Plots",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Daily WaterBalance",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "CalculateRollingWaterBalance.Script.WaterBalanceToday",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Daily WaterBal",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Cumulative WaterBalance",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "CalculateRollingWaterBalance.Script.WaterBalanceCumulative",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Cumulative WaterBal",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WaterStored",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "WaterStored",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Stored",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "PsiOfLowestLayer",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Psi(14)",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "LowerPot",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "WaterRemovedToday",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Gradient",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Psi(14)",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Gradient'",
+                          "Name": "LowerPot",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Drainage",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Gradient'",
+                          "Name": "Drainage",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Drainage (mm)",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Seepage",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Psi(14)",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Seepage'",
+                          "Name": "LowerPot",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Drainage",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Seepage'",
+                          "Name": "Drainage",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Drainage (mm)",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Potential",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Psi(14)",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Potential'",
+                          "Name": "LowerPot",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Drainage",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Potential'",
+                          "Name": "Drainage",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "WaterAddedToday",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[SimulationName] LIKE '*Gradient'",
+                          "Name": "Rain_Irrig",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Drainage",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Drainage",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Drainage",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Drainage",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Drainage",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "CumulativeDrainage",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Drainage",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": true,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Drainage",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WaterUptake",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "CalculateRollingWaterBalance.Script.PlantWaterUptake",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Uptake",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Runoff",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Runoff",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Runoff",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Runoff",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Runoff",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Irrigation",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Irrigation",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Irrigation",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Runoff",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "CumulativeIrrigation",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "Irrigation",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": true,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Irrigation",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
