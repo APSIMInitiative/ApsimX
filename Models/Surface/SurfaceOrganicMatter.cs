@@ -280,6 +280,9 @@ namespace Models.Surface
             }
         }
 
+        /// <summary>The amount of material incorporated into the soil.</summary>
+        public FOMPoolType Incorporated { get; private set; }
+
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
 
@@ -494,6 +497,7 @@ namespace Models.Surface
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             calculatedPotentialDecomposition = false;
+            Incorporated = null;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>
@@ -928,7 +932,7 @@ namespace Models.Surface
             double[] no3 = new double[nLayers]; // total no3 to go into each soil layer (from all surfOM"s)
             double[] nh4 = new double[nLayers]; // total nh4 to go into each soil layer (from all surfOM"s)
             double[] po4 = new double[nLayers]; // total po4 to go into each soil layer (from all surfOM"s)
-            FOMPoolType FPoolProfile = new FOMPoolType();
+            Incorporated = new FOMPoolType();
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
@@ -957,11 +961,11 @@ namespace Models.Surface
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
             
-            FPoolProfile.Layer = new FOMPoolLayerType[deepestLayer + 1];
+            Incorporated.Layer = new FOMPoolLayerType[deepestLayer + 1];
 
             for (int layer = 0; layer <= deepestLayer; layer++)
             {
-                FPoolProfile.Layer[layer] = new FOMPoolLayerType()
+                Incorporated.Layer[layer] = new FOMPoolLayerType()
                 {
                     thickness = soilPhysical.Thickness[layer],
                     no3 = no3[layer],
@@ -971,7 +975,7 @@ namespace Models.Surface
                 };
 
                 for (int i = 0; i < maxFr; i++)
-                    FPoolProfile.Layer[layer].Pool[i] = new FOMType()
+                    Incorporated.Layer[layer].Pool[i] = new FOMType()
                     {
                         C = CPool[i, layer],
                         N = NPool[i, layer],
@@ -980,7 +984,7 @@ namespace Models.Surface
                     };
             }
             if (IncorpFOMPool != null)
-                IncorpFOMPool.Invoke(FPoolProfile);
+                IncorpFOMPool.Invoke(Incorporated);
 
             for (int pool = 0; pool < maxFr; pool++)
             {

@@ -158,24 +158,21 @@ namespace Models.AgPasture
             get { return myLightProfile; }
             set
             {
-                if (value != null)
+                InterceptedRadn = 0.0;
+                myLightProfile = value;
+                foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
                 {
-                    InterceptedRadn = 0.0;
-                    myLightProfile = value;
-                    foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
-                    {
-                        InterceptedRadn += canopyLayer.AmountOnGreen;
-                    }
+                    InterceptedRadn += canopyLayer.AmountOnGreen;
+                }
 
-                    // stuff required to calculate photosynthesis using Ecomod approach
-                    RadiationTopOfCanopy = myMetData.Radn;
-                    fractionGreenCover = 1.0;
-                    swardGreenCover = 0.0;
-                    if (InterceptedRadn > 0.0)
-                    {
-                        fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
-                        swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
-                    }
+                // stuff required to calculate photosynthesis using Ecomod approach
+                RadiationTopOfCanopy = myMetData.Radn;
+                fractionGreenCover = 1.0;
+                swardGreenCover = 0.0;
+                if (InterceptedRadn > 0.0)
+                {
+                    fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
+                    swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
                 }
 
                 // The approach for computing photosynthesis in Ecomod (from which AgPasture is adapted) uses radiation on top of
@@ -197,13 +194,13 @@ namespace Models.AgPasture
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region ICrop implementation  --------------------------------------------------------------------------------------
+            #region ICrop implementation  --------------------------------------------------------------------------------------
 
-        /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
-        /// <remarks>
-        /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
-        /// In AgPasture there is the parameter SpeciesFamily flagging whether a species is a grass or a legume...
-        /// </remarks>
+            /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
+            /// <remarks>
+            /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
+            /// In AgPasture there is the parameter SpeciesFamily flagging whether a species is a grass or a legume...
+            /// </remarks>
         public string PlantType { get; set; }
 
         /// <summary>Flag indicating whether the biomass is from a c4 plant or not</summary>
@@ -756,11 +753,11 @@ namespace Models.AgPasture
         /// <summary>Reference daily DM turnover rate for shoot tissues (0-1).</summary>
         /// <remarks>This is closely related to the leaf appearance rate.</remarks>
         [Units("0-1")]
-        public double TissueTurnoverRefRateShoot { get; set; } = 0.05;
+        public double TissueTurnoverRateShoot { get; set; } = 0.05;
 
         /// <summary>Reference daily DM turnover rate for root tissues (0-1).</summary>
         [Units("0-1")]
-        public double TissueTurnoverRefRateRoot { get; set; } = 0.02;
+        public double TissueTurnoverRateRoot { get; set; } = 0.02;
 
         /// <summary>Relative turnover rate for emerging tissues (>0.0).</summary>
         [Units("-")]
@@ -768,7 +765,7 @@ namespace Models.AgPasture
 
         /// <summary>Reference daily detachment rate for dead tissues (0-1).</summary>
         [Units("0-1")]
-        public double DetachmentRefRateShoot { get; set; } = 0.08;
+        public double DetachmentRateShoot { get; set; } = 0.08;
 
         /// <summary>Minimum temperature for tissue turnover (oC).</summary>
         [Units("oC")]
@@ -831,6 +828,14 @@ namespace Models.AgPasture
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
         public double MaximumNFixation { get; set; } = 0.0;
+
+        /// <summary>Respiration cost factor due to the presence of symbiont bacteria (kgC/kgC in roots).</summary>
+        [Units("kg/kg")]
+        public double SymbiontCostFactor { get; set; } = 0.0;
+
+        /// <summary>Respiration cost factor due to the activity of symbiont bacteria (kgC/kgN fixed).</summary>
+        [Units("kg/kg")]
+        public double NFixingCostFactor { get; set; } = 0.0;
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -900,6 +905,17 @@ namespace Models.AgPasture
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
+
+        ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        /// <summary>Maximum fraction of water or N in the soil that is available to plants.</summary>
+        /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
+        [Units("0-1")]
+        public double MaximumFractionAvailable { get; set; } = 0.999;
+
+        /// <summary>Exponent of function determining soil extractable N.</summary>
+        [Units("-")]
+        public double NuptakeSWFactor { get; set; } = 0.25;
 
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1079,9 +1095,6 @@ namespace Models.AgPasture
         /// <summary>Daily DM turnover rate for stolon tissue (0-1).</summary>
         private double gamaS;
 
-        /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
-        private double ttfLeafNumber;
-
         /// <summary>Tissue turnover factor due to variations in temperature (0-1).</summary>
         private double ttfTemperature;
 
@@ -1092,7 +1105,7 @@ namespace Models.AgPasture
         private double ttfMoistureRoot;
 
         /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
-        private double ttfMoistureLitter;
+        private double ttfLeafNumber;
 
         /// <summary>Effect of defoliation on stolon turnover (0-1).</summary>
         private double cumDefoliationFactor;
@@ -1764,7 +1777,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double NBPP
         {
-            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * (1.0 - fractionToShoot); }
+            get { return (grossPhotosynthesis - respirationGrowth - respirationMaintenance) * (1 - fractionToShoot); }
         }
 
         ////- N flows outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2047,13 +2060,6 @@ namespace Models.AgPasture
             get { return gamaR; }
         }
 
-        /// <summary>Leaf Number factor for tissue turnover (0-1).</summary>
-        [Units("0-1")]
-        public double LeafNumberFactorTurnover
-        {
-            get { return ttfLeafNumber; }
-        }
-
         /// <summary>Temperature factor for tissue turnover (0-1).</summary>
         [Units("0-1")]
         public double TemperatureFactorTurnover
@@ -2061,25 +2067,11 @@ namespace Models.AgPasture
             get { return ttfTemperature; }
         }
 
-        /// <summary>Moisture factor for shoot tissue turnover (0-1).</summary>
+        /// <summary>Moisture factor for tissue turnover (0-1).</summary>
         [Units("0-1")]
-        public double MoistureFactorShootTurnover
+        public double MoistureFactorTurnover
         {
             get { return ttfMoistureShoot; }
-        }
-
-        /// <summary>Moisture factor for root tissue turnover (0-1).</summary>
-        [Units("0-1")]
-        public double MoistureFactorRootTurnover
-        {
-            get { return ttfMoistureRoot; }
-        }
-
-        /// <summary>Moisture factor for shoot tissue detachment (0-1).</summary>
-        [Units("0-1")]
-        public double MoistureFactorShootDetachment
-        {
-            get { return ttfMoistureLitter; }
         }
 
         ////- LAI and cover outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2537,7 +2529,7 @@ namespace Models.AgPasture
                                    deadWt: 0.0, deadN: 0.0);
             roots[0].SetBiomassState(rootWt: MinimumGreenWt * MinimumGreenRootProp,
                                      rootN: MinimumGreenWt * MinimumGreenRootProp * roots[0].NConcOptimum,
-                                     rootDepth: roots[0].MinimumRootingDepth);
+                                     rootDepth: roots[0].RootDepthMinimum);
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
@@ -2617,13 +2609,10 @@ namespace Models.AgPasture
             detachedRootDM = 0.0;
             detachedRootN = 0.0;
 
-            respirationMaintenance = 0.0;
-            respirationGrowth = 0.0;
-            remobilisedC = 0.0;
-
             demandOptimumN = 0.0;
             demandLuxuryN = 0.0;
             fixedN = 0.0;
+
             senescedNRemobilised = 0.0;
             luxuryNRemobilised = 0.0;
 
@@ -2910,7 +2899,7 @@ namespace Models.AgPasture
             // TODO: find a way to use today's GLFwater, or to compute an alternative one
 
             // Get the moisture factor for littering rate (detachment)
-            ttfMoistureLitter = MoistureEffectOnDetachment();
+            double ttfMoistureLitter = MoistureEffectOnDetachment();
 
             // Consider the number of leaves
             ttfLeafNumber = 3.0 / LiveLeavesPerTiller; // three refers to the number of stages used in the model
@@ -2923,7 +2912,7 @@ namespace Models.AgPasture
             double StockFac2Litter = TurnoverStockFactor * SR;
 
             // Turnover rate for leaf and stem tissues
-            gama = TissueTurnoverRefRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
+            gama = TissueTurnoverRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
 
             // Get the factor due to defoliation (increases turnover)
             double defoliationFactor = DefoliationEffectOnTissueTurnover();
@@ -2940,13 +2929,13 @@ namespace Models.AgPasture
             }
 
             // Turnover rate for roots
-            gamaR = TissueTurnoverRefRateRoot * ttfTemperature * ttfMoistureRoot;
+            gamaR = TissueTurnoverRateRoot * ttfTemperature * ttfMoistureRoot;
             gamaR += TurnoverDefoliationRootEffect * defoliationFactor * (1.0 - gamaR);
 
             // Turnover rate for dead material (littering or detachment)
             double digestDead = (Leaf.DigestibilityDead * Leaf.DMDead) + (Stem.DigestibilityDead * Stem.DMDead);
             digestDead = MathUtilities.Divide(digestDead, Leaf.DMDead + Stem.DMDead, 0.0, Epsilon);
-            gamaD = DetachmentRefRateShoot * ttfMoistureLitter * digestDead / CarbonFractionInDM;
+            gamaD = DetachmentRateShoot * ttfMoistureLitter * digestDead;// / CarbonFractionInDM; // Is the CarbonFractionInDM needed here??? What are the units of gamaD
             gamaD += StockFac2Litter;
 
             if ((gama > 1.0) || (gamaS > 1.0) || (gamaD > 1.0) || (gamaR > 1.0))
@@ -3625,7 +3614,7 @@ namespace Models.AgPasture
         /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
         /// <param name="amount">The DM amount (kg/ha)</param>
         /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount')</exception>
-        public void RemoveBiomass(string type, double amount)
+        public Biomass RemoveBiomass(string type, double amount)
         {
             if (isAlive && Harvestable.Wt > Epsilon)
             {
@@ -3652,7 +3641,7 @@ namespace Models.AgPasture
                 // Do the actual removal
                 if (!MathUtilities.FloatsAreEqual(amountToRemove, 0.0, 0.0001))
                 {
-                    RemoveBiomass(amountToRemove);
+                    return RemoveBiomass(amountToRemove);
                 }
 
             }
@@ -3660,6 +3649,7 @@ namespace Models.AgPasture
             {
                 mySummary.WriteMessage(this, " Could not graze due to lack of DM available", MessageType.Warning);
             }
+            return null;
         }
 
         /// <summary>Removes a given amount of biomass (DM and N) from the plant.</summary>
