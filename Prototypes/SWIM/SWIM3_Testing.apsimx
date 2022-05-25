@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 434,
+  "ExplorerWidth": 438,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -18,7 +18,7 @@
       "Children": [
         {
           "$type": "Models.Manager, Models",
-          "Code": "// This script calculates a *WaterBalance* term (output) that adds together the water balance\n// water entering the system (e.g. rain, irrigation) and subtracts the water\n// leaving the system (e.g. runoff, drainage, evaporation, plant water uptake). If mass balance\n// is maintained, the *WaterBalance* variable should always be zero.   \n\n\n\n\nusing Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPlant[] plants;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double WaterBalanceCumulative  { get; set; }\n        public double WaterBalanceToday  { get; set; }\n\n        public double SoilWaterAtInitialisation  { get; set; }\n        public double SoilWaterYesterday  { get; set; }\n\t\tpublic double SoilWaterNow  { get; set; }\n\n\t\tpublic double PlantWaterUptake { get; set; }\n\n        public double WaterAddedToday  { get; set; }\n        public double WaterRemovedToday  { get; set; }\n        public double WaterAddedCumulative  { get; set; }\n        public double WaterRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n        \t// capture the water in and on the soil as a starting point\n        \t// doing this here as need the models to have intialised first\n        \t{\n\t        \tSoilWaterAtInitialisation = waterBalance.Pond;\n    \t    \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\t\tSoilWaterAtInitialisation += waterBalance.SWmm[i];\n\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\n        \t\tWaterAddedCumulative = 0.0;\n        \t\tWaterRemovedCumulative = 0.0;\n        \t\tSoilWaterNow = 0.0;\n        \t}\n        \telse\n        \t{\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\n        \t\tWaterAddedToday = 0.0;\n        \t\tWaterRemovedToday = 0.0;\n        \t}\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\n        \tSoilWaterNow = waterBalance.Pond;\n        \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\tSoilWaterNow += waterBalance.SWmm[i]; // so all the water stored in or on the soil\n\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\n        \tWaterAddedCumulative+= WaterAddedToday;\n\n        \tWaterRemovedToday = waterBalance.Drainage + waterBalance.Es + waterBalance.Runoff;\n        \tPlantWaterUptake = 0.0;\n        \tforeach (var plant in plants)\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\n\n        \tWaterRemovedToday += PlantWaterUptake;\n        \t// Need to add subsurface drainage here\n\n        \tWaterRemovedCumulative += WaterRemovedToday;\n\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+          "Code": "// This script calculates a *WaterBalance* term (output) that adds together the water balance\n// water entering the system (e.g. rain, irrigation) and subtracts the water\n// leaving the system (e.g. runoff, drainage, evaporation, plant water uptake). If mass balance\n// is maintained, the *WaterBalance* variable should always be zero.   \n\n\n\n\nusing Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPlant[] plants;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double WaterBalanceCumulative  { get; set; }\n        public double WaterBalanceToday  { get; set; }\n\n        public double SoilWaterAtInitialisation  { get; set; }\n        public double SoilWaterYesterday  { get; set; }\n\t\tpublic double SoilWaterNow  { get; set; }\n\n\t\tpublic double PlantWaterUptake { get; set; }\n\n        public double WaterAddedToday  { get; set; }\n        public double WaterRemovedToday  { get; set; }\n        public double WaterAddedCumulative  { get; set; }\n        public double WaterRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n        \t// capture the water in and on the soil as a starting point\n        \t// doing this here as need the models to have intialised first\n        \t{\n\t        \tSoilWaterAtInitialisation = waterBalance.Pond;\n    \t    \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\t\tSoilWaterAtInitialisation += waterBalance.SWmm[i];\n\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\n        \t\tWaterAddedCumulative = 0.0;\n        \t\tWaterRemovedCumulative = 0.0;\n        \t\tSoilWaterNow = 0.0;\n        \t}\n        \telse\n        \t{\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\n        \t\tWaterAddedToday = 0.0;\n        \t\tWaterRemovedToday = 0.0;\n        \t}\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\n        \tSoilWaterNow = waterBalance.Pond;\n        \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\tSoilWaterNow += waterBalance.SWmm[i]; // so all the water stored in or on the soil\n\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\n        \tWaterAddedCumulative+= WaterAddedToday;\n\n        \tWaterRemovedToday = waterBalance.Drainage + waterBalance.Es + waterBalance.Runoff + waterBalance.SubsurfaceDrain;\n        \tPlantWaterUptake = 0.0;\n        \tforeach (var plant in plants)\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\n\n        \tWaterRemovedToday += PlantWaterUptake;\n        \t// Need to add subsurface drainage here\n\n        \tWaterRemovedCumulative += WaterRemovedToday;\n\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
           "Parameters": [],
           "Name": "CalculateRollingWaterBalance",
           "Enabled": true,
@@ -3261,6 +3261,23 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"What lower boundary condition is wanted?\")] \n        public LowerBCTypeOptions LowerBCType { get; set; }\n        \r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")]\n        [Display(EnabledCallback = \"IsPotential\")] \n        public double LowerBCValue { get; set; }\n        \n        /// <summary></summary>\n        public bool IsPotential => LowerBCType == LowerBCTypeOptions.potential;\n        \r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "LowerBCType",
+                          "Value": "potential"
+                        },
+                        {
+                          "Key": "LowerBCValue",
+                          "Value": "-2700"
+                        }
+                      ],
+                      "Name": "SWIMSetLowerBC",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Soils.Soil, Models",
                       "RecordNumber": 42,
                       "ASCOrder": null,
@@ -4109,7 +4126,7 @@
                               "DrainSpacing": 13500.0,
                               "DrainRadius": 52.0,
                               "Klat": 1000.0,
-                              "ImpermDepth": 3900.0,
+                              "ImpermDepth": 4500.0,
                               "Name": "SwimSubsurfaceDrain",
                               "Children": [],
                               "Enabled": true,
@@ -4778,23 +4795,6 @@
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"What lower boundary condition is wanted?\")] \n        public LowerBCTypeOptions LowerBCType { get; set; }\n        \r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")]\n        [Display(EnabledCallback = \"IsPotential\")] \n        public double LowerBCValue { get; set; }\n        \n        /// <summary></summary>\n        public bool IsPotential => LowerBCType == LowerBCTypeOptions.potential;\n        \r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "LowerBCType",
-                              "Value": "potential"
-                            },
-                            {
-                              "Key": "LowerBCValue",
-                              "Value": "-2700"
-                            }
-                          ],
-                          "Name": "SWIMSetLowerBC",
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -6039,6 +6039,98 @@
                           "CumulativeX": false,
                           "Filter": "[Clock.Today]>='2014-01-01'",
                           "Name": "Obs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Drainage",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Outputfile",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "SWIM.Drainage",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[Clock.Today]>='2014-01-01'",
+                          "Name": "NG",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -11094807,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Classic",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "drain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[Clock.Today]>='2014-01-01'",
+                          "Name": "Classic",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -16081,7 +16173,7 @@
                   "FactorToVaryLines": null,
                   "Marker": 5,
                   "MarkerSize": 0,
-                  "Line": 2,
+                  "Line": 4,
                   "LineThickness": 0,
                   "TableName": "PredictedObserved",
                   "XFieldName": "Observed.Watertable",
@@ -26328,7 +26420,7 @@
                           "Parameters": [
                             {
                               "Key": "LowerBCType",
-                              "Value": "gradient"
+                              "Value": "potential"
                             },
                             {
                               "Key": "LowerBCValue",
@@ -28055,6 +28147,70 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Psi10",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Irrigation.IrrigationApplied",
+                          "Position": 2,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WaterTable",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Date",
+                          "YFieldName": "WaterTableDepth",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Irrigation",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
