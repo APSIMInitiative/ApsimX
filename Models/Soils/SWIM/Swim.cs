@@ -3217,7 +3217,12 @@ namespace Models.Soils
             double psiValue;
 
             if (theta == soilPhysical.SAT[node])
-                return 0.0;
+            {
+                if (_psi[node] > 0)
+                    return _psi[node];
+                else
+                    return 0;
+            }
             else
             {
                 if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
