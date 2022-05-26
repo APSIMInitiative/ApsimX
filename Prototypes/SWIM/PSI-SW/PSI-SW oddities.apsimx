@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 144,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -22,7 +22,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "1994-08-05T00:00:00",
-          "End": "1994-08-31T00:00:00",
+          "End": "1999-08-31T00:00:00",
           "Name": "clock",
           "Children": [],
           "Enabled": true,
@@ -30,9 +30,7 @@
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "summaryfile",
           "Children": [],
           "Enabled": true,
@@ -262,24 +260,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -494,24 +474,6 @@
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     100.0,
@@ -630,24 +592,6 @@
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -753,24 +697,6 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -834,6 +760,9 @@
                 {
                   "$type": "Models.Soils.Swim3, Models",
                   "PrecipitationInterception": 0.0,
+                  "ersoil": 1E-06,
+                  "ernode": 1E-06,
+                  "slcerr": 1E-06,
                   "theta": null,
                   "psi": null,
                   "Salb": 0.13,
