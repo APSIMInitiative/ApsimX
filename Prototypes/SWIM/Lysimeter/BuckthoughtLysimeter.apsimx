@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 148,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -45,7 +45,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0,4",
+                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0,2,4",
                   "Name": "Fert",
                   "Children": [],
                   "Enabled": true,
@@ -53,7 +53,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreatmentUrine].Script.UrineLevel = Autumn",
+                  "Specification": "[TreatmentUrine].Script.UrineLevel = Autumn,Spring,None",
                   "Name": "Urine",
                   "Children": [],
                   "Enabled": true,
@@ -61,54 +61,6 @@
                 }
               ],
               "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Permutation, Models",
-              "Name": "Permutation1",
-              "Children": [
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0",
-                  "Name": "Fert",
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreatmentUrine].Script.UrineLevel = None",
-                  "Name": "Urine",
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Permutation, Models",
-              "Name": "Permutation2",
-              "Children": [
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0,2,4",
-                  "Name": "Fert",
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[TreatmentUrine].Script.UrineLevel = None,Spring,Autumn",
-                  "Name": "Urine",
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": false,
               "ReadOnly": false
             }
           ],
@@ -119,7 +71,7 @@
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
           "Descriptors": null,
-          "Name": "Base",
+          "Name": "BaseBuckthought",
           "Children": [
             {
               "$type": "Models.Climate.Weather, Models",
@@ -146,27 +98,6 @@
               "Name": "Summary",
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\nusing Models.PMF;\r\nusing Models.Core;\nusing Models.Interfaces;\r\nusing System;\nusing System.Linq;\nusing System.Data;\nusing System.IO;\nusing System.Collections.Generic;\nusing System.Diagnostics;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\n        [Link] IWeather weather;\n        [Link] Simulation simulation;\n        \n        private DataTable data;\n        private List<DateTime> dates = new List<DateTime>();\n        private DateTime startDate;\n        private DateTime endDate;\n\n        [Description(\"Name of file containing weather data to patch:\")]\r\n        public string patchFileName { get; set; }\r\n\r\n        [Description(\"Date to start patching weather data (can be blank):\")]\r\n        public string date1 { get; set; }\r\n\r\n        [Description(\"Date to stop patching weather data: (can be blank)\")]\r\n        public string date2 { get; set; }\n\n\t\t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t\t// Ensure filename is relative to the directory where the .apsimx file is located.\n\t\t\tstring fullFileName = PathUtilities.GetAbsolutePath(patchFileName, simulation.FileName);\n\t\t\n\t\t\t// Read in data.\n\t\t\tdata = ApsimTextFile.ToTable(fullFileName);\n\t\t\tforeach (DataRow row in data.Rows)\n\t\t\t\tdates.Add(DataTableUtilities.GetDateFromRow(row));\n\t\t\t\n\t\t\t// Ensure startDate and endDate always have a value.\n\t\t\tif (string.IsNullOrEmpty(date1))\n\t\t\t\tstartDate = clock.StartDate;\n\t\t\telse\n\t\t\t\tstartDate = DateTime.Parse(date1);\n\n \t\t\tif (string.IsNullOrEmpty(date2))\n\t\t\t\tendDate = clock.EndDate;\n\t\t\telse\n\t\t\t\tendDate = DateTime.Parse(date2);\n\n\t\t}\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n\t\t\tif (clock.Today >= startDate && clock.Today <= endDate)\n\t\t\t{\n\t\t\t\t// check to see if we have a row of data for today.\n\t\t\t\tint rowIndex = dates.IndexOf(clock.Today);\n\t\t\t\tif (rowIndex != -1)\n\t\t\t\t{\n\t\t\t\t\t// Yes we do have data for today so patch the data.\n\t\t\t\t\tforeach (DataColumn column in data.Columns)\n\t\t\t\t\t{\n\t\t\t\t\t\tif (column.ColumnName.Equals(\"Rain\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.Rain = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"MaxT\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.MaxT = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"MinT\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.MinT = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"Radn\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.Radn = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"CO2\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.CO2 = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"VP\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.VP = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\r\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "date1",
-                  "Value": "2011-01-01"
-                },
-                {
-                  "Key": "date2",
-                  "Value": "2012-08-27"
-                },
-                {
-                  "Key": "patchFileName",
-                  "Value": "NgahereManualRainfall.met"
-                }
-              ],
-              "Name": "PatchRainfall",
-              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -390,7 +321,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        \n        [Description(\"What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n\n\n        [Display(VisibleCallback = \"IsBCPotential\")]\n        [Description(\"What should the lower BC potential be set to (should be positive for a watertable) (mm)?\")] public double LowerBCValue { get; set; }\n        \n\t\tpublic bool IsBCPotential => LowerBCType == LowerBCTypeOptions.potential;\n\n\n\n\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "LowerBCType",
@@ -398,7 +329,7 @@
                     },
                     {
                       "Key": "LowerBCValue",
-                      "Value": "-500"
+                      "Value": "700"
                     }
                   ],
                   "Name": "SWIM3_SetLowerBC",
@@ -460,8 +391,12 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Diagnostics;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n    \n    \t//<Link()> Dim MyPaddock As Paddock\n   \t\t[Link] Swim3 swim;\n   \t\t[Link] Nutrient nutrient;\n   \t\t[Link] Clock clock;\n   \t\t[Link] ISoilWater waterBalance;\n\n   \t\t// Parameter variables:\n   \t\t[Description(\"Date that autumn urine is applied\")]\n   \t\tpublic string AutumnUrinePatch_date_str { get; set;}\n   \t\t\n   \t\t[Description(\"Date that spring urine is applied\")]\n   \t\tpublic string SpringUrinePatch_date_str { get; set;}\n\n  \t\t[Description(\"Type the amount of water to apply (mm):\")]\n   \t\t[Units(\"mm\")]\n  \t\tpublic double Urine_Water_to_add { get; set;}\n  \t\t\n   \t\t[Description(\"Type the amount of urea N to apply (kg/ha):\")]\n   \t\t[Units(\"kg/ha\")]\n   \t\tpublic double Urine_N_to_add { get; set;}\n   \t\t\n  \t\t[Description(\"Type the amount of Br to apply (kg/ha):\")]\n   \t\t[Units(\"kg/ha\")] \n   \t\tpublic double Br_to_add { get; set;}\n   \n  \t\t[Description(\"The depth reached by urine (mm):\")]\n   \t\tpublic double Depth_for_urine { get; set;}\n   \n   \t\tpublic enum UrineLevelOptions { None, Autumn, Spring }\n   \t\t\n   \t\t// Variables read from other modules\n\t    [Description(\"The urine level:\")]\n   \t\tpublic UrineLevelOptions UrineLevel {get; set; }    \n\n\t\t// Output variables\n\t\tprivate double Urine;        // Amount of urine applied today\n   \t\tprivate DateTime UrinePatch_date;\n\n   \t\t// Internal variables\n   \t\tprivate DateTime AutumnUrinePatch_date;\n   \t\tprivate DateTime SpringUrinePatch_date;\n   \t\tprivate DateTime AppDate;             // The date when urine applications start (in date format)\n   \t\tprivate DateTime Today;               // The date of today (in date format)\n   \t\tprivate double[] Urine_prop;          // The potential proportion of urine for each soil layer\n   \t\tprivate double[] Urine_prop_cum;      // The potential proportion of urine for each soil layer\n   \t\tprivate double SoilDepth;             // The soil depth (mm)\n   \t\tprivate bool Add_Urine;\n\n\t\t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t\t//Debugger.Break();\n\t\t\t\n      \t\t// Put the dates into date format:\n      \t\tAutumnUrinePatch_date = DateTime.Parse(AutumnUrinePatch_date_str);\n      \t\tSpringUrinePatch_date = DateTime.Parse(SpringUrinePatch_date_str);\n      \t\n\t      \tif (UrineLevel == UrineLevelOptions.None)\n\t         \tUrinePatch_date = new DateTime(2020, 12, 31);    // ie - not within this simulation\n      \t\telse if (UrineLevel == UrineLevelOptions.Autumn)\n         \t\tUrinePatch_date = AutumnUrinePatch_date; \n      \t\telse if (UrineLevel == UrineLevelOptions.Spring)\n         \t\tUrinePatch_date = SpringUrinePatch_date; \n      \t\telse\n         \t\tthrow new Exception(\"Incorrect urine date information\");\n\n      \t\tUrine_prop = new double[waterBalance.Thickness.Length];\n  \t\t    Urine_prop_cum = new double[waterBalance.Thickness.Length];\n  \n      \t\tSoilDepth = 0.0;\n      \t\tfor (int z = 0; z < waterBalance.Thickness.Length; z++)\n      \t\t{\n\t        \tif (SoilDepth <= Depth_for_urine)   // this is at start depth\n           \t\t\tUrine_prop[z] = waterBalance.Thickness[z] / Depth_for_urine;\n         \t\telse\n            \t\tUrine_prop[z] = 0.0;\n         \n         \t\tSoilDepth += waterBalance.Thickness[z];   // no updated to end current depth\n         \n         \t\tif (z == 0)\n            \t\tUrine_prop_cum[z] = Urine_prop[z];\n         \t\telse\n            \t\tUrine_prop_cum[z] = Urine_prop[z] + Urine_prop_cum[z - 1];\n\n         \t\tif (Urine_prop_cum[z] <= 1.0)\n         \t\t{\n            \t\t// do nothing\n            \t}\n         \t\telse\n         \t\t{\n            \t\tUrine_prop[z] = Math.Max(0.0, 1.0 - Urine_prop_cum[z - 1]);\n            \t\tUrine_prop_cum[z] = Urine_prop[z] + Urine_prop_cum[z - 1];\n         \t\t}\n      \t\t}\n    \t}\n    \t\n\t\t[EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n      \t{\n      \t\tUrine = 0.0;\n   \n\t      \tAdd_Urine = clock.Today == UrinePatch_date;\n      \n      \t\tif (Add_Urine)\n      \t\t{\n         \t\tdouble[] Ini_swdep = waterBalance.SWmm;\n         \t\tdouble[] Ini_urea  = nutrient.Urea.kgha;\n\n\t\t        Urine = Urine_N_to_add;\n\n         \t\tdouble[] New_swdep = new double[waterBalance.Thickness.Length];         \n         \t\tdouble[] New_urea = new double[waterBalance.Thickness.Length];\n\n\t\t        for (int z = 0; z < waterBalance.Thickness.Length; z++)\n\t\t        {\n            \t\tNew_swdep[z] = Ini_swdep[z] + Urine_prop[z] * Urine_Water_to_add;\n            \t\tNew_urea[z] = Ini_urea[z] + Urine_prop[z] * Urine_N_to_add;\n            \t}\n\t         \n\t\t        nutrient.Urea.SetKgHa(SoluteSetterType.Other, New_urea);\n      \t\t}\n      \t}\n\t}\n}    ",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Diagnostics;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n    \n    \t//<Link()> Dim MyPaddock As Paddock\n   \t\t[Link] Swim3 swim;\n   \t\t[Link] Nutrient nutrient;\n   \t\t[Link] Clock clock;\n   \t\t[Link] ISoilWater waterBalance;\n\n   \t\t// Parameter variables:\n   \t\t[Description(\"Date that autumn urine is applied\")]\n   \t\tpublic string AutumnUrinePatch_date_str { get; set;}\n   \t\t\n   \t\t[Description(\"Date that spring urine is applied\")]\n   \t\tpublic string SpringUrinePatch_date_str { get; set;}\n\n  \t\t[Description(\"The amount of urine as a depth of water (mm):\")]\n   \t\t[Units(\"mm\")]\n  \t\tpublic double Urine_Water_to_add { get; set;}\n  \t\t\n   \t\t[Description(\"Amount of N in the urine (kg/ha):\")]\n   \t\t[Units(\"kgN/ha\")]\n   \t\tpublic double Urine_N_to_add { get; set;}\n   \t\t\n  \t\t//[Description(\"Type the amount of Br to apply (kg/ha):\")]\n   \t\t//[Units(\"kg/ha\")] \n   \t\t//public double Br_to_add { get; set;}\n   \n  \t\t[Description(\"The depth reached by urine (mm):\")]\n   \t\tpublic double Depth_for_urine { get; set;}\n   \n   \t\tpublic enum UrineLevelOptions { None, Autumn, Spring }\n   \t\t\n   \t\t// Variables read from other modules\n\t    [Description(\"The urine level:\")]\n   \t\tpublic UrineLevelOptions UrineLevel {get; set; }    \n\n\t\t// Output variables\n\t\tprivate double Urine;        // Amount of urine applied today\n   \t\tprivate DateTime UrinePatch_date;\n\n   \t\t// Internal variables\n   \t\tprivate DateTime AutumnUrinePatch_date;\n   \t\tprivate DateTime SpringUrinePatch_date;\n   \t\tprivate DateTime AppDate;             // The date when urine applications start (in date format)\n   \t\tprivate DateTime Today;               // The date of today (in date format)\n   \t\tprivate double[] Urine_prop;          // The potential proportion of urine for each soil layer\n   \t\tprivate double[] Urine_prop_cum;      // The potential proportion of urine for each soil layer\n   \t\tprivate double SoilDepth;             // The soil depth (mm)\n   \t\tprivate bool Add_Urine;\n\n\t\t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t\t//Debugger.Break();\n\t\t\t\n      \t\t// Put the dates into date format:\n      \t\tAutumnUrinePatch_date = DateTime.Parse(AutumnUrinePatch_date_str);\n      \t\tSpringUrinePatch_date = DateTime.Parse(SpringUrinePatch_date_str);\n      \t\n\t      \tif (UrineLevel == UrineLevelOptions.None)\n\t         \tUrinePatch_date = new DateTime(3000, 12, 31);    // ie - not within this simulation\n      \t\telse if (UrineLevel == UrineLevelOptions.Autumn)\n         \t\tUrinePatch_date = AutumnUrinePatch_date; \n      \t\telse if (UrineLevel == UrineLevelOptions.Spring)\n         \t\tUrinePatch_date = SpringUrinePatch_date; \n      \t\telse\n         \t\tthrow new Exception(\"Incorrect urine date information\");\n\n      \t\tUrine_prop = new double[waterBalance.Thickness.Length];\n  \t\t    Urine_prop_cum = new double[waterBalance.Thickness.Length];\n  \n      \t\tSoilDepth = 0.0;\n      \t\tfor (int z = 0; z < waterBalance.Thickness.Length; z++)\n      \t\t{\n\t        \tif (SoilDepth <= Depth_for_urine)   // this is at start depth\n           \t\t\tUrine_prop[z] = waterBalance.Thickness[z] / Depth_for_urine;\n         \t\telse\n            \t\tUrine_prop[z] = 0.0;\n         \n         \t\tSoilDepth += waterBalance.Thickness[z];   // no updated to end current depth\n         \n         \t\tif (z == 0)\n            \t\tUrine_prop_cum[z] = Urine_prop[z];\n         \t\telse\n            \t\tUrine_prop_cum[z] = Urine_prop[z] + Urine_prop_cum[z - 1];\n\n         \t\tif (Urine_prop_cum[z] <= 1.0)\n         \t\t{\n            \t\t// do nothing\n            \t}\n         \t\telse\n         \t\t{\n            \t\tUrine_prop[z] = Math.Max(0.0, 1.0 - Urine_prop_cum[z - 1]);\n            \t\tUrine_prop_cum[z] = Urine_prop[z] + Urine_prop_cum[z - 1];\n         \t\t}\n      \t\t}\n    \t}\n    \t\n\t\t[EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n      \t{\n      \t\tUrine = 0.0;\n   \n\t      \tAdd_Urine = clock.Today == UrinePatch_date;\n      \n      \t\tif (Add_Urine)\n      \t\t{\n         \t\tdouble[] Ini_swdep = waterBalance.SWmm;\n         \t\tdouble[] Ini_urea  = nutrient.Urea.kgha;\n\n\t\t        Urine = Urine_N_to_add;\n\n         \t\tdouble[] New_swdep = new double[waterBalance.Thickness.Length];         \n         \t\tdouble[] New_urea = new double[waterBalance.Thickness.Length];\n\n\t\t        for (int z = 0; z < waterBalance.Thickness.Length; z++)\n\t\t        {\n            \t\tNew_swdep[z] = Ini_swdep[z] + Urine_prop[z] * Urine_Water_to_add;\n            \t\tNew_urea[z] = Ini_urea[z] + Urine_prop[z] * Urine_N_to_add;\n            \t}\n\t         \n\t\t        nutrient.Urea.SetKgHa(SoluteSetterType.Other, New_urea);\n      \t\t}\n      \t}\n\t}\n}    ",
                   "Parameters": [
+                    {
+                      "Key": "UrineLevel",
+                      "Value": "None"
+                    },
                     {
                       "Key": "AutumnUrinePatch_date_str",
                       "Value": "2011-05-04"
@@ -479,16 +414,8 @@
                       "Value": "800"
                     },
                     {
-                      "Key": "Br_to_add",
-                      "Value": "0"
-                    },
-                    {
                       "Key": "Depth_for_urine",
                       "Value": "150"
-                    },
-                    {
-                      "Key": "UrineLevel",
-                      "Value": "None"
                     }
                   ],
                   "Name": "TreatmentUrine",
@@ -518,9 +445,9 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\nusing Models.Functions;\nusing System.Diagnostics;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPlant[] plants;\n        [Link(ByName=true)] PastureSpecies AGPRyegrass;\n        //[Link(ByName=true)] PastureSpecies AGPWhiteClover;\n        [Link] private Swim3 Swim;\n       // [Link(ByName=true)] private NutrientPool NO3; \n\n\n        //[Description(\"Winter white clover generic growth limiting factor; default = 1\")]\n        //public double WinterWhiteGlfGeneric { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t\t\t{\n\t\t\t\t//AGPWhiteClover.GlfGeneric = 0.5;\n\t\t\t\t//AGPRyegrass.UseColdStressFactor = 0;\n\t\t\t\t//AGPRyegrass.Root.KNO3 = 0.1;\n\t\t\t\t//Swim.ernode = 0.001;\n\t\t\t\t//Swim.ersoil = 0.001;\n\t\t\t\t//Swim.slcerr = 0.001;\n\t\t\t\t\n\t\t\t\t//Debugger.Break();\n\t\t\t\tvar denitrificationModel = FindByPath(\"[Nutrient].NO3.Denitrification.Rate\").Value as CERESDenitrificationModel;\n\t\t\t\tdenitrificationModel.DenitrificationRateModifier = 0.0001; // default is 0.0006\n\n\t\t\t\tvar nitrifN2ORateConst = FindByPath(\"[Nutrient].NH4.Nitrification.NLoss\").Value as Constant;\n\t\t\t\tnitrifN2ORateConst.FixedValue = 0.0002; // default is 0.002\n\n\t\t\t\tdenitrificationModel.IsInertActive = true; // default is true\n\n\t\t\t}\n        \telse\n        \t{\n        \t}\n\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        }\n\n    }\n}\n",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\nusing Models.Functions;\nusing System.Diagnostics;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPlant[] plants;\n        [Link(ByName=true)] PastureSpecies AGPRyegrass;\n        //[Link(ByName=true)] PastureSpecies AGPWhiteClover;\n        [Link] private Swim3 Swim;\n       // [Link(ByName=true)] private NutrientPool NO3; \n\n\n        //[Description(\"Winter white clover generic growth limiting factor; default = 1\")]\n        //public double WinterWhiteGlfGeneric { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t\t\t{\n\t\t\t\t//AGPWhiteClover.GlfGeneric = 0.5;\n\t\t\t\t//AGPRyegrass.UseColdStressFactor = 0;\n\t\t\t\t//AGPRyegrass.Root.KNO3 = 0.1;\n\t\t\t\t//Swim.ernode = 0.001;\n\t\t\t\t//Swim.ersoil = 0.001;\n\t\t\t\t//Swim.slcerr = 0.001;\n\t\t\t\t\n\t\t\t\t//Debugger.Break();\n\t\t\t\tvar denitrificationModel = FindByPath(\"[Nutrient].NO3.Denitrification.Rate\").Value as CERESDenitrificationModel;\n\t\t\t\tdenitrificationModel.DenitrificationRateModifier = 0.0001; // default is 0.0006\n\n\t\t\t\tvar nitrifN2ORateConst = FindByPath(\"[Nutrient].NH4.Nitrification.NLoss\").Value as Constant;\n\t\t\t\tnitrifN2ORateConst.FixedValue = 0.002; // default is 0.002\n\n\t\t\t\tdenitrificationModel.IsInertActive = false; // default is true\n\n\t\t\t}\n        \telse\n        \t{\n        \t}\n\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        }\n\n    }\n}\n",
                   "Parameters": [],
-                  "Name": "Fiddle",
+                  "Name": "AddressCarbonAndNitrogenIssues",
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -530,139 +457,151 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2010-12-21",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [AGPRyegrass].RemoveBiomass(\"setresidueamount\", 1450)",
+                      "Enabled": false
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-21",
+                      "Action": " [AGPWhiteClover].RemoveBiomass(\"setresidueamount\", 250)",
+                      "Enabled": false
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-21",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-01-06",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-02-20",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-03-23",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-04-29",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-04-11",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-05-31",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-06-27",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-07-28",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-09-06",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-09-28",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-10-16",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-11-03",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-11-17",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-12-05",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2011-12-19",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-01-12",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-02-07",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-03-13",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-04-13",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-05-17",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-07-02",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2012-08-24",
-                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1700)",
                       "Enabled": true
                     }
                   ],
@@ -973,17 +912,17 @@
                   "$type": "Models.AgPasture.PastureSpecies, Models",
                   "InitialShootDM": 500.0,
                   "InitialRootDM": 250.0,
-                  "InitialRootDepth": 0.17,
+                  "InitialRootDepth": 250.0,
                   "ResourceName": "AGPWhiteClover",
                   "Name": "AGPWhiteClover",
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                   "InitialResidueName": "grass",
                   "InitialResidueType": "grass",
-                  "InitialResidueMass": 20.0,
+                  "InitialResidueMass": 200.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 17.0,
@@ -1133,7 +1072,7 @@
                           "LLMetadata": null,
                           "KLMetadata": null,
                           "XFMetadata": null,
-                          "Name": "AgPRyegrassSoil",
+                          "Name": "AGPRyegrassSoil",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1164,9 +1103,9 @@
                           "LLMetadata": null,
                           "KLMetadata": null,
                           "XFMetadata": null,
-                          "Name": "AgPWhiteCloverSoil",
+                          "Name": "AGPWhiteCloverSoil",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
@@ -1175,7 +1114,7 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "FOMCNRatio": 40.0,
+                      "FOMCNRatio": 20.0,
                       "Thickness": [
                         60.0,
                         110.0,
@@ -1212,11 +1151,11 @@
                         0.99
                       ],
                       "FOM": [
-                        92.873,
-                        57.963,
-                        31.810856349632882,
-                        11.372932585525932,
-                        5.9797517560712565
+                        200.0,
+                        100.0,
+                        60.0,
+                        20.0,
+                        0.0
                       ],
                       "CarbonMetadata": null,
                       "FOMMetadata": null,
@@ -1303,8 +1242,8 @@
                       "PSIDul": -100.0,
                       "VC": true,
                       "DTMin": 0.0,
-                      "DTMax": 60.0,
-                      "MaxWaterIncrement": 5.0,
+                      "DTMax": 1440.0,
+                      "MaxWaterIncrement": 10.0,
                       "SpaceWeightingFactor": 0.0,
                       "SoluteSpaceWeightingFactor": 0.0,
                       "Dis": 0.0,
@@ -1570,7 +1509,7 @@
                             0.442,
                             0.517
                           ],
-                          "Name": "NH41",
+                          "Name": "NH4_nonlinear",
                           "Children": [],
                           "Enabled": false,
                           "ReadOnly": false
@@ -1631,6 +1570,58 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 20.0,
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        150.0
+                      ],
+                      "Carbon": [
+                        8.2,
+                        5.5,
+                        3.3,
+                        1.7,
+                        1.7
+                      ],
+                      "SoilCNRatio": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
+                      "FBiom": [
+                        0.08,
+                        0.02,
+                        0.015,
+                        0.01,
+                        0.01
+                      ],
+                      "FInert": [
+                        0.58,
+                        0.7,
+                        0.77,
+                        0.9,
+                        0.99
+                      ],
+                      "FOM": [
+                        92.873,
+                        57.963,
+                        31.810856349632882,
+                        11.372932585525932,
+                        5.9797517560712565
+                      ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
+                      "Name": "Organic1",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -1642,14 +1633,15 @@
                     "[Clock].Today",
                     "[Weather].Rain",
                     "[Irrigation].IrrigationApplied",
-                    "[AGPRyegrass].AboveGroundWt + as AboveGroundBiomass",
-                    "[AGPRyegrass].HarvestedWt + as HarvestedWt",
-                    "[AGPRyegrass].HarvestedN + as HarvestedN",
+                    "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as AboveGroundBiomass",
+                    "[AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt as HarvestedWt",
+                    "[AGPRyegrass].HarvestedN + [AGPWhiteClover].HarvestedN as HarvestedN",
                     "[Swim].Drainage",
                     "[Swim].LeachNO3",
                     "[Swim].LeachNH4",
                     "sum([Nutrient].DenitrifiedN) as DenitrifiedN",
                     "sum([Nutrient].N2Oatm[1:8]) as N2Oatm",
+                    "",
                     "",
                     "",
                     "",
@@ -1709,6 +1701,7 @@
                     "// biom_c"
                   ],
                   "EventNames": [
+                    "//[Clock].DoReport",
                     "Clock.Today >= new DateTime(2011, 2, 21)"
                   ],
                   "GroupByVariableName": null,
@@ -2758,7 +2751,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "RainAndIrrigation",
                   "Children": [],
                   "Enabled": true,
@@ -2786,7 +2779,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "RainAndIrrigation1",
                   "Children": [],
                   "Enabled": true,
@@ -2850,7 +2843,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Drainage",
                   "Children": [],
                   "Enabled": true,
@@ -2878,7 +2871,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "SoilWaterEvap",
                   "Children": [],
                   "Enabled": true,
@@ -2906,7 +2899,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Uptake",
                   "Children": [],
                   "Enabled": true,
@@ -3006,7 +2999,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "RyegrassDemand",
+                  "Title": "MicroClimate.PetTotal",
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -3044,7 +3037,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Demand",
                   "Children": [],
                   "Enabled": true,
@@ -3072,7 +3065,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Uptake",
                   "Children": [],
                   "Enabled": true,
@@ -3100,7 +3093,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "PET",
                   "Children": [],
                   "Enabled": true,
@@ -3128,7 +3121,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Demand1",
                   "Children": [],
                   "Enabled": true,
@@ -3156,7 +3149,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Uptake1",
                   "Children": [],
                   "Enabled": true,
@@ -3184,7 +3177,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "PET1",
                   "Children": [],
                   "Enabled": true,
@@ -3220,7 +3213,7 @@
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "RainIrrig",
+                  "Title": "MicroClimate.PetTotal",
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
@@ -3258,7 +3251,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Demand",
                   "Children": [],
                   "Enabled": true,
@@ -3286,7 +3279,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Uptake",
                   "Children": [],
                   "Enabled": true,
@@ -3314,7 +3307,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "PET",
                   "Children": [],
                   "Enabled": true,
@@ -3342,7 +3335,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Demand1",
                   "Children": [],
                   "Enabled": true,
@@ -3370,7 +3363,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "Uptake1",
                   "Children": [],
                   "Enabled": true,
@@ -3398,7 +3391,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": true,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[SimulationName] LIKE 'ExperimentFert4UrineAutumn'",
                   "Name": "PET1",
                   "Children": [],
                   "Enabled": true,
@@ -3413,14 +3406,6 @@
           "ReadOnly": false
         }
       ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
-      "Text": "0.599\n0.100\n0.100\n0.100\n0.100\n",
-      "Name": "Memo",
-      "Children": [],
       "Enabled": true,
       "ReadOnly": false
     }
