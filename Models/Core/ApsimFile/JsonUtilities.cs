@@ -361,6 +361,18 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Replaces the type a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        /// <param name="currentType">Type of child model to replace, including full namespace</param>
+        /// <param name="newType">New type of child model, including full namespace</param>
+        public static void ReplaceChildModelType(JObject node, string currentType, string newType)
+        {
+            foreach (JObject child in ChildrenRecursively(node, currentType))
+                child["$type"] = child["$type"].ToString().Replace(currentType, newType);
+        }
+
+        /// <summary>
         /// Gets a list of property values.
         /// </summary>
         /// <param name="node">The model node to look under.</param>
