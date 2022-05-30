@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 601,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -1725,6 +1725,14 @@
                   "Name": "NFillingRate",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nFirst half of the Grainfilling Period is calculated using Grain Filling Rate.\n2nd half is calculated using the maximum N Concentration of todays Biomass\n\nAmount of N filled per day is limited by the Target N Concentration at all times.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "StartGrainFill",
                       "End": "Maturity",
@@ -1734,14 +1742,6 @@
                           "$type": "Models.Functions.LessThanFunction, Models",
                           "Name": "LessThanFunction",
                           "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "\nFirst half of the Grainfilling Period is calculated using Grain Filling Rate\n2nd half is calculated using the maximum N Concentration of todays Biomass\n\nAmount of N filled per day is limited by the Target N Concentration at all times.",
-                              "Name": "Memo",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
                             {
                               "$type": "Models.Functions.DivideFunction, Models",
                               "Name": "gfFract",
@@ -2730,6 +2730,14 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1000000.0,
                   "Units": null,
@@ -3127,7 +3135,7 @@
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "StartGrainFill",
                               "End": "HarvestRipe",
-                              "Name": "BetweenFloweringAndGrainFill1",
+                              "Name": "BetweenGrainFillAndHarvest",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -3226,11 +3234,11 @@
                         },
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "NRequiredToMaintainMinConcenctration",
                           "Children": [
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": " required",
+                              "Name": "NRequired",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -3242,7 +3250,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.AddFunction, Models",
-                                  "Name": "AddFunction",
+                                  "Name": "CurrentDM",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
@@ -3589,14 +3597,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].MinimumNConc",
-                  "Name": "CriticalNConc",
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
