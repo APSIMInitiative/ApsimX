@@ -2946,7 +2946,7 @@ namespace Models.AgPasture
             // Turnover rate for dead material (littering or detachment)
             double digestDead = (Leaf.DigestibilityDead * Leaf.DMDead) + (Stem.DigestibilityDead * Stem.DMDead);
             digestDead = MathUtilities.Divide(digestDead, Leaf.DMDead + Stem.DMDead, 0.0, Epsilon);
-            gamaD = DetachmentRefRateShoot * ttfMoistureLitter * digestDead / CarbonFractionInDM;
+            gamaD = DetachmentRefRateShoot * ttfMoistureLitter * digestDead;// / CarbonFractionInDM; // Is the CarbonFractionInDM needed here??? What are the units of gamaD
             gamaD += StockFac2Litter;
 
             if ((gama > 1.0) || (gamaS > 1.0) || (gamaD > 1.0) || (gamaR > 1.0))
@@ -3625,7 +3625,7 @@ namespace Models.AgPasture
         /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
         /// <param name="amount">The DM amount (kg/ha)</param>
         /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount')</exception>
-        public void RemoveBiomass(string type, double amount)
+        public Biomass RemoveBiomass(string type, double amount)
         {
             if (isAlive && Harvestable.Wt > Epsilon)
             {
@@ -3652,7 +3652,7 @@ namespace Models.AgPasture
                 // Do the actual removal
                 if (!MathUtilities.FloatsAreEqual(amountToRemove, 0.0, 0.0001))
                 {
-                    RemoveBiomass(amountToRemove);
+                    return RemoveBiomass(amountToRemove);
                 }
 
             }
@@ -3660,6 +3660,7 @@ namespace Models.AgPasture
             {
                 mySummary.WriteMessage(this, " Could not graze due to lack of DM available", MessageType.Warning);
             }
+            return null;
         }
 
         /// <summary>Removes a given amount of biomass (DM and N) from the plant.</summary>
