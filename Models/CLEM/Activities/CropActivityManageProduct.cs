@@ -121,12 +121,6 @@ namespace Models.CLEM.Activities
         public CropDataType EndCurrentSequenceHarvest { get; set; }
 
         /// <summary>
-        /// Stores the next harvest details
-        /// </summary>
-        [JsonIgnore]
-        public CropDataType NextHarvest { get; set; }
-
-        /// <summary>
         /// Units to Hectares converter from Land type
         /// </summary>
         [JsonIgnore]
@@ -177,7 +171,7 @@ namespace Models.CLEM.Activities
         {
             switch (type)
             {
-                case "CropActivityFee":
+                case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
@@ -483,15 +477,15 @@ namespace Models.CLEM.Activities
                         AmountAvailableForHarvest = AmountHarvested;
 
                         double percentN = 0;
-                        // if no nitrogen provided form file
-                        if (double.IsNaN(NextHarvest.Npct))
+                        // if no nitrogen provided from file
+                        if (double.IsNaN(harvests.current.Npct))
                         {
                             if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
                                 // grazed pasture with no N read assumes the green biomass N content
                                 percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
                         }
                         else
-                            percentN = NextHarvest.Npct;
+                            percentN = harvests.current.Npct;
 
                         if (MathUtilities.FloatsAreEqual(percentN, 0.0))
                         {
