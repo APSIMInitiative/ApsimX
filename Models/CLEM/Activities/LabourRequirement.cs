@@ -193,17 +193,12 @@ namespace Models.CLEM.Activities
                 case "Fixed":
                     daysNeeded = LabourPerUnit * activityMetric;
                     break;
-                case "per AE":
-                case "per head":
-                case "per kg":
-                case "per ha":
+                default:
                     numberUnits = activityMetric / UnitSize;
                     if (WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * LabourPerUnit;
                     break;
-                default:
-                    throw new NotImplementedException($"Unknown unit [{Measure}] requested in [{GetType().Name}]:[{NameWithParent}]");
             }
 
             if (MathUtilities.IsPositive(daysNeeded))
