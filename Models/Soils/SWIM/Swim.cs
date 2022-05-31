@@ -1043,7 +1043,7 @@ namespace Models.Soils
             if (ibbc != 0)
             {
                 ibbc = 0;
-                summary.WriteMessage(this, "Bottom boundary condition now constant gradient", MessageType.Diagnostic);
+                summary.WriteMessage(this, "Bottom boundary condition now constant gradient", MessageType.Information);
             }
         }
 
@@ -1057,7 +1057,7 @@ namespace Models.Soils
             if (ibbc != 1)
             {
                 ibbc = 1;
-                summary.WriteMessage(this, "Bottom boundary condition now constant potential", MessageType.Diagnostic);
+                summary.WriteMessage(this, "Bottom boundary condition now constant potential", MessageType.Information);
             }
         }
 
@@ -1071,7 +1071,21 @@ namespace Models.Soils
             if (ibbc != 3)
             {
                 ibbc = 3;
-                summary.WriteMessage(this, "Bottom boundary condition now a seepage potential", MessageType.Diagnostic);
+                summary.WriteMessage(this, "Bottom boundary condition now a seepage potential", MessageType.Information);
+            }
+        }
+
+        /// <summary>
+        /// Set the lower boundary condition for a water table.
+        /// </summary>
+        /// <param name="bbcValue">Bottom boundary condition (cm).</param>
+        public void SetLowerBCForWaterTable(double bbcValue)
+        {
+            bbc_value = bbcValue;
+            if (ibbc != 4)
+            {
+                ibbc = 4;
+                summary.WriteMessage(this, "Bottom boundary condition for water table", MessageType.Information);
             }
         }
 
@@ -3217,7 +3231,12 @@ namespace Models.Soils
             double psiValue;
 
             if (theta == soilPhysical.SAT[node])
-                return 0.0;
+            {
+                if (_psi[node] > 0)
+                    return _psi[node];
+                else
+                    return 0;
+            }
             else
             {
                 if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
