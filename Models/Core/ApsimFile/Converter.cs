@@ -3985,15 +3985,16 @@ namespace Models.Core.ApsimFile
             {
                 var soil = JsonUtilities.Parent(nutrient) as JObject;
                 var physical = JsonUtilities.ChildWithName(soil, "Physical", ignoreCase: true);
-                var chemical = JsonUtilities.ChildWithName(soil, "Chemical", ignoreCase:true);
+                var chemical = JsonUtilities.ChildWithName(soil, "Chemical", ignoreCase: true);
                 var organic = JsonUtilities.ChildWithName(soil, "Organic", ignoreCase: true);
                 var samples = JsonUtilities.ChildrenOfType(soil, "Sample");
 
                 if (soil != null && physical != null && chemical != null && organic != null)
                 {
                     var soilChildren = soil["Children"] as JArray;
+                    var chemicalChildren = chemical["Children"] as JArray;
                     var bdToken = physical["BD"] as JArray;
-                    if (soilChildren != null && bdToken != null)
+                    if (soilChildren != null && chemicalChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
 
@@ -4005,14 +4006,17 @@ namespace Models.Core.ApsimFile
                         if (ocValues != null)
                         {
                             var oc = JsonUtilities.Parent(ocValues);
-                            var mappedValues = Soils.Standardiser.Layers.MapConcentration(ocValues.Values<double>().ToArray(), 
-                                                                                          oc["Thickness"].Values<double>().ToArray(), 
-                                                                                          organic["Thickness"].Values<double>().ToArray(), 
+                            var mappedValues = Soils.Standardiser.Layers.MapConcentration(ocValues.Values<double>().ToArray(),
+                                                                                          oc["Thickness"].Values<double>().ToArray(),
+                                                                                          organic["Thickness"].Values<double>().ToArray(),
                                                                                           1.0, true);
                             organic["Carbon"] = new JArray(mappedValues);
                             organic["CarbonUnits"] = oc["OCUnits"].ToString();
                         }
 
+                        AddNodeToChemical(chemical, samples, "PH", 7.0);
+                        AddNodeToChemical(chemical, samples, "EC", 0.0);
+                        AddNodeToChemical(chemical, samples, "ESP", 0.0);
 
                         // iterate through existing solutes and store their initial values in the solute.
                         foreach (var solute in JsonUtilities.ChildrenOfType(soil, "Solute"))
@@ -4024,18 +4028,73 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Move solutes from nutrient to soil.
-                        soilChildren.Add(CreateSoluteToken(tokensContainingValues, "Urea", bd));
-                        soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NH4", bd));
-                        soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NO3", bd));
+                        chemicalChildren.Add(CreateSoluteToken(tokensContainingValues, "Urea", bd));
+                        chemicalChildren.Add(CreateSoluteToken(tokensContainingValues, "NH4", bd));
+                        chemicalChildren.Add(CreateSoluteToken(tokensContainingValues, "NO3", bd));
                         var labileP = CreateSoluteToken(tokensContainingValues, "LabileP", bd);
                         var unavailableP = CreateSoluteToken(tokensContainingValues, "UnavailableP", bd);
                         if (labileP["Values"] as JArray != null && unavailableP["Values"] as JArray != null)
                         {
-                            soilChildren.Add(labileP);
-                            soilChildren.Add(unavailableP);
+                            chemicalChildren.Add(labileP);
+                            chemicalChildren.Add(unavailableP);
                         }
                     }
                 }
+            }
+
+            // By this point any remaining samples should just have SW values or be blank.
+            // Delete the blank samples and move the remaining ones to under the Physical node.
+            foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                var physical = JsonUtilities.ChildWithName(soil, "Physical", ignoreCase: true);
+                if (physical != null)
+                {
+                    var physicalChildren = physical["Children"] as JArray;
+                    if (physicalChildren != null)
+                    {
+                        foreach (JObject sample in JsonUtilities.ChildrenRecursively(soil, "Sample"))
+                        {
+                            if (MathUtilities.ValuesInArray(sample["SW"]))
+                            {
+                                sample.Remove("NO3");
+                                sample.Remove("NH4");
+                                sample.Remove("Urea");
+                                sample.Remove("LabileP");
+                                sample.Remove("UnavailableP");
+                                sample.Remove("OC");
+                                sample.Remove("EC");
+                                sample.Remove("PH");
+                                sample.Remove("CL");
+                                sample.Remove("ESP");
+                                sample["Name"] = "InitialWater";
+                                //sample.Remove();
+                                physicalChildren.Add(sample);
+                            }
+                        }
+
+                        // Move any InitWater tokens to under Physical.
+                        foreach (JObject initWater in JsonUtilities.ChildrenRecursively(soil, "InitWater"))
+                        {
+                            //initWater.Remove();
+                            physicalChildren.Add(initWater);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static void AddNodeToChemical(JObject chemical, List<JObject> samples, string nodeName, double defaultValue)
+        {
+            var valuesToken = FindValuesToken(samples.Reverse<JObject>(), nodeName);
+            if (valuesToken != null)
+            {
+                var sampleToken = JsonUtilities.Parent(valuesToken);
+                var mappedValues = Soils.Standardiser.Layers.MapConcentration(valuesToken.Values<double>().ToArray(),
+                                                                              sampleToken["Thickness"].Values<double>().ToArray(),
+                                                                              chemical["Thickness"].Values<double>().ToArray(),
+                                                                              defaultValue, true);
+                chemical[nodeName] = new JArray(mappedValues);
+                chemical[$"{nodeName}Units"] = sampleToken[$"{nodeName}Units"].ToString();
             }
         }
 

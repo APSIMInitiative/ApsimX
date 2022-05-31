@@ -10,7 +10,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType=typeof(Soil))]
+    [ValidParent(ParentType=typeof(Physical))]
     public class Sample : Model
     {
         [Link]
