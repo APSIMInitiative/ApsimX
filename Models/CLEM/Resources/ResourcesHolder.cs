@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
 using Models.Core;
-using Models.CLEM.Activities;
-using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using System.Reflection;
 
@@ -96,7 +90,11 @@ namespace Models.CLEM.Resources
         /// <returns>A resource type component</returns>
         public T FindResourceType<R, T>(IModel requestingModel, string resourceName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
-            string[] nameParts = new string[] { "", resourceName };
+            // if resourceName is null return empty T as this is from the UI and user has not supplied the resource name
+            if (resourceName is null)
+                missingResourceTypeAction = OnMissingResourceActionTypes.Ignore;
+
+            string[] nameParts = new string[] { "", resourceName??"" };
             if (nameParts.Last().Contains('.'))
             {
                 nameParts = nameParts.Last().Split('.');
@@ -167,7 +165,7 @@ namespace Models.CLEM.Resources
 
             if (resType as IModel is null)
             {
-                errorMsg = $"Unable to locate resource type [r={nameParts.Last()}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource type [r={((nameParts.Last()=="")?"Unknown":nameParts.Last())}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
