@@ -88,6 +88,10 @@ namespace Models.CLEM.Activities
             resourceRequest = null;
             if (MathUtilities.IsPositive(argument))
             {
+                string relatesTo = "";
+                if (Parent as CLEMRuminantActivityBase != null)
+                    relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdName;
+
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
                 {
@@ -98,7 +102,7 @@ namespace Models.CLEM.Activities
                     Required = charge,
                     Category = TransactionCategory,
                     AdditionalDetails = this,
-                    RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName,
+                    RelatesToResource = relatesTo,
                     ActivityModel = this
                 };
                 return new List<ResourceRequest>() { resourceRequest };
