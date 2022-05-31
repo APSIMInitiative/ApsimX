@@ -652,7 +652,9 @@ namespace Models.CLEM.Activities
 
                     if (test | test2)
                     {
-                        string warn = $"The identifier [{(((iChild.Identifier??"") == "") ? "BLANK" : iChild.Identifier)}] specified in [{iChild.Name}] is not valid for the parent activity [a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        string warn = $"Invalid parameter value in {(iChild as CLEMModel).FullPath}{Environment.NewLine}PARAMETER: Identifier";
+                        warn += $"{Environment.NewLine}DESCRIPTION: Unknown identifier value [{(((iChild.Identifier ?? "") == "") ? "BLANK" : iChild.Identifier)}]";
+                        warn += $"{Environment.NewLine}PROBLEM: The specified identifier is not valid for the parent activity [a={NameWithParent}]{Environment.NewLine}Select an identifier from the list. If only the invalid value is displayed, edit the simulation file (change value to null) or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 
@@ -661,10 +663,11 @@ namespace Models.CLEM.Activities
                     test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
                     if (test | test2)
                     {
-                        string warn = $"The units [{(((iChild.Measure ?? "") == "") ? "BLANK" : iChild.Measure)}] specified in [{iChild.GetType().Name}]:[{iChild.Name}] are not valid for the parent activity [{GetType().Name}]:[a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        string warn = $"Invalid parameter value in {(iChild as CLEMModel).FullPath}{Environment.NewLine}PARAMETER: Units of measure";
+                        warn += $"{Environment.NewLine}DESCRIPTION: Unknown units of measure [{(((iChild.Identifier ?? "") == "") ? "BLANK" : iChild.Identifier)}]";
+                        warn += $"{Environment.NewLine}PROBLEM: The specified units are not valid for the parent activity [a={NameWithParent}]{Environment.NewLine}Select units of measure from the list. If only the invalid value is displayed, edit the simulation file (change value to null) or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
-
                 }
             }
         }
