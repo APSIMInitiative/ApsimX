@@ -33,8 +33,8 @@ namespace Models.CLEM.Activities
     public class RuminantActivityBuySell : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private FinanceType bankAccount = null;
-        private IEnumerable<RuminantTrucking> truckingBuy = null;
-        private IEnumerable<RuminantTrucking> truckingSell = null;
+        private IEnumerable<RuminantTrucking> truckingBuy;
+        private IEnumerable<RuminantTrucking> truckingSell;
         private int numberToDo;
         private int numberToSkip;
         private double numberTrucks;
@@ -184,8 +184,9 @@ namespace Models.CLEM.Activities
                     IndividualsToBeTrucked = uniqueIndividuals;
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    foreach (var trucking in truckingBuy)
-                        trucking.ManuallyGetResourcesPerformActivity();
+                    if(truckingBuy != null)
+                        foreach (var trucking in truckingBuy)
+                            trucking.ManuallyGetResourcesPerformActivity();
 
                     break;
                 case "Sell":
@@ -195,8 +196,9 @@ namespace Models.CLEM.Activities
                     IndividualsToBeTrucked = uniqueIndividuals;
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    foreach (var trucking in truckingSell)
-                        trucking.ManuallyGetResourcesPerformActivity();
+                    if (truckingBuy != null)
+                        foreach (var trucking in truckingSell)
+                            trucking.ManuallyGetResourcesPerformActivity();
 
                     break;
                 default:
@@ -216,11 +218,20 @@ namespace Models.CLEM.Activities
                 case "Buy":
                     identifier = "Purchases";
 
-                    // all trucking has been allocated and each trucking component knows its individuals
-                    foreach (var trucking in truckingBuy)
+                    if (truckingBuy is null)
                     {
-                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
-                        numberTrucked += trucking.IndividualsToBeTrucked.Count();
+                        // no trucking found
+                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                        numberTrucked = numberToDo;
+                    }
+                    else
+                    {
+                        // all trucking has been allocated and each trucking component knows its individuals
+                        foreach (var trucking in truckingBuy)
+                        {
+                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                            numberTrucked += trucking.IndividualsToBeTrucked.Count();
+                        }
                     }
 
                     // add payment request so we can manage by shortfall, place at top of all requests for first access
@@ -272,10 +283,20 @@ namespace Models.CLEM.Activities
                 case "Sell":
                     identifier = "Sales";
 
-                    foreach (var trucking in truckingSell)
+                    if (truckingSell is null)
                     {
-                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
-                        numberTrucked += trucking.IndividualsToBeTrucked.Count();
+                        // no trucking found
+                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                        numberTrucked = numberToDo;
+                    }
+                    else
+                    {
+                        // all trucking has been allocated and each trucking component knows its individuals
+                        foreach (var trucking in truckingSell)
+                        {
+                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                            numberTrucked += trucking.IndividualsToBeTrucked.Count();
+                        }
                     }
 
                     // provide updated measure for companion models
