@@ -845,7 +845,7 @@ namespace Models.CLEM.Activities
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
             {
-                string warn = $"Resource shortfalls found in child components with ShortfallAffectsActivity set to [True] will not influence the tasks performed by [a={NameWithParent}].{Environment.NewLine}All [ShortfallAffectsActivity] settings have been ignored.";
+                string warn = $"Resource shortfalls found in child components with Insufficient resources action set to [UseAvailableWithImplications] will not influence the tasks performed by [a={NameWithParent}].{Environment.NewLine}All [UseAvailableWithImplications] settings have been ignored.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 Status = ActivityStatus.Warning;
                 AddStatusMessage("Shortfalls ignored. See CLEM Messages");
@@ -957,7 +957,8 @@ namespace Models.CLEM.Activities
                         // individuals marked for sale are not considered as they will be lost by sales and we assume all sales will take place
 
                         // remove excess sires from purchases if any
-                        int numberToRemove = Math.Min(numberMaleSiresInHerd + numberMaleSiresInPurchases - SiresKept, numberMaleSiresInPurchases);
+                        // this value may exceed those in purchases, but that's ok as first step before remiving from herd
+                        int numberToRemove = numberMaleSiresInHerd + numberMaleSiresInPurchases - SiresKept;
 
                         // remove suitable individuals from the purchase list 
                         foreach (var removeFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveSiresFromPurchases"))
@@ -1134,15 +1135,19 @@ namespace Models.CLEM.Activities
                         {
                             // Remove from herd not for sale
                             IEnumerable<RuminantGroup> reduceBreedersFilters = GetCompanionModelsByIdentifier<RuminantGroup>(false, false, "RemoveBreedersFromHerd");
-                            if (reduceBreedersFilters != null)
+                            if(reduceBreedersFilters is null)
                             {
-                                foreach (var removeFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, false, "RemoveBreedersFromHerd"))
-                                    foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).OrderBy(a => a.Class).Take(excessBreeders).ToList())
-                                    {
-                                        female.SaleFlag = HerdChangeReason.ExcessBreederSale;
-                                        excessBreeders--;
-                                    }
+                                reduceBreedersFilters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveBreedersFromHerd");
+                                SortByProperty srt = new SortByProperty() { PropertyOfIndividual = "Age", SortDirection = System.ComponentModel.ListSortDirection.Descending };
+                                reduceBreedersFilters.FirstOrDefault().Children.Add(srt);
                             }
+
+                            foreach (var removeFilter in reduceBreedersFilters)
+                                foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).OrderBy(a => a.Class).Take(excessBreeders).ToList())
+                                {
+                                    female.SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                    excessBreeders--;
+                                }
                         }
 
                         if (excessBreeders > 0)
@@ -1799,57 +1804,9 @@ namespace Models.CLEM.Activities
             return childList;   
         }
 
-        //private bool IsCustomFilterTaskIncluded(string identifier)
-        //{
-        //    switch (identifier)
-        //    {
-        //        case "RemoveBreedersFromPurchases":
-        //            return ManageFemaleBreederNumbers;
-        //        case "RemoveBreedersFromHerd":
-        //            return ManageFemaleBreederNumbers;
-        //        case "RemoveOldFemalesFromHerd":
-        //            return MarkOldBreedersForSale;
-        //        case "RemoveOldSiresFromHerd":
-        //            return MarkOldSiresForSale;
-        //        case "RemoveSiresFromPurchases":
-        //            return ManageMaleBreederNumbers;
-        //        case "RemoveSiresFromHerd":
-        //            return ManageMaleBreederNumbers;
-        //        case "SelectBreedersFromSales":
-        //            return ManageFemaleBreederNumbers;
-        //        case "SelectBreedersFromHerd":
-        //            return ManageFemaleBreederNumbers;
-        //        case "SelectYoungFemalesFromGrowOut":
-        //            return ManageFemaleBreederNumbers & GrowOutYoungFemales;
-        //        case "SelectYoungFemalesFromSales":
-        //            return ManageFemaleBreederNumbers;
-        //        case "SelectSiresFromSales":
-        //            return ManageMaleBreederNumbers;
-        //        case "SelectFutureSiresFromSales":
-        //            return ManageMaleBreederNumbers;
-        //        case "SelectFutureSiresFromGrowOut":
-        //            return ManageMaleBreederNumbers & GrowOutYoungMales;
-        //        default:
-        //            return false;
-        //    }
-        //}
-
-        //private bool CreateFilterHTML(StringWriter stringWriter, Dictionary<string, IEnumerable<RuminantGroup>> filters, string identifier, string startText, string endText)
-        //{
-        //    var filterGroup = filters[identifier].FirstOrDefault();
-        //    if (filterGroup != null && filterGroup.Identifier == identifier)
-        //    {
-        //        stringWriter.Write($"<div class=\"activityentry\">{startText} will be filtered and ordered using the <span class=\"filterlink\">{filterGroup.Name}</span> filter group with style <span class=\"setvalue\">{filterGroup.Identifier}</span>{endText}</div>");
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            //if (FindAllChildren<RuminantGroup>().Any())
-            //    return "</div>";
             return "";
         }
 
