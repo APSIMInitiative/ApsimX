@@ -183,6 +183,11 @@ namespace Models.CLEM.Activities
                 ResourceRequestList = new List<ResourceRequest>();
                 pastureRequest = null;
                 IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name);
+
+                totalPastureRequired = 0;
+                totalPastureDesired = 0;
+                Status = ActivityStatus.NotNeeded;
+
                 if (herd.Any())
                 {
                     // Stand alone model has not been set by parent RuminantActivityGrazePasture
@@ -191,9 +196,6 @@ namespace Models.CLEM.Activities
                         SetupPoolsAndLimits(1.0);
                         PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
                     }
-
-                    totalPastureRequired = 0;
-                    totalPastureDesired = 0;
 
                     // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
@@ -304,11 +306,6 @@ namespace Models.CLEM.Activities
 
                     this.Status = ActivityStatus.Partial;
                 }
-            }
-            else
-            {
-                if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-                    Status = ActivityStatus.NotNeeded;
             }
         }
 

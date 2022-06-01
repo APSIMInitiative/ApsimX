@@ -164,13 +164,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
+            Status = ActivityStatus.NotNeeded;
             feedEstimated = filterGroups.OfType<RuminantFeedGroup>().Sum(a => a.CurrentResourceRequest.Required);
-            //foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>())
-            //{
-            //    var requests = iChild.DetermineResourcesForActivity(0);
-            //    feedEstimated += requests.Sum(a => a.Required);
-            //    resourceRequests.AddRange(requests);
-            //}
 
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
@@ -399,7 +394,8 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            SetStatusSuccessOrPartial(numberFed != numberToDo);
+            if (numberToDo > 0)
+                SetStatusSuccessOrPartial(numberFed != numberToDo);
         }
 
         #region validation
