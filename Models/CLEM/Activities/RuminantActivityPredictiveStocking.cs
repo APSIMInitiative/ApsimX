@@ -327,7 +327,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<RuminantGroup>(), true, "childgroupactivityborder", "Individuals will be sold in the following order:", "")
+                (FindAllChildren<RuminantGroup>(), true, "childgroupfilterborder", "Individuals will be sold in the following order:", "")
             };
         }
 

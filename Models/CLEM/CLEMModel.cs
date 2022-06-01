@@ -777,14 +777,10 @@ namespace Models.CLEM
                 ".warninglink {color:white; font-weight:bold; background-color:orange !important; border-color:darkorange; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".folder {color:#666666; font-style: italic; font-size:1.1em; }" +
-                ".childgrouplabel {color:#666666; font-style: italic; font-size:1.1em; padding: 5px 0px 10px 0px; }" +
+                ".childgrouplabel {color:#666666; font-style: italic; font-size:0.9em; }" +
                 ".childgrouprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; }" +
-                ".childgroupactivityborder {border-color:[LabourGroupBorder]; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:10px; margin-bottom:5px; margin-top:5px;}" +
-                //".cropmixedlabel {color:#666666; font-style: italic; font-size:1.1em; padding: 5px 0px 10px 0px; }" +
-                //".croprotationlabel {color:#666666; font-style: italic; font-size:1.1em; padding: 5px 0px 10px 0px; }" +
-                //".cropmixedborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; }" +
-                //".croprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:2px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; }" +
-                //".labourgroupsborder {border-color:[LabourGroupBorder]; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:10px; margin-bottom:5px; margin-top:5px;}" +
+                ".childgroupactivityborder {border-color:[LabourGroupBorder]; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px;}" +
+                ".childgroupfilterborder {border-color:#cc33cc; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:White; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +

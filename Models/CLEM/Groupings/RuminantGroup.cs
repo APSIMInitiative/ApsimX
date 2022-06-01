@@ -63,7 +63,7 @@ namespace Models.CLEM.Groupings
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write($"<div class=\"filtername\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}> ");
+                htmlWriter.Write($"<div class=\"filtername\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
                     htmlWriter.Write($"{Name}");
                 if ((Identifier ?? "") != "")

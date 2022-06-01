@@ -280,7 +280,7 @@ namespace Models.CLEM.Activities
         {
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
-                (FindAllChildren<LabourGroup>(), true, "childgroupactivityborder", "The required labour will be taken from the following groups:", "No LabourGroups provided to define labour")
+                (FindAllChildren<LabourGroup>(), true, "childgroupfilterborder", "The required labour will be taken from the following groups:", "No LabourGroups provided to define labour")
             };
         }
 
