@@ -4028,16 +4028,27 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Move solutes from nutrient to soil.
-                        chemicalChildren.Add(CreateSoluteToken(tokensContainingValues, "Urea", bd));
                         chemicalChildren.Add(CreateSoluteToken(tokensContainingValues, "NH4", bd));
                         chemicalChildren.Add(CreateSoluteToken(tokensContainingValues, "NO3", bd));
                         var labileP = CreateSoluteToken(tokensContainingValues, "LabileP", bd);
                         var unavailableP = CreateSoluteToken(tokensContainingValues, "UnavailableP", bd);
-                        if (labileP["Values"] as JArray != null && unavailableP["Values"] as JArray != null)
+                        if (labileP != null && unavailableP != null && labileP["Values"] as JArray != null && unavailableP["Values"] as JArray != null)
                         {
                             chemicalChildren.Add(labileP);
                             chemicalChildren.Add(unavailableP);
                         }
+
+                        // Add a urea solute to Chemical
+                        var thickness = chemical["Thickness"] as JArray;
+                        var urea = new JObject
+                        {
+                            ["$type"] = "Models.Soils.Nutrients.Solute, Models",
+                            ["Name"] = "Urea",
+                            ["Thickness"] = thickness,
+                            ["InitialValues"] = new JArray(Array.CreateInstance(typeof(double), thickness.Count)),
+                            ["InitialValuesUnits"] = "kgha"
+                        };
+                        chemicalChildren.Add(urea);
                     }
                 }
             }
@@ -4054,7 +4065,8 @@ namespace Models.Core.ApsimFile
                     {
                         foreach (JObject sample in JsonUtilities.ChildrenRecursively(soil, "Sample"))
                         {
-                            if (MathUtilities.ValuesInArray(sample["SW"]))
+                            var sw = sample["SW"] as JArray;
+                            if (MathUtilities.ValuesInArray(sw.Values<double>()))
                             {
                                 sample.Remove("NO3");
                                 sample.Remove("NH4");
@@ -4070,12 +4082,14 @@ namespace Models.Core.ApsimFile
                                 //sample.Remove();
                                 physicalChildren.Add(sample);
                             }
+                            else
+                                sample.Remove();
                         }
 
                         // Move any InitWater tokens to under Physical.
-                        foreach (JObject initWater in JsonUtilities.ChildrenRecursively(soil, "InitWater"))
+                        foreach (JObject initWater in JsonUtilities.ChildrenRecursively(soil, "InitialWater"))
                         {
-                            //initWater.Remove();
+                            initWater.Remove();
                             physicalChildren.Add(initWater);
                         }
                     }
@@ -4083,18 +4097,29 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Add a property from a sample node to the chemical node.
+        /// </summary>
+        /// <param name="chemical"></param>
+        /// <param name="samples"></param>
+        /// <param name="nodeName"></param>
+        /// <param name="defaultValue"></param>
         private static void AddNodeToChemical(JObject chemical, List<JObject> samples, string nodeName, double defaultValue)
         {
             var valuesToken = FindValuesToken(samples.Reverse<JObject>(), nodeName);
             if (valuesToken != null)
             {
-                var sampleToken = JsonUtilities.Parent(valuesToken);
-                var mappedValues = Soils.Standardiser.Layers.MapConcentration(valuesToken.Values<double>().ToArray(),
-                                                                              sampleToken["Thickness"].Values<double>().ToArray(),
-                                                                              chemical["Thickness"].Values<double>().ToArray(),
-                                                                              defaultValue, true);
-                chemical[nodeName] = new JArray(mappedValues);
-                chemical[$"{nodeName}Units"] = sampleToken[$"{nodeName}Units"].ToString();
+                var values = valuesToken.Values<double>().ToArray();
+                if (MathUtilities.ValuesInArray(values))
+                {
+                    var sampleToken = JsonUtilities.Parent(valuesToken);
+                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values,
+                                                                                  sampleToken["Thickness"].Values<double>().ToArray(),
+                                                                                  chemical["Thickness"].Values<double>().ToArray(),
+                                                                                  defaultValue, true);
+                    chemical[nodeName] = new JArray(mappedValues);
+                    chemical[$"{nodeName}Units"] = sampleToken[$"{nodeName}Units"].ToString();
+                }
             }
         }
 
@@ -4108,22 +4133,33 @@ namespace Models.Core.ApsimFile
         private static JToken CreateSoluteToken(IEnumerable<JObject> tokens, string soluteName, double[] bd)
         {
             JToken valuesToken = FindValuesToken(tokens, soluteName);
-            JToken token = JsonUtilities.Parent(valuesToken);
-            string units = "ppm";
-            if (token["$type"].ToString() == "Models.Soils.Sample, Models")
-                units = "kgha";
-            else
-                units = "ppm";
-            return new JObject
+            if (valuesToken != null)
             {
-                ["$type"] = "Models.Soils.Nutrients.Solute, Models",
-                ["Name"] = soluteName,
-                ["Thickness"] = token["Thickness"],
-                ["InitialValues"] = valuesToken,
-                ["InitialValuesUnits"] = units
-            };
+                JToken token = JsonUtilities.Parent(valuesToken);
+                string units = "ppm";
+                if (token["$type"].ToString() == "Models.Soils.Sample, Models")
+                    units = "kgha";
+                else
+                    units = "ppm";
+                return new JObject
+                {
+                    ["$type"] = "Models.Soils.Nutrients.Solute, Models",
+                    ["Name"] = soluteName,
+                    ["Thickness"] = token["Thickness"],
+                    ["InitialValues"] = valuesToken,
+                    ["InitialValuesUnits"] = units
+                };
+            }
+
+            return null;
         }
 
+        /// <summary>
+        /// Find soil values for a specific property from a collection of JTokens.
+        /// </summary>
+        /// <param name="tokens">The tokens to search.</param>
+        /// <param name="elementName">The name of the property to search for.</param>
+        /// <returns>The found token or null if not found.</returns>
         private static JToken FindValuesToken(IEnumerable<JObject> tokens, string elementName)
         {
             foreach (var token in tokens)
