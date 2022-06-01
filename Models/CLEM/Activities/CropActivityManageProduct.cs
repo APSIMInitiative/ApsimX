@@ -264,7 +264,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStepDoRotations(object sender, EventArgs e)
         {
             // rotate harvest if needed
-            if (rotationReady) // && this.ActivityEnabled && HarvestData.Any())
+            if (rotationReady) 
             {
                 parentManagementActivity.RotateCrop();
             }
@@ -367,7 +367,8 @@ namespace Models.CLEM.Activities
             if(parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType) && this.TimingOK)
             {
                 Status = ActivityStatus.NotNeeded;
-                PerformTasksForTimestep();
+                ManageActivityResourcesAndTasks();
+                //PerformTasksForTimestep();
             }
         }
 
