@@ -807,20 +807,22 @@ namespace Models.AgPasture
         public double TurnoverStockFactor { get; set; } = 0.01;
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
+        /// <remarks>Converts the fraction of biomass removed into potential increase in turnover.</remarks>
         [Units("-")]
-        public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
+        public double TurnoverDefoliationMultiplier { get; set; } = 1.0;
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
+        /// <remarks>Controls the spread of the effect of time, the smaller the more spread the effect.</remarks>
         [Units("-")]
-        public double TurnoverDefoliationFactor { get; set; } = 1.0;
+        public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
 
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [Units("/day")]
         public double TurnoverDefoliationEffectMin { get; set; } = 0.025;
 
-        /// <summary>Effect of defoliation on root turnover rate due to defoliation (0-1).</summary>
+        /// <summary>Coefficient adjusting the effect of defoliation on root turnover rate (0-1).</summary>
         [Units("0-1")]
-        public double TurnoverDefoliationRootEffect { get; set; } = 0.1;
+        public double TurnoverDefoliationEffectOnRoots { get; set; } = 0.1;
 
         ////- N fixation (for legumes) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2964,7 +2966,7 @@ namespace Models.AgPasture
 
             // Turnover rate for roots
             gamaR = TissueTurnoverRefRateRoot * ttfTemperature * ttfMoistureRoot;
-            gamaR += TurnoverDefoliationRootEffect * ttfDefoliationEffect * (1.0 - gamaR);
+            gamaR += TurnoverDefoliationEffectOnRoots * ttfDefoliationEffect * (1.0 - gamaR);
 
             // Turnover rate for dead material (littering or detachment)
             gamaD = DetachmentRefRateShoot * ttfMoistureLitter * ttfDigestibiliyLitter;
@@ -4135,25 +4137,25 @@ namespace Models.AgPasture
         /// <summary>Computes the effect of defoliation on stolon/root turnover rate.</summary>
         /// <remarks>
         /// This approach spreads the effect over a few days after a defoliation, starting large and decreasing with time.
-        /// It is assumed that a defoliation of 100% of harvestable material will result in a full decay of stolons.
+        /// The base effect is a function of the fraction of biomass defoliated, adjusted through a multiplier.
         /// </remarks>
         /// <returns>A factor for adjusting tissue turnover (0-1)</returns>
         private double DefoliationEffectOnTissueTurnover()
         {
             double defoliationEffect = 0.0;
-            cumDefoliationFactor += myDefoliatedFraction;
-            if ((cumDefoliationFactor > 0.0) && (TurnoverDefoliationFactor > 0.0))
+            cumDefoliationFactor += myDefoliatedFraction * TurnoverDefoliationMultiplier;
+            if (cumDefoliationFactor > 0.0)
             {
                 double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
                 todaysFactor /= (TurnoverDefoliationCoefficient + 1.0);
                 if (cumDefoliationFactor - todaysFactor < TurnoverDefoliationEffectMin)
                 {
-                    defoliationEffect = cumDefoliationFactor * TurnoverDefoliationFactor;
+                    defoliationEffect = cumDefoliationFactor;
                     cumDefoliationFactor = 0.0;
                 }
                 else
                 {
-                    defoliationEffect = (cumDefoliationFactor - todaysFactor) * TurnoverDefoliationFactor;
+                    defoliationEffect = cumDefoliationFactor - todaysFactor;
                     cumDefoliationFactor = todaysFactor;
                 }
             }
