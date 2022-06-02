@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 148,
+  "ExplorerWidth": 300,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -57,7 +57,7 @@
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
           "AllColumns": false,
-          "Name": "AveAnnual",
+          "Name": "PxO_AveAnnual",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -70,7 +70,7 @@
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
           "AllColumns": false,
-          "Name": "Annual",
+          "Name": "PxO_Annual",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -83,7 +83,7 @@
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
           "AllColumns": false,
-          "Name": "AveSeason",
+          "Name": "PxO_AveSeason",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -74876,6 +74876,272 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.ForageDigestibility.Forages, Models",
+                  "Parameters": [
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "SurfaceOrganicMatter.Residue",
+                      "IsLive": true,
+                      "DigestibilityString": "0",
+                      "FractionConsumable": 0.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "SurfaceOrganicMatter.Residue",
+                      "IsLive": false,
+                      "DigestibilityString": "0",
+                      "FractionConsumable": 0.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Leaf",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 80.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Leaf",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stem",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 20.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stem",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stolon",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stolon",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Leaf",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 60.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Leaf",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stem",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 15.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stem",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stolon",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 10.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stolon",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPPaspalum.Leaf",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 40.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPPaspalum.Leaf",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPPaspalum.Stem",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 10.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPPaspalum.Stem",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPPaspalum.Stolon",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPPaspalum.Stolon",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    }
+                  ],
+                  "Name": "Forages",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Newtonsoft.Json;\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [JsonIgnore] public bool DoControl { get; set; }\r\n        [JsonIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "AllowControl",
+                      "Value": "True"
+                    },
+                    {
+                      "Key": "EnableDate",
+                      "Value": "01/01/1975 00:00:00"
+                    },
+                    {
+                      "Key": "WithinYearControl",
+                      "Value": "False"
+                    },
+                    {
+                      "Key": "ControlStart",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "ControlEnd",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "RainfallMultiplier",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "RainfallAddition",
+                      "Value": "0.98"
+                    },
+                    {
+                      "Key": "RadiationMultiplier",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "RadiationAddition",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "MinTMultiplier",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "MinTAddition",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "MaxTMultiplier",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "MaxTAddition",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "WindMultiplier",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "WindAddition",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "VPMultiplier",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "VPAddition",
+                      "Value": "0"
+                    }
+                  ],
+                  "Name": "ClimateController",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
@@ -74884,140 +75150,134 @@
                   "Name": "Field",
                   "Children": [
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link(IsOptional = true)]\r\n        private Phenology phenology;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((phenology.Stage >= 3.0) && (phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
-                      "Parameters": [
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowInDocs": false,
+                      "GraphsPerPage": 6,
+                      "Name": "Management",
+                      "Children": [
                         {
-                          "Key": "allowIrrigation",
-                          "Value": "False"
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link(IsOptional = true)]\r\n        private Phenology phenology;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((phenology.Stage >= 3.0) && (phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "allowIrrigation",
+                              "Value": "False"
+                            },
+                            {
+                              "Key": "seasonStart",
+                              "Value": "15-Aug"
+                            },
+                            {
+                              "Key": "seasonEnd",
+                              "Value": "30-May"
+                            },
+                            {
+                              "Key": "seasonsAllocation",
+                              "Value": "10000"
+                            },
+                            {
+                              "Key": "triggerDeficit",
+                              "Value": "50"
+                            },
+                            {
+                              "Key": "targetDeficit",
+                              "Value": "99"
+                            },
+                            {
+                              "Key": "returndays",
+                              "Value": "1"
+                            },
+                            {
+                              "Key": "maximumAmount",
+                              "Value": "30"
+                            },
+                            {
+                              "Key": "depthPAWC",
+                              "Value": "300"
+                            }
+                          ],
+                          "Name": "AutomaticIrrigation",
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "Key": "seasonStart",
-                          "Value": "15-Aug"
+                          "$type": "Models.Operations, Models",
+                          "Operation": null,
+                          "Name": "IrrigationSchedule",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "Key": "seasonEnd",
-                          "Value": "30-May"
+                          "$type": "Models.Operations, Models",
+                          "Operation": null,
+                          "Name": "Cutting",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "Key": "seasonsAllocation",
-                          "Value": "10000"
-                        },
-                        {
-                          "Key": "triggerDeficit",
-                          "Value": "50"
-                        },
-                        {
-                          "Key": "targetDeficit",
-                          "Value": "99"
-                        },
-                        {
-                          "Key": "returndays",
-                          "Value": "1"
-                        },
-                        {
-                          "Key": "maximumAmount",
-                          "Value": "30"
-                        },
-                        {
-                          "Key": "depthPAWC",
-                          "Value": "300"
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Newtonsoft.Json;\r\nusing Models.AgPasture;\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Simulation Simulation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link] private Soil mySoil;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private ISummary summary;\r\n        // - Links to APSIM models\r\n        //[Link] AgPasture.PastureSpecies Pasture;\r\n\r\n        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n\r\n        //[Link(ByName = true)] Report HarvestReport;\r\n\r\n\r\n        [Separator(\"NOTE WELL!! MUST start the sim the data after annual reporting and do a harvest on annual reporting day\")]\r\n        [Description(\"Do reporting on each harvest?    :\")] public bool EnableOnHarvest { get; set; }\r\n        [Description(\"Name of the component for harvest-based reporting    :\")] public string ReportNameHarvest { get; set; }\r\n\r\n        [Description(\"Do reporting at the end of each production year?    :\")] public bool EnableOnAnnual { get; set; }\r\n        [Description(\"Name of the component for annual reporting    :\")] public string ReportNameAnnual { get; set; }\r\n        [Description(\"Date for annual reporting - NOTE - must coincide with the end of one of the seasons below (dd-mmm)    :\")] public string ReportDateAnnual { get; set; }\r\n\r\n        [Description(\"Do the seasonal reporting)?    :\")] public bool EnableOnSeason { get; set; }\r\n        [Description(\"Name of the component for seasonal reporting    :\")] public string ReportNameSeasonal { get; set; }\r\n        [Description(\"Last day of summer for seasonal reporting (dd-mmm)\")] public string SummerEndDate { get; set; }\r\n        [Description(\"Last day of autumn for seasonal reporting (dd-mmm)\")] public string AutumnEndDate { get; set; }\r\n        [Description(\"Last day of winter for seasonal reporting (dd-mmm)\")] public string WinterEndDate { get; set; }\r\n        [Description(\"Last day of spring for seasonal reporting (dd-mmm)\")] public string SpringEndDate { get; set; }\r\n\r\n        [Description(\"Do the summary reporting (at the end of the simulation)?    :\")] public bool EnableOnSummary { get; set; }\r\n        [Description(\"Name of the component for summary (comparison to observed) reporting    :\")] public string ReportNameSummary { get; set; }\r\n\r\n\r\n\r\n        public double AnnualHarvestedWt { get; set; }\r\n        public double AnnualIrrigated { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n        private bool doAnnualReport = false;\r\n        private bool doAnnualReportCalculations = false;\r\n        private bool doSeasonalReport = false;\r\n        private bool doSummerReport = false;\r\n        private bool doAutumnReport = false;\r\n        private bool doWinterReport = false;\r\n        private bool doSpringReport = false;\r\n        private bool doSummerReportCalculations = false;\r\n        private bool doAutumnReportCalculations = false;\r\n        private bool doWinterReportCalculations = false;\r\n        private bool doSpringReportCalculations = false;\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveAnnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdAnnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngAnnHarvested { get; set; }\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveSummerHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdSummerHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngSummerHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveAutumnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdAutumnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngAutumnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveWinterHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdWinterHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngWinterHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveSpringHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdSpringHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngSpringHarvested { get; set; }\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double[] AveSeasonalHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double[] StdSeasonalHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double[] RngSeasonalHarvested { get; set; }\r\n\r\n        [JsonIgnore][Units(\"-\")] public string Season { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double SeasonNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double SummerNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double AutumnNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double WinterNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double SpringNHA  { get; set; }\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> AnnHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> SummerHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> AutumnHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> WinterHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> SpringHarvested = new List<double>();\r\n        //List<double> harvestedWtSums = new List<double>();\r\n        private int CountYears = 0;\r\n        private bool GrazedToday;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in zone.FindAllChildren<PastureSpecies>().OfType<IModel>().ToList())\r\n                Pasture.Add(species);\r\n\r\n            CountYears = 0;\r\n\r\n            Season = \"Unknown\";\r\n            SeasonNHA = 0.0;\r\n            SummerNHA = 0.0;\r\n            AutumnNHA = 0.0;\r\n            WinterNHA = 0.0;\r\n            SpringNHA = 0.0;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfYear\")]\r\n        private void OnStartOfYear(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazedToday = false;\r\n\r\n            // Is this the day for annual reporting?\r\n            doAnnualReportCalculations = false;  // this is to capture annual harvests etc for the final Summary report\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today))\r\n                doAnnualReportCalculations = true;\r\n\r\n            doAnnualReport = false;\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today) && (EnableOnAnnual))\r\n                doAnnualReport = true;\r\n            else if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today.AddDays(-1)))\r\n            {\r\n                AnnualHarvestedWt = 0.0;\r\n                AnnualIrrigated = 0.0;            \r\n            }\r\n\r\n            doSummerReport = false;\r\n            doAutumnReport = false;\r\n            doWinterReport = false;\r\n            doSpringReport = false;\r\n            doSummerReportCalculations = false;\r\n            doAutumnReportCalculations = false;\r\n            doWinterReportCalculations = false;\r\n            doSpringReportCalculations = false;\r\n            if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today))\r\n            {\r\n                Season = \"Summer\";\r\n                doSummerReport = true;\r\n                doSummerReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;  // could move this zeroing\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today))\r\n            {\r\n                Season = \"Autumn\";\r\n                doAutumnReport = true;\r\n                doAutumnReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today))\r\n            {\r\n                Season = \"Winter\";\r\n                doWinterReport = true;\r\n                doWinterReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today))\r\n            {\r\n                Season = \"Spring\";\r\n                doSpringReport = true;\r\n                doSpringReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"Grazed\")]\r\n        private void OnGrazed(object sender, EventArgs e)\r\n        {\r\n            // Grazing happened today.\r\n            GrazedToday = true;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in Pasture)\r\n            {\r\n                AnnualHarvestedWt += species.NetGrowthWt;\r\n                IntervalNHA += species.NetGrowthWt;\r\n                SeasonNHA += species.NetGrowthWt;\r\n            }\r\n\r\n            AnnualIrrigated += Irrigation.IrrigationApplied;\r\n\r\n            if ((GrazedToday) && (EnableOnHarvest))\r\n            {\r\n                Models.Report harvestReport = this.FindInScope(ReportNameHarvest) as Models.Report;\r\n                if (harvestReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameHarvest));\r\n                harvestReport.DoOutput();\r\n                IntervalNHA = 0.0;\r\n            }\r\n\r\n            if (EnableOnSeason && (doSummerReport || doAutumnReport || doWinterReport || doSpringReport))\r\n            {\r\n                Models.Report seasonalReport = this.FindInScope(ReportNameSeasonal) as Models.Report;\r\n                if (seasonalReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameSeasonal));\r\n                seasonalReport.DoOutput();\r\n            }\r\n\r\n            if (doAnnualReportCalculations)\r\n                AnnHarvested.Add(AnnualHarvestedWt);\r\n            if (doSummerReportCalculations)\r\n                SummerHarvested.Add(SeasonNHA);\r\n            if (doAutumnReportCalculations)\r\n                AutumnHarvested.Add(SeasonNHA);\r\n            if (doWinterReportCalculations)\r\n                WinterHarvested.Add(SeasonNHA);\r\n            if (doSpringReportCalculations)\r\n                SpringHarvested.Add(SeasonNHA);\r\n\r\n            if (doAnnualReport)\r\n            {\r\n                Models.Report annualReport = this.FindInScope(ReportNameAnnual) as Models.Report;\r\n                if (annualReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameAnnual));\r\n                annualReport.DoOutput();\r\n            }\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"EndOfSimulation\")]\r\n        private void OnEndOfSimulation(object sender, EventArgs e)\r\n        {\r\n            if (EnableOnSummary)\r\n            {\r\n\r\n                AveAnnHarvested = MathUtilities.Average(AnnHarvested);\r\n                StdAnnHarvested = MathUtilities.SampleStandardDeviation(AnnHarvested);\r\n                RngAnnHarvested = MathUtilities.Max(AnnHarvested) - MathUtilities.Min(AnnHarvested);\r\n\r\n                AveSummerHarvested = MathUtilities.Average(SummerHarvested);\r\n                StdSummerHarvested = MathUtilities.SampleStandardDeviation(SummerHarvested);\r\n                RngSummerHarvested = MathUtilities.Max(SummerHarvested) - MathUtilities.Min(SummerHarvested);\r\n\r\n                AveAutumnHarvested = MathUtilities.Average(AutumnHarvested);\r\n                StdAutumnHarvested = MathUtilities.SampleStandardDeviation(AutumnHarvested);\r\n                RngAutumnHarvested = MathUtilities.Max(AutumnHarvested) - MathUtilities.Min(AutumnHarvested);\r\n\r\n                AveWinterHarvested = MathUtilities.Average(WinterHarvested);\r\n                StdWinterHarvested = MathUtilities.SampleStandardDeviation(WinterHarvested);\r\n                RngWinterHarvested = MathUtilities.Max(WinterHarvested) - MathUtilities.Min(WinterHarvested);\r\n\r\n                AveSpringHarvested = MathUtilities.Average(SpringHarvested);\r\n                StdSpringHarvested = MathUtilities.SampleStandardDeviation(SpringHarvested);\r\n                RngSpringHarvested = MathUtilities.Max(SpringHarvested) - MathUtilities.Min(SpringHarvested);\r\n\r\n\r\n\r\n                Models.Report summaryReport = this.FindInScope(ReportNameSummary) as Models.Report;\r\n                if (summaryReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameSummary));\r\n                summaryReport.DoOutput();\r\n            }\r\n        }\r\n\r\n\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "EnableOnHarvest",
+                              "Value": "False"
+                            },
+                            {
+                              "Key": "ReportNameHarvest",
+                              "Value": "HarvestReport"
+                            },
+                            {
+                              "Key": "EnableOnAnnual",
+                              "Value": "False"
+                            },
+                            {
+                              "Key": "ReportNameAnnual",
+                              "Value": "AnnualReport"
+                            },
+                            {
+                              "Key": "ReportDateAnnual",
+                              "Value": "31-may"
+                            },
+                            {
+                              "Key": "EnableOnSeason",
+                              "Value": "False"
+                            },
+                            {
+                              "Key": "ReportNameSeasonal",
+                              "Value": ""
+                            },
+                            {
+                              "Key": "SummerEndDate",
+                              "Value": "28-feb"
+                            },
+                            {
+                              "Key": "AutumnEndDate",
+                              "Value": "31-may"
+                            },
+                            {
+                              "Key": "WinterEndDate",
+                              "Value": "31-aug"
+                            },
+                            {
+                              "Key": "SpringEndDate",
+                              "Value": "30-nov"
+                            },
+                            {
+                              "Key": "EnableOnSummary",
+                              "Value": "True"
+                            },
+                            {
+                              "Key": "ReportNameSummary",
+                              "Value": "SummaryReport"
+                            }
+                          ],
+                          "Name": "DoReporting",
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
-                      "Name": "AutomaticIrrigation",
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": null,
-                      "Name": "IrrigationSchedule",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": null,
-                      "Name": "Cutting",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using Newtonsoft.Json;\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [JsonIgnore] public bool DoControl { get; set; }\r\n        [JsonIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-                      "Parameters": [
-                        {
-                          "Key": "AllowControl",
-                          "Value": "True"
-                        },
-                        {
-                          "Key": "EnableDate",
-                          "Value": "01/01/1975 00:00:00"
-                        },
-                        {
-                          "Key": "WithinYearControl",
-                          "Value": "False"
-                        },
-                        {
-                          "Key": "ControlStart",
-                          "Value": ""
-                        },
-                        {
-                          "Key": "ControlEnd",
-                          "Value": ""
-                        },
-                        {
-                          "Key": "RainfallMultiplier",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "RainfallAddition",
-                          "Value": "0.98"
-                        },
-                        {
-                          "Key": "RadiationMultiplier",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "RadiationAddition",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "MinTMultiplier",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "MinTAddition",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "MaxTMultiplier",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "MaxTAddition",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "WindMultiplier",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "WindAddition",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "VPMultiplier",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "VPAddition",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "ClimateController",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -75076,79 +75336,6 @@
                       "SpeciesCutProportions": null,
                       "Name": "SimpleGrazing",
                       "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using Newtonsoft.Json;\r\nusing Models.AgPasture;\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Simulation Simulation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link] private Soil mySoil;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private ISummary summary;\r\n        // - Links to APSIM models\r\n        //[Link] AgPasture.PastureSpecies Pasture;\r\n\r\n        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n\r\n        //[Link(ByName = true)] Report HarvestReport;\r\n\r\n\r\n        [Separator(\"NOTE WELL!! MUST start the sim the data after annual reporting and do a harvest on annual reporting day\")]\r\n        [Description(\"Do reporting on each harvest?    :\")] public bool EnableOnHarvest { get; set; }\r\n        [Description(\"Name of the component for harvest-based reporting    :\")] public string ReportNameHarvest { get; set; }\r\n\r\n        [Description(\"Do reporting at the end of each production year?    :\")] public bool EnableOnAnnual { get; set; }\r\n        [Description(\"Name of the component for annual reporting    :\")] public string ReportNameAnnual { get; set; }\r\n        [Description(\"Date for annual reporting - NOTE - must coincide with the end of one of the seasons below (dd-mmm)    :\")] public string ReportDateAnnual { get; set; }\r\n\r\n        [Description(\"Do the seasonal reporting)?    :\")] public bool EnableOnSeason { get; set; }\r\n        [Description(\"Name of the component for seasonal reporting    :\")] public string ReportNameSeasonal { get; set; }\r\n        [Description(\"Last day of summer for seasonal reporting (dd-mmm)\")] public string SummerEndDate { get; set; }\r\n        [Description(\"Last day of autumn for seasonal reporting (dd-mmm)\")] public string AutumnEndDate { get; set; }\r\n        [Description(\"Last day of winter for seasonal reporting (dd-mmm)\")] public string WinterEndDate { get; set; }\r\n        [Description(\"Last day of spring for seasonal reporting (dd-mmm)\")] public string SpringEndDate { get; set; }\r\n\r\n        [Description(\"Do the summary reporting (at the end of the simulation)?    :\")] public bool EnableOnSummary { get; set; }\r\n        [Description(\"Name of the component for summary (comparison to observed) reporting    :\")] public string ReportNameSummary { get; set; }\r\n\r\n\r\n\r\n        public double AnnualHarvestedWt { get; set; }\r\n        public double AnnualIrrigated { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n        private bool doAnnualReport = false;\r\n        private bool doAnnualReportCalculations = false;\r\n        private bool doSeasonalReport = false;\r\n        private bool doSummerReport = false;\r\n        private bool doAutumnReport = false;\r\n        private bool doWinterReport = false;\r\n        private bool doSpringReport = false;\r\n        private bool doSummerReportCalculations = false;\r\n        private bool doAutumnReportCalculations = false;\r\n        private bool doWinterReportCalculations = false;\r\n        private bool doSpringReportCalculations = false;\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveAnnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdAnnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngAnnHarvested { get; set; }\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveSummerHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdSummerHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngSummerHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveAutumnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdAutumnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngAutumnHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveWinterHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdWinterHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngWinterHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double AveSpringHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double StdSpringHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double RngSpringHarvested { get; set; }\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double[] AveSeasonalHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double[] StdSeasonalHarvested { get; set; }\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public double[] RngSeasonalHarvested { get; set; }\r\n\r\n        [JsonIgnore][Units(\"-\")] public string Season { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double SeasonNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double SummerNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double AutumnNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double WinterNHA  { get; set; }\r\n        [JsonIgnore][Units(\"-\")] public double SpringNHA  { get; set; }\r\n\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> AnnHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> SummerHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> AutumnHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> WinterHarvested = new List<double>();\r\n        [JsonIgnore][Units(\"kgDM/ha\")] public List<double> SpringHarvested = new List<double>();\r\n        //List<double> harvestedWtSums = new List<double>();\r\n        private int CountYears = 0;\r\n        private bool GrazedToday;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in zone.FindAllChildren<PastureSpecies>().OfType<IModel>().ToList())\r\n                Pasture.Add(species);\r\n\r\n            CountYears = 0;\r\n\r\n            Season = \"Unknown\";\r\n            SeasonNHA = 0.0;\r\n            SummerNHA = 0.0;\r\n            AutumnNHA = 0.0;\r\n            WinterNHA = 0.0;\r\n            SpringNHA = 0.0;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfYear\")]\r\n        private void OnStartOfYear(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazedToday = false;\r\n\r\n            // Is this the day for annual reporting?\r\n            doAnnualReportCalculations = false;  // this is to capture annual harvests etc for the final Summary report\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today))\r\n                doAnnualReportCalculations = true;\r\n\r\n            doAnnualReport = false;\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today) && (EnableOnAnnual))\r\n                doAnnualReport = true;\r\n            else if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today.AddDays(-1)))\r\n            {\r\n                AnnualHarvestedWt = 0.0;\r\n                AnnualIrrigated = 0.0;            \r\n            }\r\n\r\n            doSummerReport = false;\r\n            doAutumnReport = false;\r\n            doWinterReport = false;\r\n            doSpringReport = false;\r\n            doSummerReportCalculations = false;\r\n            doAutumnReportCalculations = false;\r\n            doWinterReportCalculations = false;\r\n            doSpringReportCalculations = false;\r\n            if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today))\r\n            {\r\n                Season = \"Summer\";\r\n                doSummerReport = true;\r\n                doSummerReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;  // could move this zeroing\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today))\r\n            {\r\n                Season = \"Autumn\";\r\n                doAutumnReport = true;\r\n                doAutumnReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today))\r\n            {\r\n                Season = \"Winter\";\r\n                doWinterReport = true;\r\n                doWinterReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today))\r\n            {\r\n                Season = \"Spring\";\r\n                doSpringReport = true;\r\n                doSpringReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"Grazed\")]\r\n        private void OnGrazed(object sender, EventArgs e)\r\n        {\r\n            // Grazing happened today.\r\n            GrazedToday = true;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in Pasture)\r\n            {\r\n                AnnualHarvestedWt += species.NetGrowthWt;\r\n                IntervalNHA += species.NetGrowthWt;\r\n                SeasonNHA += species.NetGrowthWt;\r\n            }\r\n\r\n            AnnualIrrigated += Irrigation.IrrigationApplied;\r\n\r\n            if ((GrazedToday) && (EnableOnHarvest))\r\n            {\r\n                Models.Report harvestReport = this.FindInScope(ReportNameHarvest) as Models.Report;\r\n                if (harvestReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameHarvest));\r\n                harvestReport.DoOutput();\r\n                IntervalNHA = 0.0;\r\n            }\r\n\r\n            if (EnableOnSeason && (doSummerReport || doAutumnReport || doWinterReport || doSpringReport))\r\n            {\r\n                Models.Report seasonalReport = this.FindInScope(ReportNameSeasonal) as Models.Report;\r\n                if (seasonalReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameSeasonal));\r\n                seasonalReport.DoOutput();\r\n            }\r\n\r\n            if (doAnnualReportCalculations)\r\n                AnnHarvested.Add(AnnualHarvestedWt);\r\n            if (doSummerReportCalculations)\r\n                SummerHarvested.Add(SeasonNHA);\r\n            if (doAutumnReportCalculations)\r\n                AutumnHarvested.Add(SeasonNHA);\r\n            if (doWinterReportCalculations)\r\n                WinterHarvested.Add(SeasonNHA);\r\n            if (doSpringReportCalculations)\r\n                SpringHarvested.Add(SeasonNHA);\r\n\r\n            if (doAnnualReport)\r\n            {\r\n                Models.Report annualReport = this.FindInScope(ReportNameAnnual) as Models.Report;\r\n                if (annualReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameAnnual));\r\n                annualReport.DoOutput();\r\n            }\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"EndOfSimulation\")]\r\n        private void OnEndOfSimulation(object sender, EventArgs e)\r\n        {\r\n            if (EnableOnSummary)\r\n            {\r\n\r\n                AveAnnHarvested = MathUtilities.Average(AnnHarvested);\r\n                StdAnnHarvested = MathUtilities.SampleStandardDeviation(AnnHarvested);\r\n                RngAnnHarvested = MathUtilities.Max(AnnHarvested) - MathUtilities.Min(AnnHarvested);\r\n\r\n                AveSummerHarvested = MathUtilities.Average(SummerHarvested);\r\n                StdSummerHarvested = MathUtilities.SampleStandardDeviation(SummerHarvested);\r\n                RngSummerHarvested = MathUtilities.Max(SummerHarvested) - MathUtilities.Min(SummerHarvested);\r\n\r\n                AveAutumnHarvested = MathUtilities.Average(AutumnHarvested);\r\n                StdAutumnHarvested = MathUtilities.SampleStandardDeviation(AutumnHarvested);\r\n                RngAutumnHarvested = MathUtilities.Max(AutumnHarvested) - MathUtilities.Min(AutumnHarvested);\r\n\r\n                AveWinterHarvested = MathUtilities.Average(WinterHarvested);\r\n                StdWinterHarvested = MathUtilities.SampleStandardDeviation(WinterHarvested);\r\n                RngWinterHarvested = MathUtilities.Max(WinterHarvested) - MathUtilities.Min(WinterHarvested);\r\n\r\n                AveSpringHarvested = MathUtilities.Average(SpringHarvested);\r\n                StdSpringHarvested = MathUtilities.SampleStandardDeviation(SpringHarvested);\r\n                RngSpringHarvested = MathUtilities.Max(SpringHarvested) - MathUtilities.Min(SpringHarvested);\r\n\r\n\r\n\r\n                Models.Report summaryReport = this.FindInScope(ReportNameSummary) as Models.Report;\r\n                if (summaryReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameSummary));\r\n                summaryReport.DoOutput();\r\n            }\r\n        }\r\n\r\n\r\n    }\r\n}\r\n",
-                      "Parameters": [
-                        {
-                          "Key": "EnableOnHarvest",
-                          "Value": "False"
-                        },
-                        {
-                          "Key": "ReportNameHarvest",
-                          "Value": "HarvestReport"
-                        },
-                        {
-                          "Key": "EnableOnAnnual",
-                          "Value": "False"
-                        },
-                        {
-                          "Key": "ReportNameAnnual",
-                          "Value": "AnnualReport"
-                        },
-                        {
-                          "Key": "ReportDateAnnual",
-                          "Value": "31-may"
-                        },
-                        {
-                          "Key": "EnableOnSeason",
-                          "Value": "False"
-                        },
-                        {
-                          "Key": "ReportNameSeasonal",
-                          "Value": ""
-                        },
-                        {
-                          "Key": "SummerEndDate",
-                          "Value": "28-feb"
-                        },
-                        {
-                          "Key": "AutumnEndDate",
-                          "Value": "31-may"
-                        },
-                        {
-                          "Key": "WinterEndDate",
-                          "Value": "31-aug"
-                        },
-                        {
-                          "Key": "SpringEndDate",
-                          "Value": "30-nov"
-                        },
-                        {
-                          "Key": "EnableOnSummary",
-                          "Value": "True"
-                        },
-                        {
-                          "Key": "ReportNameSummary",
-                          "Value": "SummaryReport"
-                        },
-                        {
-                          "Key": "AnnualHarvestedWt",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "AnnualIrrigated",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "IntervalNHA",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "DoReporting",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -75515,9 +75702,9 @@
                     },
                     {
                       "$type": "Models.AgPasture.PastureSpecies, Models",
-                      "InitialShootDM": 1500.0,
-                      "InitialRootDM": 450.0,
-                      "InitialRootDepth": 400.0,
+                      "InitialShootDM": 1.0,
+                      "InitialRootDM": 1.0,
+                      "InitialRootDepth": 500.0,
                       "ResourceName": "AGPPaspalum",
                       "Name": "AGPPaspalum",
                       "Enabled": false,
@@ -75527,23 +75714,22 @@
                       "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
-                        "//([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) as HarvestedWt",
-                        "//([AGPRyegrass].Standing.Wt + [AGPWhiteClover].Standing.Wt) as StandingHerbageWt",
-                        "(sum([Soil].Nutrient.Urea.kgha) + sum([Soil].Nutrient.NH4.kgha) + sum([Soil].Nutrient.NO3.kgha)) as MinN",
-                        "//(Sum([Soil].SoilWater.ESW) as ESW ",
-                        "(Sum([Soil].Nutrient.NH4.kgha + [Soil].Nutrient.NO3.kgha)) as TotalPlantAvailableN",
-                        "//([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) as PropCloverHarvested",
-                        "//([AGPRyegrass].DeadTissue.Wt) + ([AGPWhiteClover].DeadTissue.Wt) as Senescence",
-                        "[Irrigation].IrrigationApplied as Irrigation",
-                        "//[SimpleGrazing].PreGrazeDM",
-                        "Sum of [AGPWhiteClover].FixedN from 1-Jul to [Clock].Today as AnnualFixed",
-                        "//([AGPRyegrass].Harvestable.Wt + [AGPWhiteClover].Harvestable.Wt) as HarvestableWt",
-                        "Sum of ([SimpleGrazing].AmountUrineNReturned + [SimpleGrazing].AmountDungNReturned) from 1-Jul to [Clock].Today as AnnualReturnedN",
-                        "([AGPryegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) as TotalUptake",
-                        "Sum of ([AGPryegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) from 1-Jul to [Clock].Today as AnnualTotalUptake",
-                        "Sum([AGPRyegrass].SoilNO3Uptake) + Sum([AGPWhiteClover].SoilNO3Uptake) as NO3Uptake",
+                        "([AGPRyegrass].TotalWt + [AGPWhiteClover].TotalWt) as TotalPlantWt",
+                        "([AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt) as TotalPlantWt",
+                        "([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) as HarvestedWt",
+                        "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) from 1-Jul to [Clock].Today as HarvestedWtCum",
+                        "Sum of ([AGPRyegrass].HarvestedN + [AGPWhiteClover].HarvestedN) from 1-Jul to [Clock].Today as HarvestedNCum",
+                        "([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 0.000001)) as CloverContentHarvested",
+                        "[AGPRyegrass].AboveGroundLiveWt as AboveGroundLiveWt_Ryegrass",
+                        "[AGPWhiteClover].AboveGroundLiveWt as AboveGroundLiveWt_WClover",
                         "",
-                        "Sum of ([AGPWhiteClover].FixedN / ([AGPWhiteClover].FixedN + [AGPWhiteClover].SoilUptakeN + 1)) from 1-Jul to [Clock].Today as CloverFixedN"
+                        "",
+                        "[Irrigation].IrrigationApplied as Irrigation",
+                        "(sum([Soil].Nutrient.Urea.kgha) + sum([Soil].Nutrient.NH4.kgha) + sum([Soil].Nutrient.NO3.kgha)) as TotalSoilMinN",
+                        "Sum of [AGPWhiteClover].FixedN from 1-Jul to [Clock].Today as AnnualFixed",
+                        "Sum of ([SimpleGrazing].AmountUrineNReturned + [SimpleGrazing].AmountDungNReturned) from 1-Jul to [Clock].Today as ReturnedNCum",
+                        "([AGPryegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) as TotalUptake",
+                        "Sum of ([AGPryegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) from 1-Jul to [Clock].Today as AnnualTotalUptake"
                       ],
                       "EventNames": [
                         "[Clock].EndOfDay"
@@ -75558,37 +75744,11 @@
                       "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
-                        "([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) as HarvestedWt",
-                        "([AGPRyegrass].Standing.Wt + [AGPWhiteClover].Standing.Wt) as StandingHerbageWt",
-                        "[AGPRyegrass].HarvestedWt",
-                        "[AGPWhiteClover].HarvestedWt",
-                        "[SimpleGrazing].AmountUrineNReturned as UrineN",
-                        "[SimpleGrazing].AmountDungNReturned as DungN",
-                        "([SimpleGrazing].AmountUrineNReturned + [SimpleGrazing].AmountDungNReturned) as TotalNReturned",
-                        "Sum of ([SimpleGrazing].AmountUrineNReturned + [SimpleGrazing].AmountDungNReturned) from 1-Jul to [Clock].Today as AnnualReturnedN",
-                        "([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) as PropCloverHarvested",
-                        "",
-                        "[Soil].Nutrient.NO3.kgha",
-                        "[Soil].Nutrient.NH4.kgha"
-                      ],
-                      "EventNames": [
-                        "[SimpleGrazing].Grazed"
-                      ],
-                      "GroupByVariableName": null,
-                      "Name": "HarvestReport",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Report, Models",
-                      "VariableNames": [
-                        "[Clock].Today as Date",
                         "[Clock].Today.Year as Year",
                         "[Weather].Season as Season",
                         "sum of [AGPWhiteClover].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as WhiteClover",
                         "sum of [AGPRyegrass].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Ryegrass",
-                        "mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) on [SimpleGrazing].Grazed from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
+                        "mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 0.000001)) on [SimpleGrazing].Grazed from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
                       ],
                       "EventNames": [
                         "[Clock].EndOfSimulation"
@@ -75644,23 +75804,135 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "Graphs",
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Report, Models",
-                      "VariableNames": [
-                        "[Clock].Today as Date",
-                        "[AGPRyegrass].HarvestedWt",
-                        "[AGPPaspalum].HarvestedWt",
-                        "[AGPWhiteClover].HarvestedWt",
-                        "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt + [AGPPaspalum].HarvestedWt) from 1-Jul to [Clock].Today as HarvestedWt"
-                      ],
-                      "EventNames": [
-                        "[SimpleGrazing].Grazed"
-                      ],
-                      "GroupByVariableName": null,
-                      "Name": "Report",
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 2,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Biomass_Ahaura",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "AboveGroundLiveWt_Ryegrass",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ahaura'",
+                      "Name": "Ryegrass",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "AboveGroundLiveWt_WClover",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ahaura'",
+                      "Name": "WClover",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -990142,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "AboveGroundLiveWt_Paspalum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ahaura'",
+                      "Name": "Paspalum",
+                      "Children": [],
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
@@ -75668,190 +75940,352 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.ForageDigestibility.Forages, Models",
-                  "Parameters": [
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
                     {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "SurfaceOrganicMatter.Residue",
-                      "IsLive": true,
-                      "DigestibilityString": "0",
-                      "FractionConsumable": 0.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "SurfaceOrganicMatter.Residue",
-                      "IsLive": false,
-                      "DigestibilityString": "0",
-                      "FractionConsumable": 0.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPRyegrass.Leaf",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 80.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPRyegrass.Leaf",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPRyegrass.Stem",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 20.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPRyegrass.Stem",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPRyegrass.Stolon",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPRyegrass.Stolon",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPWhiteClover.Leaf",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 60.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPWhiteClover.Leaf",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPWhiteClover.Stem",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 15.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPWhiteClover.Stem",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPWhiteClover.Stolon",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 10.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPWhiteClover.Stolon",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPPaspalum.Leaf",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 40.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPPaspalum.Leaf",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPPaspalum.Stem",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 10.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPPaspalum.Stem",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPPaspalum.Stolon",
-                      "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
-                    },
-                    {
-                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                      "Name": "AGPPaspalum.Stolon",
-                      "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 0.0,
-                      "UseDigestibilityFromModel": false
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
-                  "Name": "Forages",
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Irrigation_Whichmore",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "Irrigation",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'WinchmoreIRadcliffe'",
+                      "Name": "Series",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "NUptake_Ruakura",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "AnnualTotalUptake",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ruakura'",
+                      "Name": "AnnualTotalUptake",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "AnnualReturnedN",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ruakura'",
+                      "Name": "AnnualReturned",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "AnnualFixed",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ruakura'",
+                      "Name": "FixedN",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 2,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "NReturned",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "HarvestedNCum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ahaura'",
+                      "Name": "Harvested",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -990142,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Date",
+                      "YFieldName": "ReturnedNCum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Location] LIKE 'Ahaura'",
+                      "Name": "Returned",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 1,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "PxO_AnnualHarv",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Location",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 1,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "Annual",
+              "XFieldName": "Observed.AnnualHarvestedWt",
+              "YFieldName": "Predicted.AnnualHarvestedWt",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": "",
+              "Name": "Series",
+              "Children": [
+                {
+                  "$type": "Models.Regression, Models",
+                  "ForEachSeries": false,
+                  "showOneToOne": true,
+                  "showEquation": true,
+                  "Name": "Regression",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -76007,562 +76441,6 @@
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 2,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "RGxWC",
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Date",
-              "YFieldName": "AGPRyegrass.HarvestedWt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Dargaville'",
-              "Name": "RG",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -1663232,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Date",
-              "YFieldName": "AGPWhiteClover.HarvestedWt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Dargaville'",
-              "Name": "WC",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 2,
-              "ColourArgb": -11094807,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Date",
-              "YFieldName": "HarvestedWt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Dargaville'",
-              "Name": "Total",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -11094807,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Date",
-              "YFieldName": "AGPPaspalum.HarvestedWt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Dargaville'",
-              "Name": "Paspalum",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": false,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 2,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "NReturned",
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "HarvestReport",
-              "XFieldName": "Date",
-              "YFieldName": "UrineN",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Cromwell'",
-              "Name": "Urine",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -1663232,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "HarvestReport",
-              "XFieldName": "Date",
-              "YFieldName": "DungN",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Cromwell'",
-              "Name": "Dung",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Date",
-              "YFieldName": "NO3Uptake",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Cromwell'",
-              "Name": "Total",
-              "Children": [],
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 2,
-              "ColourArgb": -990142,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "HarvestReport",
-              "XFieldName": "Date",
-              "YFieldName": "AnnualReturnedN",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Cromwell'",
-              "Name": "Annual",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 2,
-              "ColourArgb": -990142,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "HarvestReport",
-              "XFieldName": "Date",
-              "YFieldName": "AnnualReturnedN",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Cromwell'",
-              "Name": "Annual1",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "NUptake",
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Date",
-              "YFieldName": "AnnualTotalUptake",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Ruakura'",
-              "Name": "AnnualTotalUptake",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -1663232,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Date",
-              "YFieldName": "AnnualReturnedN",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Ruakura'",
-              "Name": "AnnualReturned",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16736653,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Date",
-              "YFieldName": "AnnualFixed",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Ruakura'",
-              "Name": "FixedN",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -3376729,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Date",
-              "YFieldName": "CloverFixedN",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'Ruakura'",
-              "Name": "CloverFixedN",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "Irrigation",
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 0,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Date",
-              "YFieldName": "Irrigation",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "[Location] LIKE 'WinchmoreIRadcliffe'",
-              "Name": "Series",
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
