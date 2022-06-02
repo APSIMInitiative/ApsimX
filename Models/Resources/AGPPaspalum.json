@@ -83,14 +83,14 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Leaf",
-          "NConcMinimum": 0.012,
-          "NConcOptimum": 0.04,
-          "NConcMaximum": 0.05,
+          "NConcMinimum": 0.0076,
+          "NConcOptimum": 0.025,
+          "NConcMaximum": 0.0325,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.6,
               "Children": [],
@@ -101,7 +101,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DevelopingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.15,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -111,7 +111,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.25,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -136,14 +136,14 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
-          "NConcMinimum": 0.006,
-          "NConcOptimum": 0.02,
-          "NConcMaximum": 0.025,
+          "NConcMinimum": 0.004,
+          "NConcOptimum": 0.0125,
+          "NConcMaximum": 0.0175,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.6,
               "Children": [],
@@ -154,7 +154,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DevelopingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.15,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -164,7 +164,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.25,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -189,15 +189,15 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stolon",
-          "FractionStanding": 0.0,
           "NConcMinimum": 0.0,
           "NConcOptimum": 0.0,
           "NConcMaximum": 0.0,
+          "FractionStanding": 0.0,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.6,
               "Children": [],
@@ -218,7 +218,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -243,9 +243,9 @@
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
           "Name": "Root",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.006,
-          "NConcMaximum": 0.025,
+          "NConcMinimum": 0.004,
+          "NConcOptimum": 0.0125,
+          "NConcMaximum": 0.0150,
           "MinimumRootingDepth": 50.0,
           "MaximumPotentialRootingDepth": 1000.0,
           "RootElongationRate": 30.0,
@@ -260,7 +260,7 @@
             {
               "$type": "Models.AgPasture.RootTissue, Models",
               "Name": "Live",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

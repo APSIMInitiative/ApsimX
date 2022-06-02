@@ -83,14 +83,14 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Leaf",
-          "NConcMinimum": 0.0133,
+          "NConcMinimum": 0.0135,
           "NConcOptimum": 0.05,
           "NConcMaximum": 0.06,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.9,
               "Children": [],
@@ -111,7 +111,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.7,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -136,14 +136,14 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stem",
-          "NConcMinimum": 0.0067,
+          "NConcMinimum": 0.0073,
           "NConcOptimum": 0.0225,
           "NConcMaximum": 0.03,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.9,
               "Children": [],
@@ -164,7 +164,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.7,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -197,7 +197,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.9,
               "Children": [],
@@ -218,7 +218,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.7,
               "Children": [],
               "IncludeInDocumentation": true,

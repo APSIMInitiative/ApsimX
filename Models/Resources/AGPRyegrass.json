@@ -90,7 +90,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.9,
               "Children": [],
@@ -111,7 +111,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -143,7 +143,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.9,
               "Children": [],
@@ -164,7 +164,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -208,7 +208,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DevelopingTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.0,
               "DigestibilityCellWall": 0.7,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -218,7 +218,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.6,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -260,7 +260,7 @@
             {
               "$type": "Models.AgPasture.RootTissue, Models",
               "Name": "Live",
-              "FractionNRemobilisable": 0.1,
+              "FractionNRemobilisable": 0.2,
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
