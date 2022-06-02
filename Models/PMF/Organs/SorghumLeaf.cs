@@ -18,13 +18,18 @@ namespace Models.PMF.Organs
 {
 
     /// <summary>
-    /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
-    /// through photosynthesis, and determining the plant's transpiration demand.  The model also calculates the growth, senescence, and
-    /// detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
+    /// SorghumLeaf reproduces the functionality provided by the sorghum and maize models in Apsim Classic.
+    /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.  
     /// 
-    /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
-    /// competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
-    /// Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
+    /// Radiation interception is supplied via the MicroClimate model.  
+    /// Potential evapotranspiration is calculated within this model, although additional functionality has been provided in order to use the evapotransiration
+    /// calculation method provided by MicroClimate. The UseMicroClimate switch allows the user to select which method to use. 
+    /// The Sorghum model has been validated using the provided water demand function, not MicroClimate 
+    /// Each day, the potential daily leaf growth is calculated - DeltaLAI.
+    /// This value is then adjusted through the amount of stress, and also the limitations provided by SLA (Specific Leaf Area) and SLN (Specific Leaf Nitrogen)
+    /// This model takes into account competition between different plants when more than one is present in the simulation.  
+    /// The values of canopy Cover, LAI, and plant Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  
+    /// MicroClimate uses an implementation of the
     /// Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
     /// These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
@@ -1165,10 +1170,11 @@ namespace Models.PMF.Organs
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            // Add a heading and description.
-            foreach (ITag tag in base.Document())
+            foreach (var tag in GetModelDescription())
                 yield return tag;
 
+            foreach (ITag tag in culms.Document())
+                yield return tag;
             // List the parameters, properties, and processes from this organ that need to be documented:
 
             // Document initial DM weight.
