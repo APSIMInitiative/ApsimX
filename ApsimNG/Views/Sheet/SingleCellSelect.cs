@@ -1,5 +1,4 @@
-﻿using Gdk;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace UserInterface.Views
@@ -102,10 +101,18 @@ namespace UserInterface.Views
             if (sheet.CellHitTest(evnt.X, evnt.Y, out colIndex, out rowIndex) &&
                 rowIndex >= sheet.NumberFrozenRows)
             {
-                selectedColumnIndex = colIndex;
-                selectedRowIndex = rowIndex;
-                sheetWidget.GrabFocus();
-                sheet.Refresh();
+                // If the cell is already selected then go into edit mode.
+                if (IsSelected(colIndex, rowIndex))
+                {
+                    Editor?.Edit();
+                }
+                else
+                {
+                    selectedColumnIndex = colIndex;
+                    selectedRowIndex = rowIndex;
+                    sheetWidget.GrabFocus();
+                    sheet.Refresh();
+                }
             }
         }
 
@@ -136,7 +143,7 @@ namespace UserInterface.Views
         /// <summary>Moves the selected cell down one row.</summary>
         private void MoveDown()
         {
-            selectedRowIndex = Math.Min(selectedRowIndex + 1, sheet.DataProvider.RowCount - 1);
+            selectedRowIndex = Math.Min(selectedRowIndex + 1, sheet.RowCount - 1);
             if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))
                 sheet.ScrollDown();
         }
@@ -153,7 +160,7 @@ namespace UserInterface.Views
         private void PageDown()
         {
             int pageSize = sheet.FullyVisibleRowIndexes.Count() - sheet.NumberFrozenRows;
-            selectedRowIndex = Math.Min(selectedRowIndex + pageSize, sheet.DataProvider.RowCount-1);
+            selectedRowIndex = Math.Min(selectedRowIndex + pageSize, sheet.RowCount-1);
             sheet.ScrollDownPage();
         }
 
@@ -174,7 +181,7 @@ namespace UserInterface.Views
         /// <summary>Moves the selected cell to bottom row.</summary>
         private void MoveToBottom()
         {
-            selectedRowIndex = sheet.DataProvider.RowCount - 1;
+            selectedRowIndex = sheet.RowCount - 1;
             sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
         }
 

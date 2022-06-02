@@ -61,7 +61,7 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                return SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStringsCM(Thickness);
             }
             set
             {

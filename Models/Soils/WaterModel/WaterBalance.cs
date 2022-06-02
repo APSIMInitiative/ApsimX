@@ -201,7 +201,7 @@ namespace Models.WaterModel
         {
             get
             {
-                return SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStringsCM(Thickness);
             }
             set
             {

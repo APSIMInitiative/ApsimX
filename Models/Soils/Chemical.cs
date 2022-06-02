@@ -3,15 +3,20 @@
     using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Interfaces;
+    using Models.Soils.Nutrients;
+    using Models.Soils.Standardiser;
     using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
+    using System.Data;
 
     /// <summary>This class captures chemical soil data</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
+    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
     [ValidParent(ParentType=typeof(Soil))]
-    public class Chemical : Model
+    public class Chemical : Model, ITabularData
     {
         /// <summary>An enumeration for specifying PH units.</summary>
         public enum PHUnitsEnum
@@ -33,7 +38,7 @@
         {
             get
             {
-                return SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStringsCM(Thickness);
             }
             set
             {
@@ -78,5 +83,67 @@
 
         /// <summary>PH metadata</summary>
         public string[] PHMetadata { get; set; }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public DataTable GetData()
+        {
+            var solutes = GetStandardisedSolutes();
+
+            var data = new DataTable("Chemical");
+            data.Columns.Add("Depth");
+            foreach (var solute in solutes)
+                data.Columns.Add(solute.Name);
+            data.Columns.Add("pH");
+            data.Columns.Add("EC");
+            data.Columns.Add("ESP");
+
+            // Add units to row 1.
+            var unitsRow = data.NewRow();
+            unitsRow["Depth"] = "(mm)";
+            unitsRow["pH"] = $"({PHUnits})";
+            unitsRow["EC"] = "(1:5 dS/m)";
+            unitsRow["ESP"] = "(%)";
+            foreach (var solute in solutes)
+                unitsRow[solute.Name] = $"({solute.InitialValuesUnits})";
+            data.Rows.Add(unitsRow);
+
+            var depthStrings = SoilUtilities.ToDepthStrings(Thickness);
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                var row = data.NewRow();
+                row["Depth"] = depthStrings[i];
+                if (PH != null && i < PH.Length)
+                    row["pH"] = PH[i].ToString("F3");
+                if (EC != null && i < EC.Length)
+                    row["EC"] = EC[i].ToString("F3");
+                if (ESP != null && i < ESP.Length)
+                    row["ESP"] = ESP[i].ToString("F3");
+                foreach (var solute in solutes)
+                    row[solute.Name] = solute.InitialValues[i].ToString("F3");
+                data.Rows.Add(row);
+            }
+
+            return data;
+        }
+
+        /// <summary>Get all solutes with standardised layer structure.</summary>
+        /// <returns></returns>
+        private IEnumerable<Solute> GetStandardisedSolutes()
+        {
+            var solutes = new List<Solute>();
+
+            // Add in child solutes.
+            foreach (var solute in FindAllChildren<Solute>())
+            {
+                var standardisedSolute = solute.Clone();
+                if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
+                    standardisedSolute.InitialValues = Layers.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
+                else
+                    standardisedSolute.InitialValues = Layers.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
+
+                solutes.Add(standardisedSolute);
+            }
+            return solutes;
+        }
     }
 }

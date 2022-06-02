@@ -118,6 +118,14 @@
         /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
         /// <param name="Thickness">The thickness.</param>
         /// <returns></returns>
+        public static string[] ToDepthStringsCM(double[] Thickness)
+        {
+            return ToDepthStrings(MathUtilities.Divide_Value(Thickness, 10.0));
+        }
+
+        /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
+        /// <param name="Thickness">The thickness.</param>
+        /// <returns></returns>
         public static string[] ToDepthStrings(double[] Thickness)
         {
             if (Thickness == null)
@@ -130,7 +138,7 @@
                     Strings[i] = "";
                 else
                 {
-                    double ThisThickness = Thickness[i] / 10; // to cm
+                    double ThisThickness = Thickness[i];
                     double TopOfLayer = DepthSoFar;
                     double BottomOfLayer = DepthSoFar + ThisThickness;
 

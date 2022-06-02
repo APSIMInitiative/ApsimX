@@ -24,6 +24,7 @@ namespace UserInterface.Views
         {
             this.sheet = sheet;
             this.sheetWidget = sheetWidget;
+            sheet.MouseClick += OnMouseClickEvent;
             sheet.KeyPress += OnKeyPressEvent;
         }
 
@@ -32,10 +33,20 @@ namespace UserInterface.Views
 
         public bool IsEditing => entry != null;
 
+
         /// <summary>Cleanup the instance.</summary>
         private void Cleanup()
         {
+            sheet.MouseClick -= OnMouseClickEvent;
             sheet.KeyPress -= OnKeyPressEvent;
+        }
+
+        /// <summary>Invoked when the user clicks a mouse button.</summary>
+        /// <param name="sender">Sender of event.</param>
+        /// <param name="evnt">The event data.</param>
+        private void OnMouseClickEvent(object sender, SheetEventButton evnt)
+        {
+
         }
 
         /// <summary>Invoked when the user presses a key.</summary>
@@ -44,11 +55,11 @@ namespace UserInterface.Views
         private void OnKeyPressEvent(object sender, SheetEventKey evnt)
         {
             if (!IsEditing && evnt.Key == Keys.Return)
-                ShowEntryBox();
+                Edit();
         }
         
-        /// <summary>Display an entry box for the user to edit cell data.</summary>
-        private void ShowEntryBox()
+        /// <summary>Display an entry box for the user to edit the current selected cell data.</summary>
+        public void Edit()
         {
             Selection.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
             var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);

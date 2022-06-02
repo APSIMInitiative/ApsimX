@@ -160,7 +160,7 @@ namespace Models.Soils
         {
             get
             {
-                return SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStringsCM(Thickness);
             }
             set
             {

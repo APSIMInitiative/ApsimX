@@ -152,6 +152,9 @@ namespace UserInterface.Views
         /// <summary>The padding (in pixels) to go on the left and right size of a column.</summary>
         public int ColumnPadding { get; set; } = 20;
 
+        /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
+        public int RowCount { get; set; } = 0;
+
         /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
         public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
 
@@ -292,6 +295,13 @@ namespace UserInterface.Views
                 foreach (var columnIndex in VisibleColumnIndexes)
                     foreach (var rowIndex in VisibleRowIndexes)
                         DrawCell(cr, columnIndex, rowIndex);
+
+                // Optionally add in blank rows at bottom of grid.
+                int numRowsOfData = VisibleRowIndexes.Count();
+                int numBlankRowsToAdd = Math.Max(0, RowCount - numRowsOfData);
+                foreach (var columnIndex in VisibleColumnIndexes)
+                    for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
+                        DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
             }
             catch (Exception err)
             {
@@ -311,6 +321,9 @@ namespace UserInterface.Views
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
                 MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.LastOrDefault();
+
+            if (RowCount == 0)
+                RowCount = DataProvider.RowCount; 
 
             Initialised?.Invoke(this, new EventArgs());
         }
@@ -397,7 +410,7 @@ namespace UserInterface.Views
         {
             int top = 0;
             int rowIndex = 0;
-            while (rowIndex < DataProvider.RowCount && top < Height)
+            while (rowIndex < RowCount && top < Height)
             {
                 var firstScrollableRowIndex = NumberHiddenRows + NumberFrozenRows;
 
@@ -444,17 +457,33 @@ namespace UserInterface.Views
             {
                 int columnWidth = 0;
                 for (int rowIndex = 0; rowIndex < NumberFrozenRows + 1; rowIndex++)
-                {
-                    var text = DataProvider.GetCellContents(columnIndex, rowIndex);
-                    if (text == null)
-                        text = string.Empty;
+                    columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
-                    var rectangle = cr.GetPixelExtents(text, true, false);
+                // Look at middle row.
+                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount / 2));
 
-                    columnWidth = Math.Max(columnWidth, rectangle.Width);
-                }
+                // Look at last row.
+                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount-1));
+
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }
+        }
+
+        /// <summary>
+        /// Get the width of a cell.
+        /// </summary>
+        /// <param name="cr"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        private int GetWidthOfCell(IDrawContext cr, int columnIndex, int rowIndex)
+        {
+            var text = DataProvider.GetCellContents(columnIndex, rowIndex);
+            if (text == null)
+                text = string.Empty;
+
+            var rectangle = cr.GetPixelExtents(text, true, false);
+            return rectangle.Width;
         }
 
         /// <summary>Draw a single cell to the context.</summary>
@@ -465,7 +494,9 @@ namespace UserInterface.Views
         {
             try
             {
-                var text = DataProvider.GetCellContents(columnIndex, rowIndex);
+                string text = null;
+                if (rowIndex < DataProvider.RowCount)
+                    text = DataProvider.GetCellContents(columnIndex, rowIndex);
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
                 if (cellBounds != null)
                 {
