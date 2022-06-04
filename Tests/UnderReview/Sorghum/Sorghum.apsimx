@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 601,
+  "ExplorerWidth": 285,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -181,7 +181,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "_McLean, G., Brider, J., Doherty, A._\r\n\r\nThe APSIM sorghum model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a culms model to simulate tillering\r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs\n",
+              "Text": "Hammer, G.L., McLean, G, Brider, J, Holzworth, D\n\nThe APSIM-sorghum model is based on a framework of the physiological determinants of crop growth and development (Charles-Edwards, 1982) and is focused at organ scale. It generates the phenotype of a crop as a consequence of underlying physiological processes (Fig. 1) by using the concept of supply and demand balances for light, carbon, water, and nitrogen (Hammer et al., 2001b).\nThe approach is focused around quantifying capture and use of radiation, water, and nitrogen within a framework that predicts the dynamics of crop development and the realized growth of major organs based on their potential growth and whether the supply of carbohydrate and nitrogen can satisfy this potential. Demand for resources is defined by potential organ growth and potential supply by resource capture (Monteith, 1977; Passioura, 1983; Monteith, 1986) (Fig. 1).\n\nArbitration rules and organ level responses are invoked when resource capture cannot satisfy demand. The APSIM-sorghum model retains some features and concepts of earlier models (Sinclair, 1986; Rosenthal et al., 1989; Birch et al., 1990; Sinclair and Amir, 1992; Chapman et al., 1993; Hammer and Muchow, 1994), but has been adapted and redesigned to generate a more explanatory approach to the modeling of the underlying physiology (Hammer et al., 2006).\n\n\n![Schematic representation of crop growth and development dynamics (a) and crop nitrogen dynamics (b) in Agricultural Production System sIMulator (APSIM)-sorghum model. Connection points between the two schematics are shown by theshaded boxes. After Hammer et al. (2010). SLN, specific leaf nitrogen](SorghumModel.png)\n",
               "Name": "Introduction",
               "Children": [],
               "Enabled": true,
@@ -480,7 +480,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The phenology model used in the APSIM sorghum model follows the approach used in earlier sorghum models(Jones and Kiniry (1986), Carberry and Arbrecht (1991), Carberry et al (1989).  \r\nThe model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  \r\n",
+                  "Text": "Phenology is simulated through a number of development stages by using a thermal time approach (Muchow and Carberry, 1990; Hammer and Muchow, 1994),\nwith the temperature response characterized by a base (Tb), optimum (Topt), and maximum (Tm) temperature. Hammer et al. (1993) and Carberry et al. (1993) reported values of Tb, Topt, and Tm for sorghum of 11, 32, and 42°C, respectively.\nThe thermal time target for the phase between emergence and panicle initiation is also a function of day length (Hammer et al., 1989; Ravi Kumar et al., 2009), and its duration, when divided by the plastochron (°Cd per leaf), determines total leaf number once an allowance for leaf initials in the embryo has been included.\nTotal leaf number multiplied by the phyllochron (°Cd per leaf) determines the thermal time to reach flag leaf stage, which is thus an emergent property of the model. The duration of the phases between the stages of flag leaf, anthesis, and start and end of grain filling are also simulated through thermal time targets (Muchow and Carberry, 1990; Hammer and Muchow, 1994; Ravi Kumar et al., 2009). Drought stress and N stress can both reduce the leaf appearance rate and hence delay phenology during the vegetative stages (Craufurd et al., 1993; van Oosterom et al., 2010a).\n",
                   "Name": "memo",
                   "Children": [],
                   "Enabled": true,
