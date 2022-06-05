@@ -85,7 +85,14 @@ namespace Models.CLEM.Resources
         /// 0 (default) = not a market transaction
         ///</summary> 
         public double MarketTransactionMultiplier { get; set; }
-
+        /// <summary>
+        /// The details if this request comes from an companion model managing resources
+        /// </summary>
+        public (string type, string identifier, string unit) CompanionModelDetails { get; set; }
+        /// <summary>
+        /// The final outcome if shortfall for reporting to shortfall reports
+        /// </summary>
+        public string ShortfallStatus { get; set; }
         ///<summary>
         /// ResourceRequest constructor
         ///</summary> 
@@ -157,10 +164,30 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class ActivityPerformedEventArgs : EventArgs
     {
+        ///// <summary>
+        ///// Activity details
+        ///// </summary>
+        //public CLEMActivityBase Activity { get; set; }
+
         /// <summary>
-        /// Activity details
+        /// Name of activity
         /// </summary>
-        public CLEMActivityBase Activity { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Status at time of reporting
+        /// </summary>
+        public ActivityStatus Status { get; set; }
+
+        /// <summary>
+        /// Status at time of reporting
+        /// </summary>
+        public string StatusMessage { get; }
+
+        /// <summary>
+        /// Activity unique Id
+        /// </summary>
+        public string Id { get; set; }
     }
 
 

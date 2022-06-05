@@ -8,8 +8,9 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Reporting;
+using Models.CLEM.Activities;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on date range
@@ -64,6 +65,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerDateRange()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 
@@ -85,13 +87,10 @@ namespace Models.CLEM.Activities
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
+                        Name = this.Name,
+                        Status = ActivityStatus.Timer,
+                        Id = this.UniqueID.ToString(),
                     };
-                    activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
                 }
                 return inrange;
@@ -157,7 +156,7 @@ namespace Models.CLEM.Activities
                 if (StartDate != startDate || EndDate != endDate)
                     htmlWriter.Write(" (modified for monthly timestep)");
                 htmlWriter.Write("</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }
