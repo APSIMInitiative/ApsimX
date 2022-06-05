@@ -1,17 +1,16 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq.Expressions;
-using Display = Models.Core.DisplayAttribute;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on resource
@@ -50,7 +49,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Operator to use for filtering")]
         [Required]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
         private object[] GetOperators() => new object[]
         {
@@ -78,6 +77,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerResourceLevel()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 
@@ -144,8 +144,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform when ");
-                htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write($"Perform when {DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)} ");
                 string str = "";
                 switch (Operator)
                 {
@@ -180,7 +179,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</span>");
                 }
                 htmlWriter.Write("</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }

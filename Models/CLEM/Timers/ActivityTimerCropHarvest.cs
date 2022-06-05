@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -8,9 +9,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
-using System.Diagnostics;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on crop harvest
@@ -54,6 +54,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerCropHarvest()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 
@@ -103,17 +104,10 @@ namespace Models.CLEM.Activities
                     seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
                 }
 
-                foreach (var seq in sequenceTimerList)
-                {
-                    string sequence = seq.Sequence;
-                    if (seqStart > seq.Sequence.Length)
-                    {
-                        sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(seqStart??0 / (double)seq.Sequence.Length))));
-                    }
-                    if (sequence.Substring(seqStart ?? 0,1) == "0")
-                        return false;
-                }
-                return (seqStart != null);
+                if(seqStart != null)
+                    return ActivityTimerSequence.IsInSequence(sequenceTimerList, seqStart);
+
+                return false;
             }
         }
 
@@ -168,44 +162,36 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
+                htmlWriter.Write("\r\n<div class=\"filter\">");
                 if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
                 {
-                    htmlWriter.Write("\r\n<div class=\"filter\">At harvest");
-                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write("At harvest</div>");
                 }
                 else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
                 {
-                    htmlWriter.Write("\r\n<div class=\"filter\">");
-                    htmlWriter.Write("All <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest (\"first\" if using HarvestType)");
-                    htmlWriter.Write("</div>");
+                    htmlWriter.Write($"All {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStart))}");
+                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest (\"first\" if using HarvestType)</div>");
                 }
                 else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
                 {
-                    htmlWriter.Write("\r\n<div class=\"filter\">");
-                    htmlWriter.Write("All <span class=\"setvalueextra\">");
-                    htmlWriter.Write(OffsetMonthHarvestStop.ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest (\"last\" if using HarvestType)");
-                    htmlWriter.Write("</div>");
+                    htmlWriter.Write($"All {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStop))}");
+                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest (\"last\" if using HarvestType)</div>");
                 }
                 else if (OffsetMonthHarvestStop == OffsetMonthHarvestStart)
                 {
-                    htmlWriter.Write("\r\n<div class=\"filter\">");
-                    htmlWriter.Write("Perform <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before \"first\" (if using HarvestType)" : "after \"last\" (if using HarvestType)") + " harvest");
-                    htmlWriter.Write("</div>");
+                    htmlWriter.Write($"Perform {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStop))}");
+                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before \"first\" (if using HarvestType)" : "after \"last\" (if using HarvestType)") + " harvest</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\r\n<div class=\"filter\">");
-                    htmlWriter.Write("Start <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ");
+                    htmlWriter.Write($"Start {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStart))}");
+                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ");
                     htmlWriter.Write((OffsetMonthHarvestStart > 0) ? "after \"last\" (if using HarvestType) " : "before \"first\" (if using HarvestType) ");
-                    htmlWriter.Write(" harvest and stop <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ");
-                    htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)");
-                    htmlWriter.Write("</div>");
+                    htmlWriter.Write($" harvest and stop {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStop))}");
+                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ");
+                    htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)</div>");
                 }
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
 
                 return htmlWriter.ToString(); 

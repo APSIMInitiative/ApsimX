@@ -163,6 +163,18 @@ namespace Models.CLEM.Resources
         public double PurchaseAge { get; set; }
 
         /// <summary>
+        /// Number of months since purchased
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSincePurchase
+        {
+            get
+            {
+                return Convert.ToInt32(Math.Round(Age - PurchaseAge, 4));
+            }
+        }
+
+        /// <summary>
         /// Weight (kg)
         /// </summary>
         /// <units>kg</units>
@@ -291,25 +303,28 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(this.IsSuckling)
+                if (this.IsSuckling)
                     return "Suckling";
-                else if(this.IsWeaner)
+                else if (this.IsWeaner)
                     return "Weaner";
                 else
                 {
-                    if(this is RuminantFemale)
+                    if (this is RuminantFemale)
+                    {
                         if ((this as RuminantFemale).IsPreBreeder)
                             return "PreBreeder";
                         else
                             return "Breeder";
+                    }
                     else
-                        if((this as RuminantMale).IsSire)
+                    {
+                        if ((this as RuminantMale).IsSire)
                             return "Sire";
-                        else if((this as RuminantMale).IsCastrated)
+                        else if ((this as RuminantMale).IsCastrated)
                             return "Castrate";
                         else
                         {
-                            if((this as RuminantMale).IsWildBreeder)
+                            if ((this as RuminantMale).IsWildBreeder)
                             {
                                 return "Breeder";
                             }
@@ -318,6 +333,7 @@ namespace Models.CLEM.Resources
                                 return "PreBreeder";
                             }
                         }
+                    }
                 }
             }
         }
@@ -581,7 +597,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Wean(bool report, string reason)
         {
-            weaned = true;
+            weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
             if (this.Mother != null)
             {
                 this.Mother.SucklingOffspringList.Remove(this);
@@ -589,33 +605,43 @@ namespace Models.CLEM.Resources
             }
             if (report)
             {
+                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
-                    RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
-                    {
-                        RumObj = this,
-                        Category = reason
-                    };
-                    (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
-                }
+                    RumObj = this,
+                    Category = reason
+                };
+                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
             }
 
         }
 
-        private bool weaned = true;
+        private int weaned = -1;
 
         /// <summary>
         /// Method to set the weaned status to unweaned for new born individuals.
         /// </summary>
         public void SetUnweaned()
         {
-            weaned = false;
+            weaned = -1;
         }
 
         /// <summary>
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool Weaned { get { return weaned; } }
+        public bool Weaned { get { return (weaned >= 0); } }
+
+        /// <summary>
+        /// Number of months since weaned
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSinceWeaned 
+        { 
+            get
+            {
+                return Convert.ToInt32(Math.Round(Age - weaned, 4));
+            }
+        }
 
         /// <summary>
         /// Milk production currently available from mother
@@ -696,7 +722,9 @@ namespace Models.CLEM.Resources
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;
-            this.weaned = true;
+            int ageInt = Convert.ToInt32(Math.Round(Age, 4));
+            int weanage = Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
+            this.weaned = (ageInt <= weanage)?ageInt:weanage;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
         }
