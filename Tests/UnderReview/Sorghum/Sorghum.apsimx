@@ -181,7 +181,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Hammer, G.L., McLean, G, Brider, J, Holzworth, D\n\nThe APSIM-sorghum model is based on a framework of the physiological determinants of crop growth and development (Charles-Edwards, 1982) and is focused at organ scale. It generates the phenotype of a crop as a consequence of underlying physiological processes (Fig. 1) by using the concept of supply and demand balances for light, carbon, water, and nitrogen (Hammer et al., 2001b).\nThe approach is focused around quantifying capture and use of radiation, water, and nitrogen within a framework that predicts the dynamics of crop development and the realized growth of major organs based on their potential growth and whether the supply of carbohydrate and nitrogen can satisfy this potential. Demand for resources is defined by potential organ growth and potential supply by resource capture (Monteith, 1977; Passioura, 1983; Monteith, 1986) (Fig. 1).\n\nArbitration rules and organ level responses are invoked when resource capture cannot satisfy demand. The APSIM-sorghum model retains some features and concepts of earlier models (Sinclair, 1986; Rosenthal et al., 1989; Birch et al., 1990; Sinclair and Amir, 1992; Chapman et al., 1993; Hammer and Muchow, 1994), but has been adapted and redesigned to generate a more explanatory approach to the modeling of the underlying physiology (Hammer et al., 2006).\n\n\n![Schematic representation of crop growth and development dynamics (a) and crop nitrogen dynamics (b) in Agricultural Production System sIMulator (APSIM)-sorghum model. Connection points between the two schematics are shown by theshaded boxes. After Hammer et al. (2010). SLN, specific leaf nitrogen](SorghumModel.png)\n",
+              "Text": "Hammer, G.L., McLean, G, Brider, J, Holzworth, D\n\nThe APSIM-sorghum model is based on a framework of the physiological determinants of crop growth and development (Charles-Edwards, 1982) and is focused at organ scale. It generates the phenotype of a crop as a consequence of underlying physiological processes (Fig. 1) by using the concept of supply and demand balances for light, carbon, water, and nitrogen (Hammer et al., 2001b).\nThe approach is focused around quantifying capture and use of radiation, water, and nitrogen within a framework that predicts the dynamics of crop development and the realized growth of major organs based on their potential growth and whether the supply of carbohydrate and nitrogen can satisfy this potential. Demand for resources is defined by potential organ growth and potential supply by resource capture (Monteith, 1977; Passioura, 1983; Monteith, 1986) (Fig. 1).\n\nArbitration rules and organ level responses are invoked when resource capture cannot satisfy demand. The APSIM-sorghum model retains some features and concepts of earlier models (Sinclair, 1986; Rosenthal et al., 1989; Birch et al., 1990; Sinclair and Amir, 1992; Chapman et al., 1993; Hammer and Muchow, 1994), but has been adapted and redesigned to generate a more explanatory approach to the modeling of the underlying physiology (Hammer et al., 2006).\n\n![Schematic representation of crop growth and development dynamics (a) and crop nitrogen dynamics (b) in Agricultural Production System sIMulator (APSIM)-sorghum model. Connection points between the two schematics are shown by theshaded boxes. After Hammer et al. (2010). SLN, specific leaf nitrogen](SorghumModel.png)\n\n",
               "Name": "Introduction",
               "Children": [],
               "Enabled": true,
@@ -6678,7 +6678,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": " required",
+                              "Name": "requiredN",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -6759,7 +6759,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": " required",
+                              "Name": "RequiredN",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -8105,7 +8105,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": " required",
+                              "Name": "RequiredN",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -8186,7 +8186,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": " required",
+                              "Name": "RequiredN",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
