@@ -20,23 +20,7 @@ namespace Models.PMF.Organs
     /// <summary>
     /// SorghumLeaf reproduces the functionality provided by the sorghum and maize models in Apsim Classic.
     /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.  
-    /// 
-    /// Radiation interception is supplied via the MicroClimate model.  
-    /// Potential evapotranspiration is calculated within this model, although additional functionality has been provided in order to use the evapotransiration
-    /// calculation method provided by MicroClimate. The UseMicroClimate switch allows the user to select which method to use. 
-    /// The Sorghum model has been validated using the provided water demand function, not MicroClimate 
-    /// Each day, the potential daily leaf growth is calculated - DeltaLAI.
-    /// This value is then adjusted through the amount of stress, and also the limitations provided by SLA (Specific Leaf Area) and SLN (Specific Leaf Nitrogen)
-    /// This model takes into account competition between different plants when more than one is present in the simulation.  
-    /// The values of canopy Cover, LAI, and plant Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  
-    /// MicroClimate uses an implementation of the
-    /// Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
-    /// These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
-    /// <remarks>
-    /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
-    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
-    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -1171,6 +1155,10 @@ namespace Models.PMF.Organs
         public override IEnumerable<ITag> Document()
         {
             foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
                 yield return tag;
 
             foreach (ITag tag in culms.Document())

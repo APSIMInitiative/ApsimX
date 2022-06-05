@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 376,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -3487,6 +3487,14 @@
               "DltSenescedLaiAge": 0.0,
               "Name": "Leaf",
               "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Aboveground biomass accumulation is simulated as the minimum of light-limited or water-limited growth. In the absence of water limitation, biomass accumulation is the product of the amount of intercepted radiation (IR) and its conversion efficiency, the radiation use efficiency (RUE). The fraction of incident radiation intercepted is a function of the LAI and the canopy extinction coefficient(k), which is a measure of canopy structure (Lafarge and Hammer, 2002). The eﬀects of N supply on crop growth are implicitly incorporated in this approach. Nitrogen limitation will reduce leaf area growth and hence LAI and IR. It can also reduce RUE, which is a function of the N status of the leaves (Muchow and Sinclair, 1994; Sinclair and Amir, 1992). Sinclair and Muchow (1998) reviewed studies that had measured RUE in many crops and noted a consistent value of 1.25 g MJ−1 for triple dwarf sorghum under optimum growing conditions.\n\nUnder water limitation, above ground biomass accumulation is the product of realized transpiration and its conversion efficiency, biomass produced per unitof water transpired, or transpiration efficiency (TE). It is necessary to adjust TE to allow for the prevailing vapor pressure deﬁcit (vpd) (Tanner and Sinclair, 1983;Kemanian et al., 2005). Numerous studies in sorghum (Tanner and Sinclair, 1983; Hammer et al., 1997) have found a standard value of 9 Pa for the TE coefficient insorghum, so that at a vpd of 2 kPa a TE of 4.5 gm−2 mm−1 results. As RUE and TE are based on aboveground biomass only, root mass is not explicitly modeled, but is added to the aboveground biomass accumulation according to a root/shoot ratio that declines with successive growth stages of the crop.",
+                  "Name": "Introduction",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.PMF.Struct.LeafCulms, Models",
                   "dltLeafNo": 0.0,
