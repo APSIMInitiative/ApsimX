@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 148,
+  "ExplorerWidth": 339,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -468,8 +468,6 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
-                  "ShootLag": 15.0,
-                  "ShootRate": 0.6,
                   "Start": "Germination",
                   "End": "Emergence",
                   "TTForTimeStep": 0.0,
@@ -480,6 +478,48 @@
                       "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.AddFunction, Models",
+                      "Name": "Target",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 15.0,
+                          "Units": null,
+                          "Name": "ShootLag",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DepthxRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Plant].SowingData.Depth",
+                              "Name": "SowingDepth",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.6,
+                              "Units": null,
+                              "Name": "ShootRate",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1475,6 +1515,48 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Arbitrator].SDRatio",
+                      "Name": "XValue",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "PhenoNitrogenStress",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Don't use this variable for reporting as this function will be re-evaluated at the end of the day and will therefore be evaluated using todays SLN value.\nWhen phenology is calculated, it will be using yesterday's SLN.\nLeaf(NitrogenPhenoStress)is used to ensure consistency.\n\nOriginal function: phenoStress = (0.5 + 0.5 / 0.3 * (SLN - 0.7));\n\nBound by Min of 0.5, Max of 1.0\n\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        0.7,
+                        1.0
+                      ],
+                      "Y": [
+                        0.5,
+                        0.5,
+                        1.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SLN",
                       "Name": "XValue",
                       "Children": [],
                       "Enabled": true,
@@ -11952,6 +12034,15 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "SeedMortalityRate",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
