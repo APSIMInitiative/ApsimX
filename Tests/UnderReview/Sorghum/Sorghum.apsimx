@@ -1639,6 +1639,14 @@
               "Name": "Grain",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Maximum grain number is a function of the change in plant biomass between panicle initiation and start grain ﬁlling (Rosenthal et al., 1989), while grain size is determined by grain growth rate, eﬀective grain ﬁlling period, and redistribution of assimilates post-anthesis (Heiniger et al., 1997b). If grain mass demand for a day exceeds the daily increase in biomass, the shortfall will ﬁrst be met through translocation from stem and, if that is insuﬃcient to meet demand of the grain, through translocation from leaves, accelerating their senescence. Conversely, if the daily increase in biomass exceeds the grain mass demand, the excess biomass production is allocated to the stem.",
+                  "Name": "Introduction",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.05,
                   "Units": null,
