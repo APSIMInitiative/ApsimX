@@ -8,6 +8,7 @@
     using Models.Soils.Standardiser;
     using Newtonsoft.Json;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Data;
 
@@ -42,7 +43,7 @@
             }
             set
             {
-                Thickness = SoilUtilities.ToThickness(value);
+                Thickness = SoilUtilities.ToThicknessCM(value);
             }
         }
 
@@ -85,7 +86,20 @@
         public string[] PHMetadata { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public DataTable GetData()
+        public DataTable TabularData
+        {
+            get
+            {
+                return GetData();
+            }
+            set
+            {
+                SetData(value);
+            }
+        }
+
+        /// <summary>Get tabular data. Called by GUI.</summary>
+        private DataTable GetData()
         {
             var solutes = GetStandardisedSolutes();
 
@@ -126,6 +140,34 @@
             return data;
         }
 
+        /// <summary>Setting tabular data. Called by GUI.</summary>
+        /// <param name="data"></param>
+        public void SetData(DataTable data)
+        {
+            var solutes = GetStandardisedSolutes();
+            var depthStrings = DataTableUtilities.GetColumnAsStrings(data, "Depth", 100, 1);
+            var numLayers = depthStrings.ToList().FindIndex(value => value == null);
+            if (numLayers == -1)
+                numLayers = 100;
+
+            Thickness = SoilUtilities.ToThickness(DataTableUtilities.GetColumnAsStrings(data, "Depth", numLayers, 1));
+            PH = DataTableUtilities.GetColumnAsDoubles(data, "PH", numLayers, 1);
+            EC = DataTableUtilities.GetColumnAsDoubles(data, "EC", numLayers, 1);
+            ESP = DataTableUtilities.GetColumnAsDoubles(data, "ESP", numLayers, 1);
+
+            int i = 1;
+            foreach (var solute in solutes)
+            {
+                solute.InitialValues = DataTableUtilities.GetColumnAsDoubles(data, solute.Name, numLayers, 1);
+                var units = data.Rows[0][i].ToString();
+                if (units == "(kgha)")
+                    solute.InitialValuesUnits = Solute.UnitsEnum.kgha;
+                else
+                    solute.InitialValuesUnits = Solute.UnitsEnum.ppm;
+                i++;
+            }
+        }
+
         /// <summary>Get all solutes with standardised layer structure.</summary>
         /// <returns></returns>
         private IEnumerable<Solute> GetStandardisedSolutes()
@@ -135,15 +177,53 @@
             // Add in child solutes.
             foreach (var solute in FindAllChildren<Solute>())
             {
-                var standardisedSolute = solute.Clone();
-                if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
-                    standardisedSolute.InitialValues = Layers.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
+                if (MathUtilities.AreEqual(Thickness, solute.Thickness))
+                    solutes.Add(solute);
                 else
-                    standardisedSolute.InitialValues = Layers.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
+                {
+                    var standardisedSolute = solute.Clone();
+                    if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
+                        standardisedSolute.InitialValues = Layers.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
+                    else
+                        standardisedSolute.InitialValues = Layers.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
 
-                solutes.Add(standardisedSolute);
+                    solutes.Add(standardisedSolute);
+                }
             }
             return solutes;
+        }
+
+        /// <summary>
+        /// Get possible units for a given column.
+        /// </summary>
+        /// <param name="columnIndex">The column index.</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetUnits(int columnIndex)
+        {
+            var numSolutes = GetStandardisedSolutes().Count();
+
+            if (columnIndex >= 1 && columnIndex <= numSolutes)
+                return (string[]) Enum.GetNames(typeof (Solute.UnitsEnum));
+            else if (columnIndex == numSolutes + 1)
+                return (string[]) Enum.GetNames(typeof(PHUnitsEnum));
+            else
+                return new string[0];
+        }
+
+        /// <summary>
+        /// Set the units for a column.
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        /// <param name="units"></param>
+        public void SetUnits(int columnIndex, string units)
+        {
+            var solutes = GetStandardisedSolutes().ToList();
+            var numSolutes = solutes.Count;
+
+            if (columnIndex >= 1 && columnIndex <= numSolutes)
+                solutes[columnIndex-1].InitialValuesUnits = (Solute.UnitsEnum) Enum.Parse(typeof(Solute.UnitsEnum), units);
+            else if (columnIndex == numSolutes + 1)
+                PHUnits = (PHUnitsEnum)Enum.Parse(typeof(PHUnitsEnum), units);            
         }
     }
 }

@@ -36,6 +36,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when a mouse button is clicked.</summary>
         public event EventHandler<SheetEventButton> MouseClick;
 
+        /// <summary>Invoked when a mouse button is clicked.</summary>
+        public event EventHandler<SheetEventButton> ContextMenuClick;
+
         /// <summary>Invoked when the sheet has been initialised.</summary>
         public event EventHandler Initialised;
 
@@ -120,7 +123,10 @@ namespace UserInterface.Views
 
         public void InvokeButtonPress(SheetEventButton button)
         {
-            MouseClick.Invoke(this, button);
+            if (button.LeftButton)
+                MouseClick?.Invoke(this, button);
+            else
+                ContextMenuClick?.Invoke(this, button);
         }
 
         public void InvokeScroll(int delta)

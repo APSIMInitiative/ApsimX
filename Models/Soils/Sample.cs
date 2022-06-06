@@ -55,7 +55,7 @@
             }
             set
             {
-                Thickness = SoilUtilities.ToThickness(value);
+                Thickness = SoilUtilities.ToThicknessCM(value);
             }
         }
 

@@ -65,7 +65,7 @@ namespace Models.Soils.Nutrients
             }
             set
             {
-                Thickness = SoilUtilities.ToThickness(value);
+                Thickness = SoilUtilities.ToThicknessCM(value);
             }
         }
 

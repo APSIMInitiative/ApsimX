@@ -64,7 +64,7 @@ namespace UserInterface.Views
         /// <param name="evnt">The event data.</param>
         private void OnKeyPressEvent(object sender, SheetEventKey evnt)
         {
-            if (Editor == null || !Editor.IsEditing)
+            if (evnt.Key != Keys.None && (Editor == null || !Editor.IsEditing))
             {
                 if (evnt.Key == Keys.Right && evnt.Control)
                     MoveToFarRight();
@@ -89,6 +89,10 @@ namespace UserInterface.Views
 
                 sheet.Refresh();
             }
+            else if (Editor != null && evnt.KeyValue < 255)
+            {
+                Editor.Edit(evnt.KeyValue);
+            }
         }
 
         /// <summary>Invoked when the user clicks a mouse button.</summary>
@@ -108,6 +112,7 @@ namespace UserInterface.Views
                 }
                 else
                 {
+                    Editor?.EndEdit();
                     selectedColumnIndex = colIndex;
                     selectedRowIndex = rowIndex;
                     sheetWidget.GrabFocus();
@@ -117,7 +122,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell to the left one column.</summary>
-        private void MoveLeft()
+        public void MoveLeft()
         {
             selectedColumnIndex = Math.Max(selectedColumnIndex - 1, 0);
             if (!sheet.FullyVisibleColumnIndexes.Contains(selectedColumnIndex))
@@ -125,7 +130,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell to the right one column.</summary>
-        private void MoveRight()
+        public void MoveRight()
         {
             selectedColumnIndex = Math.Min(selectedColumnIndex + 1, sheet.DataProvider.ColumnCount - 1);
             if (!sheet.FullyVisibleColumnIndexes.Contains(selectedColumnIndex))
@@ -133,7 +138,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell up one row.</summary>
-        private void MoveUp()
+        public void MoveUp()
         {
             selectedRowIndex = Math.Max(selectedRowIndex - 1, sheet.NumberFrozenRows);
             if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))
@@ -141,7 +146,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell down one row.</summary>
-        private void MoveDown()
+        public void MoveDown()
         {
             selectedRowIndex = Math.Min(selectedRowIndex + 1, sheet.RowCount - 1);
             if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))

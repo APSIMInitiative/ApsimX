@@ -260,8 +260,8 @@ namespace APSIM.Shared.Utilities
             int index = 0;
             for (int Row = startRow; Row != table.Rows.Count && index != numValues; Row++)
             {
-                if (table.Rows[Row][columnName].ToString() == "")
-                    values[index] = MathUtilities.MissingValue;
+                if (table.Rows[Row][columnName].ToString() == string.Empty)
+                    values[index] = double.NaN;
                 else
                 {
                     try
@@ -275,7 +275,10 @@ namespace APSIM.Shared.Utilities
                 }
                 index++;
             }
-            return values;
+            if (MathUtilities.ValuesInArray(values))
+                return values;
+            else
+                return null;
         }
 
         /// <summary>Get columns as doubles within specific data range</summary>

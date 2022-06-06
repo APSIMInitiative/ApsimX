@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Presenters
 {
     using EventArguments;
+    using global::UserInterface.Interfaces;
     using Models.Core;
     using Models.Interfaces;
     using System;
@@ -22,16 +23,22 @@
         private SheetWidget sheetWidget;
 
         /// <summary>The sheet cell selector.</summary>
-        SingleCellSelect cellSelector;
+        private SingleCellSelect cellSelector;
 
         ///// <summary>The sheet scrollbars</summary>
         //SheetScrollBars scrollbars;
 
         /// <summary>The data provider for the sheet</summary>
-        DataTableProvider dataProvider;
+        private DataTable data;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
+
+        /// <summary>The popup context menu helper.</summary>
+        private ContextMenuHelper contextMenuHelper;
+
+        /// <summary>The popup context menu.</summary>
+        private MenuView contextMenu;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -55,11 +62,21 @@
 
             sheetContainer = view.GetControl<ContainerView>("grid");
             PopulateGrid();
+
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            contextMenuHelper = new ContextMenuHelper(sheetWidget);
+            contextMenu = new MenuView();
+            contextMenuHelper.ContextMenu += OnContextMenuPopup;
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            contextMenuHelper.ContextMenu -= OnContextMenuPopup;
+
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(modelWithData, "TabularData", data));
+
             //base.Detach();
             view.Dispose();
             CleanupSheet();
@@ -74,7 +91,8 @@
                 // Cleanup existing sheet instances before creating new ones.
                 CleanupSheet();
 
-                dataProvider = new DataTableProvider(modelWithData.GetData());
+                data = modelWithData.TabularData;
+                var dataProvider = new DataTableProvider(data);
 
                 sheet = new Sheet()
                 {
@@ -101,6 +119,57 @@
             }
         }
 
+        /// <summary>
+        /// User has right clicked - display popup menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
+        {
+            if (sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
+            {
+                if (rowIndex == 1)
+                {
+                    var menuItems = new List<MenuDescriptionArgs>();
+
+                    foreach (string units in modelWithData.GetUnits(columnIndex))
+                    {
+                        var menuItem = new MenuDescriptionArgs()
+                        {
+                            Name = units,
+                        };
+                        //menuItem.OnClick += OnContextMenuItemClick;
+                        menuItem.OnClick += (s, e) => { modelWithData.SetUnits(columnIndex, menuItem.Name); Refresh(); };
+                        menuItems.Add(menuItem);
+                    }
+                    if (menuItems.Count > 0)
+                    {
+                        contextMenu.Populate(menuItems);
+                        contextMenu.Show();
+                    }
+                }
+            }
+        }
+
+        /// <summary>Refresh the grid.</summary>
+        private void Refresh()
+        {
+            data = modelWithData.TabularData;
+            sheet.DataProvider = new DataTableProvider(data);
+            sheet.Refresh();
+        }
+
+        /// <summary>
+        /// User has clicked a menu item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnContextMenuItemClick(object sender, EventArgs e)
+        {
+            //var menuItem = sender as menuItem;
+            //modelWithData.SetUnits()
+        }
+
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()
         {
@@ -109,6 +178,15 @@
                 cellSelector.Cleanup();
                 //scrollbars.Cleanup();
             }
+        }
+
+        /// <summary>
+        /// The mode has changed (probably via undo/redo).
+        /// </summary>
+        /// <param name="changedModel">The model with changes</param>
+        private void OnModelChanged(object changedModel)
+        {
+            this.PopulateGrid();
         }
     }
 }

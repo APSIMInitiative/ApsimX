@@ -158,34 +158,47 @@
         /// To
         /// 100, 200
         /// </summary>
-        /// <param name="DepthStrings">The depth strings.</param>
+        /// <param name="depthStrings">The depth strings.</param>
+        /// <returns></returns>
+        public static double[] ToThicknessCM(string[] depthStrings)
+        {
+            return MathUtilities.Multiply_Value(ToThickness(depthStrings), 10);
+        }
+
+        /// <summary>
+        /// Convert an array of depth strings (mm) to thickness (mm) e.g.
+        /// "0-100", "10-300"
+        /// To
+        /// 100, 200
+        /// </summary>
+        /// <param name="depthStrings">The depth strings.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Invalid layer string:  + DepthStrings[i] +
         ///                                   . String must be of the form: 10-30</exception>
-        public static double[] ToThickness(string[] DepthStrings)
+        public static double[] ToThickness(string[] depthStrings)
         {
-            if (DepthStrings == null)
+            if (depthStrings == null)
                 return null;
 
-            double[] Thickness = new double[DepthStrings.Length];
-            for (int i = 0; i != DepthStrings.Length; i++)
+            double[] Thickness = new double[depthStrings.Length];
+            for (int i = 0; i != depthStrings.Length; i++)
             {
-                if (string.IsNullOrEmpty(DepthStrings[i]))
+                if (string.IsNullOrEmpty(depthStrings[i]))
                     Thickness[i] = MathUtilities.MissingValue;
                 else
                 {
-                    int PosDash = DepthStrings[i].IndexOf('-');
+                    int PosDash = depthStrings[i].IndexOf('-');
                     if (PosDash == -1)
-                        throw new Exception("Invalid layer string: " + DepthStrings[i] +
+                        throw new Exception("Invalid layer string: " + depthStrings[i] +
                                   ". String must be of the form: 10-30");
                     double TopOfLayer;
                     double BottomOfLayer;
 
-                    if (!Double.TryParse(DepthStrings[i].Substring(0, PosDash), out TopOfLayer))
-                        throw new Exception("Invalid string for layer top: '" + DepthStrings[i].Substring(0, PosDash) + "'");
-                    if (!Double.TryParse(DepthStrings[i].Substring(PosDash + 1), out BottomOfLayer))
-                        throw new Exception("Invalid string for layer bottom: '" + DepthStrings[i].Substring(PosDash + 1) + "'");
-                    Thickness[i] = (BottomOfLayer - TopOfLayer) * 10;
+                    if (!Double.TryParse(depthStrings[i].Substring(0, PosDash), out TopOfLayer))
+                        throw new Exception("Invalid string for layer top: '" + depthStrings[i].Substring(0, PosDash) + "'");
+                    if (!Double.TryParse(depthStrings[i].Substring(PosDash + 1), out BottomOfLayer))
+                        throw new Exception("Invalid string for layer bottom: '" + depthStrings[i].Substring(PosDash + 1) + "'");
+                    Thickness[i] = (BottomOfLayer - TopOfLayer);
                 }
             }
             return Thickness;
