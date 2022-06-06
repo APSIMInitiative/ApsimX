@@ -301,8 +301,10 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("</span> kg");
                 }
                 else
+                {
                     if (ConvertToKg != 1)
                         htmlWriter.Write("<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg");
+                }
 
                 htmlWriter.Write("\r\n</div>");
                 if (StartingAmount > 0)

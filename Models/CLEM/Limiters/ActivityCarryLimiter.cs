@@ -1,36 +1,42 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Limiters
 {
     /// <summary>
-    /// Cut and carry Activity limiter
+    /// Limits the total carried across a range of activities
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [Description("This cut and carry limiter will limit the amount of cut and carry possible for all activities located at or below the UI level is it placed.")]
+    [Description("This carry limiter will limit the amount that can be carried for all activities located at or below the UI level it is placed.")]
     [HelpUri(@"Content/Features/Limiters/CutAndCarryLimiter.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityCutAndCarryLimiter: CLEMModel
+    public class ActivityCarryLimiter: CLEMModel
     {
         private double amountUsedThisMonth = 0;
 
         /// <summary>
         /// Monthly weight limit (kg/day)
         /// </summary>
-        [Description("Monthly weight limit (dry kg/day)")]
+        [Description("Monthly weight limit (kg/day)")]
         [ArrayItemCount(12)]
         [Units("kg/day")]
         public double[] WeightLimitPerDay { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityCarryLimiter()
+        {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
+        }
 
         /// <summary>
         /// Get the amount of cut and carry available.
@@ -60,6 +66,25 @@ namespace Models.CLEM.Activities
             amountUsedThisMonth = 0;
         }
 
+        /// <summary>
+        /// Method to locate a ActivityCutAndCarryLimiter from a specified model
+        /// </summary>
+        /// <param name="model">Model looking for limiter</param>
+        /// <returns></returns>
+        public static ActivityCarryLimiter Locate(IModel model)
+        {
+            // search children
+            ActivityCarryLimiter limiterFound = model.FindAllChildren<ActivityCarryLimiter>().Cast<ActivityCarryLimiter>().FirstOrDefault();
+            if (limiterFound == null)
+            {
+                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
+                {
+                    limiterFound = ActivityCarryLimiter.Locate(model.Parent);
+                }
+            }
+            return limiterFound;
+        }
+
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -74,7 +99,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Limit cut and carry activities to ");
+                htmlWriter.Write($"Limit cut and carry activities to ");
                 if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -9,7 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer for breeding to maintain best milk production
@@ -65,6 +66,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerBreedForMilking()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             base.SetDefaults();
         }
 
@@ -165,13 +167,10 @@ namespace Models.CLEM.Activities
                 // report activity performed details.
                 ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                 {
-                    Activity = new BlankActivity()
-                    {
-                        Status = ActivityStatus.Timer,
-                        Name = this.Name,
-                    }
+                    Name = this.Name,
+                    Status = ActivityStatus.Timer,
+                    Id = this.UniqueID.ToString(),
                 };
-                activitye.Activity.SetGuID(this.UniqueID);
                 this.OnActivityPerformed(activitye);
             }
         }
@@ -224,7 +223,7 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
                 }
                 htmlWriter.Write("\r\n</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
 
                 return htmlWriter.ToString();

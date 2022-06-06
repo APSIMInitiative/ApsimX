@@ -302,8 +302,13 @@ namespace Models.CLEM.Resources
 
             // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
             if (!ind.Weaned & !ind.SaleFlag.ToString().Contains("Died"))
-                if(ind.Mother != null)
+            {
+                if (ind.Mother != null)
+                {
+                    ind.Mother.SucklingOffspringList.Remove(ind);
                     ind.Mother.NumberOfWeaned++;
+                }
+            }
 
             Herd.Remove(ind);
             LastIndividualChanged = ind;

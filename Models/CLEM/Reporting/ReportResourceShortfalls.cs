@@ -42,7 +42,10 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
                 "[Activities].LastShortfallResourceRequest.Category as Category",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
-                "[Activities].LastShortfallResourceRequest.Available as Available"
+                "[Activities].LastShortfallResourceRequest.Provided as Provided",
+                "[Activities].LastShortfallResourceRequest.Available as Available",
+                "[Activities].LastShortfallResourceRequest.ActivityModel.Status as Action",
+                "[Activities].LastShortfallResourceRequest.ShortfallStatus as Status",
             };
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };

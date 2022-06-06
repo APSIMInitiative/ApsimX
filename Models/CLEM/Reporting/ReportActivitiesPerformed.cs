@@ -63,6 +63,10 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public string HtmlOutputFilename { get { return "ActivitiesPerformedSummary.html"; } }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -82,7 +86,8 @@ namespace Models.CLEM.Reporting
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
                 "[Activities].LastActivityPerformed.Status as Status",
-                "[Activities].LastActivityPerformed.UniqueID as UniqueID"
+                "[Activities].LastActivityPerformed.Id as UniqueID",
+                "[Activities].LastActivityPerformed.StatusMessage as Message"
             };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
@@ -321,7 +326,7 @@ namespace Models.CLEM.Reporting
                 htmlString.WriteLine("\r\n<div class=\"r1\"><span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span></div>");
 
                 htmlString.Write("\r\n<div class=\"r2\"><div class=\"clearfix defaultbanner\">");
-                htmlString.Write($"<div class=\"namediv\">Report activities performed</div>");
+                htmlString.Write($"<div class=\"namediv\">Report activities performed</div><br />");
                 htmlString.Write($"<div class=\"typediv\">Details</div>");
                 htmlString.Write("</div>");
                 htmlString.Write("\r\n<div class=\"defaultcontent\">");

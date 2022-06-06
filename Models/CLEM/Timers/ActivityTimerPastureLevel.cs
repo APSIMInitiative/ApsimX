@@ -1,15 +1,15 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Timers
 {
     /// <summary>
     /// Activity timer based on pasture level
@@ -67,6 +67,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityTimerPastureLevel()
         {
+            ModelSummaryStyle = HTMLSummaryStyle.Filter;
             this.SetDefaults();
         }
 
@@ -122,7 +123,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</span> ");
                 }
                 htmlWriter.Write(" kg per hectare</div>");
-                if (!this.Enabled)
+                if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
                 return htmlWriter.ToString(); 
             }

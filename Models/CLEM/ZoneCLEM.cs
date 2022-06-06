@@ -33,6 +33,7 @@ namespace Models.CLEM
         private Summary summary = null;
         [Link]
         private Clock clock = null;
+        private string wholeSimulationSummaryFile = "";
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -105,8 +106,6 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
-        private string wholeSimulationSummaryFile = "";
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -134,7 +133,8 @@ namespace Models.CLEM
         {
             // if auto create summary 
             if (AutoCreateDescriptiveSummary)
-            if (!File.Exists(wholeSimulationSummaryFile))
+            {
+                if (!File.Exists(wholeSimulationSummaryFile))
                     System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
                 else
                 {
@@ -151,6 +151,7 @@ namespace Models.CLEM
                         }
                     }
                 }
+            }
         }
 
 
@@ -242,18 +243,20 @@ namespace Models.CLEM
             ReportInvalidParameters(this);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
-            if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
             {
-                DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
-                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
-                EcologicalIndicatorsNextDueDate = trackDate;
-            }
-            else
-            {
-                EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                while (clock.StartDate > EcologicalIndicatorsNextDueDate)
-                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
+                {
+                    DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
+                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    EcologicalIndicatorsNextDueDate = trackDate;
+                }
+                else
+                {
+                    EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                    while (clock.StartDate > EcologicalIndicatorsNextDueDate)
+                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                }
             }
         }
 
@@ -333,7 +336,6 @@ namespace Models.CLEM
             if (model is CLEMModel)
                 (model as CLEMModel).CLEMParentName = parentZone.Name;
             modelPath += starter+model.Name+"]";
-            modelPath = modelPath.Replace("][", "]&shy;[");
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
@@ -391,6 +393,10 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public bool FormatForParentControl { get { return CurrentAncestorList.Count > 0; } }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
+
         ///<inheritdoc/>
         public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
@@ -423,15 +429,15 @@ namespace Models.CLEM
                 if (rnd != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div>");
+                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div><br />");
                     htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with");
                     if (rnd.Seed == 0)
-                        htmlWriter.Write("Every run of this simulation will be different.");
+                        htmlWriter.Write("every run using a different sequence.");
                     else
-                        htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
+                        htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
                     htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, markdown2Html));
@@ -443,7 +449,7 @@ namespace Models.CLEM
                 if (clk != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div>");
+                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div><br />");
                     htmlWriter.Write("<div class=\"typediv\">Clock</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
@@ -484,13 +490,15 @@ namespace Models.CLEM
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
                 ResourcesHolder resources = this.FindChild<ResourcesHolder>();
-                if(resources != null)
+                if (resources != null)
+                {
                     if (resources.FoundMarket != null)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("This farm represents ");
                         htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
                     }
+                }
 
                 if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
                 {
@@ -564,7 +572,7 @@ namespace Models.CLEM
                     htmlWriter.Write(">");
                     htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write("<br /><div class=\"typediv\">" + this.GetType().Name + "</div>");
                 return htmlWriter.ToString();
             }
         }
