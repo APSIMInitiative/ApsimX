@@ -119,7 +119,7 @@ namespace APSIM.Documentation
                 AgPastureDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf", false),
                 // todo: agroforestry
                 StandardPmfPlantRow("Barley"),
-                CreateUnderReviewPlantRow("Canola"),
+                StandardPmfPlantRow("Canola"),
                 StandardPmfPlantRow("Chicory"),
                 StandardPmfPlantRow("Chickpea"),
                 StandardPmfPlantRow("Eucalyptus"),
