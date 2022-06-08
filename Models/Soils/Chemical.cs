@@ -106,7 +106,16 @@
             var data = new DataTable("Chemical");
             data.Columns.Add("Depth");
             foreach (var solute in solutes)
+            {
                 data.Columns.Add(solute.Name);
+                bool soluteOnDifferentLayerStructure = !MathUtilities.AreEqual(solute.Thickness,
+                                                                               FindChild<Solute>(solute.Name).Thickness);
+                if (soluteOnDifferentLayerStructure)
+                {
+                    // Different layer structure in solute so mark it as readonly.
+                    data.Columns[solute.Name].ReadOnly = true;
+                }
+            }
             data.Columns.Add("pH");
             data.Columns.Add("EC");
             data.Columns.Add("ESP");
@@ -186,7 +195,7 @@
                         standardisedSolute.InitialValues = Layers.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
                     else
                         standardisedSolute.InitialValues = Layers.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
-
+                    standardisedSolute.Thickness = Thickness;
                     solutes.Add(standardisedSolute);
                 }
             }

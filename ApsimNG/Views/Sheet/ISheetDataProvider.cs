@@ -19,5 +19,9 @@
         /// <param name="rowIndex">Row index of cell.</param>
         /// <param name="value">The value.</param>
         void SetCellContents(int colIndex, int rowIndex, string value);
+
+        /// <summary>Is the column readonly?</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        bool IsColumnReadonly(int colIndex);
     }
 }

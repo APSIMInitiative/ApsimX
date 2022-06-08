@@ -40,7 +40,9 @@ namespace UserInterface.Views
         public States GetCellState(int columnIndex, int rowIndex)
         {
             if (sheet.CellSelector != null && sheet.CellSelector.IsSelected(columnIndex, rowIndex))
-                return States.Selected;
+                return States.Selected; 
+            else if (sheet.DataProvider.IsColumnReadonly(columnIndex))
+                return States.Insensitive;
             else if (rowIndex < sheet.NumberFrozenRows)
                 return States.Insensitive;
             else

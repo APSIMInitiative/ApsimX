@@ -65,5 +65,12 @@ namespace UserInterface.Views
         {
             Data.Rows[rowIndex - numHeadingRows][colIndex] = value;
         }
+
+        /// <summary>Is the column readonly?</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public bool IsColumnReadonly(int colIndex)
+        {
+            return Data.Columns[colIndex].ReadOnly;
+        }
     }
 }

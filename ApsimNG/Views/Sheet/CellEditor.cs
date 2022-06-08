@@ -59,38 +59,41 @@ namespace UserInterface.Views
             EndEdit();
 
             sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
-            var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
-
-            entry = new Entry();
-            entry.SetSizeRequest((int)cellBounds.Width - 3, (int)cellBounds.Height - 10);
-            entry.WidthChars = 5;
-            if (defaultChar == char.MinValue)
-                entry.Text = sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex);
-            else
-                entry.Text = defaultChar.ToString();
-            entry.KeyPressEvent += OnEntryKeyPress;
-            if (!sheet.CellPainter.TextLeftJustify(selectedColumnIndex, selectedRowIndex))
-                entry.Alignment = 1; // right
-
-            if (sheetWidget.Children.Length == 1)
+            if (!sheet.DataProvider.IsColumnReadonly(selectedColumnIndex))
             {
-                fix = (Fixed)sheetWidget.Child;
-            }
-            else
-            {
-                fix = new Fixed();
-                sheetWidget.Add(fix);
-            }
-            fix.Put(entry, (int)cellBounds.Left + 1, (int)cellBounds.Top + 1);
+                var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
 
-            sheetWidget.ShowAll();
-            sheet.Refresh();
+                entry = new Entry();
+                entry.SetSizeRequest((int)cellBounds.Width - 3, (int)cellBounds.Height - 10);
+                entry.WidthChars = 5;
+                if (defaultChar == char.MinValue)
+                    entry.Text = sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex);
+                else
+                    entry.Text = defaultChar.ToString();
+                entry.KeyPressEvent += OnEntryKeyPress;
+                if (!sheet.CellPainter.TextLeftJustify(selectedColumnIndex, selectedRowIndex))
+                    entry.Alignment = 1; // right
 
-            entry.GrabFocus();
-            if (defaultChar != char.MinValue)
-            {
-                entry.SelectRegion(1, 0);
-                entry.Position = 1;
+                if (sheetWidget.Children.Length == 1)
+                {
+                    fix = (Fixed)sheetWidget.Child;
+                }
+                else
+                {
+                    fix = new Fixed();
+                    sheetWidget.Add(fix);
+                }
+                fix.Put(entry, (int)cellBounds.Left + 1, (int)cellBounds.Top + 1);
+
+                sheetWidget.ShowAll();
+                sheet.Refresh();
+
+                entry.GrabFocus();
+                if (defaultChar != char.MinValue)
+                {
+                    entry.SelectRegion(1, 0);
+                    entry.Position = 1;
+                }
             }
         }
 

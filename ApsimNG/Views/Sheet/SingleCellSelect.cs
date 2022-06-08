@@ -216,7 +216,8 @@ namespace UserInterface.Views
                 int columnIndex = selectedColumnIndex;
                 foreach (string word in line.Split('\t'))
                 {
-                    sheet.DataProvider.SetCellContents(columnIndex, rowIndex, word);
+                    if (!sheet.DataProvider.IsColumnReadonly(columnIndex))
+                        sheet.DataProvider.SetCellContents(columnIndex, rowIndex, word);
                     columnIndex++;
                     if (columnIndex == sheet.DataProvider.ColumnCount)
                         break;
