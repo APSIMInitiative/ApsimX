@@ -77,64 +77,75 @@ namespace APSIM.Interop.Graphing
         /// <param name="graph">The graph to be converted.</param>
         public IPlotModel ToPlotModel(IGraph graph)
         {
-            if (graph.XAxis == null)
-                throw new NullReferenceException("Graph has no x-axis");
-            if (graph.YAxis == null)
-                throw new NullReferenceException("Graph has no y-axis");
-            if (graph.Legend == null)
-                throw new NullReferenceException("Graph has no legend configuration");
-            if (graph.Series == null)
-                throw new NullReferenceException("Graph has no series");
-
-            PlotModel plot = new PlotModel();
-
-            // Add series to graph.
-            AxisLabelCollection labels = AxisLabelCollection.Empty();
-            ExportedSeries previous = null;
-            AxisRequirements xAxisRequirements = null;
-            AxisRequirements yAxisRequirements = null;
-            foreach (Series graphSeries in graph.Series)
+            try
             {
-                ExportedSeries series = graphSeries.ToOxyPlotSeries(labels);
-                labels = series.AxisLabels;
-                plot.Series.Add(series.Result);
-                if (previous == null)
-                    previous = series;
-                else
+                if (graph.XAxis == null)
+                    throw new NullReferenceException("Graph has no x-axis");
+                if (graph.YAxis == null)
+                    throw new NullReferenceException("Graph has no y-axis");
+                if (graph.Legend == null)
+                    throw new NullReferenceException("Graph has no legend configuration");
+                if (graph.Series == null)
+                    throw new NullReferenceException("Graph has no series");
+
+                PlotModel plot = new PlotModel();
+
+                // Add series to graph.
+                AxisLabelCollection labels = AxisLabelCollection.Empty();
+                ExportedSeries previous = null;
+                AxisRequirements xAxisRequirements = null;
+                AxisRequirements yAxisRequirements = null;
+                foreach (Series graphSeries in graph.Series)
                 {
-                    previous.ThrowIfIncompatibleWith(series);
-                    previous = series;
+                    ExportedSeries series = graphSeries.ToOxyPlotSeries(labels);
+                    labels = series.AxisLabels;
+                    plot.Series.Add(series.Result);
+                    if (previous == null)
+                        previous = series;
+                    else
+                    {
+                        previous.ThrowIfIncompatibleWith(series);
+                        previous = series;
+                    }
+                    if (series.XAxisRequirements.AxisKind != null)
+                        xAxisRequirements = series.XAxisRequirements;
+                    if (series.YAxisRequirements.AxisKind != null)
+                        yAxisRequirements = series.YAxisRequirements;
                 }
-                if (series.XAxisRequirements.AxisKind != null)
-                    xAxisRequirements = series.XAxisRequirements;
-                if (series.YAxisRequirements.AxisKind != null)
-                    yAxisRequirements = series.YAxisRequirements;
+
+                // Axes (don't add them if there are no series to display on the graph).
+                if (xAxisRequirements?.AxisKind != null)
+                    plot.Axes.Add(graph.XAxis.ToOxyPlotAxis(xAxisRequirements, labels.XLabels));
+                if (yAxisRequirements?.AxisKind != null)
+                    plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(yAxisRequirements, labels.YLabels));
+
+                // Legend
+
+                plot.Legends.Add(new Legend()
+                {
+                    LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation(),
+                    LegendPosition = graph.Legend.Position.ToOxyPlotLegendPosition(),
+                    LegendPlacement = graph.Legend.InsideGraphArea ? OxyLegendPlacement.Inside : OxyLegendPlacement.Outside,
+                    Font = font,
+                });
+
+
+                // Apply font
+                plot.TitleFont = font;
+                plot.SetLegendFont(font);
+                plot.PlotAreaBorderThickness = new OxyThickness(0);
+                plot.Title = graph.Title;
+
+                return plot;
+            }
+            catch (Exception err)
+            {
+                var graphName = graph.Title;
+                if (graph is Models.Core.IModel graphModel)
+                    graphName = $"path: {graphModel.FullPath} title: {graphName}";
+                throw new Exception($"Error found while exporting graph {graphName}", err);
             }
 
-            // Axes (don't add them if there are no series to display on the graph).
-            if (xAxisRequirements?.AxisKind != null)
-                plot.Axes.Add(graph.XAxis.ToOxyPlotAxis(xAxisRequirements, labels.XLabels));
-            if (yAxisRequirements?.AxisKind != null)
-                plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(yAxisRequirements, labels.YLabels));
-
-            // Legend
-
-            plot.Legends.Add(new Legend()
-            {
-                LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation(),
-                LegendPosition = graph.Legend.Position.ToOxyPlotLegendPosition(),
-                LegendPlacement = graph.Legend.InsideGraphArea ? OxyLegendPlacement.Inside : OxyLegendPlacement.Outside,
-                Font = font,
-            });
-
-
-            // Apply font
-            plot.TitleFont = font;
-            plot.SetLegendFont(font);
-            plot.PlotAreaBorderThickness = new OxyThickness(0);
-            plot.Title = graph.Title;
-
-            return plot;
         }
     }
 }
