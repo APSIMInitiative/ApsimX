@@ -47,6 +47,22 @@ namespace UserInterface.Views
             }
         }
 
+        public void SetClipboard(string text)
+        {
+            var clipboardName = "CLIPBOARD";
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            cb.Text = text;
+        }
+
+        public string GetClipboard()
+        {
+            var clipboardName = "CLIPBOARD";
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            return cb.WaitForText();
+        }
+
         private void OnRedrawNeeded(object sender, EventArgs e)
         {
             QueueDraw();

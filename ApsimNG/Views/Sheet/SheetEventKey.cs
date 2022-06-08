@@ -18,5 +18,6 @@
         public Keys Key = Keys.None;
         public char KeyValue;
         public bool Control;
+        public bool Shift;
     }
 }

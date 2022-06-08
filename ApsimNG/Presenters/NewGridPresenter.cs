@@ -86,7 +86,7 @@
                 grid.Sheet.NumberFrozenColumns = 1;
                 grid.Sheet.RowCount = 50;
                 grid.Sheet.DataProvider = new DataTableProvider(modelWithData.TabularData);
-                grid.Sheet.CellSelector = new SingleCellSelect(grid.Sheet, grid);
+                grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
                 grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
                 grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
@@ -108,10 +108,9 @@
         {
             if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
             {
+                var menuItems = new List<MenuDescriptionArgs>();
                 if (rowIndex == 1)
                 {
-                    var menuItems = new List<MenuDescriptionArgs>();
-
                     foreach (string units in modelWithData.GetUnits(columnIndex))
                     {
                         var menuItem = new MenuDescriptionArgs()
@@ -121,13 +120,49 @@
                         menuItem.OnClick += (s, e) => { modelWithData.SetUnits(columnIndex, menuItem.Name); Refresh(); };
                         menuItems.Add(menuItem);
                     }
-                    if (menuItems.Count > 0)
+                }
+                else
+                {
+                    var menuItem = new MenuDescriptionArgs()
                     {
-                        contextMenu.Populate(menuItems);
-                        contextMenu.Show();
-                    }
+                        Name = "Copy",
+                        ShortcutKey = "Ctrl+C"
+                    };
+                    menuItem.OnClick += OnCopy;
+                    menuItems.Add(menuItem);
+                    menuItem = new MenuDescriptionArgs()
+                    {
+                        Name = "Paste",
+                        ShortcutKey = "Ctrl+V"
+                    };
+                    menuItem.OnClick += OnPaste;
+                    menuItems.Add(menuItem);
+                }
+
+                if (menuItems.Count > 0)
+                {
+                    contextMenu.Populate(menuItems);
+                    contextMenu.Show();
                 }
             }
+        }
+
+        /// <summary>
+        /// User has selected paste.
+        /// </summary>
+        private void OnCopy(object sender, EventArgs e)
+        {
+            grid.Sheet.CellSelector.Copy();
+        }
+
+        /// <summary>
+        /// User has selected paste.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPaste(object sender, EventArgs e)
+        {
+            grid.Sheet.CellSelector.Paste();
         }
 
         /// <summary>Refresh the grid.</summary>

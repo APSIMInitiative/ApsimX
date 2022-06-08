@@ -24,6 +24,7 @@ namespace UserInterface.Views
             else
                 keyParams.KeyValue = (char)evnt.KeyValue;
             keyParams.Control = evnt.State == ModifierType.ControlMask;
+            keyParams.Shift = evnt.State == ModifierType.ShiftMask;
             return keyParams;
         }
 
@@ -33,7 +34,8 @@ namespace UserInterface.Views
             {
                 X = (int)evnt.X,
                 Y = (int)evnt.Y,
-                LeftButton = evnt.Button == 1
+                LeftButton = evnt.Button == 1,
+                Shift = evnt.State == ModifierType.ShiftMask
             };
             return buttonParams;
         }

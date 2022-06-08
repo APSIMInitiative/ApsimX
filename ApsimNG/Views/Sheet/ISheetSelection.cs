@@ -15,15 +15,21 @@
         void GetSelection(out int columnIndex, out int rowIndex);
 
         /// <summary>Moves the selected cell to the left one column.</summary>
-        void MoveLeft();
+        void MoveLeft(bool shift = false);
 
         /// <summary>Moves the selected cell to the right one column.</summary>
-        void MoveRight();
+        void MoveRight(bool shift = false);
 
         /// <summary>Moves the selected cell up one row.</summary>
-        void MoveUp();
+        void MoveUp(bool shift = false);
 
         /// <summary>Moves the selected cell down one row.</summary>
-        void MoveDown();
+        void MoveDown(bool shift = false);
+        
+        /// <summary>Copy cells to clipboard.</summary>
+        void Copy();
+
+        /// <summary>Past cells from clipboard.</summary>
+        void Paste();
     }
 }
