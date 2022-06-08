@@ -16,20 +16,8 @@
         /// <summary>The data store model to work with.</summary>
         private ITabularData modelWithData;
 
-        /// <summary>The sheet.</summary>
-        private Sheet sheet;
-
         /// <summary>The sheet widget.</summary>
-        private SheetWidget sheetWidget;
-
-        /// <summary>The sheet cell selector.</summary>
-        private SingleCellSelect cellSelector;
-
-        ///// <summary>The sheet scrollbars</summary>
-        //SheetScrollBars scrollbars;
-
-        /// <summary>The data provider for the sheet</summary>
-        private DataTable data;
+        private SheetWidget grid;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
@@ -64,7 +52,7 @@
             PopulateGrid();
 
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            contextMenuHelper = new ContextMenuHelper(sheetWidget);
+            contextMenuHelper = new ContextMenuHelper(grid);
             contextMenu = new MenuView();
             contextMenuHelper.ContextMenu += OnContextMenuPopup;
         }
@@ -75,7 +63,8 @@
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             contextMenuHelper.ContextMenu -= OnContextMenuPopup;
 
-            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(modelWithData, "TabularData", data));
+            var dataTableProvider = grid.Sheet.DataProvider as DataTableProvider;
+            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(modelWithData, "TabularData", dataTableProvider.Data));
 
             //base.Detach();
             view.Dispose();
@@ -91,27 +80,18 @@
                 // Cleanup existing sheet instances before creating new ones.
                 CleanupSheet();
 
-                data = modelWithData.TabularData;
-                var dataProvider = new DataTableProvider(data);
+                grid = new SheetWidget();
+                grid.Sheet = new Sheet();
+                grid.Sheet.NumberFrozenRows = 2;
+                grid.Sheet.NumberFrozenColumns = 1;
+                grid.Sheet.RowCount = 50;
+                grid.Sheet.DataProvider = new DataTableProvider(modelWithData.TabularData);
+                grid.Sheet.CellSelector = new SingleCellSelect(grid.Sheet, grid);
+                grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
+                grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+                grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
 
-                sheet = new Sheet()
-                {
-                    DataProvider = dataProvider,
-                    NumberFrozenRows = 2,
-                    NumberFrozenColumns = 1,
-                    RowCount = 50
-                };
-                sheetWidget = new SheetWidget(sheet);
-                cellSelector = new SingleCellSelect(sheet, sheetWidget);
-                var sheetEditor = new SheetEditor(sheet, sheetWidget)
-                {
-                    Selection = cellSelector
-                };
-
-                cellSelector.Editor = sheetEditor;
-                var scrollbars = new SheetScrollBars(sheet, sheetWidget);
-                sheet.CellPainter = new DefaultCellPainter(sheet, sheetWidget, sheetEditor, sheetSelection: cellSelector);
-                sheetContainer.Add(scrollbars.MainWidget);
+                sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
             }
             catch (Exception err)
             {
@@ -126,7 +106,7 @@
         /// <param name="e"></param>
         private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
         {
-            if (sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
+            if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
             {
                 if (rowIndex == 1)
                 {
@@ -138,7 +118,6 @@
                         {
                             Name = units,
                         };
-                        //menuItem.OnClick += OnContextMenuItemClick;
                         menuItem.OnClick += (s, e) => { modelWithData.SetUnits(columnIndex, menuItem.Name); Refresh(); };
                         menuItems.Add(menuItem);
                     }
@@ -154,29 +133,17 @@
         /// <summary>Refresh the grid.</summary>
         private void Refresh()
         {
-            data = modelWithData.TabularData;
-            sheet.DataProvider = new DataTableProvider(data);
-            sheet.Refresh();
-        }
-
-        /// <summary>
-        /// User has clicked a menu item.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnContextMenuItemClick(object sender, EventArgs e)
-        {
-            //var menuItem = sender as menuItem;
-            //modelWithData.SetUnits()
+            grid.Sheet.DataProvider = new DataTableProvider(modelWithData.TabularData);
+            grid.Sheet.Refresh();
         }
 
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()
         {
-            if (cellSelector != null)
+            if (grid != null && grid.Sheet.CellSelector != null)
             {
-                cellSelector.Cleanup();
-                //scrollbars.Cleanup();
+                (grid.Sheet.CellSelector as SingleCellSelect).Cleanup();
+                grid.Sheet.ScrollBars.Cleanup();
             }
         }
 

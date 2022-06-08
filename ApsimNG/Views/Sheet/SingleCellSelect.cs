@@ -38,9 +38,6 @@ namespace UserInterface.Views
             sheet.MouseClick -= OnMouseClickEvent;
         }
 
-        /// <summary>The optional sheet editor</summary>
-        public ISheetEditor Editor { get; set; }
-
         /// <summary>Gets whether a cell is selected.</summary>
         /// <param name="columnIndex">The index of the current selected column.</param>
         /// <param name="rowIndex">The index of the current selected row</param>
@@ -64,7 +61,7 @@ namespace UserInterface.Views
         /// <param name="evnt">The event data.</param>
         private void OnKeyPressEvent(object sender, SheetEventKey evnt)
         {
-            if (evnt.Key != Keys.None && (Editor == null || !Editor.IsEditing))
+            if (evnt.Key != Keys.None && (sheet.CellEditor == null || !sheet.CellEditor.IsEditing))
             {
                 if (evnt.Key == Keys.Right && evnt.Control)
                     MoveToFarRight();
@@ -89,9 +86,9 @@ namespace UserInterface.Views
 
                 sheet.Refresh();
             }
-            else if (Editor != null && evnt.KeyValue < 255)
+            else if (sheet.CellEditor != null && evnt.KeyValue < 255)
             {
-                Editor.Edit(evnt.KeyValue);
+                sheet.CellEditor.Edit(evnt.KeyValue);
             }
         }
 
@@ -108,11 +105,11 @@ namespace UserInterface.Views
                 // If the cell is already selected then go into edit mode.
                 if (IsSelected(colIndex, rowIndex))
                 {
-                    Editor?.Edit();
+                    sheet.CellEditor?.Edit();
                 }
                 else
                 {
-                    Editor?.EndEdit();
+                    sheet.CellEditor?.EndEdit();
                     selectedColumnIndex = colIndex;
                     selectedRowIndex = rowIndex;
                     sheetWidget.GrabFocus();

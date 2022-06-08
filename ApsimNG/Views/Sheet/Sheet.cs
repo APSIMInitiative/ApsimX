@@ -57,6 +57,15 @@ namespace UserInterface.Views
         /// <summary>The painter to use to get style a cell.</summary>
         public ISheetCellPainter CellPainter { get; set; }
 
+        /// <summary>The cell selector instance.</summary>
+        public ISheetSelection CellSelector { get; set; }
+
+        /// <summary>The cell editor instance.</summary>
+        public ISheetEditor CellEditor { get; set; }
+
+        /// <summary>The scroll bars instance.</summary>
+        public SheetScrollBars ScrollBars { get; set; }
+
         /// <summary>The widths (in pixels) of each column in the sheet. Can be null to auto-calculate.</summary>
         public int[] ColumnWidths { get; set; }
 

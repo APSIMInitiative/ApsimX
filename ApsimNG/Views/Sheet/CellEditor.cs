@@ -3,7 +3,7 @@ using Gtk;
 
 namespace UserInterface.Views
 {
-    class SheetEditor : ISheetEditor
+    class CellEditor : ISheetEditor
     {
         /// <summary>The sheet.</summary>
         private readonly Sheet sheet;
@@ -20,16 +20,13 @@ namespace UserInterface.Views
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
         /// <param name="sheetWidget">The sheet widget.</param>
-        public SheetEditor(Sheet sheet, SheetWidget sheetWidget)
+        public CellEditor(Sheet sheet, SheetWidget sheetWidget)
         {
             this.sheet = sheet;
             this.sheetWidget = sheetWidget;
             sheet.MouseClick += OnMouseClickEvent;
             sheet.KeyPress += OnKeyPressEvent;
         }
-
-        /// <summary>The cell selection instance.</summary>
-        public ISheetSelection Selection { get; set; }
 
         public bool IsEditing => entry != null;
 
@@ -61,7 +58,7 @@ namespace UserInterface.Views
         {
             EndEdit();
 
-            Selection.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
+            sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
             var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
 
             entry = new Entry();
@@ -122,9 +119,9 @@ namespace UserInterface.Views
             }
             else if (args.Event.Key == Gdk.Key.Return)
             {
-                Selection.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
+                sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
                 sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, entry.Text);
-                Selection.MoveDown();
+                sheet.CellSelector.MoveDown();
                 EndEdit();
             }
         }

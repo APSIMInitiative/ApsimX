@@ -9,9 +9,6 @@ namespace UserInterface.Views
     /// </summary>
     public class DataTableProvider : ISheetDataProvider
     {
-        /// <summary>The wrapped data table.</summary>
-        private readonly DataTable data;
-
         /// <summary>The optional units for each column in the data table. Can be null.</summary>
         private readonly IList<string> units;
 
@@ -24,9 +21,9 @@ namespace UserInterface.Views
         public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null)
         {
             if (dataSource == null)
-                data = new DataTable();
+                Data = new DataTable();
             else
-                data = dataSource;
+                Data = dataSource;
             units = columnUnits;
             if (units == null)
                 numHeadingRows = 1;
@@ -34,11 +31,14 @@ namespace UserInterface.Views
                 numHeadingRows = 2;
         }
 
+        /// <summary>The wrapped data table.</summary>
+        public DataTable Data { get; }
+
         /// <summary>Gets the number of columns of data.</summary>
-        public int ColumnCount => data.Columns.Count;
+        public int ColumnCount => Data.Columns.Count;
 
         /// <summary>Gets the number of rows of data.</summary>
-        public int RowCount => data.Rows.Count + numHeadingRows;
+        public int RowCount => Data.Rows.Count + numHeadingRows;
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>
@@ -46,10 +46,10 @@ namespace UserInterface.Views
         public string GetCellContents(int colIndex, int rowIndex)
         {
             if (rowIndex == 0)
-                return data.Columns[colIndex].ColumnName;
+                return Data.Columns[colIndex].ColumnName;
             else if (numHeadingRows == 2 && rowIndex == 1)
                 return units[colIndex];
-            var value = data.Rows[rowIndex - numHeadingRows][colIndex];
+            var value = Data.Rows[rowIndex - numHeadingRows][colIndex];
             if (value is double)
                 return ((double)value).ToString("F3");  // 3 decimal places.
             else if (value is DateTime)
@@ -63,7 +63,7 @@ namespace UserInterface.Views
         /// <param name="value">The value.</param>
         public void SetCellContents(int colIndex, int rowIndex, string value)
         {
-            data.Rows[rowIndex - numHeadingRows][colIndex] = value;
+            Data.Rows[rowIndex - numHeadingRows][colIndex] = value;
         }
     }
 }
