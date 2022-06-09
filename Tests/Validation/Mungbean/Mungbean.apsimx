@@ -1,13 +1,21 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 150,
+  "Version": 151,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Memo, Models",
       "Text": "# The APSIM Mungbean Model\r\n\r\nThe APSIM Mungbean model has been developed using the Plant Modelling Framework (PMF) of ([brown_plant_2014]). This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs ",
       "Name": "Introduction",
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "•While, when extensively calibrated to specific sites as it was in many papers, the APSIM classic mungbean model can accurately simulate a limited number of targeted scenarios, overall, it has a low level of simulation accuracy (RMSDYield = 470 kg ha-1, r2yield = 0.13; RMSDBiomass = 1823 kg ha-1, r2Biomass = 0.2). Therefore, the classic model has limited functionality and performance in forecasting analyses. Likewise, the classic model was built using old cultivars (Berken and King) which bear limited resemblance to the current popular cultivars (e.g., Jade-AU, Crystal, and Celera II-AU). We decided to source some parameter values from the classic model, but otherwise built the new model off of the template of the soybean APSIM NextGen model and Plant Modelling Framework. Parameter-wise, the following are the major ones that were changed:\n\noThere was an added phase for thermal time accumulation to delay emergence in the spring. The shoot lag was extended from 10 to 25GDD, but now days to emergence is more temperature dependent.\noThe base and optimal temperatures for vegetative thermal time were kept the same, but the optimal temperature window was extended to 43C and the max was at 45C, not 40C. This was to reflect the consistency in growth at the October, November, and January sowing dates. Reproductive had the same base, but a lower optimal window and max than Vegetative.\noThe node appearance rate was 100 before, but is now 70 (in line with Geetika’s work)\noThe k and RUE values are higher, sourced from Geetika’s work\noA water deficit stress induced senescence was added\noA photosynthesis respond to higher VPD was added\noRoot depth rate was changed to reflect the collected soil water extraction data \noWithout root:shoot biomass data, we kept the 0.2 biomass fraction to the root included in the soybean model which had extensive root data included in the model building dataset\noThe critical nitrogen concentrations are a smaller range with a lower max and higher min. This data was drawn from Muchow et al., 1993 paper on accumulation (see model documentation)\n\noThis is not a comprehensive list: We are sure that we are missing other items that were changed (likely the maximum fixation rate and the stem allocation fraction), but it was not always a simple adjustment to the parameters as the model framework itself has changed. The classic model required a good amount of further calibration by the model users in a way that we hope the new model won’t. That said, it is still customisable and we welcome any feedback about how it runs or what needs to be added or improved.\n",
+      "Name": "Differences between Classic and NextGen Models",
       "Children": [],
       "Enabled": true,
       "ReadOnly": false
