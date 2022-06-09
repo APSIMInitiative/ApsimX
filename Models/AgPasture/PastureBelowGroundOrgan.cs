@@ -55,25 +55,28 @@
         //---------------------------- Parameters -----------------------
 
         /// <summary>Minimum rooting depth (mm).</summary>
-        public double RootDepthMinimum { get; set; } = 50.0;
+        public double MinimumRootingDepth { get; set; } = 50.0;
 
-        /// <summary>Maximum rooting depth (mm).</summary>
-        public double RootDepthMaximum { get; set; } = 750.0;
+        /// <summary>Maximum potential rooting depth (mm).</summary>
+        public double MaximumPotentialRootingDepth { get; set; } = 750.0;
+
+        /// <summary>Maximum rooting depth allowed by soil condition (mm).</summary>
+        public double MaximumAllowedRootingDepth { get; set; } = 500.0;
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
-        public double RootElongationRate { get; set; } = 25.0;
+        public double ElongationRate { get; set; } = 25.0;
 
-        /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
+        /// <summary>Factor for root distribution; depth from surface where root proportion starts to decrease (mm).</summary>
         [Units("mm")]
-        public double RootDistributionDepthParam { get; set; } = 90.0;
+        public double DepthDistributionParamTop { get; set; } = 90.0;
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
         [Units("-")]
-        public double RootDistributionExponent { get; set; } = 3.2;
+        public double DepthDistributionExponent { get; set; } = 3.2;
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        public double RootBottomDistributionFactor { get; set; } = 1.05;
+        public double DepthDistributionParamBottom { get; set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
         public double SpecificRootLength { get; set; } = 100.0;
@@ -277,6 +280,23 @@
             mySoilNO3Available = new double[nLayers];
             mySoilWaterAvailable = new double[nLayers];
 
+            // check rooting depth
+            MaximumAllowedRootingDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
+            for (int z = 0; z < soilPhysical.Thickness.Length; z++)
+            {
+                if (soilCropData.XF[z] < 0.000001)
+                { // root depth limited by some soil issue
+                    if (z > 0)
+                    {
+                        MaximumAllowedRootingDepth = soilPhysical.ThicknessCumulative[z - 1];
+                    }
+                    else
+                    { // not a soil...
+                        MaximumAllowedRootingDepth = 0.0;
+                    }
+                }
+            }
+
             // save minimum DM and get target root distribution
             MinimumLiveDM = minimumLiveWt;
             TargetDistribution = RootDistributionTarget();
@@ -292,7 +312,7 @@
         /// <param name="rootDepth">The depth of root zone (mm).</param>
         public void SetBiomassState(double rootWt, double rootN, double rootDepth)
         {
-            Depth = rootDepth;
+            Depth = Math.Min(rootDepth, MaximumAllowedRootingDepth);
             CalculateRootZoneBottomLayer();
 
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
@@ -490,7 +510,9 @@
                     currentDepth += soilPhysical.Thickness[layer];
                 }
                 else
+                {
                     layer = nLayers;
+                }
             }
         }
 
@@ -512,12 +534,12 @@
             double[] result = new double[nLayers];
             double depthTop = 0.0;
             double depthBottom = 0.0;
-            double depthFirstStage = Math.Min(RootDepthMaximum, RootDistributionDepthParam);
+            double depthFirstStage = Math.Min(MaximumAllowedRootingDepth, DepthDistributionParamTop);
 
             for (int layer = 0; layer < nLayers; layer++)
             {
                 depthBottom += soilPhysical.Thickness[layer];
-                if (depthTop >= RootDepthMaximum)
+                if (depthTop >= MaximumAllowedRootingDepth)
                 {
                     // totally out of root zone
                     result[layer] = 0.0;
@@ -530,10 +552,10 @@
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = RootDepthMaximum * RootBottomDistributionFactor;
-                    result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), RootDistributionExponent + 1)
-                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, RootDepthMaximum), RootDistributionExponent + 1);
-                    result[layer] /= (RootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, RootDistributionExponent);
+                    double maxRootDepth = MaximumAllowedRootingDepth * DepthDistributionParamBottom;
+                    result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), DepthDistributionExponent + 1)
+                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, MaximumAllowedRootingDepth), DepthDistributionExponent + 1);
+                    result[layer] /= (DepthDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, DepthDistributionExponent);
                     if (depthTop < depthFirstStage)
                     {
                         // partially in first stage
@@ -568,7 +590,7 @@
                 topLayersDepth += soilPhysical.Thickness[layer];
             }
             // Then consider layer at the bottom of the root zone
-            double layerFrac = Math.Min(1.0, (RootDepthMaximum - topLayersDepth) / (Depth - topLayersDepth));
+            double layerFrac = Math.Min(1.0, (MaximumAllowedRootingDepth - topLayersDepth) / (Depth - topLayersDepth));
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
             // Normalise the weights to be a fraction, adds up to one
@@ -638,18 +660,12 @@
         public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor)
         {
             // Check changes in root depth
-            var dRootDepth = 0.0;
-            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < RootDepthMaximum))
+            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < MaximumAllowedRootingDepth))
             {
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
-                dRootDepth = RootElongationRate * tempFactor;
-                Depth = Math.Min(RootDepthMaximum, Math.Max(RootDepthMinimum, Depth + dRootDepth));
+                var dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * tempFactor;
+                Depth = Math.Min(MaximumAllowedRootingDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
                 CalculateRootZoneBottomLayer();
-            }
-            else
-            {
-                // No net growth
-                dRootDepth = 0.0;
             }
         }
 

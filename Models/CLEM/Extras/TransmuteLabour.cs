@@ -9,6 +9,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using System.Linq;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM
 {
@@ -82,10 +83,10 @@ namespace Models.CLEM
         {
             request.Required = shortfall / shortfallPacketSize * AmountPerPacket;
 
-            if (request.Required > 0)
+            if (MathUtilities.IsPositive(request.Required))
             {
                 request.FilterDetails = groupings;
-                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, (request.ActivityModel is CLEMActivityBase)?(request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable:false);
             }
             return (request.Provided >= request.Required);
         }

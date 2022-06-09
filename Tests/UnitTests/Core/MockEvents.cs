@@ -15,6 +15,11 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
+        public void ConnectEvents(IModel model)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DisconnectEvents()
         {
             throw new NotImplementedException();

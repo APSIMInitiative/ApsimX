@@ -1,5 +1,6 @@
 using Models.Core;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -23,8 +25,11 @@ namespace Models.CLEM.Groupings
     [Description("Set monthly feeding values for specified individual ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroupMonthly.htm")]
-    public class RuminantFeedGroupMonthly : FilterGroup<Ruminant>, IValidatableObject
+    public class RuminantFeedGroupMonthly : RuminantFeedGroup, IValidatableObject
     {
+        [Link]
+        private Clock clock = null;
+
         /// <summary>
         /// Daily value to supply for each month
         /// </summary>
@@ -32,13 +37,17 @@ namespace Models.CLEM.Groupings
         [Required, ArrayItemCount(12)]
         public double[] MonthlyValues { get; set; }
 
+        /// <inheritdoc/>
+        public override double CurrentValue{
+            get { return MonthlyValues[clock.Today.Month - 1]; } 
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantFeedGroupMonthly()
         {
             MonthlyValues = new double[12];
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
         #region validation
