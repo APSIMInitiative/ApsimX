@@ -127,7 +127,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Gliricidia"),
                 StandardPmfPlantRow("Maize"),
                 MicroClimateRow(),
-                CreateUnderReviewPlantRow("Mungbean"),
+                StandardPmfPlantRow("Mungbean"),
                 StandardPmfPlantRow("Nutrient"),
                 StandardPmfPlantRow("Oats"),
                 StandardPmfPlantRow("OilPalm"),
