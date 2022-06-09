@@ -9,6 +9,8 @@ namespace Models.Soils.Nutrients
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using APSIM.Shared.Documentation;
+    using System.Data;
+    using System.Linq;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.
@@ -16,10 +18,10 @@ namespace Models.Soils.Nutrients
     /// or losses from the system.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
+    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
     [ValidParent(ParentType = typeof(Chemical))]
-    public class Solute : Model, ISolute
+    public class Solute : Model, ISolute, ITabularData
     {
         [Link]
         Soil soil = null;
@@ -138,6 +140,86 @@ namespace Models.Soils.Nutrients
 
             foreach (ITag tag in GetModelDescription())
                 yield return tag;
+        }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public DataTable TabularData
+        {
+            get
+            {
+                return GetData();
+            }
+            set
+            {
+                SetData(value);
+            }
+        }
+
+        /// <summary>Get tabular data. Called by GUI.</summary>
+        private DataTable GetData()
+        {
+            var data = new DataTable(Name);
+            data.Columns.Add("Depth");
+            data.Columns.Add("Initial values");
+
+            // Add units to row 1.
+            var unitsRow = data.NewRow();
+            unitsRow["Depth"] = "(mm)";
+            unitsRow["Initial values"] = $"({InitialValuesUnits})";
+            data.Rows.Add(unitsRow);
+
+            var depthStrings = SoilUtilities.ToDepthStrings(Thickness);
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                var row = data.NewRow();
+                row["Depth"] = depthStrings[i];
+                row["Initial values"] = InitialValues[i].ToString("F3");
+                data.Rows.Add(row);
+            }
+
+            return data;
+        }
+
+        /// <summary>Setting tabular data. Called by GUI.</summary>
+        /// <param name="data"></param>
+        public void SetData(DataTable data)
+        {
+            var depthStrings = DataTableUtilities.GetColumnAsStrings(data, "Depth", 100, 1);
+            var numLayers = depthStrings.ToList().FindIndex(value => value == null);
+            if (numLayers == -1)
+                numLayers = 100;
+
+            Thickness = SoilUtilities.ToThickness(DataTableUtilities.GetColumnAsStrings(data, "Depth", numLayers, 1));
+            InitialValues = DataTableUtilities.GetColumnAsDoubles(data, "Initial values", numLayers, 1);
+            var units = data.Rows[0]["Initial values"].ToString();
+            if (units == "(kgha)")
+                InitialValuesUnits = Solute.UnitsEnum.kgha;
+            else
+                InitialValuesUnits = Solute.UnitsEnum.ppm;
+        }
+
+        /// <summary>
+        /// Get possible units for a given column.
+        /// </summary>
+        /// <param name="columnIndex">The column index.</param>
+        /// <returns></returns>
+        public IEnumerable<string> GetUnits(int columnIndex)
+        {
+            if (columnIndex == 1)
+                return (string[])Enum.GetNames(typeof(Solute.UnitsEnum));
+            else
+                return new string[0];
+        }
+
+        /// <summary>
+        /// Set the units for a column.
+        /// </summary>
+        /// <param name="columnIndex"></param>
+        /// <param name="units"></param>
+        public void SetUnits(int columnIndex, string units)
+        {
+            if (columnIndex == 1)
+                InitialValuesUnits = (Solute.UnitsEnum)Enum.Parse(typeof(Solute.UnitsEnum), units);
         }
     }
 }

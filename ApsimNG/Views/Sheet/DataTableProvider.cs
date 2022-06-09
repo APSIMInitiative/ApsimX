@@ -63,7 +63,10 @@ namespace UserInterface.Views
         /// <param name="value">The value.</param>
         public void SetCellContents(int colIndex, int rowIndex, string value)
         {
-            Data.Rows[rowIndex - numHeadingRows][colIndex] = value;
+            int i = rowIndex - numHeadingRows;
+            while (i >= Data.Rows.Count)
+                Data.Rows.Add(Data.NewRow());
+            Data.Rows[i][colIndex] = value;
         }
 
         /// <summary>Is the column readonly?</summary>
