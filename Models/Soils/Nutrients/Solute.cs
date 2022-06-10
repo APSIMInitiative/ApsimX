@@ -57,17 +57,17 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
-        [Units("cm")]
+        [Units("mm")]
         [JsonIgnore]
         public string[] Depth
         {
             get
             {
-                return SoilUtilities.ToDepthStringsCM(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = SoilUtilities.ToThicknessCM(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -77,7 +77,7 @@ namespace Models.Soils.Nutrients
         public double[] Thickness { get; set; }
 
         /// <summary>Nitrate NO3.</summary>
-        [Description("Initial values")]
+        [Description("Initial {Name} values")]
         [Summary]
         public double[] InitialValues { get; set; }
 
@@ -112,6 +112,7 @@ namespace Models.Soils.Nutrients
             else
                 kgha = SoilUtilities.ppm2kgha(Thickness, soilPhysical.BD, InitialValues);
         }
+
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>
@@ -143,83 +144,13 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public DataTable TabularData
+        public TabularData GetTabularData()
         {
-            get
+            return new TabularData(Name, new TabularData.Column[] 
             {
-                return GetData();
-            }
-            set
-            {
-                SetData(value);
-            }
-        }
-
-        /// <summary>Get tabular data. Called by GUI.</summary>
-        private DataTable GetData()
-        {
-            var data = new DataTable(Name);
-            data.Columns.Add("Depth");
-            data.Columns.Add("Initial values");
-
-            // Add units to row 1.
-            var unitsRow = data.NewRow();
-            unitsRow["Depth"] = "(mm)";
-            unitsRow["Initial values"] = $"({InitialValuesUnits})";
-            data.Rows.Add(unitsRow);
-
-            var depthStrings = SoilUtilities.ToDepthStrings(Thickness);
-            for (int i = 0; i < Thickness.Length; i++)
-            {
-                var row = data.NewRow();
-                row["Depth"] = depthStrings[i];
-                row["Initial values"] = InitialValues[i].ToString("F3");
-                data.Rows.Add(row);
-            }
-
-            return data;
-        }
-
-        /// <summary>Setting tabular data. Called by GUI.</summary>
-        /// <param name="data"></param>
-        public void SetData(DataTable data)
-        {
-            var depthStrings = DataTableUtilities.GetColumnAsStrings(data, "Depth", 100, 1);
-            var numLayers = depthStrings.ToList().FindIndex(value => value == null);
-            if (numLayers == -1)
-                numLayers = 100;
-
-            Thickness = SoilUtilities.ToThickness(DataTableUtilities.GetColumnAsStrings(data, "Depth", numLayers, 1));
-            InitialValues = DataTableUtilities.GetColumnAsDoubles(data, "Initial values", numLayers, 1);
-            var units = data.Rows[0]["Initial values"].ToString();
-            if (units == "(kgha)")
-                InitialValuesUnits = Solute.UnitsEnum.kgha;
-            else
-                InitialValuesUnits = Solute.UnitsEnum.ppm;
-        }
-
-        /// <summary>
-        /// Get possible units for a given column.
-        /// </summary>
-        /// <param name="columnIndex">The column index.</param>
-        /// <returns></returns>
-        public IEnumerable<string> GetUnits(int columnIndex)
-        {
-            if (columnIndex == 1)
-                return (string[])Enum.GetNames(typeof(Solute.UnitsEnum));
-            else
-                return new string[0];
-        }
-
-        /// <summary>
-        /// Set the units for a column.
-        /// </summary>
-        /// <param name="columnIndex"></param>
-        /// <param name="units"></param>
-        public void SetUnits(int columnIndex, string units)
-        {
-            if (columnIndex == 1)
-                InitialValuesUnits = (Solute.UnitsEnum)Enum.Parse(typeof(Solute.UnitsEnum), units);
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+            });
         }
     }
 }

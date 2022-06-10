@@ -94,25 +94,30 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Add a column of values to the specified data table
         /// </summary>
-        static public void AddColumn(DataTable table, string columnName, string[] values, int startRow, int count)
+        static public void AddColumn<T>(DataTable table, string columnName, IEnumerable<T> values, int startRow, int count)
         {
             if (table.Columns.IndexOf(columnName) == -1)
-                table.Columns.Add(columnName, typeof(string));
+                table.Columns.Add(columnName, typeof(T));
 
             if (values == null)
                 return;
 			
-            // Make sure there are enough values in the table.
-            while (table.Rows.Count < values.Length + startRow)
-                table.Rows.Add(table.NewRow());
-
             int row = startRow;
-            for (int Index = 0; Index != values.Length; Index++)
+            foreach (var value in values)
             {
-                if (values[Index] != "")
-                    table.Rows[row][columnName] = values[Index];
+                while (row >= table.Rows.Count)
+                    table.Rows.Add(table.NewRow());
+
+                if (IsValid(value))
+                    table.Rows[row][columnName] = value;
                 row++;
             }
+        }
+
+        static private bool IsValid(object value)
+        {
+            return value.GetType() == typeof(string) && !string.IsNullOrEmpty((string)value) ||
+                   value.GetType() == typeof(double) && !double.IsNaN((double)value);
         }
 
         /// <summary>

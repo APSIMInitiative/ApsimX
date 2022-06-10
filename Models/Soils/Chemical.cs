@@ -33,17 +33,17 @@
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
-        [Units("cm")]
+        [Units("mm")]
         [JsonIgnore]
         public string[] Depth
         {
             get
             {
-                return SoilUtilities.ToDepthStringsCM(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = SoilUtilities.ToThicknessCM(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -86,95 +86,30 @@
         public string[] PHMetadata { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public DataTable TabularData
-        {
-            get
-            {
-                return GetData();
-            }
-            set
-            {
-                SetData(value);
-            }
-        }
-
-        /// <summary>Get tabular data. Called by GUI.</summary>
-        private DataTable GetData()
+        public TabularData GetTabularData()
         {
             var solutes = GetStandardisedSolutes();
 
-            var data = new DataTable("Chemical");
-            data.Columns.Add("Depth");
+            var columns = new List<TabularData.Column>();
+
+            var depthColumns = new List<VariableProperty>();
+            depthColumns.Add(new VariableProperty(this, GetType().GetProperty("Depth")));
             foreach (var solute in solutes)
             {
-                data.Columns.Add(solute.Name);
-                bool soluteOnDifferentLayerStructure = !MathUtilities.AreEqual(solute.Thickness,
-                                                                               FindChild<Solute>(solute.Name).Thickness);
-                if (soluteOnDifferentLayerStructure)
-                {
-                    // Different layer structure in solute so mark it as readonly.
-                    data.Columns[solute.Name].ReadOnly = true;
-                }
+                if (MathUtilities.AreEqual(solute.Thickness, Thickness))
+                    depthColumns.Add(new VariableProperty(solute, solute.GetType().GetProperty("Depth")));
             }
-            data.Columns.Add("pH");
-            data.Columns.Add("EC");
-            data.Columns.Add("ESP");
+            columns.Add(new TabularData.Column("Depth", depthColumns));
 
-            // Add units to row 1.
-            var unitsRow = data.NewRow();
-            unitsRow["Depth"] = "(mm)";
-            unitsRow["pH"] = $"({PHUnits})";
-            unitsRow["EC"] = "(1:5 dS/m)";
-            unitsRow["ESP"] = "(%)";
             foreach (var solute in solutes)
-                unitsRow[solute.Name] = $"({solute.InitialValuesUnits})";
-            data.Rows.Add(unitsRow);
+                columns.Add(new TabularData.Column(solute.Name, 
+                                                   new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
 
-            var depthStrings = SoilUtilities.ToDepthStrings(Thickness);
-            for (int i = 0; i < Thickness.Length; i++)
-            {
-                var row = data.NewRow();
-                row["Depth"] = depthStrings[i];
-                if (PH != null && i < PH.Length)
-                    row["pH"] = PH[i].ToString("F3");
-                if (EC != null && i < EC.Length)
-                    row["EC"] = EC[i].ToString("F3");
-                if (ESP != null && i < ESP.Length)
-                    row["ESP"] = ESP[i].ToString("F3");
-                foreach (var solute in solutes)
-                    row[solute.Name] = solute.InitialValues[i].ToString("F3");
-                data.Rows.Add(row);
-            }
+            columns.Add(new TabularData.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
+            columns.Add(new TabularData.Column("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
+            columns.Add(new TabularData.Column("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
 
-            return data;
-        }
-
-        /// <summary>Setting tabular data. Called by GUI.</summary>
-        /// <param name="data"></param>
-        public void SetData(DataTable data)
-        {
-            var solutes = GetStandardisedSolutes();
-            var depthStrings = DataTableUtilities.GetColumnAsStrings(data, "Depth", 100, 1);
-            var numLayers = depthStrings.ToList().FindIndex(value => value == null);
-            if (numLayers == -1)
-                numLayers = 100;
-
-            Thickness = SoilUtilities.ToThickness(DataTableUtilities.GetColumnAsStrings(data, "Depth", numLayers, 1));
-            PH = DataTableUtilities.GetColumnAsDoubles(data, "PH", numLayers, 1);
-            EC = DataTableUtilities.GetColumnAsDoubles(data, "EC", numLayers, 1);
-            ESP = DataTableUtilities.GetColumnAsDoubles(data, "ESP", numLayers, 1);
-
-            int i = 1;
-            foreach (var solute in solutes)
-            {
-                solute.InitialValues = DataTableUtilities.GetColumnAsDoubles(data, solute.Name, numLayers, 1);
-                var units = data.Rows[0][i].ToString();
-                if (units == "(kgha)")
-                    solute.InitialValuesUnits = Solute.UnitsEnum.kgha;
-                else
-                    solute.InitialValuesUnits = Solute.UnitsEnum.ppm;
-                i++;
-            }
+            return new TabularData(Name, columns);
         }
 
         /// <summary>Get all solutes with standardised layer structure.</summary>
@@ -202,37 +137,6 @@
             return solutes;
         }
 
-        /// <summary>
-        /// Get possible units for a given column.
-        /// </summary>
-        /// <param name="columnIndex">The column index.</param>
-        /// <returns></returns>
-        public IEnumerable<string> GetUnits(int columnIndex)
-        {
-            var numSolutes = GetStandardisedSolutes().Count();
 
-            if (columnIndex >= 1 && columnIndex <= numSolutes)
-                return (string[]) Enum.GetNames(typeof (Solute.UnitsEnum));
-            else if (columnIndex == numSolutes + 1)
-                return (string[]) Enum.GetNames(typeof(PHUnitsEnum));
-            else
-                return new string[0];
-        }
-
-        /// <summary>
-        /// Set the units for a column.
-        /// </summary>
-        /// <param name="columnIndex"></param>
-        /// <param name="units"></param>
-        public void SetUnits(int columnIndex, string units)
-        {
-            var solutes = GetStandardisedSolutes().ToList();
-            var numSolutes = solutes.Count;
-
-            if (columnIndex >= 1 && columnIndex <= numSolutes)
-                solutes[columnIndex-1].InitialValuesUnits = (Solute.UnitsEnum) Enum.Parse(typeof(Solute.UnitsEnum), units);
-            else if (columnIndex == numSolutes + 1)
-                PHUnits = (PHUnitsEnum)Enum.Parse(typeof(PHUnitsEnum), units);            
-        }
     }
 }

@@ -4,6 +4,7 @@
     using global::UserInterface.Interfaces;
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -14,7 +15,7 @@
     public class NewGridPresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private ITabularData modelWithData;
+        private TabularData tabularData;
 
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
@@ -44,7 +45,7 @@
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
-            modelWithData = model as ITabularData;
+            tabularData = (model as ITabularData).GetTabularData();
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
@@ -64,7 +65,8 @@
             contextMenuHelper.ContextMenu -= OnContextMenuPopup;
 
             var dataTableProvider = grid.Sheet.DataProvider as DataTableProvider;
-            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(modelWithData, "TabularData", dataTableProvider.Data));
+            if (dataTableProvider != null)
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(tabularData, "Data", dataTableProvider.Data));
 
             //base.Detach();
             view.Dispose();
@@ -85,7 +87,7 @@
                 grid.Sheet.NumberFrozenRows = 2;
                 grid.Sheet.NumberFrozenColumns = 1;
                 grid.Sheet.RowCount = 50;
-                grid.Sheet.DataProvider = new DataTableProvider(modelWithData.TabularData);
+                grid.Sheet.DataProvider = new DataTableProvider(tabularData.Data);
                 grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
                 grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
@@ -111,13 +113,13 @@
                 var menuItems = new List<MenuDescriptionArgs>();
                 if (rowIndex == 1)
                 {
-                    foreach (string units in modelWithData.GetUnits(columnIndex))
+                    foreach (string units in tabularData.GetUnits(columnIndex))
                     {
                         var menuItem = new MenuDescriptionArgs()
                         {
                             Name = units,
                         };
-                        menuItem.OnClick += (s, e) => { modelWithData.SetUnits(columnIndex, menuItem.Name); Refresh(); };
+                        menuItem.OnClick += (s, e) => { tabularData.SetUnits(columnIndex, menuItem.Name); Refresh(); };
                         menuItems.Add(menuItem);
                     }
                 }
@@ -168,7 +170,7 @@
         /// <summary>Refresh the grid.</summary>
         private void Refresh()
         {
-            grid.Sheet.DataProvider = new DataTableProvider(modelWithData.TabularData);
+            grid.Sheet.DataProvider = new DataTableProvider(tabularData.Data);
             grid.Sheet.Refresh();
         }
 
