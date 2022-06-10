@@ -3,31 +3,36 @@
     using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Interfaces;
     using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>A model for capturing physical soil parameters</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
+    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical
+    public class Physical : Model, IPhysical, ITabularData
     {
+        // Initial soil water when set by user as a layered variable (as opposed to an InitialWater node)
+        private double[] sw;
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
-        [Units("cm")]
+        [Units("mm")]
         [Summary]
         [JsonIgnore]
         public string[] Depth
         {
             get
             {
-                return SoilUtilities.ToDepthStringsCM(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = SoilUtilities.ToThicknessCM(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -132,6 +137,31 @@
         [Units("mm")]
         public double[] SATmm { get { return MathUtilities.Multiply(SAT, Thickness); } }
 
+        /// <summary>Initial soil water (mm/mm).</summary>
+        [Summary]
+        [Description("SW")]
+        [Units("mm/mm")]
+        [Display(Format = "N2")]
+        public double[] SW
+        {
+            get
+            {
+                var initWater = FindChild<InitialWater>();
+                if (initWater == null)
+                    return sw;
+                else
+                    return initWater.SW;
+            }
+            set
+            {
+                sw = value;
+            }
+        }
+
+        /// <summary>Initial soil water (mm).</summary>
+        [Units("mm")]
+        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }
+
         /// <summary>KS (mm/day).</summary>
         [Summary]
         [Description("KS")]
@@ -181,5 +211,34 @@
         /// <summary>Particle size clay metadata.</summary>
         public string[] ParticleSizeClayMetadata { get; set; }
 
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            var columns = new List<TabularData.Column>();
+
+            columns.Add(new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+            columns.Add(new TabularData.Column("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand"))));
+            columns.Add(new TabularData.Column("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt"))));
+            columns.Add(new TabularData.Column("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay"))));
+            columns.Add(new TabularData.Column("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks"))));
+            columns.Add(new TabularData.Column("BD", new VariableProperty(this, GetType().GetProperty("BD"))));
+            columns.Add(new TabularData.Column("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry"))));
+            columns.Add(new TabularData.Column("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
+            columns.Add(new TabularData.Column("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
+            columns.Add(new TabularData.Column("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
+            columns.Add(new TabularData.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: FindChild<InitialWater>() != null));
+            columns.Add(new TabularData.Column("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
+
+            foreach (var soilCrop in FindAllChildren<SoilCrop>())
+            {
+                var cropName = soilCrop.Name.Replace("Soil", "");
+                columns.Add(new TabularData.Column($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL"))));
+                columns.Add(new TabularData.Column($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL"))));
+                columns.Add(new TabularData.Column($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF"))));
+                columns.Add(new TabularData.Column($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWC")), units: $"{PAWCmm.Sum():F1} mm"));
+            }
+
+            return new TabularData(Name, columns);
+        }
     }
 }

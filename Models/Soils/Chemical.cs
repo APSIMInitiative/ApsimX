@@ -1,6 +1,5 @@
 ﻿namespace Models.Soils
 {
-    using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
@@ -8,9 +7,7 @@
     using Models.Soils.Standardiser;
     using Newtonsoft.Json;
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>This class captures chemical soil data</summary>
     [Serializable]

@@ -40,7 +40,7 @@ namespace Models.Soils
 
             // Add columns to data table.
             foreach (var column in columns)
-                data.Columns.Add(column.CreateDataColumn());
+                data.Columns.Add(new DataColumn(column.Name));
 
             // Add units to data table as row 1.
             var unitsRow = data.NewRow();
@@ -51,6 +51,10 @@ namespace Models.Soils
             // Add values to data table.
             foreach (var column in columns)
                 column.AddColumnToDataTable(data);
+
+            // Set readonly flag on each column in data.
+            foreach (var column in columns)
+                data.Columns[column.Name].ReadOnly = column.IsReadOnly;
 
             return data;
         }
@@ -89,7 +93,10 @@ namespace Models.Soils
 
         /// <summary>Encapsulates a column of data.</summary>
         public class Column
-        { 
+        {
+            /// <summary>Column units.</summary>
+            private string units;
+
             /// <summary>Name of column.</summary>
             public string Name { get; }
 
@@ -101,10 +108,17 @@ namespace Models.Soils
             /// </summary>
             /// <param name="name">Name of the column.</param>
             /// <param name="property">The PropertyInfo instance.</param>
-            public Column(string name, VariableProperty property)
+            /// <param name="readOnly">Is the column readonly?</param>
+            /// <param name="units">The units of the column.</param>
+            public Column(string name, VariableProperty property, bool readOnly = false, string units = null)
             {
                 Name = name;
                 Properties = new VariableProperty[] { property };
+                IsReadOnly = readOnly || Properties.First().IsReadOnly;
+                if (units == null)
+                    this.units = Properties.First().Units;
+                else
+                    this.units = units;
             }
 
             /// <summary>
@@ -121,7 +135,7 @@ namespace Models.Soils
             /// <summary>Column units.</summary>
             public string Units
             {
-                get => Properties.First().Units;
+                get => units;
                 set
                 {
                     Properties.First().Units = value;
@@ -131,14 +145,8 @@ namespace Models.Soils
             /// <summary>Allowable column units.</summary>
             public IEnumerable<string> AllowableUnits => Properties.First().AllowableUnits.Select(au => au.Name);
 
-            /// <summary>Create a DataColumn for this column.</summary>
-            public DataColumn CreateDataColumn()
-            {
-                return new DataColumn(Name)
-                {
-                    ReadOnly = Properties.First().IsReadOnly
-                };
-            }
+            /// <summary>Is the column readonly?</summary>
+            public bool IsReadOnly { get; }
 
             /// <summary>Add a column to a DataTable.</summary>
             /// <param name="data">The DataTable.</param>
@@ -166,10 +174,13 @@ namespace Models.Soils
 
                 foreach (var property in Properties)
                 {
-                    if (property.DataType == typeof(string[]))
-                        property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
-                    else if (property.DataType == typeof(double[]))
-                        property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                    if (!property.IsReadOnly)
+                    {
+                        if (property.DataType == typeof(string[]))
+                            property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
+                        else if (property.DataType == typeof(double[]))
+                            property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                    }
                 }
             }
         }

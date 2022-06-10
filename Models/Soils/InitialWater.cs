@@ -193,7 +193,7 @@
                 }
 
                 // Get the soil water values for each layer.
-                double[] sw = this.SW(SoilPhysical.Thickness, ll, SoilPhysical.DUL, xf);
+                double[] sw = this.SWInternal(SoilPhysical.Thickness, ll, SoilPhysical.DUL, xf);
 
                 // Calculate the plant available water (mm/mm)
                 double[] pawVolumetric = MathUtilities.Subtract(sw, ll);
@@ -229,6 +229,33 @@
                 {
                     this.fractionFull = 0;
                 }
+            }
+        }
+
+        /// <summary>Soil water</summary>
+        [Units("mm/mm")]
+        public double[] SW
+        {
+            get
+            {
+                // Get the correct lower limits and xf values to use in the calculation of PAW
+                double[] ll;
+                double[] xf;
+                if (this.RelativeTo == "LL15" || this.RelativeTo == null)
+                {
+                    ll = SoilPhysical.LL15;
+                    xf = null;
+                }
+                else
+                {
+                    var soilCrop = Soil.FindDescendant<SoilCrop>(RelativeTo + "Soil");
+                    if (soilCrop == null)
+                        throw new Exception($"Cannot find a soil crop parameterisation called {RelativeTo}Soil");
+
+                    ll = soilCrop.LL;
+                    xf = soilCrop.XF;
+                }
+                return SWInternal(SoilPhysical.Thickness, ll, SoilPhysical.DUL, xf);
             }
         }
 
@@ -279,7 +306,7 @@
         /// <param name="dul">Drained upper limit</param>
         /// <param name="xf">Exploratory factor</param>
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
-        internal double[] SW(double[] thickness, double[] ll, double[] dul, double[] xf)
+        internal double[] SWInternal(double[] thickness, double[] ll, double[] dul, double[] xf)
         {
             if (double.IsNaN(this.DepthWetSoil))
             {
