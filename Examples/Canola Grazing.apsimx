@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 382,
   "Version": 151,
   "Name": "Simulations",
   "Children": [
@@ -216,11 +216,11 @@
           "Parameters": [
             {
               "Key": "Genotype",
-              "Value": "Hereford"
+              "Value": "Large Merino"
             },
             {
               "Key": "Sex",
-              "Value": "Female"
+              "Value": "Male"
             },
             {
               "Key": "Age",
@@ -248,7 +248,7 @@
             },
             {
               "Key": "StockingRate",
-              "Value": "20"
+              "Value": "50"
             },
             {
               "Key": "CurrentLocation",
@@ -1137,6 +1137,34 @@
               "Children": [
                 {
                   "$type": "Models.Series, Models",
+                  "Type": 0,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Stock.IntakeAll.Weight",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Grazing",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1187,34 +1215,6 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "GrainWt",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -2793984,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Stock.IntakeAll.Weight",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Grazing",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
