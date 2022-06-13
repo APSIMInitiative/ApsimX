@@ -4921,25 +4921,6 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "FloralInitiation",
-                      "Name": "EarlyVegetativeGrowthPhase",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.1,
-                          "Units": null,
-                          "Name": "StemFraction",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "FloralInitiation",
                       "End": "EndFlowering",
                       "Name": "StemGrowthPhase",
                       "Children": [
@@ -4950,12 +4931,14 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                0.0,
+                                100.0,
+                                101.0,
                                 200.0,
                                 201.0,
                                 400.0
                               ],
                               "Y": [
+                                0.2,
                                 0.5,
                                 0.5,
                                 0.75,
@@ -7163,7 +7146,6 @@
       "Enabled": true,
       "ReadOnly": false
     }
-
   ],
   "IncludeInDocumentation": true,
   "Enabled": true,
