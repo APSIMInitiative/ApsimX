@@ -471,79 +471,27 @@ namespace Models.Utilities
         {
             if (OnDownload != null && !OnDownload())
                 return;
+            string message = "The R statistical package is required for this simulation, but could not be located on this computer.\r\nYou can obtain R by going to ";
             if (ProcessUtilities.CurrentOS.IsWindows)
             {
-                string fileName = Path.Combine(Path.GetTempPath(), "RSetup.exe");
-
-                // Delete the installer if it already exists.
-                if (File.Exists(fileName))
-                    File.Delete(fileName);
-#pragma warning disable SYSLIB0014
-                WebClient web = new WebClient();
-                web.DownloadFileCompleted += (sender, e) =>
-                {
-                    try
-                    {
-                        OnDownloadCompleted?.Invoke();
-                        InstallR(fileName);
-                    }
-                    catch
-                    {
-                    }
-                };
-                web.DownloadFileAsync(new Uri(windowsDownloadUrl), fileName);
-#pragma warning restore SYSLIB0014
+                message += windowsDownloadUrl;
             }
             else if (ProcessUtilities.CurrentOS.IsMac)
             {
-                throw new NotImplementedException("R auto download not yet available on macOS.");
+                message += "https://cran.csiro.au/bin/macosx/";
             }
             else if (ProcessUtilities.CurrentOS.IsLinux)
             {
-                throw new Exception("R auto download not yet available on Linux.");
+                message += "https://cran.csiro.au/bin/linux/";
             }
             else
             {
-                throw new Exception("Target running unknown OS.");
+                message += "https://cran.csiro.au/";
             }
+            throw new Exception(message);
         }
 
-        /// <summary>
-        /// Runs the R installer.
-        /// </summary>
-        /// <param name="installerPath">Path to the installer.</param>
-        private void InstallR(string installerPath)
-        {
-            if (installerPath == null)
-                return;
-
-            // Setup a working directory.
-            string workingDirectory = Path.Combine(Path.GetTempPath(), "RSetup");
-            if (!Directory.Exists(workingDirectory))
-                Directory.CreateDirectory(workingDirectory);
-
-            // Copy installer to working directory.
-            try
-            {
-                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileName(installerPath));
-                File.Copy(installerPath, newInstallerPath, true);
-                installerPath = newInstallerPath;
-            }
-            catch
-            {
-            }
-            // Check to see if installer is already running for whatever reason.
-            // Kill them if found.
-            foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(installerPath)))
-                process.Kill();
-
-            // Run the installer.
-            var installer = new ProcessUtilities.ProcessWithRedirectedOutput();
-            installer.Start(installerPath, "", workingDirectory, false, cancelToken);
-            installer.WaitForExit();
-        }
-
-        /// <summary>
+       /// <summary>
         /// Gets the path to an executable (uses the Unix which utility). 
         /// Throws if the package does not exist. Obviously this will not
         /// work on Windows.
