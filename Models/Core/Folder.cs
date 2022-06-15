@@ -58,7 +58,7 @@
         private IEnumerable<ITag> DocumentChildren()
         {
             // Write memos.
-            foreach (Memo memo in FindAllChildren<Memo>())
+            foreach (Memo memo in FindAllChildren<Memo>().Where(memo => memo.Enabled))
                 foreach (ITag tag in memo.Document())
                     yield return tag;
 
@@ -68,7 +68,7 @@
             // Write experiment descriptions. We don't call experiment.Document() here,
             // because we want to just show the experiment design (a string) and put it
             // inside a table cell.
-            IEnumerable<Experiment> experiments = FindAllChildren<Experiment>();
+            IEnumerable<Experiment> experiments = FindAllChildren<Experiment>().Where(experiment => experiment.Enabled);
             if (experiments.Any())
             {
                 yield return new Paragraph("**List of experiments.**");
@@ -98,12 +98,12 @@
             }
 
             // Document experiments individually.
-            foreach (Experiment experiment in experiments)
+            foreach (Experiment experiment in experiments.Where(expt => expt.Enabled))
                 foreach (ITag tag in experiment.Document())
                     yield return tag;
 
             // Document child folders.
-            foreach (Folder folder in FindAllChildren<Folder>())
+            foreach (Folder folder in FindAllChildren<Folder>().Where(f => f.Enabled))
                 foreach (ITag tag in folder.Document())
                     yield return tag;
         }

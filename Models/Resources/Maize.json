@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 149,
+  "Version": 151,
   "Name": "Simulations",
   "Children": [
     {
@@ -660,6 +660,76 @@
               "SetEvent": "Maturity",
               "ReSetEvent": "never",
               "Name": "MaturityDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide maturity date as days after sowing(DAS).",
+                  "Name": "memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide maturity date as days after sowing(DAS).",
+                  "Name": "memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "HarvestRipe",
+              "ReSetEvent": "never",
+              "Name": "HarvestDAS",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -7064,7 +7134,9 @@
             },
             {
               "$type": "Models.PMF.Cultivar, Models",
-              "Command": null,
+              "Command": [
+                ""
+              ],
               "Name": "Pioneer_3153",
               "Children": [],
               "Enabled": true,
@@ -7082,6 +7154,509 @@
               ],
               "Name": "Pioneer_39G12",
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CultivarFolder, Models",
+              "Name": "Generic",
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 135",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 430",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_80",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 155",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 530",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_90",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 170",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 578",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_95",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 185",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 630",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_100",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 188",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 654",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_103",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 192",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 673",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_105",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 199",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 701",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_108",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 210",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 730",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_110",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 208",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 739",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_112",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 215",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 767",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_115",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 220",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 815",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_120",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 250",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 900",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "B_130",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 140",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 420",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_80",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 170",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 505",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_90",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 181",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 558",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_95",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 190",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 615",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_100",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 204",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 630",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_103",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 209",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 648",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_105",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 218",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 674",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_108",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 230",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 700",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_110",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 229",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 710",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_112",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 238",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 737",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_115",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 250",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 775",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_120",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 285",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 865",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36"
+                  ],
+                  "Name": "A_130",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 212",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 775",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.2",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.36",
+                    "[Grain].MaximumGrainsPerCob.FixedValue = 850"
+                  ],
+                  "Name": "HY_110",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 216",
+                    "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 705",
+                    "[Phenology].Maturing.Target.FixedValue = 1",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.7",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.25",
+                    "[Grain].MaximumGrainsPerCob.FixedValue = 550"
+                  ],
+                  "Name": "LY_110",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 270",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0,0,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 640",
+                    "[Phenology].Maturing.Target.FixedValue=50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue=50",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 640",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue=22",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03"
+                  ],
+                  "Name": "P1197",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }

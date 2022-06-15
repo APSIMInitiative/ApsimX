@@ -81,7 +81,9 @@ namespace Models.CLEM.Groupings
                     simpleBinary = Expression.MakeBinary(ExpressionType.Equal, exists, simpleVal);
                 }
                 else
+                {
                     simpleBinary = Expression.MakeBinary(Operator, exists, simpleVal);
+                }
 
                 block = Expression.Condition(
                         attIsNull,

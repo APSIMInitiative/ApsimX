@@ -957,12 +957,7 @@
                     string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
 
                     ICommand cmd = null;
-                    if (e.Copied)
-                    {
-                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
-                        CommandHistory.Add(command, true);
-                    }
-                    else if (e.Moved)
+                    if (e.Moved)
                     {
                         if (fromParentPath != toParentPath)
                         {
@@ -973,6 +968,16 @@
                                 CommandHistory.Add(cmd);
                             }
                         }
+                    }
+                    else if (e.Copied)
+                    {
+                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
+                        CommandHistory.Add(command, true);
+                    }
+                    else if (e.Linked)
+                    {
+                        // tbi
+                        MainPresenter.ShowMessage("Linked models TBI", Simulation.MessageType.Information);
                     }
                     view.Tree.ExpandChildren(toParent.FullPath, false);
                 }

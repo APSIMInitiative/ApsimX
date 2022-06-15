@@ -1,11 +1,74 @@
-﻿using Models.CLEM.Resources;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Models.CLEM
 {
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ActivityStatus
+    {
+        /// <summary>
+        /// Performed with all resources available
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Performed with partial resources available
+        /// </summary>
+        Partial,
+        /// <summary>
+        /// Insufficient resources so activity ignored
+        /// </summary>
+        Ignored,
+        /// <summary>
+        /// Insufficient resources so simulation stopped
+        /// </summary>
+        Critical,
+        /// <summary>
+        /// Indicates a timer occurred successfully
+        /// </summary>
+        Timer,
+        /// <summary>
+        /// Indicates a calculation event occurred
+        /// </summary>
+        Calculation,
+        /// <summary>
+        /// Indicates activity occurred but was not needed
+        /// </summary>
+        NotNeeded,
+        /// <summary>
+        /// Indicates activity caused a warning and was not performed
+        /// </summary>
+        Warning,
+        /// <summary>
+        /// Indicates activity was place holder or parent activity
+        /// </summary>
+        NoTask,
+        /// <summary>
+        /// Insufficient resources so activity skipped
+        /// </summary>
+        Skipped,
+
+    }
+
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ResourceAllocationStyle
+    {
+        /// <summary>
+        /// Automatically perform in CLEMGetResourcesRequired
+        /// </summary>
+        Automatic,
+        /// <summary>
+        /// Manually perform in activity code.
+        /// </summary>
+        Manual,
+        /// <summary>
+        /// Controlled by parent activity.
+        /// </summary>
+        ByParent,
+    }
 
     /// <summary>
     /// Crop store style
@@ -122,21 +185,6 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Mustering timing type
-    /// </summary>
-    public enum MusterTimingType
-    {
-        /// <summary>
-        /// At start of time step
-        /// </summary>
-        StartOfTimestep,
-        /// <summary>
-        /// At end of time step
-        /// </summary>
-        EndOfTimeStep
-    }
-
-    /// <summary>
     /// Animal pricing style
     /// </summary>
     public enum PricingStyleType
@@ -172,118 +220,6 @@ namespace Models.CLEM
         /// Sale price
         /// </summary>
         Sale
-    }
-
-    /// <summary>
-    /// Crop payment style
-    /// </summary>
-    public enum CropPaymentStyleType
-    {
-        /// <summary>
-        /// Fixed price
-        /// </summary>
-        Fixed = 0,
-        /// <summary>
-        /// Amount per unit of land
-        /// </summary>
-        perUnitOfLand = 3,
-        /// <summary>
-        /// Amount per hectare
-        /// </summary>
-        perHa = 1,
-        /// <summary>
-        /// Amount per tree
-        /// </summary>
-        perTree = 2,
-    }
-
-    /// <summary>
-    /// Crop payment style
-    /// </summary>
-    public enum ResourcePaymentStyleType
-    {
-        /// <summary>
-        /// Fixed price
-        /// </summary>
-        Fixed,
-        /// <summary>
-        /// Amount per unit of resource
-        /// </summary>
-        perUnit,
-        /// <summary>
-        /// Amount per block of resource
-        /// </summary>
-        perBlock,
-    }
-
-    /// <summary>
-    /// Animal payment style
-    /// </summary>
-    public enum AnimalPaymentStyleType
-    {
-        /// <summary>
-        /// Fixed price
-        /// </summary>
-        Fixed,
-        /// <summary>
-        /// Amount per head
-        /// </summary>
-        perHead,
-        /// <summary>
-        /// Amount per adult equivilant
-        /// </summary>
-        perAE,
-        /// <summary>
-        /// Proportion of total sales
-        /// </summary>
-        ProportionOfTotalSales,
-        /// <summary>
-        /// Amount per hectare
-        /// </summary>
-        perHa,
-        /// <summary>
-        /// Amount per unit of land
-        /// </summary>
-        perUnitOfLand
-    }
-
-    /// <summary>
-    /// Labour allocation unit type
-    /// </summary>
-    public enum LabourUnitType
-    {
-        /// <summary>
-        /// Fixed price
-        /// </summary>
-        Fixed = 0,
-        /// <summary>
-        /// Labour per unit of land
-        /// </summary>
-        perUnitOfLand = 7,
-        /// <summary>
-        /// Labour per hectare
-        /// </summary>
-        perHa = 1,
-        /// <summary>
-        /// Labour per Tree
-        /// </summary>
-        perTree = 2,
-        /// <summary>
-        /// Labour per head
-        /// </summary>
-        perHead = 3,
-        /// <summary>
-        /// Labour per adult equivilant
-        /// </summary>
-        perAE = 4,
-        /// <summary>
-        /// Labour per kg
-        /// </summary>
-        perKg = 5,
-        /// <summary>
-        /// Labour per unit
-        /// </summary>
-        perUnit = 6,
     }
 
     /// <summary>
@@ -367,7 +303,7 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Possible actions when only partial requested resources are available
+    /// Possible actions when only partial resources requested are available
     /// </summary>
     public enum OnPartialResourcesAvailableActionTypes
     {
@@ -380,9 +316,13 @@ namespace Models.CLEM
         /// </summary>
         SkipActivity,
         /// <summary>
-        /// Receive resources available and perform activity
+        /// Use available resources to perform activity
         /// </summary>
-        UseResourcesAvailable
+        UseAvailableResources,
+        /// <summary>
+        /// Use available resources with shortfall influencing other activities
+        /// </summary>
+        UseAvailableWithImplications,
     }
 
     /// <summary>
@@ -888,6 +828,100 @@ namespace Models.CLEM
         /// Individuals not marked for sale in the herd
         /// </summary>
         NotMarkedForSale,
+    }
+
+    /// <summary>
+    /// The types of labels provided for use by companion models
+    /// </summary>
+    public enum CompanionModelLabelType
+    {
+        /// <summary>
+        /// The child identifiers available
+        /// </summary>
+        Identifiers,
+        /// <summary>
+        /// The resource measures available
+        /// </summary>
+        Measure
+    }
+
+    /// <summary>
+    /// Reporting style for Memos in Descriptive summary
+    /// </summary>
+    public enum DescriptiveSummaryMemoReportingType
+    {
+        /// <summary>
+        /// Present where they occur in the tree structure
+        /// </summary>
+        InPlace,
+        /// <summary>
+        /// Present at the top of the property list
+        /// </summary>
+        AtTop,
+        /// <summary>
+        /// Present at the bottom of the property list
+        /// </summary>
+        AtBottom,
+        /// <summary>
+        /// Do not present Memos
+        /// </summary>
+        Ignore
+    }
+
+    /// <summary>
+    /// A list of labels used for communication between an activity and companion models
+    /// </summary>
+    [Serializable]
+    public struct LabelsForCompanionModels
+    {
+        /// <summary>
+        /// List of available identifiers
+        /// </summary>
+        public List<string> Identifiers;
+        /// <summary>
+        /// List of available measures
+        /// </summary>
+        public List<string> Measures;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="identifiers"></param>
+        /// <param name="measures"></param>
+        public LabelsForCompanionModels(List<string> identifiers, List<string> measures)
+        {
+            Identifiers = identifiers;
+            Measures = measures;
+        }
+    }
+
+    /// <summary>
+    /// Additional linq extensions
+    /// </summary>
+    public static class LinqExtensions
+    {
+        /// <summary>
+        /// Method to extend linq and allow DistinctBy for unions
+        /// Provided by MoreLinQ
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
+         (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> knownKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (knownKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
+
     }
 
 }

@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all labour types (people) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
-    public class Labour: ResourceBaseWithTransactions, IValidatableObject
+    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -106,6 +106,21 @@ namespace Models.CLEM.Resources
             return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
+        /// <inheritdoc/>
+        public LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() { "Adult equivalent" },
+                        measures: new List<string>()
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
+        }
+
         #region validation
 
         /// <summary>
@@ -139,7 +154,7 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             // locate AE relationship
-            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
+            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Adult equivalent");
 
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())

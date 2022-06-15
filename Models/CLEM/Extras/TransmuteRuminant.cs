@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -120,7 +121,7 @@ namespace Models.CLEM
                         // remove individual from herd immediately
                         (ResourceGroup as RuminantHerd).Herd.Remove(ind);
                     
-                    if (available >= needed)
+                    if (MathUtilities.IsGreaterThanOrEqual(available, needed))
                     {
                         if (queryOnly)
                             return true;

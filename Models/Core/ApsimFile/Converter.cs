@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 149; } }
+        public static int LatestVersion { get { return 151; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3946,6 +3946,63 @@ namespace Models.Core.ApsimFile
                 if (JsonUtilities.ChildWithName(plant, "MortalityRate") != null)
                     JsonUtilities.AddConstantFunctionIfNotExists(plant, "SeedMortality", "0.0");
             }
+        }
+
+        /// <summary>
+        /// The previous converter function added a constant called
+        /// SeedMortality, which should have been called SeedMortalityRate.
+        /// Unfortunately, the cat is already out of the bag, so I've fixed this
+        /// by writing a new converter function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion150(JObject root, string fileName)
+        {
+            const string correctName = "SeedMortalityRate";
+            foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
+            {
+                if (JsonUtilities.Children(plant).Count > 0)
+                {
+                    JObject seedMortality = JsonUtilities.ChildWithName(plant, "SeedMortality", ignoreCase: true);
+                    if (seedMortality == null)
+                        // If no seed mortality exists, add it in with the right name.
+                        JsonUtilities.AddConstantFunctionIfNotExists(plant, correctName, 0);
+                    else
+                        // We already have a seed mortality. Just rename it.
+                        JsonUtilities.RenameModel(seedMortality, correctName);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update modified models to new CLEM refactor with Comparable child models.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion151(JObject root, string fileName)
+        {
+            Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
+            {
+                { "Models.CLEM.Groupings.LabourFilterGroup", "Models.CLEM.Groupings.LabourGroup" },
+                { "Models.CLEM.Activities.RuminantActivityFee", "Models.CLEM.Activities.ActivityFee" },
+                { "Models.CLEM.Activities.CropActivityFee", "Models.CLEM.Activities.ActivityFee" },
+                { "Models.CLEM.Activities.ResourceActivityFee", "Models.CLEM.Activities.ActivityFee" },
+                { "Models.CLEM.Activities.LabourActivityFee", "Models.CLEM.Activities.ActivityFee" },
+                { "Models.CLEM.Activities.TruckingSettings", "Models.CLEM.Activities.RuminantTrucking" },
+                { "Models.CLEM.Activities.ActivityCutAndCarryLimiter", "Models.CLEM.Limiters.ActivityCarryLimiter" },
+                { "Models.CLEM.Activities.ActivityTimerBreedForMilking", "Models.CLEM.Timers.ActivityTimerBreedForMilking" },
+                { "Models.CLEM.Activities.ActivityTimerCropHarvest", "Models.CLEM.Timers.ActivityTimerCropHarvest" },
+                { "Models.CLEM.Activities.ActivityTimerDateRange", "Models.CLEM.Timers.ActivityTimerDateRange" },
+                { "Models.CLEM.Activities.ActivityTimerInterval", "Models.CLEM.Timers.ActivityTimerInterval" },
+                { "Models.CLEM.Activities.ActivityTimerLinked", "Models.CLEM.Timers.ActivityTimerLinked" },
+                { "Models.CLEM.Activities.ActivityTimerMonthRange", "Models.CLEM.Timers.ActivityTimerMonthRange" },
+                { "Models.CLEM.Activities.ActivityTimerPastureLevel", "Models.CLEM.Timers.ActivityTimerPastureLevel" },
+                { "Models.CLEM.Activities.ActivityTimerResourceLevel", "Models.CLEM.Timers.ActivityTimerResourceLevel" },
+                { "Models.CLEM.Activities.ActivityTimerSequence", "Models.CLEM.Timers.ActivityTimerSequence" },
+            };
+            
+            foreach (var item in searchReplaceStrings)
+                JsonUtilities.ReplaceChildModelType(root, item.Key, item.Value);
         }
 
         /// <summary>
