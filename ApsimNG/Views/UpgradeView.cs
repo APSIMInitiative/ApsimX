@@ -369,21 +369,6 @@
                                 cancellationToken.Cancel();
 
                         }
-#pragma warning disable SYSLIB0014
-                        /*
-                        WebClient web = new WebClient();
-
-                        try
-                        {
-                            waitDlg = new Gtk.MessageDialog(window1, Gtk.DialogFlags.Modal,
-                                Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
-                            waitDlg.Title = "APSIM Upgrade";
-                            web.DownloadFileCompleted += Web_DownloadFileCompleted;
-                            web.DownloadProgressChanged += OnDownloadProgressChanged;
-                            web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
-                            if (waitDlg.Run() == (int)ResponseType.Cancel)
-                                web.CancelAsync();
-                        } */
                         catch (Exception err)
                         {
                             ViewBase.MasterView.ShowMsgDialog("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
@@ -392,15 +377,12 @@
                         {
                             if (waitDlg != null)
                             {
-                                // web.DownloadProgressChanged -= OnDownloadProgressChanged;
                                 waitDlg.Dispose();
                                 waitDlg = null;
                             }
                             if (window1 != null && window1.Window != null)
                                 window1.Window.Cursor = null;
                         }
-#pragma warning restore SYSLIB0014
-
                     }
                 }
             }
@@ -438,11 +420,9 @@
                 err = new Exception("Error updating download progress", err);
                 ShowError(err);
             }
-            if (e == 1.0) // Should be true only if the file has been completely downloaded
+            if (e == 1.0) // Should be true only iff the file has been completely downloaded
             {
-                // args is a holdover from the earlier WebClient approach and no longer does anything useful
-                var args = new System.ComponentModel.AsyncCompletedEventArgs(null, false, null);
-                Web_DownloadFileCompleted(this, args);
+                Web_DownloadFileCompleted();
             }
 
         }
@@ -459,37 +439,7 @@
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
 
-        /// <summary>
-        /// Invoked when the download progress changes.
-        /// Updates the progress bar.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            try
-            {
-                Gtk.Application.Invoke(delegate
-                {
-                    try
-                    {
-                        double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
-                        waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
-                    }
-                    catch (Exception err)
-                    {
-                        ShowError(err);
-                    }
-                });
-            }
-            catch (Exception err)
-            {
-                err = new Exception("Error updating download progress", err);
-                ShowError(err);
-            }
-        }
-
-        private void Web_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void Web_DownloadFileCompleted()
         {
             try
             {
@@ -501,13 +451,10 @@
                         waitDlg = null;
                     }
                 });
-                if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
+                if (!string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
                     try
                     {
-                        if (e.Error != null) // On Linux, we get to this point even when errors have occurred
-                            throw e.Error;
-
                         if (File.Exists(tempSetupFileName))
                         {
 
