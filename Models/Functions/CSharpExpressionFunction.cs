@@ -59,7 +59,8 @@ namespace Models.Functions
                 // Replace the "using Models;" namespace place holder with the namesspaces above.
                 template = template.Replace("using Models;", namespaces);
 
-                template = template.Replace("class Script", $"class {relativeTo.Name}Script");
+                var scriptName = Guid.NewGuid().ToString().Replace("-", "");
+                template = template.Replace("class Script", $"class Script{scriptName}");
 
                 // Replace the link place holder in the template with links created above.
                 template = template.Replace("        [Link] Clock Clock = null;", links.ToString());

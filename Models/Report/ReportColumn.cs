@@ -331,7 +331,7 @@
 
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
-                events.Subscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
+                events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
                 fromVariable = (clock as IModel).FindByPath(fromString);
                 toVariable = (clock as IModel).FindByPath(toString);
                 if (fromVariable != null)
@@ -380,7 +380,7 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event data.</param>
-        private void OnEndOfSimulation(object sender, EventArgs e)
+        private void OnUnsubscribeFromEvents(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(collectionEventName))
                 events.Unsubscribe(collectionEventName, OnDoReportCalculations);
@@ -389,7 +389,7 @@
             if (!string.IsNullOrEmpty(fromString) && fromVariable == null)
                 events.Unsubscribe(fromString, OnFromEvent);
             events.Unsubscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
-            events.Unsubscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
+            events.Unsubscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
         }
 
         /// <summary>

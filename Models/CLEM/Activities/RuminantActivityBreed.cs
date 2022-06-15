@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
@@ -67,7 +68,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityBreed()
         {
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.[Type].Breeding";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -167,7 +168,7 @@ namespace Models.CLEM.Activities
                                             // calculate conception
                                             Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                                             double conceptionRate = ConceptionRate(female, out status);
-                                            if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                            if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
                                             {
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                 female.LastMatingStyle = MatingStyle.PreSimulation;
@@ -188,7 +189,7 @@ namespace Models.CLEM.Activities
 
                                                     for (int k = 0; k < female.CarryingCount; i++)
                                                     {
-                                                        if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                         {
                                                             female.OneOffspringDies();
                                                             if (female.NumberOfOffspring == 0)
@@ -207,14 +208,14 @@ namespace Models.CLEM.Activities
                                     numberPossible = Convert.ToInt32(limiter * location.OfType<RuminantFemale>().Count(), CultureInfo.InvariantCulture);
                                     foreach (RuminantFemale female in location.OfType<RuminantFemale>())
                                     {
-                                        if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                        if (!female.IsPregnant && MathUtilities.IsGreaterThanOrEqual((female.Age - female.AgeAtLastBirth) * 30.4, female.BreedParams.MinimumDaysBirthToConception))
                                         {
                                             // calculate conception
                                             Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                                             double conceptionRate = ConceptionRate(female, out status);
                                             if (numberServiced <= numberPossible) // labour/finance limited number
                                             {
-                                                if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                                if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
                                                 {
                                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                     female.LastMatingStyle = MatingStyle.Controlled;
@@ -235,7 +236,7 @@ namespace Models.CLEM.Activities
 
                                                         for (int k = 0; k < female.CarryingCount; k++)
                                                         {
-                                                            if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                            if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                             {
                                                                 female.OneOffspringDies();
                                                                 if (female.NumberOfOffspring == 0)
@@ -257,6 +258,17 @@ namespace Models.CLEM.Activities
                 }
             }
 
+        }
+
+        /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // Reset all activity determined conception rates
+            if(useControlledMating)
+                GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsBreeder).Select(a => a.ActivityDeterminedConceptionRate == null);
         }
 
         /// <summary>An event handler to perform herd breeding </summary>
@@ -282,7 +294,7 @@ namespace Models.CLEM.Activities
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
                     var rnd = RandomNumberGenerator.Generator.NextDouble();
-                    if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                    if (MathUtilities.IsLessThan(rnd, female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                     {
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
@@ -415,9 +427,16 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            if (conceptionRate > 0)
+                            // If an activity controlled mating has previously determined conception rate and saved it (it will not be null if mated)
+                            // This conception rate can be used instead of determining conception here. 
+                            if (female.ActivityDeterminedConceptionRate != null)
+                                conceptionRate = female.ActivityDeterminedConceptionRate ?? 0;
+
+
+                            if (female.ActivityDeterminedConceptionRate != null || conceptionRate > 0)
                             {
-                                if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                //ActivitydeterminedConception rate > 0, otherwise rate caclulated above versus the random number approach
+                                if ((female.ActivityDeterminedConceptionRate != null)?female.ActivityDeterminedConceptionRate > 0: RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
 
@@ -546,12 +565,12 @@ namespace Models.CLEM.Activities
             if (!female.IsPregnant)
             {
                 status = Reporting.ConceptionStatus.NotReady;
-                if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
+                if (MathUtilities.IsGreaterThanOrEqual(female.Age, female.BreedParams.MinimumAge1stMating) && female.NumberOfBirths == 0)
                     isConceptionReady = true;
                 else
                 {
                     // add one to age to ensure that conception is due this timestep
-                    if ((female.Age + 1 - female.AgeAtLastBirth) * 30.4 > female.BreedParams.MinimumDaysBirthToConception)
+                    if (MathUtilities.IsGreaterThan((female.Age + 1 - female.AgeAtLastBirth) * 30.4, female.BreedParams.MinimumDaysBirthToConception))
                     {
                         // only based upon period since birth
                         isConceptionReady = true;

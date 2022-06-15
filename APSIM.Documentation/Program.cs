@@ -119,7 +119,7 @@ namespace APSIM.Documentation
                 AgPastureDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf", false),
                 // todo: agroforestry
                 StandardPmfPlantRow("Barley"),
-                CreateUnderReviewPlantRow("Canola"),
+                StandardPmfPlantRow("Canola"),
                 StandardPmfPlantRow("Chicory"),
                 StandardPmfPlantRow("Chickpea"),
                 StandardPmfPlantRow("Eucalyptus"),
@@ -127,6 +127,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Gliricidia"),
                 StandardPmfPlantRow("Maize"),
                 MicroClimateRow(),
+                StandardPmfPlantRow("Mungbean"),
                 StandardPmfPlantRow("Nutrient"),
                 StandardPmfPlantRow("Oats"),
                 StandardPmfPlantRow("OilPalm"),
@@ -250,6 +251,7 @@ namespace APSIM.Documentation
 
         private static IDocumentationRow CreateUnderReviewPlantRow(string modelName)
         {
+            Console.WriteLine($"Creating documentation for {modelName}");
             string validationFile = Path.Combine(underReview, modelName, $"{modelName}.apsimx");
             string modelPath = $"[Replacements].{modelName}";
             IDocumentationFile file = new DocsFromModelPath(validationFile, modelPath, $"{modelName}.pdf", options, true);
@@ -266,6 +268,7 @@ namespace APSIM.Documentation
 
         private static IDocumentationRow StandardDocsRow(string name, string modelResourceFile, string validationFile, string outFile, IEnumerable<IDocumentationCell> extraCells = null)
         {
+            Console.WriteLine($"Creating documentation for {name}");
             string model = Path.Combine(resources, modelResourceFile);
             string validation = Path.Combine(Program.validation, Path.GetFileNameWithoutExtension(validationFile), validationFile);
             IEnumerable<string> files = new string[2] { model, validation };

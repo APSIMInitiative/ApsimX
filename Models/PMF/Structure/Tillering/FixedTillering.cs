@@ -129,6 +129,8 @@ namespace Models.PMF.Struct
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
 			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
 			
+			// In sorghum, this is added to current leafno immediately. In
+			// maize, this doesn't happen until end of day.
 			culm.AddNewLeaf(dltLeafNo);
 
 			return dltLeafNo;

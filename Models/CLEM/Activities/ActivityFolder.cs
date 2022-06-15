@@ -11,14 +11,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>An folder to manage activity grouping</summary>
+    /// <summary>A folder to manage activity grouping</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity folder holds groups of activities and is used to arrange activities and apply timers to the group")]
+    [Description("This activity folder helps arrange activities and apply timers to the group")]
     [HelpUri(@"Content/Features/Activities/ActivitiesFolder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityFolder : CLEMActivityBase
@@ -36,6 +36,12 @@ namespace Models.CLEM.Activities
         public ActivityFolder()
         {
             TransactionCategory = "Folder";
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            Status = ActivityStatus.NoTask;
         }
 
         #region descriptive summary
@@ -58,6 +64,7 @@ namespace Models.CLEM.Activities
             return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">";
         } 
         #endregion
+
 
     }
 }

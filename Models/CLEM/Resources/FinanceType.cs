@@ -31,6 +31,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Opening balance")]
         [Required]
+        [Core.Display(Format = "N2")]
         public double OpeningBalance { get; set; }
 
         /// <summary>
@@ -84,6 +85,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
+        [Core.Display(Format = "N2")]
         public double Amount
         {
             get
@@ -162,7 +164,6 @@ namespace Models.CLEM.Resources
 
             if (addAmount > 0)
             {
-                addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction
@@ -208,7 +209,7 @@ namespace Models.CLEM.Resources
             if (request.MarketTransactionMultiplier > 0)
                 FindEquivalentMarketStore();
 
-            double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
+            double amountRemoved = request.Required;
             
             // more than positive balance can be taken if withdrawal limit set to false
             if(this.EnforceWithdrawalLimit)
