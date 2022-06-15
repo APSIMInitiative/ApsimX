@@ -1,0 +1,3077 @@
+! validation data sets for mungbean, with output at grain maturity only
+
+!!!!!!!!!!!!!!!! APS1 - Gatton 1991 density !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.aps1d1.control]
+Module = clock       [aps1d1]                                        
+Module = report      c:\apswork\apsim\report\report.par   [mungbean]              [aps1d1]                                        
+Module = met         c:\apswork\apsim\met\GAT9091.met  [standard]
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps1d1] 
+
+[aps1d1.report.parameters]
+Title =  aps1 - mungbean  36 plants/m2                                                   
+Screen_output= on
+Outputfile  = aps1d1.out    /overwrite
+Summaryfile = aps1d1.sum   /overwrite
+
+[aps1d1.clock.parameters]
+Start_day  =   25       
+Start_year = 1991      
+End_day    =  110   
+End_year   = 1991     
+
+[APSIM.aps1d2.control]
+Module = clock       [aps1d2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps1d2]                                        
+Module = met         c:\apswork\apsim\met\GAT9091.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps1d2] 
+
+[aps1d2.report.parameters]
+Title =  aps1 - mungbean  36 plants/m2                                                   
+Screen_output= on
+Outputfile  = aps1d2.out          /overwrite
+Summaryfile = aps1d2.sum          /overwrite
+
+[aps1d2.clock.parameters]
+Start_day  =   25       
+Start_year = 1991      
+End_day    =  110   
+End_year   = 1991     
+
+!!!!!!!!!!!!!!!! APS18 - Gatton 1993 weathering !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.aps18p1b.control]
+Module = clock       [aps18p1b]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p1b]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p1b] 
+
+[aps18p1b.report.parameters]
+Title =  aps18 - berkin weathering -  planting 1                                                         
+Screen_output= on
+Outputfile  = aps18p1b.out          /overwrite
+Summaryfile = aps18p1b.sum          /overwrite
+
+[aps18p1b.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p2b.control]
+Module = clock       [aps18p2b]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p2b]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p2b] 
+
+[aps18p2b.report.parameters]
+Title =  aps18 - berkin weathering -  planting 2                                                         
+Screen_output= on
+Outputfile  = aps18p2b.out          /overwrite
+Summaryfile = aps18p2b.sum          /overwrite
+
+[aps18p2b.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p3b.control]
+Module = clock       [aps18p3b] 
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p3b]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p3b] 
+
+[aps18p3b.report.parameters]
+Title =  aps18 - berkin weathering -  planting 3                                                         
+Screen_output= on
+Outputfile  = aps18p3b.out          /overwrite
+Summaryfile = aps18p3b.sum          /overwrite
+
+[aps18p3b.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p4b.control]
+Module = clock       [aps18p4b]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p4b]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p4b] 
+
+[aps18p4b.report.parameters]
+Title =  aps18 - berkin weathering -  planting 4                                                         
+Screen_output= on
+Outputfile  = aps18p4b.out          /overwrite
+Summaryfile = aps18p4b.sum          /overwrite
+
+[aps18p4b.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p5b.control]
+Module = clock       [aps18p5b]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p5b]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p5b] 
+
+[aps18p5b.report.parameters]
+Title =  aps18 - berkin weathering -  planting 5                                                         
+Screen_output= on
+Outputfile  = aps18p5b.out          /overwrite
+Summaryfile = aps18p5b.sum          /overwrite
+
+[aps18p5b.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p6b.control]
+Module = clock       [aps18p6b]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p6b]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p6b] 
+
+[aps18p6b.report.parameters]
+Title =  aps18 - berkin weathering -  planting 6                                                         
+Screen_output= on
+Outputfile  = aps18p6b.out          /overwrite
+Summaryfile = aps18p6b.sum          /overwrite
+
+[aps18p6b.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p1k.control]
+Module = clock       [aps18p1k]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p1k]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p1k] 
+
+[aps18p1k.report.parameters]
+Title =  aps18 - king weathering -  planting 1                                                         
+Screen_output= on
+Outputfile  = aps18p1k.out          /overwrite
+Summaryfile = aps18p1k.sum          /overwrite
+
+[aps18p1k.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p2k.control]
+Module = clock       [aps18p2k]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p2k]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p2k] 
+
+[aps18p2k.report.parameters]
+Title =  aps18 - king weathering -  planting 2                                                         
+Screen_output= on
+Outputfile  = aps18p2k.out          /overwrite
+Summaryfile = aps18p2k.sum          /overwrite
+
+[aps18p2k.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p3k.control]
+Module = clock       [aps18p3k]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p3k]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p3k] 
+
+[aps18p3k.report.parameters]
+Title =  aps18 - king weathering -  planting 3                                                         
+Screen_output= on
+Outputfile  = aps18p3k.out          /overwrite
+Summaryfile = aps18p3k.sum          /overwrite
+
+[aps18p3k.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p4k.control]
+Module = clock       [aps18p4k]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p4k]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p4k] 
+
+[aps18p4k.report.parameters]
+Title =  aps18 - king weathering -  planting 4                                                         
+Screen_output= on
+Outputfile  = aps18p4k.out          /overwrite
+Summaryfile = aps18p4k.sum          /overwrite
+
+[aps18p4k.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p5k.control]
+Module = clock       [aps18p5k]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p5k]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p5k] 
+
+[aps18p5k.report.parameters]
+Title =  aps18 - king weathering -  planting 5                                                         
+Screen_output= on
+Outputfile  = aps18p5k.out          /overwrite
+Summaryfile = aps18p5k.sum          /overwrite
+
+[aps18p5k.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+[APSIM.aps18p6k.control]
+Module = clock       [aps18p6k]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps18p6k]                                        
+Module = met         c:\apswork\apsim\met\aps18.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps18p6k] 
+
+[aps18p6k.report.parameters]
+Title =  aps18 - king weathering -  planting 6                                                         
+Screen_output= on
+Outputfile  = aps18p6k.out          /overwrite
+Summaryfile = aps18p6k.sum          /overwrite
+
+[aps18p6k.clock.parameters]
+Start_day =  300       
+Start_year =1993      
+End_day =    150   
+End_year =  1994    
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT1 1986/87 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt1c1p1.control]
+Module = clock       [nt1c1p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c1p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c1p1] 
+
+[nt1c1p1.report.parameters]
+Title =  NT1 mungbean -  berkin planting 1                                                         
+Screen_output= off
+Outputfile  = nt1c1p1.out          /overwrite
+Summaryfile = nt1c1p1.sum          /overwrite
+
+[nt1c1p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c1p2.control]
+Module = clock       [nt1c1p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c1p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c1p2] 
+
+[nt1c1p2.report.parameters]
+Title =  NT1 mungbean -  berkin planting 2                                                         
+Screen_output= off
+Outputfile  = nt1c1p2.out          /overwrite
+Summaryfile = nt1c1p2.sum          /overwrite
+
+[nt1c1p2.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c2p1.control]
+Module = clock       [nt1c2p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c2p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c2p1] 
+
+[nt1c2p1.report.parameters]
+Title =  NT1 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt1c2p1.out          /overwrite
+Summaryfile = nt1c2p1.sum          /overwrite
+
+[nt1c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c2p2.control]
+Module = clock       [nt1c2p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c2p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c2p2] 
+
+[nt1c2p2.report.parameters]
+Title =  NT1 mungbean -  king planting 2                                                        
+Screen_output= off
+Outputfile  = nt1c2p2.out          /overwrite
+Summaryfile = nt1c2p2.sum          /overwrite
+
+[nt1c2p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c3p1.control]
+Module = clock       [nt1c3p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c3p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c3p1] 
+
+[nt1c3p1.report.parameters]
+Title =  NT1 mungbean -  satin planting 1                                                         
+Screen_output= off
+Outputfile  = nt1c3p1.out          /overwrite
+Summaryfile = nt1c3p1.sum          /overwrite
+
+[nt1c3p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c3p2.control]
+Module = clock       [nt1c3p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c3p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c3p2] 
+
+[nt1c3p2.report.parameters]
+Title =  NT1 mungbean -  satin planting 2                                                        
+Screen_output= off
+Outputfile  = nt1c3p2.out          /overwrite
+Summaryfile = nt1c3p2.sum          /overwrite
+
+[nt1c3p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c4p1.control]
+Module = clock       [nt1c4p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c4p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate    mgb_valm.man [nt1c4p1]                                                                                    
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c4p1] 
+
+[nt1c4p1.report.parameters]
+Title =  NT1 mungbean -  shantung planting 1                                                         
+Screen_output= off
+Outputfile  = nt1c4p1.out          /overwrite
+Summaryfile = nt1c4p1.sum          /overwrite
+
+[nt1c4p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c4p2.control]
+Module = clock       [nt1c4p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c4p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c4p2] 
+
+[nt1c4p2.report.parameters]
+Title =  NT1 mungbean -  shantung planting 2                                                        
+Screen_output= off
+Outputfile  = nt1c4p2.out          /overwrite
+Summaryfile = nt1c4p2.sum          /overwrite
+
+[nt1c4p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c5p1.control]
+Module = clock       [nt1c5p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c5p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c5p1] 
+
+[nt1c5p1.report.parameters]
+Title =  NT1 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt1c5p1.out          /overwrite
+Summaryfile = nt1c5p1.sum          /overwrite
+
+[nt1c5p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt1c5p2.control]
+Module = clock       [nt1c5p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt1c5p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt1c5p2] 
+
+[nt1c5p2.report.parameters]
+Title =  NT1 mungbean -  putland planting 2                                                   
+Screen_output= off
+Outputfile  = nt1c5p2.out          /overwrite
+Summaryfile = nt1c5p2.sum          /overwrite
+
+[nt1c5p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT2 1986/87 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt2c2p1.control]
+Module = clock       [nt2c2p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c2p1]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met   [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c2p1] 
+
+[nt2c2p1.report.parameters]
+Title =  NT2 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt2c2p1.out          /overwrite
+Summaryfile = nt2c2p1.sum          /overwrite
+
+[nt2c2p1.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c2p2.control]
+Module = clock       [nt2c2p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c2p2]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c2p2] 
+
+[nt2c2p2.report.parameters]
+Title =  NT2 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt2c2p2.out          /overwrite
+Summaryfile = nt2c2p2.sum          /overwrite
+
+[nt2c2p2.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c2p3.control]
+Module = clock       [nt2c2p3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c2p3]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c2p3] 
+
+[nt2c2p3.report.parameters]
+Title =  NT2 mungbean -  king planting 3                                                         
+Screen_output= off
+Outputfile  = nt2c2p3.out          /overwrite
+Summaryfile = nt2c2p3.sum          /overwrite
+
+[nt2c2p3.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c2p4.control]
+Module = clock       [nt2c2p4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c2p4]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c2p4] 
+
+[nt2c2p4.report.parameters]
+Title =  NT2 mungbean -  king planting 4                                                         
+Screen_output= off
+Outputfile  = nt2c2p4.out          /overwrite
+Summaryfile = nt2c2p4.sum          /overwrite
+
+[nt2c2p4.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c3p1.control]
+Module = clock       [nt2c3p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c3p1]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c3p1] 
+
+[nt2c3p1.report.parameters]
+Title =  NT2 mungbean -  satin planting 1                                                         
+Screen_output= off
+Outputfile  = nt2c3p1.out          /overwrite
+Summaryfile = nt2c3p1.sum          /overwrite
+
+[nt2c3p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c3p2.control]
+Module = clock       [nt2c3p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c3p2]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c3p2] 
+
+[nt2c3p2.report.parameters]
+Title =  NT2 mungbean -  satin planting 2                                                         
+Screen_output= off
+Outputfile  = nt2c3p2.out          /overwrite
+Summaryfile = nt2c3p2.sum          /overwrite
+
+[nt2c3p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c3p3.control]
+Module = clock       [nt2c3p3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c3p3]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c3p3] 
+
+[nt2c3p3.report.parameters]
+Title =  NT2 mungbean -  satin planting 3                                                         
+Screen_output= off
+Outputfile  = nt2c3p3.out          /overwrite
+Summaryfile = nt2c3p3.sum          /overwrite
+
+[nt2c3p3.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c3p4.control]
+Module = clock       [nt2c3p4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c3p4]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c3p4] 
+
+[nt2c3p4.report.parameters]
+Title =  NT2 mungbean -  satin planting 4                                                         
+Screen_output= off
+Outputfile  = nt2c3p4.out          /overwrite
+Summaryfile = nt2c3p4.sum          /overwrite
+
+[nt2c3p4.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c5p1.control]
+Module = clock       [nt2c5p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c5p1]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c5p1] 
+
+[nt2c5p1.report.parameters]
+Title =  NT2 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt2c5p1.out          /overwrite
+Summaryfile = nt2c5p1.sum          /overwrite
+
+[nt2c5p1.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c5p2.control]
+Module = clock       [nt2c5p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c5p2]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c5p2] 
+
+[nt2c5p2.report.parameters]
+Title =  NT2 mungbean -  putland planting 2                                                         
+Screen_output= off
+Outputfile  = nt2c5p2.out          /overwrite
+Summaryfile = nt2c5p2.sum          /overwrite
+
+[nt2c5p2.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c5p3.control]
+Module = clock       [nt2c5p3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c5p3]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c5p3] 
+
+[nt2c5p3.report.parameters]
+Title =  NT2 mungbean -  putland planting 3                                                         
+Screen_output= off
+Outputfile  = nt2c5p3.out          /overwrite
+Summaryfile = nt2c5p3.sum          /overwrite
+
+[nt2c5p3.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt2c5p4.control]
+Module = clock       [nt2c5p4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt2c5p4]                                        
+Module = met         c:\apswork\apsim\met\dd8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt2c5p4] 
+
+[nt2c5p4.report.parameters]
+Title =  NT2 mungbean -  putland planting 4                                                         
+Screen_output= off
+Outputfile  = nt2c5p4.out          /overwrite
+Summaryfile = nt2c5p4.sum          /overwrite
+
+[nt2c5p4.clock.parameters]
+Start_day =    1       
+Start_year =1987      
+End_day =    152   
+End_year =  1987  
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT3 1986/87 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt3c2p1.control]
+Module = clock       [nt3c2p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt3c2p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt3c2p1] 
+
+[nt3c2p1.report.parameters]
+Title =  NT3 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt3c2p1.out          /overwrite
+Summaryfile = nt3c2p1.sum          /overwrite
+
+[nt3c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt3c2p2.control]
+Module = clock       [nt3c2p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt3c2p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt3c2p2] 
+
+[nt3c2p2.report.parameters]
+Title =  NT3 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt3c2p2.out          /overwrite
+Summaryfile = nt3c2p2.sum          /overwrite
+
+[nt3c2p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt3c2p3.control]
+Module = clock       [nt3c2p3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt3c2p3]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt3c2p3] 
+
+[nt3c2p3.report.parameters]
+Title =  NT3 mungbean -  king planting 3                                                         
+Screen_output= off
+Outputfile  = nt3c2p3.out          /overwrite
+Summaryfile = nt3c2p3.sum          /overwrite
+
+[nt3c2p3.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt3c4p1.control]
+Module = clock       [nt3c4p1] 
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt3c4p1]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt3c4p1] 
+
+[nt3c4p1.report.parameters]
+Title =  NT3 mungbean -  shantung planting 1                                                         
+Screen_output= off
+Outputfile  = nt3c4p1.out          /overwrite
+Summaryfile = nt3c4p1.sum          /overwrite
+
+[nt3c4p1.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt3c4p2.control]
+Module = clock       [nt3c4p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt3c4p2]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt3c4p2] 
+
+[nt3c4p2.report.parameters]
+Title =  NT3 mungbean -  shantung planting 2                                                         
+Screen_output= off
+Outputfile  = nt3c4p2.out          /overwrite
+Summaryfile = nt3c4p2.sum          /overwrite
+
+[nt3c4p2.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+[APSIM.nt3c4p3.control]
+Module = clock       [nt3c4p3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt3c4p3]                                        
+Module = met         c:\apswork\apsim\met\krc8687.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt3c4p3] 
+
+[nt3c4p3.report.parameters]
+Title =  NT3 mungbean -  shantung planting 3                                                        
+Screen_output= off
+Outputfile  = nt3c4p3.out          /overwrite
+Summaryfile = nt3c4p3.sum          /overwrite
+
+[nt3c4p3.clock.parameters]
+Start_day =  250       
+Start_year =1986      
+End_day =    150   
+End_year =  1987  
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT4 1989/90 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt4c2p1.control]
+Module = clock       [nt4c2p1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt4c2p1]                                        
+Module = met         c:\apswork\apsim\met\krs8990.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate    mgb_valm.man [nt4c2p1]                                                                                    
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt4c2p1] 
+
+[nt4c2p1.report.parameters]
+Title =  NT4 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt4c2p1.out          /overwrite
+Summaryfile = nt4c2p1.sum          /overwrite
+
+[nt4c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1989      
+End_day =    150   
+End_year =  1990  
+
+[APSIM.nt4c2p2.control]
+Module = clock       [nt4c2p2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [nt4c2p2]                                        
+Module = met         c:\apswork\apsim\met\krs8990.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate    mgb_valm.man [nt4c2p1]                                                                                    
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [nt4c2p2] 
+
+[nt4c2p2.report.parameters]
+Title =  NT4 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt4c2p2.out          /overwrite
+Summaryfile = nt4c2p2.sum          /overwrite
+
+[nt4c2p2.clock.parameters]
+Start_day =  250       
+Start_year =1989     
+End_day =    150   
+End_year =  1990
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT5 1990/91 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt5c2p1.control]
+Module = clock       [nt5c2p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt5c2p1]                                        
+Module = met         c:\apswork\apsim\met\krs9091.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt5c2p1] 
+
+[nt5c2p1.report.parameters]
+Title =  NT5 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt5c2p1.out          /overwrite
+Summaryfile = nt5c2p1.sum          /overwrite
+
+[nt5c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1990      
+End_day =    150   
+End_year =  1991  
+
+[APSIM.nt5c5p1.control]
+Module = clock       [nt5c5p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt5c5p1]                                        
+Module = met         c:\apswork\apsim\met\krs9091.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt5c5p1] 
+
+[nt5c5p1.report.parameters]
+Title =  NT5 mungbean -  putland planting 1                                                        
+Screen_output= off
+Outputfile  = nt5c5p1.out          /overwrite
+Summaryfile = nt5c5p1.sum          /overwrite
+
+[nt5c5p1.clock.parameters]
+Start_day =  250       
+Start_year =1990     
+End_day =    150   
+End_year =  1991
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT7 1987/88 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt7c2p1.control]
+Module = clock       [nt7c2p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt7c2p1]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt7c2p1] 
+
+[nt7c2p1.report.parameters]
+Title =  NT7 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt7c2p1.out          /overwrite
+Summaryfile = nt7c2p1.sum          /overwrite
+
+[nt7c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt7c3p1.control]
+Module = clock       [nt7c3p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt7c3p1]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt7c3p1] 
+
+[nt7c3p1.report.parameters]
+Title =  NT7 mungbean -  satin planting 1                                                         
+Screen_output= off
+Outputfile  = nt7c3p1.out          /overwrite
+Summaryfile = nt7c3p1.sum          /overwrite
+
+[nt7c3p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt7c4p1.control]
+Module = clock       [nt7c4p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt7c4p1]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt7c4p1] 
+
+[nt7c4p1.report.parameters]
+Title =  NT7 mungbean -  shangtung planting 1                                                         
+Screen_output= off
+Outputfile  = nt7c4p1.out          /overwrite
+Summaryfile = nt7c4p1.sum          /overwrite
+
+[nt7c4p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt7c5p1.control]
+Module = clock       [nt7c5p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt7c5p1]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt7c5p1] 
+
+[nt7c5p1.report.parameters]
+Title =  NT7 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt7c5p1.out          /overwrite
+Summaryfile = nt7c5p1.sum          /overwrite
+
+[nt7c5p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT8 1987/88 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt8c2p1.control]
+Module = clock       [nt8c2p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt8c2p1]                                        
+Module = met         c:\apswork\apsim\met\kcc8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt8c2p1] 
+
+[nt8c2p1.report.parameters]
+Title =  NT8 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt8c2p1.out          /overwrite
+Summaryfile = nt8c2p1.sum          /overwrite
+
+[nt8c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt8c3p1.control]
+Module = clock       [nt8c3p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt8c3p1]                                        
+Module = met         c:\apswork\apsim\met\kcc8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt8c3p1] 
+
+[nt8c3p1.report.parameters]
+Title =  NT8 mungbean -  satin planting 1                                                         
+Screen_output= off
+Outputfile  = nt8c3p1.out          /overwrite
+Summaryfile = nt8c3p1.sum          /overwrite
+
+[nt8c3p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt8c4p1.control]
+Module = clock       [nt8c4p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt8c4p1]                                        
+Module = met         c:\apswork\apsim\met\kcc8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt8c4p1] 
+
+[nt8c4p1.report.parameters]
+Title =  NT8 mungbean -  shangtung planting 1                                                         
+Screen_output= off
+Outputfile  = nt8c4p1.out          /overwrite
+Summaryfile = nt8c4p1.sum          /overwrite
+
+[nt8c4p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt8c5p1.control]
+Module = clock       [nt8c5p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt8c5p1]                                        
+Module = met         c:\apswork\apsim\met\kcc8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt8c5p1] 
+
+[nt8c5p1.report.parameters]
+Title =  NT8 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt8c5p1.out          /overwrite
+Summaryfile = nt8c5p1.sum          /overwrite
+
+[nt8c5p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT9 1987/88 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.nt9c2p1.control]
+Module = clock       [nt9c2p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c2p1]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c2p1] 
+
+[nt9c2p1.report.parameters]
+Title =  NT9 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt9c2p1.out          /overwrite
+Summaryfile = nt9c2p1.sum          /overwrite
+
+[nt9c2p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c2p2.control]
+Module = clock       [nt9c2p2]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c2p2]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c2p2] 
+
+[nt9c2p2.report.parameters]
+Title =  NT9 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt9c2p2.out          /overwrite
+Summaryfile = nt9c2p2.sum          /overwrite
+
+[nt9c2p2.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c2p3.control]
+Module = clock       [nt9c2p3]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c2p3]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c2p3] 
+
+[nt9c2p3.report.parameters]
+Title =  NT9 mungbean -  king planting 3                                                         
+Screen_output= off
+Outputfile  = nt9c2p3.out          /overwrite
+Summaryfile = nt9c2p3.sum          /overwrite
+
+[nt9c2p3.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c3p1.control]
+Module = clock       [nt9c3p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c3p1]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c3p1] 
+
+[nt9c3p1.report.parameters]
+Title =  NT9 mungbean -  satin planting 1                                                         
+Screen_output= off
+Outputfile  = nt9c3p1.out          /overwrite
+Summaryfile = nt9c3p1.sum          /overwrite
+
+[nt9c3p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c3p2.control]
+Module = clock       [nt9c3p2]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c3p2]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c3p2] 
+
+[nt9c3p2.report.parameters]
+Title =  NT9 mungbean -  satin planting 2                                                         
+Screen_output= off
+Outputfile  = nt9c3p2.out          /overwrite
+Summaryfile = nt9c3p2.sum          /overwrite
+
+[nt9c3p2.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c3p3.control]
+Module = clock       [nt9c3p3]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c3p3]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c3p3] 
+
+[nt9c3p3.report.parameters]
+Title =  NT9 mungbean -  satin planting 3                                                         
+Screen_output= off
+Outputfile  = nt9c3p3.out          /overwrite
+Summaryfile = nt9c3p3.sum          /overwrite
+
+[nt9c3p3.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c5p1.control]
+Module = clock       [nt9c5p1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c5p1]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c5p1] 
+
+[nt9c5p1.report.parameters]
+Title =  NT9 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt9c5p1.out          /overwrite
+Summaryfile = nt9c5p1.sum          /overwrite
+
+[nt9c5p1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt9c5p2.control]
+Module = clock       [nt9c5p2]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c5p2]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c5p2] 
+
+[nt9c5p2.report.parameters]
+Title =  NT9 mungbean -  putland planting 2                                                         
+Screen_output= off
+Outputfile  = nt9c5p2.out          /overwrite
+Summaryfile = nt9c5p2.sum          /overwrite
+
+[nt9c5p2.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    160
+End_year =  1988
+
+[APSIM.nt9c5p3.control]
+Module = clock       [nt9c5p3]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt9c5p3]                                        
+Module = met         c:\apswork\apsim\met\dd8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [ddaly]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt9c5p3] 
+
+[nt9c5p3.report.parameters]
+Title =  NT9 mungbean -  putland planting 3                                                         
+Screen_output= off
+Outputfile  = nt9c5p3.out          /overwrite
+Summaryfile = nt9c5p3.sum          /overwrite
+
+[nt9c5p3.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    170
+End_year =  1988
+
+!!!!!!!!!!!!!!!!!!!!!!!!! NT10 1987/88 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+[APSIM.nt10c2t1.control]
+Module = clock       [nt10c2t1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c2t1]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c2t1] 
+
+[nt10c2t1.report.parameters]
+Title =  NT10 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt10c2t1.out          /overwrite
+Summaryfile = nt10c2t1.sum          /overwrite
+
+[nt10c2t1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c2t2.control]
+Module = clock       [nt10c2t2]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c2t2]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c2t2] 
+
+[nt10c2t2.report.parameters]
+Title =  NT10 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt10c2t2.out          /overwrite
+Summaryfile = nt10c2t2.sum          /overwrite
+
+[nt10c2t2.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c2t3.control]
+Module = clock       [nt10c2t3]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c2t3]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c2t3] 
+
+[nt10c2t3.report.parameters]
+Title =  NT10 mungbean -  king planting 1                                                         
+Screen_output= off
+Outputfile  = nt10c2t3.out          /overwrite
+Summaryfile = nt10c2t3.sum          /overwrite
+
+[nt10c2t3.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c2t4.control]
+Module = clock       [nt10c2t4]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c2t4]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c2t4] 
+
+[nt10c2t4.report.parameters]
+Title =  NT10 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt10c2t4.out          /overwrite
+Summaryfile = nt10c2t4.sum          /overwrite
+
+[nt10c2t4.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c2t5.control]
+Module = clock       [nt10c2t5]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c2t5]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c2t5] 
+
+[nt10c2t5.report.parameters]
+Title =  NT10 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt10c2t5.out          /overwrite
+Summaryfile = nt10c2t5.sum          /overwrite
+
+[nt10c2t5.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c2t6.control]
+Module = clock       [nt10c2t6]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c2t6]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c2t6] 
+
+[nt10c2t6.report.parameters]
+Title =  NT10 mungbean -  king planting 2                                                         
+Screen_output= off
+Outputfile  = nt10c2t6.out          /overwrite
+Summaryfile = nt10c2t6.sum          /overwrite
+
+[nt10c2t6.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+
+[APSIM.nt10c5t1.control]
+Module = clock       [nt10c5t1]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c5t1]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c5t1] 
+
+[nt10c5t1.report.parameters]
+Title =  NT10 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt10c5t1.out          /overwrite
+Summaryfile = nt10c5t1.sum          /overwrite
+
+[nt10c5t1.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c5t2.control]
+Module = clock       [nt10c5t2]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c5t2]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c5t2] 
+
+[nt10c5t2.report.parameters]
+Title =  NT10 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt10c5t2.out          /overwrite
+Summaryfile = nt10c5t2.sum          /overwrite
+
+[nt10c5t2.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c5t3.control]
+Module = clock       [nt10c5t3]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c5t3]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c5t3] 
+
+[nt10c5t3.report.parameters]
+Title =  NT10 mungbean -  putland planting 1                                                         
+Screen_output= off
+Outputfile  = nt10c5t3.out          /overwrite
+Summaryfile = nt10c5t3.sum          /overwrite
+
+[nt10c5t3.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c5t4.control]
+Module = clock       [nt10c5t4]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c5t4]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c5t4] 
+
+[nt10c5t4.report.parameters]
+Title =  NT10 mungbean -  putland planting 2                                                         
+Screen_output= off
+Outputfile  = nt10c5t4.out          /overwrite
+Summaryfile = nt10c5t4.sum          /overwrite
+
+[nt10c5t4.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c5t5.control]
+Module = clock       [nt10c5t5]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c5t5]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c5t5] 
+
+[nt10c5t5.report.parameters]
+Title =  NT10 mungbean -  putland planting 2                                                         
+Screen_output= off
+Outputfile  = nt10c5t5.out          /overwrite
+Summaryfile = nt10c5t5.sum          /overwrite
+
+[nt10c5t5.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+[APSIM.nt10c5t6.control]
+Module = clock       [nt10c5t6]
+Module = report     c:\apswork\apsim\report\report.par [mungbean]               [nt10c5t6]                                        
+Module = met         c:\apswork\apsim\met\krs8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard] 
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard] 
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard] 
+Module = fertiliz                                              c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man    [nt10c5t6] 
+
+[nt10c5t6.report.parameters]
+Title =  NT10 mungbean -  putland planting 2                                                         
+Screen_output= off
+Outputfile  = nt10c5t6.out          /overwrite
+Summaryfile = nt10c5t6.sum          /overwrite
+
+[nt10c5t6.clock.parameters]
+Start_day =  250       
+Start_year =1987      
+End_day =    150   
+End_year =  1988
+
+!!!!!!!!!!!!!!!!!!!!!!!! APS20  Downs 1993 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.aps20f1.Mansbridge]
+Module = clock       [aps20f1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f1]                                        
+Module = met         c:\apswork\apsim\met\mans9394.met [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f1] 
+
+[aps20f1.report.parameters]
+Title =  aps20 - mungbean  emerald f1                                                   
+Screen_output= on
+Outputfile  = aps20f1.out          /overwrite
+Summaryfile = aps20f1.sum          /overwrite
+
+[aps20f1.clock.parameters]
+Start_day  =  350         
+Start_year = 1993      
+End_day    =   80   
+End_year   = 1994     
+
+[APSIM.aps20f2.Muirhead]
+Module = clock       [aps20f2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f2]                                        
+Module = met         c:\apswork\apsim\met\muir9394.met  [standard]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f2] 
+
+[aps20f2.report.parameters]
+Title =  aps20 - mungbean  shangtung f2                                                   
+Screen_output= on
+Outputfile  = aps20f2.out          /overwrite
+Summaryfile = aps20f2.sum          /overwrite
+
+[aps20f2.clock.parameters]
+Start_day  =  350       
+Start_year = 1993      
+End_day    =   90   
+End_year   = 1994     
+
+[APSIM.aps20f3.Anderson]
+Module = clock       [aps20f3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f3]                                        
+Module = met         c:\apswork\apsim\met\ande9394.met [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [brigalow]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [brigalow]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [brigalow]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f3] 
+
+[aps20f3.report.parameters]
+Title =  aps20 - mungbean   celera f3                                                         
+Screen_output= on
+Outputfile  = aps20f3.out          /overwrite
+Summaryfile = aps20f3.sum          /overwrite
+
+[aps20f3.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    120   
+End_year =  1994    
+
+[APSIM.aps20f4.Vaughan]
+Module = clock       [aps20f4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f4]                                        
+Module = met         c:\apswork\apsim\met\vaug9394.met [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f4] 
+
+[aps20f4.report.parameters]
+Title =  aps20 - mungbean shangtung f4                                                         
+Screen_output= on
+Outputfile  = aps20f4.out          /overwrite
+Summaryfile = aps20f4.sum          /overwrite
+
+[aps20f4.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    115   
+End_year =  1994    
+
+[APSIM.aps20f5.Schelberg]
+Module = clock       [aps20f5]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f5]                                        
+Module = met         c:\apswork\apsim\met\sche9394.met [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [waco]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [waco]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f5] 
+
+[aps20f5.report.parameters]
+Title =  aps20 - mungbean satin f5                                                         
+Screen_output= on
+Outputfile  = aps20f5.out          /overwrite
+Summaryfile = aps20f5.sum          /overwrite
+
+[aps20f5.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    100   
+End_year =  1994    
+
+[APSIM.aps20f6.RBazeley]
+Module = clock       [aps20f6]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f6]                                        
+Module = met         c:\apswork\apsim\met\rbaz9394.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [box]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [box]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [box]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f6] 
+
+[aps20f6.report.parameters]
+Title =  aps20 - mungbean berkin f6                                                         
+Screen_output= on
+Outputfile  = aps20f6.out          /overwrite
+Summaryfile = aps20f6.sum          /overwrite
+
+[aps20f6.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    112   
+End_year =  1994    
+
+[APSIM.aps20f7.Stirling]
+Module = clock       [aps20f7]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f7]                                        
+Module = met         c:\apswork\apsim\met\mans9394.met [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [cecilvale]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f7] 
+
+[aps20f7.report.parameters]
+Title =  aps20 - mungbean emerald f7                                                         
+Screen_output= on
+Outputfile  = aps20f7.out          /overwrite
+Summaryfile = aps20f7.sum          /overwrite
+
+[aps20f7.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    134   
+End_year =  1994    
+
+[APSIM.aps20f8.ABazeley]
+Module = clock       [aps20f8]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f8]                                        
+Module = met         c:\apswork\apsim\met\abaz9394.met  [standard]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [box]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [box]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                      c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [box]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f8] 
+
+[aps20f8.report.parameters]
+Title =  aps20 - mungbean emerald f8                                                         
+Screen_output= on
+Outputfile  = aps20f8.out          /overwrite
+Summaryfile = aps20f8.sum          /overwrite
+
+[aps20f8.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    139   
+End_year =  1994 
+
+[APSIM.aps20f9.Croft]
+Module = clock       [aps20f9]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [aps20f9]                                        
+Module = met         c:\apswork\apsim\met\crof9394.met [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [brigalow]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [brigalow]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                                    c:\apsuite\apsim\fertiliz\fertiliz.ini[standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par  [brigalow]  c:\apswork\apsim\inifiles\mungbean.ini [standard] 
+Module = operatns    mgb_valm.man [aps20f9] 
+
+[aps20f9.report.parameters]
+Title =  aps20 - mungbean satin f9                                                         
+Screen_output= on
+Outputfile  = aps20f9.out          /overwrite
+Summaryfile = aps20f9.sum          /overwrite
+
+[aps20f9.clock.parameters]
+Start_day =  350       
+Start_year =1993      
+End_day =    116   
+End_year =  1994   
+
+!!!!!!!!!!!!!!!!!! Muchow et al data sets from Katherine and Gatton !!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!! Published in Field Crops Research v 32 & 33      !!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.rcm_L12r.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L12r]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L12r]                                        
+Module = met         c:\apswork\apsim\met\kath8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L12r] 
+
+[rcm_L12r.report.parameters]
+Title =  RCM - sowing 2 1987/88 at Katherine 1 Dec 1987                                                   
+Screen_output= on
+Outputfile  = l12r.out    /overwrite
+Summaryfile = l12r.sum   /overwrite
+
+[rcm_L12r.clock.parameters]
+Start_day  =  335       
+Start_year = 1987      
+End_day    =   50   
+End_year   = 1988     
+
+[APSIM.rcm_L13r.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L13r]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L13r]                                        
+Module = met         c:\apswork\apsim\met\kath8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L13r] 
+
+[rcm_L13r.report.parameters]
+Title =  RCM - sowing 3 1987/88 at Katherine 5 Jan 1988                                                   
+Screen_output= on
+Outputfile  = l13r.out    /overwrite
+Summaryfile = l13r.sum   /overwrite
+
+[rcm_L13r.clock.parameters]
+Start_day  =    4       
+Start_year = 1988      
+End_day    =   85  
+End_year   = 1988     
+
+[APSIM.rcm_L13i.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L13i]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L13i]                                        
+Module = met         c:\apswork\apsim\met\kath8788.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L13i] 
+
+[rcm_L13i.report.parameters]
+Title =  RCM - sowing 3 1987/88 at Katherine 5 Jan 1988                                                   
+Screen_output= on
+Outputfile  = l13i.out    /overwrite
+Summaryfile = l13i.sum   /overwrite
+
+[rcm_L13i.clock.parameters]
+Start_day  =    4       
+Start_year = 1988      
+End_day    =   85  
+End_year   = 1988     
+
+[APSIM.rcm_L21r.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L21r]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L21r]
+Module = met         c:\apswork\apsim\met\kath89.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L21r] 
+
+[rcm_L21r.report.parameters]
+Title =  RCM - sowing 1 1989 at Katherine 10 Jan 1989
+Screen_output= on
+Outputfile  = l21r.out    /overwrite
+Summaryfile = l21r.sum   /overwrite
+
+[rcm_L21r.clock.parameters]
+Start_day  =   10
+Start_year = 1989
+End_day    =  110  
+End_year   = 1989
+
+[APSIM.rcm_L22r.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L22r]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L22r]
+Module = met         c:\apswork\apsim\met\kath89.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L22r] 
+
+[rcm_L22r.report.parameters]
+Title =  RCM - sowing 2 1989 at Katherine 7 Feb 1989
+Screen_output= on
+Outputfile  = l22r.out    /overwrite
+Summaryfile = l22r.sum   /overwrite
+
+[rcm_L22r.clock.parameters]
+Start_day  =   38
+Start_year = 1989
+End_day    =  112  
+End_year   = 1989
+
+[APSIM.rcm_L3i.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L3i]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L3i]
+Module = met         c:\apswork\apsim\met\kath89.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]  c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath] c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L3i] 
+
+[rcm_L3i.report.parameters]
+Title =  RCM - sowing 3 1989 at Katherine 28 Feb 1989 Irrigated
+Screen_output= on
+Outputfile  = l3i.out    /overwrite
+Summaryfile = l3i.sum   /overwrite
+
+[rcm_L3i.clock.parameters]
+Start_day  =   59
+Start_year = 1989
+End_day    =  130  
+End_year   = 1989 
+
+[APSIM.rcm_L3r.control] ! assuming that soil at Katherine was a Tippera
+Module = clock       [rcm_L3r]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L3r]
+Module = met         c:\apswork\apsim\met\kath89.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]         c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2     mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]         c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2       mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par  [kath]         c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                             c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L3r] 
+
+[rcm_L3r.report.parameters]
+Title =  RCM - sowing 3 1989 at Katherine 28 Feb 1989 Rainfed
+Screen_output= on
+Outputfile  = l3r.out    /overwrite
+Summaryfile = l3r.sum   /overwrite
+
+[rcm_L3r.clock.parameters]
+Start_day  =   59
+Start_year = 1989
+End_day    =  130  
+End_year   = 1989
+
+[APSIM.rcm_L4i.control]
+Module = clock       [rcm_L4i]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]              [rcm_L4i]
+Module = met         c:\apswork\apsim\met\gatt90.met  [standard]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm_L4i] 
+
+[rcm_L4i.report.parameters]
+Title =  RCM - sowing 1990 at Gatton 9 Jan 1990
+Screen_output= on
+Outputfile  = l4i.out    /overwrite
+Summaryfile = l4i.sum   /overwrite
+
+[rcm_L4i.clock.parameters]
+Start_day  =    9
+Start_year = 1990
+End_day    =   95   
+End_year   = 1990 
+
+!!!!!!!!!!!!!!!!! Bob Lawn RJL1 AJAR V33  !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!!!!!!!!!!!!!!!! RJL1_1: Irrigated 1976-77 Dalby !!!!!!!!!!!!!!!!!!
+
+[APSIM.rjl1_1.control]
+Module = clock       [rjl1_1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl1_1]
+Module = met         c:\apswork\apsim\met\dalby25.met  [weather]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl1_1] 
+
+[rjl1_1.report.parameters]
+Title =  RJL1_1: Irrigated sown 10 Dec 1976-77 Dalby after winter cereal
+Screen_output= on
+Outputfile  = rjl1_1.out    /overwrite
+Summaryfile = rjl1_1.sum   /overwrite
+
+[rjl1_1.clock.parameters]
+!! start simulation at assumed end of winter cereal crop
+Start_day  =  269
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL1_2: Double-cropped 1976-77 Dalby !!!!!!!!!!!!!!!!!!
+
+[APSIM.rjl1_2.control]
+Module = clock       [rjl1_2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl1_2]
+Module = met         c:\apswork\apsim\met\dalby25.met  [weather]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl1_2] 
+
+[rjl1_2.report.parameters]
+Title =  RJL1_2: Double-cropped sown 10 Dec 1976-77 Dalby after winter cereal
+Screen_output= on
+Outputfile  = rjl1_2.out    /overwrite
+Summaryfile = rjl1_2.sum   /overwrite
+
+[rjl1_2.clock.parameters]
+!! start simulation at assumed end of winter cereal crop
+Start_day  =  269
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL1_3: Winter fallow 1976-77 Dalby !!!!!!!!!!!!!!!!!!
+
+[APSIM.rjl1_3.control]
+Module = clock       [rjl1_3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl1_3]
+Module = met         c:\apswork\apsim\met\dalby25.met  [weather]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl1_3] 
+
+[rjl1_3.report.parameters]
+Title =  RJL1_3: sown 10 Dec 1976-77 Dalby after winter fallow
+Screen_output= on
+Outputfile  = rjl1_3.out    /overwrite
+Summaryfile = rjl1_3.sum   /overwrite
+
+[rjl1_3.clock.parameters]
+!! start simulation at assumed end of previous summer crop
+Start_day  =  100
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL1_4: Irrigated 1978 Dalby !!!!!!!!!!!!!!!!!!
+
+[APSIM.rjl1_4.control]
+Module = clock       [rjl1_4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl1_4]
+Module = met         c:\apswork\apsim\met\dalby25.met  [weather]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl1_4] 
+
+[rjl1_4.report.parameters]
+Title =  RJL1_4: Irrigated sown 10 Jan 1978 Dalby after winter cereal
+Screen_output= on
+Outputfile  = rjl1_4.out    /overwrite
+Summaryfile = rjl1_4.sum   /overwrite
+
+[rjl1_4.clock.parameters]
+!! start simulation at assumed end of winter cereal crop
+Start_day  =  290
+Start_year = 1977
+End_day    =   90   
+End_year   = 1978 
+
+!!!!!!!!!!!!!!!!! RJL1_5: Double-cropped 1978 Dalby !!!!!!!!!!!!!!!!!!
+
+[APSIM.rjl1_5.control]
+Module = clock       [rjl1_5]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl1_5]
+Module = met         c:\apswork\apsim\met\dalby25.met  [weather]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl1_5] 
+
+[rjl1_5.report.parameters]
+Title =  RJL1_5: Double-cropped sown 10 Jan 1978 Dalby after winter cereal
+Screen_output= on
+Outputfile  = rjl1_5.out    /overwrite
+Summaryfile = rjl1_5.sum   /overwrite
+
+[rjl1_5.clock.parameters]
+!! start simulation at assumed end of winter cereal crop
+Start_day  =  290
+Start_year = 1977
+End_day    =   90   
+End_year   = 1978 
+
+!!!!!!!!!!!!!!!!! RJL1_6: Winter fallow 1978 Dalby !!!!!!!!!!!!!!!!!!
+
+[APSIM.rjl1_6.control]
+Module = clock       [rjl1_6]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl1_6]
+Module = met         c:\apswork\apsim\met\dalby25.met  [weather]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [waco] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [waco]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl1_6] 
+
+[rjl1_6.report.parameters]
+Title =  RJL1_6: sown 10 Jan 1978 Dalby after winter fallow
+Screen_output= on
+Outputfile  = rjl1_6.out    /overwrite
+Summaryfile = rjl1_6.sum   /overwrite
+
+[rjl1_6.clock.parameters]
+!! start simulation at assumed end of previous summer crop
+Start_day  =  100
+Start_year = 1977
+End_day    =   90   
+End_year   = 1978
+
+
+!!!!!!!!!! RCM1_1: 1 April 1980 sowing 35 plants/m2, 25 cm rows  !!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!  Irrigated !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!! Assuming Tippera soil will represent Ord Sandy Loam !!!!!!!
+
+[APSIM.rcm1_1.control]
+Module = clock       [rcm1_1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm1_1]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rcm1]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm1_1] 
+
+[rcm1_1.report.parameters]
+Title =  RCM1_1: 1 April 1980 sowing 35 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm1_1.out    /overwrite
+Summaryfile = rcm1_1.sum   /overwrite
+
+[rcm1_1.clock.parameters]
+! start simulation at planting
+Start_day  =   91
+Start_year = 1980
+End_day    =  170   
+End_year   = 1980 
+
+!!!!!!!!!!!!!!!!!!!!!!!!  Dry !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.rcm1_2.control]
+Module = clock       [rcm1_2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm1_2]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm1_2] 
+
+[rcm1_2.report.parameters]
+Title =  RCM1_2: 1 April 1980 sowing 35 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm1_2.out    /overwrite
+Summaryfile = rcm1_2.sum   /overwrite
+
+[rcm1_2.clock.parameters]
+! start simulation at planting
+Start_day  =   91
+Start_year = 1980
+End_day    =  170   
+End_year   = 1980 
+
+!!!!!!!!!!!!!!!!!!!!!!!!  Wet / Dry !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+[APSIM.rcm1_3.control]
+Module = clock       [rcm1_3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm1_3]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [kath] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate                                                                                       
+Module = mungbean    c:\apswork\apsim\site\site_all.par [kath]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm1_3] 
+
+[rcm1_3.report.parameters]
+Title =  RCM1_3: 1 April 1980 sowing 35 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm1_3.out    /overwrite
+Summaryfile = rcm1_3.sum   /overwrite
+
+[rcm1_3.clock.parameters]
+! start simulation at planting
+Start_day  =   91
+Start_year = 1980
+End_day    =  170   
+End_year   = 1980 
+
+!! Muchow & Charles-Edwards KRS expts RCM2 AJAR v33, 5 densities under irrigation !!!!
+
+!!!!!! Assuming Gatton_light soil will represent Ord Sandy Loam !!!!!!!
+
+!!!!! 10 plants/m2 !!!!!
+
+[APSIM.rcm2_1.control]
+Module = clock       [rcm2_1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm2_1]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rcm2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm2_1] 
+
+[rcm2_1.report.parameters]
+Title =  RCM2_1: 11 January 1980 sowing 10 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm2_1.out    /overwrite
+Summaryfile = rcm2_1.sum   /overwrite
+
+[rcm2_1.clock.parameters]
+! start simulation at planting
+Start_day  =   11
+Start_year = 1980
+End_day    =   90   
+End_year   = 1980 
+
+!!!!! 19 plants/m2 !!!!!
+
+[APSIM.rcm2_2.control]
+Module = clock       [rcm2_2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm2_2]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rcm2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm2_2] 
+
+[rcm2_2.report.parameters]
+Title =  RCM2_2: 11 January 1980 sowing 19 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm2_2.out    /overwrite
+Summaryfile = rcm2_2.sum   /overwrite
+
+[rcm2_2.clock.parameters]
+! start simulation at planting
+Start_day  =   11
+Start_year = 1980
+End_day    =   90   
+End_year   = 1980 
+
+!!!!! 27 plants/m2 !!!!!
+
+[APSIM.rcm2_3.control]
+Module = clock       [rcm2_3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm2_3]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rcm2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm2_3] 
+
+[rcm2_3.report.parameters]
+Title =  RCM2_3: 11 January 1980 sowing 27 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm2_3.out    /overwrite
+Summaryfile = rcm2_3.sum   /overwrite
+
+[rcm2_3.clock.parameters]
+! start simulation at planting
+Start_day  =   11
+Start_year = 1980
+End_day    =   90   
+End_year   = 1980 
+
+!!!!! 39 plants/m2 !!!!!
+
+[APSIM.rcm2_4.control]
+Module = clock       [rcm2_4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm2_4]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rcm2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm2_4] 
+
+[rcm2_4.report.parameters]
+Title =  RCM2_4: 11 January 1980 sowing 39 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm2_4.out    /overwrite
+Summaryfile = rcm2_4.sum   /overwrite
+
+[rcm2_4.clock.parameters]
+! start simulation at planting
+Start_day  =   11
+Start_year = 1980
+End_day    =   90   
+End_year   = 1980
+
+!!!!! 50 plants/m2 !!!!!
+
+[APSIM.rcm2_5.control]
+Module = clock       [rcm2_5]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rcm2_5]
+Module = met         c:\apswork\apsim\met\kunucli.dat  [kununurra]           
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_light] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rcm2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_light]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rcm2_5] 
+
+[rcm2_5.report.parameters]
+Title =  RCM2_5: 11 January 1980 sowing 50 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rcm2_5.out    /overwrite
+Summaryfile = rcm2_5.sum   /overwrite
+
+[rcm2_5.clock.parameters]
+! start simulation at planting
+Start_day  =   11
+Start_year = 1980
+End_day    =   90   
+End_year   = 1980
+
+!!!!!!!!!!!!!!!!! Bob Lawn RJL2 AJAR V34 Part III !!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!! Lawes irrigated !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!!!!!!!!!!!!!!!!! RJL2_1: 18 Nov 1976 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_1.control]
+Module = clock       [rjl2_1]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_1]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_1] 
+
+[rjl2_1.report.parameters]
+Title =  RJL2_1: 18 Nov 1976 sowing 20 plants/m2, 100 cm rows
+Screen_output= on
+Outputfile  = rjl2_1.out    /overwrite
+Summaryfile = rjl2_1.sum   /overwrite
+
+[rjl2_1.clock.parameters]
+! start simulation at planting
+Start_day  =  323
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_2: 18 Nov 1976 sowing 27 plants/m2, 75 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_2.control]
+Module = clock       [rjl2_2]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_2]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_2] 
+
+[rjl2_2.report.parameters]
+Title =  RJL2_2: 18 Nov 1976 sowing 27 plants/m2, 75 cm rows
+Screen_output= on
+Outputfile  = rjl2_2.out    /overwrite
+Summaryfile = rjl2_2.sum   /overwrite
+
+[rjl2_2.clock.parameters]
+! start simulation at planting
+Start_day  =  323
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_3: 18 Nov 1976 sowing 40 plants/m2, 50 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_3.control]
+Module = clock       [rjl2_3]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_3]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_3] 
+
+[rjl2_3.report.parameters]
+Title =  RJL2_3: 18 Nov 1976 sowing 40 plants/m2, 50 cm rows
+Screen_output= on
+Outputfile  = rjl2_3.out    /overwrite
+Summaryfile = rjl2_3.sum   /overwrite
+
+[rjl2_3.clock.parameters]
+! start simulation at planting
+Start_day  =  323
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_4: 18 Nov 1976 sowing 80 plants/m2, 25 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_4.control]
+Module = clock       [rjl2_4]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_4]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_4] 
+
+[rjl2_4.report.parameters]
+Title =  RJL2_4: 18 Nov 1976 sowing 80 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rjl2_4.out    /overwrite
+Summaryfile = rjl2_4.sum   /overwrite
+
+[rjl2_4.clock.parameters]
+! start simulation at planting
+Start_day  =  323
+Start_year = 1976
+End_day    =   70   
+End_year   = 1977 
+
+
+!!!!!!!!!!!!!!!!! RJL2_5: 20 Dec 1976 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_5.control]
+Module = clock       [rjl2_5]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_5]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_5] 
+
+[rjl2_5.report.parameters]
+Title =  RJL2_5: 20 Dec 1976 sowing 20 plants/m2, 100 cm rows
+Screen_output= on
+Outputfile  = rjl2_5.out    /overwrite
+Summaryfile = rjl2_5.sum   /overwrite
+
+[rjl2_5.clock.parameters]
+! start simulation at planting
+Start_day  =  355
+Start_year = 1976
+End_day    =   80   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_6: 20 Dec 1976 sowing 27 plants/m2, 75 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_6.control]
+Module = clock       [rjl2_6]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_6]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_6] 
+
+[rjl2_6.report.parameters]
+Title =  RJL2_6: 20 Dec 1976 sowing 27 plants/m2, 75 cm rows
+Screen_output= on
+Outputfile  = rjl2_6.out    /overwrite
+Summaryfile = rjl2_6.sum   /overwrite
+
+[rjl2_6.clock.parameters]
+! start simulation at planting
+Start_day  =  355
+Start_year = 1976
+End_day    =   80   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_7: 20 Dec 1976 sowing 40 plants/m2, 50 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_7.control]
+Module = clock       [rjl2_7]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_7]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_7] 
+
+[rjl2_7.report.parameters]
+Title =  RJL2_7: 20 Dec 1976 sowing 40 plants/m2, 50 cm rows
+Screen_output= on
+Outputfile  = rjl2_7.out    /overwrite
+Summaryfile = rjl2_7.sum   /overwrite
+
+[rjl2_7.clock.parameters]
+! start simulation at planting
+Start_day  =  355
+Start_year = 1976
+End_day    =   80   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_8: 20 Dec 1976 sowing 80 plants/m2, 25 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_8.control]
+Module = clock       [rjl2_8]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_8]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_8] 
+
+[rjl2_8.report.parameters]
+Title =  RJL2_8: 20 Dec 1976 sowing 80 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rjl2_8.out    /overwrite
+Summaryfile = rjl2_8.sum   /overwrite
+
+[rjl2_8.clock.parameters]
+! start simulation at planting
+Start_day  =  355
+Start_year = 1976
+End_day    =   80   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_9: 24 Jan 1977 sowing 20 plants/m2, 100 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_9.control]
+Module = clock       [rjl2_9]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_9]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_9] 
+
+[rjl2_9.report.parameters]
+Title =  RJL2_9: 24 Jan 1977 sowing 20 plants/m2, 100 cm rows
+Screen_output= on
+Outputfile  = rjl2_9.out    /overwrite
+Summaryfile = rjl2_9.sum   /overwrite
+
+[rjl2_9.clock.parameters]
+! start simulation at planting
+Start_day  =   24
+Start_year = 1977
+End_day    =  120   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_10: 24 Jan 1977 sowing 27 plants/m2, 75 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_10.control]
+Module = clock       [rjl2_10]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_10]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_10] 
+
+[rjl2_10.report.parameters]
+Title =  RJL2_10: 24 Jan 1977 sowing 27 plants/m2, 75 cm rows
+Screen_output= on
+Outputfile  = rjl2_10.out    /overwrite
+Summaryfile = rjl2_10.sum   /overwrite
+
+[rjl2_10.clock.parameters]
+! start simulation at planting
+Start_day  =   24
+Start_year = 1977
+End_day    =  120   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_11: 24 Jan 1977 sowing 40 plants/m2, 50 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_11.control]
+Module = clock       [rjl2_11]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_11]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_11] 
+
+[rjl2_11.report.parameters]
+Title =  RJL2_11: 24 Jan 1977 sowing 40 plants/m2, 50 cm rows
+Screen_output= on
+Outputfile  = rjl2_11.out    /overwrite
+Summaryfile = rjl2_11.sum   /overwrite
+
+[rjl2_11.clock.parameters]
+! start simulation at planting
+Start_day  =   24
+Start_year = 1977
+End_day    =  120   
+End_year   = 1977 
+
+!!!!!!!!!!!!!!!!! RJL2_12: 24 Jan 1977 sowing 80 plants/m2, 25 cm rows !!!!!!!!!!
+
+[APSIM.rjl2_12.control]
+Module = clock       [rjl2_12]
+Module = report      c:\apswork\apsim\report\report.par [mungbean]            [rjl2_12]
+Module = met         c:\apswork\apsim\met\cooper.aps  [cprl]            
+Module = manager     mgb_valm.man [standard]                                                             
+Module = soilwat2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soilwat2\soilwat2.ini [standard]
+Module = residue2    mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\residue2\residue2.ini [standard]
+Module = soiln2      mgb_valm.man [standard]  c:\apswork\apsim\site\site_all.par [gatton_heavy] c:\apsuite\apsim\soiln2\soiln2.ini [standard]
+Module = fertiliz                                  c:\apsuite\apsim\fertiliz\fertiliz.ini [standard] 
+Module = irrigate    mgb_valm.man [rjl2]                                                                                   
+Module = mungbean    c:\apswork\apsim\site\site_all.par [gatton_heavy]  c:\apswork\apsim\inifiles\mungbean.ini [standard]
+Module = operatns    mgb_valm.man [rjl2_12] 
+
+[rjl2_12.report.parameters]
+Title =  RJL2_12: 24 Jan 1977 sowing 80 plants/m2, 25 cm rows
+Screen_output= on
+Outputfile  = rjl2_12.out    /overwrite
+Summaryfile = rjl2_12.sum   /overwrite
+
+[rjl2_12.clock.parameters]
+! start simulation at planting
+Start_day  =   24
+Start_year = 1977
+End_day    =  120   
+End_year   = 1977 

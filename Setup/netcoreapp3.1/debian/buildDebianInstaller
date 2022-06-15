@@ -35,7 +35,7 @@ then
 fi
 mkdir -p "$apsimx_inst"
 
-copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' $@; }
+copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' "$@"; }
 cp "$apsimx/APSIM.bib" "$apsimx_inst/"
 copy "$apsimx"/ApsimNG/Resources/world/* "$apsimx_inst"/ApsimNG/Resources/world/
 copy "$apsimx"/bin/Release/netcoreapp3.1/linux-x64/publish/* "$apsimx_inst"/bin/

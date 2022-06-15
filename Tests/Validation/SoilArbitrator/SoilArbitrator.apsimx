@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 147,
+  "ExplorerWidth": 285,
+  "Version": 150,
   "Name": "Simulations",
   "Children": [
     {
@@ -133,15 +133,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -368,15 +359,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -441,15 +423,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -513,15 +486,6 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -716,15 +680,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -988,15 +943,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -1061,15 +1007,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1133,15 +1070,6 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1352,15 +1280,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1661,15 +1580,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -1734,15 +1644,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1806,15 +1707,6 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2722,15 +2614,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -3068,15 +2951,6 @@
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     150.0,
@@ -3141,15 +3015,6 @@
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -3213,15 +3078,6 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -4007,7 +3863,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
+                      "Specification": "",
                       "Name": "Factor",
                       "Children": [
                         {
@@ -4372,15 +4228,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-50",
-                                "50-65",
-                                "65-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -4433,15 +4280,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-50",
-                                "50-65",
-                                "65-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -4795,15 +4633,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-50",
-                                "50-65",
-                                "65-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -5486,7 +5315,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 1",
                             "[OnOffIrrigation].Script.IrrigOn = 1",
-                            "[Rye2].Root.RootDepthMaximum = 150",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 150",
                             "[Rye2].InitialRootDepth = 150"
                           ],
                           "Paths": null,
@@ -5501,7 +5330,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 150",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 150",
                             "[Rye2].InitialRootDepth = 150"
                           ],
                           "Paths": null,
@@ -5814,14 +5643,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -5881,14 +5702,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -6205,14 +6018,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "FOMCNRatio": 30.0,
                               "Thickness": [
                                 100.0,
@@ -6917,7 +6722,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
+                      "Specification": "",
                       "Name": "Factor",
                       "Children": [
                         {
@@ -6951,7 +6756,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 1",
                             "[OnOffIrrigation].Script.IrrigOn = 1",
-                            "[Rye2].Root.RootDepthMaximum = 150",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 150",
                             "[Rye2].InitialRootDepth = 150"
                           ],
                           "Paths": null,
@@ -6966,7 +6771,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 150",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 150",
                             "[Rye2].InitialRootDepth = 150"
                           ],
                           "Paths": null,
@@ -7279,15 +7084,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-50",
-                                "50-65",
-                                "65-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -7340,15 +7136,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-50",
-                                "50-65",
-                                "65-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -7776,15 +7563,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-50",
-                                "50-65",
-                                "65-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -8326,7 +8104,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 750",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 750",
                             "[Rye2].InitialRootDepth = 750"
                           ],
                           "Paths": null,
@@ -8341,7 +8119,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 500",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 500",
                             "[Rye2].InitialRootDepth = 500"
                           ],
                           "Paths": null,
@@ -8356,7 +8134,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 350",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 350",
                             "[Rye2].InitialRootDepth = 350"
                           ],
                           "Paths": null,
@@ -8371,7 +8149,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 225",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 225",
                             "[Rye2].InitialRootDepth = 225"
                           ],
                           "Paths": null,
@@ -8386,7 +8164,7 @@
                           "Specifications": [
                             "[OnOffFertiliser].Script.FertOn = 0",
                             "[OnOffIrrigation].Script.IrrigOn = 0",
-                            "[Rye2].Root.RootDepthMaximum = 100",
+                            "[Rye2].Root.MaximumPotentialRootingDepth = 100",
                             "[Rye2].InitialRootDepth = 100"
                           ],
                           "Paths": null,
@@ -8699,14 +8477,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -8766,14 +8536,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -9090,14 +8852,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "FOMCNRatio": 30.0,
                               "Thickness": [
                                 100.0,
@@ -10125,14 +9879,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10192,14 +9938,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10516,14 +10254,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
-                              ],
                               "FOMCNRatio": 30.0,
                               "Thickness": [
                                 100.0,
@@ -12100,12 +11830,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -12146,12 +11870,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -12380,12 +12098,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -12660,12 +12372,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -12706,12 +12412,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -12940,12 +12640,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -14293,12 +13987,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -14339,12 +14027,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -14573,12 +14255,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -14853,12 +14529,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -14899,12 +14569,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -15133,12 +14797,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -16486,12 +16144,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -16532,12 +16184,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -16766,12 +16412,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -17046,12 +16686,6 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -17092,12 +16726,6 @@
                             },
                             {
                               "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -17326,12 +16954,6 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-45",
-                                "45-60"
-                              ],
                               "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
@@ -18390,12 +18012,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -18436,12 +18052,6 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -18670,12 +18280,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             150.0,
@@ -19032,12 +18636,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -19078,12 +18676,6 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -19312,12 +18904,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             150.0,
@@ -19674,12 +19260,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -19720,12 +19300,6 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -19954,12 +19528,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             150.0,
@@ -21030,12 +20598,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -21076,12 +20638,6 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -21310,12 +20866,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             150.0,
@@ -21672,12 +21222,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -21718,12 +21262,6 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -21952,12 +21490,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             150.0,
@@ -22314,12 +21846,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -22360,12 +21886,6 @@
                         },
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "Thickness": [
                             150.0,
                             150.0,
@@ -22594,12 +22114,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-45",
-                            "45-60"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             150.0,

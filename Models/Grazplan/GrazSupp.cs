@@ -85,7 +85,11 @@ namespace Models.GrazPlan
         public static string DefaultLocale()
         {
             string loc = null;
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+#else
             if (ProcessUtilities.CurrentOS.IsWindows)
+#endif
             {
                 Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(PARAMKEY);
                 if (regKey != null)
@@ -1663,7 +1667,11 @@ namespace Models.GrazPlan
         /// <returns>True if this locale is found</returns>
         public bool ReadFromRegistryFile(string locale)
         {
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+#else
             if (ProcessUtilities.CurrentOS.IsWindows)
+#endif
             {
                 Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(GrazParam.PARAMKEY);
                 if (regKey != null)
