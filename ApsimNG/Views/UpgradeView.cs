@@ -463,7 +463,13 @@
                                 // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
                                 // and will handle the removal of the previous version.
                                 string oldVersion = Models.Core.Simulations.ApsimVersion;
-                                Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
+                                var startInfo = new ProcessStartInfo()
+                                {
+                                    FileName = tempSetupFileName,
+                                    Arguments = $"/upgradefrom={oldVersion}",
+                                    WorkingDirectory = Path.GetTempPath()
+                                };
+                                Process.Start(startInfo);
                             }
                             else if (ProcessUtilities.CurrentOS.IsMac)
                             {
