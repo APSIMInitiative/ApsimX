@@ -48,11 +48,11 @@ namespace Models.PMF.Phen
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            Target = CAMP.VrnSatThreshold;
-            ProgressThroughPhase = CAMP.MethColdVrn1;
+            Target = CAMP.pVrn2;
+            ProgressThroughPhase = CAMP.Vrn1;
             double HS = phenology.FindChild<IFunction>("HaunStage").Value();
-            double RelativeBasicVegetative = Math.Max(1, HS / 1.1);
-            double RelativeVrn1Expression = Math.Max(1, ProgressThroughPhase / Target);
+            double RelativeBasicVegetative = Math.Min(1, HS / 1.1);
+            double RelativeVrn1Expression = Math.Min(1, ProgressThroughPhase / Target);
             FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);
             
             return CAMP.IsVernalised;
