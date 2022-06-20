@@ -385,7 +385,7 @@ namespace APSIM.Shared.Utilities
 
             if (_excelData.Rows.Count != 0)
             {
-                data = _excelData;
+                data = _excelData.Copy();
             }
             //will I ever hit this without having any data???
 
