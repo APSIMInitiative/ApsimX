@@ -5,6 +5,7 @@
     using System.IO;
     using System.Net;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Net.Sockets;
     using System.Text;
     using System.Text.Json;
@@ -12,43 +13,16 @@
     using System.Threading.Tasks;
     using System.Xml.Serialization;
 
+
     /// <summary>
     /// A class containing some web utilities
     /// </summary>
     public class WebUtilities
     {
         /// <summary>
-        ///  Upload a file via ftp
+        /// HttpClient is intended to be instantiated once per application, rather than per-use. See Remarks.
         /// </summary>
-        /// <param name="localFileName">Name of the file to be uploaded</param>
-        /// <param name="username">remote username</param>
-        /// <param name="password">remote password</param>
-        /// <param name="hostname">remote hostname</param>
-        /// <param name="remoteFileName">Full path and name of where the file goes</param>
-        /// <returns></returns>
-        public static bool UploadFTP(string localFileName, string username, string password, string hostname, string remoteFileName)
-        {
-            // Get the object used to communicate with the server.
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://" + hostname + remoteFileName);
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-            request.Credentials = new NetworkCredential();
-
-            // Copy the contents of the file to the request stream.
-            StreamReader sourceStream = new StreamReader(localFileName);
-            byte[] fileContents = Encoding.UTF8.GetBytes(sourceStream.ReadToEnd());
-            sourceStream.Close();
-            request.ContentLength = fileContents.Length;
-
-            Stream requestStream = request.GetRequestStream();
-            requestStream.Write(fileContents, 0, fileContents.Length);
-            requestStream.Close();
-
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-            string retVal = response.StatusDescription;
-            response.Close();
-
-            return retVal != "200";
-        }
+        public static readonly HttpClient client = new HttpClient();
 
         /// <summary>
         /// Send a string to the specified socket server. Returns the response string. Will throw
@@ -84,65 +58,69 @@
             return Response;
         }
 
-        /// <summary>Call REST web service.</summary>
+        /// <summary>
+        /// Async function to issue POST request for a URL and return the result as a Stream
+        /// </summary>
+        /// <param name="url">URL to be accessed</param>
+        /// <param name="content">Data to be posted, as JSON</param>
+        /// <returns></returns>
+        private static async Task<Stream> AsyncPostStreamTask(string url, string content)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var data = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(url, data).ConfigureAwait(false);
+            return await response.Content.ReadAsStreamAsync();
+        }
+
+        /// <summary>Call REST web service using POST.</summary>
+        /// Assumes the data returned by the URL is JSON, 
+        /// which is then deserialised into the returned object
+        /// <typeparam name="T">The return type</typeparam>
+        /// <param name="url">The URL of the REST service.</param>
+        /// <returns>The return data</returns>
+        public static T PostRestService<T>(string url)
+        {
+            var stream = AsyncPostStreamTask(url, "").Result;
+            if (typeof(T).Name == "Object")
+                return default(T);
+            JsonSerializerOptions options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            return JsonSerializer.DeserializeAsync<T>(stream, options).Result;
+        }
+
+
+        /// <summary>
+        /// Async function to issue GET request for a URL and return the result as a Stream
+        /// </summary>
+        /// <param name="url">URL to access</param>
+        /// <param name="mediaType">Preferred media type to return</param>
+        /// <returns>Data stream obtained from the URL</returns>
+        public static async Task<Stream> AsyncGetStreamTask(string url, string mediaType)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
+            HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
+            return await response.Content.ReadAsStreamAsync();
+        }
+
+        /// <summary>Call REST web service using GET.
+        /// Assumes the data returned by the URL is XML, 
+        /// which is then deserialised into the returned object
+        /// </summary>
         /// <typeparam name="T">The return type</typeparam>
         /// <param name="url">The URL of the REST service.</param>
         /// <returns>The return data</returns>
         public static T CallRESTService<T>(string url)
         {
-            WebRequest wrGETURL;
-            wrGETURL = WebRequest.Create(url);
-            wrGETURL.Method = "GET";
-            wrGETURL.ContentType = @"application/xml; charset=utf-8";
-            wrGETURL.ContentLength = 0;
-            using (HttpWebResponse webresponse = wrGETURL.GetResponse() as HttpWebResponse)
-            {
-                Encoding enc = System.Text.Encoding.GetEncoding("utf-8");
-                // read response stream from response object
-                using (StreamReader loResponseStream = new StreamReader(webresponse.GetResponseStream(), enc))
-                {
-                    string st = loResponseStream.ReadToEnd();
-                    if (typeof(T).Name == "Object")
-                        return default(T);
+            var stream = AsyncGetStreamTask(url, "application/xml").Result;
+            if (typeof(T).Name == "Object")
+                return default(T);
 
-                    XmlSerializer serializer = new XmlSerializer(typeof(T));
-
-                    //ResponseData responseData;
-                    return (T)serializer.Deserialize(new XmlUtilities.NamespaceIgnorantXmlTextReader(new StringReader(st)));
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="url"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T PostRestService<T>(string url)
-        {
-            WebRequest wrGETURL;
-            wrGETURL = WebRequest.Create(url);
-            wrGETURL.Method = "POST";
-            wrGETURL.ContentType = @"application/xml; charset=utf-8";
-            wrGETURL.ContentLength = 0;
-            using (HttpWebResponse webresponse = wrGETURL.GetResponse() as HttpWebResponse)
-            {
-                Encoding enc = System.Text.Encoding.GetEncoding("utf-8");
-                // read response stream from response object
-                using (StreamReader loResponseStream = new StreamReader(webresponse.GetResponseStream(), enc))
-                {
-                    string st = loResponseStream.ReadToEnd();
-                    if (typeof(T).Name == "Object")
-                        return default(T);
-
-                    JsonSerializerOptions options = new JsonSerializerOptions()
-                    {
-                        PropertyNameCaseInsensitive = true
-                    };
-                    return JsonSerializer.Deserialize<T>(st, options);
-                }
-            }
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            return (T)serializer.Deserialize(new XmlUtilities.NamespaceIgnorantXmlTextReader(new StreamReader(stream)));
         }
 
         /// <summary>
@@ -152,37 +130,70 @@
         /// <returns>The data stream</returns>
         public static MemoryStream ExtractDataFromURL(string url)
         {
-            HttpWebRequest request = null;
-            HttpWebResponse response = null;
-            MemoryStream stream = new MemoryStream();
             try
             {
-                request = (HttpWebRequest)WebRequest.Create(url);
-                response = (HttpWebResponse)request.GetResponse();
-                Stream streamResponse = response.GetResponseStream();
-
-                // Reads 1024 characters at a time.    
-                byte[] read = new byte[1024];
-                int count = streamResponse.Read(read, 0, 1024);
-                while (count > 0)
+                Stream result = AsyncGetStreamTask(url, "*/*").Result;
+                if (result == null)
+                    throw new Exception();
+                if (result is MemoryStream)
+                    return result as MemoryStream;
+                else
                 {
-                    // Dumps the 1024 characters into our memory stream.
-                    stream.Write(read, 0, count);
-                    count = streamResponse.Read(read, 0, 1024);
+                    MemoryStream memStream = new MemoryStream();
+                    result.CopyTo(memStream);
+                    return memStream;
                 }
-                return stream;
             }
             catch (Exception)
             {
                 throw new Exception("Cannot get data from " + url);
             }
-            finally
-            {
-                // Releases the resources of the response.
-                if (response != null)
-                    response.Close();
-            }
         }
 
+        /// <summary>
+        /// Retrieve data from a URL, providing progress indications along the way
+        /// </summary>
+        /// <param name="url">The URL to obtain (using GET method)</param>
+        /// <param name="destination">A stream to write the results to (typically a FileStream)</param>
+        /// <param name="progress">A Progress object (defaults to null)</param>
+        /// <param name="cancellationToken">a CancellationToken(defaults to an empty token</param>
+        /// <param name="mediaType">Media type to obtain (defaults to */*)</param>
+        /// <returns>A Task</returns>
+        public static async void GetAsyncWithProgress(string url, Stream destination,
+                       IProgress<double> progress = null, CancellationToken cancellationToken = default, string mediaType = "*/*")
+        {
+            try
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
+                HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception(string.Format("The request returned with HTTP status code {0}", response.StatusCode));
+                }
+                long contentLength = response.Content.Headers.ContentLength.HasValue ? response.Content.Headers.ContentLength.Value : -1L;
+                using (Stream download = await response.Content.ReadAsStreamAsync())
+                {
+                    long totalRead = 0L;
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+
+                    while ((bytesRead = await download.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
+                        totalRead += bytesRead;
+                        progress?.Report((double)totalRead / (double)contentLength);
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {}
+            finally
+            {
+                if (destination is FileStream)
+                    destination.Close();
+            }
+        }
     }
 }

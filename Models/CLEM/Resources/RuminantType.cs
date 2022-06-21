@@ -216,15 +216,19 @@ namespace Models.CLEM.Resources
 
                         // check that pricing item meets the specified criteria.
                         if (suitableFilters)
+                        {
                             if (matchCriteria == null)
                                 matchCriteria = priceGroup;
                             else
+                            {
                                 // multiple price entries were found. using first. value = xxx.
                                 if (!warningsMultipleEntry.Contains(criteria))
-                            {
-                                warningsMultipleEntry.Add(criteria);
-                                Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
+                                {
+                                    warningsMultipleEntry.Add(criteria);
+                                    Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
+                                }
                             }
+                        }
                     }
 
                     if (matchCriteria == null)

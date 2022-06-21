@@ -397,7 +397,7 @@ namespace Models.PMF
             if (population > 0)
                 this.Population = population;
             else
-                this.Population = seeds;
+                this.Population = SowingData.Population = seeds;
 
             // Find cultivar and apply cultivar overrides.
             Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));

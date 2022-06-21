@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
-    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(SpecifyRuminant))]
     [Description("Cohort component for specifying an individual during simulation or initalising the herd at the start")]
     [Version(1, 0, 3, "Includes set previous conception specification")]

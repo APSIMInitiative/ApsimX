@@ -93,12 +93,17 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write("</td>");
                     for (int i = 0; i < 12; i++)
+                    {
                         if (MonthlyValues == null)
                             htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
-                        else if (i > MonthlyValues.Count() - 1)
-                            htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
                         else
-                            htmlWriter.Write("<td><span class=\"setvalue\">" + ((this.MonthlyValues.Length - 1 >= i) ? this.MonthlyValues[i].ToString() : "") + "</span></td>");
+                        {
+                            if (i > MonthlyValues.Count() - 1)
+                                htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
+                            else
+                                htmlWriter.Write("<td><span class=\"setvalue\">" + ((this.MonthlyValues.Length - 1 >= i) ? this.MonthlyValues[i].ToString() : "") + "</span></td>");
+                        }
+                    }
                     htmlWriter.Write("</tr>");
                 }
                 else

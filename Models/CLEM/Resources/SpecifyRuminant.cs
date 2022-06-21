@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
     [Description("Specify the details of a individual ruminant to be used by an activity")]
     [HelpUri(@"Content/Resources/Ruminanta/SpecifyRuminant.htm")]
