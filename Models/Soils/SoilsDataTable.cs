@@ -132,7 +132,7 @@
                 var nutrient = new Nutrients.Nutrient();
                 nutrient.ResourceName = "Nutrient";
                 soil.Children.Add(nutrient);
-                var initialWater = new InitialWater();
+                var initialWater = new Water();
                 soil.Children.Add(initialWater);
 
                 // crops

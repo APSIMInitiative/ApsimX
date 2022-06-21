@@ -15,6 +15,16 @@ namespace UserInterface.Views
         /// <summary>Number of heading rows.</summary>
         private int numHeadingRows;
 
+
+        /// <summary>Delegate for a CellChanged event.</summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="colIndex">The index of the column that was changed.</param>
+        /// <param name="rowIndex">The index of the row that was changed.</param>
+        public delegate void CellChangedDelegate(ISheetDataProvider sender, int colIndex, int rowIndex);
+
+        /// <summary>An event invoked when a cell changes.</summary>
+        public event CellChangedDelegate CellChanged;
+
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
         /// <param name="columnUnits">Optional units for each column of data.</param>
@@ -63,10 +73,18 @@ namespace UserInterface.Views
         /// <param name="value">The value.</param>
         public void SetCellContents(int colIndex, int rowIndex, string value)
         {
-            int i = rowIndex - numHeadingRows;
-            while (i >= Data.Rows.Count)
-                Data.Rows.Add(Data.NewRow());
-            Data.Rows[i][colIndex] = value;
+            if (!IsColumnReadonly(colIndex))
+            {
+                int i = rowIndex - numHeadingRows;
+                while (i >= Data.Rows.Count)
+                    Data.Rows.Add(Data.NewRow());
+
+                if (Data.Rows[i][colIndex].ToString() != value.ToString())
+                {
+                    Data.Rows[i][colIndex] = value;
+                    CellChanged?.Invoke(this, colIndex, rowIndex);
+                }
+            }
         }
 
         /// <summary>Is the column readonly?</summary>

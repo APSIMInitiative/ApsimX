@@ -124,9 +124,9 @@
             Soil s = sims.Children[0].Children[0] as Soil;
             Assert.AreEqual(s.Name, "Soil");
 
-            InitialWater initWater = s.Children[0] as InitialWater;
+            Water initWater = s.Children[0] as Water;
             Assert.AreEqual(initWater.FractionFull, 0.5);
-            Assert.AreEqual(initWater.PercentMethod, InitialWater.PercentMethodEnum.FilledFromTop);
+            Assert.IsTrue(initWater.FilledFromTop);
 
             Physical w = s.Children[1] as Physical;
             Assert.AreEqual(w.Thickness, new double[] { 150, 150, 300, 300 });

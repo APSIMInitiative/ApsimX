@@ -19,7 +19,7 @@
         private GraphView graphView;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InitialWaterView" /> class.
+        /// Constructor
         /// </summary>
         public XYPairsView(ViewBase owner) : base(owner)
         {

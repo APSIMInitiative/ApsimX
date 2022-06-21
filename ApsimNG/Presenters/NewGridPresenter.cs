@@ -34,6 +34,15 @@
 
         private ViewBase view = null;
 
+        /// <summary>Delegate for a CellChanged event.</summary>
+        /// <param name="dataProvider">The data provider.</param>
+        /// <param name="colIndex">The index of the column that was changed.</param>
+        /// <param name="rowIndex">The index of the row that was changed.</param>
+        public delegate void CellChangedDelegate(ISheetDataProvider dataProvider, int colIndex, int rowIndex);
+
+        /// <summary>An event invoked when a cell changes.</summary>
+        public event CellChangedDelegate CellChanged;
+
         /// <summary>Default constructor</summary>
         public NewGridPresenter()
         {
@@ -50,7 +59,7 @@
             this.explorerPresenter = explorerPresenter;
 
             sheetContainer = view.GetControl<ContainerView>("grid");
-            PopulateGrid();
+            Populate();
 
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             contextMenuHelper = new ContextMenuHelper(grid);
@@ -64,9 +73,10 @@
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             contextMenuHelper.ContextMenu -= OnContextMenuPopup;
 
-            var dataTableProvider = grid.Sheet.DataProvider as DataTableProvider;
-            if (dataTableProvider != null)
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(tabularData, "Data", dataTableProvider.Data));
+            if (grid.Sheet.DataProvider is DataTableProvider dataProvider)
+                dataProvider.CellChanged -= OnCellChanged;
+
+            SaveGridToModel();
 
             //base.Detach();
             view.Dispose();
@@ -74,7 +84,7 @@
         }
 
         /// <summary>Populate the grid control with data.</summary>
-        public void PopulateGrid()
+        private void Populate()
         {
             // Create sheet control
             try
@@ -82,22 +92,40 @@
                 // Cleanup existing sheet instances before creating new ones.
                 CleanupSheet();
 
+                var dataProvider = new DataTableProvider(tabularData.Data);
+
                 grid = new SheetWidget();
                 grid.Sheet = new Sheet();
                 grid.Sheet.NumberFrozenRows = 2;
                 grid.Sheet.NumberFrozenColumns = 1;
                 grid.Sheet.RowCount = 50;
-                grid.Sheet.DataProvider = new DataTableProvider(tabularData.Data);
+                grid.Sheet.DataProvider = dataProvider;
                 grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
                 grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
                 grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-
                 sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
+
+                dataProvider.CellChanged += OnCellChanged;
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err.ToString());
+            }
+        }
+
+        /// <summary>
+        /// User has changed a cell.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="colIndex">The index of the column that was changed.</param>
+        /// <param name="rowIndex">The index of the row that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider sender, int colIndex, int rowIndex)
+        {
+            if (CellChanged != null)
+            {
+                SaveGridToModel();
+                CellChanged.Invoke(sender, colIndex, rowIndex);
             }
         }
 
@@ -168,10 +196,16 @@
         }
 
         /// <summary>Refresh the grid.</summary>
-        private void Refresh()
+        public void Refresh()
         {
-            grid.Sheet.DataProvider = new DataTableProvider(tabularData.Data);
+            if (grid.Sheet.DataProvider is DataTableProvider dataProvider)
+                dataProvider.CellChanged -= OnCellChanged;
+
+            dataProvider = new DataTableProvider(tabularData.Data);
+            grid.Sheet.DataProvider = dataProvider;
             grid.Sheet.Refresh();
+
+            dataProvider.CellChanged += OnCellChanged;
         }
 
         /// <summary>Clean up the sheet components.</summary>
@@ -190,7 +224,15 @@
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
-            this.PopulateGrid();
+            Refresh();
+        }
+
+        /// <summary>Save the contents of the grid to the model.</summary>
+        private void SaveGridToModel()
+        {
+            var dataTableProvider = grid.Sheet.DataProvider as DataTableProvider;
+            if (dataTableProvider != null)
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(tabularData, "Data", dataTableProvider.Data));
         }
     }
 }

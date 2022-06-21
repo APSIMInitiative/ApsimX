@@ -4,6 +4,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Standardiser;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -16,8 +17,8 @@
     [ValidParent(ParentType = typeof(Soil))]
     public class Physical : Model, IPhysical, ITabularData
     {
-        // Initial soil water when set by user as a layered variable (as opposed to an InitialWater node)
-        private double[] sw;
+        // Water node.
+        private Water waterNode = null;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
@@ -146,15 +147,12 @@
         {
             get
             {
-                var initWater = FindChild<InitialWater>();
-                if (initWater == null)
-                    return sw;
-                else
-                    return initWater.SW;
+                return Layers.MapConcentration(WaterNode.InitialValues, WaterNode.Thickness, Thickness, 0);
             }
             set
             {
-                sw = value;
+                if (IsSWSameLayerStructure)
+                    WaterNode.InitialValues = value;
             }
         }
 
@@ -226,7 +224,7 @@
             columns.Add(new TabularData.Column("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
             columns.Add(new TabularData.Column("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
             columns.Add(new TabularData.Column("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
-            columns.Add(new TabularData.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: FindChild<InitialWater>() != null));
+            columns.Add(new TabularData.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
             columns.Add(new TabularData.Column("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
 
             foreach (var soilCrop in FindAllChildren<SoilCrop>())
@@ -240,5 +238,20 @@
 
             return new TabularData(Name, columns);
         }
+
+        private Water WaterNode
+        { 
+            get
+            {
+                if (waterNode == null)
+                    waterNode = FindInScope<Water>();
+                if (waterNode == null)
+                    throw new Exception("Cannot find water node in simulation");
+                return waterNode;
+            }
+        }
+
+        /// <summary>Is SW from the water node in the same layer structure?</summary>
+        private bool IsSWSameLayerStructure => MathUtilities.AreEqual(Thickness, WaterNode.Thickness);
     }
 }

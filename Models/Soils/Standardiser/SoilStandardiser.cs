@@ -15,7 +15,6 @@
             SoilUnits.Convert(soil);
             MergeSamplesIntoOne(soil);
             SoilDefaults.FillInMissingValues(soil);
-            RemoveInitialWater(soil);
             CreateInitialSample(soil);
         }
 
@@ -84,29 +83,6 @@
                 }
             }
             return primaryArray;
-        }
-
-        /// <summary>Removes the initial water.</summary>
-        /// <param name="soil">The soil.</param>
-        private static void RemoveInitialWater(Soil soil)
-        {
-            var soilPhysical = soil.FindChild<Soils.IPhysical>();
-            var initialWater = soil.FindChild<InitialWater>();
-            if (initialWater != null)
-            {
-                var sample = soil.FindChild<Sample>();
-                if (sample == null)
-                {
-                    sample = new Sample();
-                    sample.Thickness = soilPhysical.Thickness;
-                    sample.Parent = soil;
-                    soil.Children.Add(sample);
-                }
-
-                sample.SW = initialWater.SWInternal(sample.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
-
-                soil.Children.Remove(initialWater);
-            }
         }
     }
 }

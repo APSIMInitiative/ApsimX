@@ -116,7 +116,7 @@
             var solutes = new List<Solute>();
 
             // Add in child solutes.
-            foreach (var solute in FindAllChildren<Solute>())
+            foreach (var solute in FindAllInScope<Solute>())
             {
                 if (MathUtilities.AreEqual(Thickness, solute.Thickness))
                     solutes.Add(solute);

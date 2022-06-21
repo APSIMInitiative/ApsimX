@@ -613,7 +613,7 @@ namespace UserInterface.Presenters
                 Physical waterNode = new Physical();
                 Organic organicMatter = new Organic();
                 WaterBalance soilWater = new WaterBalance();
-                InitialWater initialWater = new InitialWater();
+                Water initialWater = new Water();
                 Solute no3 = new Solute();
                 Solute nh4 = new Solute();
                 Nutrient nutrient = new Nutrient();
@@ -667,7 +667,7 @@ namespace UserInterface.Presenters
                 organicMatter.Thickness = thickness;
 
                 initialWater.Name = "Initial water";
-                initialWater.PercentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
+                initialWater.FilledFromTop = true;
                 initialWater.FractionFull = 0.0;
 
                 // Initialise nitrogen to 0.0

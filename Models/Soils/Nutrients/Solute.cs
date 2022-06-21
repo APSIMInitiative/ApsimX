@@ -20,7 +20,7 @@ namespace Models.Soils.Nutrients
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
     [PresenterName("UserInterface.Presenters.NewGridPresenter")]
-    [ValidParent(ParentType = typeof(Chemical))]
+    [ValidParent(ParentType = typeof(Soil))]
     public class Solute : Model, ISolute, ITabularData
     {
         [Link]

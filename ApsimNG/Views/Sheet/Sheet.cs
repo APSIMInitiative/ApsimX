@@ -471,7 +471,7 @@ namespace UserInterface.Views
             for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
             {
                 int columnWidth = 0;
-                for (int rowIndex = 0; rowIndex < NumberFrozenRows + 1; rowIndex++)
+                for (int rowIndex = 0; rowIndex < Math.Min(NumberFrozenRows + 1, DataProvider.RowCount); rowIndex++)
                     columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
                 // Look at middle row.

@@ -1,4 +1,6 @@
-﻿namespace UserInterface.Views
+﻿using System;
+
+namespace UserInterface.Views
 {
     /// <summary>An interface used by the sheet widget to get and set the contents of a sheet cell.</summary>
     public interface ISheetDataProvider
