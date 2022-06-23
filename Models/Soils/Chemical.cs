@@ -11,8 +11,8 @@
 
     /// <summary>This class captures chemical soil data</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
-    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType=typeof(Soil))]
     public class Chemical : Model, ITabularData
     {

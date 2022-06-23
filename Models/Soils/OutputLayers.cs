@@ -6,6 +6,7 @@
     using Models.Soils.Standardiser;
     using System;
     using Newtonsoft.Json;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
@@ -13,9 +14,9 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class OutputLayers : Model
+    public class OutputLayers : Model, ITabularData
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
@@ -28,10 +29,17 @@
         [Link]
         private INutrient nutrientBalanceModel = null;
 
-
         /// <summary>Gets or sets the thickness of each layer.</summary>
-        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public string[] Depth
+        {
+            get => SoilUtilities.ToDepthStrings(Thickness);
+            set => Thickness = SoilUtilities.ToThickness(value);
+        }
 
         ///<summary>Gets the soil bulk density of each mapped layer.</summary>
         [JsonIgnore]
@@ -273,6 +281,15 @@
 
                 return Layers.MapConcentration(modelOC, waterBalanceModel.Thickness, Thickness, double.NaN);
             }
+        }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")))
+            });
         }
     }
 }

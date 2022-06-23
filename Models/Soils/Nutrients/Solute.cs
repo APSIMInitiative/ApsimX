@@ -18,14 +18,11 @@ namespace Models.Soils.Nutrients
     /// or losses from the system.
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
-    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Solute : Model, ISolute, ITabularData
     {
-        [Link]
-        Soil soil = null;
-
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
         private IPhysical soilPhysical = null;
@@ -48,27 +45,19 @@ namespace Models.Soils.Nutrients
         public Solute() { }
 
         /// <summary>Default constructor.</summary>
-        public Solute(Soil soilModel, string soluteName, double[] value) 
+        public Solute(string soluteName, double[] value) 
         {
-            soil = soilModel;
             kgha = value;
             Name = soluteName;
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [Description("Depth")]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth
         {
-            get
-            {
-                return SoilUtilities.ToDepthStrings(Thickness);
-            }
-            set
-            {
-                Thickness = SoilUtilities.ToThickness(value);
-            }
+            get => SoilUtilities.ToDepthStrings(Thickness);
+            set => Thickness = SoilUtilities.ToThickness(value);
         }
 
         /// <summary>Thickness</summary>
@@ -77,7 +66,6 @@ namespace Models.Soils.Nutrients
         public double[] Thickness { get; set; }
 
         /// <summary>Nitrate NO3.</summary>
-        [Description("Initial {Name} values")]
         [Summary]
         public double[] InitialValues { get; set; }
 

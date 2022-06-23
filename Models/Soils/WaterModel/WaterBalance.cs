@@ -41,10 +41,10 @@ namespace Models.WaterModel
     /// This contrasts with models such as SWIM that solve simultaneously a set of differential equations that describe the flow processes.
     /// </summary>
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : ModelCollectionFromResource, ISoilWater
+    public class WaterBalance : ModelCollectionFromResource, ISoilWater, ITabularData
     {
         /// <summary>Link to the soil properties.</summary>
         [Link]
@@ -195,7 +195,6 @@ namespace Models.WaterModel
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [JsonIgnore]
-        [Description("Depth")]
         [Units("cm")]
         public string[] Depth
         {
@@ -211,7 +210,6 @@ namespace Models.WaterModel
 
         /// <summary>Soil layer thickness for each layer (mm).</summary>
         [Units("mm")]
-        [Description("Soil layer thickness for each layer")]
         public double[] Thickness { get; set; }
 
         /// <summary>Amount of water in the soil (mm).</summary>
@@ -350,7 +348,6 @@ namespace Models.WaterModel
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Caption("SWCON")]
-        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON)")]
         public double[] SWCON { get; set; }
 
         /// <summary>Lateral saturated hydraulic conductivity (KLAT).</summary>
@@ -362,7 +359,6 @@ namespace Models.WaterModel
         [Bounds(Lower = 0, Upper = 1.0e3F)]
         [Units("mm/d")]
         [Caption("Klat")]
-        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
@@ -823,6 +819,17 @@ namespace Models.WaterModel
         public void Tillage(string tillageType)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
+                new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
+            });
         }
     }
 }

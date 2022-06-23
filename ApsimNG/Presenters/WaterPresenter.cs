@@ -197,18 +197,18 @@
                                      System.Drawing.Color.LightBlue, LineType.Solid, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.DrawLineAndMarkers(cllName, cll,
+            graph.DrawLineAndMarkers("", cll,
                                      swCumulativeThickness,
                                      "", "", null, null, AxisPosition.Top, AxisPosition.Left,
                                      System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.DrawRegion(cllName, cll, swCumulativeThickness,
+            graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
                              sw, swCumulativeThickness,
                              AxisPosition.Top, AxisPosition.Left,
                              System.Drawing.Color.Blue, true);
 
-            graph.DrawLineAndMarkers("DUL", dul,
+            graph.DrawLineAndMarkers("", dul,
                          cumulativeThickness,
                          "", "", null, null, AxisPosition.Top, AxisPosition.Left,
                          System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
@@ -223,6 +223,7 @@
 
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }
     }

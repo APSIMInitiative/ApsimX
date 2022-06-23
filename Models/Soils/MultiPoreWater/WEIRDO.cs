@@ -1,23 +1,14 @@
-﻿
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using Models.Core;
-using Models;
-using Newtonsoft.Json;
-using Models.PMF;
-using System.Runtime.Serialization;
-using Models.Surface;
-using Models.Soils;
-using Models.Interfaces;
+﻿using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
-using Models.Functions;
-using Models.Soils.Standardiser;
 using Models.Climate;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils.Standardiser;
+using Models.Surface;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
-using APSIM.Shared.APSoil;
 
 namespace Models.Soils
 {
@@ -26,10 +17,10 @@ namespace Models.Soils
     ///
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater
+    public class WEIRDO : Model, ISoilWater, ITabularData
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -154,17 +145,16 @@ namespace Models.Soils
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [Description("Depth")]
         [Units("cm")]
         public string[] Depth
         {
             get
             {
-                return SoilUtilities.ToDepthStringsCM(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = SoilUtilities.ToThicknessCM(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -335,38 +325,25 @@ namespace Models.Soils
 
         #region Parameters
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("ConductC (*e^-10")]
-        [Display(Format = "N2")]
         public double[] CFlow { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("ConductX")]
-        [Display(Format = "N1")]
         public double[] XFlow { get; set; }
         /// <summary>Water potential where k curve becomes flat between -10 and -1000</summary>
-        [Description("PsiBub")]
         [Units("mm H2O")]
-        [Display(Format = "N0")]
         public double[] PsiBub { get; set; }
         /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
         [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("RFacMin")]
         public double[] MinRepellancyFactor { get; set; }
         /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
         [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("Rlower")]
         public double[] LowerRepellentWC { get; set; }
         /// <summary>Relative Water content above which soil is hydrophillic</summary>
         [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("Rupper")]
         public double[] UpperRepellentWC { get; set; }
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
         [Units("um")]
-        [Description("The pore diameters that seperate modeled pore compartments")]
         private double[] PoreBounds = { 3000, 1194, 475, 189, 75, 30, 8.6, 2.47, 0.707, 0.202, 0.0005 };
         /// <summary>
         /// The hydraulic conductance below the bottom of the specified profile
@@ -475,7 +452,6 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/h")]
         [Summary]
-        [Description("The Poiseuille conductivity of each pore")]
         [Display(Format = "N1")]
         [JsonIgnore]
         public double[][] Capillarity { get; set; }
@@ -485,7 +461,6 @@ namespace Models.Soils
         [Units("mm/h")]
         [Summary]
         [Display(Format = "N1")]
-        [Description("The Potential hydraulic conducitivity of water out of the pore")]
         [JsonIgnore]
         public double[][] HydraulicConductivityOut { get; set; }
         /// <summary>
@@ -494,7 +469,6 @@ namespace Models.Soils
         [Units("mm")]
         [Summary]
         [Display(Format = "N1")]
-        [Description("Layer water potential when these pore spaces are full and larger pores are empty")]
         [JsonIgnore]
         public double[][] PsiUpper { get; set; }
         /// <summary>
@@ -502,7 +476,6 @@ namespace Models.Soils
         /// </summary>
         [Units("0-1")]
         [Display(Format = "N1")]
-        [Description("Layer relative water water filled porosity when these pores are full and larger pores are empty")]
         [JsonIgnore]
         public double[][] RelativePoreVolume { get; set; }
         /// <summary>
@@ -511,7 +484,6 @@ namespace Models.Soils
         [Units("0-1")]
         [Summary]
         [Display(Format = "N1")]
-        [Description("Layer volumetric water content when these pores are full and larger pores are empty")]
         [JsonIgnore]
         public double[][] Theta { get; set; }
         /// <summary>
@@ -1405,5 +1377,20 @@ namespace Models.Soils
             }
         }
         #endregion
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new TabularData.Column("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))),
+                new TabularData.Column("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))),
+                new TabularData.Column("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))),
+                new TabularData.Column("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))),
+                new TabularData.Column("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))),
+                new TabularData.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC")))
+            });
+        }
     }
 }

@@ -4,19 +4,17 @@
     using Models.Core;
     using Models.Interfaces;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
-    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model, ITabularData
     {
         /// <summary>Crop lower limit (mm/mm)</summary>
         [Summary]
-        [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
 
@@ -33,17 +31,13 @@
             }
         }
 
-    /// <summary>The KL value.</summary>
-    [Summary]
-        [Description("KL")]
-        [Display(Format = "N2")]
+        /// <summary>The KL value.</summary>
+        [Summary]
         [Units("/day")]
         public double[] KL { get; set; }
 
         /// <summary>The exploration factor</summary>
         [Summary]
-        [Description("XF")]
-        [Display(Format = "N1")]
         [Units("0-1")]
         public double[] XF { get; set; }
 
@@ -57,8 +51,6 @@
         public string[] XFMetadata { get; set; }
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
-        [Description("PAWC")]
-        [Display(Format = "N2", ShowTotal = true)]
         [Units("mm/mm")]
         public double[] PAWC
         {
@@ -72,7 +64,6 @@
         }
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
-        [Display(Format = "N2", ShowTotal = true)]
         [Units("mm")]
         public double[] PAWCmm
         {
@@ -97,6 +88,5 @@
                 new TabularData.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
             });
         }
-
     }
 }

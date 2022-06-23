@@ -21,9 +21,6 @@ namespace Models.Soils.NutrientPatching
         private Clock clock = null;
 
         [Link]
-        private Soil soil = null;
-        
-        [Link]
         private IPhysical soilPhysical = null;
         
         [Link]
@@ -384,7 +381,7 @@ namespace Models.Soils.NutrientPatching
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     values[i] += solutesAsList[s].kgha[i] * areas[s];
             }
-            return new Solute(soil, name, values);
+            return new Solute(name, values);
         }
 
         /// <summary>

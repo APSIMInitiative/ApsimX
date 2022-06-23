@@ -12,8 +12,8 @@
 
     /// <summary>A model for capturing physical soil parameters</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
-    [PresenterName("UserInterface.Presenters.NewProfilePresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Physical : Model, IPhysical, ITabularData
     {
@@ -21,7 +21,6 @@
         private Water waterNode = null;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [Description("Depth")]
         [Units("mm")]
         [Summary]
         [JsonIgnore]
@@ -66,25 +65,21 @@
 
         /// <summary>Particle size clay.</summary>
         [Summary]
-        [Description("Clay")]
         [Units("%")]
         public double[] ParticleSizeClay { get; set; }
 
         /// <summary>Particle size sand.</summary>
         [Summary]
-        [Description("Sand")]
         [Units("%")]
         public double[] ParticleSizeSand { get; set; }
 
         /// <summary>Particle size silt.</summary>
         [Summary]
-        [Description("Silt")]
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
 
         /// <summary>Rocks.</summary>
         [Summary]
-        [Description("Rocks")]
         [Units("%")]
         public double[] Rocks { get; set; }
 
@@ -93,21 +88,18 @@
 
         /// <summary>Bulk density (g/cc).</summary>
         [Summary]
-        [Description("BD")]
         [Units("g/cc")]
         [Display(Format = "N2")]
         public double[] BD { get; set; }
 
         /// <summary>Air dry - volumetric (mm/mm).</summary>
         [Summary]
-        [Description("Air dry")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] AirDry { get; set; }
 
         /// <summary>Lower limit 15 bar (mm/mm).</summary>
         [Summary]
-        [Description("LL15")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] LL15 { get; set; }
@@ -118,7 +110,6 @@
 
         /// <summary>Drained upper limit (mm/mm).</summary>
         [Summary]
-        [Description("DUL")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] DUL { get; set; }
@@ -129,7 +120,6 @@
 
         /// <summary>Saturation (mm/mm).</summary>
         [Summary]
-        [Description("SAT")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
@@ -140,7 +130,6 @@
 
         /// <summary>Initial soil water (mm/mm).</summary>
         [Summary]
-        [Description("SW")]
         [Units("mm/mm")]
         [Display(Format = "N2")]
         public double[] SW
@@ -162,7 +151,6 @@
 
         /// <summary>KS (mm/day).</summary>
         [Summary]
-        [Description("KS")]
         [Units("mm/day")]
         [Display(Format = "N1")]
         public double[] KS { get; set; }
