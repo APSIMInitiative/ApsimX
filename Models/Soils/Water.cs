@@ -123,34 +123,34 @@
         {
             get
             {
+                var ll = RelativeToLL;
                 double depthSoFar = 0;
                 for (int layer = 0; layer < Thickness.Length; layer++)
                 {
-                    if (InitialValues[layer] >= Physical.DUL[layer])
+                    var prop = (InitialValues[layer] - ll[layer]) / (Physical.DUL[layer] - ll[layer]);
+
+                    if (MathUtilities.IsGreaterThanOrEqual(prop, 1.0))
                         depthSoFar += Thickness[layer];
                     else
+                    {
+                        depthSoFar += Thickness[layer] * prop;
                         return depthSoFar;
+                    }
                 }
 
                 return depthSoFar;
             }
             set
             {
-                DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, Physical.DUL);
+                InitialValues = DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, Physical.DUL);
             }
         }
 
         /// <summary>Finds the 'physical' node.</summary>
-        private IPhysical Physical
-        {
-            get
-            {
-                return FindInScope<IPhysical>();
-            }
-        }
+        public IPhysical Physical => FindInScope<IPhysical>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
-        private double[] RelativeToLL
+        public double[] RelativeToLL
         {
             get
             {
@@ -158,7 +158,7 @@
                     return Physical.LL15;
                 else
                 {
-                    var plantCrop = FindInScope<SoilCrop>(RelativeTo);
+                    var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
                     if (plantCrop == null)
                     {
                         RelativeTo = "LL15";

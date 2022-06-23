@@ -13,7 +13,7 @@
     /// <summary>A model for capturing physical soil parameters</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.NewGridView.glade")]
-    [PresenterName("UserInterface.Presenters.NewGridPresenter")]
+    [PresenterName("UserInterface.Presenters.NewProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Physical : Model, IPhysical, ITabularData
     {

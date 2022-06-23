@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Graphing;
     using Models.Soils;
     using System;
     using System.Globalization;
@@ -36,6 +37,9 @@
         /// <summary>Plant available water label.</summary>
         private LabelView pawLabel;
 
+        /// <summary>Graph.</summary>
+        private GraphView graph;
+
         /// <summary>Default constructor</summary>
         public WaterPresenter()
         {
@@ -58,6 +62,8 @@
             relativeToDropDown = view.GetControl<DropDownView>("relativeToDropDown");
             depthWetSoilEdit = view.GetControl<EditView>("depthWetSoilEdit");
             pawLabel = view.GetControl<LabelView>("pawLabel");
+            graph = view.GetControl<GraphView>("graph");
+            graph.SetPreferredWidth(0.3);
 
             Refresh();
             ConnectEvents();
@@ -80,7 +86,10 @@
                 percentFullEdit.Text = (water.FractionFull * 100).ToString("F0");
                 filledFromTopCheckbox.Checked = water.FilledFromTop;
                 relativeToDropDown.Values = water.AllowedRelativeTo.ToArray();
+                relativeToDropDown.SelectedValue = water.RelativeTo;
                 depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0");
+                PopulateWaterGraph(graph, water.Physical.Thickness, water.Physical.AirDry, water.Physical.LL15, water.Physical.DUL, water.Physical.SAT,
+                                   water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 ConnectEvents();
             }
             catch (Exception err)
@@ -92,10 +101,12 @@
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
+            DisconnectEvents();
             gridPresenter.CellChanged += OnCellChanged;
             percentFullEdit.Changed += OnPercentFullChanged;
             filledFromTopCheckbox.Changed += OnFilledFromTopChanged;
             relativeToDropDown.Changed += OnRelativeToChanged;
+            depthWetSoilEdit.Changed += OnDepthWetSoilChanged;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -106,6 +117,7 @@
             percentFullEdit.Changed -= OnPercentFullChanged;
             filledFromTopCheckbox.Changed -= OnFilledFromTopChanged;
             relativeToDropDown.Changed -= OnRelativeToChanged;
+            depthWetSoilEdit.Changed -= OnDepthWetSoilChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
@@ -118,7 +130,7 @@
             Refresh();
         }
 
-        /// <summary>Invoked when the percent full edit box was changed.</summary>
+        /// <summary>Invoked when the percent full edit box is changed.</summary>
         /// <param name="sender">The send of the event.</param>
         /// <param name="e">The event arguments.</param>
         private void OnPercentFullChanged(object sender, EventArgs e)
@@ -131,7 +143,7 @@
             gridPresenter.Refresh();
         }
 
-        /// <summary>Invoked when the filled from top checkbox was changed.</summary>
+        /// <summary>Invoked when the filled from top checkbox is changed.</summary>
         /// <param name="sender">The send of the event.</param>
         /// <param name="e">The event arguments.</param>
         private void OnFilledFromTopChanged(object sender, EventArgs e)
@@ -142,13 +154,24 @@
             gridPresenter.Refresh();
         }
 
-        /// <summary>Invoked when the relative to drop down was changed.</summary>
+        /// <summary>Invoked when the relative to drop down is changed.</summary>
         /// <param name="sender">The send of the event.</param>
         /// <param name="e">The event arguments.</param>
         private void OnRelativeToChanged(object sender, EventArgs e)
         {
             water.RelativeTo = relativeToDropDown.SelectedValue;
             water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+            Refresh();
+            gridPresenter.Refresh();
+        }
+
+        /// <summary>Invoked when the depth of wet soil is changed.</summary>
+        /// <param name="sender">The send of the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnDepthWetSoilChanged(object sender, EventArgs e)
+        {
+            water.DepthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.InvariantCulture);
+            Console.Write(water.DepthWetSoil);
             Refresh();
             gridPresenter.Refresh();
         }
@@ -160,6 +183,47 @@
         private void OnModelChanged(object changedModel)
         {
             Refresh();
+        }
+
+        public static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] ll15, double[] dul, double[] sat,
+                                               string cllName, double[] swThickness, double[] cll, double[] sw)
+        {
+            var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
+            var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
+            graph.Clear();
+            graph.DrawLineAndMarkers("Airdry", airdry,
+                                     cumulativeThickness,
+                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                     System.Drawing.Color.LightBlue, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.DrawLineAndMarkers(cllName, cll,
+                                     swCumulativeThickness,
+                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                     System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.DrawRegion(cllName, cll, swCumulativeThickness,
+                             sw, swCumulativeThickness,
+                             AxisPosition.Top, AxisPosition.Left,
+                             System.Drawing.Color.Blue, true);
+
+            graph.DrawLineAndMarkers("DUL", dul,
+                         cumulativeThickness,
+                         "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                         System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                         LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.DrawLineAndMarkers("SAT", sat,
+                                     cumulativeThickness,
+                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                     System.Drawing.Color.DarkBlue, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+
+            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            graph.Refresh();
         }
     }
 }
