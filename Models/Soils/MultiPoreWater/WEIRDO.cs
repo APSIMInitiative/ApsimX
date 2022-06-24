@@ -284,7 +284,7 @@ namespace Models.Soils
         #region Class Dependancy Links
 
         [Link]
-        private Sample initial = null;
+        private Water water = null;
         [Link]
         private SurfaceOrganicMatter SurfaceOM = null;
         [Link]
@@ -624,10 +624,10 @@ namespace Models.Soils
             //Check the soil water content initialisation is legit
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (initial.SWVolumetric[l] - soilPhysical.SAT[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initial.SWVolumetric[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
-                if (soilPhysical.LL15[l] - initial.SWVolumetric[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initial.SWVolumetric[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
+                if (water.Volumetric[l] - soilPhysical.SAT[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + water.Volumetric[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
+                if (soilPhysical.LL15[l] - water.Volumetric[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + water.Volumetric[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
             }
         }
 
@@ -1177,12 +1177,12 @@ namespace Models.Soils
                     Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
                     Pores[l][c].CFlow = CFlow[l];
                     Pores[l][c].XFlow = XFlow[l];
-                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, initial.SWVolumetric[l] - AccumWaterVolume);
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, water.Volumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Thickness[l];
                     Pores[l][c].IncludeSorption = IncludeSorption;
                 }
-                if (Math.Abs(AccumWaterVolume - initial.SWVolumetric[l]) > FloatingPointTolerance)
+                if (Math.Abs(AccumWaterVolume - water.Volumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];

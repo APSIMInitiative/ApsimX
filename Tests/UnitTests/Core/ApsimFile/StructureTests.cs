@@ -78,7 +78,7 @@
 
         /// <summary>When a soil is copied from APSoil make sure an InitWater and Sample is added.</summary>
         [Test]
-        public void StructureTests_EnsureAPSOILSoilHasInitWaterAndSampleAdded()
+        public void StructureTests_EnsureAPSOILSoilHasInitWaterAdded()
         {
             Simulation simulation = new Simulation();
 
@@ -88,7 +88,6 @@
             Soil soil = simulation.Children[0] as Soil;
             Assert.AreEqual(7, soil.Children.Count);
             Assert.IsTrue(soil.Children[5] is Water);
-            Assert.IsTrue(soil.Children[6] is Sample);
         }
 
         [Test]

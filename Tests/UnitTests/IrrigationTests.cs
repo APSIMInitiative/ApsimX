@@ -107,11 +107,10 @@
                                 InitialValues = new double[] { 23, 7, 2, 1, 1, 1 },
                                 InitialValuesUnits = Solute.UnitsEnum.kgha
                             },                            
-                            new Sample()
+                            new Water()
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
-                                SW = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
-                                SWUnits = Sample.SWUnitsEnum.Gravimetric
+                                InitialValues = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
                             },
                             new Models.WaterModel.WaterBalance()
                             {

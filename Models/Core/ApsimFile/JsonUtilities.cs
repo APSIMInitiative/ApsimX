@@ -162,10 +162,10 @@ namespace Models.Core.ApsimFile
         /// Returns the descendant of a given node of the specified type.
         /// </summary>
         /// <param name="node">The node.</param>
-        /// <param name="type">The type of model to search for.</param>
-        public static JObject DescendantOfType(JObject node, Type type)
+        /// <param name="typeName">The type name of model to search for (e.g. Physical).</param>
+        public static JObject DescendantOfType(JObject node, string typeName)
         {
-            return ChildrenRecursively(node).FirstOrDefault(child => Type(child) == type.Name);
+            return ChildrenRecursively(node).FirstOrDefault(child => Type(child) == typeName);
         }
 
         /// <summary>

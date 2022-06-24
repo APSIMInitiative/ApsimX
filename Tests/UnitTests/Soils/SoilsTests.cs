@@ -58,11 +58,10 @@
                         InitialValues = new double[] { 38, double.NaN, 500, 490, 500, 500 },
                         InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
-                    new Sample
+                    new Water
                     {
                         Thickness = new double[] { 100, 300, 300, 300 },
-                        SW = new double[] { 0.103, 0.238, 0.253, 0.247 },
-                        SWUnits = Sample.SWUnitsEnum.Gravimetric
+                        InitialValues = new double[] { 0.103, 0.238, 0.253, 0.247 },
                     },
                     new Solute
                     {
@@ -70,11 +69,6 @@
                         Thickness = new double[] { 100, 300 },
                         InitialValues = new double[] { 23, 7 },
                         InitialValuesUnits = Solute.UnitsEnum.kgha
-                    },
-                    new Sample
-                    {
-                        Thickness = new double[] { 100, 300 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
                 }
             };

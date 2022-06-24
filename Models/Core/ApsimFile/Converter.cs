@@ -3173,12 +3173,12 @@ namespace Models.Core.ApsimFile
                         // The sample is in an experiment. If it's being overriden by a factor,
                         // ignore it.
                         JObject factors = JsonUtilities.ChildWithName(expt, "Factors");
-                        if (factors != null && JsonUtilities.DescendantOfType(factors, typeof(Sample)) != null)
+                        if (factors != null && JsonUtilities.DescendantOfType(factors, "Sample") != null)
                             continue;
                     }
 
-                    JObject replacements = JsonUtilities.DescendantOfType(root, typeof(Replacements));
-                    if (replacements != null && JsonUtilities.DescendantOfType(replacements, typeof(Sample)) != null)
+                    JObject replacements = JsonUtilities.DescendantOfType(root, "Replacements");
+                    if (replacements != null && JsonUtilities.DescendantOfType(replacements, "Sample") != null)
                         continue;
 
                     JObject parent = JsonUtilities.Parent(sample) as JObject;
@@ -4055,6 +4055,7 @@ namespace Models.Core.ApsimFile
                             var newSolute = CreateSoluteToken(tokensContainingValues, solute["Name"].ToString(), bd);
                             if (newSolute != null)
                             {
+                                solute["$type"] = "Models.Soils.Solute, Models";
                                 solute["Thickness"] = newSolute["Thickness"];
                                 solute["InitialValues"] = newSolute["InitialValues"];
                                 solute["InitialValuesUnits"] = newSolute["InitialValuesUnits"];
@@ -4076,7 +4077,7 @@ namespace Models.Core.ApsimFile
                         var thickness = chemical["Thickness"] as JArray;
                         var urea = new JObject
                         {
-                            ["$type"] = "Models.Soils.Nutrients.Solute, Models",
+                            ["$type"] = "Models.Soils.Solute, Models",
                             ["Name"] = "Urea",
                             ["Thickness"] = thickness,
                             ["InitialValues"] = new JArray(Array.CreateInstance(typeof(double), thickness.Count)),
@@ -4196,9 +4197,7 @@ namespace Models.Core.ApsimFile
                     swimSolute.Remove();
                 }
                 else
-                {
-                    swimSolute["$type"] = "Models.Soils.Nutrients.Solute, Models";
-                }
+                    swimSolute["$type"] = "Models.Soils.Solute, Models";
             }
         }
 		
@@ -4219,9 +4218,9 @@ namespace Models.Core.ApsimFile
                 {
                     var sampleToken = JsonUtilities.Parent(valuesToken);
                     var mappedValues = SoilUtilities.MapConcentration(values,
-                                                                                  sampleToken["Thickness"].Values<double>().ToArray(),
-                                                                                  chemical["Thickness"].Values<double>().ToArray(),
-                                                                                  defaultValue, true);
+                                                                      sampleToken["Thickness"].Values<double>().ToArray(),
+                                                                      chemical["Thickness"].Values<double>().ToArray(),
+                                                                      defaultValue, true);
                     chemical[nodeName] = new JArray(mappedValues);
                     chemical[$"{nodeName}Units"] = sampleToken[$"{nodeName}Units"].ToString();
                 }
@@ -4248,7 +4247,7 @@ namespace Models.Core.ApsimFile
                     units = "ppm";
                 return new JObject
                 {
-                    ["$type"] = "Models.Soils.Nutrients.Solute, Models",
+                    ["$type"] = "Models.Soils.Solute, Models",
                     ["Name"] = soluteName,
                     ["Thickness"] = token["Thickness"],
                     ["InitialValues"] = valuesToken,

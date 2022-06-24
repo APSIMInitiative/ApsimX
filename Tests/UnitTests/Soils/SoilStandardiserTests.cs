@@ -59,17 +59,10 @@
                         InitialValues = new double[] { 38, double.NaN },
                         InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
-                    new Sample
+                    new Water
                     {
                         Thickness = new double[] { 500 },
-                        SW = new double[] { 0.103 },
-                        SWUnits = Sample.SWUnitsEnum.Gravimetric
-                    },
-                    new Sample
-                    {
-                        Thickness = new double[] { 1000 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric,
-                        Name = "Sample1"
+                        InitialValues = new double[] { 0.103 },
                     }
                 }
             };
@@ -77,18 +70,15 @@
 
             soil.Standardise();
 
-            var water = soil.Children[0] as Physical;
+            var physical = soil.Children[0] as Physical;
             var soilOrganicMatter = soil.Children[3] as Organic;
-            var sample = soil.Children[5] as Sample;
+            var water = soil.Children[5] as Water;
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
-            Assert.AreEqual(water.Thickness, targetThickness);
+            Assert.AreEqual(physical.Thickness, targetThickness);
             Assert.AreEqual(soilOrganicMatter.Thickness, targetThickness);
-            Assert.AreEqual(sample.Thickness, targetThickness);
-
-            // Make sure sample units are volumetric.
-            Assert.AreEqual(sample.SWUnits, Sample.SWUnitsEnum.Volumetric);
+            Assert.AreEqual(water.Thickness, targetThickness);
         }
 
         /// <summary>Ensure a LayerStructure is used for mapping.</summary>
@@ -139,17 +129,10 @@
                         InitialValues = new double[] { 38, double.NaN },
                         InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
-                    new Sample
+                    new Water
                     {
                         Thickness = new double[] { 500 },
-                        SW = new double[] { 0.103 },
-                        SWUnits = Sample.SWUnitsEnum.Gravimetric
-                    },
-                    new Sample
-                    {
-                        Thickness = new double[] { 1000 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric,
-                        Name = "Sample1"
+                        InitialValues = new double[] { 0.103 }
                     },
                     new LayerStructure
                     {
@@ -161,18 +144,15 @@
 
             soil.Standardise();
 
-            var water = soil.Children[0] as Physical;
+            var physical = soil.Children[0] as Physical;
             var soilOrganicMatter = soil.Children[3] as Organic;
-            var sample = soil.Children[5] as Sample;
+            var water = soil.Children[5] as Water;
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
-            Assert.AreEqual(water.Thickness, targetThickness);
+            Assert.AreEqual(physical.Thickness, targetThickness);
             Assert.AreEqual(soilOrganicMatter.Thickness, targetThickness);
-            Assert.AreEqual(sample.Thickness, targetThickness);
-
-            // Make sure sample units are volumetric.
-            Assert.AreEqual(sample.SWUnits, Sample.SWUnitsEnum.Volumetric);
+            Assert.AreEqual(water.Thickness, targetThickness);
         }
 
         /// <summary>Ensure a single initial conditions sample is created.</summary>
@@ -186,19 +166,19 @@
 
             var chemical = soil.Children[3] as Chemical;
             var organic = soil.Children[4] as Organic;
-            var initial = soil.Children[5] as Sample;
+            var water = soil.Children[5] as Water;
             var analysis = soil.Children[4] as Chemical;
-            var samples = soil.FindAllChildren<Solute>().ToArray();
+            var solutes = soil.FindAllChildren<Solute>().ToArray();
 
-            Assert.AreEqual(soil.FindAllChildren<Sample>().Count(), 1);
-            Assert.AreEqual(initial.Name, "Initial");
-            Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
+            Assert.AreEqual(soil.FindAllChildren<Water>().Count(), 1);
+            Assert.AreEqual(water.Name, "Initial");
+            Assert.AreEqual(water.Volumetric, new double[] { 0.1, 0.2 } );
             Assert.AreEqual(organic.Carbon, new double[] { 2.0, 0.9 });
             Assert.AreEqual(chemical.PH, new double[] { 6.4, 6.9 });
             Assert.AreEqual(chemical.EC, new double[] { 150, 200 });
 
-            Assert.AreEqual(samples[0].InitialValues, new double[] { 29.240000000000002, 2.432 });  // NO3 kg/ha
-            Assert.AreEqual(samples[1].InitialValues, new double[] { 1.4960000000000002, 0.4864 }); // NH4 kg/ha
+            Assert.AreEqual(solutes[0].InitialValues, new double[] { 29.240000000000002, 2.432 });  // NO3 kg/ha
+            Assert.AreEqual(solutes[1].InitialValues, new double[] { 1.4960000000000002, 0.4864 }); // NH4 kg/ha
 
             var soilOrganicMatter = soil.Children[3] as Organic;
             Assert.IsNull(soilOrganicMatter.Carbon);
@@ -274,11 +254,10 @@
                         InitialValues = new double[] { 2, double.NaN },
                         InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
-                    new Sample
+                    new Water
                     {
                         Thickness = new double[] { 100, 200 },
-                        SW = new double[] { 0.1, 0.2 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                        InitialValues = new double[] { 0.1, 0.2 },
                     }
                 }
             };

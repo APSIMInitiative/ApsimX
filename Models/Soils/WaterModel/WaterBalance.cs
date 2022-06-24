@@ -55,7 +55,7 @@ namespace Models.WaterModel
         private IPhysical soilPhysical = null;
 
         [Link]
-        Sample initial = null;
+        Water water = null;
 
         [Link]
         private ISummary summary = null;
@@ -784,7 +784,7 @@ namespace Models.WaterModel
             FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
             SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-            Water = initial.SWmm;
+            Water = water.MM;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;

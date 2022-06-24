@@ -171,7 +171,7 @@
         public void Check(ISummary summary)
         {
             var weirdo = FindChild<WEIRDO>();
-            var initial = FindChild<Sample>();
+            var water = FindChild<Water>();
             var organic = FindChild<Organic>();
             var chemical = FindChild<Chemical>();
             var physical = FindChild<IPhysical>();
@@ -270,19 +270,19 @@
                             summary.WriteMessage(null, $"OC value of {organic.Carbon[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
                     }
 
-                if (!MathUtilities.ValuesInArray(initial.SW))
+                if (!MathUtilities.ValuesInArray(water.Volumetric))
                     message.AppendLine("No starting soil water values found.");
                 else
                     for (int layer = 0; layer != physical.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
 
-                        if (initial.SW[layer] == MathUtilities.MissingValue || double.IsNaN(initial.SW[layer]))
+                        if (water.Volumetric[layer] == MathUtilities.MissingValue || double.IsNaN(water.Volumetric[layer]))
                             message.AppendLine($"Soil water value missing in layer {layerNumber}");
-                        else if (MathUtilities.GreaterThan(initial.SW[layer], physical.SAT[layer], 3))
-                            message.AppendLine($"Soil water of {initial.SW[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layer].ToString("f3")}");
-                        else if (MathUtilities.LessThan(initial.SW[layer], physical.AirDry[layer], 3))
-                            message.AppendLine($"Soil water of {initial.SW[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
+                        else if (MathUtilities.GreaterThan(water.Volumetric[layer], physical.SAT[layer], 3))
+                            message.AppendLine($"Soil water of {water.Volumetric[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layer].ToString("f3")}");
+                        else if (MathUtilities.LessThan(water.Volumetric[layer], physical.AirDry[layer], 3))
+                            message.AppendLine($"Soil water of {water.Volumetric[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
                     }
 
                 for (int layer = 0; layer != physical.Thickness.Length; layer++)
