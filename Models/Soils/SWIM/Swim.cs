@@ -2317,7 +2317,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                SwimSoluteParameters soluteParam = FindInScope<SwimSoluteParameters>(solute_names[i]);
+                var soluteParam = FindInScope<Solute>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 for (int j = 0; j < soluteParam.FIP.Length; j++)

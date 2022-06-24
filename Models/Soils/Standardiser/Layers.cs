@@ -192,16 +192,16 @@
         /// <param name="soil">The soil</param>
         private static void SetSWIMThickness(Swim3 swim, double[] thickness, Soil soil)
         {
-            foreach (var soluteParameters in soil.FindAllChildren<SwimSoluteParameters>())
-            {
-                if (!MathUtilities.AreEqual(thickness, soluteParameters.Thickness))
-                {
-                    if (soluteParameters.Exco != null)
-                        soluteParameters.Exco = MapConcentration(soluteParameters.Exco, soluteParameters.Thickness, thickness, 0.2);
-                    if (soluteParameters.FIP != null)
-                        soluteParameters.FIP = MapConcentration(soluteParameters.FIP, soluteParameters.Thickness, thickness, 0.2);
-                }
-            }
+            //foreach (var soluteParameters in soil.FindAllChildren<SwimSoluteParameters>())
+            //{
+            //    if (!MathUtilities.AreEqual(thickness, soluteParameters.Thickness))
+            //    {
+            //        if (soluteParameters.Exco != null)
+            //            soluteParameters.Exco = MapConcentration(soluteParameters.Exco, soluteParameters.Thickness, thickness, 0.2);
+            //        if (soluteParameters.FIP != null)
+            //            soluteParameters.FIP = MapConcentration(soluteParameters.FIP, soluteParameters.Thickness, thickness, 0.2);
+            //    }
+            //}
         }
 
         /// <summary>Convert the crop to the specified thickness. Ensures LL is between AirDry and DUL.</summary>

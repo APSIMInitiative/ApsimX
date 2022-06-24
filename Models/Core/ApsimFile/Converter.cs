@@ -4053,9 +4053,12 @@ namespace Models.Core.ApsimFile
                         foreach (var solute in JsonUtilities.ChildrenOfType(soil, "Solute"))
                         {
                             var newSolute = CreateSoluteToken(tokensContainingValues, solute["Name"].ToString(), bd);
-                            solute["Thickness"] = newSolute["Thickness"];
-                            solute["InitialValues"] = newSolute["InitialValues"];
-                            solute["InitialValuesUnits"] = newSolute["InitialValuesUnits"];
+                            if (newSolute != null)
+                            {
+                                solute["Thickness"] = newSolute["Thickness"];
+                                solute["InitialValues"] = newSolute["InitialValues"];
+                                solute["InitialValuesUnits"] = newSolute["InitialValuesUnits"];
+                            }
                         }
 
                         // Move solutes from nutrient to soil.
@@ -4171,6 +4174,30 @@ namespace Models.Core.ApsimFile
                             initWater.Remove("DepthWetSoil");
                         }
                     }
+                }
+            }
+
+            // Convert all SwimSoluteParameters into regular solutes.
+            foreach (JObject swimSolute in JsonUtilities.ChildrenRecursively(root, "SwimSoluteParameters"))
+            {
+                var parent = JsonUtilities.Parent(swimSolute);
+                if (parent["$type"].ToString().Contains(".Swim3"))
+                {
+                    var soil = JsonUtilities.Parent(parent) as JObject;
+                    string soluteName = swimSolute["Name"].ToString();
+                    var solute = JsonUtilities.ChildWithName(soil, soluteName, true);
+                    if (solute != null)
+                    {
+                        solute["WaterTableConcentration"] = swimSolute["WaterTableConcentration"];
+                        solute["D0"] = swimSolute["D0"];
+                        solute["Exco"] = swimSolute["Exco"];
+                        solute["FIP"] = swimSolute["FIP"];
+                    }
+                    swimSolute.Remove();
+                }
+                else
+                {
+                    swimSolute["$type"] = "Models.Soils.Nutrients.Solute, Models";
                 }
             }
         }

@@ -46,7 +46,7 @@
         /// <summary>Nitrate NO3.</summary>
         [Summary]
         [Units("mm")]
-        public double[] InitialValuesMM => MathUtilities.Multiply(InitialValues, Physical.Thickness);
+        public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Physical.Thickness);
 
         /// <summary>Amount water (mm)</summary>
         [Units("mm")]
@@ -59,7 +59,7 @@
 
         /// <summary>Plant available water (mm).</summary>
         [Units("mm")]
-        public double InitialPAWmm => MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+        public double InitialPAWmm => InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -105,8 +105,8 @@
         {
             get
             {
-                return MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                       MathUtilities.Subtract(Physical.DULmm, RelativeToLLMM).Sum();
+                return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
+                                                   MathUtilities.Subtract(Physical.DULmm, RelativeToLLMM).Sum();
             }
             set
             {
@@ -123,6 +123,8 @@
         {
             get
             {
+                if (InitialValues == null)
+                    return 0;
                 var ll = RelativeToLL;
                 double depthSoFar = 0;
                 for (int layer = 0; layer < Thickness.Length; layer++)

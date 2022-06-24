@@ -28,7 +28,7 @@ namespace Models.Soils
         {
             return new TabularData(Name, new TabularData.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:false)
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly:false)
             });
         }
     }

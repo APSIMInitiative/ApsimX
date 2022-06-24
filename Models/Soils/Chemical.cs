@@ -29,7 +29,6 @@
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [Description("Depth")]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth
@@ -51,8 +50,6 @@
 
         /// <summary>pH</summary>
         [Summary]
-        [Description("PH")]
-        [Display(Format = "N1")]
         public double[] PH { get; set; }
 
         /// <summary>The units of pH.</summary>
@@ -60,14 +57,10 @@
 
         /// <summary>Gets or sets the ec.</summary>
         [Summary]
-        [Description("EC")]
-        [Units("1:5 dS/m")]
         public double[] EC { get; set; }
 
         /// <summary>Gets or sets the esp.</summary>
         [Summary]
-        [Description("ESP")]
-        [Units("%")]
         public double[] ESP { get; set; }
 
         /// <summary>EC metadata</summary>

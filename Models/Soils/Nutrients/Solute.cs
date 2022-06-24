@@ -72,6 +72,20 @@ namespace Models.Soils.Nutrients
         /// <summary>Units of the Initial values.</summary>
         public UnitsEnum InitialValuesUnits { get; set; }
 
+        /// <summary>Concentration of solute in water table (ppm).</summary>
+        [Description("For SWIM: Concentration of solute in water table (ppm).")]
+        public double WaterTableConcentration { get; set; }
+
+        /// <summary>Diffusion coefficient (D0).</summary>
+        [Description("For SWIM: Diffusion coefficient (D0)")]
+        public double D0 { get; set; }
+
+        /// <summary>EXCO.</summary>
+        public double[] Exco { get; set; }
+
+        /// <summary>FIP.</summary>
+        public double[] FIP { get; set; }
+
         /// <summary>Solute amount (kg/ha)</summary>
         [JsonIgnore]
         public double[] kgha { get; set; }
@@ -134,11 +148,19 @@ namespace Models.Soils.Nutrients
         /// <summary>Tabular data. Called by GUI.</summary>
         public TabularData GetTabularData()
         {
-            return new TabularData(Name, new TabularData.Column[] 
+            bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
+            var columns = new List<TabularData.Column>()
             {
                 new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
                 new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-            });
+            };
+            if (swimPresent)
+            {
+                columns.Add(new TabularData.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
+                columns.Add(new TabularData.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+            }
+            return new TabularData(Name, columns);
         }
+
     }
 }
