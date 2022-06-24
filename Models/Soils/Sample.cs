@@ -2,9 +2,9 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Soils.Standardiser;
     using Newtonsoft.Json;
     using System;
+    using System.Linq;
 
     /// <summary>The class represents a soil sample.</summary>
     [Serializable]
@@ -94,7 +94,8 @@
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, Layers.BDMapped(physical, this.Thickness)), this.Thickness);
+                        var bd = SoilUtilities.MapConcentration(physical.BD, physical.Thickness, Thickness, physical.BD.Last());
+                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, bd), this.Thickness);
                     }
                     else
                     {
@@ -117,7 +118,8 @@
                 {
                     if (this.SWUnits == SWUnitsEnum.Volumetric)
                     {
-                        return MathUtilities.Divide(this.SW, Layers.BDMapped(physical, this.Thickness));
+                        var bd = SoilUtilities.MapConcentration(physical.BD, physical.Thickness, Thickness, physical.BD.Last());
+                        return MathUtilities.Divide(this.SW, bd);
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
@@ -125,7 +127,8 @@
                     }
                     else
                     {
-                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, Layers.BDMapped(physical, this.Thickness)), this.Thickness);
+                        var bd = SoilUtilities.MapConcentration(physical.BD, physical.Thickness, Thickness, physical.BD.Last());
+                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, bd), this.Thickness);
                     }
                 }
                 return null;
@@ -147,7 +150,8 @@
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return MathUtilities.Multiply(this.SW, Layers.BDMapped(physical, this.Thickness));
+                        var bd = SoilUtilities.MapConcentration(physical.BD, physical.Thickness, Thickness, physical.BD.Last());
+                        return MathUtilities.Multiply(this.SW, bd);
                     }
                     else
                     {

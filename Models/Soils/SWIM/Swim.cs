@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
-using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
 
 namespace Models.Soils
@@ -2323,8 +2322,8 @@ namespace Models.Soils
                 for (int j = 0; j < soluteParam.FIP.Length; j++)
                     if (soluteParam.FIP[j] < 1.0)
                         throw new Exception("In the current implementation FIP must be equal to 1 to enforce a linear isotherm. Nonlinear isotherms were causing mass balance errors - this might be resolved in the future, " + solute_names[i]);
-                fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
-                exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
+                fip[i] = SoilUtilities.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
+                exco[i] = SoilUtilities.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 ex[i] = MathUtilities.Multiply(exco[i], soilPhysical.BD);
                 cslgw[i] = soluteParam.WaterTableConcentration;
                 d0[i] = soluteParam.D0;
@@ -5769,6 +5768,13 @@ namespace Models.Soils
         public void Tillage(string tillageType)
         {
             throw new NotImplementedException("SWIM doesn't implement a tillage method");
+        }
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
+        {
+
         }
     }
 }

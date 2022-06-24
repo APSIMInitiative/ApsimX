@@ -831,5 +831,28 @@ namespace Models.WaterModel
                 new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
             });
         }
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
+        {
+            SetThickness(targetThickness);
+        }
+
+        /// <summary>Sets the soil water thickness.</summary>
+        /// <param name="thickness">Thickness to change soil water to.</param>
+        private void SetThickness(double[] thickness)
+        {
+            if (!MathUtilities.AreEqual(thickness, Thickness))
+            {
+                KLAT = SoilUtilities.MapConcentration(KLAT, Thickness, thickness, MathUtilities.LastValue(KLAT));
+                SWCON = SoilUtilities.MapConcentration(SWCON, Thickness, thickness, 0.0);
+
+                Thickness = thickness;
+            }
+            if (SWCON == null)
+                SWCON = MathUtilities.CreateArrayOfValues(0.3, Thickness.Length);
+            MathUtilities.ReplaceMissingValues(SWCON, 0.0);
+        }
     }
 }

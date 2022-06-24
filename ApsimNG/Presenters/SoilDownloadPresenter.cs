@@ -6,7 +6,6 @@ using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Nutrients;
-using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
 using System;
@@ -194,7 +193,7 @@ namespace UserInterface.Presenters
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
                     var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
-                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
+                    var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
                     var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
                     row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
                     row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");

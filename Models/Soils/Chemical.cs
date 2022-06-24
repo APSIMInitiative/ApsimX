@@ -4,7 +4,6 @@
     using Models.Core;
     using Models.Interfaces;
     using Models.Soils.Nutrients;
-    using Models.Soils.Standardiser;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -117,9 +116,9 @@
                 {
                     var standardisedSolute = solute.Clone();
                     if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
-                        standardisedSolute.InitialValues = Layers.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
+                        standardisedSolute.InitialValues = SoilUtilities.MapMass(solute.InitialValues, solute.Thickness, Thickness, false);
                     else
-                        standardisedSolute.InitialValues = Layers.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
+                        standardisedSolute.InitialValues = SoilUtilities.MapConcentration(solute.InitialValues, solute.Thickness, Thickness, 1.0);
                     standardisedSolute.Thickness = Thickness;
                     solutes.Add(standardisedSolute);
                 }
@@ -127,6 +126,36 @@
             return solutes;
         }
 
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
+        {
+            SetThickness(targetThickness);
+            if (PHUnits == PHUnitsEnum.CaCl2)
+            {
+                PH = SoilUtilities.PHCaCl2ToWater(PH);
+                PHUnits = PHUnitsEnum.Water;
+            }
+
+            EC = MathUtilities.FillMissingValues(EC, Thickness.Length, 0);
+            ESP = MathUtilities.FillMissingValues(ESP, Thickness.Length, 0);
+            PH = MathUtilities.FillMissingValues(PH, Thickness.Length, 7.0);
+        }
+
+
+        /// <summary>Sets the chemical thickness.</summary>
+        /// <param name="targetThickness">The thickness to change the chemical to.</param>
+        private void SetThickness(double[] targetThickness)
+        {
+            if (!MathUtilities.AreEqual(targetThickness, Thickness))
+            {
+                PH = SoilUtilities.MapConcentration(PH, Thickness, targetThickness, 7.0);
+                EC = SoilUtilities.MapConcentration(EC, Thickness, targetThickness, MathUtilities.LastValue(EC));
+                ESP = SoilUtilities.MapConcentration(ESP, Thickness, targetThickness, MathUtilities.LastValue(ESP));
+                PH = SoilUtilities.MapConcentration(PH, Thickness, targetThickness, MathUtilities.LastValue(PH));
+                Thickness = targetThickness;
+            }
+        }
 
     }
 }

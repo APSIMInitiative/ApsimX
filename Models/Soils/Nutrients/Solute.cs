@@ -162,5 +162,38 @@ namespace Models.Soils.Nutrients
             return new TabularData(Name, columns);
         }
 
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
+        {
+            SetThickness(targetThickness);
+
+            double defaultValue;
+            if (Name.Equals("NO3", StringComparison.InvariantCultureIgnoreCase))
+                defaultValue = 0.1;
+            else if (Name.Equals("NH4", StringComparison.InvariantCultureIgnoreCase))
+                defaultValue = 0.01;
+            else
+                defaultValue = 0.0;
+
+            InitialValues = MathUtilities.FillMissingValues(InitialValues, Thickness.Length, defaultValue);
+        }
+
+        /// <summary>Sets the sample thickness.</summary>
+        /// <param name="thickness">The thickness to change the sample to.</param>
+        private void SetThickness(double[] thickness)
+        {
+            if (!MathUtilities.AreEqual(thickness, Thickness))
+            {
+                if (Exco != null)
+                    Exco = SoilUtilities.MapConcentration(Exco, Thickness, thickness, 0.2);
+                if (FIP != null)
+                    FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
+
+                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, 1.0);
+                InitialValuesUnits = Solute.UnitsEnum.ppm;
+                Thickness = thickness;
+            }
+        }
     }
 }

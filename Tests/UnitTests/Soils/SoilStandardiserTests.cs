@@ -3,7 +3,6 @@
     using Models.Core;
     using Models.Soils;
     using Models.Soils.Nutrients;
-    using Models.Soils.Standardiser;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -76,7 +75,7 @@
             };
             Utilities.InitialiseModel(soil);
 
-            SoilStandardiser.Standardise(soil);
+            soil.Standardise();
 
             var water = soil.Children[0] as Physical;
             var soilOrganicMatter = soil.Children[3] as Organic;
@@ -160,7 +159,7 @@
             };
             Utilities.InitialiseModel(soil);
 
-            SoilStandardiser.Standardise(soil);
+            soil.Standardise();
 
             var water = soil.Children[0] as Physical;
             var soilOrganicMatter = soil.Children[3] as Organic;
@@ -183,7 +182,7 @@
             Soil soil = CreateSimpleSoil();
             Utilities.InitialiseModel(soil);
 
-            SoilStandardiser.Standardise(soil);
+            soil.Standardise();
 
             var chemical = soil.Children[3] as Chemical;
             var organic = soil.Children[4] as Organic;

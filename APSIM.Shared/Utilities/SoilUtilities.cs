@@ -1,6 +1,7 @@
 ﻿namespace APSIM.Shared.Utilities
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>Various soil utilities.</summary>
@@ -272,6 +273,130 @@
         {
             // pH in CaCl = (pH in water + 0.1375) / 1.1045
             return MathUtilities.Divide_Value(MathUtilities.AddValue(values, 0.1375), 1.1045);
+        }
+
+        /// <summary>Map soil variables (using concentration) from one layer structure to another.</summary>
+        /// <param name="fromValues">The from values.</param>
+        /// <param name="fromThickness">The from thickness.</param>
+        /// <param name="toThickness">To thickness.</param>
+        /// <param name="defaultValueForBelowProfile">The default value for below profile.</param>
+        /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <returns></returns>
+        public static double[] MapConcentration(double[] fromValues, double[] fromThickness,
+                                                  double[] toThickness,
+                                                  double defaultValueForBelowProfile,
+                                                  bool allowMissingValues = false)
+        {
+            if (fromValues != null)
+            {
+                if (fromValues.Length != fromThickness.Length && !allowMissingValues)
+                    throw new Exception($"In MapConcentration, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
+                if (fromValues == null || fromThickness == null)
+                    return null;
+
+                // convert from values to a mass basis with a dummy bottom layer.
+                List<double> values = new List<double>();
+                List<double> thickness = new List<double>();
+                for (int i = 0; i < fromValues.Length; i++)
+                {
+                    if (!allowMissingValues && double.IsNaN(fromValues[i]))
+                        break;
+
+                    values.Add(fromValues[i]);
+                    thickness.Add(fromThickness[i]);
+                }
+
+                values.Add(defaultValueForBelowProfile);
+                thickness.Add(30000);
+                double[] massValues = MathUtilities.Multiply(values.ToArray(), thickness.ToArray());
+
+                double[] newValues = MapMass(massValues, thickness.ToArray(), toThickness, allowMissingValues);
+
+                // Convert mass back to concentration and return
+                return MathUtilities.Divide(newValues, toThickness);
+            }
+            return null;
+        }
+
+        /// <summary>Map soil variables from one layer structure to another.</summary>
+        /// <param name="fromValues">The f values.</param>
+        /// <param name="fromThickness">The f thickness.</param>
+        /// <param name="toThickness">To thickness.</param>
+        /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <returns>The from values mapped to the specified thickness</returns>
+        public static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
+                                       bool allowMissingValues = false)
+        {
+            if (fromValues == null || fromThickness == null)
+                return null;
+
+            double[] FromThickness = MathUtilities.RemoveMissingValuesFromBottom((double[])fromThickness.Clone());
+            double[] FromValues = (double[])fromValues.Clone();
+
+            if (FromValues == null)
+                return null;
+
+            if (!allowMissingValues)
+            {
+                // remove missing layers.
+                for (int i = 0; i < FromValues.Length; i++)
+                {
+                    if (double.IsNaN(FromValues[i]) || i >= FromThickness.Length || double.IsNaN(FromThickness[i]))
+                    {
+                        FromValues[i] = double.NaN;
+                        if (i == FromThickness.Length)
+                            Array.Resize(ref FromThickness, i + 1);
+                        FromThickness[i] = double.NaN;
+                    }
+                }
+                FromValues = MathUtilities.RemoveMissingValuesFromBottom(FromValues);
+                FromThickness = MathUtilities.RemoveMissingValuesFromBottom(FromThickness);
+            }
+
+            if (MathUtilities.AreEqual(FromThickness, toThickness))
+                return FromValues;
+
+            if (FromValues.Length != FromThickness.Length)
+                return null;
+
+            // Remapping is achieved by first constructing a map of
+            // cumulative mass vs depth
+            // The new values of mass per layer can be linearly
+            // interpolated back from this shape taking into account
+            // the rescaling of the profile.
+
+            double[] CumDepth = new double[FromValues.Length + 1];
+            double[] CumMass = new double[FromValues.Length + 1];
+            CumDepth[0] = 0.0;
+            CumMass[0] = 0.0;
+            for (int Layer = 0; Layer < FromThickness.Length; Layer++)
+            {
+                CumDepth[Layer + 1] = CumDepth[Layer] + FromThickness[Layer];
+                CumMass[Layer + 1] = CumMass[Layer] + FromValues[Layer];
+            }
+
+            //look up new mass from interpolation pairs
+            double[] ToMass = new double[toThickness.Length];
+            for (int Layer = 1; Layer <= toThickness.Length; Layer++)
+            {
+                double LayerBottom = MathUtilities.Sum(toThickness, 0, Layer, 0.0);
+                double LayerTop = LayerBottom - toThickness[Layer - 1];
+                bool DidInterpolate;
+                double CumMassTop = MathUtilities.LinearInterpReal(LayerTop, CumDepth,
+                    CumMass, out DidInterpolate);
+                double CumMassBottom = MathUtilities.LinearInterpReal(LayerBottom, CumDepth,
+                    CumMass, out DidInterpolate);
+                ToMass[Layer - 1] = CumMassBottom - CumMassTop;
+            }
+
+            if (!allowMissingValues)
+            {
+                for (int i = 0; i < ToMass.Length; i++)
+                    if (double.IsNaN(ToMass[i]))
+                        ToMass[i] = 0.0;
+            }
+
+            return ToMass;
         }
     }
 }

@@ -4,7 +4,6 @@ using Models.Climate;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
-using Models.Soils.Standardiser;
 using Models.Surface;
 using Newtonsoft.Json;
 using System;
@@ -760,15 +759,17 @@ namespace Models.Soils
 
         #region Water Balance Methods
 
-        internal void SetLayerThickness(double[] targetThickness)
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
         {
             CFlow = MathUtilities.Multiply_Value(CFlow, 1e-10);
-            CFlow = Layers.MapConcentration(CFlow, Thickness, targetThickness, CFlow[CFlow.Length - 1]);
-            XFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, XFlow[XFlow.Length - 1]);
-            PsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, PsiBub[PsiBub.Length - 1]);
-            UpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, UpperRepellentWC[UpperRepellentWC.Length - 1]);
-            LowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, LowerRepellentWC[LowerRepellentWC.Length - 1]);
-            MinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, MinRepellancyFactor[MinRepellancyFactor.Length - 1]);
+            CFlow = SoilUtilities.MapConcentration(CFlow, Thickness, targetThickness, CFlow[CFlow.Length - 1]);
+            XFlow = SoilUtilities.MapConcentration(XFlow, Thickness, targetThickness, XFlow[XFlow.Length - 1]);
+            PsiBub = SoilUtilities.MapConcentration(PsiBub, Thickness, targetThickness, PsiBub[PsiBub.Length - 1]);
+            UpperRepellentWC = SoilUtilities.MapConcentration(UpperRepellentWC, Thickness, targetThickness, UpperRepellentWC[UpperRepellentWC.Length - 1]);
+            LowerRepellentWC = SoilUtilities.MapConcentration(LowerRepellentWC, Thickness, targetThickness, LowerRepellentWC[LowerRepellentWC.Length - 1]);
+            MinRepellancyFactor = SoilUtilities.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, MinRepellancyFactor[MinRepellancyFactor.Length - 1]);
             Thickness = targetThickness;
         }
 
