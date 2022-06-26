@@ -423,7 +423,7 @@
                 LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition, !LegendOutsideGraph);
                 var xAxis = Axis.FirstOrDefault(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top);
                 var yAxis = Axis.FirstOrDefault(a => a.Position == AxisPosition.Left || a.Position == AxisPosition.Right);
-                return new APSIM.Shared.Documentation.Graph(Name, GetSeries(definitions), xAxis, yAxis, legend);
+                return new APSIM.Shared.Documentation.Graph(Name, FullPath, GetSeries(definitions), xAxis, yAxis, legend);
             }
             catch (Exception err)
             {
