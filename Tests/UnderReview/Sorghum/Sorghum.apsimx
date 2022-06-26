@@ -35340,10 +35340,10 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Experiment: LE20\n\nDescription: LE20 - Density\n\nStart Date: 9/11/1998\n\nEnd Date: 7/03/1999\n\n|SimulationName |Density        |\n|---------------|---------------|\n|Density_1      | 2 plants/m2   |\n|Density_2      | 4 plants/m2   |\n|Density_2      | 8 plants/m2   |\n|Density_3      |16 plants/m2   |\n",
+                  "Text": "Dynamic Tillering is still under development.\n\nExperiment: LE20\n\nDescription: LE20 - Density\n\nStart Date: 9/11/1998\n\nEnd Date: 7/03/1999\n\n|SimulationName |Density        |\n|---------------|---------------|\n|Density_1      | 2 plants/m2   |\n|Density_2      | 4 plants/m2   |\n|Density_2      | 8 plants/m2   |\n|Density_3      |16 plants/m2   |\n",
                   "Name": "LE20 Description",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35361,7 +35361,7 @@
                       "Values": null,
                       "Name": "Density_1",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -35375,7 +35375,7 @@
                       "Values": null,
                       "Name": "Density_2",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -35389,7 +35389,7 @@
                       "Values": null,
                       "Name": "Density_3",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -35403,11 +35403,11 @@
                       "Values": null,
                       "Name": "Density_4",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -35422,7 +35422,7 @@
                       "End": "1999-02-21T00:00:00",
                       "Name": "Clock",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -35430,7 +35430,7 @@
                       "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -35440,14 +35440,14 @@
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                       "Name": "SoilArbitrator",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -35467,7 +35467,7 @@
                           "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35479,7 +35479,7 @@
                           "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35526,7 +35526,7 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -35534,25 +35534,25 @@
                               "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n\r\n    public class Script : Model\r\n    {\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            if (crop.IsReadyForHarvesting)\r\n            {\r\n                crop.Harvest();\r\n                crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "HarvestingRule",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
                           "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35567,7 +35567,7 @@
                           ],
                           "Name": "FertiliserSchedule",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35954,7 +35954,7 @@
                           ],
                           "Name": "IrrigationSchedule",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35975,7 +35975,7 @@
                             }
                           ],
                           "Name": "Automatic irrigation based on water deficit",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -35990,14 +35990,14 @@
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "ResourceName": "Sorghum",
                           "Name": "Sorghum",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36010,7 +36010,7 @@
                           "InitialCNR": 80.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -36144,11 +36144,11 @@
                                   "XFMetadata": null,
                                   "Name": "SorghumSoil",
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36188,21 +36188,21 @@
                               "KLAT": null,
                               "ResourceName": "WaterBalance",
                               "Name": "SoilWater",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "ResourceName": "Nutrient",
                               "Name": "Nutrient",
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36266,7 +36266,7 @@
                               "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36318,7 +36318,7 @@
                               "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36355,7 +36355,7 @@
                               "PHUnits": 0,
                               "Name": "Initial Soil",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -36366,23 +36366,23 @@
                               "RelativeTo": null,
                               "Name": "Initial water",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
