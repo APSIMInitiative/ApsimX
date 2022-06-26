@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 339,
-  "Version": 150,
+  "ExplorerWidth": 285,
+  "Version": 151,
   "Name": "Simulations",
   "Children": [
     {
@@ -5033,6 +5033,7 @@
             {
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
               "TilleringMethod": 0,
+              "FertileTillerNumber": 0.0,
               "InitialDMWeight": 0.01,
               "InitialLAI": 380.0,
               "InitialSLN": 1.7,
@@ -5091,7 +5092,6 @@
                   "$type": "Models.PMF.Struct.LeafCulms, Models",
                   "dltLeafNo": 0.0,
                   "Culms": [],
-                  "TilleringMethod": 0.0,
                   "FinalLeafNo": 0.0,
                   "dltPotentialLAI": 0.0,
                   "dltStressedLAI": 0.0,
@@ -5100,7 +5100,8 @@
                     {
                       "$type": "Models.PMF.Struct.DynamicTillering, Models",
                       "CalculatedTillerNumber": 0.0,
-                      "FertileTillerNumber": 0.0,
+                      "CurrentTillerNumber": 0.0,
+                      "DltTillerNumber": 0.0,
                       "SupplyDemandRatio": 0.0,
                       "Name": "DynamicTillering",
                       "Children": [
@@ -5239,6 +5240,7 @@
                     {
                       "$type": "Models.PMF.Struct.FixedTillering, Models",
                       "FertileTillerNumber": 0.0,
+                      "CurrentTillerNumber": 0.0,
                       "Name": "FixedTillering",
                       "Children": [
                         {
