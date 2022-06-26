@@ -397,9 +397,8 @@ namespace Models.PMF.Struct
 				radiationAverages = new List<double>();
 				plantsPerMetre = data.RowSpacing / 1000.0 * data.SkipDensityScale;
                 //plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
-
-                //FertileTillerNumber = data.BudNumber;
                 CurrentTillerNumber = 0.0;
+				CalculatedTillerNumber = 0.0;
 			}
 		}
 	}

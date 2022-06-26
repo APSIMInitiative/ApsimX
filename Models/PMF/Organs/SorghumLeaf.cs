@@ -148,7 +148,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
-        /// <summary>Gets or sets the Tillering Method.</summary>
+        /// <summary>Gets the Tillering Method.</summary>
         [Description("Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FertileTillerNumber, 1 = DynamicTillering")]
         public int TilleringMethod { get; set; }
 

@@ -231,10 +231,10 @@ namespace Models.PMF.Struct
 		{
 			if (data.Plant == plant)
 			{
-				if (leaf.TilleringMethod == -1)
+				if (data.TilleringMethod == -1)
 					FertileTillerNumber = CalculateFtn();
 				else
-					FertileTillerNumber = leaf.FertileTillerNumber;
+					FertileTillerNumber = data.FTN;
                 CurrentTillerNumber = 0.0;
 			}
 		}
