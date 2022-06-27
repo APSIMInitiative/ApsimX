@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 392,
+  "ExplorerWidth": 285,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -1706,6 +1706,13 @@
                         }
                       ],
                       "Name": "Operations",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Irrigation, Models",
+                      "Name": "Irrigation",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
