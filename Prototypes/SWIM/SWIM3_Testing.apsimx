@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 381,
   "Version": 150,
   "Name": "Simulations",
   "Children": [
@@ -107,7 +107,7 @@
           "AllColumns": true,
           "Name": "PredictedObserved",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
