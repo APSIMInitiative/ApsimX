@@ -43,7 +43,6 @@ namespace Models.Functions
             totalLaiEqlbLight = 0;
             avgLaiEquilibLight = 0;
             laiEqlbLightTodayQ = new Queue<double>();
-
         }
 
         /// <summary>Called when [EndCrop].</summary>
@@ -54,7 +53,7 @@ namespace Models.Functions
         {
             totalLaiEqlbLight = 0;
             avgLaiEquilibLight = 0;
-            laiEqlbLightTodayQ.Clear();
+            laiEqlbLightTodayQ?.Clear();
         }
 
         /// <summary>Gets the value.</summary>

@@ -28,7 +28,7 @@ namespace Models.PMF.Organs
     {
         /// <summary>The plant</summary>
         [Link]
-        private Plant plant = null; //todo change back to private
+        private Plant plant = null; 
 
         [Link]
         private ISummary summary = null;
@@ -148,9 +148,14 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
-        /// <summary>Gets or sets the R50.</summary>
-        [Description("Tillering Method: 0 = Fixed - uses FTN, 1 = Dynamic")]
-        public int TilleringMethod { get; set; } = 0;
+        /// <summary>Gets the Tillering Method.</summary>
+        [Description("Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FertileTillerNumber, 1 = DynamicTillering")]
+        public int TilleringMethod { get; set; }
+
+        /// <summary>Determined by the tillering method chosen.</summary>
+        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        [Description("")]
+        public double FertileTillerNumber { get; set; }
 
         /// <summary>The initial biomass dry matter weight</summary>
         [Description("Initial leaf dry matter weight")]
@@ -959,8 +964,7 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leafInitialised = true;
-                culms.TilleringMethod = TilleringMethod;
-
+                
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
                 LAI = InitialLAI * SowingDensity.ConvertSqM2SqMM();
