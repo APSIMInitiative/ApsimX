@@ -91,7 +91,7 @@ namespace Models.Soils
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return SoilUtilities.kgha2ppm(physical.Thickness, physical.BD, kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(Physical.Thickness, Physical.BD, kgha); } }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -112,7 +112,7 @@ namespace Models.Soils
             else if (InitialValuesUnits == UnitsEnum.kgha)
                 kgha = ReflectionUtilities.Clone(InitialValues) as double[];
             else
-                kgha = SoilUtilities.ppm2kgha(Thickness, physical.BD, InitialValues);
+                kgha = SoilUtilities.ppm2kgha(Thickness, Physical.BD, InitialValues);
         }
 
         /// <summary>Setter for kgha.</summary>
@@ -166,8 +166,6 @@ namespace Models.Soils
         /// <param name="targetThickness">Target thickness.</param>
         public void Standardise(double[] targetThickness)
         {
-            physical = FindInScope<IPhysical>();
-
             SetThickness(targetThickness);
 
             double defaultValue;
@@ -198,6 +196,17 @@ namespace Models.Soils
                 InitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, thickness, 1.0);
                 InitialValuesUnits = Solute.UnitsEnum.ppm;
                 Thickness = thickness;
+            }
+        }
+
+        /// <summary>The soil physical node.</summary>
+        private IPhysical Physical
+        {
+            get
+            {
+                if (physical == null)
+                    physical = FindInScope<IPhysical>();
+                return physical;
             }
         }
     }

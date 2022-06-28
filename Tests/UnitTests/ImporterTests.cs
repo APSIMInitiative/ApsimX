@@ -125,7 +125,7 @@
             Assert.AreEqual(s.Name, "Soil");
 
             Water initWater = s.Children[0] as Water;
-            Assert.AreEqual(initWater.FractionFull, 0.5);
+            Assert.AreEqual(initWater.FractionFull, 0.5, 0.000000001);
             Assert.IsTrue(initWater.FilledFromTop);
 
             Physical w = s.Children[1] as Physical;
@@ -147,18 +147,6 @@
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
-
-            var no3 = s.Children[7] as Solute;
-            Assert.AreEqual(no3.Name, "NO3");
-            Assert.AreEqual(no3.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(no3.InitialValues, new double[] { 6.5, 2.1, 2.1, 1.0 });
-            Assert.AreEqual(no3.InitialValuesUnits, Solute.UnitsEnum.kgha);
-
-            var nh4 = s.Children[8] as Solute;
-            Assert.AreEqual(nh4.Name, "NH4");
-            Assert.AreEqual(nh4.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(nh4.InitialValues, new double[] { 0.5, 0.1, 0.1, 0.2 });
-            Assert.AreEqual(nh4.InitialValuesUnits, Solute.UnitsEnum.kgha);
 
             SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
             Assert.AreEqual(crop.LL, new double[] { 0.29, 0.29, 0.32, 0.38 });

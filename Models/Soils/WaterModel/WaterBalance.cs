@@ -219,8 +219,11 @@ namespace Models.WaterModel
             get { return waterMM; } 
             set 
             { 
-                waterMM = value; 
-                waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
+                waterMM = value;
+                if (value == null)
+                    waterVolumetric = null;
+                else
+                    waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
             } 
         }
 

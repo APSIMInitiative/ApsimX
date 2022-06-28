@@ -125,24 +125,38 @@ namespace Models.Core.ApsimFile
                     {
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
-                        initWater["$type"] = "Models.Soils.InitialWater, Models";
-                        JsonUtilities.RenameModel(initWater as JObject, "Initial water");
-                        initWater["PercentMethod"] = "FilledFromTop";
+                        initWater["$type"] = "Models.Soils.Water, Models";
+                        JsonUtilities.RenameModel(initWater as JObject, "Water");
+                        initWater["FilledFromTop"] = true;
                         initWater["FractionFull"] = 1;
-                        initWater["DepthWetSoil"] = "NaN";
                         soilChildren.Add(initWater);
                         res = true;
                     }
                     if (sample == null)
                     {
-                        sample = new JObject();
-                        sample["$type"] = "Models.Soils.Sample, Models";
-                        JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
-                        sample["Thickness"] = new JArray(new double[] { 1800 });
-                        sample["NO3N"] = new JArray(new double[] { 3 });
-                        sample["NH4"] = new JArray(new double[] { 1 });
-                        sample["SWUnits"] = "Volumetric";
-                        soilChildren.Add(sample);
+                        soilChildren.Add(new JObject
+                        {
+                            ["$type"] = "Models.Soils.Solute, Models",
+                            ["Name"] = "NO3",
+                            ["Thickness"] = new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(new double[] { 3 })
+                        });
+
+                        soilChildren.Add(new JObject
+                        {
+                            ["$type"] = "Models.Soils.Solute, Models",
+                            ["Name"] = "NH4",
+                            ["Thickness"] = new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(new double[] { 1 })
+                        });
+
+                        soilChildren.Add(new JObject
+                        {
+                            ["$type"] = "Models.Soils.Solute, Models",
+                            ["Name"] = "Urea",
+                            ["Thickness"] = new JArray(new double[] { 1800 }),
+                            ["InitialValues"] = new JArray(new double[] { 0.0 })
+                        });
                         res = true;
                     }
                     return res;
@@ -4071,7 +4085,7 @@ namespace Models.Core.ApsimFile
                         soilChildren.Add(CreateSoluteToken(tokensContainingValues, "NO3", bd));
                         var labileP = CreateSoluteToken(tokensContainingValues, "LabileP", bd);
                         var unavailableP = CreateSoluteToken(tokensContainingValues, "UnavailableP", bd);
-                        if (labileP != null && unavailableP != null && labileP["Values"] as JArray != null && unavailableP["Values"] as JArray != null)
+                        if (labileP != null && unavailableP != null && labileP["InitialValues"] as JArray != null && unavailableP["InitialValues"] as JArray != null)
                         {
                             soilChildren.Add(labileP);
                             soilChildren.Add(unavailableP);
@@ -4104,7 +4118,7 @@ namespace Models.Core.ApsimFile
                     foreach (JObject sample in JsonUtilities.ChildrenRecursively(soil, "Sample"))
                     {
                         var sw = sample["SW"] as JArray;
-                        if (MathUtilities.ValuesInArray(sw.Values<double>()))
+                        if (sw != null &&MathUtilities.ValuesInArray(sw.Values<double>()))
                         {
                             // Turn a sample into a Water node.
                             sample.Remove("NO3");
@@ -4122,7 +4136,6 @@ namespace Models.Core.ApsimFile
                             water["$type"] = "Models.Soils.Water, Models";
                             water["InitialValues"] = sample["SW"];
                             sample.Remove("SW");
-                            //soilChildren.Add(water);
                         }
                         else
                             sample.Remove();
@@ -4131,10 +4144,15 @@ namespace Models.Core.ApsimFile
                     // Convert InitWater to a Water node.
                     foreach (var initWater in JsonUtilities.ChildrenOfType(soil, "InitialWater"))
                     {
-                        bool filledFromTop = initWater["PercentMethod"].Value<int>() == 1;
+                        var percentMethod = initWater["PercentMethod"].Value<string>();
+                        bool filledFromTop = percentMethod == "1" || percentMethod == "FilledFromTop";
                         double fractionFull = initWater["FractionFull"].Value<double>();
-                        double depthWetSoil = initWater["DepthWetSoil"].Value<double>();
-                        string relativeTo = initWater["RelativeTo"].ToString();
+                        double depthWetSoil = double.NaN;
+                        if (initWater["DepthWetSoil"] != null)
+                            depthWetSoil = initWater["DepthWetSoil"].Value<double>();
+                        string relativeTo = "LL15";
+                        if (initWater["RelativeTo"] != null)
+                            relativeTo = initWater["RelativeTo"].ToString();
                         double[] thickness = physical["Thickness"].Values<double>().ToArray();
                         double[] ll15 = physical["LL15"].Values<double>().ToArray();
                         double[] dul = physical["DUL"].Values<double>().ToArray();
@@ -4172,6 +4190,7 @@ namespace Models.Core.ApsimFile
                         }
                         else
                         {
+                            initWater.Remove();
                         }
 
                         if (!double.IsNaN(depthWetSoil))
@@ -4225,26 +4244,44 @@ namespace Models.Core.ApsimFile
             // Rename variables.
             var variableRenames = new Tuple<string, string>[]
             {
-                new Tuple<string, string>("[Swim3].SWmm", "[Soil].Water.MM"),
-                new Tuple<string, string>("[Swim3].SW", "[Soil].Water.Volumetric"),
                 new Tuple<string, string>("[Soil].Swim3.SWmm", "[Soil].Water.MM"),
                 new Tuple<string, string>("[Soil].Swim3.SW", "[Soil].Water.Volumetric"),
+                new Tuple<string, string>("[Swim3].SWmm", "[Soil].Water.MM"),
+                new Tuple<string, string>("[Swim3].SW", "[Soil].Water.Volumetric"),
 
-                new Tuple<string, string>("[SoilWater].SWmm", "[Soil].Water.MM"),
-                new Tuple<string, string>("[SoilWater].SW", "[Soil].Water.Volumetric"),
                 new Tuple<string, string>("[Soil].SoilWater.SWmm", "[Soil].Water.MM"),
                 new Tuple<string, string>("[Soil].SoilWater.SW", "[Soil].Water.Volumetric"),
+                new Tuple<string, string>("[SoilWater].SWmm", "[Soil].Water.MM"),
+                new Tuple<string, string>("[SoilWater].SW", "[Soil].Water.Volumetric"),
 
                 new Tuple<string, string>("[Swim3].Cl", "[Soil].Cl"),
 
-                new Tuple<string, string>("[Nutrient].NO3.Denitrification", "[Nutrient].Denitrification"),
-                new Tuple<string, string>("[Nutrient].NH4.Nitrification", "[Nutrient].Nitrification"),
+                new Tuple<string, string>("[Soil].Nutrient.NO3.Denitrification", "[Nutrient].Denitrification"),
+                new Tuple<string, string>("[Soil].Nutrient.NH4.Nitrification", "[Nutrient].Nitrification"),
+                new Tuple<string, string>("[Soil].Nutrient.LabileP.PFlow", "[Nutrient].LabileToUnavailablePFlow"),
+                new Tuple<string, string>("[Soil].Nutrient.UnavailableP.PFlow", "[Nutrient].UnavailableToLabilePFlow"),
                 new Tuple<string, string>("[Soil].Nutrient.NO3", "[Soil].NO3"),
                 new Tuple<string, string>("[Soil].Nutrient.NH4", "[Soil].NH4"),
                 new Tuple<string, string>("[Soil].Nutrient.Urea", "[Soil].Urea"),
+                new Tuple<string, string>("[Nutrient].NO3.Denitrification", "[Nutrient].Denitrification"),
+                new Tuple<string, string>("[Nutrient].NH4.Nitrification", "[Nutrient].Nitrification"),
+                new Tuple<string, string>("[Nutrient].LabileP.PFlow", "[Nutrient].LabileToUnavailablePFlow"),
+                new Tuple<string, string>("[Nutrient].UnavailableP.PFlow", "[Nutrient].UnavailableToLabilePFlow"),
                 new Tuple<string, string>("[Nutrient].NO3", "[Soil].NO3"),
                 new Tuple<string, string>("[Nutrient].NH4", "[Soil].NH4"),
                 new Tuple<string, string>("[Nutrient].Urea", "[Soil].Urea"),
+
+                new Tuple<string, string>("[Soil].Chemical.LabileP", "[LabileP].InitialValues"),
+                new Tuple<string, string>("[Soil].Chemical.UnavailableP", "[UnavailableP].InitialValues"),
+                new Tuple<string, string>("[Chemical].LabileP", "[LabileP].InitialValues"),
+                new Tuple<string, string>("[Chemical].UnavailableP", "[UnavailableP].InitialValues"),
+
+                new Tuple<string, string>("[Soil].Nutrient.LabileP", "[Soil].LabileP"),
+                new Tuple<string, string>("[Soil].Nutrient.UnavailableP", "[Soil].UnavailableP"),
+                new Tuple<string, string>("[Nutrient].LabileP", "[Soil].LabileP"),
+                new Tuple<string, string>("[Nutrient].UnavailableP", "[Soil].UnavailableP"),
+
+
             };
             JsonUtilities.RenameVariables(root, variableRenames);
         }

@@ -10,7 +10,7 @@
     [Serializable]
     [ValidParent(ParentType = typeof(Solute))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     public class PFlow : Model
     {
         [Link(Type = LinkType.Child, ByName = true)]

@@ -140,7 +140,7 @@
                 targetThickness = layerStructure.Thickness;
 
             physical.Standardise(targetThickness);
-            chemical.Standardise(targetThickness);
+            chemical?.Standardise(targetThickness);
             organic.Standardise(targetThickness);
             water.Standardise(targetThickness);
             waterBalance.Standardise(targetThickness);

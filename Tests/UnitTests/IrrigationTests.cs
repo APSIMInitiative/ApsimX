@@ -24,7 +24,7 @@
             events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -46,7 +46,7 @@
             events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -106,7 +106,14 @@
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 InitialValues = new double[] { 23, 7, 2, 1, 1, 1 },
                                 InitialValuesUnits = Solute.UnitsEnum.kgha
-                            },                            
+                            },
+                            new Solute
+                            {
+                                Name = "Urea",
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                                InitialValues = new double[] { 0, 0, 0, 0, 0, 0 },
+                                InitialValuesUnits = Solute.UnitsEnum.kgha
+                            },                             
                             new Water()
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
@@ -137,10 +144,7 @@
                                     new MockNutrientPool() { Name = "FOMCellulose" },
                                     new MockNutrientPool() { Name = "FOMCarbohydrate" },
                                     new MockNutrientPool() { Name = "FOMLignin" },
-                                    new MockNutrientPool() { Name = "SurfaceResidue" },
-                                    new Solute() { Name = "NO3" },
-                                    new Solute() { Name = "NH4" },
-                                    new Solute() { Name = "Urea"}
+                                    new MockNutrientPool() { Name = "SurfaceResidue" }
                                 }
                             },
                             new MockSoilTemperature(),
@@ -174,6 +178,10 @@
             links.Resolve(zone, true);
             var events = new Events(zone);
             events.ConnectEvents();
+
+            var soil = zone.Children[1] as Soil;
+            soil.Standardise();
+
             return zone;
         }
     }

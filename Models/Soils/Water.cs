@@ -51,7 +51,7 @@
 
         /// <summary>Amount water (mm)</summary>
         [Units("mm")]
-        public double[] MM => MathUtilities.Multiply(Volumetric, Thickness);
+        public double[] MM => Volumetric == null ? null : MathUtilities.Multiply(Volumetric, Thickness);
 
         /// <summary>Amount (mm/mm)</summary>
         [JsonIgnore]
@@ -75,6 +75,15 @@
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
+        /// <summary>Performs the initial checks and setup</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfSimulation")]
+        private void OnSimulationEnding(object sender, EventArgs e)
         {
             Reset();
         }
