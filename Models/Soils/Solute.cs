@@ -25,7 +25,7 @@ namespace Models.Soils
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
-        private IPhysical soilPhysical = null;
+        private IPhysical physical = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -91,7 +91,7 @@ namespace Models.Soils
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(physical.Thickness, physical.BD, kgha); } }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -112,7 +112,7 @@ namespace Models.Soils
             else if (InitialValuesUnits == UnitsEnum.kgha)
                 kgha = ReflectionUtilities.Clone(InitialValues) as double[];
             else
-                kgha = SoilUtilities.ppm2kgha(Thickness, soilPhysical.BD, InitialValues);
+                kgha = SoilUtilities.ppm2kgha(Thickness, physical.BD, InitialValues);
         }
 
         /// <summary>Setter for kgha.</summary>
@@ -166,6 +166,8 @@ namespace Models.Soils
         /// <param name="targetThickness">Target thickness.</param>
         public void Standardise(double[] targetThickness)
         {
+            physical = FindInScope<IPhysical>();
+
             SetThickness(targetThickness);
 
             double defaultValue;
@@ -176,7 +178,10 @@ namespace Models.Soils
             else
                 defaultValue = 0.0;
 
+            if (FIP != null) FIP = MathUtilities.FillMissingValues(FIP, Thickness.Length, FIP.Last());
+            if (Exco != null) Exco = MathUtilities.FillMissingValues(Exco, Thickness.Length, Exco.Last());
             InitialValues = MathUtilities.FillMissingValues(InitialValues, Thickness.Length, defaultValue);
+            Reset();
         }
 
         /// <summary>Sets the sample thickness.</summary>
@@ -190,7 +195,7 @@ namespace Models.Soils
                 if (FIP != null)
                     FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
 
-                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, 1.0);
+                InitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, thickness, 1.0);
                 InitialValuesUnits = Solute.UnitsEnum.ppm;
                 Thickness = thickness;
             }

@@ -132,6 +132,7 @@
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N2")]
+        [JsonIgnore]
         public double[] SW
         {
             get

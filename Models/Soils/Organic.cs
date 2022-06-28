@@ -87,6 +87,14 @@
         [Display(Format = "N1")]
         public double[] FOM { get; set; }
 
+        /// <summary>Organic nitrogen. Units: %</summary>
+        [Units("%")]
+        public double[] Nitrogen { get { return MathUtilities.Divide(Carbon, SoilCNRatio); } }
+
+        /// <summary>Organic carbon:nitrogen ratio</summary>
+        [Units("%")]
+        public double[] CNR { get { return MathUtilities.Divide(Carbon, Nitrogen); } }
+
         /// <summary>Carbon metadata</summary>
         public string[] CarbonMetadata { get; set; }
 

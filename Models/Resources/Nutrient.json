@@ -258,7 +258,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Soil].Organic.FInert * [Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness",
+              "Expression": "[Soil].Organic.FInert * [Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -275,7 +275,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Inert].C / [Soil].Initial.OCNR",
+              "Expression": "[Inert].C / [Soil].Organic.CNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -826,7 +826,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(([Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness -[Inert].C) * [Soil].Organic.FBiom) / (1 + [Soil].Organic.FBiom)",
+              "Expression": "(([Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness -[Inert].C) * [Soil].Organic.FBiom) / (1 + [Soil].Organic.FBiom)",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -1017,7 +1017,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "(1-[Soil].Organic.FInert)*[Soil].Initial.OC * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness - [Microbial].C",
+              "Expression": "(1-[Soil].Organic.FInert)*[Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness - [Microbial].C",
               "Name": "InitialCarbon",
               "Children": [
                 {
@@ -1034,7 +1034,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Humic].C / [Soil].Initial.OCNR",
+              "Expression": "[Humic].C / [Soil].Organic.CNR",
               "Name": "InitialNitrogen",
               "Children": [
                 {

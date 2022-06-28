@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
@@ -60,6 +61,14 @@
         /// <summary>Plant available water (mm).</summary>
         [Units("mm")]
         public double InitialPAWmm => InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW => APSoilUtilities.CalcPAWC(Physical.Thickness, Physical.LL15, Volumetric, null);
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm => MathUtilities.Multiply(PAW, Physical.Thickness);
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -273,6 +282,7 @@
         public void Standardise(double[] targetThickness)
         {
             SetThickness(targetThickness);
+            Reset();
         }
 
         /// <summary>Sets the sample thickness.</summary>
@@ -281,8 +291,8 @@
         {
             if (!MathUtilities.AreEqual(thickness, Thickness))
             {
-                if (Volumetric != null)
-                    Volumetric = MapSW(Volumetric, Thickness, thickness);
+                if (InitialValues != null)
+                    InitialValues = MapSW(InitialValues, Thickness, thickness);
 
                 Thickness = thickness;
             }

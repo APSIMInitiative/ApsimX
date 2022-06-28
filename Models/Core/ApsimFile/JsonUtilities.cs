@@ -667,6 +667,24 @@ namespace Models.Core.ApsimFile
                     simpleGrazing["FlexibleExpressionForTimingOfGrazing"] = expression;
                 }
             }
+            foreach (var factor in JsonUtilities.ChildrenOfType(node, "Factor"))
+            {
+                var specification = factor["Specification"].ToString();
+                if (specification != null)
+                {
+                    bool replacementFound = false;
+                    foreach (var replacement in changes)
+                    {
+                        replacementFound = specification.ToString().Contains(replacement.Item1) || replacementFound;
+                        specification = specification.ToString().Replace(replacement.Item1, replacement.Item2);
+                    }
+                    if (replacementFound)
+                    {
+                        replacementMade = true;
+                        factor["Specification"] = specification;
+                    }
+                }
+            }
 
             foreach (var compositeFactor in JsonUtilities.ChildrenOfType(node, "CompositeFactor"))
             {

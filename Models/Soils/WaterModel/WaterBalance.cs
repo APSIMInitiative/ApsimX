@@ -544,6 +544,9 @@ namespace Models.WaterModel
 
             // Now that we've finished moving water, calculate volumetric water
             waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
+
+            // Update the variable in the water model.
+            water.Volumetric = waterVolumetric;
         }
 
         /// <summary>Move water down the profile</summary>

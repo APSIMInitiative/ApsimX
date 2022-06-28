@@ -152,7 +152,6 @@
                 PH = SoilUtilities.MapConcentration(PH, Thickness, targetThickness, 7.0);
                 EC = SoilUtilities.MapConcentration(EC, Thickness, targetThickness, MathUtilities.LastValue(EC));
                 ESP = SoilUtilities.MapConcentration(ESP, Thickness, targetThickness, MathUtilities.LastValue(ESP));
-                PH = SoilUtilities.MapConcentration(PH, Thickness, targetThickness, MathUtilities.LastValue(PH));
                 Thickness = targetThickness;
             }
         }

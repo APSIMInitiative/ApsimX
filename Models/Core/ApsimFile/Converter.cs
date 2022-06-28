@@ -4033,16 +4033,20 @@ namespace Models.Core.ApsimFile
                         var tokensContainingValues = samples.Reverse<JObject>()
                                                             .Concat(new JObject[] { chemical });
 
-                        var ocValues = FindValuesToken(tokensContainingValues, "OC");
-                        if (ocValues != null)
+                        var ocValuesToken = FindValuesToken(tokensContainingValues, "OC");
+                        if (ocValuesToken != null)
                         {
-                            var oc = JsonUtilities.Parent(ocValues);
-                            var mappedValues = SoilUtilities.MapConcentration(ocValues.Values<double>().ToArray(),
-                                                                                          oc["Thickness"].Values<double>().ToArray(),
-                                                                                          organic["Thickness"].Values<double>().ToArray(),
-                                                                                          1.0, true);
-                            organic["Carbon"] = new JArray(mappedValues);
-                            organic["CarbonUnits"] = oc["OCUnits"].ToString();
+                            var oc = JsonUtilities.Parent(ocValuesToken);
+                            var ocValues = ocValuesToken.Values<double>().ToArray();
+                            if (MathUtilities.ValuesInArray(ocValues))
+                            {
+                                var mappedValues = SoilUtilities.MapConcentration(ocValues,
+                                                                                  oc["Thickness"].Values<double>().ToArray(),
+                                                                                  organic["Thickness"].Values<double>().ToArray(),
+                                                                                  1.0, true);
+                                organic["Carbon"] = new JArray(mappedValues);
+                                organic["CarbonUnits"] = oc["OCUnits"].ToString();
+                            }
                         }
 
                         AddNodeToChemical(chemical, samples, "PH", 7.0);
@@ -4052,7 +4056,7 @@ namespace Models.Core.ApsimFile
                         // iterate through existing solutes and store their initial values in the solute.
                         foreach (var solute in JsonUtilities.ChildrenOfType(soil, "Solute"))
                         {
-                            var newSolute = CreateSoluteToken(tokensContainingValues, solute["Name"].ToString(), bd);
+                            var newSolute = CreateSoluteToken(tokensContainingValues, solute["Name"].ToString().ToUpper(), bd);
                             if (newSolute != null)
                             {
                                 solute["$type"] = "Models.Soils.Solute, Models";
@@ -4092,88 +4096,95 @@ namespace Models.Core.ApsimFile
             // Delete the blank samples and move the remaining ones to under the Physical node.
             foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
             {
+                var soilChildren = soil["Children"] as JArray;
                 var physical = JsonUtilities.ChildWithName(soil, "Physical", ignoreCase: true);
-                if (physical != null)
+                if (physical != null && soilChildren != null)
                 {
-                    var physicalChildren = physical["Children"] as JArray;
-                    if (physicalChildren != null)
+                    JObject water = null;
+                    foreach (JObject sample in JsonUtilities.ChildrenRecursively(soil, "Sample"))
                     {
-                        foreach (JObject sample in JsonUtilities.ChildrenRecursively(soil, "Sample"))
+                        var sw = sample["SW"] as JArray;
+                        if (MathUtilities.ValuesInArray(sw.Values<double>()))
                         {
-                            var sw = sample["SW"] as JArray;
-                            if (MathUtilities.ValuesInArray(sw.Values<double>()))
-                            {
-                                // Turn a sample into a Water node.
-                                sample.Remove("NO3");
-                                sample.Remove("NH4");
-                                sample.Remove("Urea");
-                                sample.Remove("LabileP");
-                                sample.Remove("UnavailableP");
-                                sample.Remove("OC");
-                                sample.Remove("EC");
-                                sample.Remove("PH");
-                                sample.Remove("CL");
-                                sample.Remove("ESP");
-                                sample["Name"] = "Water";
-                                sample["$type"] = "Models.Soils.Water, Models";
-                                //sample.Remove();
-                                physicalChildren.Add(sample);
-                            }
-                            else
-                                sample.Remove();
+                            // Turn a sample into a Water node.
+                            sample.Remove("NO3");
+                            sample.Remove("NH4");
+                            sample.Remove("Urea");
+                            sample.Remove("LabileP");
+                            sample.Remove("UnavailableP");
+                            sample.Remove("OC");
+                            sample.Remove("EC");
+                            sample.Remove("PH");
+                            sample.Remove("CL");
+                            sample.Remove("ESP");
+                            water = sample;
+                            water["Name"] = "Water";
+                            water["$type"] = "Models.Soils.Water, Models";
+                            water["InitialValues"] = sample["SW"];
+                            sample.Remove("SW");
+                            //soilChildren.Add(water);
                         }
+                        else
+                            sample.Remove();
+                    }
 
-                        // Convert InitWater to a Water node.
-                        foreach (var initWater in JsonUtilities.ChildrenOfType(soil, "InitialWater"))
+                    // Convert InitWater to a Water node.
+                    foreach (var initWater in JsonUtilities.ChildrenOfType(soil, "InitialWater"))
+                    {
+                        bool filledFromTop = initWater["PercentMethod"].Value<int>() == 1;
+                        double fractionFull = initWater["FractionFull"].Value<double>();
+                        double depthWetSoil = initWater["DepthWetSoil"].Value<double>();
+                        string relativeTo = initWater["RelativeTo"].ToString();
+                        double[] thickness = physical["Thickness"].Values<double>().ToArray();
+                        double[] ll15 = physical["LL15"].Values<double>().ToArray();
+                        double[] dul = physical["DUL"].Values<double>().ToArray();
+                        double[] ll;
+                        double[] xf = null;
+                        if (relativeTo == "LL15")
+                            ll = ll15;
+                        else
                         {
-                            initWater["Name"] = "Water";
-                            initWater["$type"] = "Models.Soils.Water, Models";
-
-                            bool filledFromTop = initWater["PercentMethod"].Value<int>() == 1;
-                            double fractionFull = initWater["FractionFull"].Value<double>();
-                            double depthWetSoil = initWater["DepthWetSoil"].Value<double>();
-                            string relativeTo = initWater["RelativeTo"].ToString();
-                            double[] thickness = physical["Thickness"].Values<double>().ToArray();
-                            double[] ll15 = physical["LL15"].Values<double>().ToArray();
-                            double[] dul = physical["DUL"].Values<double>().ToArray();
-                            double[] ll;
-                            double[] xf = null;
-                            if (relativeTo == "LL15")
+                            var nameToFind = relativeTo + "Soil";
+                            var plantCrop = JsonUtilities.ChildrenOfType(physical, "SoilCrop")
+                                                            .Find(sc => sc["Name"].ToString().Equals(relativeTo, StringComparison.InvariantCultureIgnoreCase));
+                            if (plantCrop == null)
+                            {
+                                relativeTo = "LL15";
                                 ll = ll15;
+                            }
                             else
                             {
-                                var nameToFind = relativeTo + "Soil";
-                                var plantCrop = JsonUtilities.ChildrenOfType(physical, "SoilCrop")
-                                                                .Find(sc => sc["Name"].ToString().Equals(relativeTo, StringComparison.InvariantCultureIgnoreCase));
-                                if (plantCrop == null)
-                                {
-                                    relativeTo = "LL15";
-                                    ll = ll15;
-                                }
-                                else
-                                {
-                                    ll = plantCrop["LL"].Values<double>().ToArray();
-                                    xf = plantCrop["XF"].Values<double>().ToArray();
-                                }
+                                ll = plantCrop["LL"].Values<double>().ToArray();
+                                xf = plantCrop["XF"].Values<double>().ToArray();
                             }
-                            if (xf == null)
-                                xf = Enumerable.Repeat(1.0, thickness.Length).ToArray();
-
-                            if (!double.IsNaN(depthWetSoil))
-                                initWater["InitialValues"] = new JArray(Water.DistributeToDepthOfWetSoil(depthWetSoil, thickness, ll, dul));
-                            else
-                            { 
-                                if (filledFromTop)
-                                    initWater["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, ll, dul, xf));
-                                else
-                                    initWater["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, ll, dul));
-                            }
-                            initWater["Thickness"] = new JArray(thickness);
-                            initWater["FilledFromTop"] = filledFromTop;
-                            initWater.Remove("PercentMethod");
-                            initWater.Remove("FractionFull");
-                            initWater.Remove("DepthWetSoil");
                         }
+                        if (xf == null)
+                            xf = Enumerable.Repeat(1.0, thickness.Length).ToArray();
+
+                        if (water == null)
+                        {
+                            water = initWater;
+                            water["Name"] = "Water";
+                            water["$type"] = "Models.Soils.Water, Models";
+                            water.Remove("PercentMethod");
+                            water.Remove("FractionFull");
+                            water.Remove("DepthWetSoil");
+                        }
+                        else
+                        {
+                        }
+
+                        if (!double.IsNaN(depthWetSoil))
+                            water["InitialValues"] = new JArray(Water.DistributeToDepthOfWetSoil(depthWetSoil, thickness, ll, dul));
+                        else
+                        {
+                            if (filledFromTop)
+                                water["InitialValues"] = new JArray(Water.DistributeWaterFromTop(fractionFull, thickness, ll, dul, xf));
+                            else
+                                water["InitialValues"] = new JArray(Water.DistributeWaterEvenly(fractionFull, ll, dul));
+                        }
+                        water["Thickness"] = new JArray(thickness);
+                        water["FilledFromTop"] = filledFromTop;
                     }
                 }
             }
@@ -4187,20 +4198,57 @@ namespace Models.Core.ApsimFile
                     var soil = JsonUtilities.Parent(parent) as JObject;
                     string soluteName = swimSolute["Name"].ToString();
                     var solute = JsonUtilities.ChildWithName(soil, soluteName, true);
+
                     if (solute != null)
                     {
                         solute["WaterTableConcentration"] = swimSolute["WaterTableConcentration"];
                         solute["D0"] = swimSolute["D0"];
                         solute["Exco"] = swimSolute["Exco"];
                         solute["FIP"] = swimSolute["FIP"];
+                        if (solute["Thickness"] == null)
+                        {
+                            solute["Thickness"] = swimSolute["Thickness"];
+                            int numLayers = (solute["Thickness"] as JArray).Count;
+                            solute["InitialValues"] = new JArray(Enumerable.Repeat(0.0, numLayers));
+                        }
                     }
                     swimSolute.Remove();
                 }
                 else
                     swimSolute["$type"] = "Models.Soils.Solute, Models";
             }
+
+            // Make sure all solutes have the new $type
+            foreach (JObject solute in JsonUtilities.ChildrenRecursively(root, "Solute"))
+                solute["$type"] = "Models.Soils.Solute, Models";
+
+            // Rename variables.
+            var variableRenames = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("[Swim3].SWmm", "[Soil].Water.MM"),
+                new Tuple<string, string>("[Swim3].SW", "[Soil].Water.Volumetric"),
+                new Tuple<string, string>("[Soil].Swim3.SWmm", "[Soil].Water.MM"),
+                new Tuple<string, string>("[Soil].Swim3.SW", "[Soil].Water.Volumetric"),
+
+                new Tuple<string, string>("[SoilWater].SWmm", "[Soil].Water.MM"),
+                new Tuple<string, string>("[SoilWater].SW", "[Soil].Water.Volumetric"),
+                new Tuple<string, string>("[Soil].SoilWater.SWmm", "[Soil].Water.MM"),
+                new Tuple<string, string>("[Soil].SoilWater.SW", "[Soil].Water.Volumetric"),
+
+                new Tuple<string, string>("[Swim3].Cl", "[Soil].Cl"),
+
+                new Tuple<string, string>("[Nutrient].NO3.Denitrification", "[Nutrient].Denitrification"),
+                new Tuple<string, string>("[Nutrient].NH4.Nitrification", "[Nutrient].Nitrification"),
+                new Tuple<string, string>("[Soil].Nutrient.NO3", "[Soil].NO3"),
+                new Tuple<string, string>("[Soil].Nutrient.NH4", "[Soil].NH4"),
+                new Tuple<string, string>("[Soil].Nutrient.Urea", "[Soil].Urea"),
+                new Tuple<string, string>("[Nutrient].NO3", "[Soil].NO3"),
+                new Tuple<string, string>("[Nutrient].NH4", "[Soil].NH4"),
+                new Tuple<string, string>("[Nutrient].Urea", "[Soil].Urea"),
+            };
+            JsonUtilities.RenameVariables(root, variableRenames);
         }
-		
+
         /// <summary>
         /// Add a property from a sample node to the chemical node.
         /// </summary>
@@ -4222,7 +4270,9 @@ namespace Models.Core.ApsimFile
                                                                       chemical["Thickness"].Values<double>().ToArray(),
                                                                       defaultValue, true);
                     chemical[nodeName] = new JArray(mappedValues);
-                    chemical[$"{nodeName}Units"] = sampleToken[$"{nodeName}Units"].ToString();
+                    var units = sampleToken[$"{nodeName}Units"];
+                    if (units != null)
+                        chemical[$"{nodeName}Units"] = units.ToString();
                 }
             }
         }

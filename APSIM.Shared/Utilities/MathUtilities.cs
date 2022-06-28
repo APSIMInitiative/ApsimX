@@ -1792,10 +1792,13 @@ namespace APSIM.Shared.Utilities
         /// <param name="defaultValue">The value to use if can't find any other value.</param>
         public static double[] FillMissingValues(double[] values, int numValues, double defaultValue)
         {
+            int numOriginalValues = 0;
+            if (values != null)
+                numOriginalValues = values.Length;
             Array.Resize(ref values, numValues);
             for (int i = 0; i < numValues; i++)
             {
-                if (double.IsNaN(values[i]))
+                if (i >= numOriginalValues || double.IsNaN(values[i]))
                 {
                     double validValue;
                     if (i == 0)

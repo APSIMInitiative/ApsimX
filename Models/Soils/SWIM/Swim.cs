@@ -1518,6 +1518,9 @@ namespace Models.Soils
             else
                 GetObsEvapVariables();
             OnProcess();
+
+            // Update the variable in the water model.
+            water.Volumetric = SW;
         }
 
       //  [EventHandler]

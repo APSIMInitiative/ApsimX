@@ -728,6 +728,9 @@ namespace Models.Soils
             double CheckMass = DeltaSWC + Infiltration - Drainage - Es - WaterExtraction;
             if (Math.Abs(CheckMass) > FloatingPointTolerance)
                 throw new Exception(this + " Mass balance violated");
+
+            // Update the variable in the water model.
+            water.Volumetric = SW;
         }
         /// <summary>
         /// Adds irrigation events into daily total
