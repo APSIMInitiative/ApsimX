@@ -88,7 +88,7 @@ namespace Models.Soils
 
         /// <summary>Solute amount (kg/ha)</summary>
         [JsonIgnore]
-        public double[] kgha { get; set; }
+        public virtual double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return SoilUtilities.kgha2ppm(Physical.Thickness, Physical.BD, kgha); } }
@@ -118,7 +118,7 @@ namespace Models.Soils
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>
-        public void SetKgHa(SoluteSetterType callingModelType, double[] value)
+        public virtual void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
             for (int i = 0; i < value.Length; i++)
                 kgha[i] = value[i];
@@ -127,7 +127,7 @@ namespace Models.Soils
         /// <summary>Setter for kgha delta.</summary>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">New delta values</param>
-        public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
+        public virtual void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
             for (int i = 0; i < delta.Length; i++)
                 kgha[i] += delta[i];

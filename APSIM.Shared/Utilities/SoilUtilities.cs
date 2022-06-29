@@ -287,7 +287,7 @@
                                                   double defaultValueForBelowProfile,
                                                   bool allowMissingValues = false)
         {
-            if (fromValues != null)
+            if (fromValues != null && !MathUtilities.AreEqual(fromThickness, toThickness))
             {
                 if (fromValues.Length != fromThickness.Length && !allowMissingValues)
                     throw new Exception($"In MapConcentration, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
@@ -315,7 +315,7 @@
                 // Convert mass back to concentration and return
                 return MathUtilities.Divide(newValues, toThickness);
             }
-            return null;
+            return fromValues;
         }
 
         /// <summary>Map soil variables from one layer structure to another.</summary>

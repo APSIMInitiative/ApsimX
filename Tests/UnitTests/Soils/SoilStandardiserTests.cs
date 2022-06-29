@@ -70,9 +70,9 @@
 
             soil.Standardise();
 
-            var physical = soil.Children[0] as Physical;
-            var soilOrganicMatter = soil.Children[3] as Organic;
-            var water = soil.Children[5] as Water;
+            var physical = soil.FindChild<Physical>();
+            var soilOrganicMatter = soil.FindChild<Organic>();
+            var water = soil.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
@@ -144,9 +144,9 @@
 
             soil.Standardise();
 
-            var physical = soil.Children[0] as Physical;
-            var soilOrganicMatter = soil.Children[3] as Organic;
-            var water = soil.Children[5] as Water;
+            var physical = soil.FindChild<Physical>();
+            var soilOrganicMatter = soil.FindChild<Organic>();
+            var water = soil.FindChild<Water>();
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
@@ -164,26 +164,20 @@
 
             soil.Standardise();
 
-            var chemical = soil.Children[3] as Chemical;
-            var organic = soil.Children[4] as Organic;
-            var water = soil.Children[5] as Water;
-            var analysis = soil.Children[4] as Chemical;
+            var chemical = soil.FindChild<Chemical>();
+            var organic = soil.FindChild<Organic>();
+            var water = soil.FindChild<Water>();
             var solutes = soil.FindAllChildren<Solute>().ToArray();
 
             Assert.AreEqual(soil.FindAllChildren<Water>().Count(), 1);
-            Assert.AreEqual(water.Name, "Initial");
+            Assert.AreEqual(water.Name, "Water");
             Assert.AreEqual(water.Volumetric, new double[] { 0.1, 0.2 } );
             Assert.AreEqual(organic.Carbon, new double[] { 2.0, 0.9 });
-            Assert.AreEqual(chemical.PH, new double[] { 6.4, 6.9 });
+            Assert.AreEqual(chemical.PH, new double[] { 6.65, 7.0 });
             Assert.AreEqual(chemical.EC, new double[] { 150, 200 });
 
-            Assert.AreEqual(solutes[0].InitialValues, new double[] { 29.240000000000002, 2.432 });  // NO3 kg/ha
-            Assert.AreEqual(solutes[1].InitialValues, new double[] { 1.4960000000000002, 0.4864 }); // NH4 kg/ha
-
-            var soilOrganicMatter = soil.Children[3] as Organic;
-            Assert.IsNull(soilOrganicMatter.Carbon);
-
-            Assert.NotNull(analysis);
+            Assert.AreEqual(solutes[0].InitialValues, new double[] { 21.5, 1.0 });  // NO3 kg/ha
+            Assert.AreEqual(solutes[1].InitialValues, new double[] { 1.5, 1.0 }); // NH4 kg/ha
         }
 
         [Test]
@@ -231,13 +225,13 @@
                     new Organic
                     {
                         Thickness = new double[] { 100, 200 },
-                        Carbon = new double[] { 2, 1 },
+                        Carbon = new double[] { 2, 0.9 },
                         FBiom = new double[] { 1, 2 }
                     },
                     new Chemical
                     {
                         Thickness = new double[] { 50, 50 },
-                        PH = new double[] { 6.8, 6.9 },
+                        PH = new double[] { 6.4, 6.9 },
                         EC = new double[] { 100, 200 }
                     },
                     new Solute
