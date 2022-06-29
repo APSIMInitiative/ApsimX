@@ -48,5 +48,12 @@ namespace Models.PMF
 
         /// <summary>The skip plant seed density adjustment</summary>
         public double SkipDensityScale { get; set; } = 1;
+
+        /// <summary>Tillering Method to set Fixed or dynamic tillering</summary>
+        /// <summary>Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FTN, 1 = DynamicTillering</summary>
+        public int TilleringMethod { get; set; } = 0;
+
+        /// <summary>Fertile Tiller Number</summary>
+        public double FTN { get; set; } = 0.0;
     }
 }

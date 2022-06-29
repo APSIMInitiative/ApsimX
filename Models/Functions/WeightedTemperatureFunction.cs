@@ -74,7 +74,7 @@ namespace Models.Functions
             var xAxis = new APSIM.Shared.Graphing.Axis(xName, APSIM.Shared.Graphing.AxisPosition.Bottom, false, false);
             var yAxis = new APSIM.Shared.Graphing.Axis(yName, APSIM.Shared.Graphing.AxisPosition.Left, false, false);
             var legend = new APSIM.Shared.Graphing.LegendConfiguration(APSIM.Shared.Graphing.LegendOrientation.Vertical, APSIM.Shared.Graphing.LegendPosition.TopLeft, true);
-            return new APSIM.Shared.Documentation.Graph(Name, series, xAxis, yAxis, legend);
+            return new APSIM.Shared.Documentation.Graph(Name, FullPath, series, xAxis, yAxis, legend);
         }
     }
 }
