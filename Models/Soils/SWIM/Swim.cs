@@ -1914,7 +1914,7 @@ namespace Models.Soils
 
             if (reset_theta == null && reset_psi == null)
             {
-                th = water.Volumetric.Clone() as double[]; 
+                th = water.InitialValues.Clone() as double[]; 
             }
 
             if (waterTable != null && !Double.IsNaN(waterTable.WaterTableDepth))

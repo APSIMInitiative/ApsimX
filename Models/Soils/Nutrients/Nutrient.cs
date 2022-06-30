@@ -126,7 +126,7 @@ namespace Models.Soils.Nutrients
             foreach (NutrientPool P in FindAllChildren<NutrientPool>())
                 P.Reset();
 
-            foreach (Solute S in FindAllChildren<ISolute>())
+            foreach (Solute S in FindAllInScope<ISolute>())
                 S.Reset();
         }
 

@@ -2,6 +2,7 @@
 using Models.Core;
 using Models.Interfaces;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Models.Soils
 {
@@ -14,6 +15,7 @@ namespace Models.Soils
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Units("mm")]
+        [JsonIgnore]
         public string[] Depth
         {
             get => SoilUtilities.ToDepthStrings(Thickness);

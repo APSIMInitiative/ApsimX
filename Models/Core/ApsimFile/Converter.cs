@@ -4114,7 +4114,7 @@ namespace Models.Core.ApsimFile
 
                         // Add a urea solute to Chemical
                         var urea = (double[]) Array.CreateInstance(typeof(double), chemicalThickness.Length);
-                        soilChildren.Add(CreateSoluteToken((urea, "kgha", bdThickness), soluteTypeName, "Urea"));
+                        soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
                     }
                 }
 
@@ -4126,20 +4126,28 @@ namespace Models.Core.ApsimFile
                     var sw = sample["SW"] as JArray;
                     if (sw != null &&MathUtilities.ValuesInArray(sw.Values<double>()))
                     {
-                        // Turn a sample into a Water node.
-                        sample.Remove("NO3");
-                        sample.Remove("NH4");
-                        sample.Remove("Urea");
-                        sample.Remove("LabileP");
-                        sample.Remove("UnavailableP");
-                        sample.Remove("OC");
-                        sample.Remove("EC");
-                        sample.Remove("PH");
-                        sample.Remove("CL");
-                        sample.Remove("ESP");
-                        water = sample;
-                        water["Name"] = "Water";
-                        water["$type"] = "Models.Soils.Water, Models";
+                        // Does a water node already exist?
+                        water = JsonUtilities.ChildWithName(soil, "Water");
+                        if (water == null)
+                        {
+                            water = sample;
+                            // Turn a sample into a Water node.
+                            sample.Remove("NO3");
+                            sample.Remove("NH4");
+                            sample.Remove("Urea");
+                            sample.Remove("LabileP");
+                            sample.Remove("UnavailableP");
+                            sample.Remove("OC");
+                            sample.Remove("EC");
+                            sample.Remove("PH");
+                            sample.Remove("CL");
+                            sample.Remove("ESP");
+                            water["Name"] = "Water";
+                            water["$type"] = "Models.Soils.Water, Models";
+                        }
+                        else
+                            sample.Remove();  // remove the sample.
+                        
                         water["InitialValues"] = sample["SW"];
                         sample.Remove("SW");
                     }
@@ -4262,6 +4270,7 @@ namespace Models.Core.ApsimFile
                 new Tuple<string, string>("[Soil].InitialWater.SW", "[Soil].Water.InitialValues"),
                 new Tuple<string, string>("[Soil].Initial.SW", "[Soil].Water.InitialValues"),
                 new Tuple<string, string>("[Soil].Initial Water.SW", "[Soil].Water.InitialValues"),
+                new Tuple<string, string>("[Soil].Initial water.SW", "[Soil].Water.InitialValues"),
                 new Tuple<string, string>("[Soil].InitialWater.FractionFull", "[Soil].Water.FractionFull"),
                 new Tuple<string, string>("[Soil].Initial.OC", "[Soil].Organic.Carbon"),
                 

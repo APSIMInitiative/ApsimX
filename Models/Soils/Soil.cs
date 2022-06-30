@@ -132,7 +132,7 @@
             var layerStructure = FindChild<LayerStructure>();
             var organic = FindChild<Organic>();
             var water = FindChild<Water>();
-            var waterBalance = FindChild<ISoilWater>();
+            var waterBalance = FindInScope<ISoilWater>();
 
             // Determine the target layer structure.
             var targetThickness = physical.Thickness;
