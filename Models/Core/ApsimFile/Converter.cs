@@ -4099,17 +4099,20 @@ namespace Models.Core.ApsimFile
 
                         // If SoilNitrogen is present then remove no3, nh4 and urea from under SoilNitrogen
                         // and convert soluetes to SoilNitrogenSolute.
+                        var nutrientModel = nutrient;
                         if (soilNitrogen != null)
+                            nutrientModel = soilNitrogen;
+                        if (nutrientModel != null)
                         {
-                            var tocken = JsonUtilities.ChildWithName(soilNitrogen, "NO3");
-                            if (tocken != null)
-                                tocken.Remove();
-                            tocken = JsonUtilities.ChildWithName(soilNitrogen, "NH4");
-                            if (tocken != null)
-                                tocken.Remove();
-                            tocken = JsonUtilities.ChildWithName(soilNitrogen, "Urea");
-                            if (tocken != null)
-                                tocken.Remove();
+                            var token = JsonUtilities.ChildWithName(nutrientModel, "NO3");
+                            if (token != null)
+                                token.Remove();
+                            token = JsonUtilities.ChildWithName(nutrientModel, "NH4");
+                            if (token != null)
+                                token.Remove();
+                            token = JsonUtilities.ChildWithName(nutrientModel, "Urea");
+                            if (token != null)
+                                token.Remove();
                         }
 
                         // Add a urea solute to Chemical
@@ -4308,8 +4311,8 @@ namespace Models.Core.ApsimFile
                 new Tuple<string, string>("[SoilNitrogen].NO3", "[Soil].NO3"),
                 new Tuple<string, string>("[SoilNitrogen].NH4", "[Soil].NH4"),
                 new Tuple<string, string>("[SoilNitrogen].Urea", "[Soil].Urea"),
-               
 
+                new Tuple<string, string>(".Chemical.NO3N", ".NO3.kgha"),
             };
             JsonUtilities.RenameVariables(root, variableRenames);
 

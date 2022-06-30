@@ -99,8 +99,6 @@ namespace Models.Soils
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Console.WriteLine($"Resetting solute {Name}");
-
             Reset();
         }
 
@@ -168,8 +166,6 @@ namespace Models.Soils
         /// <param name="targetThickness">Target thickness.</param>
         public void Standardise(double[] targetThickness)
         {
-            Console.WriteLine($"Standardising solute {Name}");
-
             SetThickness(targetThickness);
 
             double defaultValue;

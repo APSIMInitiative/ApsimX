@@ -757,6 +757,23 @@ namespace Models.Core.ApsimFile
                 }
             }
 
+            foreach (var croptimizr in JsonUtilities.ChildrenOfType(node, "CroptimizR"))
+            {
+                foreach (var replacement in changes)
+                {
+                    foreach (var parameter in croptimizr["Parameters"] as JArray)
+                    {
+                        var path = parameter["Path"].ToString();
+                        if (path.Contains(replacement.Item1))
+                        {
+                            parameter["Path"] = path.Replace(replacement.Item1, replacement.Item2);
+                            replacementMade = true;
+                        }
+                    }
+                }
+            }
+
+
             return replacementMade;
         }
 

@@ -127,7 +127,6 @@
         /// <summary>Gets the soil ready for running in a simulation.</summary>
         public void Standardise()
         {
-            Console.WriteLine($"Standardising soil {Name}");
             var physical = FindChild<IPhysical>();
             var chemical = FindChild<Chemical>();
             var layerStructure = FindChild<LayerStructure>();
