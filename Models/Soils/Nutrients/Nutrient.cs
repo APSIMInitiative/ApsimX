@@ -190,7 +190,10 @@ namespace Models.Soils.Nutrients
                 double[] values = new double[numLayers];
 
                 foreach (NFlow f in FindAllChildren<NFlow>())
-                    values = MathUtilities.Add(values, f.Natm);
+                {
+                    if (f.Natm != null)
+                        values = MathUtilities.Add(values, f.Natm);
+                }
                 return values;
             }
         }
@@ -271,8 +274,13 @@ namespace Models.Soils.Nutrients
                 else
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
-                for (int i = 0; i < values.Length; i++)
-                    values[i] = no3NFlow.Value[i] + no3NFlow.Natm[i];
+                if (no3NFlow.Value != null)
+                {
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        values[i] = no3NFlow.Value[i] + no3NFlow.Natm[i];
+                    }
+                }
 
                 return values;
             }

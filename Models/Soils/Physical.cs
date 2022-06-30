@@ -201,6 +201,7 @@
         /// <summary>Tabular data. Called by GUI.</summary>
         public TabularData GetTabularData()
         {
+            bool waterNodePresent = FindInScope<Water>() != null;
             var columns = new List<TabularData.Column>();
 
             columns.Add(new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
@@ -213,7 +214,8 @@
             columns.Add(new TabularData.Column("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
             columns.Add(new TabularData.Column("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
             columns.Add(new TabularData.Column("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
-            columns.Add(new TabularData.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
+            if (waterNodePresent)
+                columns.Add(new TabularData.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
             columns.Add(new TabularData.Column("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
 
             foreach (var soilCrop in FindAllChildren<SoilCrop>())
@@ -747,6 +749,7 @@
             double[] cl = clNode.InitialValues;
             if (MathUtilities.ValuesInArray(cl))
             {
+                cl = SoilUtilities.MapConcentration(cl, clNode.Thickness, Thickness, 0);
                 crop.KL = SoilUtilities.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                 for (int i = 0; i < Thickness.Length; i++)
                     crop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));

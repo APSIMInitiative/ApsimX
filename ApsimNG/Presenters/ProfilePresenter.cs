@@ -86,7 +86,7 @@
             {
                 DisconnectEvents();
 
-                if (model is Physical || model is Water)
+                if (water != null && (model is Physical || model is Water))
                     WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
                                                       water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 else if (model is Organic organic)

@@ -386,7 +386,7 @@
         {
             JObject organic = new JObject()
             { 
-                ["$type"] = "Models.Soils.Solute, Models",
+                ["$type"] = "Models.Soils.Organic, Models",
                 ["Thickness"] = new JArray(new double[] { 100, 200}),
                 ["OC"] = new JArray(new double[] { 2, 1 }),
                 ["OCUnits"] = "Total"

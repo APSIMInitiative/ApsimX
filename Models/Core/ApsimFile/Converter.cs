@@ -4049,7 +4049,7 @@ namespace Models.Core.ApsimFile
 
                         string soluteTypeName = "Models.Soils.Solute, Models";
                         if (soilNitrogen != null)
-                            soluteTypeName = "Models.Soils.SoilNitrogenUrea, Models";
+                            soluteTypeName = "Models.Soils.SoilNitrogen{soluteName}, Models";
 
                         // create a collection of JTokens to search for solute initialisation values.
                         var tokensContainingValues = new JObject[] { organic, chemical }
@@ -4258,7 +4258,13 @@ namespace Models.Core.ApsimFile
                 new Tuple<string, string>("[Soil].SoilWater.SW", "[Soil].Water.Volumetric"),
                 new Tuple<string, string>("[SoilWater].SWmm", "[Soil].Water.MM"),
                 new Tuple<string, string>("[SoilWater].SW", "[Soil].Water.Volumetric"),
-
+                new Tuple<string, string>("[Soil].Initialwater.SW", "[Soil].Water.InitialValues"),
+                new Tuple<string, string>("[Soil].InitialWater.SW", "[Soil].Water.InitialValues"),
+                new Tuple<string, string>("[Soil].Initial.SW", "[Soil].Water.InitialValues"),
+                new Tuple<string, string>("[Soil].Initial Water.SW", "[Soil].Water.InitialValues"),
+                new Tuple<string, string>("[Soil].InitialWater.FractionFull", "[Soil].Water.FractionFull"),
+                new Tuple<string, string>("[Soil].Initial.OC", "[Soil].Organic.Carbon"),
+                
                 new Tuple<string, string>("[Swim3].Cl", "[Soil].Cl"),
 
                 new Tuple<string, string>("[Soil].Nutrient.NO3.Denitrification", "[Nutrient].Denitrification"),
@@ -4293,10 +4299,23 @@ namespace Models.Core.ApsimFile
                 new Tuple<string, string>("[SoilNitrogen].NO3", "[Soil].NO3"),
                 new Tuple<string, string>("[SoilNitrogen].NH4", "[Soil].NH4"),
                 new Tuple<string, string>("[SoilNitrogen].Urea", "[Soil].Urea"),
-
+               
 
             };
             JsonUtilities.RenameVariables(root, variableRenames);
+
+            // Add a "using Models.Soils" to manager models if they reference solute.
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var usingStatements = manager.GetUsingStatements();
+                var found = usingStatements.Where(u => u == "Models.Soils").Any();
+                if (!found)
+                {
+                    usingStatements = usingStatements.Append("Models.Soils");
+                    manager.SetUsingStatements(usingStatements);
+                    manager.Save();
+                }
+            }
         }
 
         /// <summary>
@@ -4327,11 +4346,14 @@ namespace Models.Core.ApsimFile
         {
             var token = new JObject()
             {
-                ["$type"] = soluteTypeName,
-                ["Name"] = soluteName,
-                ["InitialValues"] = new JArray(value.Item1),
-                ["Thickness"] = new JArray(value.Item3)
+                ["$type"] = soluteTypeName.Replace("{soluteName}", soluteName),
+                ["Name"] = soluteName
             };
+            if (value.Item1 != null)
+            {
+                token["InitialValues"] = new JArray(value.Item1);
+                token["Thickness"] = new JArray(value.Item3);
+            }
             if (value.Item2 != null)
                 token["InitialValuesUnits"] = value.Item2;
             return token;
@@ -4369,7 +4391,7 @@ namespace Models.Core.ApsimFile
                     else
                         units = "ppm";
                 }
-                else if (nodeName == "OC")
+                else if (valuesToken == null && nodeName == "OC")
                 {
                     valuesToken = token["Carbon"] as JArray;
                     units = "Total";

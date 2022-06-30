@@ -47,7 +47,7 @@
             Nutrient.IsHidden = true;
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in nutrientPatchManager.Parent.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
             lignin = Nutrient.FindInScope<NutrientPool>("FOMLignin");
             if (lignin == null)
@@ -69,7 +69,7 @@
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
+            foreach (ISolute solute in Nutrient.Parent.Parent.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
             lignin = from.lignin;
             cellulose = from.cellulose;
