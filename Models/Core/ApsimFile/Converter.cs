@@ -4173,21 +4173,6 @@ namespace Models.Core.ApsimFile
                             sample.Remove();
                     }
 
-                    // If there is no water node, then create one.
-                    if (JsonUtilities.ChildWithName(soil, "Water") == null)
-                    {
-                        if (soilChildren != null)
-                        {
-                            soilChildren.Add(new JObject()
-                            {
-                                ["$type"] = "Models.Soils.Water, Models",
-                                ["Name"] = "Water",
-                                ["Thickness"] = physical["Thickness"]
-                            });
-                        }
-                    }
-
-
                     // Convert InitWater to a Water node.
                     foreach (var initWater in JsonUtilities.ChildrenOfType(soil, "InitialWater"))
                     {
@@ -4251,6 +4236,20 @@ namespace Models.Core.ApsimFile
                         }
                         water["Thickness"] = new JArray(thickness);
                         water["FilledFromTop"] = filledFromTop;
+                    }
+
+                    // If there is no water node, then create one.
+                    if (JsonUtilities.ChildWithName(soil, "Water") == null)
+                    {
+                        if (soilChildren != null)
+                        {
+                            soilChildren.Add(new JObject()
+                            {
+                                ["$type"] = "Models.Soils.Water, Models",
+                                ["Name"] = "Water",
+                                ["Thickness"] = physical["Thickness"]
+                            });
+                        }
                     }
                 }
             }
