@@ -46,8 +46,10 @@
             Nutrient = simulations.Children[0] as Nutrient;
             Nutrient.IsHidden = true;
 
+            CreateSolutes(Nutrient, (patchManager as IModel).FindAncestor<Soil>().FindAllChildren<Solute>());
+
             // Find all solutes.
-            foreach (ISolute solute in nutrientPatchManager.Parent.FindAllChildren<ISolute>())
+            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
             lignin = Nutrient.FindInScope<NutrientPool>("FOMLignin");
             if (lignin == null)
@@ -69,11 +71,25 @@
             Structure.Add(Nutrient, from.Nutrient.Parent);
 
             // Find all solutes.
-            foreach (ISolute solute in Nutrient.Parent.Parent.FindAllChildren<ISolute>())
+            foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
             lignin = from.lignin;
             cellulose = from.cellulose;
             carbohydrate = from.carbohydrate;
+        }
+
+        private void CreateSolutes(IModel parent, IEnumerable<Solute> solutes)
+        {
+            foreach (Solute solute in solutes)
+            {
+                var newSolute = new Solute();
+                newSolute.Name = solute.Name;
+                newSolute.Thickness = solute.Thickness;
+                newSolute.InitialValues = solute.InitialValues;
+                newSolute.InitialValuesUnits = solute.InitialValuesUnits;
+                newSolute.Parent = parent;
+                parent.Children.Add(newSolute);
+            }
         }
 
         /// <summary>Nutrient model.</summary>

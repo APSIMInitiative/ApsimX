@@ -105,7 +105,7 @@ namespace Models.Soils
         /// <summary>
         /// Set solute to initialisation state
         /// </summary>
-        public void Reset()
+        public virtual void Reset()
         {
             if (InitialValues == null)
                 kgha = new double[Thickness.Length];
@@ -200,7 +200,7 @@ namespace Models.Soils
         }
 
         /// <summary>The soil physical node.</summary>
-        private IPhysical Physical
+        protected IPhysical Physical
         {
             get
             {

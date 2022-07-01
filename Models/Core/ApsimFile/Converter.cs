@@ -4030,6 +4030,7 @@ namespace Models.Core.ApsimFile
             {
                 var nutrient = JsonUtilities.ChildWithName(soil, "Nutrient");
                 var soilNitrogen = JsonUtilities.ChildWithName(soil, "SoilNitrogen");
+                var nutrientPatchManager = JsonUtilities.ChildWithName(soil, "NutrientPatchManager");
                 var physical = JsonUtilities.ChildWithName(soil, "Physical", ignoreCase: true);
                 var chemical = JsonUtilities.ChildWithName(soil, "Chemical", ignoreCase: true);
                 var organic = JsonUtilities.ChildWithName(soil, "Organic", ignoreCase: true);
@@ -4050,6 +4051,8 @@ namespace Models.Core.ApsimFile
                         string soluteTypeName = "Models.Soils.Solute, Models";
                         if (soilNitrogen != null)
                             soluteTypeName = "Models.Soils.SoilNitrogen{soluteName}, Models";
+                        else if (nutrientPatchManager != null)
+                            soluteTypeName = "Models.Soils.NutrientPatching.SolutePatch, Models";
 
                         // create a collection of JTokens to search for solute initialisation values.
                         var tokensContainingValues = new JObject[] { organic, chemical }
@@ -4096,12 +4099,19 @@ namespace Models.Core.ApsimFile
                             soilChildren.Add(CreateSoluteToken(labileP, soluteTypeName, "LabileP"));
                             soilChildren.Add(CreateSoluteToken(unavailableP, soluteTypeName, "UnavailableP"));
                         }
+                        if (nutrientPatchManager != null)
+                        {
+                            soilChildren.Add(CreateSoluteToken((null, null, null), soluteTypeName, "PlantAvailableNO3"));
+                            soilChildren.Add(CreateSoluteToken((null, null, null), soluteTypeName, "PlantAvailableNH4"));
+                        }
 
                         // If SoilNitrogen is present then remove no3, nh4 and urea from under SoilNitrogen
                         // and convert soluetes to SoilNitrogenSolute.
                         var nutrientModel = nutrient;
                         if (soilNitrogen != null)
                             nutrientModel = soilNitrogen;
+                        if (nutrientPatchManager != null)
+                            nutrientModel = nutrientPatchManager;
                         if (nutrientModel != null)
                         {
                             var token = JsonUtilities.ChildWithName(nutrientModel, "NO3");
@@ -4111,6 +4121,12 @@ namespace Models.Core.ApsimFile
                             if (token != null)
                                 token.Remove();
                             token = JsonUtilities.ChildWithName(nutrientModel, "Urea");
+                            if (token != null)
+                                token.Remove();
+                            token = JsonUtilities.ChildWithName(nutrientModel, "PlantAvailableNO3");
+                            if (token != null)
+                                token.Remove();
+                            token = JsonUtilities.ChildWithName(nutrientModel, "PlantAvailableNH4");
                             if (token != null)
                                 token.Remove();
                         }
