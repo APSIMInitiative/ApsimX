@@ -29,17 +29,18 @@
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [Units("cm")]
+        [Summary]
+        [Units("mm")]
         [JsonIgnore]
         public string[] Depth
         {
             get
             {
-                return SoilUtilities.ToDepthStringsCM(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = SoilUtilities.ToThicknessCM(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -50,7 +51,6 @@
         public double FOMCNRatio { get; set; }
 
         /// <summary>Soil layer thickness for each layer (mm)</summary>
-        [Summary]
         [Units("mm")]
         public double[] Thickness { get; set; }
 
@@ -73,12 +73,14 @@
         [Summary]
         [Units("0-1")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Display(Format = "N3")]
         public double[] FBiom { get; set; }
 
         /// <summary>F inert.</summary>
         [Summary]
         [Units("0-1")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Display(Format = "N3")]
         public double[] FInert { get; set; }
 
         /// <summary>Fresh organic matter</summary>

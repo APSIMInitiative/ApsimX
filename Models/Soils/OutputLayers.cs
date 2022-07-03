@@ -32,6 +32,7 @@
         public double[] Thickness { get; set; }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth

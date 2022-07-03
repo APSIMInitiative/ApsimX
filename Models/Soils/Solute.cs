@@ -52,6 +52,7 @@ namespace Models.Soils
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth
@@ -61,12 +62,11 @@ namespace Models.Soils
         }
 
         /// <summary>Thickness</summary>
-        [Summary]
-        [Units("mm")]
         public double[] Thickness { get; set; }
 
         /// <summary>Nitrate NO3.</summary>
         [Summary]
+        [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
         /// <summary>Units of the Initial values.</summary>

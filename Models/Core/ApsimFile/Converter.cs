@@ -4498,10 +4498,10 @@ namespace Models.Core.ApsimFile
                     if (valuesToken == null)
                     {
                         valuesToken = token[nodeName + "N"] as JArray;
-                        units = "kgha";
+                        units = "ppm";
                     }
                     else
-                        units = "ppm";
+                        units = "kgha";
                 }
                 else if (valuesToken == null && nodeName == "OC")
                 {

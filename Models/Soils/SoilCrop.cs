@@ -13,6 +13,11 @@
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model, ITabularData
     {
+        /// <summary>Depth strings (mm/mm)</summary>
+        [Summary]
+        [Units("mm")]
+        public string[] Depth => (Parent as Physical).Depth;
+
         /// <summary>Crop lower limit (mm/mm)</summary>
         [Summary]
         [Units("mm/mm")]
@@ -34,11 +39,13 @@
         /// <summary>The KL value.</summary>
         [Summary]
         [Units("/day")]
+        [Display(Format = "N2")]
         public double[] KL { get; set; }
 
         /// <summary>The exploration factor</summary>
         [Summary]
         [Units("0-1")]
+        [Display(Format = "N1")]
         public double[] XF { get; set; }
 
         /// <summary>The metadata for crop lower limit</summary>
@@ -52,6 +59,7 @@
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
         [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] PAWC
         {
             get

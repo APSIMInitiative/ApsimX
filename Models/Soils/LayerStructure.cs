@@ -14,6 +14,7 @@ namespace Models.Soils
     public class LayerStructure : Model, ITabularData
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth

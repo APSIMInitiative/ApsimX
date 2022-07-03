@@ -46,6 +46,8 @@ namespace Models.WaterModel
     [Serializable]
     public class WaterBalance : ModelCollectionFromResource, ISoilWater, ITabularData
     {
+        private Physical physical;
+
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
@@ -194,22 +196,12 @@ namespace Models.WaterModel
         public double CatchmentArea { get; set; } = 10;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
         [JsonIgnore]
-        [Units("cm")]
-        public string[] Depth
-        {
-            get
-            {
-                return SoilUtilities.ToDepthStringsCM(Thickness);
-            }
-            set
-            {
-                Thickness = SoilUtilities.ToThicknessCM(value);
-            }
-        }
+        [Units("mm")]
+        public string[] Depth => Physical.Depth; 
 
         /// <summary>Soil layer thickness for each layer (mm).</summary>
-        [Units("mm")]
         public double[] Thickness { get; set; }
 
         /// <summary>Amount of water in the soil (mm).</summary>
@@ -348,6 +340,7 @@ namespace Models.WaterModel
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.SWCON for SWCON in standard thickness
         /// </remarks>
+        [Summary]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Caption("SWCON")]
@@ -359,6 +352,7 @@ namespace Models.WaterModel
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.KLAT for KLAT in standard thickness
         /// </remarks>
+        [Summary]
         [Bounds(Lower = 0, Upper = 1.0e3F)]
         [Units("mm/d")]
         [Caption("Klat")]
@@ -832,7 +826,7 @@ namespace Models.WaterModel
         {
             return new TabularData(Name, new TabularData.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly:true),
                 new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
                 new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
             });
@@ -859,6 +853,18 @@ namespace Models.WaterModel
             if (SWCON == null)
                 SWCON = MathUtilities.CreateArrayOfValues(0.3, Thickness.Length);
             MathUtilities.ReplaceMissingValues(SWCON, 0.0);
+        }
+
+
+        /// <summary>The soil physical node.</summary>
+        private Physical Physical
+        {
+            get
+            {
+                if (physical == null)
+                    physical = FindInScope<Physical>();
+                return physical;
+            }
         }
     }
 }

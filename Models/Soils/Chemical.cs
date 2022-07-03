@@ -28,6 +28,7 @@
         }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth
@@ -43,12 +44,12 @@
         }
 
         /// <summary>Thickness of each layer.</summary>
-        [Summary]
         [Units("mm")]
         public double[] Thickness { get; set; }
 
         /// <summary>pH</summary>
         [Summary]
+        [Display(Format = "N1")]
         public double[] PH { get; set; }
 
         /// <summary>The units of pH.</summary>
@@ -108,7 +109,7 @@
             var solutes = new List<Solute>();
 
             // Add in child solutes.
-            foreach (var solute in FindAllInScope<Solute>())
+            foreach (var solute in Parent.FindAllChildren<Solute>())
             {
                 if (MathUtilities.AreEqual(Thickness, solute.Thickness))
                     solutes.Add(solute);

@@ -19,6 +19,7 @@
     public class Water : Model, ITabularData
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
         [Units("mm")]
         [JsonIgnore]
         public string[] Depth
@@ -34,19 +35,19 @@
         }
 
         /// <summary>Thickness</summary>
-        [Summary]
-        [Units("mm")]
         public double[] Thickness { get; set; }
 
         /// <summary>Nitrate NO3.</summary>
         [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
+        [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
         /// <summary>Nitrate NO3.</summary>
         [Summary]
         [Units("mm")]
+        [Display(Format = "N1")]
         public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Physical.Thickness);
 
         /// <summary>Amount water (mm)</summary>
