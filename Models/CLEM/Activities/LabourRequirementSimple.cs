@@ -33,11 +33,5 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public new double LabourPerUnit { get; set; }
 
-        /// <summary>
-        /// Labour unit type
-        /// </summary>
-        [JsonIgnore]
-        public new LabourUnitType UnitType { get; set; }
-
     }
 }

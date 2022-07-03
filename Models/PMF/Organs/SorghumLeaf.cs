@@ -18,20 +18,9 @@ namespace Models.PMF.Organs
 {
 
     /// <summary>
-    /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
-    /// through photosynthesis, and determining the plant's transpiration demand.  The model also calculates the growth, senescence, and
-    /// detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
-    /// 
-    /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
-    /// competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
-    /// Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
-    /// Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
-    /// These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
+    /// SorghumLeaf reproduces the functionality provided by the sorghum and maize models in Apsim Classic.
+    /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.  
     /// </summary>
-    /// <remarks>
-    /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
-    /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
-    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -39,7 +28,7 @@ namespace Models.PMF.Organs
     {
         /// <summary>The plant</summary>
         [Link]
-        private Plant plant = null; //todo change back to private
+        private Plant plant = null; 
 
         [Link]
         private ISummary summary = null;
@@ -105,6 +94,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStressFunction = null;
 
+        [Link(Type = LinkType.Path, Path = "[Phenology].PhenoNitrogenStress")]
+        private IFunction nPhenoStressFunction { get; set; }
+
         /// <summary>Link to biomass removal model</summary>
         [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
@@ -156,9 +148,14 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
-        /// <summary>Gets or sets the R50.</summary>
-        [Description("Tillering Method: 0 = Fixed - uses FTN, 1 = Dynamic")]
-        public int TilleringMethod { get; set; } = 0;
+        /// <summary>Gets the Tillering Method.</summary>
+        [Description("Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FertileTillerNumber, 1 = DynamicTillering")]
+        public int TilleringMethod { get; set; }
+
+        /// <summary>Determined by the tillering method chosen.</summary>
+        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        [Description("")]
+        public double FertileTillerNumber { get; set; }
 
         /// <summary>The initial biomass dry matter weight</summary>
         [Description("Initial leaf dry matter weight")]
@@ -967,8 +964,7 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leafInitialised = true;
-                culms.TilleringMethod = TilleringMethod;
-
+                
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
                 LAI = InitialLAI * SowingDensity.ConvertSqM2SqMM();
@@ -1018,7 +1014,6 @@ namespace Models.PMF.Organs
             {
                 culms.FinalLeafNo = numberOfLeaves.Value();
                 culms.CalculatePotentialArea();
-
                 DltPotentialLAI = culms.dltPotentialLAI;
                 DltStressedLAI = culms.dltStressedLAI;
 
@@ -1066,17 +1061,11 @@ namespace Models.PMF.Organs
             LAIDead = SenescedLai;
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
 
-            CoverGreen = MathUtilities.Bound(MathUtilities.Divide(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAI), plant.SowingData.SkipDensityScale, 0.0), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
+            CoverGreen = MathUtilities.Bound(MathUtilities.Divide(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAI * plant.SowingData.SkipDensityScale), plant.SowingData.SkipDensityScale, 0.0), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-KDead * LAIDead), 0.0, 0.999999999);
 
             NitrogenPhotoStress = nPhotoStressFunction.Value();
-
-            NitrogenPhenoStress = 1.0;
-            if (phenology.Between("Emergence", "FlagLeaf"))
-            {
-                var phenoStress = (0.5 + 0.5 / 0.3 * (SLN - 0.7));
-                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.5, 1.0);
-            }
+            NitrogenPhenoStress = nPhenoStressFunction.Value();
         }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
@@ -1169,10 +1158,15 @@ namespace Models.PMF.Organs
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            // Add a heading and description.
-            foreach (ITag tag in base.Document())
+            foreach (var tag in GetModelDescription())
                 yield return tag;
 
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            foreach (ITag tag in culms.Document())
+                yield return tag;
             // List the parameters, properties, and processes from this organ that need to be documented:
 
             // Document initial DM weight.

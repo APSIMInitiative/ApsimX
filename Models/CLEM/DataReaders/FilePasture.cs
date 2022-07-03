@@ -695,8 +695,10 @@ namespace Models.CLEM
                             throw new Exception("Cannot find Runoff in pasture file: " + this.FullFileName);
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
 
                 return true;
             }
@@ -724,10 +726,13 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
                     htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
-                else if (!this.FileExists)
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 else
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                {
+                    if (!this.FileExists)
+                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                    else
+                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                }
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }

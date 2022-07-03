@@ -16,7 +16,8 @@ namespace Utility
             widget.DetachHandlers();
             if (widget is Container container)
                 foreach (Widget child in container.Children)
-                    child.DetachAllHandlers();
+                    if (child != null)
+                        child.DetachAllHandlers();
         }
 
         /// <summary>

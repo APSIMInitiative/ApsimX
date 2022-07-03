@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         public CropActivityManageCrop()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-            TransactionCategory = "Crop";
+            TransactionCategory = "Crop.[Type]";
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NoTask;
             return;
@@ -236,6 +236,17 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            string intro = (this.FindAllChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
+
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -252,52 +263,51 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("the unallocated portion of ");
                 else
                 {
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(AreaRequested, warnZero:true)} of ");
+
                     if (parentLand == null)
-                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
+                        htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span> of ");
                     else
-                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
+                        htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)} of ");
                 }
-                if (LandItemNameToUse == null || LandItemNameToUse == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[LAND NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + LandItemNameToUse + "</span>");
+                htmlWriter.Write($"{ CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
-                    htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
-            }
-        }
+        ///// <inheritdoc/>
+        //public override string ModelSummaryInnerClosingTags()
+        //{
+        //    using (StringWriter htmlWriter = new StringWriter())
+        //    {
+        //        if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
+        //            htmlWriter.Write("\r\n</div>");
+        //        return htmlWriter.ToString(); 
+        //    }
+        //}
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>");
-                    htmlWriter.Write("</div>");
-                }
-                else
-                {
-                    bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
-                    if (rotation)
-                        htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
-                    htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
-                }
-                return htmlWriter.ToString(); 
-            }
-        } 
+        ///// <inheritdoc/>
+        //public override string ModelSummaryInnerOpeningTags()
+        //{
+        //    using (StringWriter htmlWriter = new StringWriter())
+        //    {
+        //        if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
+        //        {
+        //            htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+        //            htmlWriter.Write("<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>");
+        //            htmlWriter.Write("</div>");
+        //        }
+        //        else
+        //        {
+        //            bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
+        //            if (rotation)
+        //                htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
+        //            htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
+        //        }
+        //        return htmlWriter.ToString(); 
+        //    }
+        //} 
         #endregion
     }
 }

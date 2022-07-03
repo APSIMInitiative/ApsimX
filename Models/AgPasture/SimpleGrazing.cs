@@ -95,7 +95,7 @@ namespace Models.AgPasture
         [Separator("Settings for the 'Simple Rotation'")]
         [Description("Frequency of grazing (days) or \"end of month\"")]
         [Units("days")]
-        [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
+        [Display(EnabledCallback = nameof(IsSimpleGrazingTurnedOn))]
         public string SimpleGrazingFrequencyString { get; set; }
 
         /// <summary></summary>
@@ -139,13 +139,13 @@ namespace Models.AgPasture
         [Separator("Optional rules for rotation length")]
         [Description("Monthly maximum rotation length (days)")]
         [Units("days")]
-        [Display(EnabledCallback = "IsTargetMassTurnedOn,IsFlexibleGrazingTurnedOn")]
+        [Display(EnabledCallback = nameof(IsMaximumRotationLengthArrayTurnedOn))]
         public double[] MaximumRotationLengthArray { get; set; }
 
         /// <summary></summary>
         [Description("Monthly minimum rotation length (days)")]
         [Units("days")]
-        [Display(EnabledCallback = "IsTargetMassTurnedOn,IsFlexibleGrazingTurnedOn")]
+        [Display(EnabledCallback = nameof(IsMinimumRotationLengthArrayTurnedOn))]
         public double[] MinimumRotationLengthArray { get; set; }
 
         /// <summary></summary>
@@ -260,6 +260,16 @@ namespace Models.AgPasture
                 return double.IsNaN(CNRatioDung) || CNRatioDung == 0;
             }
         }
+
+        /// <summary>
+        /// Is maximum rotation length input array enabled in the GUI?
+        /// </summary>
+        public bool IsMaximumRotationLengthArrayTurnedOn => IsTargetMassTurnedOn || IsFlexibleGrazingTurnedOn;
+
+        /// <summary>
+        /// Is minimum rotation length array enabled in the GUI?
+        /// </summary>
+        public bool IsMinimumRotationLengthArrayTurnedOn => IsTargetMassTurnedOn || IsFlexibleGrazingTurnedOn;
 
         /// <summary></summary>
         public bool IsTramplingTurnedOn { get { return TramplingOn; } }

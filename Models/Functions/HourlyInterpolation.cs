@@ -98,6 +98,8 @@ namespace Models.Functions
 
             yield return new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {agregationMethod} taken to give daily {Name}");
 
+            var xyPairs = Response as XYPairs;
+            xyPairs.XVariableName ??= "Air temperature (oC)";
             foreach (var tag in (Response as IModel).Document())
                 yield return tag;
         }
@@ -105,7 +107,7 @@ namespace Models.Functions
 
     /// <summary>
     /// Firstly 3-hourly estimates of air temperature (Ta) are interpolated 
-    /// using the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature. 
+    /// using the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature 
     /// pattern between Tmax and Tmin.  
     /// </summary>
     [Serializable]

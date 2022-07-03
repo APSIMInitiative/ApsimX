@@ -495,6 +495,7 @@ namespace Models.Optimisation
                 r.InstallPackages("remotes", "dplyr", "nloptr", "DiceDesign", "DBI", "cli");
                 r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
 
+                Status = "Running Parameter Optimization";
 
                 // todo - capture stderr as well?
                 r.OutputReceived += OnOutputReceivedFromR;
@@ -549,6 +550,14 @@ namespace Models.Optimisation
 
             // Delete temp outputs.
             Directory.Delete(outputPath, true);
+        }
+
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
         }
 
         /// <summary>

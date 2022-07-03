@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -34,6 +35,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Link]
         public Clock Clock = null;
+
+        /// <summary>Link to an event service.</summary>
+        [Link]
+        [NonSerialized]
+        private IEvent events = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -78,129 +84,70 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             //Create list of children by breed
-            foreach (RuminantType herdType in Resources.FindResourceGroup<RuminantHerd>().FindAllChildren<RuminantType>())
+            Guid currentUid = UniqueID;
+            foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
-                RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
+                RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
                 {
+                    RuminantTypeName = herdType.NameWithParent,
+                    GrazeFoodStoreTypeName = GrazeFoodStoreTypeName,
+                    ActivitiesHolder = ActivitiesHolder,
                     GrazeFoodStoreModel = GrazeFoodStoreModel,
                     RuminantTypeModel = herdType,
+                    HoursGrazed = HoursGrazed,
                     Parent = this,
                     Clock = this.Clock,
-                    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name
+                    Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
+                    OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                    TransactionCategory = TransactionCategory
                 };
+                currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
+                grazePastureHerd.UniqueID = currentUid;
 
-                ragpb.SetLinkedModels(Resources);
-
-                if (ragpb.Clock == null)
-                    ragpb.Clock = this.Clock;
-
-                ragpb.InitialiseHerd(true, true);
-
-                if (ActivityList == null)
-                    ActivityList = new List<CLEMActivityBase>();
-
-                ActivityList.Add(ragpb);
-                ragpb.ResourceShortfallOccurred += Paddock_ResourceShortfallOccurred;
-                ragpb.ActivityPerformed += BubbleHerd_ActivityPerformed;
+                grazePastureHerd.SetLinkedModels(Resources);
+                grazePastureHerd.InitialiseHerd(true, true);
+                Children.Add(grazePastureHerd);
+                events.ConnectEvents(grazePastureHerd);
             }
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
 
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
-            foreach (RuminantActivityGrazePastureHerd item in ActivityList)
+            IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren = FindAllChildren<RuminantActivityGrazePastureHerd>();
+            double potentialIntakeLimiter = -1;
+            foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
-                double potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
+                if(MathUtilities.IsNegative(potentialIntakeLimiter))
+                    potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
                 item.ResourceRequestList = null;
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
-                item.GetResourcesNeededForActivity();
-                if (item.ResourceRequestList != null && item.ResourceRequestList.Count > 0)
-                    totalNeeded += item.ResourceRequestList[0].Required;
+                var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is GrazeFoodStoreType).FirstOrDefault();
+                if(resourceRequest != null)
+                    totalNeeded += resourceRequest.Required;
             }
 
             // Check available resources
             // This determines the proportional amount available for competing breeds with different green diet proportions
-            // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model developed
+            // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
             double available = GrazeFoodStoreModel.Amount;
             double limit = 0;
-            if(totalNeeded>0)
+            if(MathUtilities.IsPositive(totalNeeded))
                 limit = Math.Min(1.0, available / totalNeeded);
 
             // apply limits to children
-            foreach (RuminantActivityGrazePastureHerd item in ActivityList)
+            foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
                 item.SetupPoolsAndLimits(limit);
 
             return ResourceRequestList;
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name);
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    int head = herd.Count();
-                    numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    double adultEqivalents = herd.Sum(a => a.AdultEquivalent);
-                    numberUnits = adultEqivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            if (ActivityList != null)
-            {
-                foreach (RuminantActivityGrazePastureHerd pastureHerd in ActivityList)
-                {
-                    pastureHerd.ResourceShortfallOccurred -= Paddock_ResourceShortfallOccurred;
-                    pastureHerd.ActivityPerformed -= BubbleHerd_ActivityPerformed;
-                }
-            }
-        }
-
-        private void Paddock_ResourceShortfallOccurred(object sender, EventArgs e)
-        {
-            // bubble shortfall to Activity base for reporting
-            OnShortfallOccurred(e);
-        }
-
-        private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
-        {
-            OnActivityPerformed(e);
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 Status = ActivityStatus.NoTask;

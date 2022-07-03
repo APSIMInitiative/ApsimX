@@ -1,12 +1,15 @@
 ﻿using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 
 namespace Models.CLEM
 {
@@ -14,7 +17,7 @@ namespace Models.CLEM
     /// Implements IFilterGroup for a specific set of filter parameters
     /// </summary>
     [Serializable]
-    public abstract class FilterGroup<TFilter> : CLEMModel, IFilterGroup
+    public abstract class FilterGroup<TFilter> : CLEMModel, IFilterGroup, IActivityCompanionModel
         where TFilter : IFilterable
     {
         [NonSerialized]
@@ -22,17 +25,37 @@ namespace Models.CLEM
         [NonSerialized]
         private protected IEnumerable<ISort> sortList = null;
 
+        /// <inheritdoc/>
+        [Description("Remove inherent order before sorting")]
+        [Core.Display(Order = 7000)]
+        public bool RandomiseBeforeSorting { get; set; }
+
         /// <summary>
         /// The properties available for filtering
         /// </summary>
         [NonSerialized]
         protected Dictionary<string, PropertyInfo> properties;
 
+        /// <summary>
+        /// An identifier for this FilterGroup based on parent requirements
+        /// </summary>
+        [Description("Group identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
+        public string Identifier { get; set; }
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public string Measure
+        {
+            get { return ""; }
+            set {; }
+        }
+
         /// <inheritdoc/>
         [JsonIgnore]
         public IEnumerable<string> Parameters => properties?.Keys;
 
-        /// <inheritdoc/>
+                /// <inheritdoc/>
         public IEnumerable<string> GetParameterNames()
         {
             if (properties is null)
@@ -41,6 +64,13 @@ namespace Models.CLEM
             return properties.Keys;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FilterGroup()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
+        }
 
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) 
@@ -66,7 +96,8 @@ namespace Models.CLEM
         {
             filterRules = null;
             sortList = null;
-            InitialiseFilters();
+            if(!GetType().Name.Contains("Linked"))
+                InitialiseFilters();
         }
 
         /// <summary>
@@ -119,7 +150,7 @@ namespace Models.CLEM
 
             if(sortList?.Any()??false)
                 // add sorting and take specified
-                filtered = filtered.Sort(sortList);
+                filtered = filtered.Sort(sortList, RandomiseBeforeSorting);
 
             // do all takes and skips
             foreach (var take in FindAllChildren<TakeFromFiltered>())
@@ -166,6 +197,22 @@ namespace Models.CLEM
             filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
 
             return filterRules.All(rule => rule is null ? false : rule(item));
+        }
+
+        /// <inheritdoc/>
+        public virtual void PrepareForTimestep()
+        {
+        }
+
+        /// <inheritdoc/>
+        public virtual List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
+        {
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public virtual void PerformTasksForTimestep(double activityMetric)
+        {
         }
 
         #region descriptive summary

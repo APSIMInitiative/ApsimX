@@ -92,7 +92,7 @@ namespace UserInterface.Views
                 textView = (TextView)gtkControl;
                 mainWidget = textView;
             }
-            textView.Margin = 10;
+            mainWidget.Margin = 10;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -326,7 +326,8 @@ namespace UserInterface.Views
                 else
                 {
                 }
-                if (autoNewline)
+                // Don't insert auto newlines after the last block in the document.
+                if (autoNewline && !(block.Parent is MarkdownDocument && block.Parent.LastChild == block))
                     textView.Buffer.Insert(ref insertPos, "\n\n");
             }
 

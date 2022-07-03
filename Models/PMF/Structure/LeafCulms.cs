@@ -10,22 +10,27 @@ using System.Linq;
 namespace Models.PMF.Struct
 {
 	/// <summary>
-	/// LeafCulms model ported from LeafCulms and LeafCulms_Fixed in
-	/// the apsim classic sorghum model.
-	/// </summary>
-	/// <remarks>
-	/// # TODO:
-	/// - Implement constants as IFunctions.
-	/// - Fix case to match style guidelines.
-	/// </remarks>
+	/// The LeafCulms model manages the additional canopy resources produced by tillering. Two main tillering strategies are provided by default, and are managed via 
+	/// the TilleringMethod switch defined in SorghumLeaf, which can be manipulated via script methods. 
+	/// FixedTillering will use the BudNumber property provided as part of the sowing method to determine the total number of fertile tillers.
+	/// Setting the BudNumber to a negative value will calculate the number of fixed tillers using latitude and sowing density to provide a rule of thumb value. 
+	/// These values have been derived using data from the Australian sorghum growing area, and may not be suitable for other locations.
+	/// DynamicTillering will calculate the potential number of tillers - usually determined by the time the 6th leaf has appeared. 
+	/// The number of fertile tillers is then maintained by the addition or removal of active tillers. Further information provided below for each method.
+	/// 
+	/// </summary>	
 	[Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
 	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
-		/// <summary> Tillering Method that uses a fixed number of tillers</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
+        /// <summary>The parent Plant</summary>
+        [Link]
+        Plant plant = null;
+
+        /// <summary> Tillering Method that uses a fixed number of tillers</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
 		private ITilleringMethod fixedTillering = null;
 
 		/// <summary> Tillering Method that manages number of tillers dynamically</summary>
@@ -59,10 +64,13 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
 
-		/// <summary> Enables Tillering method to be controlled via script</summary>
-		public double TilleringMethod { get; set; }
+        /// <summary> Set through Sowing Event</summary>
+        public int TilleringMethod { get; set; } 
 		
 		private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
+
+        /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
+        public double FertileTillerNumber { get => tillering.FertileTillerNumber; }
 
 		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
@@ -91,7 +99,7 @@ namespace Models.PMF.Struct
 		public List<Culm> Culms;
 
 		/// <summary>Total TT required to get from emergence to floral init.</summary>
-		[JsonIgnore]
+        [JsonIgnore]
 		public double TTTargetFI { get; private set; }
 
 		/// <summary> Constructor. </summary>
@@ -165,5 +173,18 @@ namespace Models.PMF.Struct
 			return appearanceRate1.Value();
 		}
 
-	}
+        /// <summary>Called when crop is sowed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        protected void OnPlantSowing(object sender, SowingParameters data)
+        {
+            if (data.Plant == plant)
+            {
+				//sets which tillering method to reference via tillering
+				TilleringMethod = data.TilleringMethod;
+            }
+        }
+
+    }
 }

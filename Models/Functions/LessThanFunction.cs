@@ -52,6 +52,10 @@ namespace Models.Functions
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
 
