@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
                     IndividualsToBeTrucked = uniqueIndividuals;
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    if (truckingBuy != null)
+                    if (truckingSell != null)
                         foreach (var trucking in truckingSell)
                             trucking.ManuallyGetResourcesPerformActivity();
 
@@ -204,6 +204,9 @@ namespace Models.CLEM.Activities
                 default:
                     break;
             }
+
+            Status = ActivityStatus.NotNeeded;
+
         }
 
         /// <inheritdoc/>
@@ -483,11 +486,11 @@ namespace Models.CLEM.Activities
                     ind.ID = HerdResource.NextUniqueID;
                     HerdResource.AddRuminant(ind, this);
                 }
-                if (head == numberToDo)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
             }
+            if (head == numberToDo)
+                SetStatusSuccessOrPartial();
+            else
+                this.Status = ActivityStatus.Partial;
         }
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
