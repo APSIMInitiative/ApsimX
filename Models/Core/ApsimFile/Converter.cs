@@ -4472,7 +4472,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Get values of a property
+        /// Get values of a property. Looks through tokens and finds first occurrance and returns it.
         /// </summary>
         /// <param name="tokens">Tokens to search through.</param>
         /// <param name="nodeName"></param>
@@ -4485,9 +4485,6 @@ namespace Models.Core.ApsimFile
                                                              double[] bd, double[] bdThickness,
                                                              double[] thicknessToReturn)
         {
-            double[] valuesToReturn = null;
-            string unitsToReturn = null;
-
             foreach (var token in tokens)
             {
                 string units = null;
@@ -4536,40 +4533,12 @@ namespace Models.Core.ApsimFile
                                                                         allowMissingValues: true);
                         }
 
-                        if (valuesToReturn == null)
-                        {
-                            valuesToReturn = values;
-                            thicknessToReturn = valuesThickness;
-                            unitsToReturn = units;
-                        }
-                        else
-                        {
-                            // Convert the units to match the return units.
-                            if (units != null && units != unitsToReturn)
-                            {
-                                var mappedBd = SoilUtilities.MapConcentration(bd, bdThickness,
-                                                                              thicknessToReturn,
-                                                                              1.5);
-
-                                if (units == "kgha" && unitsToReturn == "ppm")
-                                    SoilUtilities.kgha2ppm(thicknessToReturn, mappedBd, values);
-                                else if (units == "ppm" && unitsToReturn == "kgha")
-                                    SoilUtilities.ppm2kgha(thicknessToReturn, mappedBd, values);
-                            }
-
-                            // values should be the same layer structure as valuesToReturn. Iterate
-                            // through all values and overwrite valuesToReturn if not NaN.
-                            for (int i = 0; i < values.Length; i++)
-                            {
-                                if (!double.IsNaN(values[i]))
-                                    valuesToReturn[i] = values[i];
-                            }
-                        }
+                        return (values, units, valuesThickness);
                     }
                 }
             }
 
-            return (valuesToReturn, unitsToReturn, thicknessToReturn);
+            return (null, null, null);
         }
 
         /// <summary>
