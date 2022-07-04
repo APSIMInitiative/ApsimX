@@ -24,7 +24,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
-
     {
         private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
@@ -133,7 +132,6 @@ namespace Models.CLEM.Activities
                 : CurrentHerd(true).OfType<RuminantFemale>()
                     .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
 
-
             return fullSetBreeders;
         }
 
@@ -147,11 +145,20 @@ namespace Models.CLEM.Activities
             IEnumerable<RuminantFemale> herd = GetBreeders();
             uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
+            amountToDo = numberToDo;
+
+            // ensure a conception rate is provided for all females
+            // calculate conception rate for all individuals
+            foreach (RuminantFemale female in uniqueIndividuals)
+            {
+                if (female.BreedParams.ConceptionModel is null)
+                    throw new ApsimXException(this, $"No conception details were found for [r={female.BreedParams.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
+                female.ActivityDeterminedConceptionRate = female.BreedParams.ConceptionModel.ConceptionRate(female);
+            }
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
-                int number = numberToDo;
                 switch (valueToSupply.Key.identifier)
                 {
                     case "Number mated":
@@ -161,7 +168,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per head":
-                                valuesForCompanionModels[valueToSupply.Key] = number;
+                                valuesForCompanionModels[valueToSupply.Key] = numberToDo;
                                 break;
                             default:
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -174,22 +181,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per head":
-                                // need to estimate conception rate
-                                foreach (RuminantFemale female in uniqueIndividuals)
-                                {
-                                    if (female.BreedParams.ConceptionModel == null)
-                                        throw new ApsimXException(this, $"No conception details were found for [r={female.BreedParams.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
-                                    double rate = female.BreedParams.ConceptionModel.ConceptionRate(female);
-                                    if (RandomNumberGenerator.Generator.NextDouble() <= rate)
-                                    {
-                                        female.ActivityDeterminedConceptionRate = rate;
-                                        amountToDo++;
-                                    }
-                                    else
-                                    {
-                                        female.ActivityDeterminedConceptionRate = 0;
-                                    }
-                                }
+                                amountToDo = uniqueIndividuals.Where(a => RandomNumberGenerator.Generator.NextDouble() <= a.ActivityDeterminedConceptionRate).Count();
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -219,6 +211,10 @@ namespace Models.CLEM.Activities
                         Status = ActivityStatus.Warning;
                         AddStatusMessage("Resource shortfall prevented any mating");
                     }
+
+                    // set skipped individual activitymanagedconception to 0 // unmated
+                    foreach (RuminantFemale female in uniqueIndividuals.Skip(numberToDo - numberToSkip))
+                        female.ActivityDeterminedConceptionRate = 0;
                 }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number conceived").FirstOrDefault();
@@ -237,29 +233,24 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            List<RuminantFemale> selectedBreeders = new List<RuminantFemale>();
-            if (numberToDo-numberToSkip > 0)
+            int mated = 0;
+            List<RuminantFemale> selectedBreeders = uniqueIndividuals.SkipLast(numberToSkip).ToList();
+            foreach (RuminantFemale ruminant in selectedBreeders)
             {
-                amountToDo -= amountToSkip;
-                int mated = 0;
-                selectedBreeders = uniqueIndividuals.ToList();
-                foreach (RuminantFemale ruminant in selectedBreeders)
+                // if more conceptions allowed
+                if (amountToDo > 0)
                 {
-                    // if no more conceptions allowed
-                    if (mated < numberToDo & amountToDo > 0)
-                    {
-                        mated++;
-                        if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
-                            amountToDo--;
-                    }
-                    else
-                    {
-                        ruminant.ActivityDeterminedConceptionRate = null;
-                    }
+                    mated++;
+                    if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
+                        amountToDo--;
                 }
-                SetStatusSuccessOrPartial((mated == numberToDo || amountToDo <= 0) == false);
+                else
+                {
+                    ruminant.ActivityDeterminedConceptionRate = 0;
+                }
             }
             uniqueIndividuals = selectedBreeders;
+            SetStatusSuccessOrPartial(mated != numberToDo);
         }
 
         /// <summary>
