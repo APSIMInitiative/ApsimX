@@ -4177,7 +4177,7 @@ namespace Models.Core.ApsimFile
                     foreach (var initWater in JsonUtilities.ChildrenOfType(soil, "InitialWater"))
                     {
                         var percentMethod = initWater["PercentMethod"].Value<string>();
-                        bool filledFromTop = percentMethod == "1" || percentMethod == "FilledFromTop";
+                        bool filledFromTop = percentMethod == "0" || percentMethod == "FilledFromTop";
                         double fractionFull = Math.Min(1.0, initWater["FractionFull"].Value<double>());
                         double depthWetSoil = double.NaN;
                         if (initWater["DepthWetSoil"] != null)
