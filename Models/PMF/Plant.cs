@@ -346,7 +346,9 @@ namespace Models.PMF
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
         /// <param name="seeds">The number of seeds sown (/m2).</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0, double seeds = 0)
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
             SowingDate = clock.Today;
 
@@ -360,9 +362,17 @@ namespace Models.PMF
             SowingData.RowSpacing = rowSpacing;
             SowingData.SkipType = rowConfig;
             SowingData.Seeds = seeds;
+            SowingData.TilleringMethod = tillering;
+            SowingData.FTN = ftn;
 
             if (SowingData.Seeds != 0 && SowingData.Population != 0)
                 throw new Exception("Cannot specify both plant population and number of seeds when sowing.");
+
+            if (SowingData.TilleringMethod < -1 || SowingData.TilleringMethod > 1)
+                throw new Exception("Invalid TilleringMethod set in sowingData.");
+
+            if (SowingData.TilleringMethod != 0 && SowingData.FTN > 0.0)
+                throw new Exception("Cannot set a FertileTillerNumber when TilleringMethod is not set to FixedTillering.");
 
             if (rowConfig == 0)
             {
@@ -397,7 +407,7 @@ namespace Models.PMF
             if (population > 0)
                 this.Population = population;
             else
-                this.Population = seeds;
+                this.Population = SowingData.Population = seeds;
 
             // Find cultivar and apply cultivar overrides.
             Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
@@ -414,7 +424,7 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Information);
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " mm and a depth of " + depth + " mm"), MessageType.Information);
         }
 
         /// <summary>Harvest the crop.</summary>

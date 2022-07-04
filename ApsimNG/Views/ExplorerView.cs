@@ -90,7 +90,19 @@ namespace UserInterface.Views
                 if (descriptionView == null)
                 {
                     descriptionView = new MarkdownView(this);
+                    // Set PropagateNaturalHeight to true, to ensure that the
+                    // scrolled window requests enough space to not require a
+                    // scrollbar by default. We could change MarkdownView to
+                    // always do this, but it's used in lots of other places, so
+                    // that may have unintended consequences and would require
+                    // more extensive testing.
+                    if (descriptionView.MainWidget is ScrolledWindow scroller)
+                        scroller.PropagateNaturalHeight = true;
                     rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
+                    // Let Gtk catch up with things; otherwise too much space
+                    // is allocated to the new description view. Is there a better way?
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
                 }
                 descriptionView.Text = description;
             }

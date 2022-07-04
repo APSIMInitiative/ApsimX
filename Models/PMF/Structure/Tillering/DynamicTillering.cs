@@ -9,6 +9,7 @@ using Models.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
@@ -71,9 +72,18 @@ namespace Models.PMF.Struct
 
 		/// <summary>Number of potential Fertile Tillers at harvest</summary>
 		public double CalculatedTillerNumber { get; private set; }
-		
-		/// <summary>Actual Number of Fertile Tillers</summary>
-		public double FertileTillerNumber { get; private set; }
+        /// <summary>Current Number of Tillers</summary>
+        public double CurrentTillerNumber { get; set; }
+        /// <summary>Current Number of Tillers</summary>
+        public double DltTillerNumber { get; set; }
+
+        /// <summary>Actual Number of Fertile Tillers</summary>
+        [JsonIgnore]
+        public double FertileTillerNumber 
+		{ 
+			get => CurrentTillerNumber;
+			set { throw new Exception("Cannot set the FertileTillerNumber for Dynamic Tillering. Make sure you set TilleringMethod before FertileTillerNmber"); }
+		}
 
 		/// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
 		public double SupplyDemandRatio { get; private set; }
@@ -81,7 +91,7 @@ namespace Models.PMF.Struct
 		private int flagStage;
 		private int floweringStage;
 		private int endJuvenilePhase;
-		private double tillersAdded;
+		//private double tillersAdded;
 		private int startThermalQuotientLeafNo = 3;
 		private int endThermalQuotientLeafNo = 5;
 		private double plantsPerMetre;
@@ -191,7 +201,7 @@ namespace Models.PMF.Struct
 			if (CalculatedTillerNumber > 3)  //initiate T2:2 & T3:1
 			{
 				InitiateTiller(2, 1, 2);
-				tillersAdded = 1;       // Reporting. 
+                CurrentTillerNumber = 1;       // Reporting. 
 			}
 
 		}
@@ -201,7 +211,7 @@ namespace Models.PMF.Struct
 			//and the newleaf is greater than 3
 			// get number of tillers added so far
 
-			if (tillersAdded >= FertileTillerNumber) return 0.0;
+			if (CurrentTillerNumber >= CalculatedTillerNumber) return 0.0;
 			// calculate linear LAI - plantsPerMeter is calculated at sowing
 			//tpla is LAI/density - remove x density from plantspermetre calc?
 			linearLAI = plantsPerMetre * (leaf.LAI + leaf.SenescedLai) / 10000.0;
@@ -209,7 +219,7 @@ namespace Models.PMF.Struct
 			if (linearLAI < maxLAIForTillerAddition.Value())
 			{
 				var appRate = culms.getLeafAppearanceRate(5);
-				return Math.Min(phenology.thermalTime.Value() / appRate, CalculatedTillerNumber - tillersAdded);
+				return Math.Min(phenology.thermalTime.Value() / appRate, CalculatedTillerNumber - CurrentTillerNumber);
 			}
 			return 0.0;
 		}
@@ -226,7 +236,7 @@ namespace Models.PMF.Struct
 
 			newCulm.CulmNo = tillerNumber;
 			newCulm.CurrentLeafNo = initialLeaf;
-			newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (tillersAdded * culms.VerticalTillerAdjustment.Value());
+			newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (CurrentTillerNumber * culms.VerticalTillerAdjustment.Value());
 			newCulm.Proportion = fractionToAdd;
 			newCulm.FinalLeafNo = culms.Culms[0].FinalLeafNo;
 			//newCulm.calcLeafAppearance();
@@ -252,8 +262,8 @@ namespace Models.PMF.Struct
 			{
 				InitiateTiller(lastCulm.CulmNo + 1, tillerFraction - 1.0, 1);
 			}
-
-			tillersAdded += fractionToAdd;
+            DltTillerNumber = fractionToAdd;
+            CurrentTillerNumber += fractionToAdd;
 		}
 
 		/// <summary> calculate the potential leaf area</summary>
@@ -279,7 +289,7 @@ namespace Models.PMF.Struct
 
 			var tillerLaiToReduce = calcCeaseTillerSignal(dltStressedLAI - laiReductionForSLA);
 
-			bool moreToAdd = (tillersAdded < CalculatedTillerNumber) && (linearLAI < maxLAIForTillerAddition.Value());
+			bool moreToAdd = (CurrentTillerNumber < CalculatedTillerNumber) && (linearLAI < maxLAIForTillerAddition.Value());
 			double nLeaves = culms.Culms.First().CurrentLeafNo;
 
 			if (nLeaves > 7 && !moreToAdd && tillerLaiToReduce > 0.0)
@@ -382,14 +392,13 @@ namespace Models.PMF.Struct
 		[EventSubscribe("PlantSowing")]
 		protected void OnPlantSowing(object sender, SowingParameters data)
 		{
-			if (data.Plant == plant)
+			if (data.Plant == plant && leaf.TilleringMethod == 1)
 			{
 				radiationAverages = new List<double>();
 				plantsPerMetre = data.RowSpacing / 1000.0 * data.SkipDensityScale;
-				//plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
-
-				FertileTillerNumber = data.BudNumber;
-				tillersAdded = 0.0;
+                //plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
+                CurrentTillerNumber = 0.0;
+				CalculatedTillerNumber = 0.0;
 			}
 		}
 	}

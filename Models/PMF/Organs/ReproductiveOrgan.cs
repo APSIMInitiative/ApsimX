@@ -412,6 +412,9 @@ namespace Models.PMF.Organs
             foreach (var tag in GetModelDescription())
                 yield return tag;
 
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
             // Document Constants
             var constantTags = new List<ITag>();
             foreach (var constant in FindAllChildren<Constant>())
@@ -420,7 +423,7 @@ namespace Models.PMF.Organs
             yield return new Section("Constants", constantTags);
 
             // Document everything else.
-            foreach (var child in Children.Where(child => !(child is Constant)))
+            foreach (var child in Children.Where(child => !(child is Constant) && !(child is Memo)))
                 yield return new Section(child.Name, child.Document());
 
         }

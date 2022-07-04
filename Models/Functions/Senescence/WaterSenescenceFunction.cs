@@ -62,7 +62,7 @@ namespace Models.Functions
         {
             totalLaiEquilibWater = 0.0;
             avLaiEquilibWater = 0.0;
-            laiEquilibWaterQ.Clear();
+            laiEquilibWaterQ?.Clear();
         }
 
         /// <summary>Gets the value.</summary>

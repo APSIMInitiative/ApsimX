@@ -171,6 +171,13 @@ namespace UserInterface.Classes
             Name = metadata.GetCustomAttribute<DescriptionAttribute>()?.ToString();
             if (string.IsNullOrEmpty(Name))
                 Name = metadata.Name;
+            string units = metadata.GetCustomAttribute<UnitsAttribute>()?.ToString();
+            if (!string.IsNullOrEmpty(units))
+            {
+                units = "(" + units + ")";
+                if (!Name.Contains(units))
+                    Name += " " + units;
+            }
 
             Tooltip = metadata.GetCustomAttribute<TooltipAttribute>()?.Tooltip;
             Separators = metadata.GetCustomAttributes<SeparatorAttribute>()?.Select(s => s.ToString())?.ToList();
