@@ -399,7 +399,7 @@
             };
             var oc = Converter.GetValues(new JObject[] { organic, sample }, "OC", 1.0, null, null, null);
 
-            Assert.AreEqual(new double[] { 2.0, 0.9 }, oc.Item1);
+            Assert.AreEqual(new double[] { 2.0, 1.0 }, oc.Item1);
             Assert.AreEqual("Total", oc.Item2);
             Assert.AreEqual(new double[] { 100.0, 200.0 }, oc.Item3);
         }

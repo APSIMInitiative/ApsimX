@@ -107,17 +107,12 @@ namespace Models.Soils
         /// </summary>
         public virtual void Reset()
         {
-            double[] values;
             if (InitialValues == null)
-                values = new double[Thickness.Length];
+                kgha = new double[Thickness.Length];
             else if (InitialValuesUnits == UnitsEnum.kgha)
-                values = ReflectionUtilities.Clone(InitialValues) as double[];
+                kgha = ReflectionUtilities.Clone(InitialValues) as double[];
             else
-                values = SoilUtilities.ppm2kgha(Thickness, Physical.BD, InitialValues);
-
-            InitialValues = values;
-            InitialValuesUnits = UnitsEnum.kgha;
-            kgha = values;
+                kgha = SoilUtilities.ppm2kgha(Thickness, Physical.BD, InitialValues);
         }
 
         /// <summary>Setter for kgha.</summary>
