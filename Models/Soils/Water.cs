@@ -341,9 +341,9 @@
             // Get the first crop ll or ll15.
             var firstCrop = (Physical as IModel).FindChild<SoilCrop>();
             double[] LowerBound;
-            //if (Physical != null && firstCrop != null)
-            //    LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, Physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL)); 
-            //else
+            if (Physical != null && firstCrop != null)
+                LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, Physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL)); 
+            else
                 LowerBound = SoilUtilities.MapConcentration(Physical.LL15, Physical.Thickness, thickness.ToArray(), Physical.LL15.Last()); 
             if (LowerBound == null)
                 throw new Exception("Cannot find crop lower limit or LL15 in soil");
