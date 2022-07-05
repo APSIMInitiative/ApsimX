@@ -196,10 +196,20 @@ namespace Models.WaterModel
         public double CatchmentArea { get; set; } = 10;
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Units("mm")]
         [Summary]
         [JsonIgnore]
-        [Units("mm")]
-        public string[] Depth => Physical.Depth; 
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
 
         /// <summary>Soil layer thickness for each layer (mm).</summary>
         public double[] Thickness { get; set; }

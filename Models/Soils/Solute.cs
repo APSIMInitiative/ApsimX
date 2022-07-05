@@ -112,7 +112,7 @@ namespace Models.Soils
             else if (InitialValuesUnits == UnitsEnum.kgha)
                 kgha = ReflectionUtilities.Clone(InitialValues) as double[];
             else
-                kgha = SoilUtilities.ppm2kgha(Thickness, Physical.BD, InitialValues);
+                kgha = SoilUtilities.ppm2kgha(Thickness, SoluteBD, InitialValues);
         }
 
         /// <summary>Setter for kgha.</summary>
@@ -166,15 +166,16 @@ namespace Models.Soils
         /// <param name="targetThickness">Target thickness.</param>
         public void Standardise(double[] targetThickness)
         {
-            SetThickness(targetThickness);
-
+            // Define default ppm value to use below bottom layer of this solute if necessary.
             double defaultValue;
             if (Name.Equals("NO3", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 0.1;
+                defaultValue = 1.0;
             else if (Name.Equals("NH4", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 0.01;
+                defaultValue = 0.2;
             else
                 defaultValue = 0.0;
+
+            SetThickness(targetThickness, defaultValue);
 
             if (FIP != null) FIP = MathUtilities.FillMissingValues(FIP, Thickness.Length, FIP.Last());
             if (Exco != null) Exco = MathUtilities.FillMissingValues(Exco, Thickness.Length, Exco.Last());
@@ -184,7 +185,8 @@ namespace Models.Soils
 
         /// <summary>Sets the sample thickness.</summary>
         /// <param name="thickness">The thickness to change the sample to.</param>
-        private void SetThickness(double[] thickness)
+        /// <param name="defaultValue">Default value for missing values.</param>
+        private void SetThickness(double[] thickness, double defaultValue)
         {
             if (!MathUtilities.AreEqual(thickness, Thickness))
             {
@@ -193,7 +195,10 @@ namespace Models.Soils
                 if (FIP != null)
                     FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
 
-                InitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, thickness, 1.0);
+                double[] ppm = InitialValues;
+                if (InitialValuesUnits == UnitsEnum.kgha)
+                    ppm = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
+                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, defaultValue);
                 InitialValuesUnits = Solute.UnitsEnum.ppm;
                 Thickness = thickness;
             }
@@ -209,5 +214,8 @@ namespace Models.Soils
                 return physical;
             }
         }
+
+        /// <summary>Return bulk density on the same layer structure as this solute.</summary>
+        private double[] SoluteBD => SoilUtilities.MapConcentration(Physical.BD, Physical.Thickness, Thickness, Physical.BD.Last());
     }
 }
