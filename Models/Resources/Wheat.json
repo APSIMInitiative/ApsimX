@@ -7039,10 +7039,14 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].CAMP.FLNparams.LV = 7",
-                    "[Phenology].CAMP.FLNparams.LN = 7.0",
+                    "[Phenology].CAMP.FLNparams.LV = 7.5",
+                    "[Phenology].CAMP.FLNparams.LN = 7.5",
                     "[Phenology].CAMP.FLNparams.SV = 10.0",
-                    "[Phenology].CAMP.FLNparams.SN = 10.0"
+                    "[Phenology].CAMP.FLNparams.SN = 10.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 100",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Conquest",
                   "Children": [],
@@ -7085,10 +7089,14 @@
                     "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008, 0.008,0.008, 0.008, 0.008",
                     "[Stem].MinimumNConc.FixedValue = 0.006",
                     "[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05",
-                    "[Phenology].CAMP.FLNparams.LV = 8.5",
-                    "[Phenology].CAMP.FLNparams.LN = 8.5",
-                    "[Phenology].CAMP.FLNparams.SV = 8.5",
-                    "[Phenology].CAMP.FLNparams.SN = 8.5"
+                    "[Phenology].CAMP.FLNparams.LV = 9.0",
+                    "[Phenology].CAMP.FLNparams.LN = 9.0",
+                    "[Phenology].CAMP.FLNparams.SV = 9.0",
+                    "[Phenology].CAMP.FLNparams.SN = 9.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 100",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Discovery",
                   "Children": [
@@ -7267,8 +7275,8 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 90",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
+                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
@@ -7548,12 +7556,15 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
-                    "[Phenology].CAMP.FLNparams.LV = 7",
-                    "[Phenology].CAMP.FLNparams.LN = 7.0",
+                    "[Phenology].CAMP.FLNparams.LV = 9.0",
+                    "[Phenology].CAMP.FLNparams.LN = 9.0",
                     "[Phenology].CAMP.FLNparams.SV = 11.0",
-                    "[Phenology].CAMP.FLNparams.SN = 11.0"
+                    "[Phenology].CAMP.FLNparams.SN = 11.0",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Mercury",
                   "Children": [],
