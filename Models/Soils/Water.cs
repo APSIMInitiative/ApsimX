@@ -48,7 +48,7 @@
         [Summary]
         [Units("mm")]
         [Display(Format = "N1")]
-        public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Physical.Thickness);
+        public double[] InitialValuesMM => InitialValues == null ? null : MathUtilities.Multiply(InitialValues, Thickness);
 
         /// <summary>Amount water (mm)</summary>
         [Units("mm")]
@@ -124,15 +124,17 @@
         {
             get
             {
+                double[] dulMM = SoilUtilities.MapConcentration(Physical.DULmm, Physical.Thickness, Thickness, Physical.DULmm.Last());
                 return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
-                                                   MathUtilities.Subtract(Physical.DULmm, RelativeToLLMM).Sum();
+                                                   MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
             }
             set
             {
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 if (FilledFromTop)
-                    InitialValues = DistributeWaterFromTop(value, Physical.Thickness,RelativeToLL, Physical.DUL, RelativeToXF);
+                    InitialValues = DistributeWaterFromTop(value, Thickness, RelativeToLL, dul, RelativeToXF);
                 else
-                    InitialValues = DistributeWaterEvenly(value, RelativeToLL, Physical.DUL);
+                    InitialValues = DistributeWaterEvenly(value, RelativeToLL, dul);
             }
         }
 
@@ -145,10 +147,12 @@
                 if (InitialValues == null)
                     return 0;
                 var ll = RelativeToLL;
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+
                 double depthSoFar = 0;
                 for (int layer = 0; layer < Thickness.Length; layer++)
                 {
-                    var prop = (InitialValues[layer] - ll[layer]) / (Physical.DUL[layer] - ll[layer]);
+                    var prop = (InitialValues[layer] - ll[layer]) / (dul[layer] - ll[layer]);
 
                     if (MathUtilities.IsGreaterThanOrEqual(prop, 1.0))
                         depthSoFar += Thickness[layer];
@@ -163,7 +167,8 @@
             }
             set
             {
-                InitialValues = DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, Physical.DUL);
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                InitialValues = DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
             }
         }
 
@@ -175,19 +180,22 @@
         {
             get
             {
+                double[] values;
                 if (RelativeTo == "LL15")
-                    return Physical.LL15;
+                    values = Physical.LL15;
                 else
                 {
                     var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
                     if (plantCrop == null)
                     {
                         RelativeTo = "LL15";
-                        return Physical.LL15;
+                        values = Physical.LL15;
                     }
                     else
-                        return plantCrop.LL;
+                        values = plantCrop.LL;
                 }
+
+                return SoilUtilities.MapConcentration(values, Physical.Thickness, Thickness, values.Last());
             }
         }
 
@@ -203,7 +211,7 @@
                 {
                     var plantCrop = FindInScope<SoilCrop>(RelativeTo);
                     if (plantCrop != null)
-                        return plantCrop.XF;
+                        return SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
                 }
                 return Enumerable.Repeat(1.0, Thickness.Length).ToArray();
             }

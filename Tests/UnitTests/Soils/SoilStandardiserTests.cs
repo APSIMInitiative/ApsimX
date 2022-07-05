@@ -177,7 +177,7 @@
             Assert.AreEqual(chemical.EC, new double[] { 150, 200 });
 
             Assert.AreEqual(solutes[0].InitialValues, new double[] { 21.5, 1.0 });  // NO3 kg/ha
-            Assert.AreEqual(solutes[1].InitialValues, new double[] { 1.5, 1.0 }); // NH4 kg/ha
+            Assert.AreEqual(solutes[1].InitialValues, new double[] { 1.1, 0.2 }); // NH4 kg/ha
         }
 
         [Test]
