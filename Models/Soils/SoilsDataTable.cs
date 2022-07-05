@@ -2,8 +2,10 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.WaterModel;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Data;
 
@@ -114,10 +116,14 @@
                 chemical.ECMetadata = GetCodeValues(table, "ECCode", row, numLayers);
                 chemical.PH = GetDoubleValues(table, "PH", row, numLayers);
                 chemical.PHMetadata = GetCodeValues(table, "PHCode", row, numLayers);
-                chemical.CL = GetDoubleValues(table, "CL (mg/kg)", row, numLayers);
-                chemical.CLMetadata = GetCodeValues(table, "CLCode", row, numLayers);
                 chemical.ESP = GetDoubleValues(table, "ESP (%)", row, numLayers);
                 chemical.ESPMetadata = GetCodeValues(table, "ESPCode", row, numLayers);
+
+                var solute = new Solute();
+                solute.Thickness = physical.Thickness;
+                solute.InitialValues = GetDoubleValues(table, "CL (mg/kg)", row, numLayers);
+                solute.InitialValuesUnits = Solute.UnitsEnum.ppm;
+                soil.Children.Add(solute);
 
                 // Add in some necessary models.
                 var soilTemp = new CERESSoilTemperature();
@@ -126,7 +132,7 @@
                 var nutrient = new Nutrients.Nutrient();
                 nutrient.ResourceName = "Nutrient";
                 soil.Children.Add(nutrient);
-                var initialWater = new InitialWater();
+                var initialWater = new Water();
                 soil.Children.Add(initialWater);
 
                 // crops
@@ -254,9 +260,12 @@
                 SetCodeValues(table, "ECCode", chemical.ECMetadata, startRow);
                 SetDoubleValues(table, "PH", chemical.PH, startRow);
                 SetCodeValues(table, "PHCode", chemical.PHMetadata, startRow);
-                SetDoubleValues(table, "CL (mg/kg)", chemical.CL, startRow);
-                SetCodeValues(table, "CLCode", chemical.CLMetadata, startRow);
 
+                var cl = soil.Children
+                             .Where(child => child.Name.Equals("CL", StringComparison.InvariantCultureIgnoreCase))
+                             .First() as Solute;
+                if (cl != null)
+                    SetDoubleValues(table, "CL (mg/kg)", cl.InitialValues, startRow);
                 SetDoubleValues(table, "Boron (Hot water mg/kg)", null, startRow);
                 SetCodeValues(table, "BoronCode", null, startRow);
                 SetDoubleValues(table, "CEC (cmol+/kg)", null, startRow);

@@ -5,6 +5,7 @@
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -226,25 +227,17 @@
                                 Thickness = new double[] { 100, 300 },
                                 Carbon = new double[] { 2, 1 }
                             },
-                            new Chemical
+                            new Solute
                             {
+                                Name = "CL",
                                 Thickness = new double[] { 100, 200 },
-                                CL = new double[] { 38, double.NaN }
+                                InitialValues = new double[] { 38, double.NaN },
+                                InitialValuesUnits = Solute.UnitsEnum.ppm
                             },
-                            new Sample
+                            new Water
                             {
                                 Thickness = new double[] { 500 },
-                                SW = new double[] { 0.103 },
-                                OC = new double[] { 1.35 },
-                                SWUnits = Sample.SWUnitsEnum.Gravimetric
-                            },
-                            new Sample
-                            {
-                                Thickness = new double[] { 1000 },
-                                NO3 = new double[] { 27 },
-                                OC = new double[] { 1.35 },
-                                SWUnits = Sample.SWUnitsEnum.Volumetric,
-                                Name = "Sample2"
+                                InitialValues = new double[] { 0.103 },
                             },
                             new CERESSoilTemperature(),
                         }
@@ -256,7 +249,6 @@
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;
             var originalSoilOM = originalSoil.Children[2] as Organic;
-            var originalSample = originalSoil.Children[4] as Sample;
 
             originalSoil.OnCreated();
             
@@ -264,17 +256,13 @@
 
             var newSim = simulationDescription.ToSimulation();
 
-            var water = newSim.Children[0].Children[0] as Physical;
+            var physical = newSim.Children[0].Children[0] as Physical;
             var soilOrganicMatter = newSim.Children[0].Children[2] as Organic;
-            var sample = newSim.Children[0].Children[4] as Sample;
+            var water = newSim.Children[0].Children[4] as Water;
 
             // Make sure layer structures have been standardised.
-            Assert.AreEqual(water.Thickness, originalWater.Thickness, "soilwat thickness is incorrect");
+            Assert.AreEqual(physical.Thickness, originalWater.Thickness, "soilwat thickness is incorrect");
             Assert.AreEqual(soilOrganicMatter.Thickness, originalSoilOM.Thickness, "soil OM thickness is incorrect");
-            Assert.AreEqual(sample.Thickness, originalSample.Thickness, "sample thickness is incorrect");
-
-            // Make sure sample units are volumetric.
-            Assert.AreEqual(Sample.SWUnitsEnum.Gravimetric, sample.SWUnits, "sample's SW units are incorrect");
         }
 
         /// <summary>

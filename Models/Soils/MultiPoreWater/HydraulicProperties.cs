@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {
@@ -11,10 +13,10 @@ namespace Models.Soils
     /// Returns theta and ksat values for specified psi and theta values respectively.  Gets its parameters from the soil Water node and a couple of parameters it owns
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class HydraulicProperties : Model
+    public class HydraulicProperties : Model, ITabularData
     {
         #region External links
         [Link]
@@ -90,17 +92,22 @@ namespace Models.Soils
         /// <summary>
         /// psidul
         /// </summary>
-        /// <value>
-        /// The psidul.
-        /// </value>
         [Description("The suction when the soil is at DUL")]
         [Units("cm")]
         [Bounds(Lower = -1e3, Upper = 0.0)]
         public double psidul { get; set; }
         
         /// <summary>Gets or sets the thickness.</summary>
-        /// <value>The thickness.</value>
         public double[] Thickness { get; set; }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public string[] Depth
+        {
+            get => SoilUtilities.ToDepthStrings(Thickness);
+            set => Thickness = SoilUtilities.ToThickness(value);
+        }
 
         /// <summary>
         /// kdul
@@ -108,7 +115,6 @@ namespace Models.Soils
         /// <value>
         /// The kdul.
         /// </value>
-        [Description("The hydraulic conductivity when the soil is at DUL")]
         [Units("mm/d")]
         public double[] kdul { get; set; }
         #endregion
@@ -303,5 +309,14 @@ namespace Models.Soils
         }
         #endregion
 
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new TabularData.Column("kdul", new VariableProperty(this, GetType().GetProperty("kdul")))
+            });
+        }
     }
 }

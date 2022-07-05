@@ -3,6 +3,7 @@
     /// <summary>Keys enumeration.</summary>
     public enum Keys
     {
+        None,
         Right,
         Left,
         Up,
@@ -14,7 +15,9 @@
 
     public class SheetEventKey
     {
-        public Keys Key;
+        public Keys Key = Keys.None;
+        public char KeyValue;
         public bool Control;
+        public bool Shift;
     }
 }

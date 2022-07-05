@@ -59,5 +59,10 @@
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         double[] PAWCmm { get; }
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness"></param>
+        void Standardise(double[] targetThickness);
+
     }
 }

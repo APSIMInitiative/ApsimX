@@ -1,51 +1,58 @@
 ﻿namespace Models.Soils
 {
-    using Interfaces;
-    using System;
     using Models.Core;
     using Newtonsoft.Json;
-    using Models.Soils.Nutrients;
-    using APSIM.Shared.Utilities;
+    using System;
 
-    /// <summary>This class encapsulates a SoilNitrogen model NO3 solute.</summary>
+    /// <summary>This class encapsulates a SoilNitrogen model solute.</summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(SoilNitrogen))]
-    public class SoilNitrogenNO3 : Model, ISolute
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(Soil))]
+    public class SoilNitrogenNO3 : Solute
     {
-        [Link(Type = LinkType.Ancestor)]
-        SoilNitrogen parent = null;
+        [Link]
+        SoilNitrogen soilNitrogen = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
         [JsonIgnore]
-        public double[] kgha
+        public override double[] kgha
         {
             get
             {
-                return parent.CalculateNO3();
+                return SoilNitrogen.CalculateNO3();
             }
             set
             {
                 SetKgHa(SoluteSetterType.Plant, value);
             }
         }
-
-        /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return SoilUtilities.kgha2ppm(parent.soilPhysical.Thickness, parent.soilPhysical.BD, kgha); } }
-
+                
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>
-        public void SetKgHa(SoluteSetterType callingModelType, double[] value)
+        public override void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            parent.SetNO3(callingModelType, value);
+            SoilNitrogen.SetNO3(callingModelType, value);
         }
 
         /// <summary>Setter for kgha delta.</summary>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">New delta values</param>
-        public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
+        public override void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
-            parent.SetNO3Delta(callingModelType, delta);
+            SoilNitrogen.SetNO3Delta(callingModelType, delta);
+        }
+
+        /// <summary>The SoilNitrogen node.</summary>
+        private SoilNitrogen SoilNitrogen
+        {
+            get
+            {
+                if (soilNitrogen == null)
+                    soilNitrogen = FindInScope<SoilNitrogen>();
+                return soilNitrogen;
+            }
         }
     }
 }

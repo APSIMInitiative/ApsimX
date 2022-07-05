@@ -89,15 +89,15 @@ namespace Models.Soils.Nutrients
         public INutrientPool SurfaceResidue { get; set; }
 
         /// <summary>The NO3 pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(ByName = true)]
         public ISolute NO3 { get; set; }
 
         /// <summary>The NH4 pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(ByName = true)]
         public ISolute NH4 { get; set; }
 
         /// <summary>The Urea pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(ByName = true)]
         public ISolute Urea { get; set; }
 
         /// <summary>Get directed graph from model</summary>
@@ -126,7 +126,7 @@ namespace Models.Soils.Nutrients
             foreach (NutrientPool P in FindAllChildren<NutrientPool>())
                 P.Reset();
 
-            foreach (Solute S in FindAllChildren<ISolute>())
+            foreach (Solute S in FindAllInScope<ISolute>())
                 S.Reset();
         }
 
@@ -189,8 +189,11 @@ namespace Models.Soils.Nutrients
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
 
-                foreach (NFlow f in FindAllDescendants<NFlow>())
-                    values = MathUtilities.Add(values, f.Natm);
+                foreach (NFlow f in FindAllChildren<NFlow>())
+                {
+                    if (f.Natm != null)
+                        values = MathUtilities.Add(values, f.Natm);
+                }
                 return values;
             }
         }
@@ -210,7 +213,7 @@ namespace Models.Soils.Nutrients
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
 
-                foreach (NFlow f in FindAllDescendants<NFlow>())
+                foreach (NFlow f in FindAllChildren<NFlow>())
                     values = MathUtilities.Add(values, f.N2Oatm);
                 return values;
             }
@@ -263,7 +266,7 @@ namespace Models.Soils.Nutrients
             get
             {
                 // Get the denitrification N flow under NO3.
-                var no3NFlow = (NO3 as IModel).FindChild<NFlow>("Denitrification");
+                var no3NFlow = FindChild<NFlow>("Denitrification");
 
                 int numLayers;
                 if (FOMLignin.C == null)
@@ -271,8 +274,13 @@ namespace Models.Soils.Nutrients
                 else
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
-                for (int i = 0; i < values.Length; i++)
-                    values[i] = no3NFlow.Value[i] + no3NFlow.Natm[i];
+                if (no3NFlow.Value != null)
+                {
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        values[i] = no3NFlow.Value[i] + no3NFlow.Natm[i];
+                    }
+                }
 
                 return values;
             }
@@ -285,7 +293,7 @@ namespace Models.Soils.Nutrients
             get
             {
                 // Get the denitrification N flow under NO3.
-                var nh4NFlow = (NH4 as IModel).FindChild<NFlow>("Nitrification");
+                var nh4NFlow = FindChild<NFlow>("Nitrification");
 
                 int numLayers;
                 if (FOMLignin.C == null)
@@ -307,7 +315,7 @@ namespace Models.Soils.Nutrients
             get
             {
                 // Get the denitrification N flow under NO3.
-                var hydrolysis = (Urea as IModel).FindChild<NFlow>("Hydrolysis");
+                var hydrolysis = FindChild<NFlow>("Hydrolysis");
 
                 return hydrolysis.Value;
             }
@@ -590,14 +598,14 @@ namespace Models.Soils.Nutrients
                 }
             }
 
-            foreach (Solute solute in this.FindAllChildren<Solute>())
+            foreach (Solute solute in FindAllInScope<ISolute>())
             {
                 Point location = new Point(0, 0);
                 Node oldNode;
                 if (oldGraph != null && solute.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == solute.Name)) != null)
                     location = oldNode.Location;
                 directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
-                foreach (NFlow nitrogenFlow in solute.FindAllChildren<NFlow>())
+                foreach (NFlow nitrogenFlow in FindAllChildren<NFlow>().Where(flow => flow.sourceName == solute.Name))
                 {
                     string destName = nitrogenFlow.destinationName;
                     if (destName == null)

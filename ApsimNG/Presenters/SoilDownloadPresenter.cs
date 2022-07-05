@@ -6,7 +6,6 @@ using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Nutrients;
-using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
 using System;
@@ -194,7 +193,7 @@ namespace UserInterface.Presenters
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
                     var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
-                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
+                    var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
                     var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
                     row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
                     row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
@@ -587,8 +586,9 @@ namespace UserInterface.Presenters
                 Physical waterNode = new Physical();
                 Organic organicMatter = new Organic();
                 WaterBalance soilWater = new WaterBalance();
-                InitialWater initialWater = new InitialWater();
-                Sample initialNitrogen = new Sample();
+                Water initialWater = new Water();
+                Solute no3 = new Solute();
+                Solute nh4 = new Solute();
                 Nutrient nutrient = new Nutrient();
                 nutrient.ResourceName = "Nutrient";
 
@@ -603,7 +603,8 @@ namespace UserInterface.Presenters
                 newSoil.Children.Add(organicMatter);
                 newSoil.Children.Add(analysis);
                 newSoil.Children.Add(initialWater);
-                newSoil.Children.Add(initialNitrogen);
+                newSoil.Children.Add(no3);
+                newSoil.Children.Add(nh4);
                 newSoil.Children.Add(new CERESSoilTemperature());
                 newSoil.ParentAllDescendants();
                 newSoil.OnCreated();
@@ -639,13 +640,14 @@ namespace UserInterface.Presenters
                 organicMatter.Thickness = thickness;
 
                 initialWater.Name = "Initial water";
-                initialWater.PercentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
+                initialWater.FilledFromTop = true;
                 initialWater.FractionFull = 0.0;
 
                 // Initialise nitrogen to 0.0
-                initialNitrogen.Name = "Initial nitrogen";
-                initialNitrogen.NH4 = new double[layerCount];
-                initialNitrogen.NO3 = new double[layerCount];
+                no3.Name = "NO3";
+                no3.InitialValues = new double[layerCount];
+                nh4.Name = "NH4";
+                nh4.InitialValues = new double[layerCount];
 
                 double tAvg = (maxTemp + minTemp) / 2.0;
                 soilWater.CNCov = 0.0;

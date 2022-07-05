@@ -38,8 +38,6 @@
     ///    Es = U x t + CONA x Sqrt(t-t~1~)
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(WaterBalance))]
     public class EvaporationModel : Model
     {

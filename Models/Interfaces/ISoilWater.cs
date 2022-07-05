@@ -110,5 +110,9 @@
 
         ///<summary>Perform tillage</summary>
         void Tillage(string tillageType);
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        void Standardise(double[] targetThickness);
     }
 }

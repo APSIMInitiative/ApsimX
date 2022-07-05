@@ -128,7 +128,7 @@
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
-                foreach (string s in SoilUtilities.ToDepthStrings(physical.Thickness))
+                foreach (string s in SoilUtilities.ToDepthStringsCM(physical.Thickness))
                 {
                     rowNames.Add(s);
                 }

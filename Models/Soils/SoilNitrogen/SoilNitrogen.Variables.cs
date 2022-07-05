@@ -44,9 +44,21 @@ namespace Models.Soils
         [Link]
         public Organic organic = null;
 
-        /// <summary>Link to the initial sample.</summary>
+        /// <summary>Link to the chemical.</summary>
         [Link]
-        public Sample initial = null;
+        public Chemical chemical = null;
+
+        /// <summary>Link to the NO3 solute.</summary>
+        [Link(ByName = true)]
+        public Solute nO3 = null;
+
+        /// <summary>Link to the NH4 solute.</summary>
+        [Link(ByName = true)]
+        public Solute nH4 = null;
+
+        /// <summary>Link to the Urea solute.</summary>
+        [Link(ByName = true)]
+        public Solute urea = null;
 
         /// <summary>Link to the soil.</summary>
         [Link]
@@ -6470,13 +6482,13 @@ namespace Models.Soils
         public INutrientPool SurfaceResidue => throw new NotImplementedException();
 
         /// <summary>The NO3 pool.</summary>
-        public ISolute NO3 { get { return new Solute(Soil, "NO3", CalculateNO3()); } }
+        public ISolute NO3 { get { return new Solute("NO3", CalculateNO3()); } }
 
         /// <summary>The NH4 pool.</summary>
-        public ISolute NH4 { get { return new Solute(Soil, "NH4", CalculateNH4()); } }
+        public ISolute NH4 { get { return new Solute("NH4", CalculateNH4()); } }
 
         /// <summary>The Urea pool.</summary>
-        public ISolute Urea { get { return new Solute(Soil, "Urea", CalculateUrea()); } }
+        public ISolute Urea { get { return new Solute("Urea", CalculateUrea()); } }
 
         /// <summary>Total C lost to the atmosphere</summary>
         public double[] Catm => co2_atm;

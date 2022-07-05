@@ -1,225 +1,164 @@
 ﻿namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
+    using APSIM.Shared.Graphing;
     using Models.Core;
-    using Models;
     using Models.Soils;
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Reflection;
     using Views;
-    using APSIM.Shared.Graphing;
-    using Series = Models.Series;
 
-    /// <summary>
-    /// This presenter talks to a ProfileView to display profile (layered) data in a grid.
-    /// It uses reflection to look for public properties that are read/write, and have a
-    /// [Description] attribute.
-    /// </summary>
-    /// <remarks>
-    /// For each property found it will
-    ///   1. optionally look for units via a units attribute:
-    ///         [Units("kg/ha")]
-    ///   2. optionally look for settable units via the presence of these properties/methods:
-    ///         {Property}Units { get; set; }
-    ///         {Property}UnitsToString(Units)
-    ///         {Property}UnitsSet(ToUnits)
-    ///         where {Property} is the name of the property being examined.
-    ///   3. optionally look for a metadata property named:
-    ///     {Property}Metadata { get; set; }
-    /// </remarks>
-
+    /// <summary>A presenter for the soil profile models.</summary>
     public class ProfilePresenter : IPresenter
     {
-        /// <summary>
-        /// The underlying model that this presenter is to work with.
-        /// </summary>
-        private IModel model;
+        /// <summary>The grid presenter.</summary>
+        private NewGridPresenter gridPresenter;
 
-        /// <summary>
-        /// The underlying view that this presenter is to work with.
-        /// </summary>
-        private IProfileView view;
+        ///// <summary>The property presenter.</summary>
+        //private PropertyPresenter propertyPresenter;
 
-        /// <summary>
-        /// A reference to the parent 'explorerPresenter'
-        /// </summary>
+        /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>
-        /// A reference to the 'graphPresenter' responsible for our graph.
-        /// </summary>
-        private GraphPresenter graphPresenter;
+        /// <summary>The base view.</summary>
+        private ViewBase view = null;
 
-        /// <summary>
-        /// A reference to our 'propertyPresenter'
-        /// </summary>
-        private PropertyPresenter propertyPresenter;
-        
-        /// <summary>
-        /// Presenter for the profile grid.
-        /// </summary>
-        private ProfileGridPresenter profileGrid = new ProfileGridPresenter();
+        /// <summary>The model.</summary>
+        private IModel model;
 
-        /// <summary>
-        /// Our graph.
-        /// </summary>
-        private Graph graph;
+        /// <summary>The physical model.</summary>
+        private Physical physical;
 
-        /// <summary>
-        /// The parent zone of our model.
-        /// </summary>
-        private IModel parentForGraph;
+        /// <summary>The water model.</summary>
+        private Water water;
 
-        /// <summary>
-        /// Attach the model to the view.
-        /// </summary>
-        /// <param name="model">The underlying model we are to use</param>
-        /// <param name="view">The underlying view we are to attach to</param>
-        /// <param name="explorerPresenter">Our parent explorerPresenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        /// <summary>Graph.</summary>
+        private GraphView graph;
+
+        /// <summary>Default constructor</summary>
+        public ProfilePresenter()
         {
-            this.model = model as Model;
-            this.view = view as IProfileView;
+        }
+        
+        /// <summary>Attach the model and view to this presenter and populate the view.</summary>
+        /// <param name="model">The data store model to work with.</param>
+        /// <param name="v">Data store view to work with.</param>
+        /// <param name="explorerPresenter">Parent explorer presenter.</param>
+        public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
+        {
+            this.model = model as IModel;
+            view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
-            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
+            gridPresenter = new NewGridPresenter();
+            gridPresenter.Attach(model, v, explorerPresenter);
 
-            this.view.ShowView(false);
+            physical = this.model.FindInScope<Physical>();
+            water = this.model.FindInScope<Water>();
 
-            // Setup the property presenter and view. Hide the view if there are no properties to show.
-            this.propertyPresenter = new PropertyPresenter();
-            // Don't show any array properties.
-            propertyPresenter.Filter = p => !p.PropertyType.IsArray;
-            this.propertyPresenter.Attach(this.model, this.view.ProperiesView, this.explorerPresenter);
-            // Populate the grid
-            this.PopulateGrid();
+            var propertyView = view.GetControl<PropertyView>("properties");
+            var propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
-            // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.WaterGraph.xml");
-            graph.Name = "";
-            if (this.graph == null)
-                this.view.ShowGraph(false);
-            else
+            graph = view.GetControl<GraphView>("graph");
+            graph.SetPreferredWidth(0.3);
+
+            if (!propertyView.AnyProperties)
             {
-                // The graph's series contain many variables such as [Soil].LL. We now replace
-                // these relative paths with absolute paths.
-                foreach (Series series in graph.FindAllChildren<Series>())
-                {
-                    series.XFieldName = series.XFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
-                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);
-                    series.YFieldName = series.YFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
-                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);
-                }
-
-                this.parentForGraph = this.model.Parent as IModel;
-                if (this.parentForGraph != null)
-                {
-                    // Don't add the graph as a child of the soil. This causes problems
-                    // (see bug #4622), and adding the soil as a parent is sufficient.
-                    this.graph.Parent = this.parentForGraph;
-                    this.view.ShowGraph(true);
-                    int padding = (this.view as ProfileView).MainWidget.Allocation.Width / 2 / 2;
-                    this.view.Graph.LeftRightPadding = padding;
-                    this.graphPresenter = new GraphPresenter();
-                    for (int i = 0; i < this.profileGrid.Properties.Length; i++)
-                    {
-                        string columnName = profileGrid.Properties[i].Name;
-
-                        if (columnName.Contains("\r\n"))
-                            StringUtilities.SplitOffAfterDelimiter(ref columnName, "\r\n");
-
-                        // crop colours
-                        if (columnName.Contains("LL"))
-                        {
-                            if (profileGrid.Properties[i].Object is SoilCrop)
-                            {
-                                string soilCropName = (profileGrid.Properties[i].Object as SoilCrop).Name;
-                                string cropName = soilCropName.Replace("Soil", "");
-                                columnName = cropName + " " + columnName;
-                            }
-
-                            Series cropLLSeries = new Series();
-                            cropLLSeries.Name = columnName;
-                            cropLLSeries.Colour = ColourUtilities.ChooseColour(this.graph.Children.Count);
-                            cropLLSeries.Line = LineType.Solid;
-                            cropLLSeries.Marker = MarkerType.None;
-                            cropLLSeries.Type = SeriesType.Scatter;
-                            cropLLSeries.ShowInLegend = true;
-                            cropLLSeries.XAxis = AxisPosition.Top;
-                            cropLLSeries.YAxis = AxisPosition.Left;
-                            cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".Physical.DepthMidPoints";
-                            cropLLSeries.XFieldName = ((profileGrid.Properties[i].Object as IModel)).FullPath + "." + profileGrid.Properties[i].Name;
-                            //cropLLSeries.XFieldName = ((property.Object as Model)).FullPath + "." + property.Name;
-                            cropLLSeries.Parent = this.graph;
-
-                            this.graph.Children.Add(cropLLSeries);
-                        }
-                    }
-
-                    this.graph.LegendPosition = LegendPosition.RightTop;
-                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                    this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
-                    graphPresenter.LegendInsideGraph = false;
-                }
+                var layeredLabel = view.GetControl<LabelView>("layeredLabel");
+                var propertiesLabel = view.GetControl<LabelView>("parametersLabel");
+                propertiesLabel.Visible = false;
+                layeredLabel.Visible = false;
             }
 
-            // Trap the model changed event so that we can handle undo.
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
-
-            this.view.ShowView(true);
+            Refresh();
+            ConnectEvents();
         }
 
-        /// <summary>
-        /// Detach the model from the view.
-        /// </summary>
+        /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            propertyPresenter.Detach();
-            profileGrid.Detach();
-            if (this.graphPresenter != null)
-                this.graphPresenter.Detach();
+            DisconnectEvents();
+            view.Dispose();
         }
 
-        /// <summary>
-        /// Populate the grid with data and formatting.
-        /// </summary>
-        private void PopulateGrid()
+        /// <summary>Populate the graph with data.</summary>
+        public void Refresh()
         {
-            // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
-            //propertyPresenter.RemoveProperties(propertiesInGrid.Select(property => property.PropertyName)); // fixme
-            view.ShowPropertyGrid(true);
+            try
+            {
+                DisconnectEvents();
+
+                if (water != null && (model is Physical || model is Water))
+                    WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                                                      water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
+                else if (model is Organic organic)
+                    PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
+                
+                ConnectEvents();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err.ToString());
+            }
+        }
+
+        public static void PopulateOrganicGraph(GraphView graph, double[] thickness, double[] fom, double[] SoilCNRatio, double[] fbiom, double[] finert)
+        {
+            var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
+            graph.Clear();
+            graph.DrawArea("FOM", fom,
+                           cumulativeThickness,
+                           AxisPosition.Top, AxisPosition.Left,
+                           System.Drawing.Color.LightBlue, true);
+
+            graph.DrawLineAndMarkers("FBIOM", fbiom,
+                                     cumulativeThickness,
+                                     "", "", null, null, AxisPosition.Bottom, AxisPosition.Left,
+                                     System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.DrawLineAndMarkers("FINERT", finert,
+                                     cumulativeThickness,
+                                     "", "", null, null, AxisPosition.Bottom, AxisPosition.Left,
+                                     System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.FormatAxis(AxisPosition.Top, "Fresh organic matter (kg/ha)", inverted: false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1, 0.2, false);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+            graph.Refresh();
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        private void ConnectEvents()
+        {
+            DisconnectEvents();
+            gridPresenter.CellChanged += OnCellChanged;
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        private void DisconnectEvents()
+        {
+            gridPresenter.CellChanged -= OnCellChanged;
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+        }
+
+        /// <summary>Invoked when a grid cell has changed.</summary>
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
+        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        {
+            Refresh();
         }
 
         /// <summary>
-        /// User has changed the value of one or more cells in the profile grid.
+        /// The mode has changed (probably via undo/redo).
         /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnProfileGridCellValueChanged(object sender, EventArgs e)
-        {
-            // Refresh the graph.
-            if (this.graph != null)
-                this.graphPresenter.DrawGraph();
-        }
-        
-        /// <summary>
-        /// The model has changed probably because of an undo.
-        /// </summary>
-        /// <param name="changedModel">The model that has changed.</param>
+        /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
-            this.PopulateGrid();
-            if (this.graphPresenter != null)
-            {
-                this.graphPresenter.DrawGraph();
-            }
+            Refresh();
         }
     }
 }

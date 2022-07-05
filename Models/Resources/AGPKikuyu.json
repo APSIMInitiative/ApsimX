@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 151,
+  "Version": 152,
   "Name": "Simulations",
   "Children": [
     {
@@ -17,7 +17,7 @@
       "LightExtinctionCoefficient": 0.5,
       "GrowthTminimum": 10.0,
       "GrowthToptimum": 22.0,
-      "GrowthTEffectExponent": 1.20,
+      "GrowthTEffectExponent": 1.2,
       "UseHeatStressFactor": "yes",
       "HeatOnsetTemperature": 38.0,
       "HeatFullTemperature": 48.0,
@@ -33,7 +33,7 @@
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.4,
       "DegreesDayForGermination": 150.0,
-      "TargetShootRootRatio": 1.50,
+      "TargetShootRootRatio": 1.5,
       "MaxRootAllocation": 0.5,
       "ShootRootGlfFactor": 0.6,
       "UseReproSeasonFactor": "yes",
