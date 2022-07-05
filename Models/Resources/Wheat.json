@@ -1802,22 +1802,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0
+                        3,
+                        5,
+                        6,
+                        7
                       ],
                       "Y": [
-                        10.0,
-                        200.0,
-                        200.0,
-                        1000.0,
-                        1000.0,
-                        1000.0,
-                        1000.0
+                        10,
+                        200,
+                        1000,
+                        1000
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -3068,9 +3062,9 @@
                                     {
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
-                                        3.0,
-                                        4.0,
-                                        5.0
+                                        3,
+                                        5,
+                                        6
                                       ],
                                       "Y": [
                                         0.5,
@@ -5179,20 +5173,14 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    5.5,
+                    6,
                     6.5,
-                    7.0,
+                    7.7,
                     8.0
                   ],
                   "Y": [
                     0.01,
                     0.01,
-                    0.01,
-                    0.01,
-                    0.025,
                     0.025,
                     0.025
                   ],
@@ -5487,12 +5475,12 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0
+                    3,
+                    5,
+                    6,
+                    8,
+                    9,
+                    10
                   ],
                   "Y": [
                     0.07,
@@ -5551,15 +5539,15 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                3.0,
-                                4.0,
-                                5.0,
-                                5.7,
-                                6.0,
-                                7.0,
-                                8.0,
-                                9.0,
-                                9.000001
+                                3,
+                                4,
+                                6,
+                                6.7,
+                                8,
+                                9,
+                                10,
+                                11,
+                                12.00001
                               ],
                               "Y": [
                                 0.0,
@@ -5924,24 +5912,12 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0,
-                    9.0,
-                    10.0,
-                    11.0
+                    11,
+                    12,
+                    13
                   ],
                   "Y": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
+                    0,
                     0.2,
                     0.5
                   ],
@@ -5982,12 +5958,12 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0
+                    3,
+                    5,
+                    6,
+                    8,
+                    9,
+                    10
                   ],
                   "Y": [
                     0.07,
@@ -8323,7 +8299,7 @@
                     "[Phenology].CAMP.FLNparams.LN = 9.0",
                     "[Phenology].CAMP.FLNparams.SV = 9.0",
                     "[Phenology].CAMP.FLNparams.SN = 9.0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 225",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 145",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
