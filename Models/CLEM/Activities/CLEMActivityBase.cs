@@ -715,57 +715,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        ///// <summary>
-        ///// Method to provide the proportional limit based on labour shortfall
-        ///// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
-        ///// </summary>
-        ///// <returns></returns>
-        //public double LabourLimitProportion
-        //{
-        //    get
-        //    {
-        //        double proportion = 1.0;
-        //        if (ResourceRequestList == null)
-        //            return proportion;
-
-        //        double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
-
-        //        foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
-        //            if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourGroup).Parent as LabourRequirement).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
-        //                proportion *= item.Provided / item.Required;
-        //        return proportion;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Method to provide the proportional limit based on specified resource type
-        ///// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
-        ///// </summary>
-        ///// <returns></returns>
-        //public double LimitProportion(Type resourceType)
-        //{
-        //    double proportion = 1.0;
-        //    if (ResourceRequestList == null)
-        //        return proportion;
-
-        //    if (resourceType == typeof(LabourType))
-        //        return LabourLimitProportion;
-
-        //    double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
-
-        //    foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType))
-        //    {
-        //        if (resourceType == typeof(LabourType))
-        //        {
-        //            if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourGroup).Parent as LabourRequirement).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
-        //                proportion *= item.Provided / item.Required;
-        //        }
-        //        else // all other types
-        //            proportion = item.Provided / item.Required;
-        //    }
-        //    return proportion;
-        //}
-
         /// <summary>
         /// Method to determine if activity limited based on labour shortfall has been set
         /// </summary>
@@ -788,7 +737,6 @@ namespace Models.CLEM.Activities
             if (resourceRequests is null || !resourceRequests.Any())
             {
                 // nothing to do
-                this.Status = ActivityStatus.NotNeeded;
                 return true;
             }
 
