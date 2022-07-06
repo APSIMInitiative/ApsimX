@@ -284,6 +284,14 @@ namespace UserInterface.Views
         }
 
 
+        /// <summary>Is the column readonly?</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public bool IsColumnReadonly(int colIndex)
+        {
+            return false;
+        }
+
+
         /// <summary>
         ///  Encapsulates a page of DataTable rows.
         /// </summary>
@@ -330,6 +338,6 @@ namespace UserInterface.Views
             {
                 return data.Rows[rowIndex - start][columnIndex];
             }
-}
+        }
     }
 }

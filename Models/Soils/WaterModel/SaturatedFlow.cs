@@ -17,8 +17,6 @@ namespace Models.WaterModel
     /// cascades to the next layer.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(WaterBalance))]
     public class SaturatedFlowModel : Model
     {

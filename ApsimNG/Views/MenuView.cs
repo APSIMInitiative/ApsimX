@@ -47,7 +47,9 @@
                 }
                 else
                 {
-                    ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
+                    ManifestResourceInfo info = null;
+                    if (!string.IsNullOrEmpty(description.ResourceNameForImage))
+                        info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
                     if (info != null)
                     {
                         MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(description.Name, new Gtk.Image(null, description.ResourceNameForImage));
@@ -86,7 +88,8 @@
                     {
                     }
                 }
-                item.Activated += description.OnClick;
+                if (description.OnClick != null)
+                    item.Activated += description.OnClick;
                 if (description.FollowsSeparator && (menu.Children.Length > 0))
                 {
                     menu.Append(new SeparatorMenuItem());

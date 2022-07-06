@@ -263,6 +263,7 @@
             fixedColView.Model = gridModel;
             fixedColView.Selection.Mode = SelectionMode.None;
             popupMenu.AttachToWidget(Grid, null);
+            popupMenu.Hidden += OnPopupMenuHidden;
             AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
             AddContextActionWithAccel("Paste", OnPaste, "Ctrl+V");
             AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
@@ -292,7 +293,6 @@
 
 
         }
-
 
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
@@ -328,6 +328,16 @@
         /// Invoked when the editor needs context items (after user presses '.').
         /// </summary>
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+
+        /// <summary>
+        /// Invoked when immediately before the popup menu is shown.
+        /// </summary>
+        public event EventHandler<EventArgs> PopupMenuShowing;
+        
+        /// <summary>
+        /// Invoked when immediately after the popup menu is shown.
+        /// </summary>
+        public event EventHandler<EventArgs> PopupMenuClosing;
 
         /// <summary>
         /// Gets or sets the treeview object which displays the data.
@@ -853,9 +863,9 @@
         /// </summary>
         public void ClearContextActions(bool showDefaults = true)
         {
-            while (popupMenu.Children.Length > 3)
-                popupMenu.Remove(popupMenu.Children[3]);
-            for (int i = 0; i < 3; i++)
+            while (popupMenu.Children.Length > 4)
+                popupMenu.Remove(popupMenu.Children[4]);
+            for (int i = 0; i < 4; i++)
                 popupMenu.Children[i].Visible = showDefaults;
         }
 
@@ -1074,6 +1084,7 @@
             fixedColView.KeyPressEvent -= GridviewKeyPressEvent;
             fixedColView.FocusInEvent -= FocusInEvent;
             fixedColView.FocusOutEvent -= FocusOutEvent;
+            popupMenu.Hidden -= OnPopupMenuHidden;
 
             Grid.Drawn -= GridviewExposed;
 
@@ -1888,13 +1899,29 @@
                     args.OnHeader = true;
                     GridColumnClicked?.Invoke(this, args);
                     if (popupMenu.Children.Length > 4)  // Show only if there is more that the three standard items plus separator
-                       popupMenu.Popup();
+                        ShowPopupMenu();
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
+        }
+
+        private void ShowPopupMenu()
+        {
+            PopupMenuShowing?.Invoke(this, EventArgs.Empty);
+            popupMenu.Popup();
+        }
+
+        /// <summary>
+        /// Called when the popup menu closes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnPopupMenuHidden(object sender, EventArgs e)
+        {
+            PopupMenuClosing?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -2790,7 +2817,7 @@
                         GridColumnClicked.Invoke(this, args);
                     }
                     if (AnyCellIsSelected())
-                        popupMenu.Popup();
+                        ShowPopupMenu();
                     e.RetVal = true;
                 }
             }

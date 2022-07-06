@@ -36,7 +36,7 @@
         [Link(ByName = true)]
         ISolute NH4 = null;
 
-        [Link(ByName = true)]
+        [Link(ByName = true, IsOptional =true)]
         ISolute LabileP = null;
 
         /// <summary>
@@ -98,11 +98,16 @@
         {
             NutrientPool source = Parent as NutrientPool;
 
+            int numLayers = source.C.Length;
+
             double[] no3 = NO3.kgha;
             double[] nh4 = NH4.kgha;
-            double[] labileP = LabileP.kgha;
+            double[] labileP;
+            if (LabileP == null)
+                labileP = new double[numLayers];
+            else
+                labileP = LabileP.kgha;
 
-            int numLayers = source.C.Length;
             int numDestinations = destinations.Length;
             for (int i = 0; i < numLayers; i++)
             {
