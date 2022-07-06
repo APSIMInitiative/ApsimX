@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.AllocationStyle = ResourceAllocationStyle.ByParent;
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
@@ -154,6 +154,8 @@ namespace Models.CLEM.Activities
                 if (female.BreedParams.ConceptionModel is null)
                     throw new ApsimXException(this, $"No conception details were found for [r={female.BreedParams.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
                 female.ActivityDeterminedConceptionRate = female.BreedParams.ConceptionModel.ConceptionRate(female);
+                // identify successful matings by a positive value of rate
+                female.ActivityDeterminedConceptionRate *= (RandomNumberGenerator.Generator.NextDouble() <= female.ActivityDeterminedConceptionRate) ? 1 : -1;
             }
 
             // provide updated measure for companion models
@@ -181,7 +183,8 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per head":
-                                amountToDo = uniqueIndividuals.Where(a => RandomNumberGenerator.Generator.NextDouble() <= a.ActivityDeterminedConceptionRate).Count();
+                                // count successful conceptions
+                                amountToDo = uniqueIndividuals.Where(a => a.ActivityDeterminedConceptionRate>0).Count();
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -234,23 +237,22 @@ namespace Models.CLEM.Activities
         public override void PerformTasksForTimestep(double argument = 0)
         {
             int mated = 0;
+            int conceived = amountToDo - amountToSkip;
             List<RuminantFemale> selectedBreeders = uniqueIndividuals.SkipLast(numberToSkip).ToList();
             foreach (RuminantFemale ruminant in selectedBreeders)
             {
+                mated++;
                 // if more conceptions allowed
-                if (amountToDo > 0)
+                if (conceived > 0)
                 {
-                    mated++;
                     if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
-                        amountToDo--;
+                        conceived--;
                 }
                 else
-                {
                     ruminant.ActivityDeterminedConceptionRate = 0;
-                }
             }
             uniqueIndividuals = selectedBreeders;
-            SetStatusSuccessOrPartial(mated != numberToDo);
+            SetStatusSuccessOrPartial(numberToSkip > 0 || amountToSkip > 0);
         }
 
         /// <summary>

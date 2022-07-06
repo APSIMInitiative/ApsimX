@@ -419,7 +419,6 @@ namespace Models.CLEM.Activities
                             if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
                             {
                                 object male = null;
-
                                 if (useControlledMating)
                                 {
                                     bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
@@ -436,10 +435,12 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            if (conceptionRate > 0)
+                            // conception rate will be -ve for unsuccessful matings from controlled mating. a value of 0 still represents not mated
+                            if (Math.Abs(conceptionRate) > 0)
                             {
+                                // if controlled mating (ActiDetConcepRate not null and rate > 0 then successful mating), otherwise compare with random and conception rate for natural mating.
                                 //ActivitydeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
-                                if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                if ((female.ActivityDeterminedConceptionRate != null)?conceptionRate > 0:RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
 
