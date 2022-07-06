@@ -60,6 +60,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
+            List<IModel> grazePastureList = new List<IModel>();
             if (grazeFoodStore != null)
             {
                 this.InitialiseHerd(true, true);
@@ -80,6 +81,7 @@ namespace Models.CLEM.Activities
                         Parent = this,
                         Name = "Graze_" + (pastureType as Model).Name,
                         OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                        Status = ActivityStatus.NoTask
                     };
                     currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
                     grazePasture.UniqueID = currentUid;
@@ -100,7 +102,8 @@ namespace Models.CLEM.Activities
                             Name = grazePasture.Name + "_" + herdType.Name,
                             OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
                             ActivitiesHolder = ActivitiesHolder,
-                            TransactionCategory = TransactionCategory
+                            TransactionCategory = TransactionCategory,
+                            Status = ActivityStatus.NoTask
                         };
                         currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
                         grazePastureHerd.UniqueID = currentHerdUid;
@@ -112,10 +115,11 @@ namespace Models.CLEM.Activities
                         grazePastureHerd.InitialiseHerd(true, true);
                         grazePasture.Children.Add(grazePastureHerd);
                     }
-                    
+
+                    grazePastureList.Add(grazePasture);
                     Children.Add(grazePasture);
-                    events.ConnectEvents(grazePasture);
                 }
+                events.ConnectEvents(grazePastureList);
             }
             else
                 Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
