@@ -159,6 +159,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalSell")]
         private void OnCLEMAnimalSellPerformActivity(object sender, EventArgs e)
         {
+            Status = ActivityStatus.NotNeeded;
             task = "Sell";
             ResourceRequestList.Clear();
             ManageActivityResourcesAndTasks("Sales");
@@ -204,9 +205,6 @@ namespace Models.CLEM.Activities
                 default:
                     break;
             }
-
-            Status = ActivityStatus.NotNeeded;
-
         }
 
         /// <inheritdoc/>
@@ -224,7 +222,7 @@ namespace Models.CLEM.Activities
                     if (truckingBuy is null)
                     {
                         // no trucking found
-                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase)?.CalculateValue(a)??0);
                         numberTrucked = numberToDo;
                     }
                     else
@@ -232,7 +230,7 @@ namespace Models.CLEM.Activities
                         // all trucking has been allocated and each trucking component knows its individuals
                         foreach (var trucking in truckingBuy)
                         {
-                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase)?.CalculateValue(a)??0);
                             numberTrucked += trucking.IndividualsToBeTrucked.Count();
                         }
                     }
@@ -289,7 +287,7 @@ namespace Models.CLEM.Activities
                     if (truckingSell is null)
                     {
                         // no trucking found
-                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(a)??0);
                         numberTrucked = numberToDo;
                     }
                     else
@@ -297,7 +295,7 @@ namespace Models.CLEM.Activities
                         // all trucking has been allocated and each trucking component knows its individuals
                         foreach (var trucking in truckingSell)
                         {
-                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(a)??0);
                             numberTrucked += trucking.IndividualsToBeTrucked.Count();
                         }
                     }
@@ -487,10 +485,7 @@ namespace Models.CLEM.Activities
                     HerdResource.AddRuminant(ind, this);
                 }
             }
-            if (head == numberToDo)
-                SetStatusSuccessOrPartial();
-            else
-                this.Status = ActivityStatus.Partial;
+            SetStatusSuccessOrPartial(head < numberToDo);
         }
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
