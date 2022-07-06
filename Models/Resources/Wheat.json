@@ -7660,10 +7660,14 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].CAMP.FLNparams.LV = 5",
-                    "[Phenology].CAMP.FLNparams.LN = 5.0",
-                    "[Phenology].CAMP.FLNparams.SV = 9.0",
-                    "[Phenology].CAMP.FLNparams.SN = 9.0"
+                    "[Phenology].CAMP.FLNparams.LV = 6.1",
+                    "[Phenology].CAMP.FLNparams.LN = 11.9",
+                    "[Phenology].CAMP.FLNparams.SV = 9.1",
+                    "[Phenology].CAMP.FLNparams.SN = 10.9",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 108",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.3",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Livingston",
                   "Children": [],
