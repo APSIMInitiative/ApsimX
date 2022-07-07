@@ -116,7 +116,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
-        public GraphView(ViewBase owner = null) : base(owner)
+        public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
