@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 147,
+  "ExplorerWidth": 300,
+  "Version": 152,
   "Name": "Simulations",
   "Children": [
     {
@@ -100,7 +100,7 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[FertiliserRule].Script.ApplicationAmount",
-                    "sum([Soil].Nutrient.NO3.kgha) as NO3"
+                    "sum([Soil].NO3.kgha) as NO3"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -135,19 +135,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -412,45 +399,6 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
                       "Enabled": true,
@@ -458,19 +406,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -498,6 +433,7 @@
                         0.13,
                         0.12
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         12.5,
                         12.5,
@@ -559,19 +495,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -584,32 +507,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "NO3N": [
-                        6.5030034479878,
-                        2.101001113981589,
-                        2.10100111398159,
-                        1.7010009018956203,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.701000901895621,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196
-                      ],
-                      "NH4N": [
-                        0.599004378686979,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949608,
-                        0.10000073099949608,
-                        0.10000073099949608
                       ],
                       "PH": [
                         8.4,
@@ -624,7 +521,7 @@
                         8.9,
                         8.9
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": [
                         0.2,
                         0.25,
@@ -639,8 +536,6 @@
                         1.01
                       ],
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -651,12 +546,36 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.54,
+                        0.53,
+                        0.54,
+                        0.54,
+                        0.52,
+                        0.5,
+                        0.5,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -672,6 +591,120 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        6.5030034479878,
+                        2.101001113981589,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.701000901895621,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -694,7 +727,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n\t[Serializable]\n    public class Script : Model\n    {\n\t\t[Link]\n\t\tprivate Fertiliser fertiliser;\n\n       \t[Link]\n       \tprivate Clock clock;\n\n\t\t[Description(\"Amount (kg/ha) of fertiliser to apply\")]\n\t\tpublic double ApplicationAmount {get; set;}\n\n\t\t[Description(\"Type of fertiliser to apply\")]\n\t\tpublic Fertiliser.Types FertType { get; set; }\n\n\t\t[Description(\"Date of fertiliser application\")]\n\t\tpublic DateTime ApplicationDate {get; set;}\n\n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t{\n\t\t\tif (clock.Today.Date.Equals(ApplicationDate))\n\t\t\t\tfertiliser.Apply(Amount:ApplicationAmount,Type:FertType);\n\t\t}\n\t}\n}\n",
+                  "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link]\r\n        private Fertiliser fertiliser;\r\n\r\n           [Link]\r\n           private Clock clock;\r\n\r\n        [Description(\"Amount (kg/ha) of fertiliser to apply\")]\r\n        public double ApplicationAmount {get; set;}\r\n\r\n        [Description(\"Type of fertiliser to apply\")]\r\n        public Fertiliser.Types FertType { get; set; }\r\n\r\n        [Description(\"Date of fertiliser application\")]\r\n        public DateTime ApplicationDate {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today.Date.Equals(ApplicationDate))\r\n                fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "ApplicationAmount",
@@ -885,7 +918,7 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[FertiliserRule].Script.ApplicationAmount",
-                    "sum([Soil].Nutrient.NO3.kgha) as NO3"
+                    "sum([Soil].NO3.kgha) as NO3"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -920,19 +953,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1197,45 +1217,6 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
                       "Enabled": true,
@@ -1243,19 +1224,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -1283,6 +1251,7 @@
                         0.13,
                         0.12
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         12.5,
                         12.5,
@@ -1344,19 +1313,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1369,32 +1325,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "NO3N": [
-                        6.5030034479878,
-                        2.101001113981589,
-                        2.10100111398159,
-                        1.7010009018956203,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.701000901895621,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196
-                      ],
-                      "NH4N": [
-                        0.599004378686979,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949608,
-                        0.10000073099949608,
-                        0.10000073099949608
                       ],
                       "PH": [
                         8.4,
@@ -1409,7 +1339,7 @@
                         8.9,
                         8.9
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": [
                         0.2,
                         0.25,
@@ -1424,8 +1354,6 @@
                         1.01
                       ],
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -1436,12 +1364,36 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.54,
+                        0.53,
+                        0.54,
+                        0.54,
+                        0.52,
+                        0.5,
+                        0.5,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1457,6 +1409,120 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        6.5030034479878,
+                        2.101001113981589,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.701000901895621,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1479,7 +1545,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n\t[Serializable]\n    public class Script : Model\n    {\n\t\t[Link]\n\t\tprivate Fertiliser fertiliser;\n\n       \t[Link]\n       \tprivate Clock clock;\n\n\t\t[Description(\"Amount (kg/ha) of fertiliser to apply\")]\n\t\tpublic double ApplicationAmount {get; set;}\n\n\t\t[Description(\"Type of fertiliser to apply\")]\n\t\tpublic Fertiliser.Types FertType { get; set; }\n\n\t\t[Description(\"Date of fertiliser application\")]\n\t\tpublic DateTime ApplicationDate {get; set;}\n\n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t{\n\t\t\tif (clock.Today.Date.Equals(ApplicationDate))\n\t\t\t\tfertiliser.Apply(Amount:ApplicationAmount,Type:FertType);\n\t\t}\n\t}\n}\n",
+                  "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link]\r\n        private Fertiliser fertiliser;\r\n\r\n           [Link]\r\n           private Clock clock;\r\n\r\n        [Description(\"Amount (kg/ha) of fertiliser to apply\")]\r\n        public double ApplicationAmount {get; set;}\r\n\r\n        [Description(\"Type of fertiliser to apply\")]\r\n        public Fertiliser.Types FertType { get; set; }\r\n\r\n        [Description(\"Date of fertiliser application\")]\r\n        public DateTime ApplicationDate {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today.Date.Equals(ApplicationDate))\r\n                fertiliser.Apply(Amount:ApplicationAmount,Type:FertType);\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "ApplicationAmount",
@@ -1756,19 +1822,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2033,45 +2086,6 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
                       "Enabled": true,
@@ -2079,19 +2093,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -2119,6 +2120,7 @@
                         0.13,
                         0.12
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         12.5,
                         12.5,
@@ -2180,19 +2182,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2205,32 +2194,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "NO3N": [
-                        6.5030034479878,
-                        2.101001113981589,
-                        2.10100111398159,
-                        1.7010009018956203,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.701000901895621,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196
-                      ],
-                      "NH4N": [
-                        0.599004378686979,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949608,
-                        0.10000073099949608,
-                        0.10000073099949608
                       ],
                       "PH": [
                         8.4,
@@ -2245,7 +2208,7 @@
                         8.9,
                         8.9
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": [
                         0.2,
                         0.25,
@@ -2260,8 +2223,6 @@
                         1.01
                       ],
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -2272,12 +2233,36 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.54,
+                        0.53,
+                        0.54,
+                        0.54,
+                        0.52,
+                        0.5,
+                        0.5,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2293,6 +2278,120 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        6.5030034479878,
+                        2.101001113981589,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.701000901895621,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2611,19 +2710,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2888,45 +2974,6 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
                       "Enabled": true,
@@ -2934,19 +2981,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -2974,6 +3008,7 @@
                         0.13,
                         0.12
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         12.5,
                         12.5,
@@ -3035,19 +3070,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3060,32 +3082,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "NO3N": [
-                        6.5030034479878,
-                        2.101001113981589,
-                        2.10100111398159,
-                        1.7010009018956203,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.701000901895621,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196
-                      ],
-                      "NH4N": [
-                        0.599004378686979,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949608,
-                        0.10000073099949608,
-                        0.10000073099949608
                       ],
                       "PH": [
                         8.4,
@@ -3100,7 +3096,7 @@
                         8.9,
                         8.9
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": [
                         0.2,
                         0.25,
@@ -3115,8 +3111,6 @@
                         1.01
                       ],
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -3127,12 +3121,36 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.54,
+                        0.53,
+                        0.54,
+                        0.54,
+                        0.52,
+                        0.5,
+                        0.5,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -3148,6 +3166,120 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        6.5030034479878,
+                        2.101001113981589,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.701000901895621,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -3185,7 +3317,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n\t[Serializable]\n\tpublic class Script : Model\n\t{      \n\t\t[Link]\n\t\tprivate Fertiliser fertiliser;\n\n\t\t[Link]\n\t\tprivate Clock clock;\n\n\t\t[Description(\"Amount (kg/ha) of fertiliser to apply\")]\n\t\tpublic double ApplicationAmount {get; set;} //= 500;\n\n\t\t[Description(\"Type of fertiliser to apply\")]\n\t\tpublic Fertiliser.Types FertType {get; set;}//= \"NO3_N\";\n\n\t\t[Description(\"Date of fertiliser application\")]\n\t\tpublic DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);\n\n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t{\n\t\t\tif (clock.Today.Date.Equals(ApplicationDate))\n\t\t\t\tfertiliser.Apply(Amount: ApplicationAmount, Type: FertType);\n\t\t}\n\t}\n}\n",
+                  "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {      \r\n        [Link]\r\n        private Fertiliser fertiliser;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Description(\"Amount (kg/ha) of fertiliser to apply\")]\r\n        public double ApplicationAmount {get; set;} //= 500;\r\n\r\n        [Description(\"Type of fertiliser to apply\")]\r\n        public Fertiliser.Types FertType {get; set;}//= \"NO3_N\";\r\n\r\n        [Description(\"Date of fertiliser application\")]\r\n        public DateTime ApplicationDate {get; set;} //= new DateTime(2003, 12, 30, 0, 0, 0);\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today.Date.Equals(ApplicationDate))\r\n                fertiliser.Apply(Amount: ApplicationAmount, Type: FertType);\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "ApplicationAmount",
@@ -3535,19 +3667,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3812,45 +3931,6 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
                       "Enabled": true,
@@ -3858,19 +3938,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "FOMCNRatio": 40.0,
                       "Thickness": [
                         150.0,
@@ -3898,6 +3965,7 @@
                         0.13,
                         0.12
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         12.5,
                         12.5,
@@ -3959,19 +4027,6 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-210",
-                        "210-240",
-                        "240-270",
-                        "270-300"
-                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3984,32 +4039,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "NO3N": [
-                        6.5030034479878,
-                        2.101001113981589,
-                        2.10100111398159,
-                        1.7010009018956203,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.701000901895621,
-                        1.7010009018956196,
-                        1.7010009018956196,
-                        1.7010009018956196
-                      ],
-                      "NH4N": [
-                        0.599004378686979,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949598,
-                        0.10000073099949608,
-                        0.10000073099949608,
-                        0.10000073099949608
                       ],
                       "PH": [
                         8.4,
@@ -4024,7 +4053,7 @@
                         8.9,
                         8.9
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": [
                         0.2,
                         0.25,
@@ -4039,8 +4068,6 @@
                         1.01
                       ],
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -4051,12 +4078,36 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.54,
+                        0.53,
+                        0.54,
+                        0.54,
+                        0.52,
+                        0.5,
+                        0.5,
+                        0.48,
+                        0.47,
+                        0.46,
+                        0.44
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4072,6 +4123,120 @@
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        6.5030034479878,
+                        2.101001113981589,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.701000901895621,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4109,7 +4274,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n\t[Serializable]\n\tpublic class Script : Model\n\t{\n\t\t[Link]\n\t\tprivate Fertiliser fertiliser;\n\n\t\t[Link]\n\t\tprivate Clock clock;\n\n\t\t[Description(\"Amount (kg/ha) of fertiliser to apply\")]\n\t\tpublic double ApplicationAmount { get; set; }\n\n\t\t[Description(\"Type of fertiliser to apply\")]\n\t\tpublic Fertiliser.Types FertType { get; set; }\n\n\t\t[Description(\"Date of fertiliser application\")]\n\t\tpublic DateTime ApplicationDate { get; set; }\n\n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t{\n\t\t\tif (clock.Today.Date.Equals(ApplicationDate))\n\t\t\t\tfertiliser.Apply(ApplicationAmount, FertType);\n\t\t}\n\t}\n}\n",
+                  "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link]\r\n        private Fertiliser fertiliser;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Description(\"Amount (kg/ha) of fertiliser to apply\")]\r\n        public double ApplicationAmount { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply\")]\r\n        public Fertiliser.Types FertType { get; set; }\r\n\r\n        [Description(\"Date of fertiliser application\")]\r\n        public DateTime ApplicationDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today.Date.Equals(ApplicationDate))\r\n                fertiliser.Apply(ApplicationAmount, FertType);\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "ApplicationAmount",

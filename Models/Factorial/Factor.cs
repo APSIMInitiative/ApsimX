@@ -69,33 +69,6 @@
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="compositeFactor"></param>
-        /// <returns></returns>
-        public IEnumerable<CompositeFactor> ExpandFactor(CompositeFactor compositeFactor)
-        {
-            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>();
-            if (childCompositeFactors.Count() > 0)
-            {
-                var newFactorValues = new List<CompositeFactor>();
-                foreach (var child in childCompositeFactors)
-                {
-                    var newCompositeFactor = new CompositeFactor(this, compositeFactor.Paths, compositeFactor.Values)
-                    {
-                        Name = compositeFactor.Name + child.Name,
-                        Specifications = child.Specifications
-                    };
-                    newCompositeFactor.Children.AddRange(child.Children);
-                    newFactorValues.Add(newCompositeFactor);
-                }
-                return newFactorValues;
-            }
-            else
-                return new CompositeFactor[] { compositeFactor };
-        }
-
-        /// <summary>
         /// Convert a simple specification into factor values.
         /// </summary>
         /// <param name="specification">The specification to examine</param>

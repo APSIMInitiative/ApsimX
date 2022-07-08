@@ -12,6 +12,7 @@ using Models.Core.Run;
 using System.Collections.Generic;
 using Models.Core;
 using System.Data;
+using Models.Core.Replace;
 
 namespace UnitTests
 {

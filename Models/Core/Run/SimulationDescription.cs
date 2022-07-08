@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.JobRunning;
+    using Models.Core.Replace;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -233,7 +234,7 @@
                 {
                     foreach (IModel replacement in replacements.Children)
                     {
-                        var modelReplacement = new ModelReplacement(null, replacement);
+                        var modelReplacement = new ModelReplacement(replacement.Name, replacement);
                         replacementsToApply.Insert(0, modelReplacement);
                     }
                 }

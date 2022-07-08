@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Replace;
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
@@ -44,14 +45,6 @@
                 Name = (value as IModel).Name;
             else
                 Name = value.ToString();
-        }
-
-        /// <summary>Constructor</summary>
-        public CompositeFactor(Factor parentFactor, List<string> paths, List<object> values)
-        {
-            Parent = parentFactor;
-            Paths = paths;
-            Values = values;
         }
 
         /// <summary>Gets or sets the specification to create overides for a simulation.</summary>
