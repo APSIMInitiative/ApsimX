@@ -82,7 +82,7 @@ namespace UnitTests
             IEnumerable<IReplacement> replacements = new IReplacement[]
             {
                 new PropertyReplacement("path", "value"),
-                new ModelReplacement("x", new MockModel())
+                new ModelReplacement("x", "x", new MockModel())
             };
             ICommand target = new RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
@@ -100,7 +100,7 @@ namespace UnitTests
         {
             IEnumerable<IReplacement> replacements = new IReplacement[]
             {
-                new ModelReplacement("f", new MockModel()),
+                new ModelReplacement("f", "f", new MockModel()),
                 new PropertyReplacement("path to a model", "replacement value")
             };
             IEnumerable<string> sims = new[] { "one simulation" };

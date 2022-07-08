@@ -71,7 +71,10 @@
             for (int i = 0; i != allPaths.Count; i++)
             {
                 if (allValues[i] is IModel)
-                    simulationDescription.AddOverride(new ModelReplacement(allPaths[i], allValues[i] as IModel));
+                {
+                    string modelNameOrType = allPaths[i].Replace("[", "").Replace("]", "");
+                    simulationDescription.AddOverride(new ModelReplacement(modelNameOrType, modelNameOrType, allValues[i] as IModel));
+                }
                 else
                     simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
             }

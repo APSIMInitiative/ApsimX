@@ -234,7 +234,7 @@
                 {
                     foreach (IModel replacement in replacements.Children)
                     {
-                        var modelReplacement = new ModelReplacement(replacement.Name, replacement);
+                        var modelReplacement = new ModelReplacement(replacement.Name, typeToFind:null, replacement);
                         replacementsToApply.Insert(0, modelReplacement);
                     }
                 }
