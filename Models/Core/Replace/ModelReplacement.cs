@@ -37,11 +37,29 @@
         /// <param name="parent">The parent model to search under for models to replace.</param>
         public void Replace(IModel parent)
         {
+            // Try replacement by name match first. If not found then try by type name.
+            bool replacementWasMade = DoReplacement(parent, (m) => m.Name.Equals(modelNameToFind, StringComparison.InvariantCultureIgnoreCase));
+            if (!replacementWasMade && modelTypeToFind != null)
+                DoReplacement(parent, (m) => m.GetType().Name.Equals(modelTypeToFind, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Perform a replacement on all modesl that match a filter.
+        /// </summary>
+        /// <param name="parent">The parent model to search under.</param>
+        /// <param name="filter">The filter to use.</param>
+        /// <returns>True if replacement was found.</returns>
+        private bool DoReplacement(IModel parent, Func<IModel, bool> filter)
+        {
+            bool replacementWasMade = false;
             foreach (var match in parent.FindAllDescendants()
-                                        .Where(desc => desc.Name.Equals(modelNameToFind, StringComparison.InvariantCultureIgnoreCase) ||
-                                                       (modelTypeToFind != null && desc.GetType().Name.Equals(modelNameToFind, StringComparison.InvariantCultureIgnoreCase)))
+                                        .Where(m => filter(m))
                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
+            {
+                replacementWasMade = true;
                 Structure.Replace(match, replacement);
+            }
+            return replacementWasMade;
         }
 
         /// <summary>
