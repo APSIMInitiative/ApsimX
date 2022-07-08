@@ -153,12 +153,6 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the axis is a date time axis.
-        /// This is not editable by the user.
-        /// </summary>
-        public bool IsDateAxis { get; set; }
-
-        /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
         public double Minimum
@@ -168,7 +162,7 @@
                 DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
-                else if (IsDateAxis && DateTime.TryParse(entryMin.Text, out date))
+                else if (DateTime.TryParse(entryMin.Text, out date))
                     return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
@@ -187,7 +181,7 @@
                 DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
-                else if (IsDateAxis && DateTime.TryParse(entryMax.Text, out date))
+                else if (DateTime.TryParse(entryMax.Text, out date))
                     return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(

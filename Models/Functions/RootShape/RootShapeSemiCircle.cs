@@ -13,36 +13,24 @@ namespace Models.Functions.RootShape
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Root))]
-    public class RootShapeSemiCircle : Model, IRootShape
+    public class RootShapeSemiCircle : RootShapeCylinder
     {
-        /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(ZoneState zone)
+        /// <summary>Calculates the proportion of the layer's volume occupied by roots.</summary>
+        public double CalcRootProportion(ZoneState zone, int layer)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
 
-            zone.RootArea = 0;
-            for (int layer = 0; layer < physical.Thickness.Length; layer++)
-            {
-                double prop;
-                double top = layer == 0 ? 0 : MathUtilities.Sum(physical.Thickness, 0, layer - 1);
-                double bottom = top + physical.Thickness[layer];
-                double rootArea;
+            double top = layer == 0 ? 0 : MathUtilities.Sum(physical.Thickness, 0, layer - 1);
+            double bottom = top + physical.Thickness[layer];
 
-                if (zone.Depth < top)
-                {
-                    prop = 0;
-                } 
-                else
-                {
-                    rootArea = CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.RightDist);    // Right side
-                    rootArea += CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.LeftDist);    // Left Side
-                    zone.RootArea += rootArea / 1e6;
+            if (zone.Depth < top)
+                return 0;
 
-                    double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
-                    prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
-                }
-                zone.RootProportions[layer] = prop;
-            }
+            double rootArea = CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.RightDist);    // Right side
+            rootArea += CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.LeftDist);    // Left Side
+
+            double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
+            return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
         }
 
         /// <summary>Document the model.</summary>
@@ -54,6 +42,17 @@ namespace Models.Functions.RootShape
 
             foreach (var tag in DocumentChildren<IModel>())
                 yield return tag;
+        }
+
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        public override void CalcRootVolumeProportionInLayers(ZoneState zone)
+        {
+            var physical = zone.Soil.FindChild<Soils.IPhysical>();
+            for (int i = 0; i < physical.Thickness.Length; i++)
+                zone.RootProportionVolume[i] = CalcRootProportion(zone, i);
         }
 
         private double CalcRootAreaSemiCircleMaize(ZoneState zone, double top, double bottom, double hDist)
@@ -70,7 +69,7 @@ namespace Models.Functions.RootShape
             if (zone.RootFront <= hDist)
                 SDepth = 0.0;
             else
-                SDepth = Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootFront, 2) - Math.Pow(hDist, 2), 0, 1000000));
+                SDepth = Math.Sqrt(Math.Pow(zone.RootFront, 2) - Math.Pow(hDist, 2));
 
             // Rectangle - SDepth past bottom of this area
             if (SDepth >= bottom)

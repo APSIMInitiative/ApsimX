@@ -1,15 +1,15 @@
+using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Timers;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
@@ -23,11 +23,19 @@ namespace Models.CLEM.Activities
     [Description("Adds controlled mating details to ruminant breeding")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
-    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+
     {
-        private List<SetAttributeWithValue> attributeList;
+        private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
+
+        private int numberToDo;
+        private int numberToSkip;
+        private int amountToSkip;
+        private int amountToDo;
+        private IEnumerable<RuminantFemale> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Maximum age for mating (months)
@@ -39,9 +47,9 @@ namespace Models.CLEM.Activities
         public double MaximumAgeMating { get; set; }
 
         /// <summary>
-        /// Number joinings per male
+        /// Number joinings per male before male genetics replaced
         /// </summary>
-        [Description("Number of joinings per male")]
+        [Description("Joinings per individual male (genetics)")]
         [Category("Genetics", "All")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1)]
@@ -50,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
-        public List<SetAttributeWithValue> SireAttributes => attributeList;
+        public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>
         /// Constructor
@@ -59,7 +67,35 @@ namespace Models.CLEM.Activities
         {
             SetDefaults();
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.[Type].Breeding";
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "RuminantGroup":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>()
+                        );
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "Number mated",
+                            "Number conceived"
+                        },
+                        measures: new List<string>() {
+                            "fixed",
+                            "per head",
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -68,10 +104,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            this.AllocationStyle = ResourceAllocationStyle.ByParent;
             this.InitialiseHerd(false, true);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
-            attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
+            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
@@ -81,6 +118,160 @@ namespace Models.CLEM.Activities
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
+        }
+
+        /// <summary>
+        /// Provide the list of all breeders currently available
+        /// </summary>
+        /// <returns>A list of breeders to work with before returning to the breed activity</returns>
+        private IEnumerable<RuminantFemale> GetBreeders()
+        {
+            // return the full list of breeders currently able to breed
+            // controlled mating includes a max breeding age property, so reduces numbers mated
+            var fullSetBreeders = milkingTimer != null
+                ? milkingTimer.IndividualsToBreed
+                : CurrentHerd(true).OfType<RuminantFemale>()
+                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
+
+
+            return fullSetBreeders;
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            amountToDo = 0;
+            amountToSkip = 0;
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<RuminantFemale> herd = GetBreeders();
+            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
+
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.identifier)
+                {
+                    case "Number mated":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per head":
+                                valuesForCompanionModels[valueToSupply.Key] = number;
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                        }
+                        break;
+                    case "Number conceived":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per head":
+                                // need to estimate conception rate
+                                foreach (RuminantFemale female in uniqueIndividuals)
+                                {
+                                    if (female.BreedParams.ConceptionModel == null)
+                                        throw new ApsimXException(this, $"No conception details were found for [r={female.BreedParams.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
+                                    double rate = female.BreedParams.ConceptionModel.ConceptionRate(female);
+                                    if (RandomNumberGenerator.Generator.NextDouble() <= rate)
+                                    {
+                                        female.ActivityDeterminedConceptionRate = rate;
+                                        amountToDo++;
+                                    }
+                                    else
+                                    {
+                                        female.ActivityDeterminedConceptionRate = 0;
+                                    }
+                                }
+                                valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForTimestep()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number mated").FirstOrDefault();
+                if (numberShort != null)
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any mating");
+                    }
+                }
+
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number conceived").FirstOrDefault();
+                if (amountShort != null)
+                {
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
+                    if (amountToSkip > 0)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any mating");
+                    }
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            List<RuminantFemale> selectedBreeders = new List<RuminantFemale>();
+            if (numberToDo-numberToSkip > 0)
+            {
+                amountToDo -= amountToSkip;
+                int mated = 0;
+                selectedBreeders = uniqueIndividuals.ToList();
+                foreach (RuminantFemale ruminant in selectedBreeders)
+                {
+                    // if no more conceptions allowed
+                    if (mated < numberToDo & amountToDo > 0)
+                    {
+                        mated++;
+                        if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
+                            amountToDo--;
+                    }
+                    else
+                    {
+                        ruminant.ActivityDeterminedConceptionRate = null;
+                    }
+                }
+                SetStatusSuccessOrPartial((mated == numberToDo || amountToDo <= 0) == false);
+            }
+            uniqueIndividuals = selectedBreeders;
+        }
+
+        /// <summary>
+        /// Provide the list of breeders to mate accounting for the controlled mating failure rate, and required resources
+        /// </summary>
+        /// <returns>A list of breeders for the breeding activity to work with</returns>
+        public IEnumerable<RuminantFemale> BreedersToMate()
+        {
+            // fire all processes needed to account for resources required
+            ManageActivityResourcesAndTasks();
+            // return resulting list with conception precalculated back to the breeding activity.
+            return uniqueIndividuals;
         }
 
         #region validation
@@ -101,189 +292,6 @@ namespace Models.CLEM.Activities
             return results;
         }
         #endregion
-
-        /// <summary>An event handler to perfrom actions needed at the start of the time step</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
-        {
-            this.Status = ActivityStatus.NotNeeded;
-        }
-
-        /// <summary>
-        /// Provide the list of all breeders currently available
-        /// </summary>
-        /// <returns>A list of breeders to work with before returning to the breed activity</returns>
-        private IEnumerable<RuminantFemale> GetBreeders()
-        {
-            // return the full list of breeders currently able to breed
-            // controlled mating includes a max breeding age property, so reduces numbers mated
-            return milkingTimer != null
-                ? milkingTimer.IndividualsToBreed
-                : CurrentHerd(true).OfType<RuminantFemale>()
-                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
-        }
-
-        /// <summary>
-        /// Provide the list of breeders to mate accounting for the controlled mating failure rate, and required resources
-        /// </summary>
-        /// <returns>A list of breeders for the breeding activity to work with</returns>
-        public IEnumerable<RuminantFemale> BreedersToMate()
-        {
-            IEnumerable<RuminantFemale> breeders = null;
-            this.Status = ActivityStatus.NotNeeded;
-            if(this.TimingOK) // general Timer or TimeBreedForMilking ok
-            {
-                breeders = GetBreeders();
-                if (breeders != null &&  breeders.Any())
-                {
-                    // calculate labour and finance costs
-                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(breeders);
-                    CheckResources(resourcesneeded, Guid.NewGuid());
-                    bool tookRequestedResources = TakeResources(resourcesneeded, true);
-                    // get all shortfalls
-                    double limiter = 1;
-                    if (tookRequestedResources && (ResourceRequestList != null))
-                    {
-                        double cashlimit = 1;
-                        // calculate required and provided for fixed and variable payments
-                        var payments = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).GroupBy(a => (a.ActivityModel as RuminantActivityFee).PaymentStyle == AnimalPaymentStyleType.Fixed).Select(a => new { key = a.Key, required = a.Sum(b => b.Required), provided = a.Sum(b => b.Provided), });
-                        double paymentsRequired = payments.Sum(a => a.required);
-                        double paymentsProvided = payments.Sum(a => a.provided);
-
-                        double paymentsFixedRequired = payments.Where(a => a.key == true).Sum(a => a.required);
-
-                        if (paymentsFixedRequired > paymentsProvided)
-                        {
-                            // not enough finances for fixed payments
-                            switch (this.OnPartialResourcesAvailableAction)
-                            {
-                                case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                    throw new ApsimXException(this, $"There were insufficient [r=Finances] to pay the [Fixed] herd expenses for [{this.Name}]\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.");
-                                case OnPartialResourcesAvailableActionTypes.SkipActivity:
-                                    Status = ActivityStatus.Ignored;
-                                    cashlimit = 0;
-                                    return null;
-                                case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-                                    Status = ActivityStatus.Warning;
-                                    cashlimit = 0;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            // work out if sufficient money for variable payments 
-                            double paymentsVariableProvided = paymentsProvided - paymentsFixedRequired;
-                            if (paymentsVariableProvided < (paymentsRequired - paymentsFixedRequired))
-                            {
-                                // not enough finances for variable payments
-                                switch (this.OnPartialResourcesAvailableAction)
-                                {
-                                    case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                        throw new ApsimXException(this, $"There were insufficient [r=Finances] to pay the herd expenses for [{this.Name}]\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.");
-                                    case OnPartialResourcesAvailableActionTypes.SkipActivity:
-                                        Status = ActivityStatus.Ignored;
-                                        cashlimit = 0;
-                                        return null;
-                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-                                        Status = ActivityStatus.Partial;
-
-                                        //TODO: calculate true herd serviced based on amount available spread over all fees
-
-                                        // simply calculates limit as a properotion of the variable costs available
-                                        cashlimit = paymentsVariableProvided / (paymentsRequired - paymentsFixedRequired);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-
-                        double amountLabourNeeded = resourcesneeded.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-                        double amountLabourProvided = resourcesneeded.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-                        double labourlimit = 1;
-                        if (amountLabourNeeded > 0)
-                        {
-                            labourlimit = amountLabourProvided == 0 ? 0 : amountLabourProvided / amountLabourNeeded;
-                        }
-
-                        if (labourlimit < 1)
-                        {
-                            // not enough labour for activity
-                            switch (this.OnPartialResourcesAvailableAction)
-                            {
-                                case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                    throw new ApsimXException(this, $"There were insufficient [r=Labour] for [{this.Name}]\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.");
-                                case OnPartialResourcesAvailableActionTypes.SkipActivity:
-                                    Status = ActivityStatus.Ignored;
-                                    labourlimit = 0;
-                                    return null;
-                                case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-                                    Status = ActivityStatus.Partial;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-
-                        limiter = Math.Min(cashlimit, labourlimit);
-                    }
-
-                    if (limiter < 1)
-                        this.Status = ActivityStatus.Partial;
-                    else if (limiter == 1)
-                        this.Status = ActivityStatus.Success;
-
-                    breeders = breeders.Take(Convert.ToInt32(Math.Floor(breeders.Count() * limiter), CultureInfo.InvariantCulture));
-                }
-                // report that this activity was performed as it does not use base GetResourcesRequired
-                this.TriggerOnActivityPerformed();
-            }
-            return breeders;
-        }
-
-        /// <summary>
-        /// Private method to determine resources required for this activity in the current month
-        /// This method is local to this activity and not called with CLEMGetResourcesRequired event
-        /// </summary>
-        /// <param name="breederList">The breeders being mated</param>
-        /// <returns>List of resource requests</returns>
-        private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            IEnumerable<Ruminant> herd = CurrentHerd(false);
-            int head = herd.Where(a => a.Weaned == false).Count();
-
-            double daysNeeded = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    daysNeeded = head * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    double sumAE = 0;
-                    daysNeeded = sumAE * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
 
         #region descriptive summary
 

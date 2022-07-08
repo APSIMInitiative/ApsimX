@@ -23,6 +23,7 @@
     using APSIM.Shared.Graphing;
     using APSIM.Interop.Graphing.Extensions;
     using APSIM.Interop.Graphing.CustomSeries;
+    using Utility;
 
     using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
     using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
@@ -173,30 +174,9 @@
                 plot1.Model.MouseMove -= OnChartMouseMove;
 #pragma warning restore CS0618
                 captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
-                // It's good practice to disconnect the event handlers, as it makes memory leaks
-                // less likely. However, we may not "own" the event handlers, so how do we 
-                // know what to disconnect?
-                // We can do this via reflection. Here's how it currently can be done in Gtk#.
-                // Windows.Forms would do it differently.
-                // This may break if Gtk# changes the way they implement event handlers.
-                foreach (Widget w in popup)
-                {
-                    if (w is MenuItem)
-                    {
-                        PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (pi != null)
-                        {
-                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                            if (handlers != null && handlers.ContainsKey("activate"))
-                            {
-                                EventHandler handler = (EventHandler)handlers["activate"];
-                                (w as MenuItem).Activated -= handler;
-                            }
-                        }
-                    }
-                }
-                Clear();
+                popup.Clear();
                 popup.Dispose();
+                Clear();
                 plot1.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
@@ -1298,18 +1278,7 @@
                     if (itemText.Text == menuItemText)
                     {
                         item = oldItem;
-                        // Deactivate the "Activate" handler
-                        PropertyInfo pi = item.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (pi != null)
-                        {
-                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                            if (handlers != null && handlers.ContainsKey("activate"))
-                            {
-                                EventHandler handler = (EventHandler)handlers["activate"];
-                                item.Activated -= handler;
-                            }
-                        }
-                        break;
+                        item.DetachHandler("activate");
                     }
                 }
             }

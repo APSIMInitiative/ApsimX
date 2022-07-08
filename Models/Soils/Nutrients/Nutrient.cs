@@ -42,9 +42,6 @@ namespace Models.Soils.Nutrients
         // Carbon content of FOM
         private double CinFOM = 0.4;
 
-        // Potential soil organic matter decomposition for today.
-        private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
-
         [NonSerialized]
         private INutrientPool fom;
 
@@ -117,6 +114,9 @@ namespace Models.Soils.Nutrients
                 directedGraphInfo = value;
             }
         }
+
+        /// <summary>Potential soil organic matter decomposition for today.</summary>
+        public SurfaceOrganicMatterDecompType SurfaceResidueDecomposition { get; private set; } = null;
 
         /// <summary>
         /// Reset all pools and solutes
@@ -347,7 +347,7 @@ namespace Models.Soils.Nutrients
             {
                 // Get the denitrification N flow under NO3.
                 var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
-                pools.Remove(Inert);
+                //pools.Remove(Inert); this should be included as without it is contrary to user expectations
                 pools.Remove(SurfaceResidue);
 
                 NutrientPool returnPool = new NutrientPool();
@@ -367,10 +367,10 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Total N in each soil layer
+        /// Total organic N in each soil layer, organic and mineral
         /// </summary>
         [Units("kg/ha")]
-        public double[] TotalN
+        public double[] TotalOrganicN
         {
             get
             {
@@ -386,6 +386,25 @@ namespace Models.Soils.Nutrients
                     for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
                 return values;
+            }
+        }
+
+        /// <summary>
+        /// Total N in each soil layer, organic, mineral and nitrogen solutes
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] TotalN
+        {
+            get
+            {
+                double[] totalN = TotalOrganicN;
+
+                // I don't like having hard coded solutes here but I can't think of another
+                // way to do this easily.
+                for (int i = 0; i < totalN.Length; i++)
+                    totalN[i] += Urea.kgha[i] + NO3.kgha[i] + NH4.kgha[i];
+                
+                return totalN;
             }
         }
 
@@ -478,30 +497,30 @@ namespace Models.Soils.Nutrients
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
             SurfaceOrganicMatterDecompType actualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[PotentialSOMDecomp.Pool.Length];
-            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[SurfaceResidueDecomposition.Pool.Length];
+            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
             {
                 actualSOMDecomp.Pool[i] = new SurfaceOrganicMatterDecompPoolType();
-                actualSOMDecomp.Pool[i].Name = PotentialSOMDecomp.Pool[i].Name;
-                actualSOMDecomp.Pool[i].OrganicMatterType = PotentialSOMDecomp.Pool[i].OrganicMatterType;
+                actualSOMDecomp.Pool[i].Name = SurfaceResidueDecomposition.Pool[i].Name;
+                actualSOMDecomp.Pool[i].OrganicMatterType = SurfaceResidueDecomposition.Pool[i].OrganicMatterType;
                 actualSOMDecomp.Pool[i].FOM = new FOMType();
-                actualSOMDecomp.Pool[i].FOM.amount = PotentialSOMDecomp.Pool[i].FOM.amount;
+                actualSOMDecomp.Pool[i].FOM.amount = SurfaceResidueDecomposition.Pool[i].FOM.amount;
             }
 
             double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
             double FinalResidueC = 0;    // How much is left after decomposition
             double FractionDecomposed;
 
-            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
-                InitialResidueC += PotentialSOMDecomp.Pool[i].FOM.C;
+            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
+                InitialResidueC += SurfaceResidueDecomposition.Pool[i].FOM.C;
             FinalResidueC = SurfaceResidue.C[0];
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC,InitialResidueC,0);
             if (FractionDecomposed <1)
             { }
-            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
             {
-                actualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
-                actualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.C = SurfaceResidueDecomposition.Pool[i].FOM.C * FractionDecomposed;
+                actualSOMDecomp.Pool[i].FOM.N = SurfaceResidueDecomposition.Pool[i].FOM.N * FractionDecomposed;
             }
             return actualSOMDecomp;
         }
@@ -515,17 +534,18 @@ namespace Models.Soils.Nutrients
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             // Get potential residue decomposition from surfaceom.
-            PotentialSOMDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+            SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
 
             var surfaceResiduePool = (NutrientPool)SurfaceResidue;
 
             surfaceResiduePool.C[0] = 0;
             surfaceResiduePool.N[0] = 0;
             surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]),0.0);
-            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+
+            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
             {
-                surfaceResiduePool.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;
-                surfaceResiduePool.N[0] += PotentialSOMDecomp.Pool[i].FOM.N;
+                surfaceResiduePool.C[0] += SurfaceResidueDecomposition.Pool[i].FOM.C;
+                surfaceResiduePool.N[0] += SurfaceResidueDecomposition.Pool[i].FOM.N;
             }
         }
 
@@ -608,6 +628,9 @@ namespace Models.Soils.Nutrients
         {
             // Basic model description.
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
 
             // Document model structure.
             List<ITag> structureTags = new List<ITag>();

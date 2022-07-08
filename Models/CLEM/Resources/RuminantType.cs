@@ -144,18 +144,27 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string warningMessage = "")
+        public AnimalPriceGroup GetPriceGroupOfIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string warningMessage = "")
         {
             if (PricingAvailable())
             {
-                if(ind.CurrentPrice == null || !ind.CurrentPrice.Filter(ind))
+                AnimalPriceGroup animalPrice = (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase) ? ind.CurrentPriceGroups.Buy : ind.CurrentPriceGroups.Sell;
+                if(animalPrice == null || !animalPrice.Filter(ind))
                 {
                     // search through RuminantPriceGroups for first match with desired purchase or sale flag
                     foreach (AnimalPriceGroup priceGroup in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                         if (priceGroup.Filter(ind))
                         {
-                            ind.CurrentPrice = priceGroup;
-                            return priceGroup;
+                            if(purchaseStyle == PurchaseOrSalePricingStyleType.Purchase)
+                            {
+                                ind.CurrentPriceGroups = (priceGroup, ind.CurrentPriceGroups.Sell);
+                                return priceGroup;
+                            }
+                            else
+                            {
+                                ind.CurrentPriceGroups = (ind.CurrentPriceGroups.Buy, priceGroup);
+                                return priceGroup;
+                            }
                         }
 
                     // no price match found.
@@ -164,7 +173,7 @@ namespace Models.CLEM.Resources
                         warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
-                return ind.CurrentPrice;
+                return animalPrice;
             }
             return null;
         }
@@ -173,12 +182,13 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string property, string value, string warningMessage = "")
+        public AnimalPriceGroup GetPriceGroupOfIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string property, string value, string warningMessage = "")
         {
             double price = 0;
             if (PricingAvailable())
             {
-                if (ind.CurrentPrice == null || !ind.CurrentPrice.Filter(ind))
+                AnimalPriceGroup animalPrice = (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase) ? ind.CurrentPriceGroups.Buy : ind.CurrentPriceGroups.Sell;
+                if (animalPrice == null || !animalPrice.Filter(ind))
                 {
                     string criteria = property.ToUpper() + ":" + value.ToUpper();
 
@@ -206,15 +216,19 @@ namespace Models.CLEM.Resources
 
                         // check that pricing item meets the specified criteria.
                         if (suitableFilters)
+                        {
                             if (matchCriteria == null)
                                 matchCriteria = priceGroup;
                             else
+                            {
                                 // multiple price entries were found. using first. value = xxx.
                                 if (!warningsMultipleEntry.Contains(criteria))
-                            {
-                                warningsMultipleEntry.Add(criteria);
-                                Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
+                                {
+                                    warningsMultipleEntry.Add(criteria);
+                                    Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
+                                }
                             }
+                        }
                     }
 
                     if (matchCriteria == null)
@@ -242,10 +256,19 @@ namespace Models.CLEM.Resources
                             Summary.WriteMessage(this, warningString, MessageType.Warning);
                         }
                     }
-                    ind.CurrentPrice = matchCriteria;
+                    if (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase)
+                    {
+                        ind.CurrentPriceGroups = (matchCriteria, ind.CurrentPriceGroups.Sell);
+                        return matchCriteria;
+                    }
+                    else
+                    {
+                        ind.CurrentPriceGroups = (ind.CurrentPriceGroups.Buy, matchCriteria);
+                        return matchCriteria;
+                    }
                 }
             }
-            return ind.CurrentPrice;
+            return null;
         }
 
         #region validation

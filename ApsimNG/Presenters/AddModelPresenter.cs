@@ -56,6 +56,7 @@
             tree.DragStarted += OnDragStart;
             tree.DoubleClicked += OnAddButtonClicked;
             filterEdit.Changed += OnFilterChanged;
+            filterEdit.MainWidget.GrabFocus();
         }
 
         /// <summary>Populate the tree control.</summary>

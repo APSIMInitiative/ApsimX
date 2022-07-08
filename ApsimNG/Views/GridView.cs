@@ -1056,7 +1056,7 @@
         /// <summary>
         /// Does some cleanup work on the Grid.
         /// </summary>
-        public void Dispose()
+        public void DoDisposal()
         {
             if (splitter.Child1.Visible)
             {
@@ -1083,6 +1083,7 @@
 
             ClearGridColumns();
             gridModel.Dispose();
+            popupMenu.Clear();
             popupMenu.Dispose();
             accel.Dispose();
             if (table != null)
@@ -1192,7 +1193,7 @@
         {
             try
             {
-                Dispose();
+                DoDisposal();
             }
             catch (Exception err)
             {

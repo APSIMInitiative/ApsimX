@@ -53,6 +53,7 @@ namespace UserInterface.Views
 		private Cursor regularCursor;
         private MarkdownFindView findView;
         private AccelGroup accelerators = new AccelGroup();
+        private Menu popupMenu = new Menu();
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -91,7 +92,7 @@ namespace UserInterface.Views
                 textView = (TextView)gtkControl;
                 mainWidget = textView;
             }
-            textView.Margin = 10;
+            mainWidget.Margin = 10;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -165,7 +166,7 @@ namespace UserInterface.Views
         {
             try
             {
-                GLib.Signal.Emit(textView, "populate-popup", new Menu());
+                GLib.Signal.Emit(textView, "populate-popup", popupMenu);
             }
             catch (Exception err)
             {
@@ -325,7 +326,8 @@ namespace UserInterface.Views
                 else
                 {
                 }
-                if (autoNewline)
+                // Don't insert auto newlines after the last block in the document.
+                if (autoNewline && !(block.Parent is MarkdownDocument && block.Parent.LastChild == block))
                     textView.Buffer.Insert(ref insertPos, "\n\n");
             }
 
@@ -786,12 +788,19 @@ namespace UserInterface.Views
         {
             try
             {
+                popupMenu.Clear();
+                popupMenu.Dispose();
                 accelerators.Dispose();
-                textView.KeyPressEvent -= OnTextViewKeyPress;
+                findView.Destroy();
+                textView.PopulatePopup -= OnPopulatePopupMenu;
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;
                 textView.WidgetEventAfter -= OnWidgetEventAfter;
                 mainWidget.Destroyed -= OnDestroyed;
+                mainWidget.Realized -= OnRealized;
+                textView.FocusInEvent -= OnGainFocus;
+                textView.FocusOutEvent -= OnLoseFocus;
+                textView.KeyPressEvent -= OnTextViewKeyPress;
                 owner = null;
             }
             catch (Exception err)

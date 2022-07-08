@@ -201,7 +201,7 @@
             if (rawSummary != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(rawSummary, @"\n\s+", "\n");
+                return Regex.Replace(rawSummary, @"\n[ \t]+", "\n");
             }
             return null;
         }

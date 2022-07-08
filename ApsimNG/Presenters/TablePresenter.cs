@@ -74,6 +74,8 @@
         /// </summary>
         public void Detach()
         {
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            intellisense.Cleanup();
             view.Grid2.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
             view.Grid1.CellsChanged -= OnCellValueChanged1;
             view.Grid2.CellsChanged -= OnCellValueChanged2;

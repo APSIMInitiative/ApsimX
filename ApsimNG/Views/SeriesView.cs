@@ -142,25 +142,25 @@
             {
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
-                dataSourceDropDown.MainWidget.Dispose();
-                xDropDown.MainWidget.Dispose();
-                yDropDown.MainWidget.Dispose();
-                x2DropDown.MainWidget.Dispose();
-                y2DropDown.MainWidget.Dispose();
-                seriesDropDown.MainWidget.Dispose();
-                lineTypeDropDown.MainWidget.Dispose();
-                markerTypeDropDown.MainWidget.Dispose();
-                colourDropDown.MainWidget.Dispose();
-                lineThicknessDropDown.MainWidget.Dispose();
-                markerSizeDropDown.MainWidget.Dispose();
-                checkBoxView1.MainWidget.Dispose();
-                checkBoxView2.MainWidget.Dispose();
-                checkBoxView3.MainWidget.Dispose();
-                checkBoxView4.MainWidget.Dispose();
-                checkBoxView5.MainWidget.Dispose();
-                checkBoxView6.MainWidget.Dispose();
-                graphView1.MainWidget.Dispose();
-                editView1.MainWidget.Dispose();
+                dataSourceDropDown.Dispose();
+                xDropDown.Dispose();
+                yDropDown.Dispose();
+                x2DropDown.Dispose();
+                y2DropDown.Dispose();
+                seriesDropDown.Dispose();
+                lineTypeDropDown.Dispose();
+                markerTypeDropDown.Dispose();
+                colourDropDown.Dispose();
+                lineThicknessDropDown.Dispose();
+                markerSizeDropDown.Dispose();
+                checkBoxView1.Dispose();
+                checkBoxView2.Dispose();
+                checkBoxView3.Dispose();
+                checkBoxView4.Dispose();
+                checkBoxView5.Dispose();
+                checkBoxView6.Dispose();
+                graphView1.Dispose();
+                editView1.Dispose();
                 owner = null;
             }
             catch (Exception err)

@@ -171,6 +171,13 @@ namespace UserInterface.Interfaces
         void Close(bool askToSave = true);
 
         /// <summary>
+        /// Returns the number of pages in the notebook
+        /// </summary>
+        /// <param name="onLeft">If true, use the left notebook; if false, use the right</param>
+        /// <returns></returns>
+        public int PageCount(bool onLeft);
+
+        /// <summary>
         /// Close a tab.
         /// </summary>
         /// <param name="index">Index of the tab to be removed.</param>

@@ -7,7 +7,7 @@
    <key>CFBundleExecutable</key>
    <string>ApsimNG</string>
    <key>CFBundleIconFile</key>
-   <string>ApsimNG</string>
+   <string>ApsimNG.icns</string>
    <key>CFBundleIdentifier</key>
    <string>au.csiro.apsim.apsimx</string>
    <key>CFBundleInfoDictionaryVersion</key>

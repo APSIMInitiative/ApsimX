@@ -64,6 +64,7 @@
 
         private SharpMap.Map map;
         private Gtk.Image image;
+        private Gtk.EventBox container;
 
         /// <summary>
         /// Is the user dragging the mouse?
@@ -151,7 +152,7 @@
             image.Halign = Align.Start;
             image.Valign = Align.Start;
 
-            var container = new Gtk.EventBox();
+            container = new Gtk.EventBox();
             container.Add(image);
 
             VPaned box = new VPaned();
@@ -381,10 +382,13 @@
         {
             try
             {
-                mainWidget.ButtonPressEvent -= OnButtonPress;
-                mainWidget.ButtonReleaseEvent -= OnButtonRelease;
-                mainWidget.ScrollEvent -= OnMouseScroll;
-                mainWidget.Destroyed -= OnMainWidgetDestroyed;
+                image.Drawn -= OnImageExposed;
+                image.Dispose();
+                (PropertiesView as PropertyView).Dispose();
+                container.ButtonPressEvent -= OnButtonPress;
+                container.ButtonReleaseEvent -= OnButtonRelease;
+                container.ScrollEvent -= OnMouseScroll;
+                container.Destroyed -= OnMainWidgetDestroyed;
             }
             catch (Exception err)
             {

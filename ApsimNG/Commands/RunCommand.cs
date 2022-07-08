@@ -17,7 +17,7 @@
         private string jobName;
 
         /// <summary>The collection of jobs to run</summary>
-        private Runner jobRunner;
+        private IRunner jobRunner;
 
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -32,7 +32,7 @@
         /// <param name="name">Name of the job to be displayed in the UI..</param>
         /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
-        public RunCommand(string name, Runner runner, ExplorerPresenter presenter)
+        public RunCommand(string name, IRunner runner, ExplorerPresenter presenter)
         {
             this.jobName = name;
             this.jobRunner = runner;

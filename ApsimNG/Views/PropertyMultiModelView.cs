@@ -65,7 +65,7 @@ namespace UserInterface.Views
             //propertyTable.RowHomogeneous = true;
             propertyTable.RowSpacing = 5;
 
-            propertyTable.Destroyed += OnWidgetDestroyed;
+            propertyTable.Destroyed += PropertyTable_Destroyed;
             box.Add(propertyTable);
 
 

@@ -238,6 +238,9 @@
                 }
 
             yield return new Table(tableData);
+
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
         }
     }
 }

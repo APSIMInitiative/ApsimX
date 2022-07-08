@@ -165,6 +165,8 @@
 
         private EditorType editorMode;
 
+        private Menu popupMenu = new Menu();
+
         /// <summary>
         /// Controls the syntax highlighting scheme.
         /// </summary>
@@ -364,7 +366,7 @@
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
             AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
-            AddContextActionWithAccel("Undo", OnRedo, "Ctrl+Y");
+            AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddMenuItem("Change Style", OnChangeStyle);
 
             textEditor.Realized += OnRealized;
@@ -388,7 +390,7 @@
             try
             {
                 textEditor.Realized -= OnRealized;
-                GLib.Signal.Emit(textEditor, "populate-popup", new Menu());
+                GLib.Signal.Emit(textEditor, "populate-popup", popupMenu);
             }
             catch (Exception err)
             {
@@ -421,6 +423,9 @@
                 // Windows.Forms would do it differently.
                 // This may break if Gtk# changes the way they implement event handlers.
                 textEditor.DetachAllHandlers();
+                popupMenu.Clear();
+                popupMenu.Dispose();
+                findForm.Destroy();
                 accel.Dispose();
                 textEditor.Dispose();
                 textEditor = null;

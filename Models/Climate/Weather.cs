@@ -962,7 +962,7 @@
         /// <param name="amp">The calculated amp value</param>
         private void ProcessMonthlyTAVAMP(out double tav, out double amp)
         {
-            int savedPosition = reader.GetCurrentPosition();
+            long savedPosition = reader.GetCurrentPosition();
 
             // init return values
             tav = 0;

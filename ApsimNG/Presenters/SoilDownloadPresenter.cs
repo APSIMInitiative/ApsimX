@@ -63,12 +63,6 @@ namespace UserInterface.Presenters
         /// <summary>Add soil to simulation button.</summary>
         private ButtonView addSoilButton;
 
-        /// <summary>Apsoil help button.</summary>
-        private ButtonView apsoilButton;
-
-        /// <summary>Isric help button.</summary>
-        private ButtonView isricButton;
-
         /// <summary>The main presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
@@ -98,15 +92,11 @@ namespace UserInterface.Presenters
             radiusEditBox = view.GetControl<EditView>("radiusEditBox");
             searchButton = view.GetControl<ButtonView>("searchButton");
             addSoilButton = view.GetControl<ButtonView>("addSoilButton");
-            apsoilButton = view.GetControl<ButtonView>("apsoilButton");
-            isricButton = view.GetControl<ButtonView>("isricButton");
 
             PopulateView();
 
             searchButton.Clicked += OnSearchClicked;
             addSoilButton.Clicked += OnAddSoilButtonClicked;
-            apsoilButton.Clicked += OnApsoilButtonClicked;
-            isricButton.Clicked += OnIsricButtonClicked;
         }
 
         /// <summary>Detach the view from this presenter.</summary>
@@ -120,7 +110,7 @@ namespace UserInterface.Presenters
 
             searchButton.Clicked -= OnSearchClicked;
             addSoilButton.Clicked -= OnAddSoilButtonClicked;
-            view.MainWidget.Dispose();
+            view.Dispose();
         }
 
         /// <summary>Populate the controls.</summary>
@@ -243,22 +233,6 @@ namespace UserInterface.Presenters
                 explorerPresenter.CommandHistory.Add(addSoil);
             }
             explorerPresenter.Populate();
-        }
-
-        /// <summary>User has clicked the APSOIL help button.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnApsoilButtonClicked(object sender, EventArgs e)
-        {
-            Process.Start("https://www.apsim.info/apsim-model/apsoil/");
-        }
-
-        /// <summary>User has clicked the ISRIC help button.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnIsricButtonClicked(object sender, EventArgs e)
-        {
-            Process.Start("https://www.isric.org/explore/soilgrids");
         }
 
         /// <summary>Return zero or more APSOIL soils.</summary>

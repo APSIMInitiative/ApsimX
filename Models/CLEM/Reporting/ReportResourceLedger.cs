@@ -88,6 +88,15 @@ namespace Models.CLEM.Reporting
         [Category("General", "Extras")]
         public bool IncludeConversions { get; set; }
 
+        /// <summary>
+        /// Custom variables to add
+        /// </summary>
+        [Summary]
+        [Description("Custom variables")]
+        [Category("General", "Extras")]
+        [Core.Display(Type = DisplayType.MultiLineText)]
+        public string[] CustomVariableNames { get; set; }
+
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
@@ -211,6 +220,9 @@ namespace Models.CLEM.Reporting
                 }
                 eventNames.Add("[Resources]." + this.ResourceGroupsToReport + ".TransactionOccurred");
             }
+
+            if(CustomVariableNames != null)
+                variableNames.AddRange(CustomVariableNames);
 
             VariableNames = variableNames.ToArray();
             EventNames = eventNames.ToArray();

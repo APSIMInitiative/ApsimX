@@ -1,18 +1,20 @@
 using System;
 using NUnit.Framework;
 using APSIM.Server.IO;
+using APSIM.Shared.Utilities;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Linq;
 using System.Text;
 using System.IO.Pipes;
+using System.IO;
 
 namespace UnitTests.Server
 {
     [TestFixture]
+    [Timeout(5 * 1000)]
     public class NativeSocketConnectionTests
     {
-        private const string pipePath = "/tmp/CoreFxPipe_";
         private string pipeName;
         private NamedPipeServerStream pipe;
         private NativeCommunicationProtocol protocol;
@@ -33,11 +35,11 @@ namespace UnitTests.Server
             pipe.Dispose();
         }
 
-        private Socket CreateClient()
+        private NamedPipeClientStream CreateClient()
         {
-            Socket sock = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
-            sock.Connect(new UnixDomainSocketEndPoint($"{pipePath}{pipeName}"));
-            return sock;
+            NamedPipeClientStream client = new NamedPipeClientStream(pipeName);
+            client.Connect();
+            return client;
         }
 
         [Test]
@@ -49,12 +51,10 @@ namespace UnitTests.Server
                 pipe.WaitForConnection();
                 Assert.AreEqual(target, protocol.ReadInt());
             });
-            Socket client = CreateClient();
-            byte[] buf = BitConverter.GetBytes(target);
-            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
-            // sock.Send(new byte[4] { 0xD2, 4, 0, 0 });
-            client.Send(buf);
-            client.Disconnect(false);
+            using (NamedPipeClientStream client = CreateClient())
+            {
+                PipeUtilities.SendIntToPipe(client, target);
+            }
 
             server.Wait();
         }
@@ -68,12 +68,10 @@ namespace UnitTests.Server
                 pipe.WaitForConnection();
                 Assert.AreEqual(target, protocol.ReadDouble());
             });
-            Socket client = CreateClient();
-            byte[] buf = BitConverter.GetBytes(target);
-            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
-            // sock.Send(new byte[8] { 0, 0, 0, 0, 0, 0x80, 0x31, 0xC0 });
-            client.Send(buf);
-            client.Disconnect(false);
+            using (Stream client = CreateClient())
+            {
+                PipeUtilities.SendDoubleToPipe(client, target);
+            }
 
             server.Wait();
         }
@@ -87,16 +85,13 @@ namespace UnitTests.Server
                 Assert.AreEqual(true, protocol.ReadBool());
                 Assert.AreEqual(false, protocol.ReadBool());
             });
-            Socket client = CreateClient();
-            foreach (bool target in new[] { true, false })
+            using (Stream client = CreateClient())
             {
-                byte[] buf = BitConverter.GetBytes(target);
-                client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
-                // sock.Send(new byte[1] { 1 }); // = true
-                // sock.Send(new byte[1] { 0 }); // = false
-                client.Send(buf);
+                foreach (bool target in new[] { true, false })
+                {
+                    PipeUtilities.SendBoolToPipe(client, target);
+                }
             }
-            client.Disconnect(false);
 
             server.Wait();
         }
@@ -104,14 +99,18 @@ namespace UnitTests.Server
         [Test]
         public void TestReadDate()
         {
+            DateTime target = new DateTime(2022, 3, 17);
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.Throws<NotImplementedException>(() => protocol.ReadDate());
+                Assert.AreEqual(target, protocol.ReadDate());
             });
-            Socket client = CreateClient();
+            using (Stream client = CreateClient())
+            {
+                PipeUtilities.SendDateToPipe(client, target);
+            }
+
             server.Wait();
-            client.Disconnect(false);
         }
 
         [Test]
@@ -123,12 +122,10 @@ namespace UnitTests.Server
                 pipe.WaitForConnection();
                 Assert.AreEqual(target, protocol.ReadString());
             });
-            Socket client = CreateClient();
-            byte[] buf = Encoding.Default.GetBytes(target);
-            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
-            // sock.Send(new byte[23] { 0x54, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20, 0x61, 0x20, 0x73, 0x68, 0x6F, 0x72, 0x74, 0x20, 0x6D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65 });
-            client.Send(buf);
-            client.Disconnect(false);
+            using (Stream client = CreateClient())
+            {
+                PipeUtilities.SendStringToPipe(client, target);
+            }
 
             server.Wait();
         }
@@ -147,21 +144,17 @@ namespace UnitTests.Server
                 Assert.AreEqual(array, protocol.ReadDoubleArray());
             });
 
-            Socket client = CreateClient();
+            using (Stream client = CreateClient())
+            {
+                // Convert array to binary to send over the socket.
+                PipeUtilities.SendArrayToPipe(client, array);
 
-            // Convert array to binary to send over the socket.
-            byte[] buf = array.SelectMany(n => BitConverter.GetBytes(n)).ToArray();
-            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
-            client.Send(buf);
-
-            // Let's also check with a pre-calculated binary representation of
-            // the above array, just for fun. Note: does this depend on the
-            // host system's endian-ness?
-            buf = new byte[64] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0X40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XF0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XE0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XD0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XD0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XE0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XF0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XC0 };
-            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
-            client.Send(buf);
-
-            client.Disconnect(false);
+                // Let's also check with a pre-calculated binary representation of
+                // the above array, just for fun. Note: does this depend on the
+                // host system's endian-ness?
+                byte[] buf = new byte[64] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0X40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XF0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XE0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XD0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XD0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XE0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XF0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XC0 };
+                PipeUtilities.SendBytesToPipe(client, buf);
+            }
 
             server.Wait();
         }

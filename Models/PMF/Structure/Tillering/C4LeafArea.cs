@@ -82,7 +82,8 @@ namespace Models.PMF
 				culm.LeafArea = tmpArea * sowingDensity * culm.dltLeafNo; // in dltLai
 				culm.TotalLAI += culm.LeafArea; //not sure what this is doing as actual growth may adjust this
 				
-				dltCulmArea += culm.LeafArea * culm.Proportion;
+				culm.DltLAI = culm.LeafArea * culm.Proportion;
+				dltCulmArea += culm.DltLAI;
 			}
 			return dltCulmArea;
 		}

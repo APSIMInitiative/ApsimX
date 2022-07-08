@@ -11,14 +11,27 @@
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model
     {
-        /// <summary>Crop lower limit</summary>
+        /// <summary>Crop lower limit (mm/mm)</summary>
         [Summary]
         [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
-        
-        /// <summary>The KL value.</summary>
-        [Summary]
+
+        /// <summary>Crop lower limit (mm)</summary>
+        [Units("mm")]
+        public double[] LLmm
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+                return MathUtilities.Multiply(LL, soilPhysical.Thickness);
+            }
+        }
+
+    /// <summary>The KL value.</summary>
+    [Summary]
         [Description("KL")]
         [Display(Format = "N2")]
         [Units("/day")]

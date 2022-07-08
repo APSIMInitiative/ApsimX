@@ -19,6 +19,10 @@ namespace Models.PMF
         [Units("/m2")]
         public double Population { get; set; } = 100;
 
+        /// <summary>The number of seeds sown.</summary>
+        [Units("")]
+        public double Seeds { get; set; } = 0;
+
         /// <summary>The depth</summary>
         [Units("mm")]
         public double Depth { get; set; } = 100;

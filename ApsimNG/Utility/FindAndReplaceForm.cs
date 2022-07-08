@@ -67,10 +67,13 @@ namespace Utility
             btnReplaceAll.Clicked -= BtnReplaceAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
+            Utility.GtkUtil.DetachAllHandlers(window1);
         }
 
         public void Destroy()
         {
+            Utility.GtkUtil.DetachAllHandlers(window1);
+            window1.Destroy();
             window1.Dispose();
         }
 

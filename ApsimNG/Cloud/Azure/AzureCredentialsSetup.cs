@@ -267,7 +267,7 @@ namespace ApsimNG.Cloud.Azure
         {
             try
             {
-                System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/") { UseShellExecute = true });
             }
             catch// (Exception err) // fixme
             {

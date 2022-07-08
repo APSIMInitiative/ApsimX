@@ -223,10 +223,10 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowWaitCursor(true);
                     try
                     {
-                        upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+                        upgrades = WebUtilities.PostRestService<Upgrade[]>("https://builds.apsim.info/api/nextgen/list");
                         var upgradeNames = upgrades.Select(upgrade =>
                         {
-                            var name = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber + " " + upgrade.IssueTitle;
+                            var name = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.Issue + " " + upgrade.Title;
                             if (name.Length > 50)
                                 name = name.Remove(50);
                             return name;
@@ -343,15 +343,20 @@ namespace UserInterface.Presenters
             {
                 Directory.CreateDirectory(apsimReleaseDirectory);
 
-                var upgrade = upgrades.ToList().Find(u => versionNumber == u.ReleaseDate.ToString("yyyy.MM.dd.") + u.IssueNumber);
+                var upgrade = upgrades.ToList().Find(u => versionNumber == u.ReleaseDate.ToString("yyyy.MM.dd.") + u.Issue);
                 var releaseFileName = Path.Combine(apsimReleasesPath, versionNumber + ".exe");
 
                 // Download the release.
                 try
                 {
                     view.InvokeOnMainThread(delegate { statusLabel.Text = "Downloading the APSIM release..."; });
-                    WebClient myWebClient = new WebClient();
-                    await myWebClient.DownloadFileTaskAsync(upgrade.ReleaseURL, releaseFileName);
+                    Stream stream = await WebUtilities.AsyncGetStreamTask(upgrade.DownloadLinkWindows, "*/*");
+                    stream.Position = 0;
+                    using (FileStream file = new FileStream(releaseFileName, FileMode.Create, System.IO.FileAccess.Write))
+                    {
+                        stream.CopyTo(file);
+                        file.Flush();
+                    }
 
                     // Unpack the installer's bin directory.
                     var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -388,7 +393,6 @@ namespace UserInterface.Presenters
                     }
                     foreach (string fileName in Directory.GetFiles(binFolder, "*,?.*"))
                         File.Delete(fileName);
-
 
                 }
                 catch (Exception err)

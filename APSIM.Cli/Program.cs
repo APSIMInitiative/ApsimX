@@ -5,6 +5,7 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;
+using Models.Core.Apsim710File;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
 using System;
@@ -28,9 +29,10 @@ namespace APSIM.Cli
                 {
                     config.AutoHelp = true;
                     config.HelpWriter = Console.Out;
-                }).ParseArguments<RunOptions, DocumentOptions>(args)
+                }).ParseArguments<RunOptions, DocumentOptions, ImportOptions>(args)
                 .WithParsed<RunOptions>(Run)
                 .WithParsed<DocumentOptions>(Document)
+                .WithParsed<ImportOptions>(Import)
                 .WithNotParsed(HandleParseError);
             }
             catch (Exception err)
@@ -107,6 +109,26 @@ namespace APSIM.Cli
                 PdfWriter writer = new PdfWriter(new PdfOptions(directory, null));
                 IEnumerable<ITag> tags = options.ParamsDocs ? new ParamsInputsOutputs(model).Document() : model.Document();
                 writer.Write(pdfFile, tags);
+            }
+        }
+
+        /// <summary>
+        /// Import the files using the given options.
+        /// </summary>
+        /// <param name="options">Parsed CLI arguments.</param>
+        private static void Import(ImportOptions options)
+        {
+            if (options.Files == null || !options.Files.Any())
+                throw new ArgumentException($"No files were specified");
+
+            IEnumerable<string> files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive));
+            if (!files.Any())
+                files = options.Files;
+
+            foreach (string file in files)
+            {
+                var importer = new Importer();
+                importer.ProcessFile(file);
             }
         }
     }

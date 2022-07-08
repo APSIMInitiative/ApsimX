@@ -133,6 +133,16 @@ namespace UserInterface.Classes
         public string[] DropDownOptions { get; private set; }
 
         /// <summary>
+        /// If false, the widget shown in the GUI for this property will be disabled.
+        /// </summary>
+        public bool Enabled { get; private set; }
+
+        /// <summary>
+        /// If false, the widget will not be shown in the GUI for this property.
+        /// </summary>
+        public bool Visible { get; private set; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public Property(string name, string tooltip, object value, PropertyType displayType, IEnumerable<string> dropDownOptions = null, IEnumerable<string> separators = null)
@@ -144,6 +154,8 @@ namespace UserInterface.Classes
             DisplayMethod = displayType;
             DropDownOptions = dropDownOptions?.ToArray();
             Separators = separators?.ToList();
+            Enabled = true;
+            Visible = true;
         }
 
         /// <summary>
@@ -183,6 +195,72 @@ namespace UserInterface.Classes
             // DisplayType.DropDown if the Values property is specified.
             if (displayType == DisplayType.None && !string.IsNullOrEmpty(attrib?.Values))
                 displayType = DisplayType.DropDown;
+
+            if (attrib != null && !string.IsNullOrEmpty(attrib.VisibleCallback))
+            {
+                BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
+                MethodInfo method = metadata.DeclaringType.GetMethod(attrib.VisibleCallback, flags);
+                if (method == null)
+                {
+                    // Try a property with this name.
+                    PropertyInfo visibleProperty = metadata.DeclaringType.GetProperty(attrib.VisibleCallback, flags);
+                    if (visibleProperty == null)
+                        throw new InvalidOperationException($"Unable to evaluate visible callback {attrib.VisibleCallback} for property {metadata.Name} on type {metadata.DeclaringType.FullName} - method or property does not exist");
+
+                    if (visibleProperty.PropertyType != typeof(bool))
+                        throw new InvalidOperationException($"Property {visibleProperty.Name} is not a valid enabled callback, because it has a return type of {visibleProperty.PropertyType}. It should have a bool return type.");
+                    if (!visibleProperty.CanRead)
+                        throw new InvalidOperationException($"Property {visibleProperty.Name} is not a valid enabled callback, because it does not have a get accessor.");
+
+                    Visible = (bool)visibleProperty.GetValue(obj);
+                }
+                else
+                {
+                    if (method.ReturnType != typeof(bool))
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it has a return type of {method.ReturnType}. It should have a bool return type.");
+                    ParameterInfo[] parameters = method.GetParameters();
+                    List<ParameterInfo> nonOptionalParameters = parameters.Where(p => !p.IsOptional).ToList();
+                    if (nonOptionalParameters.Count != 0)
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it takes {nonOptionalParameters.Count} non-optional arguments ({string.Join(", ", nonOptionalParameters.Select(p => p.Name))}). It should take 0 arguments");
+
+                    Visible = (bool)method.Invoke(obj, null);
+                }
+            }
+            else
+                Visible = true;
+
+            if (attrib != null && !string.IsNullOrEmpty(attrib.EnabledCallback))
+            {
+                BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
+                MethodInfo method = metadata.DeclaringType.GetMethod(attrib.EnabledCallback, flags);
+                if (method == null)
+                {
+                    // Try a property with this name.
+                    PropertyInfo enabledProperty = metadata.DeclaringType.GetProperty(attrib.EnabledCallback, flags);
+                    if (enabledProperty == null)
+                        throw new InvalidOperationException($"Unable to evaluate enabled callback {attrib.EnabledCallback} for property {metadata.Name} on type {metadata.DeclaringType.FullName} - method or property does not exist");
+
+                    if (enabledProperty.PropertyType != typeof(bool))
+                        throw new InvalidOperationException($"Property {enabledProperty.Name} is not a valid enabled callback, because it has a return type of {enabledProperty.PropertyType}. It should have a bool return type.");
+                    if (!enabledProperty.CanRead)
+                        throw new InvalidOperationException($"Property {enabledProperty.Name} is not a valid enabled callback, because it does not have a get accessor.");
+
+                    Enabled = (bool)enabledProperty.GetValue(obj);
+                }
+                else
+                {
+                    if (method.ReturnType != typeof(bool))
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it has a return type of {method.ReturnType}. It should have a bool return type.");
+                    ParameterInfo[] parameters = method.GetParameters();
+                    List<ParameterInfo> nonOptionalParameters = parameters.Where(p => !p.IsOptional).ToList();
+                    if (nonOptionalParameters.Count != 0)
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it takes {nonOptionalParameters.Count} non-optional arguments ({string.Join(", ", nonOptionalParameters.Select(p => p.Name))}). It should take 0 arguments");
+
+                    Enabled = (bool)method.Invoke(obj, null);
+                }
+            }
+            else
+                Enabled = true;
 
             switch (displayType)
             {

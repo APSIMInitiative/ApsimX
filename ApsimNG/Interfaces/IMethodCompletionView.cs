@@ -3,11 +3,13 @@
     using System.Drawing;
     using Intellisense;
     using System.Collections.Generic;
+    using System;
+
     /// <summary>
     /// Interface for a small intellisense window which displays the 
     /// completion options for a method.
     /// </summary>
-    interface IMethodCompletionView
+    interface IMethodCompletionView : IDisposable
     {
         /// <summary>
         /// List of method completions for all overloads of this method.
@@ -23,7 +25,5 @@
         /// Gets or sets the location (top-left corner) of the popup window.
         /// </summary>
         Point Location { get; set; }
-
-        void Destroy();
     }
 }

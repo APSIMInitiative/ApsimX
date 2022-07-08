@@ -192,10 +192,10 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             this.View.TabSelected -= OnTabSelected;
-
             foreach (KeyValuePair<string, IPresenter> valuePair in PresenterList)
                 if(valuePair.Value != null)
                     valuePair.Value.Detach();
+            (this.View as ViewBase).Dispose();
         }
 
     }

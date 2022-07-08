@@ -1,7 +1,7 @@
+using APSIM.Shared.Extensions;
 using System.IO;
 using System.Text;
 using System;
-using System.Globalization;
 
 namespace APSIM.Shared.Utilities
 {
@@ -32,25 +32,36 @@ namespace APSIM.Shared.Utilities
         private char[] buffer = new char[maxBufferSize + 1];
 
         /// <summary>
-        /// Current position in the buffer.
+        /// Current position in the buffer. This is in number of characters.
         /// </summary>
-        private int position = 0;
+        private long position = 0;
 
         /// <summary>
-        /// Current position in the file.
+        /// Current position in the buffer, in number of bytes.
         /// </summary>
-        private int offset = 0;
+        private long positionBytes = 0;
 
         /// <summary>
-        /// The offset of the buffer within the stream.
+        /// Current position in the file. This is in number of bytes.
         /// </summary>
-        private int bufferOffset = 0;
+        private long offset = 0;
+
+        /// <summary>
+        /// The offset of the buffer within the stream. This is in number of bytes.
+        /// </summary>
+        private long bufferOffset = 0;
 
         /// <summary>
         /// The size of the buffer. Note that the actual buffer array can be
         /// larger than this, but will be padded with zeroes at the end.
         /// </summary>
         private int bufferSize = 0;
+
+        /// <summary>
+        /// Length of the byte order mark at the start of the stream, or 0 if
+        /// the stream doesn't contain a byte order mark.
+        /// </summary>
+        private uint bomLength = 0;
 
         /// <summary>
         /// Initialises a new instance of <see cref="StreamReaderRandomAccess"/>
@@ -75,7 +86,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Current position in the stream.
         /// </summary>
-        public int Position
+        public long Position
         {
             get
             {
@@ -101,6 +112,7 @@ namespace APSIM.Shared.Utilities
             file.Close();
             file = null;
             position = 0;
+            positionBytes = 0;
             EndOfStream = true;
             bufferSize = 0;
         }
@@ -110,10 +122,10 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="seekPosition">A byte offset relative to the origin position.</param>
         /// <param name="origin">Reference point used to obtain the new position.</param>
-        public void Seek(int seekPosition, SeekOrigin origin)
+        public void Seek(long seekPosition, SeekOrigin origin)
         {
             EndOfStream = false;
-            offset = (int)file.BaseStream.Seek(seekPosition, origin);
+            offset = file.BaseStream.Seek(seekPosition, origin);
 
             file.DiscardBufferedData();
 
@@ -134,6 +146,8 @@ namespace APSIM.Shared.Utilities
 
             char ch = '\0';
             bool endOfLine = false;
+            int numBytesRead = 0;
+            long offsetStart = bufferOffset + positionBytes;
 
             while (!endOfLine)
             {
@@ -154,6 +168,10 @@ namespace APSIM.Shared.Utilities
 
                 position++;
 
+                int numBytes = file.CurrentEncoding.GetByteCount(ch);
+                positionBytes += numBytes;
+                numBytesRead += numBytes;
+
                 // If we've reached the end of the buffer, we read a new buffer
                 // from the underlying stream.
                 if (position == bufferSize)
@@ -164,7 +182,12 @@ namespace APSIM.Shared.Utilities
                 }
             }
 
-            offset = bufferOffset + position;
+            // Update the offset. Note that offet is measured in bytes, whereas
+            // position is measured in characters. These will be different in
+            // multi-byte encodings. Note also that the buffer offset will
+            // change when we reach the end of the buffer, so we need to use the
+            // buffer offset from before we started reading.
+            offset = offsetStart + numBytesRead;
             return lineBuffer.ToString();
         }
 
@@ -186,8 +209,12 @@ namespace APSIM.Shared.Utilities
             if (file != null)
                 Close();
 
+            if (stream.Position == 0)
+                bomLength = stream.GetBomLength();
+
             file = new StreamReader(stream);
             position = 0;
+            positionBytes = 0;
             EndOfStream = false;
             bufferSize = 0;
             bufferOffset = 0;
@@ -201,8 +228,9 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         private void LoadBuffer()
         {
-            bufferOffset = Convert.ToInt32(file.BaseStream.Position, CultureInfo.InvariantCulture);
+            bufferOffset = bomLength + file.BaseStream.Position;
             position = 0;
+            positionBytes = 0;
             bufferSize = file.Read(buffer, 0, maxBufferSize);
 
             if (bufferSize == 0)

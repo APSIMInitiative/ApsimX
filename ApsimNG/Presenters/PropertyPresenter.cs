@@ -147,6 +147,7 @@ namespace UserInterface.Presenters
         {
             view.SaveChanges();
             view.PropertyChanged -= OnViewChanged;
+            (view as ViewBase).Dispose();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
     

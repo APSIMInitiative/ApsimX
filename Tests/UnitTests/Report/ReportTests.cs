@@ -755,5 +755,20 @@ namespace Models
             List<Exception> errors = runner.Run();
             Assert.AreEqual(1, errors.Count);
         }
+
+        /// <summary>
+        /// Attempt to run a simulation with invalid report variables. Ensure
+        /// that the simulation generates an exception.
+        /// </summary>
+        /// <param name="variableName">The invalid variable name.</param>
+        [TestCase("asdf")]
+        [TestCase("[Simulation].")]
+        [TestCase("sum([Simulation].)")]
+        public void TestInvalidVariableName(string variableName)
+        {
+            report.VariableNames = new[] { variableName };
+            List<Exception> errors = runner.Run();
+            Assert.AreEqual(1, errors.Count);
+        }
     }
 }

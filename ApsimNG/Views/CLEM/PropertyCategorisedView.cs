@@ -10,6 +10,7 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
     using global::UserInterface.Extensions;
+    using Utility;
 
     /// <summary>
     /// GTK# based view of the PropertyCategorisedPresenter to display a tree view of categories and sub-categories to assit filtering properties
@@ -77,6 +78,8 @@ namespace UserInterface.Views
                     child.Dispose();
                 }
             }
+            popup.Clear();
+            popup.Dispose();
             treeview1.CursorChanged -= OnAfterSelect;
             treeview1.ButtonReleaseEvent -= OnButtonUp;
             treeview1.ButtonPressEvent -= OnButtonPress;

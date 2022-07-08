@@ -84,6 +84,14 @@ namespace Models.Functions
         }
 
 
+        /// <summary>Called when [EndCrop].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            AccumulatedValue = 0;
+        }
     }
 }
 

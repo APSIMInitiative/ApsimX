@@ -91,7 +91,7 @@ namespace APSIM.Shared.Utilities
         private DateTime _LastDate;
 
         /// <summary>The first line position</summary>
-        private int FirstLinePosition;
+        private long FirstLinePosition;
 
         /// <summary>The words</summary>
         private StringCollection Words = new StringCollection();
@@ -643,7 +643,7 @@ namespace APSIM.Shared.Utilities
             if (inData.EndOfStream)
                 return "?";
 
-            int Pos = inData.Position;
+            long Pos = inData.Position;
 
             StringCollection Words = new StringCollection();
             while (GetNextLine(inData, ref Words) && (Words[w] == "?" || Words[w] == "*")) ;
@@ -809,13 +809,13 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>Return the current file position</summary>
-        public int GetCurrentPosition()
+        public long GetCurrentPosition()
         {
             return inStreamReader.Position;
         }
 
         /// <summary>Seek to the specified file position</summary>
-        public void SeekToPosition(int position)
+        public void SeekToPosition(long position)
         {
             inStreamReader.Seek(position, SeekOrigin.Begin);
         }

@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using Utility;
 
     /// <summary>
     /// Encapsulates a toolstrip (button bar)
@@ -65,18 +66,7 @@
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
-                {
-                    PropertyInfo pi = child.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(child);
-                        if (handlers != null && handlers.ContainsKey("clicked"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["clicked"];
-                            (child as ToolButton).Clicked -= handler;
-                        }
-                    }
-                }
+                    child.DetachHandlers();
                 toolStrip.Remove(child);
                 child.Dispose();
             }

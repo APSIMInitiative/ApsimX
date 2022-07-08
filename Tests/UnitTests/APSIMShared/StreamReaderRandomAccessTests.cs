@@ -1,7 +1,9 @@
 using APSIM.Shared.Utilities;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace UnitTests.APSIMShared
 {
@@ -87,6 +89,64 @@ namespace UnitTests.APSIMShared
                 reader.Seek(seekPosition, SeekOrigin.Begin);
                 Assert.AreEqual(expectedPosition, reader.Position);
             }
+        }
+
+        /// <summary>
+        /// Each of these input files are identical but have a different
+        /// encoding and byte-order mark. Ensure that the stream reader parses
+        /// them all identically, and is able to resolve the encoding from the
+        /// BOM (using UTF8 when no BOM is present), and is able to seek
+        /// correctly within the file, accounting for the presence of the BOM.
+        /// </summary>
+        /// <param name="inputFile">Input file (stored as embedded resource in this assembly).</param>
+        [TestCase("UnitTests.APSIMShared.Resources.test-utf8.csv")]
+        [TestCase("UnitTests.APSIMShared.Resources.test-utf8-bom.csv")]
+        [TestCase("UnitTests.APSIMShared.Resources.test-utf16-le.csv")]
+        [TestCase("UnitTests.APSIMShared.Resources.test-utf16-be.csv")]
+        public void TestBomParsing(string inputFile)
+        {
+            string[] expected = new string[4]
+            {
+                "x,y",
+                "0,1",
+                "1,2",
+                "2,4"
+            };
+            long[] endOfLinePositions = new long[expected.Length];
+
+            using (Stream stream = GetResourceStream(inputFile))
+            {
+                StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
+                for (int i = 0; i < expected.Length; i++)
+                {
+                    string line = reader.ReadLine();
+                    Assert.AreEqual(expected[i], line);
+                    endOfLinePositions[i] = reader.Position;
+                }
+
+                // Seek to the end of each line, and read a line, and ensure
+                // that we get the expected result. This should probably be a
+                // separate test.
+                for (int i = 1; i < expected.Length - 1; i++)
+                {
+                    reader.Seek(endOfLinePositions[i], SeekOrigin.Begin);
+                    string input = reader.ReadLine();
+                    Assert.AreEqual(expected[i + 1], input);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return a stream which reads from an embedded resource in the current
+        /// assembly with the specified name. Throw if no resource is found.
+        /// </summary>
+        /// <param name="resourceName">Resource name.</param>
+        private Stream GetResourceStream(string resourceName)
+        {
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            if (stream == null)
+                throw new InvalidOperationException($"Resource does not exist: '{resourceName}'");
+            return stream;
         }
 
         private static Stream CreateStream(string message)

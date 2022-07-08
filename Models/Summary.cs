@@ -112,7 +112,12 @@
             if (Verbosity >= messageType)
             {
                 if (storage == null)
-                    throw new ApsimXException(author, "No datastore is available!");
+                {
+                    if (author == null)
+                        throw new Exception("No datastore is available!");
+                    else
+                        throw new ApsimXException(author, "No datastore is available!");
+                }
 
                 Initialise();
 
@@ -120,7 +125,9 @@
                 DataTable table = messages.Clone();
 
                 // Remove the path of the simulation within the .apsimx file.
-                string relativeModelPath = author.FullPath.Replace($"{simulation.FullPath}.", string.Empty);
+                string relativeModelPath = null;
+                if (author != null)
+                    relativeModelPath = author.FullPath.Replace($"{simulation.FullPath}.", string.Empty);
 
                 DataRow row = table.NewRow();
                 row[0] = simulation.Name;
