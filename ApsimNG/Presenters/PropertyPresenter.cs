@@ -117,6 +117,13 @@ namespace UserInterface.Presenters
                         subObject = Activator.CreateInstance(property.PropertyType);
                     PropertyGroup group = GetProperties(subObject);
                     group.Name = property.GetCustomAttribute<DescriptionAttribute>()?.ToString() ?? property.Name;
+                    string units = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
+                    if (!string.IsNullOrEmpty(units))
+                    {
+                        units = "(" + units + ")";
+                        if (!group.Name.Contains(units))
+                            group.Name += " " + units;
+                    }
                     subModelProperties.Add(group);
                 }
                 else

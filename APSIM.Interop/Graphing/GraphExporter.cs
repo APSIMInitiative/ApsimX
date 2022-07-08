@@ -141,8 +141,7 @@ namespace APSIM.Interop.Graphing
             catch (Exception err)
             {
                 var graphName = graph.Title;
-                if (graph is Models.Core.IModel graphModel)
-                    graphName = $"path: {graphModel.FullPath} title: {graphName}";
+                graphName = $"path: {graph.Path} title: {graphName}";
                 throw new Exception($"Error found while exporting graph {graphName}", err);
             }
 

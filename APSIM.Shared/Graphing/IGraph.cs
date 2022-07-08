@@ -35,5 +35,10 @@ namespace APSIM.Shared.Documentation
         /// Graph Title.
         /// </summary>
         string Title { get; }
+
+        /// <summary>
+        /// Graph Path.
+        /// </summary>
+        string Path { get; }
     }
 }

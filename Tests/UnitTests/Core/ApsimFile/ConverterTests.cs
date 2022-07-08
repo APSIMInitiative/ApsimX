@@ -380,5 +380,28 @@
             Assert.AreEqual(1, initialWaters.Count());
             Assert.AreEqual("Models.Soils.Sample, Models", initialWaters.First()["$type"].ToString());
         }
+
+        [Test]
+        public void TestSoluteRearrangeConverter()
+        {
+            JObject organic = new JObject()
+            { 
+                ["$type"] = "Models.Soils.Organic, Models",
+                ["Thickness"] = new JArray(new double[] { 100, 200}),
+                ["OC"] = new JArray(new double[] { 2, 1 }),
+                ["OCUnits"] = "Total"
+            };
+            JObject sample = new JObject()
+            {
+                ["$type"] = "Models.Soils.Sample, Models",
+                ["Thickness"] = new JArray(new double[] { 100, 200 }),
+                ["OC"] = new JArray(new double[] { double.NaN, 0.9 })
+            };
+            var oc = Converter.GetValues(new JObject[] { organic, sample }, "OC", 1.0, null, null, null);
+
+            Assert.AreEqual(new double[] { 2.0, 1.0 }, oc.Item1);
+            Assert.AreEqual("Total", oc.Item2);
+            Assert.AreEqual(new double[] { 100.0, 200.0 }, oc.Item3);
+        }
     }
 }

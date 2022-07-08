@@ -1,14 +1,11 @@
-﻿
-
-namespace Models.Soils.NutrientPatching
+﻿namespace Models.Soils.NutrientPatching
 {
-    using Core;
-    using Interfaces;
-    using System;
-    using APSIM.Shared.Utilities;
-    using Models.Soils.Nutrients;
-    using System.Collections.Generic;
     using APSIM.Shared.Documentation;
+    using APSIM.Shared.Utilities;
+    using Core;
+    using Models.Soils.Nutrients;
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral
@@ -16,17 +13,16 @@ namespace Models.Soils.NutrientPatching
     /// mineral N pools, or losses from the system.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(NutrientPatchManager))]
-    public class SolutePatch : Model, ISolute
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(Soil))]
+    public class SolutePatch : Solute
     {
         private Soil soil;
-        private Sample initial = null;
-        private IPhysical soilPhysical = null;
-
         private NutrientPatchManager patchManager;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        public double[] kgha 
+        public override double[] kgha 
         { 
             get 
             { 
@@ -38,27 +34,12 @@ namespace Models.Soils.NutrientPatching
             }
         }
 
-        /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
-
-        /// <summary>
-        /// Invoked when model is first created.
-        /// </summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-            soil = FindAncestor<Soil>();
-            patchManager = FindAncestor<NutrientPatchManager>();
-        }
-
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            initial = soil.FindChild<Sample>();
-            soilPhysical = soil.FindChild<IPhysical>();
             if (!Name.Contains("PlantAvailable"))
                 Reset();
         }
@@ -66,26 +47,29 @@ namespace Models.Soils.NutrientPatching
         /// <summary>
         /// Set solute to initialisation state
         /// </summary>
-        public void Reset()
+        public override void Reset()
         {
-            double[] initialkgha = initial.FindByPath(Name + "N")?.Value as double[];
+            var solute = Soil.FindChild<Solute>(Name);
+            if (solute == null)
+                throw new Exception($"Cannot find solute {Name}");
+            double[] initialkgha = solute.InitialValues;
             if (initialkgha == null)
-                SetKgHa(SoluteSetterType.Other, new double[soilPhysical.Thickness.Length]);  // Urea will fall to here.
+                SetKgHa(SoluteSetterType.Other, new double[Physical.Thickness.Length]);  // Urea will fall to here.
             else
                 SetKgHa(SoluteSetterType.Other, ReflectionUtilities.Clone(initialkgha) as double[]);
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>
-        public void SetKgHa(SoluteSetterType callingModelType, double[] value)
+        public override void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            patchManager.SetSoluteKgha(callingModelType, Name, value);
+            PatchManager.SetSoluteKgha(callingModelType, Name, value);
         }
 
         /// <summary>Setter for kgha delta.</summary>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="delta">New delta values</param>
-        public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
+        public override void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
             var values = kgha;
             for (int i = 0; i < delta.Length; i++)
@@ -104,5 +88,28 @@ namespace Models.Soils.NutrientPatching
             yield return new Paragraph("This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.");
             yield return new Section("Mineral N Flows", DocumentChildren<NFlow>());
         }
+
+        /// <summary>The soil physical node.</summary>
+        private Soil Soil
+        {
+            get
+            {
+                if (soil == null)
+                    soil = FindInScope<Soil>();
+                return soil;
+            }
+        }
+
+        /// <summary>The PatchManager node.</summary>
+        private NutrientPatchManager PatchManager
+        {
+            get
+            {
+                if (patchManager == null)
+                    patchManager = FindInScope<NutrientPatchManager>();
+                return patchManager;
+            }
+        }
+
     }
 }

@@ -81,7 +81,7 @@ namespace Models.Functions
             Axis yAxis = new Axis(Parent.Name, AxisPosition.Left, false, false);
 
             var legend = new LegendConfiguration(LegendOrientation.Vertical, LegendPosition.TopLeft, true);
-            yield return new APSIM.Shared.Documentation.Graph(Parent.Name, series, xAxis, yAxis, legend);
+            yield return new APSIM.Shared.Documentation.Graph(Parent.Name, FullPath, series, xAxis, yAxis, legend);
         }
     }
 }

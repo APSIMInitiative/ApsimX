@@ -21,5 +21,11 @@ namespace Models.PMF.Interfaces
 
         /// <summary> Calculate the actual Area for the Culms</summary>
         double CalcActualLeafArea(double dltStressedLAI);
+
+        /// <summary> Fertile tiller Number (at harvest) </summary>
+        double FertileTillerNumber { get; set; }
+        /// <summary>Current Number of Tillers</summary>
+        double CurrentTillerNumber { get; set; }
+
     }
 }

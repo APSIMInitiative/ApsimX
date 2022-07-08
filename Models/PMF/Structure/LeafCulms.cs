@@ -25,8 +25,12 @@ namespace Models.PMF.Struct
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
-		/// <summary> Tillering Method that uses a fixed number of tillers</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
+        /// <summary>The parent Plant</summary>
+        [Link]
+        Plant plant = null;
+
+        /// <summary> Tillering Method that uses a fixed number of tillers</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
 		private ITilleringMethod fixedTillering = null;
 
 		/// <summary> Tillering Method that manages number of tillers dynamically</summary>
@@ -60,10 +64,13 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
 
-		/// <summary> Enables Tillering method to be controlled via script</summary>
-		public double TilleringMethod { get; set; }
+        /// <summary> Set through Sowing Event</summary>
+        public int TilleringMethod { get; set; } 
 		
 		private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
+
+        /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
+        public double FertileTillerNumber { get => tillering.FertileTillerNumber; }
 
 		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
@@ -92,7 +99,7 @@ namespace Models.PMF.Struct
 		public List<Culm> Culms;
 
 		/// <summary>Total TT required to get from emergence to floral init.</summary>
-		[JsonIgnore]
+        [JsonIgnore]
 		public double TTTargetFI { get; private set; }
 
 		/// <summary> Constructor. </summary>
@@ -166,5 +173,18 @@ namespace Models.PMF.Struct
 			return appearanceRate1.Value();
 		}
 
-	}
+        /// <summary>Called when crop is sowed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        protected void OnPlantSowing(object sender, SowingParameters data)
+        {
+            if (data.Plant == plant)
+            {
+				//sets which tillering method to reference via tillering
+				TilleringMethod = data.TilleringMethod;
+            }
+        }
+
+    }
 }

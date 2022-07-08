@@ -21,16 +21,22 @@ namespace UserInterface.Views
                 keyParams.Key = Keys.PageDown;
             else if (evnt.Key == Gdk.Key.Return)
                 keyParams.Key = Keys.Return;
-
+            else
+                keyParams.KeyValue = (char)evnt.KeyValue;
             keyParams.Control = evnt.State == ModifierType.ControlMask;
+            keyParams.Shift = evnt.State == ModifierType.ShiftMask;
             return keyParams;
         }
 
         internal static SheetEventButton ToSheetEventButton(this EventButton evnt)
         {
-            var buttonParams = new SheetEventButton();
-            buttonParams.X = (int)evnt.X;
-            buttonParams.Y = (int)evnt.Y;
+            var buttonParams = new SheetEventButton()
+            {
+                X = (int)evnt.X,
+                Y = (int)evnt.Y,
+                LeftButton = evnt.Button == 1,
+                Shift = evnt.State == ModifierType.ShiftMask
+            };
             return buttonParams;
         }
     }
