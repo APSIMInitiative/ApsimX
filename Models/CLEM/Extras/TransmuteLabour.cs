@@ -40,6 +40,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         [Description("Days labour (B) per shortfall packet (A)")]
         [Required, GreaterThanEqualValue(0)]
+        [Core.Display(EnabledCallback = "AmountPerPacketEnabled")]
         public double AmountPerPacket { get; set; }
 
         /// <inheritdoc/>
@@ -57,6 +58,11 @@ namespace Models.CLEM
         ///<inheritdoc/>
         [JsonIgnore]
         public string FinanceTypeForTransactionsName { get; set; }
+
+        /// <summary>
+        /// Method to determine if direct transmute style will enable the amount property
+        /// </summary>
+        public bool AmountPerPacketEnabled() { return TransmuteStyle != TransmuteStyle.Direct; }
 
         /// <summary>
         /// Constructor
