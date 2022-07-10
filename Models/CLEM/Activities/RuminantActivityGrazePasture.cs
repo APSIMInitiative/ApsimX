@@ -85,6 +85,7 @@ namespace Models.CLEM.Activities
 
             //Create list of children by breed
             Guid currentUid = UniqueID;
+            List<IModel> grazePastureList = new List<IModel>();
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
@@ -107,8 +108,10 @@ namespace Models.CLEM.Activities
                 grazePastureHerd.SetLinkedModels(Resources);
                 grazePastureHerd.InitialiseHerd(true, true);
                 Children.Add(grazePastureHerd);
-                events.ConnectEvents(grazePastureHerd);
+                grazePastureList.Add(grazePastureHerd);
             }
+            if(grazePastureList.Any())
+                events.ConnectEvents(grazePastureList);
         }
 
         /// <inheritdoc/>
