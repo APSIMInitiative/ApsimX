@@ -38,7 +38,7 @@
             {
                 foreach (var graphSeries in graphPage.GetAllSeriesDefinitions(folder, storage.Reader))
                 {
-                    GraphView graphView = new GraphView();
+                    GraphView graphView = new GraphView(null);
                     graphView.DisableScrolling();
                     GraphPresenter presenter = new GraphPresenter();
                     explorerPresenter.ApsimXFile.Links.Resolve(presenter);

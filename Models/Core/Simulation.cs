@@ -2,7 +2,6 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Soils.Standardiser;
 using Models.Storage;
 using Newtonsoft.Json;
 using System;
@@ -213,56 +212,55 @@ namespace Models.Core
         /// </summary>
         public void Prepare()
         {
-
-            // Remove disabled models.
-            RemoveDisabledModels(this);
-
-            // Standardise the soil.
-            var soils = FindAllDescendants<Soils.Soil>();
-            foreach (Soils.Soil soil in soils)
-                SoilStandardiser.Standardise(soil);
-
-            // If this simulation was not created from deserialisation then we need
-            // to parent all child models correctly and call OnCreated for each model.
-            bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
-            if (!hasBeenDeserialised)
-            {
-                // Parent all models.
-                this.ParentAllDescendants();
-
-                // Call OnCreated in all models.
-                foreach (IModel model in FindAllDescendants().ToList())
-                    model.OnCreated();
-            }
-
-            // Call OnPreLink in all models.
-            // Note the ToList(). This is important because some models can
-            // add/remove models from the simulations tree in their OnPreLink()
-            // method, and FindAllDescendants() is lazy.
-            FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
-
-            if (Services == null || Services.Count < 1)
-            {
-                var simulations = FindAncestor<Simulations>();
-                if (simulations != null)
-                    Services = simulations.GetServices();
-                else
-                {
-                    Services = new List<object>();
-                    IDataStore storage = this.FindInScope<IDataStore>();
-                    if (storage != null)
-                        Services.Add(this.FindInScope<IDataStore>());
-                }
-            }
-
-            if (!Services.OfType<ScriptCompiler>().Any())
-                Services.Add(new ScriptCompiler());
-
-            var links = new Links(Services);
-            var events = new Events(this);
-
             try
             {
+                // Remove disabled models.
+                RemoveDisabledModels(this);
+
+                // Standardise the soil.
+                var soils = FindAllDescendants<Soils.Soil>();
+                foreach (Soils.Soil soil in soils)
+                    soil.Standardise();
+
+                // If this simulation was not created from deserialisation then we need
+                // to parent all child models correctly and call OnCreated for each model.
+                bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
+                if (!hasBeenDeserialised)
+                {
+                    // Parent all models.
+                    this.ParentAllDescendants();
+
+                    // Call OnCreated in all models.
+                    foreach (IModel model in FindAllDescendants().ToList())
+                        model.OnCreated();
+                }
+
+                // Call OnPreLink in all models.
+                // Note the ToList(). This is important because some models can
+                // add/remove models from the simulations tree in their OnPreLink()
+                // method, and FindAllDescendants() is lazy.
+                FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
+
+                if (Services == null || Services.Count < 1)
+                {
+                    var simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        Services = simulations.GetServices();
+                    else
+                    {
+                        Services = new List<object>();
+                        IDataStore storage = this.FindInScope<IDataStore>();
+                        if (storage != null)
+                            Services.Add(this.FindInScope<IDataStore>());
+                    }
+                }
+
+                if (!Services.OfType<ScriptCompiler>().Any())
+                    Services.Add(new ScriptCompiler());
+
+                var links = new Links(Services);
+                var events = new Events(this);
+
                 // Connect all events.
                 events.ConnectEvents();
 

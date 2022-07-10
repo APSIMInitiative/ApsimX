@@ -26,8 +26,6 @@
     /// KLAT has no effect and does not alter the amount of water coming into the layer. 
     /// KLAT only alters the amount of water flowing out of the layer
     /// </summary>
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(WaterBalance))]
     [Serializable]
     public class LateralFlowModel : Model

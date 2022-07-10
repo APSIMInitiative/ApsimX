@@ -10,6 +10,7 @@ namespace Models
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
     using Models.PMF;
+    using Models.Soils;
 
     /// <summary>
     /// Implements the plant growth model logic abstracted from G_Range
@@ -43,7 +44,7 @@ namespace Models
         Soils.IPhysical soilPhysical = null;
 
         [Link]
-        Soils.Sample initial = null;
+        Organic organic = null;
 
         [Link(IsOptional = true)]
         Soils.SoilCrop SoilCrop = null;

@@ -1,18 +1,15 @@
 namespace UserInterface.Views
 {
+    using APSIM.Shared.Utilities;
+    using Classes;
+    using EventArguments;
+    using Gtk;
+    using Interfaces;
     using System;
     using System.Collections.Generic;
-    using Interfaces;
-    using Classes;
-    using Gtk;
-    using Utility;
-    using System.Linq;
-    using Models.Core;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
     using System.Globalization;
-    using Extensions;
-    using System.Reflection;
+    using System.Linq;
+    using Utility;
 
     /// <summary>
     /// This view will display a list of properties to the user
@@ -73,12 +70,31 @@ namespace UserInterface.Views
         /// </summary>
         private bool isDisposed;
 
+        /// <summary>Constructor.</summary>
+        public PropertyView() {  }
+
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="owner">The owning view.</param>
         public PropertyView(ViewBase owner) : base(owner)
         {
+            ScrolledWindow scroller = new ScrolledWindow();
+            Initialise(owner, scroller);
+        }
+
+        /// <summary>Any properties displayed in the grid?</summary>
+        public bool AnyProperties => propertyTable.Children.Length > 0;
+
+        /// <summary>
+        /// Initialise the view.
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="gtkControl"></param>
+        protected override void Initialise(ViewBase owner, GLib.Object gtkControl)
+        {
+            var scroller = gtkControl as ScrolledWindow;
+
             // Columns should not be homogenous - otherwise we'll have the
             // property name column taking up half the screen.
 
@@ -87,7 +103,6 @@ namespace UserInterface.Views
             box = new Frame();
             box.ShadowType = ShadowType.None;
             box.Add(propertyTable);
-            ScrolledWindow scroller = new ScrolledWindow();
             mainWidget = scroller;
 
             Box container = new Box(Orientation.Vertical, 0);

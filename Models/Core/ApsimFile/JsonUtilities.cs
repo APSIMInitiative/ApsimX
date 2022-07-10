@@ -162,10 +162,10 @@ namespace Models.Core.ApsimFile
         /// Returns the descendant of a given node of the specified type.
         /// </summary>
         /// <param name="node">The node.</param>
-        /// <param name="type">The type of model to search for.</param>
-        public static JObject DescendantOfType(JObject node, Type type)
+        /// <param name="typeName">The type name of model to search for (e.g. Physical).</param>
+        public static JObject DescendantOfType(JObject node, string typeName)
         {
-            return ChildrenRecursively(node).FirstOrDefault(child => Type(child) == type.Name);
+            return ChildrenRecursively(node).FirstOrDefault(child => Type(child) == typeName);
         }
 
         /// <summary>
@@ -667,6 +667,24 @@ namespace Models.Core.ApsimFile
                     simpleGrazing["FlexibleExpressionForTimingOfGrazing"] = expression;
                 }
             }
+            foreach (var factor in JsonUtilities.ChildrenOfType(node, "Factor"))
+            {
+                var specification = factor["Specification"].ToString();
+                if (specification != null)
+                {
+                    bool replacementFound = false;
+                    foreach (var replacement in changes)
+                    {
+                        replacementFound = specification.ToString().Contains(replacement.Item1) || replacementFound;
+                        specification = specification.ToString().Replace(replacement.Item1, replacement.Item2);
+                    }
+                    if (replacementFound)
+                    {
+                        replacementMade = true;
+                        factor["Specification"] = specification;
+                    }
+                }
+            }
 
             foreach (var compositeFactor in JsonUtilities.ChildrenOfType(node, "CompositeFactor"))
             {
@@ -738,6 +756,23 @@ namespace Models.Core.ApsimFile
                     }
                 }
             }
+
+            foreach (var croptimizr in JsonUtilities.ChildrenOfType(node, "CroptimizR"))
+            {
+                foreach (var replacement in changes)
+                {
+                    foreach (var parameter in croptimizr["Parameters"] as JArray)
+                    {
+                        var path = parameter["Path"].ToString();
+                        if (path.Contains(replacement.Item1))
+                        {
+                            parameter["Path"] = path.Replace(replacement.Item1, replacement.Item2);
+                            replacementMade = true;
+                        }
+                    }
+                }
+            }
+
 
             return replacementMade;
         }
