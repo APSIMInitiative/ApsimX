@@ -176,7 +176,7 @@ namespace Models.CLEM.Activities
                     case "RuminantFeedGroup":
                         valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
-                    case "LabourGroup":
+                    case "LabourRequirement":
                     case "ActivityFee":
                         switch (valueToSupply.Key.identifier)
                         {

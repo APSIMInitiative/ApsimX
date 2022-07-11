@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Models.Core
 {
@@ -25,7 +26,7 @@ namespace Models.Core
         void ConnectEvents();
 
         /// <summary>Connect all events in the specified model to simulation events.</summary>
-        void ConnectEvents(IModel model);
+        void ConnectEvents(List<IModel> models);
 
         /// <summary>Connect all events in the specified simulation.</summary>
         void DisconnectEvents();

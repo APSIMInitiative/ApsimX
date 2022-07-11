@@ -24,6 +24,8 @@ namespace Models.CLEM.Activities
     public class ActivityFolder : CLEMActivityBase
     {
         /// <inheritdoc/>
+        [Description("Category for transactions of child components")]
+        [Models.Core.Display(Order = 500)]
         public new string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
@@ -35,7 +37,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityFolder()
         {
-            TransactionCategory = "Folder";
+            TransactionCategory = "[Folder]";
         }
 
         /// <inheritdoc/>

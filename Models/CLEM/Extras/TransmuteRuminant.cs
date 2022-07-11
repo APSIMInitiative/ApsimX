@@ -57,6 +57,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         [Description("Amount (B) per packet (A)")]
         [Required, GreaterThanEqualValue(0)]
+        [Core.Display(EnabledCallback = "AmountPerPacketEnabled")]
         public double AmountPerPacket { get; set; }
 
         ///<inheritdoc/>
@@ -68,6 +69,11 @@ namespace Models.CLEM
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No transactions", typeof(Finance) } })]
         [System.ComponentModel.DefaultValueAttribute("No transactions")]
         public string FinanceTypeForTransactionsName { get; set; }
+
+        /// <summary>
+        /// Method to determine if direct transmute style will enable the amount property
+        /// </summary>
+        public bool AmountPerPacketEnabled() { return TransmuteStyle == TransmuteStyle.Direct; }
 
         ///<inheritdoc/>
         public bool DoTransmute(ResourceRequest request, double shortfall, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
