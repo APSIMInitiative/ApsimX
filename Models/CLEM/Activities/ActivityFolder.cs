@@ -23,10 +23,10 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityFolder : CLEMActivityBase
     {
-        /// <inheritdoc/>
-        [Description("Category for transactions of child components")]
-        [Models.Core.Display(Order = 500)]
-        public new string TransactionCategory { get; set; }
+        ///// <inheritdoc/>
+        //[Description("Category for transactions of child components")]
+        //[Models.Core.Display(Order = 500)]
+        //public new string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
         [JsonIgnore]
