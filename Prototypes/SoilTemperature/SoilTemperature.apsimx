@@ -350,6 +350,36 @@
                   "CNCov": 0.8,
                   "DischargeWidth": 0.0,
                   "CatchmentArea": 0.0,
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "SWCON": [
+                    0.9,
+                    0.9,
+                    0.9,
+                    0.6,
+                    0.6,
+                    0.6,
+                    0.6,
+                    0.6
+                  ],
+                  "KLAT": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
                   "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
                   "Enabled": true,
