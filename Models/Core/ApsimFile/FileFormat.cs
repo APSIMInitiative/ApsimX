@@ -194,7 +194,7 @@
 
                         // Otherwise, only serialize if the property is inherited from
                         // Model or ModelCollectionFromResource.
-                        return member.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource));
+                        return typeof(ModelCollectionFromResource).IsAssignableFrom(member.DeclaringType);
                     };
                 }
 
