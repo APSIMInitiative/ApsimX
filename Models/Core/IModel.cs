@@ -16,6 +16,9 @@ namespace Models.Core
         /// </summary>
         string Name { get; set; }
 
+        /// <summary>The name of the resource.</summary>
+        string ResourceName { get; set; }
+
         /// <summary>
         /// Gets or sets the parent model. Can be null if model has no parent.
         /// </summary>

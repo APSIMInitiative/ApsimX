@@ -187,8 +187,7 @@
             // run, because the model's resource name is not null. This can be manually
             // rectified by editing the json, but such an intervention shouldn't be
             // necessary.
-            if (newModel is ModelCollectionFromResource resourceModel)
-                resourceModel.ResourceName = null;
+            newModel.ResourceName = null;
 
             modelToReplace.Parent.Children.Remove(modelToReplace as Model);
             Apsim.ClearCaches(modelToReplace);

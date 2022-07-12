@@ -37,6 +37,9 @@
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>The name of the resource.</summary>
+        public string ResourceName { get; set; }
+
         /// <summary>
         /// Gets or sets a list of child models.   
         /// </summary>

@@ -124,6 +124,7 @@
 
         private static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
         {
+            Resource.Instance.Replace(newModel);
             foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
@@ -163,15 +164,9 @@
 
                 if (property.PropertyName == "Children")
                 {
-                    property.ShouldSerialize = instance =>
-                    {
-                        if (instance is IOptionallySerialiseChildren opt)
-                            return opt.DoSerialiseChildren;
-
-                        return true;
-                    };
+                    property.ShouldSerialize = instance => !(instance is Manager);
                 }
-                else if (typeof(ModelCollectionFromResource).IsAssignableFrom(member.DeclaringType))
+                else
                 {
                     property.ShouldSerialize = instance =>
                     {
@@ -188,13 +183,13 @@
 
                         // If the model is under a replacements node, or if the model doesn't have
                         // a resource name (ie if it's a prototype), then serialize everything.
-                        ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
-                        if (resource.FindAncestor<Replacements>() != null || string.IsNullOrEmpty(resource.ResourceName))
+                        IModel model = instance as IModel;
+                        if (model != null && (model.FindAncestor<Replacements>() != null || string.IsNullOrEmpty(model.ResourceName)))
                             return true;
 
                         // Otherwise, only serialize if the property is inherited from
                         // Model or ModelCollectionFromResource.
-                        return member.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource));
+                        return member.DeclaringType.IsAssignableFrom(typeof(IModel));
                     };
                 }
 
@@ -203,7 +198,7 @@
 
             private class ChildrenProvider : IValueProvider
             {
-                private MemberInfo memberInfo;
+                private readonly MemberInfo memberInfo;
 
                 public ChildrenProvider(MemberInfo memberInfo)
                 {
@@ -212,8 +207,8 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is ModelCollectionFromResource m && m.FindAncestor<Replacements>() == null)
-                        return m.ChildrenToSerialize;
+                    if (target is IModel m && m.FindAncestor<Replacements>() == null)
+                        return ChildrenToSerialize(m);
 
                     return new ExpressionValueProvider(memberInfo).GetValue(target);
                 }
@@ -221,6 +216,27 @@
                 public void SetValue(object target, object value)
                 {
                     new ExpressionValueProvider(memberInfo).SetValue(target, value);
+                }
+
+                /// <summary>
+                /// Gets all child models which are not part of the 'official' model resource.
+                /// Generally speaking, this is all models which have been added by the user
+                /// (e.g. cultivars).
+                /// </summary>
+                /// <remarks>
+                /// This returns all child models which do not have a matching model in the
+                /// resource model's children. A match is defined as having the same name and
+                /// type.
+                /// </remarks>
+                private IEnumerable<IModel> ChildrenToSerialize(IModel model)
+                {
+                    if (string.IsNullOrEmpty(model.ResourceName))
+                        return model.Children;
+
+                    // Return a collection of child models that aren't from a resource.
+                    List<IModel> resourceChildren = Resource.Instance.GetModel(model.ResourceName).Children;
+                    return model.Children.Where(m => !resourceChildren.Any(rc => m.GetType() == rc.GetType() && 
+                                                                                 m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
                 }
             }
         }

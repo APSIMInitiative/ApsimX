@@ -10,6 +10,7 @@
     using System.Reflection;
     using System.Text;
     using APSIM.Shared.Extensions;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// This class documents a model's parameters, inputs, and outputs.
@@ -34,6 +35,9 @@
         /// <summary>List of parameter names for the model being documented.</summary>
         private IEnumerable<string> parameterNames = Enumerable.Empty<string>();
 
+        /// <summary>Properties to exclude from the doc.</summary>
+        private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
@@ -51,8 +55,8 @@
         /// </summary>
         public IEnumerable<ITag> Document()
         {
-            if (modelToDocument is ModelCollectionFromResource resourceModel)
-                parameterNames = resourceModel.GetModelParameterNames();
+            if (!string.IsNullOrEmpty(modelToDocument.ResourceName))
+                parameterNames = GetModelParameterNames(modelToDocument.ResourceName);
 
             // Get a list of tags for each type.
             List<ITag> tags = new List<ITag>();
@@ -65,6 +69,53 @@
                 tags.AddRange(DocumentType(type));
 
             return tags;
+        }
+
+        /// <summary>
+        /// Get a list of parameter names for this model.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<string> GetModelParameterNames(string resourceName)
+        {
+            string contents = Resource.GetString(resourceName);
+            if (contents != null)
+            {
+                var parameterNames = new List<string>();
+
+                var json = JObject.Parse(contents);
+                var children = json["Children"] as JArray;
+                var simulations = children[0];
+
+                GetParametersFromToken(simulations, null, parameterNames);
+                return parameterNames;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get a list of parameter names for the specified token.
+        /// </summary>
+        /// <param name="token">The token to extract parameter names from.</param>
+        /// <param name="namePrefix">The prefix to add in front of each name.</param>
+        /// <param name="parameterNames">The list of parameter names to add to.</param>
+        private static void GetParametersFromToken(JToken token, string namePrefix, List<string> parameterNames)
+        {
+            foreach (var parameter in token.Children())
+            {
+                if (parameter is JProperty)
+                {
+                    var property = parameter as JProperty;
+                    if (property.Name == "Children" && property.First is JArray)
+                    {
+                        var children = property.First as JArray;
+                        foreach (var child in children)
+                            GetParametersFromToken(child, namePrefix + child["Name"] + ".", parameterNames); // recursion
+                    }
+                    else if (property.Name != "$type" && !propertiesToExclude.Contains(property.Name))
+                        parameterNames.Add(namePrefix + property.Name);
+                }
+            }
         }
 
         /// <summary>Document the specified model.</summary>
