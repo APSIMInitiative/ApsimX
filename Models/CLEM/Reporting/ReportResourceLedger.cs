@@ -89,6 +89,22 @@ namespace Models.CLEM.Reporting
         public bool IncludeConversions { get; set; }
 
         /// <summary>
+        /// Transaction category levels to include
+        /// </summary>
+        [Summary]
+        [Description("Number of TransactionCategory levels to include as columns")]
+        [Category("General", "Extras")]
+        public int TransactionCategoryLevels { get; set; }
+
+        /// <summary>
+        /// Names of Transaction category levels columns
+        /// </summary>
+        [Summary]
+        [Description("List of TransactionCategory level column names")]
+        [Category("General", "Extras")]
+        public string TransactionCategoryLevelColumnNames { get; set; }
+
+        /// <summary>
         /// Custom variables to add
         /// </summary>
         [Summary]
@@ -215,7 +231,19 @@ namespace Models.CLEM.Reporting
                         }
                         variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Activity.Name as Activity");
                         variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.RelatesToResource as RelatesTo");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Category as Category");
+                        if(TransactionCategoryLevels == 0)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Category as Category");
+                        else
+                        {
+                            for (int i = 1; i <= TransactionCategoryLevels; i++)
+                            {
+                                string colname = $"Category{i}";
+                                string[] parts = TransactionCategoryLevelColumnNames.Split(',').Distinct().ToArray();
+                                if (parts.Length >= i)
+                                    colname = parts[i - 1].Replace(" ","");
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.CategoryByLevel({i}) as {colname}");
+                            }
+                        }
                     }
                 }
                 eventNames.Add("[Resources]." + this.ResourceGroupsToReport + ".TransactionOccurred");
