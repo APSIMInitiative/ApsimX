@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Interfaces;
     using Models.Soils;
     using Models.Soils.Nutrients;
@@ -92,7 +93,7 @@
                     }
                 }
             };
-
+            FileFormat.InitialiseModel(simulation, (e) => throw e);
             simulation.Prepare();
             simulation.Run();
 

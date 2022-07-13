@@ -122,7 +122,12 @@
             return newModel;
         }
 
-        private static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
+        /// <summary>
+        /// Initialise a model
+        /// </summary>
+        /// <param name="newModel"></param>
+        /// <param name="errorHandler"></param>
+        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
         {
             Resource.Instance.Replace(newModel);
             foreach (var model in newModel.FindAllDescendants().ToList())
@@ -220,7 +225,7 @@
                 private IEnumerable<IModel> ChildrenToSerialize(IModel model)
                 {
                     if (model is Manager)
-                        return null;
+                        return new Model[0];
 
                     if (string.IsNullOrEmpty(model.ResourceName))
                         return model.Children;

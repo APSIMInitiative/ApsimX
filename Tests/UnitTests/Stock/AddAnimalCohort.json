@@ -881,6 +881,7 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -1276,6 +1277,7 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -6381,6 +6383,7 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -6776,6 +6779,7 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -11881,6 +11885,7 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -12276,6 +12281,7 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -17381,6 +17387,7 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -17776,6 +17783,7 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -22881,6 +22889,7 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -23276,6 +23285,7 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -28381,6 +28391,7 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
@@ -28776,6 +28787,7 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false,
