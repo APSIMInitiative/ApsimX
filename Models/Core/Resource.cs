@@ -15,6 +15,9 @@
     /// </summary>
     public class Resource
     {
+        /// <summary>Properties to exclude from the doc.</summary>
+        private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
+
         /// <summary>The instance of resource.</summary>
         private static Resource instance = null;
 
@@ -36,8 +39,8 @@
         public void Replace(IModel parent)
         {
             foreach (var child in parent.FindAllDescendants()
-                                        .Where(m => !string.IsNullOrEmpty(m.ResourceName) &&
-                                                    !m.Parent.Name.Equals("Replacements", StringComparison.InvariantCultureIgnoreCase))
+                                        .Where(m => !string.IsNullOrEmpty(m.ResourceName) &&           // non-empty resourcename
+                                                    m.FindAncestor<Folder>("Replacements") == null)   // not in replacements
                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
             {
                 IModel modelFromResource = GetModel(child.ResourceName);
@@ -46,9 +49,10 @@
                     modelFromResource.Enabled = parent.Enabled;
 
                     // Replace existing children that match (name and type) the children of modelFromResource.
-                    child.Children.RemoveAll(mr =>
+                    child.Children.RemoveAll(c =>
                     {
-                        return mr.GetType() == child.GetType() && string.Equals(mr.Name, child.Name, StringComparison.InvariantCultureIgnoreCase);
+                        return modelFromResource.Children.Any(mr => mr.GetType() == c.GetType() && 
+                                                                    string.Equals(mr.Name, c.Name, StringComparison.InvariantCultureIgnoreCase));
                     });
                     child.Children.InsertRange(0, modelFromResource.Children);
 
@@ -126,6 +130,28 @@
             }
         }
 
+        /// <summary>
+        /// Get a list of parameter names for this model.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<string> GetModelParameterNames(string resourceName)
+        {
+            string contents = Resource.GetString(resourceName);
+            if (contents != null)
+            {
+                var parameterNames = new List<string>();
+
+                var json = JObject.Parse(contents);
+                var children = json["Children"] as JArray;
+                var simulations = children[0];
+
+                GetParametersFromToken(simulations, null, parameterNames);
+                return parameterNames;
+            }
+
+            return null;
+        }
+
         /// <summary>Default constructor (private)</summary>
         private Resource() { }
 
@@ -151,6 +177,31 @@
                 catch (Exception)
                 {
                     // Couldn't set property - ignore error.
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get a list of parameter names for the specified token.
+        /// </summary>
+        /// <param name="token">The token to extract parameter names from.</param>
+        /// <param name="namePrefix">The prefix to add in front of each name.</param>
+        /// <param name="parameterNames">The list of parameter names to add to.</param>
+        private static void GetParametersFromToken(JToken token, string namePrefix, List<string> parameterNames)
+        {
+            foreach (var parameter in token.Children())
+            {
+                if (parameter is JProperty)
+                {
+                    var property = parameter as JProperty;
+                    if (property.Name == "Children" && property.First is JArray)
+                    {
+                        var children = property.First as JArray;
+                        foreach (var child in children)
+                            GetParametersFromToken(child, namePrefix + child["Name"] + ".", parameterNames); // recursion
+                    }
+                    else if (property.Name != "$type" && !propertiesToExclude.Contains(property.Name))
+                        parameterNames.Add(namePrefix + property.Name);
                 }
             }
         }
