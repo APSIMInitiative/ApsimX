@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.Nutrients
+﻿namespace Models.Soils
 {
 
     /// <summary>The known types of solute setters.</summary>

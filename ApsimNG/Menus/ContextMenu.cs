@@ -19,7 +19,6 @@
     using System.Linq;
     using System.Text;
     using Models.Functions;
-    using Models.Soils.Standardiser;
     using Models.GrazPlan;
     using Models.Climate;
     using APSIM.Interop.Markdown.Renderers;
@@ -450,7 +449,7 @@
                 if (currentSoil != null)
                 {
                     ISummary summary = currentSoil.FindInScope<ISummary>(this.explorerPresenter.CurrentNodePath);
-                    SoilChecker.CheckWithStandardisation(currentSoil, summary);
+                    currentSoil.CheckWithStandardisation(summary);
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
             }

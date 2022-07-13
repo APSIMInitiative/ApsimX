@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 339,
-  "Version": 150,
+  "ExplorerWidth": 388,
+  "Version": 151,
   "Name": "Simulations",
   "Children": [
     {
@@ -5033,6 +5033,7 @@
             {
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
               "TilleringMethod": 0,
+              "FertileTillerNumber": 0.0,
               "InitialDMWeight": 0.01,
               "InitialLAI": 380.0,
               "InitialSLN": 1.7,
@@ -5091,7 +5092,7 @@
                   "$type": "Models.PMF.Struct.LeafCulms, Models",
                   "dltLeafNo": 0.0,
                   "Culms": [],
-                  "TilleringMethod": 0.0,
+                  "TilleringMethod": 0,
                   "FinalLeafNo": 0.0,
                   "dltPotentialLAI": 0.0,
                   "dltStressedLAI": 0.0,
@@ -5100,7 +5101,8 @@
                     {
                       "$type": "Models.PMF.Struct.DynamicTillering, Models",
                       "CalculatedTillerNumber": 0.0,
-                      "FertileTillerNumber": 0.0,
+                      "CurrentTillerNumber": 0.0,
+                      "DltTillerNumber": 0.0,
                       "SupplyDemandRatio": 0.0,
                       "Name": "DynamicTillering",
                       "Children": [
@@ -5239,6 +5241,7 @@
                     {
                       "$type": "Models.PMF.Struct.FixedTillering, Models",
                       "FertileTillerNumber": 0.0,
+                      "CurrentTillerNumber": 0.0,
                       "Name": "FixedTillering",
                       "Children": [
                         {
@@ -13994,7 +13997,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\n                double ftn = 0.0;\n                double maxCover = 1.0;\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\n                crop.Sow(Cultivar, population, Depth, RowSpacing,rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -23324,7 +23327,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing,rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -23932,7 +23935,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -30796,7 +30799,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -31486,7 +31489,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -32339,7 +32342,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -33167,7 +33170,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -33794,7 +33797,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.53, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.53, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -34325,7 +34328,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.23, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.23, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -34821,7 +34824,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.29, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.29, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -35329,7 +35332,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.40, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.40, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -35848,7 +35851,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.17, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.17, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -36313,7 +36316,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.09, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.09, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -36778,7 +36781,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.34, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.34, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -37185,7 +37188,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.04, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.04, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -37638,7 +37641,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.16, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.16, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -38057,7 +38060,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.23, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.23, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -38487,7 +38490,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:5.61, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:5.61, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -38906,7 +38909,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.09, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.09, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -39359,7 +39362,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.16, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.16, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -39812,7 +39815,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": " [C4Maize].Sow(population:5.3, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": " [C4Maize].Sow(population:5.3, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -40265,7 +40268,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.16, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.16, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -40707,7 +40710,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.48, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.48, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -41172,7 +41175,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:4.25, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:4.25, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -41591,7 +41594,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.03, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.03, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -41975,7 +41978,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -42371,7 +42374,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:4.87, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:4.87, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -42778,7 +42781,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.34, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.34, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -43251,7 +43254,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -43713,7 +43716,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.54, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.54, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -44209,7 +44212,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-10-29",
-                                  "Action": "[C4Maize].Sow(population:6.54, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.54, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -45257,7 +45260,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.67, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.67, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -45679,7 +45682,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.3, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.3, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -46170,7 +46173,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.48, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.48, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -46661,7 +46664,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.39, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.39, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -47074,7 +47077,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -47565,7 +47568,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.13, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.13, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -48079,7 +48082,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -48593,7 +48596,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -49064,7 +49067,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -49555,7 +49558,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -50046,7 +50049,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -50514,7 +50517,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:2.22, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -51028,7 +51031,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.57, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.57, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -51519,7 +51522,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.48, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.48, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -51964,7 +51967,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.3, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.3, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -52409,7 +52412,7 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "1985-12-18",
-                                  "Action": "[C4Maize].Sow(population:6.76, cultivar:\"Katumani\", depth:50, rowSpacing:500, budNumber:0);",
+                                  "Action": "[C4Maize].Sow(population:6.76, cultivar:\"Katumani\", depth:50, rowSpacing:500, rowConfig:0);",
                                   "Enabled": true
                                 },
                                 {
@@ -53532,7 +53535,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -55095,7 +55098,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -55721,7 +55724,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Date",
@@ -56479,11 +56482,11 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Date",
-                              "Value": "1990-08-28"
+                              "Value": "08/28/1990 00:00:00"
                             },
                             {
                               "Key": "Density",
@@ -57273,7 +57276,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Date",
@@ -58097,7 +58100,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Date",
@@ -59006,7 +59009,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -61293,7 +61296,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -62110,7 +62113,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -62712,7 +62715,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                double ftn = 0.0;\r\n                double maxCover = 1.0;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, maxCover, ftn, 0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, rowConfig:0);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "Date",

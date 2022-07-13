@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 148,
+  "ExplorerWidth": 285,
+  "Version": 152,
   "Name": "Simulations",
   "Children": [
     {
@@ -132,12 +132,30 @@
               "Name": "Soil",
               "Children": [
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 1,
-                  "FractionFull": 0.8,
-                  "DepthWetSoil": "NaN",
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.16,
+                    0.15,
+                    0.14,
+                    0.13,
+                    0.12,
+                    0.12,
+                    0.09900000000000003,
+                    0.05
+                  ],
                   "RelativeTo": null,
-                  "Name": "Initial water",
+                  "FilledFromTop": true,
+                  "Name": "Water",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -390,6 +408,7 @@
                     0.1,
                     0.1
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     14.5,
                     14.5,
@@ -449,26 +468,6 @@
                     1000.0,
                     1000.0
                   ],
-                  "NO3N": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01
-                  ],
-                  "NH4N": [
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01
-                  ],
                   "PH": [
                     5.8,
                     5.7,
@@ -479,11 +478,9 @@
                     5.7,
                     5.7
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "LabileP": null,
-                  "UnavailableP": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -517,17 +514,17 @@
                 {
                   "$type": "Models.Soils.LayerStructure, Models",
                   "Depth": [
-                    "0-0.2",
-                    "0.2-0.4",
-                    "0.4-1",
-                    "1-2",
-                    "2-5",
-                    "5-10",
+                    "0-2",
+                    "2-4",
+                    "4-10",
                     "10-20",
-                    "20-30",
-                    "30-40",
-                    "40-50",
-                    "50-60"
+                    "20-50",
+                    "50-100",
+                    "100-200",
+                    "200-300",
+                    "300-400",
+                    "400-500",
+                    "500-600"
                   ],
                   "Thickness": [
                     2.0,
@@ -543,6 +540,102 @@
                     100.0
                   ],
                   "Name": "LayerStructure",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "Name": "NO3",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "Name": "NH4",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "Name": "Urea",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -609,7 +702,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "RowSpace",
@@ -1738,7 +1831,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\n        /// <summary>Amount of Cl leaching  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachCl { get { return 0; } }\n        \r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\n        \n        /// <summary>Pond depth (mm)</summary>\r\n        public double Pond { get; set; }\r\n\n        /// <summary>Pond depth (mm)</summary>\r\n        public double SubsurfaceDrain { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\n        /// <summary>Amount of Cl leaching  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachCl { get { return 0; } }\n        \r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\n        \n        /// <summary>Pond depth (mm)</summary>\r\n        public double Pond { get; set; }\r\n\n        /// <summary>Pond depth (mm)</summary>\r\n        public double SubsurfaceDrain { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\n        public void Standardise(double[] targetThickness)\n        {\n        \n        \n        }\n        \r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "SW",
@@ -1788,12 +1881,30 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 1,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        100.0,
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1914,6 +2025,7 @@
                         2.0,
                         2.0
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         14.5,
                         14.5,
@@ -1973,26 +2085,6 @@
                         1000.0,
                         1000.0
                       ],
-                      "NO3N": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01
-                      ],
-                      "NH4N": [
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01
-                      ],
                       "PH": [
                         6.5,
                         6.5,
@@ -2003,11 +2095,9 @@
                         6.5,
                         6.5
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -2020,6 +2110,102 @@
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Name": "SoilTemperature",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        100.0,
+                        300.0,
+                        600.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0
+                      ],
+                      "InitialValues": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        100.0,
+                        300.0,
+                        600.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0
+                      ],
+                      "InitialValues": [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        100.0,
+                        300.0,
+                        600.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false

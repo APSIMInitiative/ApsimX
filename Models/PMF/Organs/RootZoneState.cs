@@ -3,7 +3,6 @@ using Models.Core;
 using System;
 using Models.Functions;
 using System.Linq;
-using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -193,11 +192,11 @@ namespace Models.PMF.Organs
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
             double[] fromStructural = new double[1] { initialDM.Structural.Value() };
-            double[] toStructural = Layers.MapMass(fromStructural, fromLayer, Physical.Thickness);
+            double[] toStructural = SoilUtilities.MapMass(fromStructural, fromLayer, Physical.Thickness);
             double[] fromMetabolic = new double[1] { initialDM.Metabolic.Value() };
-            double[] toMetabolic = Layers.MapMass(fromMetabolic, fromLayer, Physical.Thickness);
+            double[] toMetabolic = SoilUtilities.MapMass(fromMetabolic, fromLayer, Physical.Thickness);
             double[] fromStorage = new double[1] { initialDM.Storage.Value() };
-            double[] toStorage = Layers.MapMass(fromStorage, fromLayer, Physical.Thickness);
+            double[] toStorage = SoilUtilities.MapMass(fromStorage, fromLayer, Physical.Thickness);
 
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {

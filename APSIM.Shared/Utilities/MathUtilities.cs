@@ -1785,5 +1785,50 @@ namespace APSIM.Shared.Utilities
             // add a space so that we always have something
             return returnStr;
         }
+
+        /// <summary>Changes all missing values in an array to a valid value.</summary>
+        /// <param name="values">The values to in fill.</param>
+        /// <param name="numValues">The number of values that should exist.</param>
+        /// <param name="defaultValue">The value to use if can't find any other value.</param>
+        public static double[] FillMissingValues(double[] values, int numValues, double defaultValue)
+        {
+            int numOriginalValues = 0;
+            if (values != null)
+                numOriginalValues = values.Length;
+            Array.Resize(ref values, numValues);
+            for (int i = 0; i < numValues; i++)
+            {
+                if (i >= numOriginalValues || double.IsNaN(values[i]))
+                {
+                    double validValue;
+                    if (i == 0)
+                        validValue = FindFirstValueInArray(values);
+                    else
+                        validValue = values[i - 1];
+
+                    if (double.IsNaN(validValue))
+                        values[i] = defaultValue;
+                    else
+                        values[i] = validValue;
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Find the first non NaN value in the array.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        private static double FindFirstValueInArray(double[] values)
+        {
+            for (int j = 0; j < values.Length; j++)
+                if (!double.IsNaN(values[j]))
+                    return values[j];
+
+            return double.NaN;
+        }
+
+
     }
 }

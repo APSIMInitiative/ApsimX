@@ -25,9 +25,9 @@ namespace Models.PMF.Struct
 		Plant plant = null;
 
 		/// <summary>
-		/// Link to clock (used for FTN calculations at time of sowing).
-		/// </summary>
-		[Link]
+        /// Link to clock (used for FTN calculations at time of sowing).
+        /// </summary>
+        [Link]
 		private IClock clock = null;
 
 		/// <summary>
@@ -57,11 +57,12 @@ namespace Models.PMF.Struct
 		Phenology phenology = null;
 
 		/// <summary>Number of Fertile Tillers at Harvest</summary>
-		public double FertileTillerNumber { get; private set; }
+		public double FertileTillerNumber { get; set; }
+        /// <summary>Current Number of Tillers</summary>
+        public double CurrentTillerNumber { get; set; }
 
-		private int floweringStage;
+        private int floweringStage;
 		private int endJuvenilePhase;
-		private double tillersAdded;
 
         private bool beforeFlowering()
 {
@@ -142,7 +143,7 @@ namespace Models.PMF.Struct
 			if (newLeafNo < 3) return; //don't add before leaf 3
 
 			//if there are still more tillers to add and the newleaf is greater than 3
-			if (tillersAdded >= FertileTillerNumber) return;
+			if (CurrentTillerNumber >= FertileTillerNumber) return;
 
 			//tiller emergence is more closely aligned with tip apearance, but we don't track tip, so will use ligule appearance
 			//could also use Thermal Time calcs if needed
@@ -166,8 +167,8 @@ namespace Models.PMF.Struct
 			}
 			else
 			{
-				if (FertileTillerNumber - tillersAdded < 1)
-					fraction = FertileTillerNumber - tillersAdded;
+				if (FertileTillerNumber - CurrentTillerNumber < 1)
+					fraction = FertileTillerNumber - CurrentTillerNumber;
 			}
 			AddTiller(leafAppearance, currentLeafNo, fraction);
 		}
@@ -180,8 +181,8 @@ namespace Models.PMF.Struct
 		private void AddTiller(double leafAtAppearance, double Leaves, double fractionToAdd)
 		{
 			double fraction = 1;
-			if (FertileTillerNumber - tillersAdded < 1)
-				fraction = FertileTillerNumber - tillersAdded;
+			if (FertileTillerNumber - CurrentTillerNumber < 1)
+				fraction = FertileTillerNumber - CurrentTillerNumber;
 
 			// get number of tillers 
 			// add fractionToAdd 
@@ -206,7 +207,7 @@ namespace Models.PMF.Struct
 				//T6 = 7 leaves
 				newCulm.CulmNo = culms.Culms.Count;
 				newCulm.CurrentLeafNo = 0;//currentLeaf);
-				newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (tillersAdded * culms.VerticalTillerAdjustment.Value());
+				newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (CurrentTillerNumber * culms.VerticalTillerAdjustment.Value());
 				newCulm.Proportion = fraction;
 				newCulm.FinalLeafNo = culms.Culms[0].FinalLeafNo;
 				//newCulm.calcLeafAppearance();
@@ -219,7 +220,7 @@ namespace Models.PMF.Struct
 			{
 				culms.Culms.Last().Proportion = fraction;
 			}
-			tillersAdded += fractionToAdd;
+            CurrentTillerNumber += fractionToAdd;
 		}
 
 		/// <summary>Called when crop is sowed</summary>
@@ -230,11 +231,11 @@ namespace Models.PMF.Struct
 		{
 			if (data.Plant == plant)
 			{
-				if (plant.SowingData.BudNumber == -1)
+				if (data.TilleringMethod == -1)
 					FertileTillerNumber = CalculateFtn();
 				else
-					FertileTillerNumber = data.BudNumber;
-				tillersAdded = 0.0;
+					FertileTillerNumber = data.FTN;
+                CurrentTillerNumber = 0.0;
 			}
 		}
 

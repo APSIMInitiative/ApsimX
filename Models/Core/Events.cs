@@ -45,15 +45,16 @@
         }
 
         /// <summary>Connect all events in the specified model to simulation events</summary>
-        public void ConnectEvents(IModel model)
+        public void ConnectEvents(List<IModel> models)
         {
             // Get a list of all models that need to have event subscriptions resolved in.
             var modelsToInspectForSubscribers = new List<IModel>();
-            modelsToInspectForSubscribers.Add(model);
-            modelsToInspectForSubscribers.AddRange(model.FindAllDescendants());
+            modelsToInspectForSubscribers.AddRange(models);
+            foreach (IModel item in models)
+                modelsToInspectForSubscribers.AddRange(item.FindAllDescendants());
 
             // Get a list of models in scope that publish events.
-            var modelsToInspectForPublishers = scope.FindAll(model).ToList();
+            var modelsToInspectForPublishers = scope.FindAll(models.First()).ToList();
 
             // Get a complete list of all models in scope
             var publishers = Publisher.FindAll(modelsToInspectForPublishers);

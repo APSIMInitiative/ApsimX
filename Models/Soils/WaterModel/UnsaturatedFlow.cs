@@ -24,8 +24,6 @@
     ///    Flow = Diffusivity x Volumetric Soil Water Gradient
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(WaterBalance))]
     public class UnsaturatedFlowModel : Model
     {
