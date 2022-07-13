@@ -78,7 +78,6 @@ namespace Models.CLEM.Activities
         public OtherAnimalsActivityBreed()
         {
             this.SetDefaults();
-            TransactionCategory = "OtherAnimal.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

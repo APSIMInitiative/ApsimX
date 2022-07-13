@@ -73,14 +73,6 @@ namespace Models.CLEM.Activities
             resourceTypeCreatedModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public ResourceActivityProcess()
-        {
-            TransactionCategory = "[General].[Type].Process";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

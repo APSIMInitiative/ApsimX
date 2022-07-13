@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public FinanceActivityCalculateInterest()
         {
-            TransactionCategory = "[General].Interest";
+            TransactionCategory = "Interest";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

@@ -65,14 +65,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public ProductStoreType CashmereStoreType { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityShear()
-        {
-            TransactionCategory = "Livestock.[Type].Shear";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

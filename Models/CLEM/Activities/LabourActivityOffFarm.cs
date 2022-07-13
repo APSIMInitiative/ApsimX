@@ -37,14 +37,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityOffFarm()
-        {
-            TransactionCategory = "[General].[OffFarm].Income";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

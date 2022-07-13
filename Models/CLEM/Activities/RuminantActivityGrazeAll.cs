@@ -45,14 +45,6 @@ namespace Models.CLEM.Activities
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityGrazeAll()
-        {
-            TransactionCategory = "Livestock.Grazing";
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

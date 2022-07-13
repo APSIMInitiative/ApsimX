@@ -77,7 +77,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityWean()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.[Type].Wean";
         }
 
         /// <inheritdoc/>

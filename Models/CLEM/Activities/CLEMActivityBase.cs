@@ -47,7 +47,6 @@ namespace Models.CLEM.Activities
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 

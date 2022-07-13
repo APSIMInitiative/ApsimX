@@ -81,7 +81,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public PastureActivityCutAndCarry()
         {
-            TransactionCategory = "Pasture.[Paddock].Collect";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

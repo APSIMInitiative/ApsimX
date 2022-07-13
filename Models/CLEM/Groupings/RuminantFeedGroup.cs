@@ -73,7 +73,6 @@ namespace Models.CLEM.Groupings
 
         /// <inheritdoc/>
         [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
@@ -82,7 +81,6 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public RuminantFeedGroup()
         {
-            TransactionCategory = "Feed.[Product].[Ruminants]";
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 

@@ -54,7 +54,6 @@ namespace Models.CLEM.Activities
         public OtherAnimalsActivityFeed()
         {
             this.SetDefaults();
-            TransactionCategory = "OtherAnimal.Feed";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
