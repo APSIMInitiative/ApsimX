@@ -2,12 +2,13 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core.ApsimFile;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using System.Text.Json.Serialization;
 
     /// <summary>
     /// This class encapsulates an instruction to replace a model.
@@ -39,27 +40,29 @@
                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
             {
                 IModel modelFromResource = GetModel(child.ResourceName);
-                modelFromResource.Enabled = parent.Enabled;
-
-                // Replace existing children that match (name and type) the children of modelFromResource.
-                child.Children.RemoveAll(mr =>
+                if (modelFromResource != null)
                 {
-                    return mr.GetType() == child.GetType() && string.Equals(mr.Name, child.Name, StringComparison.InvariantCultureIgnoreCase);
-                });
-                child.Children.InsertRange(0, modelFromResource.Children);
+                    modelFromResource.Enabled = parent.Enabled;
 
-                CopyPropertiesFrom(modelFromResource, child);
+                    // Replace existing children that match (name and type) the children of modelFromResource.
+                    child.Children.RemoveAll(mr =>
+                    {
+                        return mr.GetType() == child.GetType() && string.Equals(mr.Name, child.Name, StringComparison.InvariantCultureIgnoreCase);
+                    });
+                    child.Children.InsertRange(0, modelFromResource.Children);
 
-                // Make 'child' and all descendents of 'child' hidden and readonly.
-                bool isHidden = parent.FindAncestor<Replacements>() == null;
-                foreach (Model descendant in child.FindAllDescendants()
-                                                  .Append(child))
-                {
-                    descendant.IsHidden = isHidden;
-                    descendant.ReadOnly = isHidden;
+                    CopyPropertiesFrom(modelFromResource, child);
+
+                    // Make all descendents of 'child' hidden and readonly.
+                    bool isHidden = parent.FindAncestor<Replacements>() == null;
+                    foreach (Model descendant in child.FindAllDescendants())
+                    {
+                        descendant.IsHidden = isHidden;
+                        descendant.ReadOnly = isHidden;
+                    }
+
+                    child.ParentAllDescendants();
                 }
-
-                child.ParentAllDescendants();
             }
         }
 
@@ -71,6 +74,8 @@
             if (!cache.TryGetValue(resourceName, out IModel modelFromResource))
             {
                 string contents = GetString(resourceName);
+                if (string.IsNullOrEmpty(contents))
+                    return null;
 
                 modelFromResource = FileFormat.ReadFromString<IModel>(contents, e => throw e, false);
                 modelFromResource = modelFromResource.Children.First();
@@ -87,9 +92,37 @@
         {
             string fullResourceName = $"Models.Resources.{resourceName}.json";
             var contents = ReflectionUtilities.GetResourceAsString(fullResourceName);
-            if (contents == null)
-                throw new Exception($"Cannot find a resource named {resourceName}");
             return contents;
+        }
+
+        /// <summary>Get a collection of all properties from the specified resource model.</summary>
+        /// <param name="resourceName">Name of the resource.</param>
+        public IEnumerable<PropertyInfo> GetPropertiesFromResourceModel(string resourceName)
+        {
+            string[] propertiesNotToCopy = { "$type", "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName", "Enabled", "ReadOnly" };
+
+            var model = GetModel(resourceName);
+            if (model != null)
+            {
+                var children = JObject.Parse(GetString(resourceName))["Children"] as JArray;
+                if (children == null)
+                    throw new Exception($"Invalid resource {resourceName}");
+
+                var resourceToken = children[0] as JObject;
+                var propertyTokens = resourceToken.Properties();
+                foreach (var propertyName in resourceToken.Properties()
+                                                          .Select(pt => pt.Name)
+                                                          .Where(name => !propertiesNotToCopy.Contains(name)))
+                {
+                    var propertyInfo = model.GetType().GetProperty(propertyName);
+                    if (propertyInfo != null &&
+                        propertyInfo.CanWrite &&
+                        propertyInfo.CanRead &&
+                        propertyInfo.GetCustomAttribute(typeof(DescriptionAttribute)) == null &&
+                        propertyInfo.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null)
+                        yield return propertyInfo;
+                }
+            }
         }
 
         /// <summary>Default constructor (private)</summary>
@@ -98,32 +131,25 @@
         /// <summary>Copy all public properties from the one model to another.</summary>
         /// <param name="from">Model to copy from.</param>
         /// <param name="to">Model to copy to.</param>
-        private static void CopyPropertiesFrom(IModel from, IModel to)
+        private void CopyPropertiesFrom(IModel from, IModel to)
         {
-            string[] propertiesNotToCopy = { "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName" };
-            foreach (PropertyInfo property in from.GetType().GetProperties()
-                                                            .Where(p => p.CanWrite && p.CanRead && !propertiesNotToCopy.Contains(p.Name)))
+            foreach (PropertyInfo property in GetPropertiesFromResourceModel(to.ResourceName))
             {
-                var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                var jsonIgnore = property.GetCustomAttribute(typeof(Newtonsoft.Json.JsonIgnoreAttribute));
-                if (description == null && jsonIgnore == null)
+                try
                 {
-                    try
-                    {
-                        object fromValue = property.GetValue(from);
-                        bool doSetPropertyValue;
-                        if (fromValue is double)
-                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                        else
-                            doSetPropertyValue = fromValue != null;
+                    object fromValue = property.GetValue(from);
+                    bool doSetPropertyValue;
+                    if (fromValue is double)
+                        doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                    else
+                        doSetPropertyValue = fromValue != null;
 
-                        if (doSetPropertyValue)
-                            property.SetValue(to, fromValue);
-                    }
-                    catch (Exception)
-                    {
-                        // Couldn't set property - ignore error.
-                    }
+                    if (doSetPropertyValue)
+                        property.SetValue(to, fromValue);
+                }
+                catch (Exception)
+                {
+                    // Couldn't set property - ignore error.
                 }
             }
         }
