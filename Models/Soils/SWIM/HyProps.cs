@@ -11,34 +11,20 @@ namespace Models.Soils
     /// Simple Hydraulic Properties Model
     /// </summary>
     [Serializable]
-    //[ViewName("UserInterface.Views.PropertyView")]
-    //[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    //[ValidParent(ParentType=typeof(Swim3))]
-    public class HyProps //: Model
+    public class HyProps
     {
 
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[,] DELk;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[,] Mk;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[,] M0;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[,] M1;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[,] Y0;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[,] Y1;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[] MicroP;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[] MicroKs;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[] Kdula;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[] MacroP;
-        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double[] psid;
+        private double[,] DELk;
+        private double[,] Mk;
+        private double[,] M0;
+        private double[,] M1;
+        private double[,] Y0;
+        private double[,] Y1;
+        private double[] MicroP;
+        private double[] MicroKs;
+        private double[] Kdula;
+        private double[] MacroP;
+        private double[] psid;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
         const double psi0 = -0.6e7;

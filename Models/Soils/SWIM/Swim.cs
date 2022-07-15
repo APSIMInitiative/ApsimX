@@ -1,15 +1,11 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using System.IO;
-using Models.Core;
-using Models;
-using Newtonsoft.Json;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using System.Linq;
-using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
