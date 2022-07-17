@@ -59,7 +59,7 @@
                     CopyPropertiesFrom(modelFromResource, child);
 
                     // Make all descendents of 'child' hidden and readonly.
-                    bool isHidden = parent.FindAncestor<Replacements>() == null;
+                    bool isHidden = parent.FindAncestor<Folder>("Replacements") == null;
                     foreach (Model descendant in child.FindAllDescendants())
                     {
                         descendant.IsHidden = isHidden;

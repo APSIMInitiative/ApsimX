@@ -93,6 +93,7 @@
                     }
                 }
             };
+            Resource.Instance.Replace(simulation);
             FileFormat.InitialiseModel(simulation, (e) => throw e);
             simulation.Prepare();
             simulation.Run();

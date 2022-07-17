@@ -796,5 +796,25 @@ namespace Models.Core.ApsimFile
 
             return null;
         }
+
+        /// <summary>
+        /// Find an ancestor model of the given type.
+        /// </summary>
+        /// <param name="token">Model whose ancestor we want to find.</param>
+        /// <param name="typeName">Type name of ancestor to search for.</param>
+        public static JObject Ancestor(JObject token, string typeName)
+        {
+            JToken parent = Parent(token);
+            while (parent != null)
+            {
+                Type parentType = System.Type.GetType(Type(parent, true));
+                if (parentType.Name == typeName)
+                    return parent as JObject;
+
+                parent = Parent(parent);
+            }
+
+            return null;
+        }
     }
 }

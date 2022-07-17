@@ -229,7 +229,7 @@
         {
             if (topLevelModel != null)
             {
-                IModel replacements = topLevelModel.FindChild<Replacements>();
+                IModel replacements = topLevelModel.FindChild<Folder>("Replacements");
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children)

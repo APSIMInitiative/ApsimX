@@ -171,6 +171,7 @@
                     }
                 }
             };
+            Resource.Instance.Replace(zone);
             FileFormat.InitialiseModel(zone, (e) => throw e);
 
             zone.ParentAllDescendants();

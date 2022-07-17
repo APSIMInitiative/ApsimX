@@ -203,7 +203,7 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is IModel m && m.FindAncestor<Replacements>() == null)
+                    if (target is IModel m && m.FindAncestor<Folder>("Replacements") == null)
                         return ChildrenToSerialize(m);
 
                     return new ExpressionValueProvider(memberInfo).GetValue(target);

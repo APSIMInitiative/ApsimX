@@ -91,7 +91,7 @@
             {
                 Children = new List<IModel>()
                 {
-                    new Replacements()
+                    new Folder()
                     {
                         Name = "Replacements",
                         Children = new List<IModel>()

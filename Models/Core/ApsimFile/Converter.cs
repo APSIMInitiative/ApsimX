@@ -2947,7 +2947,7 @@ namespace Models.Core.ApsimFile
                     JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
                     if (zone == null)
                     {
-                        JObject replacements = JsonUtilities.Ancestor(manager.Token, typeof(Replacements));
+                        JObject replacements = JsonUtilities.Ancestor(manager.Token, "Replacements");
                         if (replacements != null)
                         {
                             JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
@@ -3030,7 +3030,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
             {
-                if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, typeof(Replacements)) != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
+                if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, "Replacements") != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
                 {
                     Constant mortalityRate = new Constant();
                     mortalityRate.Name = "MortalityRate";

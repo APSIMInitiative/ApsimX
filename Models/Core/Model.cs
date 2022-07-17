@@ -13,7 +13,6 @@
     /// </summary>
     [Serializable]
     [ValidParent(typeof(Folder))]
-    [ValidParent(typeof(Replacements))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
     public abstract class Model : IModel
