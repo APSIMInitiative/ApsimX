@@ -23,6 +23,8 @@
 
         private readonly Dictionary<string, IModel> cache = new Dictionary<string, IModel>();
 
+        private readonly object cacheLock = new object();
+
         /// <summary>Singleton instance of Resource</summary>
         public static Resource Instance
         {
@@ -78,13 +80,19 @@
         {
             if (!cache.TryGetValue(resourceName, out IModel modelFromResource))
             {
-                string contents = GetString(resourceName);
-                if (string.IsNullOrEmpty(contents))
-                    return null;
+                lock (cacheLock)
+                {
+                    if (!cache.TryGetValue(resourceName, out modelFromResource))
+                    {
+                        string contents = GetString(resourceName);
+                        if (string.IsNullOrEmpty(contents))
+                            return null;
 
-                modelFromResource = FileFormat.ReadFromString<IModel>(contents, e => throw e, false);
-                modelFromResource = modelFromResource.Children.First();
-                cache.Add(resourceName, modelFromResource);
+                        modelFromResource = FileFormat.ReadFromString<IModel>(contents, e => throw e, false);
+                        modelFromResource = modelFromResource.Children.First();
+                        cache.Add(resourceName, modelFromResource);
+                    }
+                }
             }
 
             return modelFromResource.Clone();

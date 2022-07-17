@@ -808,7 +808,7 @@ namespace Models.Core.ApsimFile
             while (parent != null)
             {
                 Type parentType = System.Type.GetType(Type(parent, true));
-                if (parentType.Name == typeName)
+                if (parentType != null && parentType.Name == typeName)
                     return parent as JObject;
 
                 parent = Parent(parent);
