@@ -113,6 +113,9 @@
                 errorHandler(err);
             }
 
+            // Replace all models that have a ResourceName with the official, released models.
+            Resource.Instance.Replace(newModel);
+
             // Call created in all models.
             if (initInBackground)
                 Task.Run(() => InitialiseModel(newModel, errorHandler));
@@ -129,7 +132,6 @@
         /// <param name="errorHandler"></param>
         public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
         {
-            Resource.Instance.Replace(newModel);
             foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
