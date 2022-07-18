@@ -49,18 +49,20 @@
                 {
                     modelFromResource.Enabled = parent.Enabled;
 
-                    // Replace existing children that match (name and type) the children of modelFromResource.
-                    child.Children.RemoveAll(c =>
+                    bool isUnderReplacements = child.FindAncestor<Folder>("Replacements") != null;
+
+                    // Add missing children from the model in resource
+                    IEnumerable<IModel> childrenToAdd = modelFromResource.Children.Where(mc =>
                     {
-                        return modelFromResource.Children.Any(mr => mr.GetType() == c.GetType() && 
-                                                                    string.Equals(mr.Name, c.Name, StringComparison.InvariantCultureIgnoreCase));
+                        return !child.Children.Any(c => c.GetType() == mc.GetType() &&
+                                                        string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
                     });
-                    child.Children.InsertRange(0, modelFromResource.Children);
+                    child.Children.InsertRange(0, childrenToAdd);
 
                     CopyPropertiesFrom(modelFromResource, child);
 
                     // Make all descendents of 'child' hidden and readonly.
-                    bool isHidden = parent.FindAncestor<Folder>("Replacements") == null;
+                    bool isHidden = !isUnderReplacements;
                     foreach (Model descendant in child.FindAllDescendants())
                     {
                         descendant.IsHidden = isHidden;
