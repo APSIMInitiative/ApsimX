@@ -44,7 +44,7 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : ModelCollectionFromResource, ISoilWater, ITabularData
+    public class WaterBalance : Model, ISoilWater, ITabularData
     {
         private Physical physical;
 

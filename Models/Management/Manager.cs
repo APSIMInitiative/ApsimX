@@ -25,7 +25,7 @@
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, IOptionallySerialiseChildren
+    public class Manager : Model
     {
         [NonSerialized]
         [Link]
@@ -83,9 +83,6 @@
 
         /// <summary>The script Model that has been compiled</summary>
         public List<KeyValuePair<string, string>> Parameters { get; set; }
-
-        /// <summary>Allow children to be serialised?</summary>
-        public bool DoSerialiseChildren { get { return false; } }
 
         /// <summary>
         /// Stores column and line of caret, and scrolling position when editing in GUI

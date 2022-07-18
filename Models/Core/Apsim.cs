@@ -89,8 +89,7 @@
 
             if (parent.GetType() == typeof(Folder) ||
                 parent.GetType() == typeof(Factor) ||
-                parent.GetType() == typeof(CompositeFactor) ||
-                parent.GetType() == typeof(Replacements))
+                parent.GetType() == typeof(CompositeFactor))
                 return true;
 
             // Functions are currently allowable anywhere

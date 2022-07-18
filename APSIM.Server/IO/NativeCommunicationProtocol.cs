@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using APSIM.Server.Commands;
 using APSIM.Shared.Utilities;
+using Models.Core.Replace;
 using Models.Core.Run;
 
 namespace APSIM.Server.IO
