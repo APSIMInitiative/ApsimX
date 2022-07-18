@@ -41,8 +41,7 @@
         public void Replace(IModel parent)
         {
             foreach (var child in parent.FindAllDescendants()
-                                        .Where(m => !string.IsNullOrEmpty(m.ResourceName) &&           // non-empty resourcename
-                                                    m.FindAncestor<Folder>("Replacements") == null)   // not in replacements
+                                        .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
             {
                 IModel modelFromResource = GetModel(child.ResourceName);

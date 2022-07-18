@@ -807,8 +807,8 @@ namespace Models.Core.ApsimFile
             JToken parent = Parent(token);
             while (parent != null)
             {
-                Type parentType = System.Type.GetType(Type(parent, true));
-                if (parentType != null && parentType.Name == typeName)
+                var typeTokens = Type(parent, true).Split(".");
+                if (typeTokens != null && typeTokens.Last() == typeName)
                     return parent as JObject;
 
                 parent = Parent(parent);
