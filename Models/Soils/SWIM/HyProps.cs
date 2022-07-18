@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using APSIM.Shared.Utilities;
-using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using System;
 
 namespace Models.Soils
 {
@@ -14,16 +10,16 @@ namespace Models.Soils
     public class HyProps
     {
 
-        private double[,] DELk;
-        private double[,] Mk;
-        private double[,] M0;
-        private double[,] M1;
-        private double[,] Y0;
-        private double[,] Y1;
-        private double[] MicroP;
-        private double[] MicroKs;
-        private double[] Kdula;
-        private double[] MacroP;
+        private double[,] delk;
+        private double[,] mk;
+        private double[,] m0;
+        private double[,] m1;
+        private double[,] y0;
+        private double[,] y1;
+        private double[] microP;
+        private double[] microKs;
+        private double[] kdula;
+        private double[] macroP;
         private double[] psid;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
@@ -31,85 +27,85 @@ namespace Models.Soils
 
         internal void ResizePropfileArrays(int newSize)
         {
-            DELk = new double[newSize, 4];
-            Mk = new double[newSize, 4];
-            M0 = new double[newSize, 5];
-            M1 = new double[newSize, 5];
-            Y0 = new double[newSize, 5];
-            Y1 = new double[newSize, 5];
-            Array.Resize(ref MicroP, newSize);
-            Array.Resize(ref MicroKs, newSize);
-            Array.Resize(ref Kdula, newSize);
-            Array.Resize(ref MacroP, newSize);
+            delk = new double[newSize, 4];
+            mk = new double[newSize, 4];
+            m0 = new double[newSize, 5];
+            m1 = new double[newSize, 5];
+            y0 = new double[newSize, 5];
+            y1 = new double[newSize, 5];
+            Array.Resize(ref microP, newSize);
+            Array.Resize(ref microKs, newSize);
+            Array.Resize(ref kdula, newSize);
+            Array.Resize(ref macroP, newSize);
             Array.Resize(ref psid, newSize);
         }
 
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public void SetupThetaCurve(double PSIDul, int n, double[] LL15, double[] DUL, double[] SAT)
+        public void SetupThetaCurve(double psiDul, int n, double[] ll15, double[] dul, double[] sat)
         {
             for (int layer = 0; layer <= n; layer++)
             {
-                psid[layer] = PSIDul;  //- (p%x(p%n) - p%x(layer))
+                psid[layer] = psiDul;  //- (p%x(p%n) - p%x(layer))
 
-                DELk[layer, 0] = (DUL[layer] - SAT[layer]) / (Math.Log10(-psid[layer]));
-                DELk[layer, 1] = (LL15[layer] - DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                DELk[layer, 2] = -LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                DELk[layer, 3] = -LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                delk[layer, 0] = (dul[layer] - sat[layer]) / (Math.Log10(-psid[layer]));
+                delk[layer, 1] = (ll15[layer] - dul[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
+                delk[layer, 2] = -ll15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                delk[layer, 3] = -ll15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
 
-                Mk[layer, 0] = 0.0;
-                Mk[layer, 1] = (DELk[layer, 0] + DELk[layer, 1]) / 2.0;
-                Mk[layer, 2] = (DELk[layer, 1] + DELk[layer, 2]) / 2.0;
-                Mk[layer, 3] = DELk[layer, 3];
+                mk[layer, 0] = 0.0;
+                mk[layer, 1] = (delk[layer, 0] + delk[layer, 1]) / 2.0;
+                mk[layer, 2] = (delk[layer, 1] + delk[layer, 2]) / 2.0;
+                mk[layer, 3] = delk[layer, 3];
 
                 // First bit might not be monotonic so check and adjust
-                double alpha = Mk[layer, 0] / DELk[layer, 0];
-                double beta = Mk[layer, 1] / DELk[layer, 0];
+                double alpha = mk[layer, 0] / delk[layer, 0];
+                double beta = mk[layer, 1] / delk[layer, 0];
                 double phi = alpha - (Math.Pow(2.0 * alpha + beta - 3.0, 2.0) / (3.0 * (alpha + beta - 2.0)));
                 if (phi <= 0)
                 {
                     double tau = 3.0 / Math.Sqrt(alpha * alpha + beta * beta);
-                    Mk[layer, 0] = tau * alpha * DELk[layer, 0];
-                    Mk[layer, 1] = tau * beta * DELk[layer, 0];
+                    mk[layer, 0] = tau * alpha * delk[layer, 0];
+                    mk[layer, 1] = tau * beta * delk[layer, 0];
                 }
 
-                M0[layer, 0] = 0.0;
-                M1[layer, 0] = 0.0;
-                Y0[layer, 0] = SAT[layer];
-                Y1[layer, 0] = SAT[layer];
+                m0[layer, 0] = 0.0;
+                m1[layer, 0] = 0.0;
+                y0[layer, 0] = sat[layer];
+                y1[layer, 0] = sat[layer];
 
-                M0[layer, 1] = Mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
-                M1[layer, 1] = Mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
-                Y0[layer, 1] = SAT[layer];
-                Y1[layer, 1] = DUL[layer];
+                m0[layer, 1] = mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
+                m1[layer, 1] = mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
+                y0[layer, 1] = sat[layer];
+                y1[layer, 1] = dul[layer];
 
-                M0[layer, 2] = Mk[layer, 1] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                M1[layer, 2] = Mk[layer, 2] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                Y0[layer, 2] = DUL[layer];
-                Y1[layer, 2] = LL15[layer];
+                m0[layer, 2] = mk[layer, 1] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
+                m1[layer, 2] = mk[layer, 2] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
+                y0[layer, 2] = dul[layer];
+                y1[layer, 2] = ll15[layer];
 
-                M0[layer, 3] = Mk[layer, 2] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                M1[layer, 3] = Mk[layer, 3] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                Y0[layer, 3] = LL15[layer];
-                Y1[layer, 3] = 0.0;
+                m0[layer, 3] = mk[layer, 2] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                m1[layer, 3] = mk[layer, 3] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                y0[layer, 3] = ll15[layer];
+                y1[layer, 3] = 0.0;
 
-                M0[layer, 4] = 0.0;
-                M1[layer, 4] = 0.0;
-                Y0[layer, 4] = 0.0;
-                Y1[layer, 4] = 0.0;
+                m0[layer, 4] = 0.0;
+                m1[layer, 4] = 0.0;
+                y0[layer, 4] = 0.0;
+                y1[layer, 4] = 0.0;
             }
         }
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public void SetupKCurve(int n, double[] LL15, double[] DUL, double[] SAT, double[] KS, double KDul, double PSIDul)
+        public void SetupKCurve(int n, double[] ll15, double[] dul, double[] sat, double[] ks, double kdul, double psiDul)
         {
             for (int layer = 0; layer <= n; layer++)
             {
-                double b = -Math.Log(PSIDul / psi_ll15) / Math.Log(DUL[layer] / LL15[layer]);
-                MicroP[layer] = b * 2.0 + 3.0;
-                Kdula[layer] = Math.Min(0.99 * KDul, KS[layer]);
-                MicroKs[layer] = Kdula[layer] / Math.Pow(DUL[layer] / SAT[layer], MicroP[layer]);
+                double b = -Math.Log(psiDul / psi_ll15) / Math.Log(dul[layer] / ll15[layer]);
+                microP[layer] = b * 2.0 + 3.0;
+                kdula[layer] = Math.Min(0.99 * kdul, ks[layer]);
+                microKs[layer] = kdula[layer] / Math.Pow(dul[layer] / sat[layer], microP[layer]);
 
-                double Sdul = DUL[layer] / SAT[layer];
-                MacroP[layer] = Math.Log10(Kdula[layer] / 99.0 / (KS[layer] - MicroKs[layer])) / Math.Log10(Sdul);
+                double sdul = dul[layer] / sat[layer];
+                macroP[layer] = Math.Log10(kdula[layer] / 99.0 / (ks[layer] - microKs[layer])) / Math.Log10(sdul);
             }
         }
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -149,45 +145,45 @@ namespace Models.Soils
             double tSqr = t * t;
             double tCube = tSqr * t;
 
-            return (2 * tCube - 3 * tSqr + 1) * Y0[layer, i] + (tCube - 2 * tSqr + t) * M0[layer, i]
-                    + (-2 * tCube + 3 * tSqr) * Y1[layer, i] + (tCube - tSqr) * M1[layer, i];
+            return (2 * tCube - 3 * tSqr + 1) * y0[layer, i] + (tCube - 2 * tSqr + t) * m0[layer, i]
+                    + (-2 * tCube + 3 * tSqr) * y1[layer, i] + (tCube - tSqr) * m1[layer, i];
         }
 
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double SimpleK(int layer, double psiValue, double[] SAT, double[] KS)
+        public double SimpleK(int layer, double psiValue, double[] sat, double[] ks)
         {
             //  Purpose
             //      Calculate Conductivity for a given node for a specified suction.
 
-            double S = SimpleS(layer, psiValue, SAT);
+            double s = SimpleS(layer, psiValue, sat);
             double simpleK;
 
-            if (S <= 0.0)
+            if (s <= 0.0)
                 simpleK = 1e-100;
             else
             {
-                double microK = MicroKs[layer] * Math.Pow(S, MicroP[layer]);
+                double microK = microKs[layer] * Math.Pow(s, microP[layer]);
 
-                if (MicroKs[layer] >= KS[layer])
+                if (microKs[layer] >= ks[layer])
                     simpleK = microK;
                 else
                 {
-                    double macroK = (KS[layer] - MicroKs[layer]) * Math.Pow(S, MacroP[layer]);
+                    double macroK = (ks[layer] - microKs[layer]) * Math.Pow(s, macroP[layer]);
                     simpleK = microK + macroK;
                 }
             }
             return simpleK / 24.0 / 10.0;
         }
 
-        private double SimpleS(int layer, double psiValue, double[] SAT)
+        private double SimpleS(int layer, double psiValue, double[] sat)
         {
             //  Purpose
             //      Calculate S for a given node for a specified suction.
-            return SimpleTheta(layer, psiValue) / SAT[layer];
+            return SimpleTheta(layer, psiValue) / sat[layer];
         }
 
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
-        public double Suction(int node, double theta, double[] _psi, double PSIDul, double[] LL15, double[] DUL, double[] SAT)
+        public double Suction(int node, double theta, double[] _psi, double psiDul, double[] ll15, double[] dul, double[] sat)
         {
             //  Purpose
             //   Calculate the suction for a given water content for a given node.
@@ -196,7 +192,7 @@ namespace Models.Soils
             const double dpF = 0.01;
             double psiValue;
 
-            if (theta == SAT[node])
+            if (theta == sat[node])
             {
                 if (_psi[node] > 0)
                     return _psi[node];
@@ -206,15 +202,15 @@ namespace Models.Soils
             else
             {
                 if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
-                    if (theta > DUL[node])
-                        psiValue = PSIDul; // Initial estimate
-                    else if (theta < LL15[node])
+                    if (theta > dul[node])
+                        psiValue = psiDul; // Initial estimate
+                    else if (theta < ll15[node])
                         psiValue = psi_ll15;
                     else
                     {
                         double pFll15 = Math.Log10(-psi_ll15);
-                        double pFdul = Math.Log10(-PSIDul);
-                        double frac = (theta - LL15[node]) / (DUL[node] - LL15[node]);
+                        double pFdul = Math.Log10(-psiDul);
+                        double frac = (theta - ll15[node]) / (dul[node] - ll15[node]);
                         double pFinit = pFll15 + frac * (pFdul - pFll15);
                         psiValue = -Math.Pow(10, pFinit);
                     }

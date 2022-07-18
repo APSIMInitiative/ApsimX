@@ -47,6 +47,7 @@ namespace Models.WaterModel
     public class WaterBalance : ModelCollectionFromResource, ISoilWater, ITabularData
     {
         private Physical physical;
+        private HyProps hyprops = new HyProps();
 
         /// <summary>Link to the soil properties.</summary>
         [Link]
@@ -195,6 +196,22 @@ namespace Models.WaterModel
         [Description("Catchment area for lateral flow calculations")]
         public double CatchmentArea { get; set; } = 10;
 
+        /// <summary>
+        /// Gets the hydraulic conductivity at DUL (mm/d)
+        /// </summary>
+        [Description("Hydraulic conductivity at DUL (mm/d)")]
+        [Units("mm/d")]
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        public double KDul { get; set; } = 0.1;
+
+        /// <summary>
+        /// Gets the matric Potential at DUL (cm)
+        /// </summary>
+        [Description("Matric Potential at DUL (cm)")]
+        [Units("cm")]
+        [Bounds(Lower = -1e3, Upper = 0.0)]
+        public double PSIDul { get; set; } = -100.0;
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Units("mm")]
         [Summary]
@@ -240,6 +257,10 @@ namespace Models.WaterModel
                 waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
             }
         }
+
+        /// <summary>Water potential of layer</summary>
+        [Units("cm")]
+        public double[] PSI { get; private set; }
 
         /// <summary>Runon (mm).</summary>
         [JsonIgnore]
@@ -554,6 +575,9 @@ namespace Models.WaterModel
 
             // Update the variable in the water model.
             water.Volumetric = waterVolumetric;
+
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -802,6 +826,12 @@ namespace Models.WaterModel
             Flow = null;
             evaporationModel.Initialise();
             irrigations = new List<IrrigationApplicationType>();
+
+            int n = soilPhysical.Thickness.Length;
+            hyprops.ResizePropfileArrays(n);
+            hyprops.SetupThetaCurve(PSIDul, n-1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+            hyprops.SetupKCurve(n-1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT, soilPhysical.KS, KDul, PSIDul);
+            PSI = new double[n];
         }
 
         ///<summary>Perform tillage</summary>
