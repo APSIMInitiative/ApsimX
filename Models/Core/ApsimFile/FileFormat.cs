@@ -162,12 +162,18 @@
 
                 property.ShouldSerialize = instance =>
                 {
+                    if (member.GetCustomAttribute<LinkAttribute>() != null ||
+                        member.GetCustomAttribute<JsonIgnoreAttribute>() != null)
+                        return false;
+
+                    // Serialise public fields.
+                    if (member is FieldInfo f)
+                        return f.IsPublic;
+
                     // Only serialise public properties
                     // If a memberinfo has a link, JsonIgnore or is readonly then don't serialise it.
                     if (!(member is PropertyInfo property) ||
                         !property.GetMethod.IsPublic ||
-                        member.GetCustomAttribute<LinkAttribute>() != null ||
-                        member.GetCustomAttribute<JsonIgnoreAttribute>() != null ||
                         !property.CanWrite ||
                         property.SetMethod.IsPrivate)
                         return false;

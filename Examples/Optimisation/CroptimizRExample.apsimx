@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 484,
+  "ExplorerWidth": 457,
   "Version": 153,
   "Name": "Simulations",
   "ResourceName": null,
@@ -316,6 +316,7 @@
                 },
                 {
                   "$type": "Models.WaterModel.EvaporationModel, Models",
+                  "t": 0.0,
                   "Name": "EvaporationModel",
                   "ResourceName": null,
                   "Children": [],
@@ -570,8 +571,8 @@
                     "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
                     "Name": "Atmosphere",
                     "Location": "50, 50",
-                    "Colour": "245, 245, 220",
-                    "OutlineColour": "0, 0, 0",
+                    "Colour": "Beige",
+                    "OutlineColour": "Black",
                     "Transparent": true
                   }
                 ],
@@ -2321,10 +2322,18 @@
       "$type": "Models.Optimisation.CroptimizR, Models",
       "Parameters": [
         {
-          "$type": "Models.Sensitivity.Parameter, Models"
+          "$type": "Models.Sensitivity.Parameter, Models",
+          "Name": "SowDate",
+          "Path": ".Simulations.Replacements.SowOnFixedDate.Script.SowDate",
+          "LowerBound": 166.0,
+          "UpperBound": 180.0
         },
         {
-          "$type": "Models.Sensitivity.Parameter, Models"
+          "$type": "Models.Sensitivity.Parameter, Models",
+          "Name": "NO3N",
+          "Path": ".Simulations.Replacements.APS6Field.NO3.InitialValues[1]",
+          "LowerBound": 0.0,
+          "UpperBound": 10.0
         }
       ],
       "PredictedTableName": "DailyReport",
@@ -3010,6 +3019,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "SurfOM": [],
                       "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
