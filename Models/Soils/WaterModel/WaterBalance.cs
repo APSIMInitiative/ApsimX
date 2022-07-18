@@ -197,14 +197,6 @@ namespace Models.WaterModel
         public double CatchmentArea { get; set; } = 10;
 
         /// <summary>
-        /// Gets the hydraulic conductivity at DUL (mm/d)
-        /// </summary>
-        [Description("Hydraulic conductivity at DUL (mm/d)")]
-        [Units("mm/d")]
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        public double KDul { get; set; } = 0.1;
-
-        /// <summary>
         /// Gets the matric Potential at DUL (cm)
         /// </summary>
         [Description("Matric Potential at DUL (cm)")]
@@ -830,7 +822,6 @@ namespace Models.WaterModel
             int n = soilPhysical.Thickness.Length;
             hyprops.ResizePropfileArrays(n);
             hyprops.SetupThetaCurve(PSIDul, n-1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
-            hyprops.SetupKCurve(n-1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT, soilPhysical.KS, KDul, PSIDul);
             PSI = new double[n];
         }
 
