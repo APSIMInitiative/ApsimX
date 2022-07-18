@@ -203,7 +203,7 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is IModel m && m.FindAncestor<Folder>("Replacements") == null)
+                    if (target is IModel m)
                         return ChildrenToSerialize(m);
 
                     return new ExpressionValueProvider(memberInfo).GetValue(target);
@@ -229,7 +229,8 @@
                     if (model is Manager)
                         return new Model[0];
 
-                    if (string.IsNullOrEmpty(model.ResourceName))
+                    // Serialise all child if ResourceName is empty or the model is under Replacements.
+                    if (string.IsNullOrEmpty(model.ResourceName) || model.FindAncestor<Folder>("Replacements") != null)
                         return model.Children;
 
                     // Return a collection of child models that aren't from a resource.

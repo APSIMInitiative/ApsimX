@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 371,
+  "ExplorerWidth": 484,
   "Version": 153,
   "Name": "Simulations",
   "ResourceName": null,
@@ -52,21 +52,7 @@
           ],
           "Name": "SowOnFixedDate",
           "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Script, APSIM7fd21e97-1242-4bca-b487-3eb8af75f44b",
-              "SowDate": 180.0,
-              "CultivarName": "Hartog",
-              "SowingDepth": 30.0,
-              "RowSpacing": 250.0,
-              "Population": 100.0,
-              "Name": "Script",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
