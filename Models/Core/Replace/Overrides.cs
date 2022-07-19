@@ -123,7 +123,7 @@ namespace Models.Core.Replace
                     if (resourceModel != null)
                         resourceModel.ResourceName = null;
 
-                    if (model.Parent is Manager manager)
+                    if (model.Parent is Manager manager && variable.Name == ".Script.Code")
                         manager.RebuildScriptModel();
                 }
             }
