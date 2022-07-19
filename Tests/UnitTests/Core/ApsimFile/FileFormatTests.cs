@@ -115,25 +115,6 @@
             Assert.AreEqual(simulation.Children[1].Parent, simulation);
         }
 
-        /// <summary>Test that models that implement IDontSerialiseChildren don't have the children serialised.</summary>
-        [Test]
-        public void FileFormat_CheckIOptionallySerialiseChildrenWorks()
-        {
-            // Create some models.
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelWithIDontSerialiseChildren()
-            {
-                Name = "ModelImplementingIDontSerialiseChildren",
-                Children = new List<IModel>() { new Clock() }
-            });
-
-            Simulations simulations = new Simulations();
-            simulations.Children.Add(sim);
-
-            string json = FileFormat.WriteToString(simulations);
-            Assert.IsFalse(json.Contains("Models.Clock"));
-        }
-
         /// <summary>
         /// This test ensures that exceptions thrown while opening a file cause
         /// the run to be flagged as failed.
@@ -148,13 +129,5 @@
             int result = Models.Program.Main(new[] { fileName });
             Assert.AreEqual(1, result);
         }
-
-        /// <summary>A class that implements IDontSerialiseChildren.</summary>
-        private class ModelWithIDontSerialiseChildren : Model, IOptionallySerialiseChildren
-        {
-            /// <summary>Allow children to be serialised?</summary>
-            public bool DoSerialiseChildren { get { return false; } }
-        }
-
     }
 }

@@ -11,7 +11,7 @@ namespace Models
     /// <summary>This model is responsible for applying fertiliser.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Fertiliser :  ModelCollectionFromResource
+    public class Fertiliser :  Model
     {
         /// <summary>The soil</summary>
         [Link] private IPhysical soilPhysical = null;

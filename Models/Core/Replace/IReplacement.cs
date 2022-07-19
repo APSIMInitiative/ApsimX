@@ -1,4 +1,4 @@
-﻿namespace Models.Core.Run
+﻿namespace Models.Core.Replace
 {
     /// <summary>
     /// Defines an interface for performing a replacement of something

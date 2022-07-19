@@ -25,7 +25,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, IPlantDamage, IHasDamageableBiomass
+    public class Plant : Model, IPlant, IPlantDamage, IHasDamageableBiomass
     {
         /// <summary>The summary</summary>
         [Link]

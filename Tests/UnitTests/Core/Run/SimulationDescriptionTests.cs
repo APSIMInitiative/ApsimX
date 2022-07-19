@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Replace;
     using Models.Core.Run;
     using Models.Soils;
     using Models.Soils.Nutrients;
@@ -70,7 +71,7 @@
             };
             
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride(new ModelReplacement("Weather", replacementWeather));
+            simulationDescription.AddOverride(new ModelReplacement("Weather", typeToFind: null, replacementWeather));
 
             var newSim = simulationDescription.ToSimulation();
             Assert.AreEqual(newSim.Name, "CustomName");
@@ -90,7 +91,7 @@
             {
                 Children = new List<IModel>()
                 {
-                    new Replacements()
+                    new Folder()
                     {
                         Name = "Replacements",
                         Children = new List<IModel>()

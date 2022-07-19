@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.JobRunning;
+    using Models.Core.Replace;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -228,12 +229,12 @@
         {
             if (topLevelModel != null)
             {
-                IModel replacements = topLevelModel.FindChild<Replacements>();
+                IModel replacements = topLevelModel.FindChild<Folder>("Replacements");
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children)
                     {
-                        var modelReplacement = new ModelReplacement(null, replacement);
+                        var modelReplacement = new ModelReplacement(replacement.Name, typeToFind:null, replacement);
                         replacementsToApply.Insert(0, modelReplacement);
                     }
                 }
