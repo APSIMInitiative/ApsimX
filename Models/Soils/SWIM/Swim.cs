@@ -631,7 +631,7 @@ namespace Models.Soils
         /// </summary>
         [Units("cm")]
         //[Description("Water potential of layer")]
-        public double[] psi        //! water potential of layer
+        public double[] PSI        //! water potential of layer
         {
             get
             {
@@ -3121,7 +3121,7 @@ namespace Models.Soils
 
         private double CalculateWaterTable()
         {
-            if (psi != null)
+            if (PSI != null)
             {
                 //   Purpose
                 //      Calculate depth of water table from soil surface
