@@ -1,22 +1,20 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Replace;
+using Models.Functions;
+using Models.PMF;
+using Models.Soils;
+using Models.Storage;
+using Models.Surface;
+using Models.WaterModel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using Models.Climate;
-using Models.Core.ApsimFile;
-using APSIM.Shared.Utilities;
-using Models.PMF;
-using Models.Functions;
-using Models.Soils;
-using Models.WaterModel;
-using Models.Surface;
 
-namespace UnitTests.Core.ApsimFile
+namespace UnitTests.Core
 {
     /// <summary>
     /// A test set for the edit file feature which
@@ -25,7 +23,7 @@ namespace UnitTests.Core.ApsimFile
     /// /Edit switch on Models.exe.
     /// </summary>
     [TestFixture]
-    public class EditFileTests
+    public class OverridesTests
     {
         private class ListClass<T> : Model
         {
@@ -37,10 +35,11 @@ namespace UnitTests.Core.ApsimFile
             public List<T> Data { get; set; }
         }
 
-        /// <summary>
-        /// Path to the .apsimx file.
-        /// </summary>
-        private string fileName;
+        /// <summary>Basic simulation.</summary>
+        private Simulations basicFile;
+
+        /// <summary>Test simulation.</summary>
+        private Simulations test;
 
         /// <summary>
         /// Path to a second .apsimx file which has a few weather
@@ -52,10 +51,14 @@ namespace UnitTests.Core.ApsimFile
         [SetUp]
         public void Initialise()
         {
-            Simulations basicFile = Utilities.GetRunnableSim();
+            basicFile = Utilities.GetRunnableSim(useInMemoryDb: true);
 
             IModel simulation = basicFile.FindInScope<Simulation>();
             IModel paddock = basicFile.FindInScope<Zone>();
+
+            // Use in memory db
+            DataStore dataStore = basicFile.FindInScope<DataStore>();
+            dataStore.UseInMemoryDB = true;
 
             // Add a weather component.
             Models.Climate.Weather weather = new Models.Climate.Weather();
@@ -121,11 +124,8 @@ namespace Models
             ListClass<double> doubleList = new ListClass<double>("DoubleList", 5);
             Structure.Add(doubleList, simulation);
 
-            basicFile.Write(basicFile.FileName);
-            fileName = basicFile.FileName;
-
             // Create a new .apsimx file containing two weather nodes.
-            Simulations test = Utilities.GetRunnableSim();
+            test = Utilities.GetRunnableSim(useInMemoryDb: true);
             IModel sim = test.FindInScope<Simulation>();
 
             Models.Climate.Weather w1 = new Models.Climate.Weather();
@@ -180,13 +180,13 @@ namespace Models
                 "[Physical].LL15[3:4] = 7",
             });
 
-            Simulations file = EditFile.Do(fileName, configFile);
+            Overrides.Apply(basicFile, configFile);
 
-            var report = file.FindInScope<Models.Report>();
+            var report = basicFile.FindInScope<Models.Report>();
             string[] variableNames = new[] { "x", "y", "z" };
             Assert.AreEqual(variableNames, report.VariableNames);
 
-            IModel sim = file.FindChild<Simulation>();
+            IModel sim = basicFile.FindChild<Simulation>();
 
             // Use an index-based lookup to locate child models.
             // When we replace an entire model, we want to ensure
@@ -257,10 +257,10 @@ namespace Models
                 "[DoubleList].Data[3:4] = 1e9",
             });
 
-            Simulations file = EditFile.Do(fileName, configFile);
+            Overrides.Apply(basicFile, configFile);
 
-            ListClass<string> stringList = (ListClass<string>)file.Children[1].Children[7];
-            ListClass<double> doubleList = (ListClass<double>)file.Children[1].Children[8];
+            ListClass<string> stringList = (ListClass<string>)basicFile.Children[1].Children[7];
+            ListClass<double> doubleList = (ListClass<double>)basicFile.Children[1].Children[8];
 
             List<string> expectedStrings = new List<string>(new[]
             {

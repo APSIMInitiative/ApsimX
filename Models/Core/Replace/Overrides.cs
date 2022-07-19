@@ -1,12 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
-using Models.Factorial;
+using Models.Core.ApsimFile;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
-namespace Models.Core.ApsimFile
+namespace Models.Core.Replace
 {
     /// <summary>
     /// Encapsulates the /Edit command-line switch which allows users
@@ -16,71 +15,35 @@ namespace Models.Core.ApsimFile
     /// 
     /// Models.exe /path/to/file.apsimx /Edit /path/to/config/file.txt
     /// </summary>
-    public static class EditFile
+    public static class Overrides
     {
         /// <summary>
-        /// Edit the given .apsimx file by applying changes
-        /// specified in the given config file.
+        /// Applies a collection of property sets (contained in a file) to a model.
         /// </summary>
-        /// <param name="apsimxFilePath">Absolute path to the .apsimx file.</param>
-        /// <param name="configFilePath">Absolute path to the config file.</param>
-        public static Simulations Do(string apsimxFilePath, string configFilePath)
+        /// <param name="model">The model to apply the changes to.</param>
+        /// <param name="configFilePath">A configuration file containing property sets.</param>
+        public static void Apply(IModel model, string configFilePath)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false);
-
-            return ApplyChanges(file, GetFactors(configFilePath));
+            var factors = ParseConfigFile(configFilePath);
+            Apply(model, factors);
         }
 
         /// <summary>
-        /// Gets a list of factors from a config file.
+        /// Applies a collection of property sets to a model.
         /// </summary>
-        /// <remarks>
-        /// Each line in the file must be of the form:
-        /// 
-        /// path = value
-        /// 
-        /// e.g.
-        /// 
-        /// [Clock].StartDate = 1/1/2019
-        /// .Simulations.Simulation.Weather.FileName = asdf.met
-        /// </remarks>
-        /// <param name="configFileName">Path to the config file.</param>
-        private static List<CompositeFactor> GetFactors(string configFileName)
+        /// <param name="model">The model to apply the changes to.</param>
+        /// <param name="factors">The property sets (keyword, value).</param>
+        /// <returns></returns>
+        public static void Apply(IModel model, IEnumerable<(string, object)> factors)
         {
-            List<CompositeFactor> factors = new List<CompositeFactor>();
-            string[] lines = File.ReadAllLines(configFileName);
-            for (int i = 0; i < lines.Length; i++)
+            foreach (var factor in factors)
             {
-                if (string.IsNullOrWhiteSpace(lines[i]))
-                    continue;
-
-                string[] values = lines[i].Split('=');
-                if (values.Length != 2)
-                    throw new Exception($"Wrong number of values specified on line {i} of config file '{configFileName}'.");
-
-                string path = values[0].Trim();
-                string value = values[1].Trim();
-                factors.Add(new CompositeFactor("factor", path, value));
-            }
-
-            return factors;
-        }
-
-        /// <summary>
-        /// Edits a single apsimx file according to the changes specified in the config file.
-        /// </summary>
-        /// <param name="file">An .apsimx file.</param>
-        /// <param name="factors">Factors to apply to the file.</param>
-        public static Simulations ApplyChanges(Simulations file, IEnumerable<CompositeFactor> factors)
-        {
-            foreach (CompositeFactor factor in factors)
-            {
-                IVariable variable = file.FindByPath(factor.Paths[0]);
+                IVariable variable = model.FindByPath(factor.Item1);
                 if (variable == null)
-                    throw new Exception($"Invalid path: {factor.Paths[0]}");
+                    throw new Exception($"Invalid path: {factor.Item1}");
 
-                string value = factor.Values[0].ToString();
-                string absolutePath =  null;
+                string value = factor.Item2.ToString();
+                string absolutePath = null;
                 try
                 {
                     if (!value.Contains(":"))
@@ -98,20 +61,54 @@ namespace Models.Core.ApsimFile
                     string modelPath = parts[1];
 
                     if (File.Exists(fileName))
-                        ReplaceModelFromFile(file, factor.Paths[0], fileName, modelPath);
+                        ReplaceModelFromFile(model, factor.Item1, fileName, modelPath);
                     else if (File.Exists(absoluteFileName))
-                        ReplaceModelFromFile(file, factor.Paths[0], absoluteFileName, modelPath);
+                        ReplaceModelFromFile(model, factor.Item1, absoluteFileName, modelPath);
                     else
                         ChangeVariableValue(variable, value);
                 }
                 else if (File.Exists(value) && variable.Value is IModel)
-                    ReplaceModelFromFile(file, factor.Paths[0], value, null);
+                    ReplaceModelFromFile(model, factor.Item1, value, null);
                 else if (File.Exists(absolutePath) && variable.Value is IModel)
-                    ReplaceModelFromFile(file, factor.Paths[0], absolutePath, null);
+                    ReplaceModelFromFile(model, factor.Item1, absolutePath, null);
                 else
                     ChangeVariableValue(variable, value);
             }
-            return file;
+        }
+
+        /// <summary>
+        /// Parse a configuration file for a list of factors..
+        /// </summary>
+        /// <remarks>
+        /// Each line in the file must be of the form:
+        /// 
+        /// path = value
+        /// 
+        /// e.g.
+        /// 
+        /// [Clock].StartDate = 1/1/2019
+        /// .Simulations.Simulation.Weather.FileName = asdf.met
+        /// </remarks>
+        /// <param name="configFileName">Path to the config file.</param>
+        private static IEnumerable<(string, object)> ParseConfigFile(string configFileName)
+        {
+            List<(string, object)> factors = new List<(string, object)>();
+            string[] lines = File.ReadAllLines(configFileName);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                    continue;
+
+                string[] values = lines[i].Split('=');
+                if (values.Length != 2)
+                    throw new Exception($"Wrong number of values specified on line {i} of config file '{configFileName}'.");
+
+                string path = values[0].Trim();
+                string value = values[1].Trim();
+                factors.Add((path, value));
+            }
+
+            return factors;
         }
 
         private static void ChangeVariableValue(IVariable variable, string value)
@@ -139,11 +136,11 @@ namespace Models.Core.ApsimFile
         /// <param name="modelToReplace">Path to the model which is to be replaced.</param>
         /// <param name="replacementFile">Path of the .apsimx file containing the model which will be inserted.</param>
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
-        private static void ReplaceModelFromFile(Simulations topLevel, string modelToReplace, string replacementFile, string replacementPath)
+        private static void ReplaceModelFromFile(IModel topLevel, string modelToReplace, string replacementFile, string replacementPath)
         {
             IModel toBeReplaced = topLevel.FindByPath(modelToReplace)?.Value as IModel;
             if (toBeReplaced == null)
-                throw new Exception($"Unable to find model which is to be replaced ({modelToReplace}) in file {topLevel.FileName}");
+                throw new Exception($"Unable to find model which is to be replaced ({modelToReplace})");
 
             IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, e => throw e, false);
 

@@ -5,6 +5,7 @@
     using CommandLine;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Replace;
     using Models.Core.Run;
     using Models.Factorial;
     using System;
@@ -99,7 +100,7 @@
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
                     else
-                        runner = new Runner(files.Select(f => EditFile.Do(f, options.EditFilePath)),
+                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
                                             options.RunTests,
@@ -126,6 +127,13 @@
                 Console.WriteLine(err.ToString());
                 exitCode = 1;
             }
+        }
+
+        private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            Overrides.Apply(file, configFilePath);
+            return file;
         }
 
         private static void ReplaceObsoleteArguments(ref string[] args)

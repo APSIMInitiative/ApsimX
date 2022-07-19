@@ -2,6 +2,7 @@
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.Replace;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
@@ -93,8 +94,7 @@ namespace UnitTests
             Assert.AreEqual(physical.Thickness[1], 150);
 
             // Run Models.exe with /Edit command.
-            sims.Write(apsimxFileName);
-            sims = EditFile.Do(apsimxFileName, configFileName);
+            Overrides.Apply(sims, configFileName);
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
