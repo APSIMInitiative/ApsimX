@@ -32,5 +32,34 @@
         {
             Overrides.Apply(simulation, new (string, object)[] { (path, replacement) });
         }
+
+
+        /// <summary>
+        /// Check value-equality with another property replacement instance.
+        /// </summary>
+        /// <remarks>Needed by ManagedSocketconnectionTests when comparing two RunCommands.</remarks>
+        /// <param name="obj">The second object instance.</param>
+        public override bool Equals(object obj)
+        {
+            if (obj is PropertyReplacement property)
+            {
+                if (path != property.path)
+                    return false;
+                if (replacement == null && property.replacement == null)
+                    return true;
+                if (replacement == null || property.replacement == null)
+                    return false;
+                return replacement.Equals(property.replacement);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get a hash code for this property replacement instance.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return (path, replacement).GetHashCode();
+        }
     }
 }

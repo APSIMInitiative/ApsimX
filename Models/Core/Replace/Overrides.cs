@@ -38,41 +38,44 @@ namespace Models.Core.Replace
         {
             foreach (var factor in factors)
             {
-                IVariable variable = model.FindByPath(factor.Item1);
-                if (variable == null)
+                IEnumerable<IVariable> variables = model.FindAllByPath(factor.Item1);
+                if (!variables.Any())
                     throw new Exception($"Invalid path: {factor.Item1}");
 
-                string value = factor.Item2.ToString();
-                string absolutePath = null;
-                try
+                foreach (IVariable variable in variables)
                 {
-                    if (!value.Contains(":"))
-                        absolutePath = PathUtilities.GetAbsolutePath(value, Directory.GetCurrentDirectory());
-                }
-                catch
-                {
-                }
+                    string value = factor.Item2.ToString();
+                    string absolutePath = null;
+                    try
+                    {
+                        if (!value.Contains(":"))
+                            absolutePath = PathUtilities.GetAbsolutePath(value, Directory.GetCurrentDirectory());
+                    }
+                    catch
+                    {
+                    }
 
-                string[] parts = value.Split(';');
-                if (parts != null && parts.Length == 2)
-                {
-                    string fileName = parts[0];
-                    string absoluteFileName = PathUtilities.GetAbsolutePath(fileName, Directory.GetCurrentDirectory());
-                    string modelPath = parts[1];
+                    string[] parts = value.Split(';');
+                    if (parts != null && parts.Length == 2)
+                    {
+                        string fileName = parts[0];
+                        string absoluteFileName = PathUtilities.GetAbsolutePath(fileName, Directory.GetCurrentDirectory());
+                        string modelPath = parts[1];
 
-                    if (File.Exists(fileName))
-                        ReplaceModelFromFile(model, factor.Item1, fileName, modelPath);
-                    else if (File.Exists(absoluteFileName))
-                        ReplaceModelFromFile(model, factor.Item1, absoluteFileName, modelPath);
+                        if (File.Exists(fileName))
+                            ReplaceModelFromFile(model, factor.Item1, fileName, modelPath);
+                        else if (File.Exists(absoluteFileName))
+                            ReplaceModelFromFile(model, factor.Item1, absoluteFileName, modelPath);
+                        else
+                            ChangeVariableValue(variable, value);
+                    }
+                    else if (File.Exists(value) && variable.Value is IModel)
+                        ReplaceModelFromFile(model, factor.Item1, value, null);
+                    else if (File.Exists(absolutePath) && variable.Value is IModel)
+                        ReplaceModelFromFile(model, factor.Item1, absolutePath, null);
                     else
                         ChangeVariableValue(variable, value);
                 }
-                else if (File.Exists(value) && variable.Value is IModel)
-                    ReplaceModelFromFile(model, factor.Item1, value, null);
-                else if (File.Exists(absolutePath) && variable.Value is IModel)
-                    ReplaceModelFromFile(model, factor.Item1, absolutePath, null);
-                else
-                    ChangeVariableValue(variable, value);
             }
         }
 
