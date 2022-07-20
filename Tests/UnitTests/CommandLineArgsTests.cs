@@ -115,13 +115,11 @@ namespace UnitTests
             Assert.AreEqual(clock.EndDate.Year, end.Year);
             Assert.AreEqual(clock.EndDate.DayOfYear, end.DayOfYear);
 
-            // These changes should not affect the clock in simulation 2.
-            start = new DateTime(2003, 11, 15);
-            end = new DateTime(2003, 11, 15);
+            // Clock 2 should have been changed as well.
             Assert.AreEqual(clock2.StartDate.Year, start.Year);
             Assert.AreEqual(clock2.StartDate.DayOfYear, start.DayOfYear);
-            Assert.AreEqual(clock2.EndDate.Year, end.Year);
-            Assert.AreEqual(clock2.EndDate.DayOfYear, end.DayOfYear);
+            Assert.AreEqual(clock2.EndDate.Year, 2003);
+            Assert.AreEqual(clock2.EndDate.DayOfYear, 319);
 
             // Sim2 should have been renamed to SimulationVariant35
             Assert.AreEqual(sim2.Name, "SimulationVariant35");

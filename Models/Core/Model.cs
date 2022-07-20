@@ -532,7 +532,7 @@
                     string modelName = path.Substring(1, posCloseBracket - 1);
                     path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
                     matches = FindAllInScope(modelName);
-                    if (matches == null)
+                    if (!matches.Any())
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
@@ -547,9 +547,14 @@
 
             foreach (Model match in matches)
             {
-                var variable = Locator().GetInternal(path, match, ignoreCase);
-                if (variable != null)
-                    yield return variable;
+                if (string.IsNullOrEmpty(path))
+                    yield return new VariableObject(match);
+                else
+                {
+                    var variable = Locator().GetInternal(path, match, ignoreCase);
+                    if (variable != null)
+                        yield return variable;
+                }
             }
         }
 
