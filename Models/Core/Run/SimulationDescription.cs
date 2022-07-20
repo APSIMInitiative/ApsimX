@@ -232,7 +232,7 @@
                 IModel replacements = topLevelModel.FindChild<Folder>("Replacements");
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (IModel replacement in replacements.Children)
+                    foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
                     {
                         var modelReplacement = new ModelReplacement(replacement.Name, typeToFind:null, replacement);
                         replacementsToApply.Insert(0, modelReplacement);

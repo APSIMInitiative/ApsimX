@@ -210,12 +210,12 @@ namespace Models
             // renamed to w1 and w2, respectively.
             var weather3 = sim.Children[5] as Models.Climate.Weather;
             Assert.NotNull(weather3);
-            Assert.AreEqual("w1", weather3.Name);
+            Assert.AreEqual("Weather3", weather3.Name);
             Assert.AreEqual("w1.met", weather3.FileName);
 
             var weather4 = sim.Children[6] as Models.Climate.Weather;
             Assert.NotNull(weather4);
-            Assert.AreEqual("w2", weather4.Name);
+            Assert.AreEqual("Weather4", weather4.Name);
             Assert.AreEqual("w2.met", weather4.FileName);
 
             // The edit file operation should have changed RUE value to 0.4.

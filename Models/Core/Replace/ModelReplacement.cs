@@ -37,9 +37,9 @@
         /// <param name="parent">The parent model to search under for models to replace.</param>
         public void Replace(IModel parent)
         {
-            string path = $"[{modelNameToFind}]";  // Search for models using name and type.
+            string path = modelNameToFind;    // Search for models using name and type.
             if (modelTypeToFind == null)
-                path = $"[Name={modelNameToFind}]";     // Search only by name.
+                path = $"Name={modelNameToFind}";     // Search only by name.
             Overrides.Apply(parent, new (string, object)[] { (path, replacement) });
         }
 

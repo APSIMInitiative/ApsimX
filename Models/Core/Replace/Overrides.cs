@@ -39,13 +39,14 @@ namespace Models.Core.Replace
             foreach (var factor in factors)
             {
                 IEnumerable<IVariable> variables = null;
-                if (factor.Item1.StartsWith("[Name="))
+                if (factor.Item1.StartsWith("Name="))
                 {
-                    string name = factor.Item1.Replace("[Name=", "").TrimEnd(']');
+                    string name = factor.Item1.Replace("Name=", "");
                     variables = model.FindAllInScope(name).Select(m => new VariableObject(m));
                 }
                 else
                     variables = model.FindAllByPath(factor.Item1);
+
                 if (!variables.Any())
                     throw new Exception($"Invalid path: {factor.Item1}");
 
@@ -80,7 +81,7 @@ namespace Models.Core.Replace
                         ReplaceModelFromFile(model, factor.Item1, value, null);
                     else if (File.Exists(absolutePath) && variable.Value is IModel)
                         ReplaceModelFromFile(model, factor.Item1, absolutePath, null);
-                    else if (variable.Value is IModel && !factor.Item1.Contains('.'))
+                    else if (variable.Value is IModel)
                         Structure.Replace(variable.Value as IModel, factor.Item2 as IModel);
                     else
                         ChangeVariableValue(variable, value);

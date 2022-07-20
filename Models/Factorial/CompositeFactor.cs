@@ -72,7 +72,7 @@
             {
                 if (allValues[i] is IModel)
                 {
-                    string modelNameOrType = allPaths[i].Replace("[", "").Replace("]", "");
+                    string modelNameOrType = allPaths[i];
                     simulationDescription.AddOverride(new ModelReplacement(modelNameOrType, modelNameOrType, allValues[i] as IModel));
                 }
                 else
