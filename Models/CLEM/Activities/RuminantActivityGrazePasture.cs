@@ -10,6 +10,7 @@ using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM.Activities
 {
@@ -35,11 +36,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Link]
         public Clock Clock = null;
-
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        [NonSerialized]
-        private IEvent events = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -78,6 +74,12 @@ namespace Models.CLEM.Activities
             //Create list of children by breed
             Guid currentUid = UniqueID;
             List<IModel> grazePastureList = new List<IModel>();
+
+            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+            string transCat = "";
+            if (!buildTransactionFromTree)
+                transCat = TransactionCategory;
+
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
@@ -92,7 +94,7 @@ namespace Models.CLEM.Activities
                     Clock = this.Clock,
                     Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
                     OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
-                    TransactionCategory = TransactionCategory
+                    TransactionCategory = transCat
                 };
                 currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
                 grazePastureHerd.UniqueID = currentUid;
@@ -100,10 +102,9 @@ namespace Models.CLEM.Activities
                 grazePastureHerd.SetLinkedModels(Resources);
                 grazePastureHerd.InitialiseHerd(true, true);
                 Children.Add(grazePastureHerd);
-                grazePastureList.Add(grazePastureHerd);
+                Structure.Add(grazePastureHerd, this);
             }
-            if(grazePastureList.Any())
-                events.ConnectEvents(grazePastureList);
+            this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
 
         /// <inheritdoc/>

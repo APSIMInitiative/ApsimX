@@ -130,6 +130,22 @@ namespace Models.CLEM.Activities
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMValidate")]
+        private void OnFinalInitialise(object sender, EventArgs e)
+        {
+            // if this is the last of newly added models that will be set to hidden
+            // reset the simulation subscriptions to correct the new order before running the simulation.
+            if(IsHidden)
+            {
+                Events events = new Events(FindAncestor<Simulation>());
+                //events.DisconnectEvents();
+                events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
+            }
+        }
+
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -169,7 +185,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // if this is the first time of this request not being partially managerd by a RuminantActivityGradePaddock work independently
+            // if this is the first time of this request not being partially managed by a RuminantActivityGradePaddock work independently
             if (lastResourceRequest != Clock.Today)
             {
                 ResourceRequestList = new List<ResourceRequest>();
@@ -215,14 +231,15 @@ namespace Models.CLEM.Activities
                     {
                         pastureRequest = new ResourceRequest()
                         {
-                            AllowTransmutation = true,
+                            AllowTransmutation = false,
                             Required = totalPastureRequired,
                             Resource = GrazeFoodStoreModel,
                             ResourceType = typeof(GrazeFoodStore),
                             ResourceTypeName = this.GrazeFoodStoreModel.Name,
                             ActivityModel = this,
                             AdditionalDetails = this,
-                            Category = TransactionCategory
+                            Category = TransactionCategory,
+                            RelatesToResource = this.RuminantTypeModel.Name
                         };
                         ResourceRequestList.Add(pastureRequest);
                         foodDetails = new FoodResourcePacket()
@@ -290,13 +307,22 @@ namespace Models.CLEM.Activities
                             ResourceTypeName = GrazeFoodStoreModel.Name
                         };
                     }
+                    if (MathUtilities.IsLessThan(shortfall, 1))
+                    {
+                        this.Status = ActivityStatus.Partial;
+                        shortfallRequest.ShortfallStatus = "BelowRequired";
+                    }
+                    else
+                    {
+                        shortfallRequest.Required = totalPastureDesired;
+                        shortfallRequest.ShortfallStatus = "BelowDesired";
+                    }
+
                     ActivitiesHolder.ReportActivityShortfall(new ResourceRequestEventArgs() { Request = shortfallRequest });
 
                     // only allow the stop error if this is a shortfall in required not desired.
                     if (MathUtilities.IsLessThan(Math.Round(shortfall, 4), 1) && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                         throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in {Clock.Today:dd\\yyyy}");
-
-                    this.Status = ActivityStatus.Partial;
                 }
             }
         }
