@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Soils;
     using Models.Soils.Nutrients;
     using Models.Surface;
@@ -170,6 +171,8 @@
                     }
                 }
             };
+            Resource.Instance.Replace(zone);
+            FileFormat.InitialiseModel(zone, (e) => throw e);
 
             zone.ParentAllDescendants();
             foreach (IModel model in zone.FindAllDescendants())

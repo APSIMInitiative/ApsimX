@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Replace;
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;

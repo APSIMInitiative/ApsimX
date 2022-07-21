@@ -753,8 +753,7 @@
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         [ContextMenu(MenuName = "Show Model Structure",
-                     IsToggle = true,
-                     AppliesTo = new Type[] { typeof(ModelCollectionFromResource) })]
+                     IsToggle = true)]
         public void ShowModelStructure(object sender, EventArgs e)
         {
             try
@@ -839,7 +838,7 @@
                     return;
                 
                 // Don't allow users to change read-only status of released models.
-                if (model is ModelCollectionFromResource || model.FindAncestor<ModelCollectionFromResource>() != null)
+                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
                     return;
 
                 bool readOnly = !model.ReadOnly;

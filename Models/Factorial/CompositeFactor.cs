@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Replace;
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
@@ -46,14 +47,6 @@
                 Name = value.ToString();
         }
 
-        /// <summary>Constructor</summary>
-        public CompositeFactor(Factor parentFactor, List<string> paths, List<object> values)
-        {
-            Parent = parentFactor;
-            Paths = paths;
-            Values = values;
-        }
-
         /// <summary>Gets or sets the specification to create overides for a simulation.</summary>
         public List<string> Specifications { get; set; }
 
@@ -78,7 +71,10 @@
             for (int i = 0; i != allPaths.Count; i++)
             {
                 if (allValues[i] is IModel)
-                    simulationDescription.AddOverride(new ModelReplacement(allPaths[i], allValues[i] as IModel));
+                {
+                    string modelNameOrType = allPaths[i].Replace("[", "").Replace("]", "");
+                    simulationDescription.AddOverride(new ModelReplacement(modelNameOrType, modelNameOrType, allValues[i] as IModel));
+                }
                 else
                     simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
             }

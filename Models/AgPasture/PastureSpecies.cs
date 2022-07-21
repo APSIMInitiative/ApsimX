@@ -21,7 +21,7 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IHasDamageableBiomass
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IHasDamageableBiomass
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 

@@ -26,7 +26,7 @@ namespace Models.PMF.OilPalm
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class OilPalm : ModelCollectionFromResource, IPlant, ICanopy, IUptake
+    public class OilPalm : Model, IPlant, ICanopy, IUptake
     {
         #region Canopy interface
         /// <summary>Canopy type</summary>

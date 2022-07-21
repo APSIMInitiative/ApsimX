@@ -162,8 +162,7 @@
                     this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
                     IModel child;
-                    if (!(selectedModelType.ModelType == typeof(ModelCollectionFromResource)) && 
-                        selectedModelType.ResourceString != null &&
+                    if (!string.IsNullOrEmpty(selectedModelType.ResourceString) &&
                         selectedModelType.ResourceString.Contains('.'))
                     {
                         var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
@@ -176,8 +175,7 @@
                     { 
                         child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
                         child.Name = selectedModelType.ModelName;
-                        if (child is ModelCollectionFromResource resource)
-                            resource.ResourceName = selectedModelType.ResourceString;
+                        child.ResourceName = selectedModelType.ResourceString;
                     }
 
                     var command = new AddModelCommand(this.model, child, explorerPresenter.GetNodeDescription);
