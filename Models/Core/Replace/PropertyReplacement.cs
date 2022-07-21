@@ -6,7 +6,7 @@
     /// This class encapsulates an instruction to replace a property value.
     /// </summary>
     [Serializable]
-    public class PropertyReplacement : IReplacement
+    public class PropertyReplacement
     {
         /// <summary>
         /// Model path to use to find the model to replace. If null, then

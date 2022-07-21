@@ -23,7 +23,7 @@
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<IReplacement> replacementsToApply = new List<IReplacement>();
+        private List<PropertyReplacement> replacementsToApply = new List<PropertyReplacement>();
 
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
@@ -92,7 +92,7 @@
         /// path, with a replacement model.
         /// </summary>
         /// <param name="replacement">An instance of a replacement that needs to be applied when simulation is run.</param>
-        public void AddOverride(IReplacement replacement)
+        public void AddOverride(PropertyReplacement replacement)
         {
             replacementsToApply.Add(replacement);
         }
@@ -122,9 +122,9 @@
         /// </summary>
         /// <param name="cancelToken"></param>
         /// <param name="changes"></param>
-        public void Run(CancellationTokenSource cancelToken, IEnumerable<IReplacement> changes)
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<PropertyReplacement> changes)
         {
-            foreach (IReplacement change in changes)
+            foreach (PropertyReplacement change in changes)
                 change.Replace(SimulationToRun);
             Run(cancelToken);
         }
@@ -234,7 +234,7 @@
                 {
                     foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
                     {
-                        var modelReplacement = new ModelReplacement(replacement.Name, typeToFind:null, replacement);
+                        var modelReplacement = new PropertyReplacement($"Name={replacement.Name}", replacement);
                         replacementsToApply.Insert(0, modelReplacement);
                     }
                 }

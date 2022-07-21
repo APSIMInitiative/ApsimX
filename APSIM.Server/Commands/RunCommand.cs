@@ -21,13 +21,13 @@ namespace APSIM.Server.Commands
         private bool runTests;
         private IEnumerable<string> simulationNamesToRun;
         private int numberOfProcessors;
-        private IEnumerable<IReplacement> changes;
+        private IEnumerable<PropertyReplacement> changes;
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
         /// </summary>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(IEnumerable<IReplacement> changes)
+        public RunCommand(IEnumerable<PropertyReplacement> changes)
         {
             runPostSimulationTools = true;
             runTests = true;
@@ -44,7 +44,7 @@ namespace APSIM.Server.Commands
         /// <param name="numProcessors">Max number of processors to use.</param>
         /// <param name="simulationNames">Simulation names to run.</param>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<IReplacement> changes, IEnumerable<string> simulationNames)
+        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<PropertyReplacement> changes, IEnumerable<string> simulationNames)
         {
             runPostSimulationTools = runPostSimTools;
             this.runTests = runTests;

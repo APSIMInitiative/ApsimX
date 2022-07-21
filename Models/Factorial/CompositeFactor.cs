@@ -69,15 +69,7 @@
 
             // Add a simulation override for each path / value combination.
             for (int i = 0; i != allPaths.Count; i++)
-            {
-                if (allValues[i] is IModel)
-                {
-                    string modelNameOrType = allPaths[i];
-                    simulationDescription.AddOverride(new ModelReplacement(modelNameOrType, modelNameOrType, allValues[i] as IModel));
-                }
-                else
-                    simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
-            }
+                simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
 
             if (!(Parent is Factors))
             {

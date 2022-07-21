@@ -79,10 +79,10 @@ namespace UnitTests
         [Test]
         public void TestReadRunCommand()
         {
-            IEnumerable<IReplacement> replacements = new IReplacement[]
+            IEnumerable<PropertyReplacement> replacements = new PropertyReplacement[]
             {
                 new PropertyReplacement("path", "value"),
-                new ModelReplacement("x", "x", new MockModel())
+                new PropertyReplacement("x", new MockModel())
             };
             ICommand target = new RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
@@ -98,9 +98,9 @@ namespace UnitTests
         [Test]
         public void TestWriteRunCommand()
         {
-            IEnumerable<IReplacement> replacements = new IReplacement[]
+            IEnumerable<PropertyReplacement> replacements = new PropertyReplacement[]
             {
-                new ModelReplacement("f", "f", new MockModel()),
+                new PropertyReplacement("f", new MockModel()),
                 new PropertyReplacement("path to a model", "replacement value")
             };
             IEnumerable<string> sims = new[] { "one simulation" };

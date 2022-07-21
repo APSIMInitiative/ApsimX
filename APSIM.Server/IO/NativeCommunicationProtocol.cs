@@ -163,9 +163,9 @@ namespace APSIM.Server.IO
             return new ReadCommand(table, parameters);
         }
 
-        public IEnumerable<IReplacement> ReadChanges()
+        public IEnumerable<PropertyReplacement> ReadChanges()
         {
-            List<IReplacement> replacements = new List<IReplacement>();
+            List<PropertyReplacement> replacements = new List<PropertyReplacement>();
 
             // For now, we assume the same parameter changes are applied to all simulations.
             object input;

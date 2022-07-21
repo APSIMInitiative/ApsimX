@@ -14,7 +14,7 @@ namespace APSIM.Server
     /// </summary>
     public class ServerJobRunner : JobRunner, IDisposable
     {
-        public IEnumerable<IReplacement> Replacements { get; set; } = Enumerable.Empty<IReplacement>();
+        public IEnumerable<PropertyReplacement> Replacements { get; set; } = Enumerable.Empty<PropertyReplacement>();
         private List<(IRunnable, IJobManager)> jobs = new List<(IRunnable, IJobManager)>();
 
         /// <summary>
