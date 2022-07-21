@@ -122,11 +122,9 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            int lossModifier = 1;
+            int lossModifier = -1;
             if (ReportLossesAsNegative)
-            {
-                lossModifier = -1;
-            }
+                lossModifier = 1;
 
             // check if running from a CLEM.Market
             bool market = (FindAncestor<Zone>().GetType() == typeof(Market));
@@ -239,7 +237,7 @@ namespace Models.CLEM.Reporting
                             {
                                 string colname = $"Category{i}";
                                 string[] parts = TransactionCategoryLevelColumnNames.Split(',').Distinct().ToArray();
-                                if (parts.Length >= i)
+                                if (parts.Length >= i && parts[i - 1].Trim() != "")
                                     colname = parts[i - 1].Replace(" ","");
                                 variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.CategoryByLevel({i}) as {colname}");
                             }
