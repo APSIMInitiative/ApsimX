@@ -45,7 +45,7 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         [XmlIgnore]
-        public string Measure
+        public virtual string Measure
         {
             get { return ""; }
             set {; }
