@@ -44,6 +44,15 @@ namespace Models.CLEM.Groupings
         public double Value { get; set; }
 
         /// <summary>
+        /// Payment style
+        /// </summary>
+        public override string Measure
+        {
+            get { return "Feed provided"; }
+            set {; }
+        }
+
+        /// <summary>
         /// Get the value for the current month
         /// </summary>
         [JsonIgnore]
@@ -142,8 +151,8 @@ namespace Models.CLEM.Groupings
                 Resource = feedActivityParent.FeedType,
                 ResourceType = typeof(AnimalFoodStore),
                 ResourceTypeName = feedActivityParent.FeedTypeName,
-                ActivityModel = this,
-                Category = TransactionCategory,
+                ActivityModel = Parent as CLEMActivityBase,
+                Category = (Parent as CLEMActivityBase).TransactionCategory,
                 RelatesToResource = feedActivityParent.PredictedHerdName,
                 AdditionalDetails = foodPacket
             };
