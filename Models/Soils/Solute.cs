@@ -217,11 +217,9 @@ namespace Models.Soils
                 if (FIP != null)
                     FIP = SoilUtilities.MapConcentration(FIP, Thickness, thickness, 0.2);
 
-                double[] ppm = InitialValues;
-                if (InitialValuesUnits == UnitsEnum.kgha)
-                    ppm = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
-                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, defaultValue);
                 InitialValuesUnits = Solute.UnitsEnum.ppm;
+                double[] ppm = InitialValues;
+                InitialValues = SoilUtilities.MapConcentration(ppm, Thickness, thickness, defaultValue);
                 Thickness = thickness;
             }
         }
