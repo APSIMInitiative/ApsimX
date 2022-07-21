@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
                 case "RuminantFeedGroupMonthly":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        measures: new List<string>()
+                        measures: new List<string>() { "Feed provided" }
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
                 switch (valueToSupply.Key.type)
                 {
                     case "RuminantFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = 0;
+                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
                         break;
                     case "LabourRequirement":
                     case "ActivityFee":
