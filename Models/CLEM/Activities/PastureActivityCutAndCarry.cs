@@ -243,7 +243,7 @@ namespace Models.CLEM.Activities
                     DMD = pasture.EstimateDMD(pasture.Nitrogen)
                 };
 
-                foodstore.Add(packet, this, "", TransactionCategory);
+                foodstore.Add(packet, this, null, TransactionCategory);
                 limiter.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }

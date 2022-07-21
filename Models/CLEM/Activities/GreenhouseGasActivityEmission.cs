@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
             }
 
             if (emissionStore != null && MathUtilities.IsPositive(amountOfEmission))
-                emissionStore.Add(amountOfEmission, this.Parent as CLEMModel, "", TransactionCategory);
+                emissionStore.Add(amountOfEmission, this.Parent as CLEMModel, null, TransactionCategory);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

@@ -503,7 +503,8 @@ namespace Models.CLEM
                         }
                         else
                         {
-                            htmlWriter.Write((item as CLEMModel).GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
+                            if(item is CLEMModel)
+                                htmlWriter.Write((item as CLEMModel).GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
                         }
                     }
                     if(!models.Any() && MissingText!="")

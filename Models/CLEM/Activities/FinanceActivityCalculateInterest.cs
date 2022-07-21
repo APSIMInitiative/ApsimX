@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
                     {
                         if (accnt.InterestRatePaid > 0)
                         {
-                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "", "Interest");
+                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, null, "Interest");
                             SetStatusSuccessOrPartial();
                         }
                     }

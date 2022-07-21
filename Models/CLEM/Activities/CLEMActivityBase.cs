@@ -272,17 +272,19 @@ namespace Models.CLEM.Activities
             if (model.parentZone is null)
                 model.parentZone = model.FindAncestor<ZoneCLEM>();
 
-            if (model.parentZone.BuildTransactionCategoryFromTree)
+            if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
             {
-                transCatsList = model.FindAllAncestors<CLEMActivityBase>().Select(a => model.parentZone.UseModelNameAsTransactionCategory ? ((a.TransactionCategory == "_") ? "" : a.Name) : a.TransactionCategory).Reverse().ToList();
+                transCatsList.Add((model.Parent as CLEMActivityBase).TransactionCategory);
+                //transCatsList = model.FindAllAncestors<CLEMActivityBase>().Where(a => a != model.Parent).Select(a => model.parentZone.UseModelNameAsTransactionCategory ? ((a.TransactionCategory == "_") ? "" : a.Name) : a.TransactionCategory).Reverse().ToList();
             }
+
             transCatsList.Add(model.parentZone.UseModelNameAsTransactionCategory ? ((model.TransactionCategory == "_") ? "" : model.Name) : model.TransactionCategory);
             transCatsList = transCatsList.Where(a => a != "").ToList();
 
             string transCat = (transCatsList.Any()) ? String.Join(".", transCatsList) : "";
 
             if (transCat.Contains("[RelatesTo]"))
-                transCat.Replace("[RelatesTo]", relatesToValue);
+                transCat.Replace("[RelatesTo]", relatesToValue??"");
 
             return transCat;
         }
@@ -619,7 +621,7 @@ namespace Models.CLEM.Activities
                                         }
                                         else
                                         {
-                                            if((companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
+                                            if(companionChild is CLEMActivityBase && (companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
                                                 companionChild.PerformTasksForTimestep(unitsProvided);
                                         }
                                     }

@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
             // receive payment for labour if bank type exists
             if (bankType != null)
             {
-                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "", TransactionCategory);
+                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, null, TransactionCategory);
                 SetStatusSuccessOrPartial(ResourceRequestList.Where(a => a.ActivityModel is LabourRequirement).Where(a => a.Available < a.Provided).Any());
             }
         }

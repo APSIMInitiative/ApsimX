@@ -123,7 +123,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (OpeningBalance > 0)
-                Add(OpeningBalance, this, "", "Opening balance");
+                Add(OpeningBalance, null, null, "Opening balance");
         }
 
         #region Transactions
