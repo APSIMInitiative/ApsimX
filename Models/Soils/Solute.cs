@@ -41,6 +41,12 @@ namespace Models.Soils
             kgha
         }
 
+        /// <summary>
+        /// Backing store for InitialValuesUnits property
+        /// </summary>
+        [JsonIgnore]
+        private UnitsEnum initialValuesUnits; 
+
         /// <summary>Default constructor.</summary>
         public Solute() { }
 
@@ -70,7 +76,23 @@ namespace Models.Soils
         public double[] InitialValues { get; set; }
 
         /// <summary>Units of the Initial values.</summary>
-        public UnitsEnum InitialValuesUnits { get; set; }
+        public UnitsEnum InitialValuesUnits
+        {
+            get => initialValuesUnits;
+            set
+            { 
+                // The check for a null Parent here is to ensure we attempt this conversion only
+                // after deserialization is complete.
+                if (value != initialValuesUnits && InitialValues != null && Parent != null)
+                {
+                    if (value == UnitsEnum.kgha)
+                        InitialValues = SoilUtilities.ppm2kgha(Thickness, SoluteBD, InitialValues);
+                    else if (value == UnitsEnum.ppm)
+                        InitialValues = SoilUtilities.kgha2ppm(Thickness, SoluteBD, InitialValues);
+                }
+                initialValuesUnits = value;
+            }
+        }
 
         /// <summary>Concentration of solute in water table (ppm).</summary>
         [Description("For SWIM: Concentration of solute in water table (ppm).")]

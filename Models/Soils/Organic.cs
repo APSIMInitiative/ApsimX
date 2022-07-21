@@ -28,6 +28,12 @@
             WalkleyBlack
         }
 
+        /// <summary>
+        /// Backing store for CarbonUnits property
+        /// </summary>
+        [JsonIgnore]
+        private CarbonUnitsEnum carbonUnits;
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
         [Units("mm")]
@@ -61,7 +67,23 @@
         public double[] Carbon { get; set; }
 
         /// <summary>The units of organic carbon.</summary>
-        public CarbonUnitsEnum CarbonUnits { get; set; }
+        public CarbonUnitsEnum CarbonUnits
+        {
+            get => carbonUnits;
+            set
+            {
+                // The check for a null Parent here is to ensure we attempt this conversion only
+                // after deserialization is complete.
+                if (value != carbonUnits && Carbon != null && Parent != null)
+                {
+                    if (value == CarbonUnitsEnum.Total)
+                        Carbon = SoilUtilities.OCWalkleyBlackToTotal(Carbon);
+                    else if (value == CarbonUnitsEnum.WalkleyBlack)
+                        Carbon = SoilUtilities.OCTotalToWalkleyBlack(Carbon);
+                }
+                carbonUnits = value;
+            }
+        }
 
         /// <summary>Carbon:nitrogen ratio.</summary>
         [Summary]
@@ -122,11 +144,7 @@
         public void Standardise(double[] targetThickness)
         {
             SetThickness(targetThickness);
-            if (CarbonUnits == CarbonUnitsEnum.WalkleyBlack)
-            {
-                Carbon = SoilUtilities.OCWalkleyBlackToTotal(Carbon);
-                CarbonUnits = CarbonUnitsEnum.Total;
-            }
+            CarbonUnits = CarbonUnitsEnum.Total;
 
             if (!MathUtilities.ValuesInArray(Carbon))
                 Carbon = null;

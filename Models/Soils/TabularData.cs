@@ -138,6 +138,7 @@ namespace Models.Soils
                 get => units;
                 set
                 {
+                    units = value;
                     Properties.First().Units = value;
                 }
             }

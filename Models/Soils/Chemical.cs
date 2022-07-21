@@ -27,6 +27,12 @@
             CaCl2
         }
 
+        /// <summary>
+        /// Backing store for PHUnits property
+        /// </summary>
+        [JsonIgnore]
+        private PHUnitsEnum pHUnits;
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
         [Units("mm")]
@@ -53,7 +59,23 @@
         public double[] PH { get; set; }
 
         /// <summary>The units of pH.</summary>
-        public PHUnitsEnum PHUnits { get; set; }
+        public PHUnitsEnum PHUnits
+        {
+            get => pHUnits;
+            set
+            {
+                // The check for a null Parent here is to ensure we attempt this conversion only
+                // after deserialization is complete.
+                if (value != pHUnits && PH != null && Parent != null)
+                {
+                    if (value == PHUnitsEnum.Water)
+                        PH = SoilUtilities.PHCaCl2ToWater(PH);
+                    else if (value == PHUnitsEnum.CaCl2)
+                        PH = SoilUtilities.PHWaterToCaCl2(PH);
+                }
+                pHUnits = value;
+            }
+        }
 
         /// <summary>Gets or sets the ec.</summary>
         [Summary]
@@ -132,11 +154,7 @@
         public void Standardise(double[] targetThickness)
         {
             SetThickness(targetThickness);
-            if (PHUnits == PHUnitsEnum.CaCl2)
-            {
-                PH = SoilUtilities.PHCaCl2ToWater(PH);
-                PHUnits = PHUnitsEnum.Water;
-            }
+            PHUnits = PHUnitsEnum.Water;
 
             EC = MathUtilities.FillMissingValues(EC, Thickness.Length, 0);
             ESP = MathUtilities.FillMissingValues(ESP, Thickness.Length, 0);
