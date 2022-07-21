@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 155; } }
+        public static int LatestVersion { get { return 154; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4567,29 +4567,6 @@ namespace Models.Core.ApsimFile
                 JsonUtilities.ReplaceManagerCode(manager, ".psi", ".PSI");
         }
 
-        /// <summary>
-        /// Disable invalid Replacement models.
-        /// </summary>
-        /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion155(JObject root, string fileName)
-        {
-            foreach (JObject replacements in JsonUtilities.Children(root)
-                                                          .Where(t => t["Name"].ToString().Equals("Replacements", StringComparison.InvariantCultureIgnoreCase)))
-            {
-                foreach (JObject child in JsonUtilities.Children(replacements))
-                {
-                    string name = child["Name"].ToString();
-                    bool foundMatch = JsonUtilities.ChildrenRecursively(root)
-                                                   .Where(c => string.Equals(JsonUtilities.Name(c), name, StringComparison.InvariantCultureIgnoreCase))
-                                                   .Skip(1)  // Skip over the child under replacements.
-                                                   .Any();
-                    if (!foundMatch)
-                        child["Enabled"] = false;
-                }
-            }
-        }
-		
         /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient
         /// </summary>

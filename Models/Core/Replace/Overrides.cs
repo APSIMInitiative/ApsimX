@@ -41,14 +41,16 @@ namespace Models.Core.Replace
                 IEnumerable<IVariable> variables = null;
                 if (factor.Item1.StartsWith("Name="))
                 {
+                    // Replacements uses this.
                     string name = factor.Item1.Replace("Name=", "");
                     variables = model.FindAllInScope(name).Select(m => new VariableObject(m));
                 }
                 else
+                {
                     variables = model.FindAllByPath(factor.Item1);
-
-                if (!variables.Any())
-                    throw new Exception($"Invalid path: {factor.Item1}");
+                    if (!variables.Any())
+                        throw new Exception($"Invalid path: {factor.Item1}");
+                }
 
                 foreach (IVariable variable in variables)
                 {

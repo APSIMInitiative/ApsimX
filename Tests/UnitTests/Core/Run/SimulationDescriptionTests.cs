@@ -139,7 +139,7 @@
 
         /// <summary>Ensure a model replacement that has a name that doesn't match won't replace anything.</summary>
         [Test]
-        public void EnsureReplacementWithInvalidNameThrows()
+        public void EnsureReplacementWithInvalidNameDoesntMatch()
         {
             var simulations = new Simulations()
             {
@@ -179,7 +179,11 @@
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
 
-            Assert.Throws<Exception>(() => simulationDescription.ToSimulation());
+            var newSim = simulationDescription.ToSimulation();
+            var weather = newSim.Children[0] as MockWeather;
+
+            // Name ('Dummy name') didn't match so property should still be 1.
+            Assert.AreEqual(weather.MaxT, 1);
         }
 
         /// <summary>
