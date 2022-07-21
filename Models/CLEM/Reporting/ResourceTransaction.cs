@@ -78,10 +78,11 @@ namespace Models.CLEM
                 string[] parts = Category.Split('.');
                 if (parts.Length >= level)
                 {
+                    if (parts[level - 1].Contains("@RelatesTo"))
+                        return parts[level - 1].Replace("@RelatesTo", RelatesToResource);
                     return parts[level - 1];
                 }
-                else
-                    return "";
+                return "";
             }
         }
 
@@ -93,7 +94,7 @@ namespace Models.CLEM
         public double AmountModifiedForLoss(bool lossesAsNegative)
         {
             double amount = Amount;
-            if (lossesAsNegative && TransactionType == TransactionType.Loss)
+            if (!lossesAsNegative && TransactionType == TransactionType.Loss)
             {
                 amount *= -1;
             }
@@ -124,7 +125,7 @@ namespace Models.CLEM
                         break;
                     case "loss":
                         amount = this.Loss;
-                        if (reportLossesAsNegative)
+                        if (!reportLossesAsNegative)
                         {
                             amount *= -1;
                         }
@@ -148,7 +149,7 @@ namespace Models.CLEM
         {
             if (ResourceType != null)
             {
-                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?-1:1);
+                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?1:-1);
                 return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
             }
             return null;
