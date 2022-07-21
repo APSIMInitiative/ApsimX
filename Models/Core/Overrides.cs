@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.Core.Replace
+namespace Models.Core
 {
     /// <summary>
     /// Encapsulates the /Edit command-line switch which allows users

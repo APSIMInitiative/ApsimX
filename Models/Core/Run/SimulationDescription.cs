@@ -1,7 +1,6 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.JobRunning;
-    using Models.Core.Replace;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -23,7 +22,7 @@
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<PropertyReplacement> replacementsToApply = new List<PropertyReplacement>();
+        private List<(string name, object value)> replacementsToApply = new List<(string name, object value)>();
 
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
@@ -88,16 +87,6 @@
         public string Status => SimulationToRun?.Status;
 
         /// <summary>
-        /// Add an override to replace an existing model, as specified by the
-        /// path, with a replacement model.
-        /// </summary>
-        /// <param name="replacement">An instance of a replacement that needs to be applied when simulation is run.</param>
-        public void AddOverride(PropertyReplacement replacement)
-        {
-            replacementsToApply.Add(replacement);
-        }
-
-        /// <summary>
         /// Add a property override to replace an existing value, as specified by a
         /// path.
         /// </summary>
@@ -105,7 +94,7 @@
         /// <param name="replacement">The model to use as the replacement.</param>
         public void AddOverride(string path, object replacement)
         {
-            replacementsToApply.Add(new PropertyReplacement(path, replacement));
+            replacementsToApply.Add((path, replacement));
         }
 
         /// <summary>
@@ -122,10 +111,9 @@
         /// </summary>
         /// <param name="cancelToken"></param>
         /// <param name="changes"></param>
-        public void Run(CancellationTokenSource cancelToken, IEnumerable<PropertyReplacement> changes)
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<(string name, object value)> changes)
         {
-            foreach (PropertyReplacement change in changes)
-                change.Replace(SimulationToRun);
+            Overrides.Apply(SimulationToRun, changes);
             Run(cancelToken);
         }
 
@@ -177,7 +165,7 @@
 
                 newSimulation.Parent = null;
                 newSimulation.ParentAllDescendants();
-                replacementsToApply.ForEach(r => r.Replace(newSimulation));
+                Overrides.Apply(newSimulation, replacementsToApply);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
@@ -233,10 +221,7 @@
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
-                    {
-                        var modelReplacement = new PropertyReplacement($"Name={replacement.Name}", replacement);
-                        replacementsToApply.Insert(0, modelReplacement);
-                    }
+                        replacementsToApply.Insert(0, ($"Name={replacement.Name}", replacement));
                 }
             }
         }

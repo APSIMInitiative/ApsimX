@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.Replace;
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
@@ -69,7 +68,7 @@
 
             // Add a simulation override for each path / value combination.
             for (int i = 0; i != allPaths.Count; i++)
-                simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
+                simulationDescription.AddOverride(allPaths[i], allValues[i]);
 
             if (!(Parent is Factors))
             {

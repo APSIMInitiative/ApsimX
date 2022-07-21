@@ -2,11 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Core.Replace;
 using Models.Core.Run;
-using Models.Factorial;
 using Models.Storage;
 
 namespace APSIM.Server.Commands
@@ -21,13 +17,13 @@ namespace APSIM.Server.Commands
         private bool runTests;
         private IEnumerable<string> simulationNamesToRun;
         private int numberOfProcessors;
-        private IEnumerable<PropertyReplacement> changes;
+        private IEnumerable<(string name, object value)> changes;
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
         /// </summary>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(IEnumerable<PropertyReplacement> changes)
+        public RunCommand(IEnumerable<(string name, object value)> changes)
         {
             runPostSimulationTools = true;
             runTests = true;
@@ -44,7 +40,7 @@ namespace APSIM.Server.Commands
         /// <param name="numProcessors">Max number of processors to use.</param>
         /// <param name="simulationNames">Simulation names to run.</param>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<PropertyReplacement> changes, IEnumerable<string> simulationNames)
+        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<(string name, object value)> changes, IEnumerable<string> simulationNames)
         {
             runPostSimulationTools = runPostSimTools;
             this.runTests = runTests;

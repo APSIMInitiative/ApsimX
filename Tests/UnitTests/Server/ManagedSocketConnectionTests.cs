@@ -1,18 +1,13 @@
-using System;
-using NUnit.Framework;
-using APSIM.Server.IO;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Linq;
-using System.Text;
-using System.IO.Pipes;
-using APSIM.Shared.Utilities;
 using APSIM.Server.Commands;
-using Models.Core.Run;
-using System.Collections.Generic;
+using APSIM.Server.IO;
+using APSIM.Shared.Utilities;
 using Models.Core;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Data;
-using Models.Core.Replace;
+using System.IO.Pipes;
+using System.Threading.Tasks;
 
 namespace UnitTests
 {
@@ -79,10 +74,10 @@ namespace UnitTests
         [Test]
         public void TestReadRunCommand()
         {
-            IEnumerable<PropertyReplacement> replacements = new PropertyReplacement[]
+            IEnumerable<(string name, object value)> replacements = new (string name, object value)[]
             {
-                new PropertyReplacement("path", "value"),
-                new PropertyReplacement("x", new MockModel())
+                ("path", "value"),
+                ("x", new MockModel())
             };
             ICommand target = new RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
@@ -98,10 +93,10 @@ namespace UnitTests
         [Test]
         public void TestWriteRunCommand()
         {
-            IEnumerable<PropertyReplacement> replacements = new PropertyReplacement[]
+            IEnumerable<(string name, object value)> replacements = new (string name, object value)[]
             {
-                new PropertyReplacement("f", new MockModel()),
-                new PropertyReplacement("path to a model", "replacement value")
+                ("f", new MockModel()),
+                ("path to a model", "replacement value")
             };
             IEnumerable<string> sims = new[] { "one simulation" };
             ICommand command = new RunCommand(false, true, 65536, replacements, sims);

@@ -1,8 +1,6 @@
 namespace Models.GrazPlan
 {
     using Models.Core;
-    using Models.Core.Replace;
-    using Models.Core.Run;
     using StdUnits;
     using System;
     using System.Collections.Generic;
@@ -150,7 +148,7 @@ namespace Models.GrazPlan
         /// <param name="name">Name of the animal parameter set.</param>
         /// <param name="animalTypeString">The animal type.</param>
         /// <param name="parameters">The parameter values to apply.</param>
-        public Genotype(string name, string animalTypeString, List<PropertyReplacement> parameters)
+        public Genotype(string name, string animalTypeString, List<(string name, object value)> parameters)
         {
             for (int i = 0; i < ConceiveSigs.Length; i++)
                 ConceiveSigs[i] = new double[2];
@@ -159,7 +157,7 @@ namespace Models.GrazPlan
                 Animal = GrazType.AnimalType.Cattle;
             else if (animalTypeString == "sheep")
                 Animal = GrazType.AnimalType.Sheep;
-            parameters.ForEach(o => o.Replace(this));
+            Overrides.Apply(this, parameters);
             PotFleeceWt = FleeceRatio * BreedSRW;
             SetPeakMilk(IntakeC[11] * BreedSRW);
         }
