@@ -44,6 +44,9 @@
         /// <summary> The weight of the organ</summary>
         public double Wt { get; private set; }
 
+        /// <summary> The Carbon of the organ</summary>
+        public double C { get; private set; }
+
         /// <summary> The Nitrogen of the organ</summary>
         public double N { get; private set; }
 
@@ -83,6 +86,7 @@
         {
             Weight = Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0,0,0);
             Wt = Weight.Total;
+            C = Carbon.Total;
             N = Nitrogen.Total;
             P = Phosphorus.Total;
             K = Potassium.Total;
