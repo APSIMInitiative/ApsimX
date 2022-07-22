@@ -76,9 +76,12 @@
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double tolerence = 1e-12;
 
-        private double startLiveWt { get; set; }
+        private double startLiveC { get; set; }
+        private double startDeadC { get; set; }
         private double startLiveN { get; set; }
-
+        private double startDeadN { get; set; }
+        private double startLiveWt { get; set; }
+        private double startDeadWt { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -117,6 +120,7 @@
         /// <summary>
         /// Object that contains root specific functionality.  Only present if the organ is representing a root
         /// </summary>
+        ///  [JsonIgnore]
         public RootNetwork RootNetworkObject { get; set; }
         
         /// <summary>The Carbon concentration of the organ</summary>
@@ -323,7 +327,11 @@
             if (parentPlant.IsEmerged)
             {
                 startLiveN = Live.N;
+                startDeadN = Dead.N;
+                startLiveC = Live.C;
+                startDeadC = Dead.C;
                 startLiveWt = Live.Wt;
+                startDeadWt = Dead.Wt;
                 senescenceRate = senescenceRateFunction.Value();
                 detachmentRate = detachmentRateFunction.Value();
                 setNconcs();
@@ -376,9 +384,13 @@
                     surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
+                // Remove respiration
                 Respired = new OrganNutrientsState(new NutrientPoolsState(respiration.CalculateLosses()),
                     new NutrientPoolsState(), new NutrientPoolsState(), new NutrientPoolsState(),Cconc);
-                //Live = new OrganNutrientsState(Live - Respired, Cconc);
+                Live = new OrganNutrientsState(Live - Respired, Cconc);
+
+                // Biomass removals
+                // Need to add
 
                 UpdateProperties();
 
@@ -387,15 +399,45 @@
                     RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved);
                     RootNetworkObject.GrowRootDepth();
                 }
-
-                double nBal = Math.Abs(Live.N - (startLiveN + Allocated.N - Senesced.N - ReAllocated.N - ReTranslocated.N));
-                if (nBal > tolerence)
-                    throw new Exception("N mass balance violation");
-                double cBal = Math.Abs(Live.Wt - (startLiveWt + Allocated.Wt - Senesced.Wt - ReAllocated.Wt - ReTranslocated.Wt));
-                if (cBal > tolerence)
-                    throw new Exception("mass balance violation");
-
             }
+        }
+
+        /// <summary>Called towards the end of proceedings each day</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoUpdate")]
+        protected void OnDoUpdate(object sender, EventArgs e)
+        {
+            if (parentPlant.IsEmerged)
+            {
+                checkMassBalance(startLiveN, startDeadN, "N");
+                checkMassBalance(startLiveC, startDeadC, "C");
+                checkMassBalance(startLiveWt, startDeadWt, "Wt");
+            }
+        }
+
+        private void checkMassBalance(double startLive, double startDead, string element)
+        {
+            double live = (double)(this.FindByPath("Live." + element).Value);
+            double dead = (double)(this.FindByPath("Dead." + element).Value);
+            double allocated = (double)(this.FindByPath("Allocated." + element).Value);
+            double senesced = (double)(this.FindByPath("Senesced." + element).Value);
+            double reAllocated = (double)(this.FindByPath("ReAllocated." + element).Value);
+            double reTranslocated = (double)(this.FindByPath("ReTranslocated." + element).Value);
+            double liveRemoved = (double)(this.FindByPath("LiveRemoved." + element).Value);
+            double deadRemoved = (double)(this.FindByPath("DeadRemoved." + element).Value);
+            double respired = (double)(this.FindByPath("Respired." + element).Value);
+            double detached = (double)(this.FindByPath("Detached." + element).Value);
+
+            double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
+                                                        - reTranslocated - liveRemoved - respired));
+            if (liveBal > tolerence)
+                throw new Exception(element + " mass balance violation in live biomass");
+
+            double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
+            if (deadBal > tolerence)
+                throw new Exception(element + " mass balance violation in dead biomass");
+
         }
 
         /// <summary>Called when crop is ending</summary>
