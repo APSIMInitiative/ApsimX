@@ -248,7 +248,7 @@
                                                                                      m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
                     }
                     else
-                        return null;
+                        return new Model[0];
                 }
             }
         }
