@@ -124,8 +124,15 @@
         {
             if (CellChanged != null)
             {
-                SaveGridToModel();
-                CellChanged.Invoke(sender, colIndex, rowIndex);
+                try
+                {
+                    SaveGridToModel();
+                    CellChanged.Invoke(sender, colIndex, rowIndex);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err.ToString());
+                }
             }
         }
 
