@@ -35,10 +35,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>Basic simulation.</summary>
-        private Simulations basicFile;
-
-        /// <summary>Test simulation.</summary>
-        private Simulations test;
+        private Simulations sims1;
 
         /// <summary>
         /// Path to a second .apsimx file which has a few weather
@@ -50,216 +47,189 @@ namespace UnitTests.Core
         [SetUp]
         public void Initialise()
         {
-            basicFile = Utilities.GetRunnableSim(useInMemoryDb: true);
+            sims1 = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2018, 1, 1)
+                            },
+                            new Zone()
+                            {
+                                Name = "Zone1",
+                                Area = 1,
+                                Children = new List<IModel>()
+                                {
+                                    new Models.Report()
+                                    {
+                                        Name = "Report1",
+                                        VariableNames = new string[]
+                                        {
+                                            "AA"
+                                        }
+                                    },
+                                    new Models.Report()
+                                    {
+                                        Name = "Report2",
+                                        VariableNames = new string[]
+                                        {
+                                            "BB"
+                                        }
+                                    }
+                                }
+                            },
+                            new Zone()
+                            {
+                                Name = "Zone2",
+                                Area = 1,
+                                Children = new List<IModel>()
+                                {
+                                    new Models.Report()
+                                    {
+                                        Name = "Report1",
+                                        VariableNames = new string[]
+                                        {
+                                            "CC"
+                                        }
+                                    },
+                                    new Models.Report()
+                                    {
+                                        Name = "Report3",
+                                        VariableNames = new string[]
+                                        {
+                                            "DD"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            sims1.ParentAllDescendants();
 
-            IModel simulation = basicFile.FindInScope<Simulation>();
-            IModel paddock = basicFile.FindInScope<Zone>();
-
-            // Use in memory db
-            DataStore dataStore = basicFile.FindInScope<DataStore>();
-            dataStore.UseInMemoryDB = true;
-
-            // Add a weather component.
-            Models.Climate.Weather weather = new Models.Climate.Weather();
-            weather.Name = "Weather";
-            weather.FileName = "asdf.met";
-            Structure.Add(weather, simulation);
-
-            // Add a second weather component.
-            Models.Climate.Weather weather2 = new Models.Climate.Weather();
-            weather2.FileName = "asdf.met";
-            weather2.Name = "Weather2";
-            Structure.Add(weather2, simulation);
-
-            // Add a third weather component.
-            Models.Climate.Weather weather3 = new Models.Climate.Weather();
-            weather3.FileName = "asdf.met";
-            weather3.Name = "Weather3";
-            Structure.Add(weather3, simulation);
-
-            // Add a third weather component.
-            Models.Climate.Weather weather4 = new Models.Climate.Weather();
-            weather4.FileName = "asdf.met";
-            weather4.Name = "Weather4";
-            Structure.Add(weather4, simulation);
-
-            // Add a report.
-            Models.Report report = new Models.Report();
-            report.Name = "Report";
-            Structure.Add(report, paddock);
-
-            // Add the wheat model.
-            string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
-            Plant wheat = FileFormat.ReadFromString<IModel>(json, e => throw e, false).Children[0] as Plant;
-            wheat.ResourceName = "Wheat";
-            Structure.Add(wheat, paddock);
-
-            Manager manager = new Manager();
-            manager.Code = @"using Models.PMF;
-using Models.Core;
-using System;
-namespace Models
-{
-    [Serializable]
-    public class Script : Model
-    {
-        [Description(""an amount"")]
-        public double Amount { get; set; }
-    }
-}";
-            Structure.Add(manager, paddock);
-
-            Physical physical = new Physical();
-            physical.BD = new double[5];
-            physical.AirDry = new double[5];
-            physical.LL15 = new double[5];
-            Structure.Add(physical, paddock);
-            Structure.Add(new WaterBalance(), paddock);
-            Structure.Add(new SurfaceOrganicMatter(), paddock);
-
-            ListClass<string> stringList = new ListClass<string>("StringList", 5);
-            Structure.Add(stringList, simulation);
-
-            ListClass<double> doubleList = new ListClass<double>("DoubleList", 5);
-            Structure.Add(doubleList, simulation);
-
-            // Create a new .apsimx file containing two weather nodes.
-            test = Utilities.GetRunnableSim(useInMemoryDb: true);
-            IModel sim = test.FindInScope<Simulation>();
-
-            Models.Climate.Weather w1 = new Models.Climate.Weather();
-            w1.FileName = "w1.met";
-            w1.Name = "w1";
-            Structure.Add(w1, sim);
-
-            Models.Climate.Weather w2 = new Models.Climate.Weather();
-            w2.Name = "w2";
-            w2.FileName = "w2.met";
-            Structure.Add(w2, sim);
-
+            // Create a new .apsimx file containing two clock nodes.
+            Simulations sims2 = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Clock()
+                            {
+                                Name = "Clock1",
+                                StartDate = new DateTime(2020, 1, 1),
+                                EndDate = new DateTime(2020, 1, 31)
+                            },
+                            new Clock()
+                            {
+                                Name = "Clock2",
+                                StartDate = new DateTime(2021, 1, 1),
+                                EndDate = new DateTime(2021, 1, 31)
+                            }
+                        }
+                    }
+                }
+            };
+            sims2.ParentAllDescendants();
             extFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
-            test.Write(extFile);
+            sims2.Write(extFile);
         }
 
+        /// <summary>Set an array property in multiple models (match on type), supplying a csv string.</summary>
         [Test]
-        public void TestEditing()
+        public void SetPropertyInTypeMatchedModels()
         {
+            Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z");
 
-            string configFile = Path.GetTempFileName();
-            File.WriteAllLines(configFile, new[]
-            {
-                // Modify an array
-                "[Report].VariableNames = x,y,z",
+            foreach (var report in sims1.FindAllInScope<Models.Report>())
+                Assert.AreEqual(new[] { "x", "y", "z" }, report.VariableNames);
+        }
 
-                // Modify a date - try a few different formats.
-                "[Clock].StartDate = 2000-01-01",
-                "[Clock].EndDate = 2000-01-10T00:00:00",
+        /// <summary>Set an array property in specific models (match on name), supplying a csv string.</summary>
+        [Test]
+        public void SetPropertyInNameMatchedModels()
+        {
+            Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z");
 
-                // Modify a string
-                "[Weather].FileName = fdsa.met",
-                @"[Weather2].FullFileName = jkl.met",
+            // It should have changed all Report1 models.
+            foreach (var report1 in sims1.FindAllInScope<Models.Report>("Report1"))
+                Assert.AreEqual(new[] { "x", "y", "z" }, report1.VariableNames);
 
-                // Replace a model with a model from another file.
-                $"[Weather3] = {extFile}",
-                $"[Weather4] = {extFile};[w2]",
+            // It should not have changed Report2 and Report3
+            var report2 = sims1.FindInScope<Models.Report>("Report2");
+            var report3 = sims1.FindInScope<Models.Report>("Report3");
+            
+            Assert.AreEqual(new[] { "BB" }, report2.VariableNames);
+            Assert.AreEqual(new[] { "DD" }, report3.VariableNames);
+        }
 
-                // Change a property of a resource model.
-                "[Wheat].Leaf.Photosynthesis.RUE.FixedValue = 0.4",
+        /// <summary>Set a date property, supplying dates in different formats.</summary>
+        [Test]
+        public void SetDateProperty()
+        {
+            Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01));
 
-                // Change a property of a manager script.
-                "[Manager].Script.Amount = 1234",
+            var clock = sims1.FindInScope<Clock>();
+            Assert.AreEqual(new DateTime(2000, 01, 01), clock.StartDate);
+        }
 
-                // Set an entire array.
-                "[Physical].BD = 1, 2, 3, 4, 5",
-                
-                // Modify a single element of an array.
-                "[Physical].AirDry[2] = 6",
+        /// <summary>Set a model from and external file (finds the first matching model).</summary>
+        [Test]
+        public void SetModelFromExternalFileFirstMatchingModel()
+        {
+            Overrides.Apply(sims1, "[Clock]", extFile);
 
-                // Modify multiple elements of an array.
-                "[Physical].LL15[3:4] = 7",
-            });
+            var clock = sims1.FindInScope<Clock>();
+            Assert.AreEqual(new DateTime(2020, 01, 01), clock.StartDate);
+        }
 
-            Overrides.Apply(basicFile, configFile);
+        /// <summary>Set a model from and external file (finds a specific model).</summary>
+        [Test]
+        public void SetModelFromExternalFileSpecificModel()
+        {
+            Overrides.Apply(sims1, "[Clock]", $"{extFile};[Clock2]");
 
-            var report = basicFile.FindInScope<Models.Report>();
-            string[] variableNames = new[] { "x", "y", "z" };
-            Assert.AreEqual(variableNames, report.VariableNames);
-
-            IModel sim = basicFile.FindChild<Simulation>();
-
-            // Use an index-based lookup to locate child models.
-            // When we replace an entire model, we want to ensure
-            // that the replacement is inserted at the correct index.
-
-            Clock clock = sim.Children[0] as Clock;
-            Assert.AreEqual(new DateTime(2000, 1, 1), clock.StartDate);
-            Assert.AreEqual(new DateTime(2000, 1, 10), clock.EndDate);
-
-            var weather = sim.Children[3] as Models.Climate.Weather;
-            Assert.NotNull(weather);
-            Assert.AreEqual("Weather", weather.Name);
-            Assert.AreEqual("fdsa.met", weather.FileName);
-
-            var weather2 = sim.Children[4] as Models.Climate.Weather;
-            Assert.NotNull(weather2);
-            Assert.AreEqual("Weather2", weather2.Name);
-            Assert.AreEqual(@"jkl.met", weather2.FileName);
-
-            // Weather3 and Weather4 should have been
-            // renamed to w1 and w2, respectively.
-            var weather3 = sim.Children[5] as Models.Climate.Weather;
-            Assert.NotNull(weather3);
-            Assert.AreEqual("Weather3", weather3.Name);
-            Assert.AreEqual("w1.met", weather3.FileName);
-
-            var weather4 = sim.Children[6] as Models.Climate.Weather;
-            Assert.NotNull(weather4);
-            Assert.AreEqual("Weather4", weather4.Name);
-            Assert.AreEqual("w2.met", weather4.FileName);
-
-            // The edit file operation should have changed RUE value to 0.4.
-            var wheat = sim.Children[2].Children[2] as Plant;
-            var rue = wheat.Children[6].Children[4].Children[0] as Constant;
-            Assert.AreEqual(0.4, rue.FixedValue);
-
-            double amount = (double)sim.FindByPath("[Manager].Script.Amount")?.Value;
-            Assert.AreEqual(1234, amount);
-
-            Physical physical = sim.Children[2].Children[4] as Physical;
-            Assert.AreEqual(new double[5] { 1, 2, 3, 4, 5 }, physical.BD);
-            Assert.AreEqual(new double[5] { 0, 6, 0, 0, 0 }, physical.AirDry);
-            Assert.AreEqual(new double[5] { 0, 0, 7, 7, 0 }, physical.LL15);
+            var clock = sims1.FindInScope<Clock>();
+            Assert.AreEqual(new DateTime(2021, 01, 01), clock.StartDate);
         }
 
         [Test]
         public void TestEditingGenericLists()
         {
-            string configFile = Path.GetTempFileName();
-            File.WriteAllLines(configFile, new[]
+            var overrides = new (string name, object value)[]
             {
                 // Set an entire (string) list.
-                "[StringList].Data = 1, x, y, true, 0.5",
+                ("[StringList].Data", "1, x, y, true, 0.5"),
                 
                 // Modify a single element of a (string) list.
-                "[StringList].Data[1] = 6",
+                ("[StringList].Data[1]", 6),
 
                 // Modify multiple elements of a (string) list.
-                "[StringList].Data[3:4] = xyz",
+                ("[StringList].Data[3:4]", "xyz"),
 
                 // Set an entire (numeric) list.
-                "[DoubleList].Data = 1, 2, 3, 4, 4.5",
+                ("[DoubleList].Data", "1, 2, 3, 4, 4.5"),
                 
                 // Modify a single element of a (numeric) list.
-                "[DoubleList].Data[1] = -13",
+                ("[DoubleList].Data[1]", -13),
 
                 // Modify multiple elements of a (numeric) list.
-                "[DoubleList].Data[3:4] = 1e9",
-            });
+                ("[DoubleList].Data[3:4]", 1e9),
+            };
 
-            Overrides.Apply(basicFile, configFile);
+            Overrides.Apply(sims1, overrides);
 
-            ListClass<string> stringList = (ListClass<string>)basicFile.Children[1].Children[7];
-            ListClass<double> doubleList = (ListClass<double>)basicFile.Children[1].Children[8];
+            ListClass<string> stringList = (ListClass<string>)sims1.Children[1].Children[7];
+            ListClass<double> doubleList = (ListClass<double>)sims1.Children[1].Children[8];
 
             List<string> expectedStrings = new List<string>(new[]
             {

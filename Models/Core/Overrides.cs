@@ -8,24 +8,34 @@ using System.Linq;
 namespace Models.Core
 {
     /// <summary>
-    /// Encapsulates the /Edit command-line switch which allows users
-    /// to make batch edits of .apsimx files from the command line.
-    /// 
-    /// Usage:
-    /// 
-    /// Models.exe /path/to/file.apsimx /Edit /path/to/config/file.txt
+    /// Encapsulates all property/model overrides in APSIM. An override is defined as a 
+    /// collection of (name, value) pairs. Overrides are applied to a model (usually an
+    /// instance of a Simulation or Simulations class).
     /// </summary>
+    /// <remarks>
+    /// 
+    /// </remarks>
     public static class Overrides
     {
         /// <summary>
-        /// Applies a collection of property sets (contained in a file) to a model.
+        /// Applies a (keyword, value) tuple to a model.
         /// </summary>
         /// <param name="model">The model to apply the changes to.</param>
-        /// <param name="configFilePath">A configuration file containing property sets.</param>
-        public static void Apply(IModel model, string configFilePath)
+        /// <param name="name">The name of the property/model to override.</param>
+        /// <param name="value">The new value of the property/model.</param>
+        /// <returns>
+        /// Name:
+        ///     Whenever a bracketed name is specified, all models that have a name or type name that match the bracketed value
+        ///     will be considered for replacement .e.g
+        ///         [Report].VariableNames   changes all 'VariableNames' properties in all models of name or type 'Report'
+        /// Value:
+        ///     Value can be a string (that will be converted into an object instance)
+        ///     Value can be a filename (that will be opened and searched for the first matching model of the same name and type)
+        ///     Value can be filename;[path] (that will be opened and searched for the first matching model that matches 'path')
+        /// </returns>
+        public static void Apply(IModel model, string name, object value)
         {
-            var factors = ParseConfigFile(configFilePath);
-            Apply(model, factors);
+            Apply(model, new (string name, object value)[] { (name, value) });
         }
 
         /// <summary>
@@ -34,12 +44,12 @@ namespace Models.Core
         /// <param name="model">The model to apply the changes to.</param>
         /// <param name="factors">The property sets (keyword, value).</param>
         /// <returns></returns>
-        public static void Apply(IModel model, IEnumerable<(string, object)> factors)
+        public static void Apply(IModel model, IEnumerable<(string name, object value)> factors)
         {
             foreach (var factor in factors)
             {
                 IEnumerable<IVariable> variables = null;
-                if (factor.Item1.StartsWith("Name="))
+                if (factor.name.StartsWith("Name="))
                 {
                     // Replacements uses this.
                     string name = factor.Item1.Replace("Name=", "");
@@ -47,46 +57,39 @@ namespace Models.Core
                 }
                 else
                 {
-                    variables = model.FindAllByPath(factor.Item1);
+                    variables = model.FindAllByPath(factor.name);
                     if (!variables.Any())
-                        throw new Exception($"Invalid path: {factor.Item1}");
+                        throw new Exception($"Invalid path: {factor.name}");
                 }
 
                 foreach (IVariable variable in variables)
                 {
-                    string value = factor.Item2.ToString();
-                    string absolutePath = null;
-                    try
-                    {
-                        if (!value.Contains(":"))
-                            absolutePath = PathUtilities.GetAbsolutePath(value, Directory.GetCurrentDirectory());
-                    }
-                    catch
-                    {
-                    }
+                    object replacement = factor.value;
 
-                    string[] parts = value.Split(';');
-                    if (parts != null && parts.Length == 2)
+                    if (factor.value is string valueAsString)
                     {
-                        string fileName = parts[0];
-                        string absoluteFileName = PathUtilities.GetAbsolutePath(fileName, Directory.GetCurrentDirectory());
-                        string modelPath = parts[1];
+                        // See if value is a filename that exists. If not then try convert it to an absolute path.
+                        valueAsString = TryConvertToAbsolutePath(valueAsString);
 
-                        if (File.Exists(fileName))
-                            ReplaceModelFromFile(model, factor.Item1, fileName, modelPath);
-                        else if (File.Exists(absoluteFileName))
-                            ReplaceModelFromFile(model, factor.Item1, absoluteFileName, modelPath);
+                        // See if value has a semicolon in it i.e. denotes a filename and a model path.
+                        string modelPath = null;
+                        string[] parts = valueAsString.Split(';');
+                        if (parts != null && parts.Length == 2)
+                        {
+                            valueAsString = TryConvertToAbsolutePath(parts[0]);
+                            modelPath = parts[1];
+                        }
+
+                        if (File.Exists(valueAsString) && variable.Value is IModel)
+                            replacement = GetModelFromFile(variable.Value.GetType(), valueAsString, modelPath);
                         else
-                            ChangeVariableValue(variable, value);
+                            replacement = ReflectionUtilities.StringToObject(variable.DataType, valueAsString);
                     }
-                    else if (File.Exists(value) && variable.Value is IModel)
-                        ReplaceModelFromFile(model, factor.Item1, value, null);
-                    else if (File.Exists(absolutePath) && variable.Value is IModel)
-                        ReplaceModelFromFile(model, factor.Item1, absolutePath, null);
-                    else if (variable.Value is IModel)
-                        Structure.Replace(variable.Value as IModel, factor.Item2 as IModel);
+
+                    if (variable.Value is IModel modelToReplace && replacement is IModel modelReplacement)
+                        Structure.Replace(modelToReplace, modelReplacement);
                     else
-                        ChangeVariableValue(variable, value);
+                        ChangeVariableValue(variable, replacement);
                 }
             }
         }
@@ -105,7 +108,7 @@ namespace Models.Core
         /// .Simulations.Simulation.Weather.FileName = asdf.met
         /// </remarks>
         /// <param name="configFileName">Path to the config file.</param>
-        private static IEnumerable<(string, object)> ParseConfigFile(string configFileName)
+        public static IEnumerable<(string, object)> ParseConfigFile(string configFileName)
         {
             List<(string, object)> factors = new List<(string, object)>();
             string[] lines = File.ReadAllLines(configFileName);
@@ -126,9 +129,14 @@ namespace Models.Core
             return factors;
         }
 
-        private static void ChangeVariableValue(IVariable variable, string value)
+        /// <summary>
+        /// Change the value of the property.
+        /// </summary>
+        /// <param name="variable">The IVariable containing the property to change.</param>
+        /// <param name="newValue">The new value of the property.</param>
+        private static void ChangeVariableValue(IVariable variable, object newValue)
         {
-            variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
+            variable.Value = newValue;
             if (variable is VariableComposite composite)
             {
                 IModel model = composite.Variables.FirstOrDefault(v => v is VariableObject obj && obj.Value is IModel)?.Value as IModel;
@@ -147,24 +155,19 @@ namespace Models.Core
         /// <summary>
         /// Replace a model with a model from another file.
         /// </summary>
-        /// <param name="topLevel">The top-level model of the file being modified.</param>
-        /// <param name="modelToReplace">Path to the model which is to be replaced.</param>
+        /// <param name="typeToFind">The type of the model to find for replacement.</param>
         /// <param name="replacementFile">Path of the .apsimx file containing the model which will be inserted.</param>
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
-        private static void ReplaceModelFromFile(IModel topLevel, string modelToReplace, string replacementFile, string replacementPath)
+        private static IModel GetModelFromFile(Type typeToFind, string replacementFile, string replacementPath)
         {
-            IModel toBeReplaced = topLevel.FindByPath(modelToReplace)?.Value as IModel;
-            if (toBeReplaced == null)
-                throw new Exception($"Unable to find model which is to be replaced ({modelToReplace})");
-
             IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, e => throw e, false);
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))
             {
-                replacement = extFile.FindAllDescendants().Where(d => toBeReplaced.GetType().IsAssignableFrom(d.GetType())).FirstOrDefault();
+                replacement = extFile.FindAllDescendants().Where(d => typeToFind.IsAssignableFrom(d.GetType())).FirstOrDefault();
                 if (replacement == null)
-                    throw new Exception($"Unable to find replacement model of type {toBeReplaced.GetType().Name} in file {replacementFile}");
+                    throw new Exception($"Unable to find replacement model of type {typeToFind.Name} in file {replacementFile}");
             }
             else
             {
@@ -173,7 +176,23 @@ namespace Models.Core
                     throw new Exception($"Unable to find model at path {replacementPath} in file {replacementFile}");
             }
 
-            Structure.Replace(toBeReplaced, replacement);
+            return replacement;
+        }
+
+        /// <summary>
+        /// Try and convert a string to a path that can be opened.
+        /// </summary>
+        /// <param name="valueAsString"></param>
+        /// <returns>The original string or the original string with a full path.</returns>
+        private static string TryConvertToAbsolutePath(string valueAsString)
+        {
+            if (!File.Exists(valueAsString) && !valueAsString.Contains(":"))
+            {
+                string path = PathUtilities.GetAbsolutePath(valueAsString, Directory.GetCurrentDirectory());
+                if (File.Exists(path))
+                    valueAsString = path;
+            }
+            return valueAsString;
         }
     }
 }

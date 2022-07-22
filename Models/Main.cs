@@ -131,7 +131,8 @@
         private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
-            Overrides.Apply(file, configFilePath);
+            var overrides = Overrides.ParseConfigFile(configFilePath);
+            Overrides.Apply(file, overrides);
             return file;
         }
 
