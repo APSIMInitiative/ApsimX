@@ -23,7 +23,7 @@
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(GrazPlan.Stock))]
-    [ValidParent(ParentType = typeof(CultivarFolder))]
+    [ValidParent(ParentType = typeof(Folder))]
     public class Cultivar : Model
     {
         /// <summary>

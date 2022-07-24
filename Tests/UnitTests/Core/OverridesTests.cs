@@ -1,17 +1,10 @@
-﻿using APSIM.Shared.Utilities;
-using Models;
+﻿using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Functions;
-using Models.PMF;
-using Models.Soils;
-using Models.Storage;
-using Models.Surface;
-using Models.WaterModel;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace UnitTests.Core
 {
@@ -105,7 +98,8 @@ namespace UnitTests.Core
                                         {
                                             "DD"
                                         }
-                                    }
+                                    },
+                                    new ListClass<string>("StringList", 5)
                                 }
                             }
                         }
@@ -202,6 +196,30 @@ namespace UnitTests.Core
             Assert.AreEqual(new DateTime(2021, 01, 01), clock.StartDate);
         }
 
+        /// <summary>Replace a model using name (not type matching)</summary>
+        [Test]
+        public void ReplaceModelUsingNameMatch()
+        {
+            var newVariableNames = new string[] { "New" };
+            Overrides.Apply(sims1, "Name=Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames });
+
+            // It should have changed all Report1 models to Report4
+            var reports = sims1.FindAllInScope<Models.Report>().ToArray();
+
+            // The names should still be the same.
+            Assert.AreEqual(4, reports.Length);
+            Assert.AreEqual("Report1", reports[0].Name);
+            Assert.AreEqual("Report2", reports[1].Name);
+            Assert.AreEqual("Report1", reports[2].Name);
+            Assert.AreEqual("Report3", reports[3].Name);
+
+            // The variablenames property should be different.
+            Assert.AreEqual(newVariableNames, reports[0].VariableNames);
+            Assert.AreEqual(new string[] { "BB" }, reports[1].VariableNames);
+            Assert.AreEqual(newVariableNames, reports[2].VariableNames);
+            Assert.AreEqual(new string[] { "DD" }, reports[3].VariableNames);
+        }
+
         [Test]
         public void TestEditingGenericLists()
         {
@@ -215,40 +233,20 @@ namespace UnitTests.Core
 
                 // Modify multiple elements of a (string) list.
                 ("[StringList].Data[3:4]", "xyz"),
-
-                // Set an entire (numeric) list.
-                ("[DoubleList].Data", "1, 2, 3, 4, 4.5"),
-                
-                // Modify a single element of a (numeric) list.
-                ("[DoubleList].Data[1]", -13),
-
-                // Modify multiple elements of a (numeric) list.
-                ("[DoubleList].Data[3:4]", 1e9),
             };
 
             Overrides.Apply(sims1, overrides);
 
-            ListClass<string> stringList = (ListClass<string>)sims1.Children[1].Children[7];
-            ListClass<double> doubleList = (ListClass<double>)sims1.Children[1].Children[8];
+            var stringList = (ListClass<string>)sims1.FindInScope<ListClass<string>>();
 
-            List<string> expectedStrings = new List<string>(new[]
+            Assert.AreEqual(new List<string>(new[]
             {
                 "6",
                 "x",
                 "xyz",
                 "xyz",
                 "0.5"
-            });
-            Assert.AreEqual(expectedStrings, stringList.Data);
-            List<double> expectedNumbers = new List<double>(new[]
-            {
-                -13,
-                2,
-                1e9,
-                1e9,
-                4.5
-            });
-            Assert.AreEqual(expectedNumbers, doubleList.Data);
+            }), stringList.Data);
         }
     }
 }

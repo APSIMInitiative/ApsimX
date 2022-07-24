@@ -442,6 +442,8 @@
                             }
                             if (newValue is string str && targetType != typeof(string))
                                 newValue = ReflectionUtilities.StringToObject(targetType, str);
+                            else if (!(newValue is string) && targetType == typeof(string))
+                                newValue = ReflectionUtilities.ObjectToString(newValue);
                             array[i - 1] = newValue; // this will modify obj as well
                         }
                     }

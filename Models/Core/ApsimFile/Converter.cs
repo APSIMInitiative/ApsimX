@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 154; } }
+        public static int LatestVersion { get { return 155; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4565,6 +4565,17 @@ namespace Models.Core.ApsimFile
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".psi", ".PSI");
             foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
                 JsonUtilities.ReplaceManagerCode(manager, ".psi", ".PSI");
+        }
+
+        /// <summary>
+        /// Replace CultivarFolder with a simple folder.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion155(JObject root, string fileName)
+        {
+            foreach (JObject cultivarFolder in JsonUtilities.ChildrenRecursively(root, "CultivarFolder"))
+                cultivarFolder["$type"] = "Models.Core.Folder, Models";
         }
 
         /// <summary>

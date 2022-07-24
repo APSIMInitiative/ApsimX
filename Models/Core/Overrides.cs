@@ -28,8 +28,12 @@ namespace Models.Core
         ///     Whenever a bracketed name is specified, all models that have a name or type name that match the bracketed value
         ///     will be considered for replacement .e.g
         ///         [Report].VariableNames   changes all 'VariableNames' properties in all models of name or type 'Report'
+        ///         
+        ///     If name starts with 'Name=' then only the specified name will be used to match models to replace. This is used
+        ///     by the replacements node. e.g. Name=Wheat will replace all models named 'Wheat'.
         /// Value:
         ///     Value can be a string (that will be converted into an object instance)
+        ///     Value can be a csv string (that will be converted into an array of object instances)
         ///     Value can be a filename (that will be opened and searched for the first matching model of the same name and type)
         ///     Value can be filename;[path] (that will be opened and searched for the first matching model that matches 'path')
         /// </returns>

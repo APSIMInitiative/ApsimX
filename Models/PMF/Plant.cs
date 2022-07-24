@@ -533,7 +533,7 @@ namespace Models.PMF
             tableData.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in Children)
             {
-                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
