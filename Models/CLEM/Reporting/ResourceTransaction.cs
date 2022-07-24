@@ -94,7 +94,7 @@ namespace Models.CLEM
         public double AmountModifiedForLoss(bool lossesAsNegative)
         {
             double amount = Amount;
-            if (!lossesAsNegative && TransactionType == TransactionType.Loss)
+            if (lossesAsNegative && TransactionType == TransactionType.Loss)
             {
                 amount *= -1;
             }
