@@ -474,7 +474,10 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         break;
                     case "per ha harvested":
-                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        if (amountToDo > 0)
+                            valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        else
+                            valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "per kg harvested":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
