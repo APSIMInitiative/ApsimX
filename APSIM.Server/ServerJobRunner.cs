@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Models.Core.Run;
 using System.Linq;
+using Models.Core.Replace;
 
 namespace APSIM.Server
 {

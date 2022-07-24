@@ -1361,8 +1361,7 @@ namespace UnitTests.Core
             {
                 new Folder(),
                 new Factor(),
-                new CompositeFactor(),
-                new Replacements(),
+                new CompositeFactor()
             };
 
             foreach (IModel anyChild in allowAnyChild)

@@ -35,7 +35,7 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("UserInterface.Views.DirectedGraphView")]
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
-    public class Nutrient : ModelCollectionFromResource, INutrient, IVisualiseAsDirectedGraph
+    public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
     {
         private DirectedGraph directedGraphInfo;
 

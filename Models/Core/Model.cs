@@ -13,7 +13,6 @@
     /// </summary>
     [Serializable]
     [ValidParent(typeof(Folder))]
-    [ValidParent(typeof(Replacements))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
     public abstract class Model : IModel
@@ -36,6 +35,9 @@
         /// Gets or sets the name of the model
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>The name of the resource.</summary>
+        public string ResourceName { get; set; }
 
         /// <summary>
         /// Gets or sets a list of child models.   

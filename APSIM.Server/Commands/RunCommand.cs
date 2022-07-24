@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.Replace;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Storage;
