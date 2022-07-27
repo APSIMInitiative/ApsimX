@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-                Add(StartingAmount, this, NameWithParent, "Starting value");
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         #region Transactions

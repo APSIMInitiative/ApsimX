@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             if (StartingAmount > 0)
-                Add(StartingAmount, this, "", "Starting value");
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         /// <summary>

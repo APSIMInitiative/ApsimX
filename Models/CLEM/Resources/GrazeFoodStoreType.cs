@@ -211,11 +211,18 @@ namespace Models.CLEM.Resources
         public IPastureManager Manager
         {
             get
-            { return manager; }
+            { 
+                return manager;
+            }
             set
             {
-                if(manager!=null)
-                    throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]");
+                if(manager!=null && manager!=value )
+                {
+                    if(manager is CropActivityManageCrop)
+                        Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
+                    else
+                        throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
+                }
                 manager = value;
             }
         }
@@ -606,7 +613,7 @@ namespace Models.CLEM.Resources
                 if (newPools.Count() > 1)
                     reason = "Initialise pool " + pool.Age.ToString();
 
-                Add(pool, this, "", reason);
+                Add(pool, null, null, reason);
             }
         }
 

@@ -38,8 +38,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public LabourActivityPayHired()
         {
-            TransactionCategory = "[General].[Type].[Action]";
-
             // activity is performed in CLEMStartOfTimestep not default CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
         }

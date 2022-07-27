@@ -91,7 +91,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityPredictiveStocking()
         {
-            TransactionCategory = "Livestock.[Type].Destock";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

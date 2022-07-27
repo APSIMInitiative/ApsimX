@@ -56,14 +56,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double Units { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceActivityBuy()
-        {
-            TransactionCategory = "[General].[Type].Purchase";
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -203,7 +195,7 @@ namespace Models.CLEM.Activities
         {
             if (unitsToDo > 0)
             {
-                resourceToBuy.Add((unitsToDo - unitsToSkip) * price.PacketSize, this, "", TransactionCategory);
+                resourceToBuy.Add((unitsToDo - unitsToSkip) * price.PacketSize, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial(unitsToSkip > 0);
             }
         }

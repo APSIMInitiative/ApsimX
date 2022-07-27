@@ -43,7 +43,6 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.Category as Category",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
                 "[Activities].LastShortfallResourceRequest.Provided as Provided",
-                "[Activities].LastShortfallResourceRequest.Available as Available",
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Status as Action",
                 "[Activities].LastShortfallResourceRequest.ShortfallStatus as Status",
             };

@@ -24,21 +24,8 @@ namespace Models.CLEM.Activities
     public class ActivityFolder : CLEMActivityBase
     {
         /// <inheritdoc/>
-        [Description("Category for transactions of child components")]
-        [Models.Core.Display(Order = 500)]
-        public new string TransactionCategory { get; set; }
-
-        /// <inheritdoc/>
         [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityFolder()
-        {
-            TransactionCategory = "[Folder]";
-        }
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)

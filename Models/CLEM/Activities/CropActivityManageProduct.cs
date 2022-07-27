@@ -31,6 +31,8 @@ namespace Models.CLEM.Activities
         private Clock clock = null;
         [Link]
         private Simulation simulation = null;
+        [Link]
+        private ZoneCLEM zoneCLEM = null;
 
         private IFileCrop fileCrop;
         private CropActivityManageCrop parentManagementActivity;
@@ -41,6 +43,7 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
         private (int? previous, int? first, int? current, int? last) harvestOffset;
         private (CropDataType previous, CropDataType first, CropDataType current, CropDataType next, CropDataType last) harvests = (null, null, null, null, null);
+        private double stockingRateSummed = 0;
 
         /// <summary>
         /// Name of the model for the crop input file
@@ -162,7 +165,6 @@ namespace Models.CLEM.Activities
         public CropActivityManageProduct()
         {
             this.SetDefaults();
-            TransactionCategory = "Crop.[Type].[Product]";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -210,6 +212,7 @@ namespace Models.CLEM.Activities
                 // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = Parent as IPastureManager;
                 addReason = "Growth";
+
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
@@ -231,15 +234,24 @@ namespace Models.CLEM.Activities
 
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
+        }
 
-            if (LinkedResourceItem is GrazeFoodStoreType)
+        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialiseForProduct(object sender, EventArgs e)
+        {
+            // parent crop doesn't know pasture area until FinalInitialise activity
+            // We must initialise biomass after the crop/pasture area is known
+            if (LinkedResourceItem is GrazeFoodStoreType && (Parent as CropActivityManageCrop).FindAllChildren<CropActivityManageProduct>().Where(a => a.StoreItemName == this.StoreItemName).FirstOrDefault() == this)
             {
                 double firstMonthsGrowth = 0;
                 CropDataType cropData = HarvestData.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
                 if (cropData != null)
                     firstMonthsGrowth = cropData.AmtKg;
 
-                (LinkedResourceItem as GrazeFoodStoreType).SetupStartingPasturePools(UnitsToHaConverter*(Parent as CropActivityManageCrop).Area * UnitsToHaConverter, firstMonthsGrowth);
+                (LinkedResourceItem as GrazeFoodStoreType).SetupStartingPasturePools((Parent as CropActivityManageCrop).Area * UnitsToHaConverter, firstMonthsGrowth);
                 addReason = "Growth";
             }
         }
@@ -318,13 +330,23 @@ namespace Models.CLEM.Activities
                         InsideMultiHarvestSequence = true;
                         harvests.previous = null;
                         harvests.last = HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault();
-                        if(harvests.last.HarvestDate > HarvestData.Skip(1).FirstOrDefault().HarvestDate)
-                            harvests.next = HarvestData.Skip(1).FirstOrDefault();
+                        if (harvests.last != null)
+                        {
+                            if (harvests.last.HarvestDate > HarvestData.Skip(1).FirstOrDefault().HarvestDate)
+                                harvests.next = HarvestData.Skip(1).FirstOrDefault();
+                            else
+                                harvests.next = harvests.last;
+                        }
                         else
-                            harvests.next = harvests.last;
+                            harvests.next = HarvestData.Skip(1).FirstOrDefault();
+
                     }
                     else
                     {
+                        // if the "last" tag has not been found keep checking as new data may have been loaded
+                        // otherwise this crop will run until end of simulation.
+                        if(harvests.last is null)
+                            harvests.last = HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault();
                         harvests.current = harvests.next;
                         harvests.next = HarvestData.Skip(1).FirstOrDefault();
                     }
@@ -384,6 +406,37 @@ namespace Models.CLEM.Activities
                 ManageActivityResourcesAndTasks();
         }
 
+        /// <summary>
+        /// Function to calculate ecological indicators. 
+        /// By summing the monthly stocking rates so when you do yearly ecological calculation 
+        /// you can get average monthly stocking rate for the whole year.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMCalculateEcologicalState")]
+        private void OnCLEMCalculateEcologicalState(object sender, EventArgs e)
+        {
+            // This event happens after growth and pasture consumption and animal death
+            // But before any management, buying and selling of animals.
+
+            if (LinkedResourceItem is GrazeFoodStoreType)
+            {
+                double area = (Parent as CropActivityManageCrop).Area * UnitsToHaConverter * 0.01;
+
+                // add this months stocking rate to running total 
+                stockingRateSummed += PastureActivityManage.CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), StoreItemName, area);
+
+                //If it is time to do yearly calculation
+                if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+                {
+                    PastureActivityManage.CalculateEcologicalIndicators(LinkedResourceItem as GrazeFoodStoreType, null, null, stockingRateSummed, zoneCLEM.EcologicalIndicatorsCalculationInterval, clock.StartDate, zoneCLEM.EcologicalIndicatorsNextDueDate);
+
+                    // Reset running total for stocking rate
+                    stockingRateSummed = 0;
+                }
+            }
+        }
+
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
@@ -421,7 +474,10 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         break;
                     case "per ha harvested":
-                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        if (amountToDo > 0)
+                            valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        else
+                            valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "per kg harvested":
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
@@ -503,7 +559,7 @@ namespace Models.CLEM.Activities
                             };
                             if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
                                 packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
-                            LinkedResourceItem.Add(packet, this, "", addReason);
+                            LinkedResourceItem.Add(packet, this, null, addReason);
                         }
                         SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));
                     }
@@ -584,33 +640,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        ///// <inheritdoc/>
-        //public override string ModelSummaryClosingTags()
-        //{
-        //    return base.ModelSummaryClosingTags(); 
-        //}
-
-        ///// <inheritdoc/>
-        //public override string ModelSummaryOpeningTags()
-        //{
-        //    string html = "";
-        //    // if first child of mixed 
-        //    if (this.Parent.GetType() == typeof(CropActivityManageProduct))
-        //    {
-        //        if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
-        //            // close off the parent item so it displays
-        //            html += "\r\n</div>";
-        //    }
-
-        //    bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
-        //    if (mixed)
-        //    {
-        //        html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
-        //        html += "\r\n<div class=\"cropmixedborder\">";
-        //    }
-        //    html += base.ModelSummaryOpeningTags();
-        //    return html;
-        //} 
         #endregion
     }
 }
