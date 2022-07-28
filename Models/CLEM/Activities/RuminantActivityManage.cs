@@ -482,7 +482,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityManage()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

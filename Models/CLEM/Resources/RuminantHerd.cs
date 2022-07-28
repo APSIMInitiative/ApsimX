@@ -252,7 +252,7 @@ namespace Models.CLEM.Resources
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
-                RelatesToResource = ind.BreedParams.NameWithParent,
+                RelatesToResource = null, // ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -321,7 +321,7 @@ namespace Models.CLEM.Resources
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
-                RelatesToResource = ind.BreedParams.NameWithParent,
+                RelatesToResource = null, //ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;

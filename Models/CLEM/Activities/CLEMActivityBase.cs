@@ -47,7 +47,6 @@ namespace Models.CLEM.Activities
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 
@@ -264,7 +263,43 @@ namespace Models.CLEM.Activities
             return new LabelsForCompanionModels();
         }
 
-        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <summary>
+        /// Method to create Transaction category based on settings in ZoneCLEM
+        /// </summary>
+        public static string UpdateTransactionCategory(CLEMActivityBase model, string relatesToValue = "")
+        {
+            List<string> transCatsList = new List<string>();
+            if (model.parentZone is null)
+                model.parentZone = model.FindAncestor<ZoneCLEM>();
+
+            if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
+            {
+                transCatsList.Add((model.Parent as CLEMActivityBase).TransactionCategory);
+                //transCatsList = model.FindAllAncestors<CLEMActivityBase>().Where(a => a != model.Parent).Select(a => model.parentZone.UseModelNameAsTransactionCategory ? ((a.TransactionCategory == "_") ? "" : a.Name) : a.TransactionCategory).Reverse().ToList();
+            }
+
+            transCatsList.Add(model.parentZone.UseModelNameAsTransactionCategory ? ((model.TransactionCategory == "_") ? "" : model.Name) : model.TransactionCategory);
+            transCatsList = transCatsList.Where(a => a != "").ToList();
+
+            string transCat = (transCatsList.Any()) ? String.Join(".", transCatsList) : "";
+
+            if (transCat.Contains("[RelatesTo]"))
+                transCat.Replace("[RelatesTo]", relatesToValue??"");
+
+            return transCat;
+        }
+
+        /// <summary>An event handler to perform any start of simulation tasks</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        protected virtual void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            // create Transaction category based on Zone settings
+            TransactionCategory = UpdateTransactionCategory(this);
+        }
+
+        /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfSimulation")]
@@ -586,7 +621,7 @@ namespace Models.CLEM.Activities
                                         }
                                         else
                                         {
-                                            if((companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
+                                            if(companionChild is CLEMActivityBase && (companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
                                                 companionChild.PerformTasksForTimestep(unitsProvided);
                                         }
                                     }
@@ -871,9 +906,6 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.Critical;
                 throw new ApsimXException(this, errorMessage);
             }
-
-            //if (!deficitFound && Status != ActivityStatus.Skipped)
-            //    Status = ActivityStatus.Success;
 
             return (Status == ActivityStatus.Skipped);
         }

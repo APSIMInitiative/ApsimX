@@ -81,7 +81,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public PastureActivityCutAndCarry()
         {
-            TransactionCategory = "Pasture.[Paddock].Collect";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -244,7 +243,7 @@ namespace Models.CLEM.Activities
                     DMD = pasture.EstimateDMD(pasture.Nitrogen)
                 };
 
-                foodstore.Add(packet, this, "", TransactionCategory);
+                foodstore.Add(packet, this, null, TransactionCategory);
                 limiter.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }

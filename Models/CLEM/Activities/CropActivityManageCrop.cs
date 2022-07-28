@@ -67,7 +67,6 @@ namespace Models.CLEM.Activities
         public CropActivityManageCrop()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-            TransactionCategory = "Crop.[Type]";
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -224,10 +223,16 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that this activity contains at least one CollectProduct activity
-            if (this.Children.OfType<CropActivityManageProduct>().Count() == 0)
+            var cropProductChildren = this.Children.OfType<CropActivityManageProduct>();
+            if (!cropProductChildren.Any())
             {
                 string[] memberNames = new string[] { "Collect product activity" };
                 results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
+            }
+            if(cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
+            {
+                string[] memberNames = new string[] { "Multiple crop product activities" };
+                results.Add(new ValidationResult("More than one [a=CropActivityManageProduct] with the same [CropName] were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", memberNames));
             }
             return results;
         }

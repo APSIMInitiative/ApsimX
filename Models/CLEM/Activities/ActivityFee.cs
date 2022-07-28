@@ -68,7 +68,6 @@ namespace Models.CLEM.Activities
         public ActivityFee()
         {
             this.SetDefaults();
-            TransactionCategory = "[General].[Type].[Action]";
             AllocationStyle = ResourceAllocationStyle.Manual;
             ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
@@ -88,7 +87,7 @@ namespace Models.CLEM.Activities
             resourceRequest = null;
             if (MathUtilities.IsPositive(argument))
             {
-                string relatesTo = "";
+                string relatesTo = null;
                 if (Parent as CLEMRuminantActivityBase != null)
                     relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdName;
 

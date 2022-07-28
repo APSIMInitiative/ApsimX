@@ -68,7 +68,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityGrow()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

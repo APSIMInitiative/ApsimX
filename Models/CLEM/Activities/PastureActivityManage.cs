@@ -123,7 +123,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public PastureActivityManage()
         {
-            TransactionCategory = "Pasture.[Paddock].Manage";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -346,7 +345,7 @@ namespace Models.CLEM.Activities
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture, this, "", "Growth");
+                    this.LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                 }
             }
 
@@ -373,77 +372,98 @@ namespace Models.CLEM.Activities
             // But before any management, buying and selling of animals.
 
             // add this months stocking rate to running total 
-            stockingRateSummed += CalculateStockingRateRightNow();
+            stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
-            CalculateEcologicalIndicators();
+            //If it is time to do yearly calculation
+            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            {
+                CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, zoneCLEM.EcologicalIndicatorsCalculationInterval, clock.StartDate, zoneCLEM.EcologicalIndicatorsNextDueDate);
+                //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
+
+                // Reset running total for stocking rate
+                stockingRateSummed = 0;
+
+                GetPastureDataList_TodayToNextEcolCalculation();
+            }
         }
 
-        private double CalculateStockingRateRightNow()
+        /// <summary>
+        /// Calulate the current stocking rate
+        /// </summary>
+        /// <param name="herd">Herd to consider</param>
+        /// <param name="paddockName">Name of paddock with animals</param>
+        /// <param name="areaSqKm">Area of paddock in Square Km</param>
+        /// <returns>Current stocking rate (AE/sq km)</returns>
+        public static double CalculateStockingRateRightNow(RuminantHerd herd, string paddockName, double areaSqKm)
         {
-            var herd = Resources.FindResourceGroup<RuminantHerd>();
             if (herd != null)
             {
-                string paddock = FeedTypeName;
-                if(paddock.Contains("."))
-                    paddock = paddock.Substring(paddock.IndexOf(".")+1);
+                if(paddockName.Contains("."))
+                    paddockName = paddockName.Substring(paddockName.IndexOf(".")+1);
 
-                return herd.Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+                return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.AdultEquivalent) / areaSqKm;
             }
             else
                 return 0;
         }
 
         /// <summary>
-        /// Method to perform calculation of all ecological indicators.
+        /// Method to perform calculation of all Ecological indicators.
         /// </summary>
-        private void CalculateEcologicalIndicators()
+        /// <param name="grazeFoodStore">Graze food store to consider</param>
+        /// <param name="landConIndex">Land condition value</param>
+        /// <param name="grassBasalAreaIndex">Grass basal area value</param>
+        /// <param name="summedStockRate">Running sum of stocking rate</param>
+        /// <param name="interval">Ecological indicator interval</param>
+        /// <param name="NextDueDate">Next ecological indicator calulation date</param>
+        /// <param name="startDate">Simulation start date</param>
+        public static void CalculateEcologicalIndicators(GrazeFoodStoreType grazeFoodStore, RelationshipRunningValue landConIndex, RelationshipRunningValue grassBasalAreaIndex, double summedStockRate, int interval, DateTime startDate, DateTime NextDueDate )
         {
-
-            //If it is time to do yearly calculation
-            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (grazeFoodStore != null)
             {
                 // Calculate change in Land Condition index and Grass basal area
-                double utilisation = LinkedNativeFoodType.PercentUtilisation;
+                double utilisation = grazeFoodStore.PercentUtilisation;
 
-                LandConditionIndex.Modify(utilisation);
-                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
-                GrassBasalArea.Modify(utilisation);
-                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.Value;
+                if (landConIndex != null)
+                {
+                    landConIndex.Modify(utilisation);
+                    grazeFoodStore.CurrentEcologicalIndicators.LandConditionIndex = landConIndex.Value;
+                }
+
+                if (grassBasalAreaIndex != null)
+                {
+                    grassBasalAreaIndex.Modify(utilisation);
+                    grazeFoodStore.CurrentEcologicalIndicators.GrassBasalArea = grassBasalAreaIndex.Value;
+                }
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((zoneCLEM.EcologicalIndicatorsNextDueDate.Year - clock.StartDate.Year) * 12) + zoneCLEM.EcologicalIndicatorsNextDueDate.Month - clock.StartDate.Month+1;
-                if (monthdiff >= zoneCLEM.EcologicalIndicatorsCalculationInterval)
-                    monthdiff = zoneCLEM.EcologicalIndicatorsCalculationInterval;
+                int monthdiff = ((NextDueDate.Year - startDate.Year) * 12) + NextDueDate.Month - startDate.Month + 1;
+                if (monthdiff >= interval)
+                    monthdiff = interval;
 
-                LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = stockingRateSummed / monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.StockingRate = summedStockRate / monthdiff;
 
                 //perennials
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value, 3.35) / Math.Pow(LandConditionIndex.Value, 3.35 + 137.7)) - 2.2;
+                if (landConIndex != null)
+                    grazeFoodStore.CurrentEcologicalIndicators.Perennials = 92.2 * (1 - Math.Pow(landConIndex.Value, 3.35) / Math.Pow(landConIndex.Value, 3.35 + 137.7)) - 2.2;
 
                 //%utilisation
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
-
-                // Reset running total for stocking rate
-                stockingRateSummed = 0;
+                grazeFoodStore.CurrentEcologicalIndicators.Utilisation = utilisation;
 
                 // calculate averages
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Cover /= monthdiff;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea /= monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.Cover /= monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.TreeBasalArea /= monthdiff;
 
                 //TreeC
                 // I didn't include the / area as tba is already per ha. I think NABSA has this wrong
-                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeCarbon = LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea * 6286 * 0.46;
+                grazeFoodStore.CurrentEcologicalIndicators.TreeCarbon = grazeFoodStore.CurrentEcologicalIndicators.TreeBasalArea * 6286 * 0.46;
 
                 //methane
                 //soilC
                 //Burnkg
                 //methaneFire
                 //N2OFire
-
-                //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
-                GetPastureDataList_TodayToNextEcolCalculation();
-
             }
         }
 

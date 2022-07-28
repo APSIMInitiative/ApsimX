@@ -35,7 +35,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "HTML version created")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ActivitiesPerformed.htm")]
-    public class ReportActivitiesPerformed : Models.Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
+    public class ReportActivitiesPerformed : Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
     {
         /// <summary>
         /// Create html version of summary

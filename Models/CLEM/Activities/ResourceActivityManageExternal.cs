@@ -58,14 +58,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No financial implications", typeof(Finance) } })]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceActivityManageExternal()
-        {
-            TransactionCategory = "[General].[Type].Imports";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
