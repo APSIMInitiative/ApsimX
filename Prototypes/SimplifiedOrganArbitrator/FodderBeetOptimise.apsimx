@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 314,
+  "ExplorerWidth": 483,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -3214,10 +3214,12 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
+                                0.99,
                                 1.0
                               ],
                               "Y": [
                                 0.5,
+                                1.0,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -3515,14 +3517,10 @@
                                   "X": [
                                     1.0,
                                     20.0,
-                                    30.0,
-                                    45.0,
                                     50.0
                                   ],
                                   "Y": [
                                     0.05,
-                                    1.0,
-                                    1.0,
                                     1.0,
                                     1.0
                                   ],
@@ -3591,7 +3589,7 @@
                                   "X": [
                                     0.5,
                                     1.0,
-                                    1.1
+                                    2.0
                                   ],
                                   "Y": [
                                     0.0,
