@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 483,
+  "ExplorerWidth": 357,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -2134,16 +2134,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "1SenescenceRateFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.AddFunction, Models",
                   "Name": "SenescenceRateFunction",
                   "Children": [
@@ -2458,7 +2448,7 @@
                                   "Name": "CrudeProteinFactor",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2467,12 +2457,12 @@
                                   "Name": "NitrogenReAllocation",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -2486,7 +2476,7 @@
                                   "Name": "CrudeProteinFactor",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -2495,12 +2485,12 @@
                                   "Name": "NitrogenReAllocation",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
@@ -3516,12 +3506,10 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     1.0,
-                                    20.0,
-                                    50.0
+                                    20.0
                                   ],
                                   "Y": [
                                     0.05,
-                                    1.0,
                                     1.0
                                   ],
                                   "Name": "XYPairs",
@@ -3826,7 +3814,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.025,
-                  "Units": null,
+                  "Units": "m2",
                   "Name": "AreaLargestLeaf",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4834,8 +4822,8 @@
                 },
                 {
                   "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
-                  "Const": 0.045,
-                  "Power": 1.6,
+                  "Const": 0.1,
+                  "Power": 1.5,
                   "Name": "TotalDMDemand",
                   "Children": [
                     {
@@ -5881,11 +5869,29 @@
                           "Name": "PhaseLookupValue",
                           "Children": [
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "MultiplyFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 10.0,
+                                  "Units": "mm/d",
+                                  "Name": "RFVmax",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Photosynthesis.RueReductionFactor",
+                                  "Name": "RUEstress",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -5982,6 +5988,74 @@
                           ],
                           "Name": "XYPairs",
                           "Children": [
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Y",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Axis, Models",
+                                  "Type": 3,
+                                  "Title": "X",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 5,
+                              "LegendOrientation": 0,
+                              "AnnotationPosition": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "Graph",
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -65536,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "TableName": null,
+                                  "XFieldName": ".Simulations.Replacements.FodderBeet.Root.Network.MaxDailyNUptake.XYPairs.X",
+                                  "YFieldName": ".Simulations.Replacements.FodderBeet.Root.Network.MaxDailyNUptake.XYPairs.Y",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
                             {
                               "$type": "Models.Graph, Models",
                               "Caption": null,
@@ -9432,6 +9506,74 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Root",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Stage",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "FodderBeet.Phenology.Stage",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "StorageRoot",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
