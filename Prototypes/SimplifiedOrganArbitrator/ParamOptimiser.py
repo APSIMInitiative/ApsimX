@@ -41,7 +41,7 @@ duration = 1000  # Set Duration To 1000 ms == 1 second
 # %matplotlib inline
 
 # +
-FodderBeetPath = "C:/GitHubRepos/ApsimX/Tests/Validation/Wheat/Wheat.apsimx"
+Path = 'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise'
 
 BlankManager = {'$type': 'Models.Manager, Models',
             'Code': '',
@@ -121,11 +121,12 @@ def removeModel(Parent,modelPath):
         print('Failed to find ' + PathElements[-1] + ' to delete')
 
 def ApplyParamReplacementSet(paramValues,paramNames,filePath):
-    with open(filePath,'r') as WheatApsimxJSON:
-        WheatApsimx = json.load(WheatApsimxJSON)
-        WheatApsimxJSON.close()
+    with open(filePath,'r',encoding="utf8") as ApsimxJSON:
+        Apsimx = json.load(ApsimxJSON)
+        ApsimxJSON.close()
+    
     ## Remove old prameterSet manager in replacements
-    removeModel(WheatApsimx,'Replacements.SetCropParameters')
+    removeModel(Apsimx,'Replacements.SetCropParameters')
 
     ## Add crop coefficient overwrite into replacements
     codeString = "using Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n     {\r\n        object Pval = 0; \r\n    "
@@ -140,73 +141,52 @@ def ApplyParamReplacementSet(paramValues,paramNames,filePath):
 
     SetCropParams["Code"] = codeString
 
-    AppendModeltoModelofType(WheatApsimx,'Models.Core.Replacements, Models',SetCropParams)
+    AppendModeltoModelofType(Apsimx,'Models.Core.Replacements, Models',SetCropParams)
 
-    with open(filePath,'w') as WheatApsimxJSON:
-        json.dump(WheatApsimx,WheatApsimxJSON,indent=2)
+    with open(filePath,'w') as ApsimxJSON:
+        json.dump(Apsimx,ApsimxJSON,indent=2)
         
 def makeLongString(SimulationSet):
     longString =  '/SimulationNameRegexPattern:"'
     longString =  longString + '(' + SimulationSet[0]  + ')|' # Add first on on twice as apsim doesn't run the first in the list
     for sim in SimulationSet[:]:
         longString = longString + '(' + sim + ')|'
-    longString = longString + '(' + SimulationSet[-1] + ')|' ## Add Last on on twice as apsim doesnt run the last in the list
-    longString = longString + '(' + SimulationSet[-1] + ')"'
+    longString = longString + '(' + SimulationSet[-1] + ')'#|' ## Add Last on on twice as apsim doesnt run the last in the list
+    #longString = longString + '(' + SimulationSet[-1] + ')"'
     return longString
 
 def CalcScaledValue(Value,RMax,RMin):
     return (Value - RMin)/(RMax-RMin)
 # +
-def Preparefile(filePath,freq):
-    ## revert .apximx file to master
+def Preparefile(filePath):
+    ## revert .apximx file to last comitt
 #     !del C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db
     command= "git --git-dir=C:/GitHubRepos/ApsimX/.git --work-tree=C:/GitHubRepos/ApsimX checkout " + filePath 
     comm=shlex.split(command) # This will convert the command into list format
     subprocess.run(comm, shell=True) 
     ## Add blank manager into each simulation
-    with open(filePath,'r') as WheatApsimxJSON:
-        WheatApsimx = json.load(WheatApsimxJSON)
-    WheatApsimxJSON.close()
-    if freq == 'Harvest':
-        #Stop Daily reporting
-        StopReporting(WheatApsimx,'Replacements.DailyReport')
-        removeModel(WheatApsimx,'DataStore.DailyObsPred')
-    else:
-        if freq != 'Daily':
-            print('Only works with Daily or Harvest frequencies')
-    AppendModeltoModelofTypeAndDeleteOldIfPresent(WheatApsimx,'Models.Core.Zone, Models',BlankManager)
-    with open(filePath,'w') as WheatApsimxJSON:
-        json.dump(WheatApsimx,WheatApsimxJSON,indent=2)
+    with open(filePath,'r',encoding="utf8") as ApsimxJSON:
+        Apsimx = json.load(ApsimxJSON)
+    ApsimxJSON.close()
+    AppendModeltoModelofTypeAndDeleteOldIfPresent(Apsimx,'Models.Core.Zone, Models',BlankManager)
+    with open(filePath,'w') as ApsimxJSON:
+        json.dump(Apsimx,ApsimxJSON,indent=2)
     
-def runModelItter(paramNames,paramValues,FittingVariables,Cultivar,DataTable,freq):        
-    ApplyParamReplacementSet(paramValues,paramNames,'C:/GitHubRepos/ApsimX/Tests/Validation/Wheat/Wheat.apsimx')
-    OptimisationVariables = ['Observed.'+x for x in FittingVariables]
-    DataPresent = pd.Series(index = DataTable.index,dtype=bool)
-    DataPresent = False
-    for v in OptimisationVariables:
-        DataPresent = (DataPresent | ~np.isnan(pd.to_numeric(DataTable.loc[:,v])))
-    SetFilter = (DataTable.Cultivar==Cultivar) & DataPresent
-    SimulationSet = DataTable.loc[SetFilter,'SimulationName'].values
-    SimSet = makeLongString(SimulationSet)
-    #print(SimSet)
+def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet):        
+    ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx')
     start = dt.datetime.now()
+    simSet = makeLongString(SimulationSet)
     subprocess.run(['C:/GitHubRepos/ApsimX/bin/Debug/netcoreapp3.1/Models.exe',
-                    'C:/GitHubRepos/ApsimX/Tests/Validation/Wheat/Wheat.apsimx',
-                    SimSet], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    Path+'.apsimx',
+                   simSet], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     endrun = dt.datetime.now()
     runtime = (endrun-start).seconds
-    con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Tests\Validation\Wheat\Wheat.db')
-    if freq == 'Harvest':
-        ObsPred = pd.read_sql("Select * from HarvestObsPred",con)
-    else:
-        if freq == 'Daily':
-            ObsPred = pd.read_sql("Select * from DailyObsPred",con)
-        else:
-            print('Only works with Daily or Harvest DataTables')
+    con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db')
+    ObsPred = pd.read_sql("Select * from PredictedObserved",con)
     con.close()
     ScObsPre = pd.DataFrame(columns = ['ScObs','ScPred','Var','SimulationID'])
     indloc = 0
-    for var in FittingVariables:
+    for var in OptimisationVariables:
         DataPairs = ObsPred.reindex(['Observed.'+var,'Predicted.'+var,'SimulationID'],axis=1).dropna()
         for c in DataPairs.columns:
             DataPairs.loc[:,c] = pd.to_numeric(DataPairs.loc[:,c])
@@ -224,544 +204,641 @@ def runModelItter(paramNames,paramValues,FittingVariables,Cultivar,DataTable,fre
     print(str(paramValues) + " run completed " +str(RegStats.n) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
     return retVal
 
-
-# -
-
-BZFits = pd.read_excel('C:/GitHubRepos/npi/Simulation/ModelFitting/FinalNPIFitting.xlsx',sheet_name='LNParams',index_col=0,skiprows=3)
-paramNames = ['[Phenology].CAMP.FLNparams.LV', 
-              '[Phenology].CAMP.FLNparams.LN', 
-              '[Phenology].CAMP.FLNparams.SV', 
-              '[Phenology].CAMP.FLNparams.SN',
-              '[Phenology].HeadEmergenceLongDayBase.FixedValue',
-              '[Phenology].HeadEmergencePpSensitivity.FixedValue']
-Cultivars = BZFits.index.values
-FittingVariables = ['Wheat.Phenology.FinalLeafNumber','Wheat.Phenology.FlagLeafDAS','Wheat.Phenology.HeadingDAS',
-                                'Wheat.Phenology.FloweringDAS']     
-GNFits = pd.DataFrame(index = Cultivars,columns=paramNames)
-
-BZFits
-
-# +
-
-
-
-
-
-
-
-# +
-#divide by 10 for model
-x0s = pd.DataFrame(data=[['RUE',22],
-['NBreak',10],
-['NStorageRootPriority',10],
-['NStorageRootStoragelPriority',0],
-['NLeafPriority',10],
-['NLeafStoragePriority',0],
-['NPetiolePriority',1],
-['NPetioleStoragePriority',0],
-['CStorageRootPriority',10],
-['CStorageRootStoragePriority',10],
-['CLeafPriority',10],
-['CLeafStoragePriority',0],
-['CPetiolePriority',10],
-['CPetioleStoragePriority',0]],columns=['param','value']).set_index('param')
-
-bounds = pd.DataFrame(data=[['RUE',(18,22)],
-['NBreak',(5,10)],
-['NStorageRootPriority',(0,100)],
-['NStorageRootStoragelPriority',(0,20)],
-['NLeafPriority',(0,100)],
-['NLeafStoragePriority',(0,20)],
-['NPetiolePriority',(1,100)],
-['NPetioleStoragePriority',(0,20)],
-['CStorageRootPriority',(0,110)],
-['CStorageRootStoragePriority',(0,20)],
-['CLeafPriority',(0,100)],
-['CLeafStoragePriority',(0,20)],
-['CPetiolePriority',(0,100)],
-['CPetioleStoragePriority',(0,20)]],columns=['param','range']).set_index('param')
-
-ParamNames=["FodderBeet.Leaf.Photosynthesis.RUE.ConstantValue",
-"FodderBeet.Leaf.Photosynthesis.FN.XYPairs.X[1]",
-"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.ConstantValue",
-"FodderBeet.StorageRoot.Carbon.DemandFunctions.QSMetabolicPriority.ConstantValue",
-"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.ConstantValue",
-"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.ConstantValue",
-"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QSMetabolicPriority.ConstantValue",
-"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.ConstantValue",
-"FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.ConstantValue",
-"FodderBeet.Leaf.Carbon.DemandFunctions.QSMetabolicPriority.ConstantValue",
-"FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.ConstantValue",
-"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.ConstantValue",
-"FodderBeet.Leaf.Nitrogen.DemandFunctions.QSMetabolicPriority.ConstantValue",
-"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.ConstantValue",
-"FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.ConstantValue",
-"FodderBeet.Petiole.Carbon.DemandFunctions.QSMetabolicPriority.ConstantValue",
-"FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.ConstantValue",
-"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.ConstantValue",
-"FodderBeet.Petiole.Nitrogen.DemandFunctions.QSMetabolicPriority.ConstantValue",
-"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.ConstantValue"]
-# -
-
-
-
-# +
-Preparefile(WheatFilePath,'Harvest')
-def runPartitingModelItter(params):
-    RUE = params[0]/10
-    Nb = params[1]/10
-    SRCstr = params[2]/10
-    SRCmet = SRCstr
-    SRCsto = SRCstr * params[3]/10
-    SRNstr = params[4]/10
-    SRNmet = SRNstr
-    SRNsto = SRNstr * params[5]/10
-    LCstr = params[6]/10
-    LCmet = LCstr
-    LCsto = LCstr * params[7]/10
-    LNstr = params[8]/10
-    LNmet = LNstr
-    LNsto = LNstr * params[9]/10
-    PCstr = params[10]/10
-    PCmet = PCstr
-    PCsto = PCstr * params[11]/10
-    PNstr = params[12]/10
-    PNmet = PNstr
-    PNsto = PNstr * params[13]/10
+def runFittingItter(fittingparams):
     
-    paramValues = [RUE, Nb, 
-                   SRCstr, SRCmet, SRCsto, SRNstr, SRNmet, SRNsto,
-                   LCstr,  LCmet,  LCsto,  LNstr,  LNmet,  LNsto,
-                   PCstr,  PCmet,  PCsto,  PNstr,  PNmet,  PNsto,]
-    return runModelItter(paramNames,paramValues,FittingVariables,c,BaseLine,'Harvest')
+    paramValues = calcModelParamValues(fittingparams)
+    
+    return runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet)
 
-x0 = x0s.value.values
-bounds = bounds.range.values
 
-runDevModelItter([70, 30, 15, 10, 150, 0.0])
-
-RandomCalls = 25
-OptimizerCalls = 20
-TotalCalls = RandomCalls + OptimizerCalls
-#try:
-checkpoint_saver = CheckpointSaver("./"+c+"testFits_checkpoint.pkl", compress=9)
-CheckPoint = load("./"+c+"Fits_checkpoint.pkl")
-x0 = CheckPoint.x_iters
-y0 = CheckPoint.func_vals
-#if (-CheckPoint.fun < 0.75):
-#    try:
-ret = gp_minimize(runDevModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
-              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0,y0=y0)
-        # ParamCombs = pd.DataFrame(ret.x_iters,columns = paramNames)
-        # ParamCombs.loc[:,'NSE'] = ret.func_vals
-        # Graph = plt.figure(figsize=(10,3))
-        # pos=1
-        # for p in paramNames:
-        #     ax = Graph.add_subplot(6,1,pos)
-        #     plt.plot(ParamCombs.loc[:,p],-ParamCombs.loc[:,'NSE'],'o',color='k')
-        #     bestFit = ParamCombs.loc[:,'NSE'].idxmin()
-        #     plt.plot(ParamCombs.loc[bestFit,p],-ParamCombs.loc[bestFit,'NSE'],'o',color='cyan',ms=8,mec='k',mew=2)
-        #     GNFits.loc[c,p] = ParamCombs.loc[bestFit,p]
-        #     GNFits.loc[c,'GN_NSE'] = ParamCombs.loc[bestFit,'NSE']
-        #     GNFits.loc[c,'BZ_NSE'] = ret.func_vals[0]
-        #     pos+=1
-        #     plt.ylabel('NSE')
-        #     plt.xlabel(p)
-        #     plt.ylim(0,1)
-#         except:
-#             print(c+' failed')
-#     else:
-#         print("fits nse already greater than 0.75")
-# except:
-#     print(c+' has no checkpoint')
-
-# +
-c='Gregory'
-Preparefile(WheatFilePath,'Harvest')
-def runDevModelItter(Devparams):
-    LV = Devparams[0]/10
-    LN = Devparams[0]/10 + Devparams[1]/10
-    SV = Devparams[0]/10 + Devparams[2]/10
-    SN = Devparams[0]/10 + Devparams[1]/10 + Devparams[2]/10 + Devparams[3]/10
-    paramValues = [LV,LN,SV,SN,Devparams[4],Devparams[5]/10]
-    boundsPass = True
-    if (LN > 30):
-        boundsPass = False
-    if (SV > 25):
-        boundsPass = False
-    if (SN > 35):
-        boundsPass = False
-    if (SN < LV):
-        boundsPass = False
-    if boundsPass == False:
-        print (str(paramValues) + " gave out of bounds parameters ")
-        retVal = 1
-    else:
-        retVal = runModelItter(paramNames,paramValues,FittingVariables,c,BaseLine,'Harvest')
-    return retVal
-
-x0 = [int(x) for x in BZFits.loc[c,['MinLN','VS','PPS','SDVS','LDB','HPPR']].values]
-bounds = [(50,100),
-          (0,120),
-          (0,80),
-          (-80,80),
-          (50,500),
-          (0,80)]
-
-runDevModelItter([70, 30, 15, 10, 150, 0.0])
-
-RandomCalls = 25
-OptimizerCalls = 20
-TotalCalls = RandomCalls + OptimizerCalls
-#try:
-checkpoint_saver = CheckpointSaver("./"+c+"testFits_checkpoint.pkl", compress=9)
-CheckPoint = load("./"+c+"Fits_checkpoint.pkl")
-x0 = CheckPoint.x_iters
-y0 = CheckPoint.func_vals
-#if (-CheckPoint.fun < 0.75):
-#    try:
-ret = gp_minimize(runDevModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
-              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0,y0=y0)
-        # ParamCombs = pd.DataFrame(ret.x_iters,columns = paramNames)
-        # ParamCombs.loc[:,'NSE'] = ret.func_vals
-        # Graph = plt.figure(figsize=(10,3))
-        # pos=1
-        # for p in paramNames:
-        #     ax = Graph.add_subplot(6,1,pos)
-        #     plt.plot(ParamCombs.loc[:,p],-ParamCombs.loc[:,'NSE'],'o',color='k')
-        #     bestFit = ParamCombs.loc[:,'NSE'].idxmin()
-        #     plt.plot(ParamCombs.loc[bestFit,p],-ParamCombs.loc[bestFit,'NSE'],'o',color='cyan',ms=8,mec='k',mew=2)
-        #     GNFits.loc[c,p] = ParamCombs.loc[bestFit,p]
-        #     GNFits.loc[c,'GN_NSE'] = ParamCombs.loc[bestFit,'NSE']
-        #     GNFits.loc[c,'BZ_NSE'] = ret.func_vals[0]
-        #     pos+=1
-        #     plt.ylabel('NSE')
-        #     plt.xlabel(p)
-        #     plt.ylim(0,1)
-#         except:
-#             print(c+' failed')
-#     else:
-#         print("fits nse already greater than 0.75")
-# except:
-#     print(c+' has no checkpoint')
 # -
 
-PoorFits = ['Axe', 'Batavia','Beaufort',
-       'Calingiri', 'Crusader', 'Csirow003', 'Csirow005', 'Csirow011',
-       'Csirow018', 'Csirow023', 'Csirow027', 'Csirow087', 'Cunningham',
-       'Cutlass', 'Eaglehawk', 'Egret', 'Ellison', 'Forrest',
-       'Gregory', 'Kellalac', 'Mace', 'Magenta',
-       'Manning', 'Merinda', 'Rongotea', 'Scepter', 'Scout', 'Spitfire',
-       'Suneca', 'Sunlamb', 'Sunstate', 'Suntop', 'Trojan', 'Wills']
-for c in PoorFits:
-    print(c)
-    Preparefile(WheatFilePath,'Harvest')
+# ### First run of optimiser, Use only full N full irrigation treatment.  Fit for total biomass, organ bioamss, cover and LAI.  Fit RUE, k leaf size and senescence params
 
-    def runDevModelItter(Devparams):
-        LV = Devparams[0]/10
-        LN = Devparams[0]/10 + Devparams[1]/10
-        SV = Devparams[0]/10 + Devparams[2]/10
-        SN = Devparams[0]/10 + Devparams[1]/10 + Devparams[2]/10 + Devparams[3]/10
-        paramValues = [LV,LN,SV,SN,Devparams[4],Devparams[5]/10]
-        boundsPass = True
-        if (LN > 30):
-            boundsPass = False
-        if (SV > 25):
-            boundsPass = False
-        if (SN > 35):
-            boundsPass = False
-        if (SN < LV):
-            boundsPass = False
-        if boundsPass == False:
-            print (str(paramValues) + " gave out of bounds parameters ")
-            retVal = 1
-        else:
-            retVal = runModelItter(paramNames,paramValues,FittingVariables,c,BaseLine,'Harvest')
-        return retVal
-
-    x0 = [int(x) for x in BZFits.loc[c,['MinLN','VS','PPS','SDVS','LDB','HPPR']].values]
-    bounds = [(50,100),
-              (0,120),
-              (0,80),
-              (-80,80),
-              (50,500),
-              (0,80)]
-
-    RandomCalls = 25
-    OptimizerCalls = 20
-    TotalCalls = RandomCalls + OptimizerCalls
-    try:
-        checkpoint_saver = CheckpointSaver("./"+c+"Fits_checkpoint.pkl", compress=9)
-        #CheckPoint = load("./"+c+"Fits_checkpoint.pkl")
-        #x0 = CheckPoint.x_iters
-        #y0 = CheckPoint.func_vals
-        #if (-CheckPoint.fun < 0.75):
-        ret = gp_minimize(runDevModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
-                          initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)
-        # ParamCombs = pd.DataFrame(ret.x_iters,columns = paramNames)
-        # ParamCombs.loc[:,'NSE'] = ret.func_vals
-        # Graph = plt.figure(figsize=(10,3))
-        # pos=1
-        # for p in paramNames:
-        #     ax = Graph.add_subplot(6,1,pos)
-        #     plt.plot(ParamCombs.loc[:,p],-ParamCombs.loc[:,'NSE'],'o',color='k')
-        #     bestFit = ParamCombs.loc[:,'NSE'].idxmin()
-        #     plt.plot(ParamCombs.loc[bestFit,p],-ParamCombs.loc[bestFit,'NSE'],'o',color='cyan',ms=8,mec='k',mew=2)
-        #     GNFits.loc[c,p] = ParamCombs.loc[bestFit,p]
-        #     GNFits.loc[c,'GN_NSE'] = ParamCombs.loc[bestFit,'NSE']
-        #     GNFits.loc[c,'BZ_NSE'] = ret.func_vals[0]
-        #     pos+=1
-        #     plt.ylabel('NSE')
-        #     plt.xlabel(p)
-        #     plt.ylim(0,1)
-    except:
-        print(c+' failed')
-        # else:
-        #     print("fits nse already greater than 0.75")
-    # except:
-    #     print(c+' has no checkpoint')
 # +
-Preparefile(WheatFilePath,'Harvest')
+SimulationSet = ["LincolnRS2016IrrFullNit300"]#,"LincolnRS2016IrrFullNit50","LincolnRS2016IrrFullNit0"]
 
-def runGrainModelItter(Grainparams):
-    paramNames = ['[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue',
-                  '[Grain].MaximumPotentialGrainSize.FixedValue']  
-    FittingVariables = ['Wheat.Grain.Number','Wheat.Grain.Size','Wheat.Grain.Wt']
-    Cultivar = 'Wakanui'
-    return runModelItter(paramNames,Grainparams,FittingVariables,Cultivar,DailyBaseLine,'Daily')
+OptimisationVariables = ['FodderBeet.AboveGround.Wt',
+                         'FodderBeet.Leaf.Live.Wt',
+                         'FodderBeet.Petiole.Live.Wt',
+                         'FodderBeet.StorageRoot.Live.Wt',
+                         'FodderBeet.Leaf.Canopy.CoverGreen',
+                         'FodderBeet.Leaf.Canopy.CoverTotal',
+                         'FodderBeet.Leaf.Canopy.LAI']
 
-Cultivar = 'Wakanui'
-bounds = [(10,50),
-          (0.01,0.07)]
-RandomCalls = 16
-OptimizerCalls = 14
-TotalCalls = RandomCalls + OptimizerCalls
-checkpoint_saver = CheckpointSaver("./"+Cultivar+"Grain_checkpoint.pkl", compress=9)
-# CheckPoint = load("./"+Cultivar+"checkpoint.pkl")
-# x0 = CheckPoint.x_iters
-# y0 = CheckPoint.func_vals
+x0sDF = pd.DataFrame(data=[['RUE',22],
+                           ['k',80],
+                           ['LargestLeafArea',75],
+                           ['leafSizeBreak',50],
+                           ['SenCoverRate',5],
+                           ['SenCoverBreak',70],
+                           ['SenAgeRate',7],
+                           ['SenAgeBreak',35]],columns=['param','value']).set_index('param')
+                           
+boundsDF = pd.DataFrame(data=[['RUE',(15,25)],
+                              ['k',(50,100)],
+                              ['LargestLeafArea',(50,100)],
+                              ['leafSizeBreak',(30,80)],
+                              ['SenCoverRate',(1,25)],
+                              ['SenCoverBreak',(50,95)],
+                              ['SenAgeRate',(0,30)],
+                              ['SenAgeBreak',(5,100)]],columns=['param','range']).set_index('param')
 
-ret = gp_minimize(runGrainModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,initial_point_generator='sobol',callback=[checkpoint_saver])#,x0=x0,y0=y0)
+paramNames=["FodderBeet.Leaf.Photosynthesis.RUE.FixedValue", 
+            "FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue", 
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]",
+            "FodderBeet.Leaf.AreaLargestLeaf.FixedValue", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[3]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]",
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]",
+            "FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"]
 
-winsound.Beep(frequency, duration)
-# +
-Preparefile(WheatFilePath,'Daily')
+def calcModelParamValues(fP):
+    mP = []
+    mP.append(fP[0]/10)#"FodderBeet.Leaf.Photosynthesis.RUE.FixedValue"
+    mP.append(.01)#"FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+    mP.append(fP[1]/100)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue"# 
+    mP.append(1.0)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]"
+    mP.append(fP[2]/1000)#"FodderBeet.Leaf.AreaLargestLeaf.FixedValue"# 
+    mP.append(fP[3])#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(fP[3]+2)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(1.0)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]"#
+    mP.append(fP[4]/1000)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]"
+    mP.append(fP[5]/100)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]"
+    mP.append(fP[6]/1000)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]"
+    mP.append(fP[7]/10)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]"
+    mP.append(fP[7]/10+3)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]"
+    mP.append(0.025)#"FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#                        
+    
+    return mP
 
-def runLeafModelItter(Leafparams):
-    paramNames = ['[Phenology].Phyllochron.BasePhyllochron.FixedValue',
-                  '[Phenology].PhyllochronPpSensitivity.FixedValue']  
-    FittingVariables = ['Wheat.Phenology.HaunStage','Wheat.Structure.LeafTipsAppeared','Wheat.Leaf.AppearedCohortNo']
-    Cultivar = 'Hartog'
-    return runModelItter(paramNames,Leafparams,FittingVariables,Cultivar,DailyBaseLine,'Daily')
+Preparefile(Path+'.apsimx')
+x0 = x0sDF.value.values.tolist()
+bounds = boundsDF.range.values.tolist()
 
-Cultivar = 'Hartog'
-bounds = [(70,120),
-          (0.2,0.7)]
-RandomCalls = 16
-OptimizerCalls = 14
-TotalCalls = RandomCalls + OptimizerCalls
-checkpoint_saver = CheckpointSaver("./"+Cultivar+"Grain_checkpoint.pkl", compress=9)
-# CheckPoint = load("./"+Cultivar+"checkpoint.pkl")
-# x0 = CheckPoint.x_iters
-# y0 = CheckPoint.func_vals
-
-ret = gp_minimize(runLeafModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,initial_point_generator='sobol',callback=[checkpoint_saver])#,x0=x0,y0=y0)
-
-winsound.Beep(frequency, duration)
-# +
-Preparefile(WheatFilePath,'Harvest')
-
-def runAnthModelItter(FLNparams):
-    LV = FLNparams[0]/10
-    LN = FLNparams[0]/10 + FLNparams[1]/10
-    SV = FLNparams[0]/10 + FLNparams[2]/10
-    SN = FLNparams[0]/10 + FLNparams[1]/10 + FLNparams[2]/10 + FLNparams[3]/10
-    paramValues = [LV,LN,SV,SN,FLNparams[4],FLNparams[5]/10,6,60]
-    boundsPass = True
-    if (LN > 30):
-        boundsPass = False
-    if (SV > 25):
-        boundsPass = False
-    if (SN > 35):
-        boundsPass = False
-    if (SN < LV):
-        boundsPass = False
-    if boundsPass == False:
-        print (str(paramValues) + " gave out of bounds parameters ")
-        retVal = 1
-    else:
-        paramNames = ['[Phenology].CAMP.FLNparams.LV', 
-              '[Phenology].CAMP.FLNparams.LN', 
-              '[Phenology].CAMP.FLNparams.SV', 
-              '[Phenology].CAMP.FLNparams.SN',
-              '[Phenology].HeadEmergenceLongDayBase.FixedValue',
-              '[Phenology].HeadEmergencePpSensitivity.FixedValue',
-              '[Phenology].CAMP.EnvData.VrnTreatTemp',
-              '[Phenology].CAMP.EnvData.VrnTreatDuration']  
-        FittingVariables = ['Wheat.Phenology.FinalLeafNumber','Wheat.Phenology.FlagLeafDAS','Wheat.Phenology.HeadingDAS',
-                            'Wheat.Phenology.FloweringDAS']
-        Cultivar = 'Hartog'
-        retVal = runModelItter(paramNames,paramValues,FittingVariables,Cultivar)
-    return retVal
-
-Cultivar = 'Hartog'
-     #/10,/10,/10,/10,/16/10
-#x0 = [80,25,45815,230,5]
-bounds = [(50,100),
-          (15,50),
-          (0,60),
-          (-50,50),
-          (50,400),
-          (0,80)]
-#x0 = [55,0,42,60,83,3]
-# bounds = [(5.00,15.00),
-#           (0.00,20.00),
-#           (0.00,10.00),
-#           (-10.00,10.00)]
-
-RandomCalls = 36
-OptimizerCalls = 30
-TotalCalls = RandomCalls + OptimizerCalls
-checkpoint_saver = CheckpointSaver("./"+Cultivar+"checkpoint.pkl", compress=9)
-# CheckPoint = load("./"+Cultivar+"checkpoint.pkl")
-# x0 = CheckPoint.x_iters
-# y0 = CheckPoint.func_vals
-
-ret = gp_minimize(runAnthModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,initial_point_generator='sobol',callback=[checkpoint_saver])#,x0=x0,y0=y0)
-
-winsound.Beep(frequency, duration)
-# +
-Preparefile(WheatFilePath)
-
-def runFLNModelItter(FLNparams):
-    LV = FLNparams[0]/10
-    LN = FLNparams[0]/10 + FLNparams[1]/10
-    SV = FLNparams[0]/10 + FLNparams[2]/10
-    SN = FLNparams[0]/10 + FLNparams[1]/10 + FLNparams[2]/10 + FLNparams[3]/10
-    paramValues = [LV,LN,SV,SN,6,60]
-    boundsPass = True
-    if (LN > 30):
-        boundsPass = False
-    if (SV > 25):
-        boundsPass = False
-    if (SN > 35):
-        boundsPass = False
-    if boundsPass == False:
-        print (str(paramValues) + " gave out of bounds parameters ")
-        retVal = 100
-    else:
-        paramNames = ['[Phenology].CAMP.FLNparams.LV', 
-              '[Phenology].CAMP.FLNparams.LN', 
-              '[Phenology].CAMP.FLNparams.SV', 
-              '[Phenology].CAMP.FLNparams.SN',
-              '[Phenology].CAMP.EnvData.VrnTreatTemp',
-              '[Phenology].CAMP.EnvData.VrnTreatDuration']  
-        FittingVariables = ['Wheat.Phenology.FinalLeafNumber','Wheat.Phenology.FlagLeafDAS']
-        Cultivar = 'MacKellar'
-        retVal = runModelItter(paramNames,paramValues,FittingVariables,Cultivar)
-    return retVal
-
-#x0 = [70,0,50,0]
-bounds = [(x0[0]20,x0[0]+30),
-          (x0[1],x0[1]+80),
-          (x0[2]-50,x0[2]+50),
-          (x0[3]-60,x0[3]+60)]
-
-# bounds = [(5.00,15.00),
-#           (0.00,20.00),
-#           (0.00,10.00),
-#           (-10.00,10.00)]
-
-RandomCalls = 4*3
+RandomCalls = 100
 OptimizerCalls = 30
 TotalCalls = RandomCalls + OptimizerCalls
 
-checkpoint_saver = CheckpointSaver("./FLNcheckpoint.pkl", compress=9)
-# from skopt import load
-# CheckPoint = load('./FLNcheckpoint.pkl')
-# x0 = ret.x_iters
-# y0 = ret.func_vals
+checkpoint_saver = CheckpointSaver("./checkpoint.pkl", compress=9)
+#CheckPoint = load("./checkpoint.pkl")
+#x0 = CheckPoint.x_iters
+#y0 = CheckPoint.func_vals
+ret = gp_minimize(runFittingItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
+              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)#y0=y0)
+# + tags=[]
+Params = pd.DataFrame(data = ret.x_iters,columns=x0sDF.index)
+Params.loc[:,"fits"] = ret.func_vals
+graph = plt.figure(figsize=(10,10))
+pos = 1
+for var in Params.columns:
+    ax = graph.add_subplot(6,3,pos)
+    plt.plot(Params.loc[:,var],-1*Params.loc[:,'fits'],'o')
+    plt.title(var)
+    pos+=1
+# -
 
-ret = gp_minimize(runFLNModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)#,y0=y0)
+pd.DataFrame(index = paramNames, data =calcModelParamValues(ret.x))
 
-winsound.Beep(frequency, duration)
+# ### Next, fix parameters fitted for leaf size, extinction coeff and senescence, optimise RUE and partitioning params
 
 # +
-Preparefile(WheatFilePath)
+SimulationSet = ["LincolnRS2016IrrFullNit300"]#,"LincolnRS2016IrrFullNit50","LincolnRS2016IrrFullNit0"]
 
-def runHeadModelItter(Headparams)
-    AllParams = [11,15.5,19.1,28] + Headparams + [6,60]
-    paramNames = ['[Phenology].CAMP.FLNparams.LV', 
-              '[Phenology].CAMP.FLNparams.LN', 
-              '[Phenology].CAMP.FLNparams.SV', 
-              '[Phenology].CAMP.FLNparams.SN',
-              '[Phenology].HeadEmergenceLongDayBase.FixedValue',
-              '[Phenology].HeadEmergencePpSensitivity.FixedValue',
-              '[Phenology].CAMP.EnvData.VrnTreatTemp',
-              '[Phenology].CAMP.EnvData.VrnTreatDuration']  
-    FittingVariables = ['Wheat.Phenology.HeadingDAS','Wheat.Phenology.FloweringDAS']
-    Cultivar = 'Wakanui'
-    retVal = runModelItter(paramNames,AllParams,FittingVariables,Cultivar)
-    return retVal
+OptimisationVariables = ['FodderBeet.AboveGround.Wt',
+                         'FodderBeet.Leaf.Live.Wt',
+                         'FodderBeet.Petiole.Live.Wt',
+                         'FodderBeet.StorageRoot.Live.Wt',
+                         #'FodderBeet.Leaf.Canopy.CoverGreen',
+                         #'FodderBeet.Leaf.Canopy.CoverTotal',
+                         'FodderBeet.Leaf.Canopy.LAI']
 
-x0 = [90, 7.920653097461647]
-bounds = [(50,200),
-          (6.0,12.0)]
+x0sDF = pd.DataFrame(data=[['RUE',210],
+                           ['StorageRoot_C_StructuralPriority',91],
+                           ['StorageRoot_C_StoragePriority',186],
+                           ['Leaf_C_StructuralPriority',61],
+                           ['Leaf_C_StoragePriority',200],
+                           ['Petiole_C_StructuralPriority',78],
+                           ['Petiole_C_StoragePriority',200]],columns=['param','value']).set_index('param')
+                           
+boundsDF = pd.DataFrame(data=[['RUE',(180,220)],
+                              ['StorageRoot_C_StructuralPriority',(0,200)],
+                              ['StorageRoot_C_StoragePriority',(0,300)],
+                              ['Leaf_C_StructuralPriority',(0,200)],
+                              ['Leaf_C_StoragePriority',(0,300)],
+                              ['Petiole_C_StructuralPriority',(0,200)],
+                              ['Petiole_C_StoragePriority',(0,300)]],columns=['param','range']).set_index('param')
 
-checkpoint_saver = CheckpointSaver("./HDcheckpoint.pkl", compress=9)
-#from skopt import load
-#CheckPoint = load('./HDcheckpoint.pkl')
+paramNames=["FodderBeet.Leaf.Photosynthesis.RUE.FixedValue", 
+            "FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue", 
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]",
+            "FodderBeet.Leaf.AreaLargestLeaf.FixedValue", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[3]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]",
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]",
+            "FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"]
 
-RandomCalls = 2*3
-OptimizerCalls = 10
+def calcModelParamValues(fP):
+    mP = []
+    mP.append(fP[0]/100)#"FodderBeet.Leaf.Photosynthesis.RUE.FixedValue"
+    mP.append(.01)#"FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+    mP.append(0.76)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue"# 
+    mP.append(1.0)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]"
+    mP.append(0.091)#"FodderBeet.Leaf.AreaLargestLeaf.FixedValue"# 
+    mP.append(66)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(68)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(1.0)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]"#
+    mP.append(0.011)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]"
+    mP.append(0.79)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]"
+    mP.append(0.002)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]"
+    mP.append(3.7)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]"
+    mP.append(6.7)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]"
+    mP.append(0.025)#"FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue"#
+    mP.append(fP[1]/10)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(fP[1]/10)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(fP[2]/10)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(fP[3]/10)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(fP[3]/10)#"FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(fP[4]/10)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(fP[5]/10)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(fP[5]/10)#"FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(fP[6]/10)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#                        
+    
+    return mP
+
+Preparefile(Path+'.apsimx')
+x0 = x0sDF.value.values.tolist()
+bounds = boundsDF.range.values.tolist()
+
+RandomCalls = 100
+OptimizerCalls = 30
 TotalCalls = RandomCalls + OptimizerCalls
 
-ret = gp_minimize(runHeadModelItter, bounds, n_calls=TotalCalls, random_state=0, callback=[checkpoint_saver], x0=x0)#,n_initial_points=RandomCalls,initial_point_generator='sobol',x0=x0)#,y0=y0)
-
-winsound.Beep(frequency, duration)
+checkpoint_saver = CheckpointSaver("./checkpoint.pkl", compress=9)
+#CheckPoint = load("./checkpoint.pkl")
+#x0 = CheckPoint.x_iters
+#y0 = CheckPoint.func_vals
+ret = gp_minimize(runFittingItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
+              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)#y0=y0)
+# -
+ret
 
 # + tags=[]
-ret = load("./Gregorycheckpoint.pkl")
+Params = pd.DataFrame(data = ret.x_iters,columns=x0sDF.index)
+Params.loc[:,"fits"] = ret.func_vals
+graph = plt.figure(figsize=(10,10))
+pos = 1
+for var in Params.columns:
+    ax = graph.add_subplot(6,3,pos)
+    plt.plot(Params.loc[:,var],-1*Params.loc[:,'fits'],'o')
+    plt.title(var)
+    pos+=1
 # -
+# ### Fit carbon partitioning factors
 
-ret#.x_iters[0]
+# +
+SimulationSet = ["LincolnRS2016IrrFullNit300"]#,"LincolnRS2016IrrFullNit50","LincolnRS2016IrrFullNit0"]
 
-ParamCombs.loc[63,:]
+OptimisationVariables = ['FodderBeet.AboveGround.Wt',
+                         'FodderBeet.Leaf.Live.Wt',
+                         'FodderBeet.Petiole.Live.Wt',
+                         'FodderBeet.StorageRoot.Live.Wt',
+                         #'FodderBeet.Leaf.Canopy.CoverGreen',
+                         #'FodderBeet.Leaf.Canopy.CoverTotal',
+                         'FodderBeet.Leaf.Canopy.LAI']
 
-Params =  ['[Phenology].CAMP.FLNparams.LV', 
-              '[Phenology].CAMP.FLNparams.LN', 
-              '[Phenology].CAMP.FLNparams.SV', 
-              '[Phenology].CAMP.FLNparams.SN',
-              '[Phenology].HeadEmergenceLongDayBase.FixedValue',
-              '[Phenology].HeadEmergencePpSensitivity.FixedValue']  
-ShortParams = pd.Series(index=Params,data=['MinLN','VS','PPS','SDVS','LDB','HPPS'])
-Fits = pd.DataFrame(index = Cultivars, columns = ['NSE'])
-Graph = plt.figure(figsize=(10,100))
-pos=1
-for c in Cultivars:
-    try:
-        ret = load("./"+c+"Fits_checkpoint.pkl")
-        Fits.loc[c,'NSE'] = -ret.fun
-        ParamCombs = pd.DataFrame(ret.x_iters,columns = Params)
-        ParamCombs.loc[:,'NSE'] = ret.func_vals
-        for p in Params:
-            ax = Graph.add_subplot(60,6,pos)
-            plt.plot(ParamCombs.loc[:,p],-ParamCombs.loc[:,'NSE'],'o',color='k')
-            bestFit = ParamCombs.loc[:,'NSE'].idxmin()
-            plt.plot(ParamCombs.loc[bestFit,p],-ParamCombs.loc[bestFit,'NSE'],'o',color='cyan',ms=8,mec='k',mew=2)
-            pos+=1
-            if p == '[Phenology].CAMP.FLNparams.LV':
-                plt.ylabel(c)
-            else:
-                ax.axes.yaxis.set_visible(False)
-            plt.xlabel(ShortParams[p])
-            plt.ylim(0,1)
-    except:
-        print("no fits for " + c)
+x0sDF = pd.DataFrame(data=[['RUE',22],
+                           ['StorageRoot_C_StructuralPriority',10],
+                           ['StorageRoot_C_StoragePriority',10],
+                           ['Leaf_C_StructuralPriority',10],
+                           ['Leaf_C_StoragePriority',10],
+                           ['Petiole_C_StructuralPriority',10],
+                           ['Petiole_C_StoragePriority',10]],columns=['param','value']).set_index('param')
+                           
+boundsDF = pd.DataFrame(data=[['RUE',(15,25)],
+                              ['StorageRoot_C_StructuralPriority',(0,200)],
+                              ['StorageRoot_C_StoragePriority',(0,200)],
+                              ['Leaf_C_StructuralPriority',(0,200)],
+                              ['Leaf_C_StoragePriority',(0,200)],
+                              ['Petiole_C_StructuralPriority',(0,200)],
+                              ['Petiole_C_StoragePriority',(0,200)]],columns=['param','range']).set_index('param')
 
-len(Fits.dropna())
+paramNames=["FodderBeet.Leaf.Photosynthesis.RUE.FixedValue", 
+            "FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue", 
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]",
+            "FodderBeet.Leaf.AreaLargestLeaf.FixedValue", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[3]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]",
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]",
+            "FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"]
 
-(Fits.NSE > 0.75).sum()
+def calcModelParamValues(fP):
+    mP = []
+    mP.append(1.97)#"FodderBeet.Leaf.Photosynthesis.RUE.FixedValue"
+    mP.append(.01)#"FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+    mP.append(0.76)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue"# 
+    mP.append(1.0)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]"
+    mP.append(0.091)#"FodderBeet.Leaf.AreaLargestLeaf.FixedValue"# 
+    mP.append(66)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(68)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(1.0)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]"#
+    mP.append(0.011)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]"
+    mP.append(0.79)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]"
+    mP.append(0.002)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]"
+    mP.append(3.7)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]"
+    mP.append(6.7)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]"
+    mP.append(0.025)#"FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue"#
+    mP.append(10.1)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(10.1)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(15.7)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(7.7)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(7.7)#"FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(13.6)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(0.5)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(0.5)#"FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(6.9)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#                        
+    
+    return mP
+
+Preparefile(Path+'.apsimx')
+x0 = x0sDF.value.values.tolist()
+bounds = boundsDF.range.values.tolist()
+
+RandomCalls = 100
+OptimizerCalls = 30
+TotalCalls = RandomCalls + OptimizerCalls
+
+checkpoint_saver = CheckpointSaver("./checkpoint.pkl", compress=9)
+#CheckPoint = load("./checkpoint.pkl")
+#x0 = CheckPoint.x_iters
+#y0 = CheckPoint.func_vals
+ret = gp_minimize(runFittingItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
+              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)#y0=y0)
+# -
+ret
+
+# ### Fit water stress responses
+
+# +
+OptimisationVariables = ['FodderBeet.AboveGround.Wt',
+'FodderBeet.Leaf.Live.Wt',
+'FodderBeet.Petiole.Live.Wt',
+'FodderBeet.StorageRoot.Live.Wt',
+'FodderBeet.AboveGround.N',
+'FodderBeet.Leaf.Live.N',
+'FodderBeet.Petiole.Live.N',
+'FodderBeet.StorageRoot.Live.N',
+'FodderBeet.Leaf.Canopy.CoverGreen',
+'FodderBeet.Leaf.Canopy.CoverTotal',
+'FodderBeet.Leaf.Canopy.LAI',
+'Soil.SoilWater.SW(1)',
+'Soil.SoilWater.SW(2)',
+'Soil.SoilWater.SW(3)',
+'Soil.SoilWater.SW(4)',
+'Soil.SoilWater.SW(5)',
+'Soil.SoilWater.SW(6)',
+'Soil.SoilWater.SW(7)',
+'ProfileWater']
+
+x0sDF = pd.DataFrame(data=[['RUE_Stress_Break',10],
+                           ['k_fullStressValue',5],
+                           ['k_Stress_Break',10],
+                           ['LArea_lowerBreak',5],
+                           ['LArea_upperBreak',10],
+                           ['RFV',10],
+                           ['Petiole_C_StoragePriority',10]],columns=['param','value']).set_index('param')
+                           
+boundsDF = pd.DataFrame(data=[['RUE',(15,25)],
+                              ['StorageRoot_C_StructuralPriority',(0,200)],
+                              ['StorageRoot_C_StoragePriority',(0,200)],
+                              ['Leaf_C_StructuralPriority',(0,200)],
+                              ['Leaf_C_StoragePriority',(0,200)],
+                              ['RFV',(0,200)],
+                              ['Petiole_C_StoragePriority',(0,200)]],columns=['param','range']).set_index('param')
+
+paramNames=["FodderBeet.Leaf.Photosynthesis.RUE.FixedValue", 
+            "FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue", 
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]",
+            "FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]",
+            "FodderBeet.Leaf.AreaLargestLeaf.FixedValue", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[3]", 
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[1]",
+            "FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]",
+            "FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]",
+            "FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+            "FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+            "FodderBeet.Root.Network.RootFrontVelocity.PhaseLookupValue.Constant.FixedValue",
+            "FodderBeet.Root.Network.NUptakeSWFactor.XYPairs.X[2]",
+            "FodderBeet.Leaf.Canopy.Gsmax350",
+            "FodderBeet.Leaf.Canopy.R50"]
+
+def calcModelParamValues(fP):
+    mP = []
+    mP.append(1.97)#"FodderBeet.Leaf.Photosynthesis.RUE.FixedValue"
+    mP.append(.01)#"FodderBeet.Leaf.Photosynthesis.FW.XYPairs.X[2]",
+    mP.append(0.76)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue"# 
+    mP.append(1.0)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.X[2]"
+    mP.append(0.091)#"FodderBeet.Leaf.AreaLargestLeaf.FixedValue"# 
+    mP.append(66)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(68)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X[2]"# 
+    mP.append(1.0)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.Y[1]"#
+    mP.append(0.5)#"FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.FW.XYPairs.X[2]"#
+    mP.append(0.011)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.Y[3]"
+    mP.append(0.79)#"FodderBeet.Leaf.SenescenceRateFunction.CoverEffect.XYPairs.X[2]"
+    mP.append(0.002)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.Y[3]"
+    mP.append(3.7)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[2]"
+    mP.append(6.7)#"FodderBeet.Leaf.SenescenceRateFunction.AgeEffect.XYPairs.X[3]"
+    mP.append(0.025)#"FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue"#
+    mP.append(10.1)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(10.1)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(15.7)#"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(7.7)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(7.7)#"FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(13.6)#"FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(0.5)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(0.5)#"FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(6.9)#"FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue"#
+    mP.append(1.0)#"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"#                        
+    
+    return mP
+
+Preparefile(Path+'.apsimx')
+x0 = x0sDF.value.values.tolist()
+bounds = boundsDF.range.values.tolist()
+
+RandomCalls = 100
+OptimizerCalls = 30
+TotalCalls = RandomCalls + OptimizerCalls
+
+checkpoint_saver = CheckpointSaver("./checkpoint.pkl", compress=9)
+#CheckPoint = load("./checkpoint.pkl")
+#x0 = CheckPoint.x_iters
+#y0 = CheckPoint.func_vals
+ret = gp_minimize(runFittingItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
+              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)#y0=y0)
+# +
+OptimisationVariables = ['FodderBeet.AboveGround.Wt',
+'FodderBeet.Leaf.Live.Wt',
+'FodderBeet.Petiole.Live.Wt',
+'FodderBeet.StorageRoot.Live.Wt',
+'FodderBeet.AboveGround.N',
+'FodderBeet.Leaf.Live.N',
+'FodderBeet.Petiole.Live.N',
+'FodderBeet.StorageRoot.Live.N',
+'FodderBeet.Leaf.Live.NConc',
+'FodderBeet.Petiole.Live.NConc',
+'FodderBeet.StorageRoot.Live.NConc',
+'FodderBeet.Leaf.Canopy.CoverGreen',
+'FodderBeet.Leaf.Canopy.LAI']
+
+#divide by 10 for model
+
+x0sDF = pd.DataFrame(data=[['LeafMinNconc',10],
+    ['StorageRoot_C_StoragePriority',10],
+['StorageRoot_N_StoragePriority',10],
+['Leaf_C_StructuralPriority',10],
+['Leaf_C_StoragePriority',10],
+['Leaf_N_StructalPriority',10],
+['Leaf_N_StoragePriority',10],
+['Petiole_C_StructuralPriority',10],
+['Petiole_C_StoragePriority',10],
+['Petiole_N_StructuralPriority',10],
+['Petiole_N_StoragePriority',10]],columns=['param','value']).set_index('param')
+
+boundsDF = pd.DataFrame(data=[['LeafMinNconc',(1,25)],
+                              ['StorageRoot_C_StoragePriority',(0,100)],
+['StorageRoot_N_StoragelPriority',(0,200)],
+['Leaf_C_StructuralPriority',(0,200)],
+['Leaf_C_StoragePriority',(0,200)],
+['Leaf_N_StructalPriority',(0,200)],
+['Leaf_N_StoragePriority',(0,200)],
+['Petiole_C_StructuralPriority',(0,200)],
+['Petiole_C_StoragePriority',(0,200)],
+['Petiole_N_StructuralPriority',(0,200)],
+['Petiole_N_StoragePriority',(0,200)]],columns=['param','range']).set_index('param')
+
+paramNames=["FodderBeet.Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue",
+    "FodderBeet.StorageRoot.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+"FodderBeet.StorageRoot.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+"FodderBeet.StorageRoot.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+"FodderBeet.StorageRoot.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+"FodderBeet.Leaf.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+"FodderBeet.Leaf.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+"FodderBeet.Leaf.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+"FodderBeet.Leaf.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+"FodderBeet.Leaf.Nitrogen.DemandFunctions.QStoragePriority.FixedValue",
+"FodderBeet.Petiole.Carbon.DemandFunctions.QStructuralPriority.FixedValue",
+"FodderBeet.Petiole.Carbon.DemandFunctions.QMetabolicPriority.FixedValue",
+"FodderBeet.Petiole.Carbon.DemandFunctions.QStoragePriority.FixedValue",
+"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStructuralPriority.FixedValue",
+"FodderBeet.Petiole.Nitrogen.DemandFunctions.QMetabolicPriority.FixedValue",
+"FodderBeet.Petiole.Nitrogen.DemandFunctions.QStoragePriority.FixedValue"]
+
+def calcModelParamValues(fittingparams):
+    MinLN = fittingparams[0]/1000
+    
+    SRCstr = 1
+    SRCmet = 1
+    SRCsto = 1 * fittingparams[1]/10
+    
+    SRNstr = 1
+    SRNmet = 1
+    SRNsto = 1 * fittingparams[2]/10
+    
+    LCstr =  1 * fittingparams[3]/10
+    LCmet =  LCstr
+    LCsto =  1 * fittingparams[4]/10
+    
+    LNstr =  1 * fittingparams[5]/10
+    LNmet =  LNstr
+    LNsto =  1 * fittingparams[6]/10
+    
+    PCstr =  1 * fittingparams[7]/10
+    PCmet =  PCstr
+    PCsto =  1 * fittingparams[8]/10
+    
+    PNstr =  1 * fittingparams[9]
+    PNmet =  PNstr
+    PNsto =  1 * fittingparams[10]/10
+    
+    return [MinLN, SRCstr, SRCmet, SRCsto, SRNstr, SRNmet, SRNsto,
+                   LCstr,  LCmet,  LCsto,  LNstr,  LNmet,  LNsto,
+                   PCstr,  PCmet,  PCsto,  PNstr,  PNmet,  PNsto]
+
+Preparefile(Path+'.apsimx')
+
+x0 = x0sDF.value.values.tolist()
+bounds = boundsDF.range.values.tolist()
+
+RandomCalls = 100
+OptimizerCalls = 30
+TotalCalls = RandomCalls + OptimizerCalls
+
+checkpoint_saver = CheckpointSaver("./checkpoint.pkl", compress=9)
+#CheckPoint = load("./checkpoint.pkl")
+#x0 = CheckPoint.x_iters
+#y0 = CheckPoint.func_vals
+ret = gp_minimize(runPartitingModelItter, bounds, n_calls=TotalCalls,n_initial_points=RandomCalls,
+              initial_point_generator='sobol',callback=[checkpoint_saver],x0=x0)#y0=y0)
+# -
+x0sDF
+
+pd.DataFrame(data=calcModelParamValues(ret.x),index=paramNames)
 
 plt.plot(-ret.func_vals)
 plt.ylim(0,1)
