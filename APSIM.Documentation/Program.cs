@@ -14,6 +14,7 @@ namespace APSIM.Documentation
 {
     class Program
     {
+        private static IEnumerable<string> cols = new string[] { "Name", "Documentation files" };
         private static readonly string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
         private static readonly string underReview = Path.Combine(apsimx, "Tests", "UnderReview");
         private static readonly string validation = Path.Combine(apsimx, "Tests", "Validation");
@@ -89,7 +90,6 @@ namespace APSIM.Documentation
 
         private static IDocumentationTable GetTutorialsTable()
         {
-            IEnumerable<string> cols = new string[2] { "Name", "Tutorial" };
             IEnumerable<IDocumentationRow> rows = new[]
             {
                 StandardTutorialRow("Climate Controller", "ClimateController"),
@@ -105,21 +105,19 @@ namespace APSIM.Documentation
 
         private static IDocumentationTable GetClemTable()
         {
-            IEnumerable<string> cols = new string[4] { "Name", "Science Documentation", "Example1", "Example2" };
             IEnumerable<IDocumentationRow> rows = new[] { ClemDocsRow() };
             return new DocumentationTable("CLEM", cols, rows);
         }
 
         private static IDocumentationTable GetAutodocsConfig()
         {
-            IEnumerable<string> cols = new[] { "Name", "Documentation", "Params/Inputs/Outputs", "Detailed" };
             IEnumerable<IDocumentationRow> rows = new[]
             {
                 AgPastureDocsRow("AGPRyegrass (AgPasture)", "AGPRyegrass.json", "AgPasture.apsimx", "AgpRyegrass.pdf", true),
                 AgPastureDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf", false),
                 // todo: agroforestry
                 StandardPmfPlantRow("Barley"),
-                StandardPmfPlantRow("Canola"),
+                StandardPmfPlantRow("Canola", new ExternalDocument("Video", "https://www.youtube.com/watch?v=kz3w5nOtdqM")),
                 StandardPmfPlantRow("Chicory"),
                 StandardPmfPlantRow("Chickpea"),
                 StandardPmfPlantRow("Eucalyptus"),
@@ -127,7 +125,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Gliricidia"),
                 StandardPmfPlantRow("Maize"),
                 MicroClimateRow(),
-                StandardPmfPlantRow("Mungbean"),
+                StandardPmfPlantRow("Mungbean", new ExternalDocument("Video", "https://www.youtube.com/watch?v=nyDZkT1JTXw")),
                 StandardPmfPlantRow("Nutrient"),
                 StandardPmfPlantRow("Oats"),
                 StandardPmfPlantRow("OilPalm"),
@@ -159,13 +157,13 @@ namespace APSIM.Documentation
         private static IDocumentationRow AgPastureDocsRow(string name, string resourceFile, string validationFile, string outFile, bool documentSpeciesTable)
         {
             string speciesFile = Path.Combine(validation, "AgPasture", "SpeciesTable.apsimx");
-            IDocumentationFile speciesParams = new DocsFromFile(speciesFile, "SpeciesTable.pdf", options);
+            IDocumentationFile speciesParams = new DocsFromFile("Species table", speciesFile, "SpeciesTable.pdf", options);
             IDocumentationFile scienceDocs = new ExternalDocument("Science Documentation", agpScience);
 
             List<IDocumentationFile> files = new List<IDocumentationFile>();
-	    files.Add(scienceDocs);
-	    if (documentSpeciesTable)
-		files.Add(speciesParams);
+	        files.Add(scienceDocs);
+	        if (documentSpeciesTable)
+		        files.Add(speciesParams);
             IDocumentationCell detailsCells = new DocumentationCell(files);
             return StandardDocsRow(name, resourceFile, validationFile, outFile, detailsCells.ToEnumerable());
         }
@@ -174,13 +172,13 @@ namespace APSIM.Documentation
         {
             string apsimxFile = Path.Combine(examples, "Tutorials", "Lifecycle", "lifecycle.apsimx");
             string outFile = "lifecycle.pdf";
-            return CustomDocsRow("Life cycle", new[] { apsimxFile }, outFile);
+            return CustomDocsRow("Life cycle", "Tutorial", new[] { apsimxFile }, outFile);
         }
 
         private static IDocumentationRow StandardTutorialRow(string rowName, string fileName)
         {
             string inputFile = Path.Combine(examples, "Tutorials", $"{fileName}.apsimx");
-            IDocumentationFile file = new DocsFromFile(inputFile, $"{fileName}.pdf", options);
+            IDocumentationFile file = new DocsFromFile("Tutorial", inputFile, $"{fileName}.pdf", options);
             IDocumentationCell cell = new DocumentationCell(file);
             return new DocumentationRow(rowName, cell.ToEnumerable());
         }
@@ -191,8 +189,8 @@ namespace APSIM.Documentation
             string croppingFile = Path.Combine(clem, "CLEM_Example_Cropping.apsimx");
             string grazingFile = Path.Combine(clem, "CLEM_Example_Grazing.apsimx");
             IDocumentationFile scienceDocs = new ExternalDocument("Science Documentation", "https://www.apsim.info/clem");
-            IDocumentationFile croppingExample = new DocsFromFile(croppingFile, "CLEM_Example_Cropping.pdf", options);
-            IDocumentationFile grazingExample = new DocsFromFile(grazingFile, "CLEM_Example_Grazing.pdf", options);
+            IDocumentationFile croppingExample = new DocsFromFile("Cropping example", croppingFile, "CLEM_Example_Cropping.pdf", options);
+            IDocumentationFile grazingExample = new DocsFromFile("Grazing example", grazingFile, "CLEM_Example_Grazing.pdf", options);
             IEnumerable<IDocumentationCell> cells = new IDocumentationCell[3]
             {
                 new DocumentationCell(new[] { scienceDocs }),
@@ -221,7 +219,7 @@ namespace APSIM.Documentation
             IDocumentationFile grazPlanDoc = new ExternalDocument("GRAZPLAN Animal Biology Model", grazPlan);
             IDocumentationCell detailsCell = new DocumentationCell(grazPlanDoc);
 
-            return CustomDocsRow("Stock", validationFile.ToEnumerable(), "Stock.pdf", new [] { paramsCell, detailsCell });
+            return CustomDocsRow("Stock", "Description & validation", validationFile.ToEnumerable(), "Stock.pdf", new [] { paramsCell, detailsCell });
         }
 
         private static IDocumentationRow SoilWaterDocs()
@@ -235,7 +233,7 @@ namespace APSIM.Documentation
 
             IDocumentationFile parameters = new ParamsDocsFromFile(validationFile, $"SoilWater-parameters.pdf", options);
             IDocumentationCell paramsCell = new DocumentationCell(parameters);
-            return CustomDocsRow("SoilWater", inputs, $"{modelName}.pdf", paramsCell.ToEnumerable());
+            return CustomDocsRow("SoilWater", "Description & validation", inputs, $"{modelName}.pdf", paramsCell.ToEnumerable());
         }
 
         private static IDocumentationRow ModelWithNoResourceRow(string modelName, IEnumerable<IDocumentationCell> extraCells = null)
@@ -246,7 +244,7 @@ namespace APSIM.Documentation
             IDocumentationFile paramsDocs = new ParamsDocsFromFile(validationFile, $"{modelName}-params.pdf", options);
             IDocumentationCell paramsCell = new DocumentationCell(paramsDocs);
             extraCells = extraCells == null ? paramsCell.ToEnumerable() : extraCells.Prepend(paramsCell);
-            return CustomDocsRow(modelName, inputs, $"{modelName}.pdf", extraCells);
+            return CustomDocsRow(modelName, "Description & validation", inputs, $"{modelName}.pdf", extraCells);
         }
 
         private static IDocumentationRow CreateUnderReviewPlantRow(string modelName)
@@ -261,9 +259,14 @@ namespace APSIM.Documentation
             return new DocumentationRow(modelName, new[] { cell, paramsCell });
         }
 
-        private static IDocumentationRow StandardPmfPlantRow(string modelName)
+        private static IDocumentationRow StandardPmfPlantRow(string modelName, ExternalDocument extraFile)
         {
-            return StandardDocsRow($"{modelName}", $"{modelName}.json", $"{modelName}.apsimx", $"{modelName}.pdf");
+            return StandardDocsRow($"{modelName}", $"{modelName}.json", $"{modelName}.apsimx", $"{modelName}.pdf", new IDocumentationCell[] { new DocumentationCell(extraFile) });
+        }
+
+        private static IDocumentationRow StandardPmfPlantRow(string modelName, IEnumerable<IDocumentationCell> extraFiles = null)
+        {
+            return StandardDocsRow($"{modelName}", $"{modelName}.json", $"{modelName}.apsimx", $"{modelName}.pdf", extraFiles);
         }
 
         private static IDocumentationRow StandardDocsRow(string name, string modelResourceFile, string validationFile, string outFile, IEnumerable<IDocumentationCell> extraCells = null)
@@ -275,7 +278,7 @@ namespace APSIM.Documentation
 
             string paramsFileName = $"{Path.GetFileNameWithoutExtension(outFile)}-parameters.pdf";
 
-            IDocumentationFile autodoc = new DocsFromFile(files, outFile, options);
+            IDocumentationFile autodoc = new DocsFromFile("Description & validation", files, outFile, options);
             IDocumentationFile param = new ParamsDocsFromFile(model, paramsFileName, options);
 
             List<IDocumentationCell> cells = new List<IDocumentationCell>();
@@ -287,10 +290,10 @@ namespace APSIM.Documentation
             return new DocumentationRow(name, cells);
         }
 
-        private static IDocumentationRow CustomDocsRow(string name, IEnumerable<string> inputs, string output, IEnumerable<IDocumentationCell> extraCells = null)
+        private static IDocumentationRow CustomDocsRow(string name, string subName, IEnumerable<string> inputs, string output, IEnumerable<IDocumentationCell> extraCells = null)
         {
             List<IDocumentationCell> cells = new List<IDocumentationCell>();
-            cells.Add(new DocumentationCell(new DocsFromFile(inputs, output, options)));
+            cells.Add(new DocumentationCell(new DocsFromFile(subName, inputs, output, options)));
             if (extraCells != null)
                 cells.AddRange(extraCells);
             return new DocumentationRow(name, cells);
