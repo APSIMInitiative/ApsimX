@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 357,
+  "ExplorerWidth": 412,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -3787,15 +3787,53 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MovingAverageFunction, Models",
-                      "NumberOfDays": 30,
-                      "StageToStartMovingAverage": "Emergence",
-                      "Name": "AccumulatedWaterStressEffect",
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "StressFactor",
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Canopy.Fw",
-                          "Name": "FW",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "AccumulatedWaterStressEffect",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MovingAverageFunction, Models",
+                              "NumberOfDays": 30,
+                              "StageToStartMovingAverage": "Emergence",
+                              "Name": "AccumulatedWaterStressEffect",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Canopy.Fw",
+                                  "Name": "FW",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": "",
+                              "Name": "Sensitivity",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": "",
+                          "Name": "UpperLimit",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -8412,6 +8450,15 @@
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "",
+                      "Parameters": null,
+                      "Name": "SetCropParameters",
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
