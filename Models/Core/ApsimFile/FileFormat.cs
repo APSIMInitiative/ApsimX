@@ -248,7 +248,10 @@
                                                                                      m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
                     }
                     else
-                        return new Model[0];
+                    {
+                        model.ResourceName = null;
+                        return model.Children;
+                    }
                 }
             }
         }

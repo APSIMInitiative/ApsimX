@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
             {
                 string relatesTo = null;
                 if (Parent as CLEMRuminantActivityBase != null)
-                    relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdName;
+                    relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdNameToDisplay;
 
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
