@@ -175,7 +175,10 @@
                     { 
                         child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
                         child.Name = selectedModelType.ModelName;
-                        child.ResourceName = selectedModelType.ResourceString;
+                        var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
+                                                                               selectedModelType.ResourceString);
+                        if (contents != null)
+                            child.ResourceName = selectedModelType.ResourceString;
                     }
 
                     var command = new AddModelCommand(this.model, child, explorerPresenter.GetNodeDescription);
