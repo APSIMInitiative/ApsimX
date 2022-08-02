@@ -42,8 +42,6 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
-        //private Dictionary<string, IIndividualAttribute> randomHerdAttributes = new Dictionary<string, IIndividualAttribute>();
-
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
@@ -120,7 +118,7 @@ namespace Models.CLEM.Activities
 
                         // must be breeders to bother checking any further
                         // must be either uncontrolled mating or the timing of controlled mating
-                        if (breeders.Count() > 0 & (!useControlledMating || this.TimingCheck(previousDate)))
+                        if (breeders.Count() > 0 & (!useControlledMating || controlledMating.TimingCheck(previousDate)))
                         {
                             int numberPossible = 0;
                             int numberServiced = 1;
@@ -313,7 +311,6 @@ namespace Models.CLEM.Activities
                         newSucklingRuminant.Location = female.Location;
                         newSucklingRuminant.Mother = female;
                         newSucklingRuminant.Number = 1;
-                        newSucklingRuminant.SetUnweaned();
                         // suckling/calf weight from Freer
                         newSucklingRuminant.PreviousWeight = newSucklingRuminant.Weight;
                         newSucklingRuminant.SaleFlag = HerdChangeReason.Born;

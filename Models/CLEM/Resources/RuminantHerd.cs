@@ -273,30 +273,10 @@ namespace Models.CLEM.Resources
             // Remove mother ID from any suckling offspring
             if (ind is RuminantFemale)
             {
-                string reason;
-                switch (ind.SaleFlag)
-                {
-                    case HerdChangeReason.Consumed:
-                    case HerdChangeReason.DiedUnderweight:
-                    case HerdChangeReason.DiedMortality:
-                        reason = "MotherDied";
-                        break;
-                    case HerdChangeReason.MarkedSale:
-                    case HerdChangeReason.TradeSale:
-                    case HerdChangeReason.ExcessBreederSale:
-                    case HerdChangeReason.MaxAgeSale:
-                        reason = "MotherSold";
-                        break;
-                    default:
-                        reason = "Unknown";
-                        break;
-                }
-
                 while ((ind as RuminantFemale).SucklingOffspringList.Any())
                 {
                     Ruminant offspring = (ind as RuminantFemale).SucklingOffspringList.FirstOrDefault();
-                    offspring.Wean(true, reason);
-                    offspring.Mother = null;
+                    offspring.MotherLost();
                 }
             }
 
@@ -469,11 +449,13 @@ namespace Models.CLEM.Resources
         /// <returns>A grouped summary of individuals</returns>
         public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {
+            bool multi = individuals.Select(a => a.BreedParams.Name).Distinct().Count() > 1;
             var groupedInd = from ind in individuals
                                     group ind by ind.BreedParams.Name into breedGroup
                                     select new RuminantReportTypeDetails()
                                     {
                                         RuminantTypeName = breedGroup.Key,
+                                        RuminantTypeNameToDisplay = (multi?breedGroup.Key:""),
                                         RuminantTypeGroup = from gind in breedGroup
                                                  group gind by gind.GetTransactionCategory(TransactionStyle, priceStyle) into catind
                                                  select new RuminantReportGroupDetails()
@@ -573,6 +555,11 @@ namespace Models.CLEM.Resources
         /// Name of ruminant type
         /// </summary>
         public string RuminantTypeName { get; set; }
+
+        /// <summary>
+        /// Name of ruminant type
+        /// </summary>
+        public string RuminantTypeNameToDisplay { get; set; }
 
         /// <summary>
         /// A list of all the details for the type

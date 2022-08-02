@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -37,6 +38,7 @@ namespace Models.CLEM.Activities
         private double totalPastureDesired = 0;
         private FoodResourcePacket foodDetails = new FoodResourcePacket();
         private ResourceRequest pastureRequest = null;
+        private double shortfallReportingCutoff = 0.01;
 
         /// <summary>
         /// Number of hours grazed
@@ -136,9 +138,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMValidate")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
+            shortfallReportingCutoff = FindInScope<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
+
             // if this is the last of newly added models that will be set to hidden
             // reset the simulation subscriptions to correct the new order before running the simulation.
-            if(IsHidden)
+            if (IsHidden)
             {
                 Events events = new Events(FindAncestor<Simulation>());
                 //events.DisconnectEvents();
@@ -294,7 +298,7 @@ namespace Models.CLEM.Activities
                 }
                 Status = ActivityStatus.Success;
 
-                if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired*0.01))
+                if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired* shortfallReportingCutoff))
                 {
                     ResourceRequest shortfallRequest = pastureRequest;
                     if (shortfallRequest is null)
@@ -302,18 +306,20 @@ namespace Models.CLEM.Activities
                         shortfallRequest = new ResourceRequest()
                         {
                             Available = pastureRequest?.Provided??0, // display all that was given
-                            Required = totalPastureDesired,
+                            Required = totalPastureRequired,
                             ResourceType = typeof(GrazeFoodStore),
                             ResourceTypeName = GrazeFoodStoreModel.Name
                         };
                     }
                     if (MathUtilities.IsLessThan(shortfall, 1))
                     {
-                        this.Status = ActivityStatus.Partial;
+                        this.Status = ((pastureRequest?.Provided ?? 0) == 0) ? ActivityStatus.Warning : ActivityStatus.Partial;
                         shortfallRequest.ShortfallStatus = "BelowRequired";
                     }
                     else
                     {
+                        if ((pastureRequest?.Provided ?? 0) == 0)
+                            Status = ActivityStatus.Warning;
                         shortfallRequest.Required = totalPastureDesired;
                         shortfallRequest.ShortfallStatus = "BelowDesired";
                     }
