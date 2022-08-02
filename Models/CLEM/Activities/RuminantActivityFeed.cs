@@ -312,7 +312,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = $"{TransactionCategory}.Wastage",
-                        RelatesToResource = this.PredictedHerdName,
+                        RelatesToResource = this.PredictedHerdNameToDisplay,
                     };
                     ResourceRequestList.Insert(0, wastedRequest);
                 }
@@ -330,7 +330,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = $"{TransactionCategory}.Overfed wastage",
-                        RelatesToResource = this.PredictedHerdName
+                        RelatesToResource = this.PredictedHerdNameToDisplay
                     };
                     ResourceRequestList.Insert(0, excessRequest);
                 }
