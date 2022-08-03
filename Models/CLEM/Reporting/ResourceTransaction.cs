@@ -24,7 +24,7 @@ namespace Models.CLEM
         /// </summary>
         public CLEMModel Activity { get; set; }
         /// <summary>
-        /// Cateogry for data analysis and summary
+        /// Category for data analysis and summary
         /// </summary>
         public string Category { get; set; }
         /// <summary>
@@ -65,6 +65,28 @@ namespace Models.CLEM
         public double Amount { get; set; }
 
         /// <summary>
+        /// Method to return the specified substring of the category based on "." delimited levels
+        /// </summary>
+        /// <param name="level">The index of the level to return</param>
+        /// <returns>The sub string</returns>
+        public string CategoryByLevel(int level)
+        {
+            if (level == 0)
+                return Category;
+            else
+            {
+                string[] parts = Category.Split('.');
+                if (parts.Length >= level)
+                {
+                    if (parts[level - 1].Contains("@RelatesTo"))
+                        return parts[level - 1].Replace("@RelatesTo", RelatesToResource);
+                    return parts[level - 1];
+                }
+                return "";
+            }
+        }
+
+        /// <summary>
         /// Allows inclusion of -ve in losses
         /// </summary>
         /// <param name="lossesAsNegative">convert losses to negative</param>
@@ -103,7 +125,7 @@ namespace Models.CLEM
                         break;
                     case "loss":
                         amount = this.Loss;
-                        if (reportLossesAsNegative)
+                        if (!reportLossesAsNegative)
                         {
                             amount *= -1;
                         }
@@ -127,7 +149,7 @@ namespace Models.CLEM
         {
             if (ResourceType != null)
             {
-                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?-1:1);
+                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?1:-1);
                 return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
             }
             return null;

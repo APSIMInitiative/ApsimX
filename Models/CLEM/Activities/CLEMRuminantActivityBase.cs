@@ -25,6 +25,7 @@ namespace Models.CLEM.Activities
         private bool reportedRestrictedHerd = false;
         private bool allowMultipleBreeds;
         private bool allowMultipleHerds;
+        private bool multipleHerds = false;
 
         /// <summary>
         /// List of filters that define the herd
@@ -37,6 +38,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public string PredictedHerdName { get; private set; }
+
+        /// <summary>
+        /// Herd name determined for this activity to be used in display
+        /// Returns empty string if only one herd in use
+        /// </summary>
+        [JsonIgnore]
+        public string PredictedHerdNameToDisplay { get {return (multipleHerds?PredictedHerdName:""); }  }
 
         /// <summary>
         /// Breed determined for this activity
@@ -177,6 +185,7 @@ namespace Models.CLEM.Activities
             // check for multiple breeds
             if (herd.Select(a => a.Breed).Distinct().Skip(1).Any())
             {
+                multipleHerds = true;
                 if (!allowMultipleBreeds)
                     throw new ApsimXException(this, $"Multiple breeds were detected in current herd for [a={this.Name}]{Environment.NewLine}Use a Ruminant Filter Group to specify a single breed for this activity.");
                 PredictedHerdBreed = "Multiple";

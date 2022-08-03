@@ -211,11 +211,18 @@ namespace Models.CLEM.Resources
         public IPastureManager Manager
         {
             get
-            { return manager; }
+            { 
+                return manager;
+            }
             set
             {
-                if(manager!=null)
-                    throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]");
+                if(manager!=null && manager!=value )
+                {
+                    if(manager is CropActivityManageCrop)
+                        Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
+                    else
+                        throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
+                }
                 manager = value;
             }
         }
@@ -393,8 +400,8 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
-        private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
             if(Manager == null)
                 Summary.WriteMessage(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name), MessageType.Warning);
@@ -606,7 +613,7 @@ namespace Models.CLEM.Resources
                 if (newPools.Count() > 1)
                     reason = "Initialise pool " + pool.Age.ToString();
 
-                Add(pool, this, "", reason);
+                Add(pool, null, null, reason);
             }
         }
 
@@ -870,7 +877,7 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            bool noGrowSeason = false;
+            bool noGrowSeason;
             int first = (int)FirstMonthOfGrowSeason;
             int last = (int)LastMonthOfGrowSeason;
             if (first < last)

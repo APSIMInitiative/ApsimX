@@ -68,7 +68,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityGrow()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -100,7 +99,7 @@ namespace Models.CLEM.Activities
                 if(MathUtilities.FloatsAreEqual(weaningAge, 0))
                     weaningAge = ind.BreedParams.GestationLength;
 
-                if (MathUtilities.IsGreaterThanOrEqual(ind.Age, weaningAge))
+                if (MathUtilities.IsGreaterThan(ind.Age, weaningAge))
                 {
                     ind.Wean(true, "Natural");
 
@@ -121,7 +120,7 @@ namespace Models.CLEM.Activities
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
+            foreach (var ind in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
             {
                 foreach (var indi in ind)
                 {
@@ -153,7 +152,7 @@ namespace Models.CLEM.Activities
 
             // calculate milk intake shortfall for sucklings
             // all in units per day and multiplied at end of this section
-            if (!ind.Weaned)
+            if (ind.IsSucklingWithMother)
             {
                 // potential milk intake/animal/day
                 ind.MilkPotentialIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
@@ -178,7 +177,7 @@ namespace Models.CLEM.Activities
                     // older individual check. previous method before adding calulation for weaners after discussions with Cam McD
                     //double prevint = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
-                else // 12month+ individuals
+                else // 12month+ weaned individuals
                 {
                     // Reference: SCA based actual LWTs
                     potentialIntake = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
@@ -341,6 +340,8 @@ namespace Models.CLEM.Activities
                     else
                     {
                         // for calves
+                        // these individuals have access to milk or are separated from mother and must survive on calf calculated pasture intake
+
                         // if potential intake = 0 they wave not needed to consume pasture and intake will be zero.
                         if(MathUtilities.IsPositive(ind.PotentialIntake))
                         {
@@ -439,8 +440,10 @@ namespace Models.CLEM.Activities
             double energyMaintenance;
             if (!ind.Weaned)
             {
-                // calculate engergy and growth from milk intake
+                // unweaned individuals are assumed to be suckling as natural weaning rate set regardless of inclusion of wean activity
+                // unweaned individuals without mother or milk from mother will need to try and survive on limited pasture until weaned.
 
+                // calculate engergy and growth from milk intake
                 // recalculate milk intake based on mothers updated milk production for the time step
                 double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
                 ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);

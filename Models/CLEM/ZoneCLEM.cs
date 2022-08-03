@@ -79,6 +79,20 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
+        /// Build TransactionCategory from tree structure
+        /// </summary>
+        [Description("Build TransactionCategory from tree structure")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool BuildTransactionCategoryFromTree { get; set; }
+
+        /// <summary>
+        /// Use model name as TransactionCategory
+        /// </summary>
+        [Description("Use component name as TransactionCategory")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool UseModelNameAsTransactionCategory { get; set; }
+
+        /// <summary>
         /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]

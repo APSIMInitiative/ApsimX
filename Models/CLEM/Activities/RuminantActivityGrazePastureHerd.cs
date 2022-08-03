@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -37,6 +38,7 @@ namespace Models.CLEM.Activities
         private double totalPastureDesired = 0;
         private FoodResourcePacket foodDetails = new FoodResourcePacket();
         private ResourceRequest pastureRequest = null;
+        private double shortfallReportingCutoff = 0.01;
 
         /// <summary>
         /// Number of hours grazed
@@ -111,14 +113,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityGrazePastureHerd()
-        {
-            TransactionCategory = "Livestock.Grazing";
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -136,6 +130,24 @@ namespace Models.CLEM.Activities
 
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMValidate")]
+        private void OnFinalInitialise(object sender, EventArgs e)
+        {
+            shortfallReportingCutoff = FindInScope<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake??0.02;
+
+            // if this is the last of newly added models that will be set to hidden
+            // reset the simulation subscriptions to correct the new order before running the simulation.
+            if (IsHidden)
+            {
+                Events events = new Events(FindAncestor<Simulation>());
+                //events.DisconnectEvents();
+                events.ReconnectEvents("Models.Clock", "CLEMGetResourcesRequired");
+            }
         }
 
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>
@@ -177,7 +189,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // if this is the first time of this request not being partially managerd by a RuminantActivityGradePaddock work independently
+            // if this is the first time of this request not being partially managed by a RuminantActivityGradePaddock work independently
             if (lastResourceRequest != Clock.Today)
             {
                 ResourceRequestList = new List<ResourceRequest>();
@@ -223,14 +235,15 @@ namespace Models.CLEM.Activities
                     {
                         pastureRequest = new ResourceRequest()
                         {
-                            AllowTransmutation = true,
+                            AllowTransmutation = false,
                             Required = totalPastureRequired,
                             Resource = GrazeFoodStoreModel,
                             ResourceType = typeof(GrazeFoodStore),
                             ResourceTypeName = this.GrazeFoodStoreModel.Name,
                             ActivityModel = this,
                             AdditionalDetails = this,
-                            Category = TransactionCategory
+                            Category = TransactionCategory,
+                            RelatesToResource = this.RuminantTypeModel.Name
                         };
                         ResourceRequestList.Add(pastureRequest);
                         foodDetails = new FoodResourcePacket()
@@ -285,7 +298,7 @@ namespace Models.CLEM.Activities
                 }
                 Status = ActivityStatus.Success;
 
-                if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired*0.01))
+                if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired* shortfallReportingCutoff))
                 {
                     ResourceRequest shortfallRequest = pastureRequest;
                     if (shortfallRequest is null)
@@ -293,18 +306,29 @@ namespace Models.CLEM.Activities
                         shortfallRequest = new ResourceRequest()
                         {
                             Available = pastureRequest?.Provided??0, // display all that was given
-                            Required = totalPastureDesired,
+                            Required = totalPastureRequired,
                             ResourceType = typeof(GrazeFoodStore),
                             ResourceTypeName = GrazeFoodStoreModel.Name
                         };
                     }
+                    if (MathUtilities.IsLessThan(shortfall, 1))
+                    {
+                        this.Status = ((pastureRequest?.Provided ?? 0) == 0) ? ActivityStatus.Warning : ActivityStatus.Partial;
+                        shortfallRequest.ShortfallStatus = "BelowRequired";
+                    }
+                    else
+                    {
+                        if ((pastureRequest?.Provided ?? 0) == 0)
+                            Status = ActivityStatus.Warning;
+                        shortfallRequest.Required = totalPastureDesired;
+                        shortfallRequest.ShortfallStatus = "BelowDesired";
+                    }
+
                     ActivitiesHolder.ReportActivityShortfall(new ResourceRequestEventArgs() { Request = shortfallRequest });
 
                     // only allow the stop error if this is a shortfall in required not desired.
                     if (MathUtilities.IsLessThan(Math.Round(shortfall, 4), 1) && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                         throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in {Clock.Today:dd\\yyyy}");
-
-                    this.Status = ActivityStatus.Partial;
                 }
             }
         }

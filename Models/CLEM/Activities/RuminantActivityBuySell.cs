@@ -66,7 +66,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityBuySell()
         {
-            TransactionCategory = "Livestock.[Type].Manage";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -246,7 +245,7 @@ namespace Models.CLEM.Activities
                             Required = herdValue,
                             AllowTransmutation = false,
                             Category = TransactionCategory,
-                            RelatesToResource = this.PredictedHerdName,
+                            RelatesToResource = this.PredictedHerdNameToDisplay,
                             AdditionalDetails = "Purchases",
                             ResourceType = typeof(Finance),
                             ResourceTypeName = BankAccountName,
@@ -405,7 +404,7 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     AllowTransmutation = false,
                                     Category = TransactionCategory,
-                                    RelatesToResource = this.PredictedHerdName
+                                    RelatesToResource = this.PredictedHerdNameToDisplay
                                 };
                                 purchaseRequest.Available = bankAccount.Amount;
                                 purchaseRequest.Required = request.Required-valueOfSkipped;
@@ -436,8 +435,8 @@ namespace Models.CLEM.Activities
                                 Required = item2.TotalPrice ?? 0,
                                 Available = item2.TotalPrice ?? 0,
                                 AllowTransmutation = false,
-                                Category = $"{TransactionCategory}.{item2.GroupName}",
-                                RelatesToResource = this.PredictedHerdName,
+                                Category = TransactionCategory,
+                                RelatesToResource = $"{PredictedHerdNameToDisplay}.{item2.GroupName}".TrimStart('.')
                             });
                         }
                     }
@@ -471,7 +470,7 @@ namespace Models.CLEM.Activities
                     var groupedIndividuals = HerdResource.SummarizeIndividualsByGroups(taskIndividuals, PurchaseOrSalePricingStyleType.Sale);
                     foreach (var item in groupedIndividuals)
                         foreach (var item2 in item.RuminantTypeGroup)
-                            bankAccount.Add(item2.TotalPrice, this, item.RuminantTypeName, $"{TransactionCategory}.{item2.GroupName}");
+                            bankAccount.Add(item2.TotalPrice, this, $"{item.RuminantTypeNameToDisplay}.{item2.GroupName}".TrimStart('.'), TransactionCategory);
                 }
             }
             else // purchases

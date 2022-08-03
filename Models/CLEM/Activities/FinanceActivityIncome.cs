@@ -48,7 +48,6 @@ namespace Models.CLEM.Activities
         public FinanceActivityIncome()
         {
             this.SetDefaults();
-            TransactionCategory = "[General].Income";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -65,7 +64,7 @@ namespace Models.CLEM.Activities
         {
             if (Amount > 0)
             {
-                bankAccount.Add(Amount, this, "", TransactionCategory);
+                bankAccount.Add(Amount, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial();
             }
         }
