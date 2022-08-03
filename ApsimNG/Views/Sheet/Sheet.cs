@@ -182,6 +182,14 @@ namespace UserInterface.Views
         /// <summary>A collection of row indexes that are currently fully visible.</summary>        
         public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
 
+        /// <summary>
+        /// The number of rows that might potentially be currently visible, whether they hold data or not, including those partially visible
+        /// </summary>
+        private int VisibleRowCount
+        {
+            get { return (Height + RowHeight - 1) / RowHeight; }
+        }
+
         /// <summary>Calculates the bounds of a cell if it is visible (wholly or partially) to the user.</summary>
         /// <param name="columnIndex">The cell column index.</param>
         /// <param name="rowIndex">The cell row index.</param>
@@ -313,7 +321,7 @@ namespace UserInterface.Views
 
                 // Optionally add in blank rows at bottom of grid.
                 int numRowsOfData = VisibleRowIndexes.Count();
-                int numBlankRowsToAdd = Math.Max(0, RowCount - numRowsOfData);
+                int numBlankRowsToAdd = Math.Max(0, VisibleRowCount - numRowsOfData);
                 foreach (var columnIndex in VisibleColumnIndexes)
                     for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
                         DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
