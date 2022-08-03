@@ -240,15 +240,7 @@
                         return model.Children;
 
                     // Return a collection of child models that aren't from a resource.
-                    var resourceModel = Resource.Instance.GetModel(model.ResourceName);
-                    if (resourceModel != null)
-                    {
-                        List<IModel> resourceChildren = resourceModel.Children;
-                        return model.Children.Where(m => !resourceChildren.Any(rc => m.GetType() == rc.GetType() &&
-                                                                                     m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
-                    }
-                    else
-                        return null;
+                    return Resource.Instance.RemoveResourceChildren(model);
                 }
             }
         }

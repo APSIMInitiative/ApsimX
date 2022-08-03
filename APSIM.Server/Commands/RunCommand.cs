@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Models.Core.Run;
 using Models.Storage;
+using static Models.Core.Overrides;
 
 namespace APSIM.Server.Commands
 {
@@ -17,13 +18,13 @@ namespace APSIM.Server.Commands
         private bool runTests;
         private IEnumerable<string> simulationNamesToRun;
         private int numberOfProcessors;
-        private IEnumerable<(string name, object value)> changes;
+        private IEnumerable<Override> changes;
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
         /// </summary>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(IEnumerable<(string name, object value)> changes)
+        public RunCommand(IEnumerable<Override> changes)
         {
             runPostSimulationTools = true;
             runTests = true;
@@ -40,7 +41,7 @@ namespace APSIM.Server.Commands
         /// <param name="numProcessors">Max number of processors to use.</param>
         /// <param name="simulationNames">Simulation names to run.</param>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<(string name, object value)> changes, IEnumerable<string> simulationNames)
+        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<Override> changes, IEnumerable<string> simulationNames)
         {
             runPostSimulationTools = runPostSimTools;
             this.runTests = runTests;

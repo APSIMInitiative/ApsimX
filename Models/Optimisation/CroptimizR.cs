@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Models.Sensitivity;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Containers;
+using static Models.Core.Overrides;
 
 namespace Models.Optimisation
 {
@@ -567,7 +568,7 @@ namespace Models.Optimisation
         /// <param name="checkpointName">Name of the checkpoint.</param>
         /// <param name="optimalValues">Changes to be applied to the models.</param>
         /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
-        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<(string, object)> optimalValues)
+        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<Override> optimalValues)
         {
             IDataStore storage = FindInScope<IDataStore>();
 
@@ -598,11 +599,11 @@ namespace Models.Optimisation
         /// parameter values returned by the optimiser.
         /// </summary>
         /// <param name="data">Datatable.</param>
-        private IEnumerable<(string, object)> GetOptimalValues(DataTable data)
+        private IEnumerable<Override> GetOptimalValues(DataTable data)
         {
             DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
             foreach (Parameter param in Parameters)
-                yield return (param.Path, optimal[$"{param.Name} Final"]);
+                yield return new Override(param.Path, optimal[$"{param.Name} Final"], Override.MatchTypeEnum.NameAndType);
         }
 
         /// <summary>

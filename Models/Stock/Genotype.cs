@@ -5,6 +5,7 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using static Models.Core.Overrides;
 
     /// <summary>Encapsulates a parameter set for an animal.</summary>
     [Serializable]
@@ -148,7 +149,7 @@ namespace Models.GrazPlan
         /// <param name="name">Name of the animal parameter set.</param>
         /// <param name="animalTypeString">The animal type.</param>
         /// <param name="parameters">The parameter values to apply.</param>
-        public Genotype(string name, string animalTypeString, List<(string name, object value)> parameters)
+        public Genotype(string name, string animalTypeString, List<Override> parameters)
         {
             for (int i = 0; i < ConceiveSigs.Length; i++)
                 ConceiveSigs[i] = new double[2];

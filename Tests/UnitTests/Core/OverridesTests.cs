@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static Models.Core.Overrides;
 
 namespace UnitTests.Core
 {
@@ -142,7 +143,7 @@ namespace UnitTests.Core
         [Test]
         public void SetPropertyInTypeMatchedModels()
         {
-            Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z");
+            Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
             foreach (var report in sims1.FindAllInScope<Models.Report>())
                 Assert.AreEqual(new[] { "x", "y", "z" }, report.VariableNames);
@@ -152,7 +153,7 @@ namespace UnitTests.Core
         [Test]
         public void SetPropertyInNameMatchedModels()
         {
-            Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z");
+            Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
             // It should have changed all Report1 models.
             foreach (var report1 in sims1.FindAllInScope<Models.Report>("Report1"))
@@ -170,7 +171,7 @@ namespace UnitTests.Core
         [Test]
         public void SetDateProperty()
         {
-            Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01));
+            Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01), Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
             Assert.AreEqual(new DateTime(2000, 01, 01), clock.StartDate);
@@ -180,7 +181,7 @@ namespace UnitTests.Core
         [Test]
         public void SetModelFromExternalFileFirstMatchingModel()
         {
-            Overrides.Apply(sims1, "[Clock]", extFile);
+            Overrides.Apply(sims1, "[Clock]", extFile, Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
             Assert.AreEqual(new DateTime(2020, 01, 01), clock.StartDate);
@@ -190,7 +191,7 @@ namespace UnitTests.Core
         [Test]
         public void SetModelFromExternalFileSpecificModel()
         {
-            Overrides.Apply(sims1, "[Clock]", $"{extFile};[Clock2]");
+            Overrides.Apply(sims1, "[Clock]", $"{extFile};[Clock2]", Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
             Assert.AreEqual(new DateTime(2021, 01, 01), clock.StartDate);
@@ -201,7 +202,7 @@ namespace UnitTests.Core
         public void ReplaceModelUsingNameMatch()
         {
             var newVariableNames = new string[] { "New" };
-            Overrides.Apply(sims1, "Name=Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames });
+            Overrides.Apply(sims1, "Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames }, Override.MatchTypeEnum.Name);
 
             // It should have changed all Report1 models to Report4
             var reports = sims1.FindAllInScope<Models.Report>().ToArray();
@@ -223,16 +224,16 @@ namespace UnitTests.Core
         [Test]
         public void TestEditingGenericLists()
         {
-            var overrides = new (string name, object value)[]
+            var overrides = new Override[]
             {
                 // Set an entire (string) list.
-                ("[StringList].Data", "1, x, y, true, 0.5"),
+                new Override("[StringList].Data", "1, x, y, true, 0.5", Override.MatchTypeEnum.NameAndType),
                 
                 // Modify a single element of a (string) list.
-                ("[StringList].Data[1]", 6),
+                new Override("[StringList].Data[1]", 6, Override.MatchTypeEnum.NameAndType),
 
                 // Modify multiple elements of a (string) list.
-                ("[StringList].Data[3:4]", "xyz"),
+                new Override("[StringList].Data[3:4]", "xyz", Override.MatchTypeEnum.NameAndType),
             };
 
             Overrides.Apply(sims1, overrides);

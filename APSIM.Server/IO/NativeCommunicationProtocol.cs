@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using static Models.Core.Overrides;
 
 namespace APSIM.Server.IO
 {
@@ -158,9 +159,9 @@ namespace APSIM.Server.IO
             return new ReadCommand(table, parameters);
         }
 
-        public IEnumerable<(string name, object value)> ReadChanges()
+        public IEnumerable<Override> ReadChanges()
         {
-            List<(string name, object value)> replacements = new List<(string name, object value)>();
+            List<Override> replacements = new List<Override>();
 
             // For now, we assume the same parameter changes are applied to all simulations.
             object input;
@@ -175,7 +176,7 @@ namespace APSIM.Server.IO
                 SendMessage(ack);
                 if (paramValue == null)
                     throw new NullReferenceException("paramValue is null");
-                replacements.Add((path, paramValue));
+                replacements.Add(new Override(path, paramValue, Override.MatchTypeEnum.NameAndType));
             }
             SendMessage(ack);
 

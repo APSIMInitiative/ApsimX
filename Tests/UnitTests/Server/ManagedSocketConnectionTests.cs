@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO.Pipes;
 using System.Threading.Tasks;
+using static Models.Core.Overrides;
 
 namespace UnitTests
 {
@@ -74,10 +75,10 @@ namespace UnitTests
         [Test]
         public void TestReadRunCommand()
         {
-            IEnumerable<(string name, object value)> replacements = new (string name, object value)[]
+            IEnumerable<Override> replacements = new Override[]
             {
-                ("path", "value"),
-                ("x", new MockModel())
+                new Override("path", "value", Override.MatchTypeEnum.NameAndType),
+                new Override("x", new MockModel(), Override.MatchTypeEnum.NameAndType)
             };
             ICommand target = new RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
@@ -93,10 +94,10 @@ namespace UnitTests
         [Test]
         public void TestWriteRunCommand()
         {
-            IEnumerable<(string name, object value)> replacements = new (string name, object value)[]
+            IEnumerable<Override> replacements = new Override[]
             {
-                ("f", new MockModel()),
-                ("path to a model", "replacement value")
+                new Override("f", new MockModel(), Override.MatchTypeEnum.NameAndType),
+                new Override("path to a model", "replacement value", Override.MatchTypeEnum.NameAndType)
             };
             IEnumerable<string> sims = new[] { "one simulation" };
             ICommand command = new RunCommand(false, true, 65536, replacements, sims);

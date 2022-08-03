@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using static Models.Core.Overrides;
 
     /// <summary>
     /// Encapsulates all the bits that are need to construct a simulation
@@ -22,7 +23,7 @@
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<(string name, object value)> replacementsToApply = new List<(string name, object value)>();
+        private List<Override> replacementsToApply = new List<Override>();
 
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
@@ -94,7 +95,7 @@
         /// <param name="replacement">The model to use as the replacement.</param>
         public void AddOverride(string path, object replacement)
         {
-            replacementsToApply.Add((path, replacement));
+            replacementsToApply.Add(new Override(path, replacement, Override.MatchTypeEnum.NameAndType));
         }
 
         /// <summary>
@@ -111,7 +112,7 @@
         /// </summary>
         /// <param name="cancelToken"></param>
         /// <param name="changes"></param>
-        public void Run(CancellationTokenSource cancelToken, IEnumerable<(string name, object value)> changes)
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<Override> changes)
         {
             Overrides.Apply(SimulationToRun, changes);
             Run(cancelToken);
@@ -221,7 +222,7 @@
                 if (replacements != null && replacements.Enabled)
                 {
                     foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
-                        replacementsToApply.Insert(0, ($"Name={replacement.Name}", replacement));
+                        replacementsToApply.Insert(0, new Override(replacement.Name, replacement, Override.MatchTypeEnum.Name));
                 }
             }
         }

@@ -18,18 +18,19 @@ namespace Models.Core
     public static class Overrides
     {
         /// <summary>
-        /// Applies a (keyword, value) tuple to a model.
+        /// Applies a property or model replacement to a model.
         /// </summary>
         /// <param name="model">The model to apply the changes to.</param>
-        /// <param name="name">The name of the property/model to override.</param>
+        /// <param name="path">The path of the property/model to override.</param>
         /// <param name="value">The new value of the property/model.</param>
+        /// <param name="matchType">Type of matching to use.</param>
         /// <returns>
         /// Name:
-        ///     Whenever a bracketed name is specified, all models that have a name or type name that match the bracketed value
+        ///     Whenever a bracketed path is specified, all models that have a name or type name that match the bracketed value
         ///     will be considered for replacement .e.g
         ///         [Report].VariableNames   changes all 'VariableNames' properties in all models of name or type 'Report'
         ///         
-        ///     If name starts with 'Name=' then only the specified name will be used to match models to replace. This is used
+        ///     If path starts with 'Name=' then only the specified name will be used to match models to replace. This is used
         ///     by the replacements node. e.g. Name=Wheat will replace all models named 'Wheat'.
         /// Value:
         ///     Value can be a string (that will be converted into an object instance)
@@ -37,65 +38,62 @@ namespace Models.Core
         ///     Value can be a filename (that will be opened and searched for the first matching model of the same name and type)
         ///     Value can be filename;[path] (that will be opened and searched for the first matching model that matches 'path')
         /// </returns>
-        public static void Apply(IModel model, string name, object value)
+        public static void Apply(IModel model, string path, object value, Override.MatchTypeEnum matchType)
         {
-            Apply(model, new (string name, object value)[] { (name, value) });
+            IEnumerable<IVariable> variables = null;
+            if (matchType == Override.MatchTypeEnum.Name)
+            {
+                // Replacements uses this.
+                variables = model.FindAllInScope(path).Select(m => new VariableObject(m));
+            }
+            else
+            {
+                variables = model.FindAllByPath(path);
+                if (!variables.Any())
+                    throw new Exception($"Invalid path: {path}");
+            }
+
+            foreach (IVariable variable in variables)
+            {
+                object replacementValue = value;
+
+                if (replacementValue is string valueAsString)
+                {
+                    // See if value is a filename that exists. If not then try convert it to an absolute path.
+                    valueAsString = TryConvertToAbsolutePath(valueAsString);
+
+                    // See if value has a semicolon in it i.e. denotes a filename and a model path.
+                    string modelPath = null;
+                    string[] parts = valueAsString.Split(';');
+                    if (parts != null && parts.Length == 2)
+                    {
+                        valueAsString = TryConvertToAbsolutePath(parts[0]);
+                        modelPath = parts[1];
+                    }
+
+                    if (File.Exists(valueAsString) && variable.Value is IModel)
+                        replacementValue = GetModelFromFile(variable.Value.GetType(), valueAsString, modelPath);
+                    else
+                        replacementValue = ReflectionUtilities.StringToObject(variable.DataType, valueAsString);
+                }
+
+                if (variable.Value is IModel modelToReplace && value is IModel modelReplacement)
+                    Structure.Replace(modelToReplace, modelReplacement);
+                else
+                    ChangeVariableValue(variable, replacementValue);
+            }
         }
 
         /// <summary>
         /// Applies a collection of property sets to a model.
         /// </summary>
         /// <param name="model">The model to apply the changes to.</param>
-        /// <param name="factors">The property sets (keyword, value).</param>
+        /// <param name="overrides">The collection of overrides to apply.</param>
         /// <returns></returns>
-        public static void Apply(IModel model, IEnumerable<(string name, object value)> factors)
+        public static void Apply(IModel model, IEnumerable<Override> overrides)
         {
-            foreach (var factor in factors)
-            {
-                IEnumerable<IVariable> variables = null;
-                if (factor.name.StartsWith("Name="))
-                {
-                    // Replacements uses this.
-                    string name = factor.Item1.Replace("Name=", "");
-                    variables = model.FindAllInScope(name).Select(m => new VariableObject(m));
-                }
-                else
-                {
-                    variables = model.FindAllByPath(factor.name);
-                    if (!variables.Any())
-                        throw new Exception($"Invalid path: {factor.name}");
-                }
-
-                foreach (IVariable variable in variables)
-                {
-                    object replacement = factor.value;
-
-                    if (factor.value is string valueAsString)
-                    {
-                        // See if value is a filename that exists. If not then try convert it to an absolute path.
-                        valueAsString = TryConvertToAbsolutePath(valueAsString);
-
-                        // See if value has a semicolon in it i.e. denotes a filename and a model path.
-                        string modelPath = null;
-                        string[] parts = valueAsString.Split(';');
-                        if (parts != null && parts.Length == 2)
-                        {
-                            valueAsString = TryConvertToAbsolutePath(parts[0]);
-                            modelPath = parts[1];
-                        }
-
-                        if (File.Exists(valueAsString) && variable.Value is IModel)
-                            replacement = GetModelFromFile(variable.Value.GetType(), valueAsString, modelPath);
-                        else
-                            replacement = ReflectionUtilities.StringToObject(variable.DataType, valueAsString);
-                    }
-
-                    if (variable.Value is IModel modelToReplace && replacement is IModel modelReplacement)
-                        Structure.Replace(modelToReplace, modelReplacement);
-                    else
-                        ChangeVariableValue(variable, replacement);
-                }
-            }
+            foreach (var replacement in overrides)
+                Apply(model, replacement.Path, replacement.Value, replacement.MatchType);
         }
 
         /// <summary>
@@ -112,9 +110,9 @@ namespace Models.Core
         /// .Simulations.Simulation.Weather.FileName = asdf.met
         /// </remarks>
         /// <param name="configFileName">Path to the config file.</param>
-        public static IEnumerable<(string, object)> ParseConfigFile(string configFileName)
+        public static IEnumerable<Override> ParseConfigFile(string configFileName)
         {
-            List<(string, object)> factors = new List<(string, object)>();
+            List<Override> overrides = new List<Override>();
             string[] lines = File.ReadAllLines(configFileName);
             for (int i = 0; i < lines.Length; i++)
             {
@@ -127,10 +125,10 @@ namespace Models.Core
 
                 string path = values[0].Trim();
                 string value = values[1].Trim();
-                factors.Add((path, value));
+                overrides.Add(new Override(path, value, Override.MatchTypeEnum.NameAndType));
             }
 
-            return factors;
+            return overrides;
         }
 
         /// <summary>
@@ -197,6 +195,39 @@ namespace Models.Core
                     valueAsString = path;
             }
             return valueAsString;
+        }
+
+        /// <summary>Encapsulates a keyword=value pair.</summary>
+        public class Override
+        {
+            /// <summary>Constructor.</summary>
+            /// <param name="path">The path of the property/model to override.</param>
+            /// <param name="value">The new value of the property/model.</param>
+            /// <param name="matchType">Type of matching to use.</param>
+            public Override(string path, object value, MatchTypeEnum matchType)
+            {
+                Path = path;
+                Value = value;
+            }
+
+            /// <summary>Supported match types when finding something to override.</summary>
+            public enum MatchTypeEnum
+            { 
+                /// <summary>Match on name only.</summary>
+                Name,
+
+                /// <summary>Match on name and type.</summary>
+                NameAndType
+            }
+
+            /// <summary>The path of the property/model to override.</summary>
+            public string Path { get; }
+
+            /// <summary>The new value of the property/model.</summary>
+            public object Value { get; }
+
+            /// <summary>Type of matching to use.</summary>
+            public MatchTypeEnum MatchType { get; }
         }
     }
 }
