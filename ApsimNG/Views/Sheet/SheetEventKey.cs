@@ -10,6 +10,8 @@
         Down,
         PageUp,
         PageDown,
+        Home,
+        End,
         Return
     }
 
