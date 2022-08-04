@@ -92,7 +92,7 @@ namespace UnitTests
             Assert.AreEqual(physical.Thickness[1], 150);
 
             // Run Models.exe with /Edit command.
-            var overrides = Overrides.ParseConfigFile(configFileName);
+            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFileName));
             Overrides.Apply(sims, overrides);
 
             // Get references to the changed models.

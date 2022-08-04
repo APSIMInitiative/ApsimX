@@ -143,38 +143,58 @@ namespace UnitTests.Core
         [Test]
         public void SetPropertyInTypeMatchedModels()
         {
-            Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
+            var undos = Overrides.Apply(sims1, "[Report].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
             foreach (var report in sims1.FindAllInScope<Models.Report>())
                 Assert.AreEqual(new[] { "x", "y", "z" }, report.VariableNames);
+
+            // Now undo the overrides.
+            Overrides.Apply(sims1, undos);
+            var reports = sims1.FindAllInScope<Models.Report>().ToArray();
+            Assert.AreEqual(new[] { "AA" }, reports[0].VariableNames);
+            Assert.AreEqual(new[] { "BB" }, reports[1].VariableNames);
+            Assert.AreEqual(new[] { "CC" }, reports[2].VariableNames);
+            Assert.AreEqual(new[] { "DD" }, reports[3].VariableNames);
         }
 
         /// <summary>Set an array property in specific models (match on name), supplying a csv string.</summary>
         [Test]
         public void SetPropertyInNameMatchedModels()
         {
-            Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
+            var undos = Overrides.Apply(sims1, "[Report1].VariableNames", "x,y,z", Override.MatchTypeEnum.NameAndType);
 
             // It should have changed all Report1 models.
             foreach (var report1 in sims1.FindAllInScope<Models.Report>("Report1"))
                 Assert.AreEqual(new[] { "x", "y", "z" }, report1.VariableNames);
 
             // It should not have changed Report2 and Report3
-            var report2 = sims1.FindInScope<Models.Report>("Report2");
-            var report3 = sims1.FindInScope<Models.Report>("Report3");
-            
-            Assert.AreEqual(new[] { "BB" }, report2.VariableNames);
-            Assert.AreEqual(new[] { "DD" }, report3.VariableNames);
+            var reports = sims1.FindAllInScope<Models.Report>().ToArray();
+
+            Assert.AreEqual(new[] { "x", "y", "z" }, reports[0].VariableNames);
+            Assert.AreEqual(new[] { "BB" }, reports[1].VariableNames);
+            Assert.AreEqual(new[] { "x", "y", "z" }, reports[2].VariableNames);
+            Assert.AreEqual(new[] { "DD" }, reports[3].VariableNames);
+
+            // Now undo the overrides.
+            Overrides.Apply(sims1, undos);
+            Assert.AreEqual(new[] { "AA" }, reports[0].VariableNames);
+            Assert.AreEqual(new[] { "BB" }, reports[1].VariableNames);
+            Assert.AreEqual(new[] { "CC" }, reports[2].VariableNames);
+            Assert.AreEqual(new[] { "DD" }, reports[3].VariableNames);
         }
 
         /// <summary>Set a date property, supplying dates in different formats.</summary>
         [Test]
         public void SetDateProperty()
         {
-            Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01), Override.MatchTypeEnum.NameAndType);
+            var undos = Overrides.Apply(sims1, "[Clock].StartDate", new DateTime(2000, 01, 01), Override.MatchTypeEnum.NameAndType);
 
             var clock = sims1.FindInScope<Clock>();
             Assert.AreEqual(new DateTime(2000, 01, 01), clock.StartDate);
+
+            // Now undo the overrides.
+            Overrides.Apply(sims1, undos);
+            Assert.AreEqual(new DateTime(2017, 1, 1), clock.StartDate);
         }
 
         /// <summary>Set a model from and external file (finds the first matching model).</summary>
@@ -202,7 +222,7 @@ namespace UnitTests.Core
         public void ReplaceModelUsingNameMatch()
         {
             var newVariableNames = new string[] { "New" };
-            Overrides.Apply(sims1, "Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames }, Override.MatchTypeEnum.Name);
+            var undos = Overrides.Apply(sims1, "Report1", new Models.Report() { Name = "Report4", VariableNames = newVariableNames }, Override.MatchTypeEnum.Name);
 
             // It should have changed all Report1 models to Report4
             var reports = sims1.FindAllInScope<Models.Report>().ToArray();
@@ -218,6 +238,15 @@ namespace UnitTests.Core
             Assert.AreEqual(newVariableNames, reports[0].VariableNames);
             Assert.AreEqual(new string[] { "BB" }, reports[1].VariableNames);
             Assert.AreEqual(newVariableNames, reports[2].VariableNames);
+            Assert.AreEqual(new string[] { "DD" }, reports[3].VariableNames);
+
+
+            // Now undo the overrides.
+            Overrides.Apply(sims1, undos);
+            reports = sims1.FindAllInScope<Models.Report>().ToArray();
+            Assert.AreEqual(new string[] { "AA" }, reports[0].VariableNames);
+            Assert.AreEqual(new string[] { "BB" }, reports[1].VariableNames);
+            Assert.AreEqual(new string[] { "CC" }, reports[2].VariableNames);
             Assert.AreEqual(new string[] { "DD" }, reports[3].VariableNames);
         }
 
@@ -236,7 +265,7 @@ namespace UnitTests.Core
                 new Override("[StringList].Data[3:4]", "xyz", Override.MatchTypeEnum.NameAndType),
             };
 
-            Overrides.Apply(sims1, overrides);
+            var undos = Overrides.Apply(sims1, overrides);
 
             var stringList = (ListClass<string>)sims1.FindInScope<ListClass<string>>();
 
