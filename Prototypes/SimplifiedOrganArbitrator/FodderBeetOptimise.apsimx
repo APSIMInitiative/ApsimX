@@ -127,7 +127,7 @@
             "[Weather].Rain",
             "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
-            "sum([Soil].SoilWater.SWmm) as ProfileWater",
+            "sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater",
             "[Soil].SoilNitrogen.mineral_n",
             "[FodderBeet].StorageRoot.Live.C + [FodderBeet].StorageRoot.Dead.C + [FodderBeet].Leaf.Live.C + [FodderBeet].Leaf.Dead.C + [FodderBeet].Root.Live.C + [FodderBeet].Root.Dead.C + [FodderBeet].Petiole.Live.C + [FodderBeet].Petiole.Dead.C as SumPlantC"
           ],
@@ -7202,38 +7202,8 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2016-09-02",
-                                  "Action": "[Irrigation].Apply(25);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2016-10-25",
-                                  "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2016-10-28",
-                                  "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2016-11-17",
-                                  "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
                                   "Date": "2016-11-23",
                                   "Action": "[Irrigation].Apply(30);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2016-11-30",
-                                  "Action": "[Irrigation].Apply(0);",
                                   "Enabled": true
                                 },
                                 {
@@ -7298,50 +7268,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2017-02-15",
-                                  "Action": "[Irrigation].Apply(35);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2017-02-22",
-                                  "Action": "[Irrigation].Apply(29);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2017-03-01",
-                                  "Action": "[Irrigation].Apply(32.6);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
                                   "Date": "2017-03-08",
                                   "Action": "[Irrigation].Apply(34);",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2017-03-15",
-                                  "Action": "[Irrigation].Apply(0);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
                                   "Date": "2017-03-22",
                                   "Action": "[Irrigation].Apply(50);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2017-03-29",
-                                  "Action": "[Irrigation].Apply(0);",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2017-04-05",
-                                  "Action": "[Irrigation].Apply(0);",
                                   "Enabled": true
                                 },
                                 {
@@ -7406,12 +7340,6 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Date": "2017-01-18",
-                                  "Action": "[Irrigation].Apply(5)",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "2017-02-25",
                                   "Action": "[Irrigation].Apply(5)",
                                   "Enabled": true
                                 },
@@ -7483,6 +7411,24 @@
                                   "Date": "2017-02-25",
                                   "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);",
                                   "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2016-10-29",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-01-18",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-02-15",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
                                 }
                               ],
                               "Name": "0",
@@ -7536,6 +7482,24 @@
                                   "Date": "2017-02-25",
                                   "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);",
                                   "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2016-10-29",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-01-18",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-02-15",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
                                 }
                               ],
                               "Name": "50",
@@ -7576,8 +7540,26 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2017-02-25",
+                                  "Date": "2017-02-15",
                                   "Action": "[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2016-10-29",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-01-18",
+                                  "Action": "[Irrigation].Apply(10);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-02-15",
+                                  "Action": "[Irrigation].Apply(10);",
                                   "Enabled": true
                                 }
                               ],
@@ -7713,26 +7695,7 @@
                         },
                         {
                           "$type": "Models.Operations, Models",
-                          "Operation": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Date": "2016-10-29",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Date": "2017-01-18",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Date": "2017-02-25",
-                              "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
-                            }
-                          ],
+                          "Operation": [],
                           "Name": "Fert",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7768,7 +7731,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Soil ThisSoil;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        [Description(\"Amount of Irrgation be applied 0/1\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n        \r\n          \r\n        private void SetSoilLayers()\r\n        {\r\n            /*\r\n            Not used yrt use whenmore detailed info is known\r\n            */\r\n            int i = 0;\r\n            if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 7)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.06;\r\n                soilPhysical.LL15[2] = 0.08;\r\n                soilPhysical.LL15[3] = 0.14;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.11;\r\n                soilPhysical.DUL[0] = 0.34;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.28;\r\n                soilPhysical.DUL[3] = 0.3;\r\n                soilPhysical.DUL[4] = 0.3;\r\n                soilPhysical.DUL[5] = 0.30;\r\n                soilPhysical.DUL[6] = 0.3;\r\n                soilPhysical.SAT[0] = 0.4;\r\n                soilPhysical.SAT[1] = 0.4;\r\n                soilPhysical.SAT[2] = 0.4;\r\n                soilPhysical.SAT[3] = 0.4;\r\n                soilPhysical.SAT[4] = 0.4;\r\n                soilPhysical.SAT[5] = 0.4;\r\n                soilPhysical.SAT[6] = 0.4;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 7)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.07;\r\n                soilPhysical.LL15[1] = 0.12;\r\n                soilPhysical.LL15[2] = 0.17;\r\n                soilPhysical.LL15[3] = 0.20;\r\n                soilPhysical.LL15[4] = 0.26;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\r\n                soilPhysical.DUL[0] = 0.30;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.29;\r\n                soilPhysical.DUL[3] = 0.25;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 7)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.11;\r\n                soilPhysical.LL15[2] = 0.21;\r\n                soilPhysical.LL15[3] = 0.18;\r\n                soilPhysical.LL15[4] = 0.23;\r\n                soilPhysical.LL15[5] = 0.30;\r\n                soilPhysical.LL15[6] = 0.26;\r\n                soilPhysical.DUL[0] = 0.25;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.27;\r\n                soilPhysical.DUL[4] = 0.34;\r\n                soilPhysical.DUL[5] = 0.27;\r\n                soilPhysical.DUL[6] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 7)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.25;\r\n                soilPhysical.LL15[3] = 0.19;\r\n                soilPhysical.LL15[4] = 0.29;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.34;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 7)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.14;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.27;\r\n                soilPhysical.LL15[3] = 0.27;\r\n                soilPhysical.LL15[4] = 0.27;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\r\n                waterBalance.Reset();\r\n            }\r\n            if ((IrrFactor == true) && (NitFactor == 250))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 7)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.12;\r\n                soilPhysical.LL15[1] = 0.18;\r\n                soilPhysical.LL15[2] = 0.17;\r\n                soilPhysical.LL15[3] = 0.20;\r\n                soilPhysical.LL15[4] = 0.27;\r\n                soilPhysical.LL15[5] = 0.27;\r\n                soilPhysical.LL15[6] = 0.21;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\r\n                waterBalance.Reset();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            //    SetSoilLayers();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Specific irrgations\r\n            \r\n            //Fodderbeet\r\n            \r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if ((DateUtilities.CompareDates(\"1-Feb\", Clock.Today) == 0))\r\n                    Irrigation.Apply(40);\r\n                if ((DateUtilities.CompareDates(\"1-Mar\", Clock.Today) == 0))\r\n                    Irrigation.Apply(36);\r\n            }\r\n        \r\n            //Oats\r\n            if (Clock.Today.Year == 2017)\r\n            if ((DateUtilities.CompareDates(\"5-Jul\", Clock.Today) == 0))\r\n            if (IrrFactor == true)\r\n            {\r\n                if (NitFactor == 0)\r\n                    Fert.Apply(40, Models.Fertiliser.Types.NO3N, 10);\r\n                if (NitFactor == 50)\r\n                    Fert.Apply(85, Models.Fertiliser.Types.NO3N, 10);\r\n                if (NitFactor == 300)\r\n                    Fert.Apply(270, Models.Fertiliser.Types.NO3N, 10);\r\n               \r\n            }\r\n             \r\n            \r\n            \r\n        }\r\n    }\r\n        \r\n        \r\n}\r\n    \r\n\r\n\r\n      \r\n",
+                          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Soil ThisSoil;\r\n        [Link] private IPhysical soilPhysical;\r\n        [Link] private ISoilWater waterBalance;\n        [Link] private Sample InitSW;\r\n        [Description(\"Amount of Irrgation be applied 0/1\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n        \r\n          \r\n        private void SetSoilLayers()\r\n        {\r\n            /*\r\n            Not used yrt use whenmore detailed info is known\r\n            */\r\n            int i = 0;\r\n            if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.06;\r\n                soilPhysical.LL15[2] = 0.08;\r\n                soilPhysical.LL15[3] = 0.14;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.11;\n                soilPhysical.LL15[7] = 0.11;\r\n                soilPhysical.DUL[0] = 0.34;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.28;\r\n                soilPhysical.DUL[3] = 0.3;\r\n                soilPhysical.DUL[4] = 0.3;\r\n                soilPhysical.DUL[5] = 0.30;\r\n                soilPhysical.DUL[6] = 0.3;\n                soilPhysical.DUL[7] = 0.3;\r\n                soilPhysical.SAT[0] = 0.4;\r\n                soilPhysical.SAT[1] = 0.4;\r\n                soilPhysical.SAT[2] = 0.4;\r\n                soilPhysical.SAT[3] = 0.4;\r\n                soilPhysical.SAT[4] = 0.4;\r\n                soilPhysical.SAT[5] = 0.4;\r\n                soilPhysical.SAT[6] = 0.4;\n                soilPhysical.SAT[7] = 0.4;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.07;\r\n                soilPhysical.LL15[1] = 0.12;\r\n                soilPhysical.LL15[2] = 0.17;\r\n                soilPhysical.LL15[3] = 0.20;\r\n                soilPhysical.LL15[4] = 0.26;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\n                soilPhysical.LL15[7] = 0.30;\r\n                soilPhysical.DUL[0] = 0.30;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.29;\r\n                soilPhysical.DUL[3] = 0.25;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.11;\r\n                soilPhysical.LL15[2] = 0.21;\r\n                soilPhysical.LL15[3] = 0.18;\r\n                soilPhysical.LL15[4] = 0.23;\r\n                soilPhysical.LL15[5] = 0.30;\r\n                soilPhysical.LL15[6] = 0.26;\n                soilPhysical.LL15[7] = 0.26;\r\n                soilPhysical.DUL[0] = 0.25;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.27;\r\n                soilPhysical.DUL[4] = 0.34;\r\n                soilPhysical.DUL[5] = 0.27;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.25;\r\n                soilPhysical.LL15[3] = 0.19;\r\n                soilPhysical.LL15[4] = 0.29;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.34;\n                soilPhysical.LL15[7] = 0.34;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.14;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.27;\r\n                soilPhysical.LL15[3] = 0.27;\r\n                soilPhysical.LL15[4] = 0.27;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\n                soilPhysical.LL15[7] = 0.30;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }\r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.15;\r\n                soilPhysical.LL15[2] = 0.16;\r\n                soilPhysical.LL15[3] = 0.16;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\r\n                soilPhysical.SAT[0] = 0.38;\r\n                soilPhysical.SAT[1] = 0.36;\r\n                soilPhysical.SAT[2] = 0.36;\r\n                soilPhysical.SAT[3] = 0.35;\r\n                soilPhysical.SAT[4] = 0.36;\r\n                soilPhysical.SAT[5] = 0.30;\r\n                soilPhysical.SAT[6] = 0.25;\n                soilPhysical.SAT[7] = 0.25;\n                InitSW.SWVolumetric[0] = 0.225;\n                InitSW.SWVolumetric[1] = 0.23;\n                InitSW.SWVolumetric[2] = 0.27;\n                InitSW.SWVolumetric[3] = 0.315;\n                InitSW.SWVolumetric[4] = 0.28;\n                InitSW.SWVolumetric[5] = 0.21;\n                InitSW.SWVolumetric[6] = 0.14;\n                InitSW.SWVolumetric[7] = 0.145;\n                waterBalance.Reset();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n                SetSoilLayers();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Specific irrgations\r\n            \r\n            if ((DateUtilities.CompareDates(\"16-Nov\", Clock.Today) == 0))\r\n                    SetSoilLayers();\r\n            \r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if ((DateUtilities.CompareDates(\"1-Feb\", Clock.Today) == 0))\r\n                    Irrigation.Apply(40);\r\n                if ((DateUtilities.CompareDates(\"1-Mar\", Clock.Today) == 0))\r\n                    Irrigation.Apply(33);\r\n            }\r\n        \r\n          \r\n            \r\n            \r\n        }\r\n    }\r\n        \r\n        \r\n}\r\n    \r\n\r\n\r\n      \r\n",
                           "Parameters": [
                             {
                               "Key": "IrrFactor",
@@ -7946,7 +7909,7 @@
                             "90-120",
                             "120-150",
                             "150-180",
-                            "180-200"
+                            "180-210"
                           ],
                           "Thickness": [
                             150.0,
@@ -7956,7 +7919,7 @@
                             300.0,
                             300.0,
                             300.0,
-                            200.0
+                            300.0
                           ],
                           "ParticleSizeClay": null,
                           "ParticleSizeSand": null,
@@ -8039,47 +8002,6 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.1,
-                                0.1,
-                                0.149,
-                                0.129,
-                                0.155,
-                                0.149,
-                                0.053,
-                                0.061
-                              ],
-                              "KL": [
-                                0.06,
-                                0.06,
-                                0.05,
-                                0.08,
-                                0.03,
-                                0.01,
-                                0.0,
-                                0.0
-                              ],
-                              "XF": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
-                              "LLMetadata": null,
-                              "KLMetadata": null,
-                              "XFMetadata": null,
-                              "Name": "OatsSoil",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilCrop, Models",
-                              "LL": [
                                 0.12,
                                 0.12,
                                 0.12,
@@ -8090,14 +8012,14 @@
                                 0.12
                               ],
                               "KL": [
-                                0.1,
-                                0.06,
-                                0.06,
-                                0.06,
-                                0.06,
-                                0.06,
-                                0.06,
-                                0.06
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2
                               ],
                               "XF": [
                                 1.0,
@@ -8345,7 +8267,7 @@
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
-                          "Name": "Initial Soil Settings",
+                          "Name": "InitSW",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -13242,7 +13164,13 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationPosition": 0,
-                  "DisabledSeries": [],
+                  "DisabledSeries": [
+                    "Full0: Obs",
+                    "Nil0: Obs",
+                    "Full50: Obs",
+                    "Nil50: Obs",
+                    "Nil300: Obs"
+                  ],
                   "LegendOutsideGraph": false,
                   "Name": "ProfileWater",
                   "Children": [
@@ -13290,7 +13218,7 @@
                       "LineThickness": 0,
                       "TableName": "ObservedData",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Soil.SoilWater.ProfileWater",
+                      "YFieldName": "ProfileWater",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -13729,7 +13657,7 @@
                                   "IncludeSeriesNameInLegend": true,
                                   "Cumulative": false,
                                   "CumulativeX": false,
-                                  "Filter": "[Irr]='Nil'",
+                                  "Filter": "[Irr]='Full'",
                                   "Name": "Pred",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -13758,7 +13686,7 @@
                                   "IncludeSeriesNameInLegend": true,
                                   "Cumulative": false,
                                   "CumulativeX": false,
-                                  "Filter": "[Irr]='Nil'",
+                                  "Filter": "[Irr]='Full'",
                                   "Name": "Obs",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -14396,11 +14324,7 @@
                         "Full0: Pred",
                         "Nil0: Pred",
                         "Full50: Pred",
-                        "Nil50: Pred",
-                        "Full0: Obs",
-                        "Nil0: Obs",
-                        "Full50: Obs",
-                        "Nil50: Obs"
+                        "Nil50: Pred"
                       ],
                       "LegendOutsideGraph": false,
                       "Name": "ProfileWater",
@@ -14465,6 +14389,765 @@
                         }
                       ],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "Folder",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L1",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(1)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(1)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L2",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(2)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(2)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L3",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(3)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(3)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L4",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(4)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(4)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L5",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(5)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(5)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L6",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(6)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(6)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationPosition": 0,
+                          "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
+                            "Nil0: Obs",
+                            "Full50: Obs",
+                            "Nil50: Obs",
+                            "Nil300: Obs"
+                          ],
+                          "LegendOutsideGraph": false,
+                          "Name": "L7",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "Irr",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "Report",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(7)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Pred",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Nit",
+                              "FactorToVaryMarkers": "Irr",
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 1,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "ObservedData",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soil.SoilWater.SW(7)",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Obs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
