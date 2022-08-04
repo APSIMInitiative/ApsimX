@@ -240,6 +240,7 @@ namespace Models.Core
         }
 
         /// <summary>Encapsulates a keyword=value pair.</summary>
+        [Serializable]
         public class Override
         {
             /// <summary>Constructor.</summary>
@@ -271,6 +272,36 @@ namespace Models.Core
 
             /// <summary>Type of matching to use.</summary>
             public MatchTypeEnum MatchType { get; }
+
+            /// <summary>
+            /// Equality method.
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public override bool Equals(object obj)
+            {
+                if (obj is Override ov)
+                {
+                    if (Path.Equals(ov.Path, StringComparison.InvariantCultureIgnoreCase) &&
+                        MatchType == ov.MatchType)
+                    {
+                        if (Value is string value1AsString && ov.Value is string value2AsString)
+                            return value1AsString.Equals(value2AsString, StringComparison.InvariantCultureIgnoreCase);
+                        else
+                            return Value.Equals(ov.Value);
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Return a hash code for this instance.
+            /// </summary>
+            /// <returns></returns>
+            public override int GetHashCode()
+            {
+                return (Path, Value, MatchType).GetHashCode();
+            }
         }
     }
 }

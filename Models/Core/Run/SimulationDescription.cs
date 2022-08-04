@@ -88,14 +88,12 @@
         public string Status => SimulationToRun?.Status;
 
         /// <summary>
-        /// Add a property override to replace an existing value, as specified by a
-        /// path.
+        /// Add an override to replace an existing value
         /// </summary>
-        /// <param name="path">The path to use to locate the model to replace.</param>
-        /// <param name="replacement">The model to use as the replacement.</param>
-        public void AddOverride(string path, object replacement)
+        /// <param name="change">The override to addd.</param>
+        public void AddOverride(Override change)
         {
-            replacementsToApply.Add(new Override(path, replacement, Override.MatchTypeEnum.NameAndType));
+            replacementsToApply.Add(change);
         }
 
         /// <summary>

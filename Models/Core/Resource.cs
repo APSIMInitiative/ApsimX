@@ -81,7 +81,8 @@
         /// <returns>The newly created model. Throws if not found.</returns>
         public IModel GetModel(string resourceName)
         {
-            return GetModelNoClone(resourceName).Model.Clone();
+            var resourceModel = GetModelNoClone(resourceName);
+            return resourceModel?.Model.Clone();
         }
 
         /// <summary>Remove all children that are from a resource.</summary>
@@ -112,7 +113,7 @@
         /// <param name="resourceName">Name of the resource.</param>
         public IEnumerable<PropertyInfo> GetPropertiesFromResourceModel(string resourceName)
         {
-            return GetModelNoClone(resourceName).Properties;
+            return GetModelNoClone(resourceName)?.Properties;
         }
 
         /// <summary>

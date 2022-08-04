@@ -145,7 +145,8 @@ namespace UnitTests
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(target, protocol.WaitForCommand());
+                var actual = protocol.WaitForCommand();
+                Assert.AreEqual(target, actual);
             });
 
             using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))

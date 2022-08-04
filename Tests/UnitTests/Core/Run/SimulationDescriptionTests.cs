@@ -34,7 +34,7 @@
             sim.ParentAllDescendants();
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride("Weather.MaxT", 2);
+            simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 2, Overrides.Override.MatchTypeEnum.NameAndType));
 
             var newSim = simulationDescription.ToSimulation();
 
@@ -69,7 +69,7 @@
             };
             
             var simulationDescription = new SimulationDescription(sim, "CustomName");
-            simulationDescription.AddOverride("Name=Weather", replacementWeather);
+            simulationDescription.AddOverride(new Overrides.Override("Weather", replacementWeather, Overrides.Override.MatchTypeEnum.NameAndType));
 
             var newSim = simulationDescription.ToSimulation();
             Assert.AreEqual(newSim.Name, "CustomName");
@@ -128,7 +128,7 @@
             Assert.AreEqual(weather.MaxT, 2);
 
             // Make sure any property overrides happens after a model replacement.
-            simulationDescription.AddOverride("Weather.MaxT", 3);
+            simulationDescription.AddOverride(new Overrides.Override("Weather.MaxT", 3, Overrides.Override.MatchTypeEnum.NameAndType));
             newSim = simulationDescription.ToSimulation();
             weather = newSim.Children[0] as MockWeather;
             Assert.AreEqual(weather.MaxT, 3);

@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using static Models.Core.Overrides;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -68,7 +69,7 @@
 
             // Add a simulation override for each path / value combination.
             for (int i = 0; i != allPaths.Count; i++)
-                simulationDescription.AddOverride(allPaths[i], allValues[i]);
+                simulationDescription.AddOverride(new Override(allPaths[i], allValues[i], Override.MatchTypeEnum.NameAndType));
 
             if (!(Parent is Factors))
             {

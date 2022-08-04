@@ -187,7 +187,7 @@
                     if (instance is IModel model && !string.IsNullOrEmpty(model.ResourceName))
                     {
                         var resourceMembers = Resource.Instance.GetPropertiesFromResourceModel(model.ResourceName);
-                        if (resourceMembers.Contains(property))
+                        if (resourceMembers != null && resourceMembers.Contains(property))
                             return false;
                     }
 
