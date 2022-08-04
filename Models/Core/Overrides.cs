@@ -95,6 +95,9 @@ namespace Models.Core
 
                 undos.Add(new Override(undoPath, oldValue, Override.MatchTypeEnum.NameAndType));
             }
+
+            // Reverse the order of the undos so that get applied in the correct order.
+            undos.Reverse();
             return undos;
         }
 
@@ -110,7 +113,7 @@ namespace Models.Core
         {
             List<Override> undos = new List<Override>();
             foreach (var replacement in overrides)
-                undos.AddRange(Apply(model, replacement.Path, replacement.Value, replacement.MatchType));
+                undos.InsertRange(0, Apply(model, replacement.Path, replacement.Value, replacement.MatchType));
             return undos;
         }
 

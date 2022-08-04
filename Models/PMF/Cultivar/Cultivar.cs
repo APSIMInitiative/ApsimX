@@ -26,19 +26,13 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class Cultivar : Model
     {
-        /// <summary>
-        /// The properties for each command
-        /// </summary>
-        private List<IVariable> properties = new List<IVariable>();
+        /// <summary>The model the cultvar is relative to.</summary>
+        private IModel relativeToModel;
 
-        /// <summary>
-        /// The original property values before the command was applied. Allows undo.
-        /// </summary>
-        private List<object> oldPropertyValues = new List<object>();
+        /// <summary>The collection of undo overrides that undo the overrides.</summary>
+        private IEnumerable<Overrides.Override> undos;
 
-        /// <summary>
-        /// Gets or sets a collection of commands that must be executed when applying this cultivar.
-        /// </summary>
+        /// <summary>The collection of commands that must be executed when applying this cultivar./// </summary>
         public string[] Command { get; set; }
 
         /// <summary>
@@ -67,48 +61,9 @@
         /// <param name="model">The underlying model to apply the commands to</param>
         public void Apply(Model model)
         {
-            if (this.Command != null)
-            {
-                foreach (string command in this.Command)
-                {
-                    try
-                    {
-                        string propertyName = command;
-                        string propertyValue = StringUtilities.SplitOffAfterDelimiter(ref propertyName, "=");
-
-                        propertyName = propertyName.TrimEnd();
-                        propertyValue = propertyValue.TrimEnd();
-
-                        if (propertyName != string.Empty && propertyValue != string.Empty)
-                        {
-                            IVariable property = model.FindByPath(propertyName) as IVariable;
-                            if (property == null)
-                                throw new Exception(string.Format("Invalid command in cultivar {0}: {1}", Name, propertyName));
-                            if (property.GetType() != null)
-                            {
-                                object oldValue = property.Value;
-                                if (oldValue is string || oldValue.GetType().IsArray || !oldValue.GetType().IsClass)
-                                {
-                                    this.oldPropertyValues.Add(oldValue);
-                                    property.Value = propertyValue;
-                                    this.properties.Add(property);
-                                }
-                                else
-                                    throw new ApsimXException(this, "Invalid type for setting cultivar parameter: " + propertyName +
-                                                                    ". Must be a built-in type e.g. double");
-                            }
-                            else
-                            {
-                                throw new ApsimXException(this, "While applying cultivar '" + Name + "', could not find property name '" + propertyName + "'");
-                            }
-                        }
-                    }
-                    catch (Exception err)
-                    {
-                        throw new Exception($"Error in cultivar {Name}: Unable to apply command '{command}'", err);
-                    }
-                }
-            }
+            relativeToModel = model;
+            if (Command != null)
+                undos = Overrides.Apply(model, Overrides.ParseStrings(Command));
         }
 
         /// <summary>
@@ -118,29 +73,15 @@
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            this.Unapply();
-        }
-
-        /// <summary>
-        /// Undo the cultivar commands. i.e. put the model back into its original state
-        /// </summary>
-        public void Unapply()
-        {
-            // Unapply the cultivars in the reverse order to which they were applied.
-            // Otherwise, if two commands modify the same property, the unapply
-            // operation will not work as expected.
-            for (int i = properties.Count - 1; i >= 0; i--)
+            if (undos != null)
             {
-                this.properties[i].Value = this.oldPropertyValues[i];
+                Overrides.Apply(relativeToModel, undos);
+                relativeToModel = null;
+                undos = null;
             }
-
-            this.properties.Clear();
-            this.oldPropertyValues.Clear();
         }
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
+        /// <summary>Document the model.</summary>
         public override IEnumerable<ITag> Document()
         {
             if (Command != null && Command.Any())
