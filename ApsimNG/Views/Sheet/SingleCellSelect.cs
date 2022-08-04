@@ -68,9 +68,9 @@ namespace UserInterface.Views
                     MoveToFarRight();
                 else if (evnt.Key == Keys.Left && evnt.Control)
                     MoveToFarLeft();
-                else if (evnt.Key == Keys.Down && evnt.Control)
+                else if ((evnt.Key == Keys.Down && evnt.Control) || evnt.Key == Keys.End)
                     MoveToBottom();
-                else if (evnt.Key == Keys.Up && evnt.Control)
+                else if ((evnt.Key == Keys.Up && evnt.Control) || evnt.Key == Keys.Home)
                     MoveToTop();
                 else if (evnt.Key == Keys.Left)
                     MoveLeft(evnt.Shift);
