@@ -4041,6 +4041,18 @@ namespace Models.Core.ApsimFile
                     var soilChildren = soil["Children"] as JArray;
                     var chemicalChildren = chemical["Children"] as JArray;
                     var bdToken = physical["BD"] as JArray;
+
+                    // Add a nutrient model if neither Nutrient or SoilNitrogen exists.
+                    if (nutrient == null && soilNitrogen == null)
+                    {
+                        soilChildren.Add(new JObject()
+                        {
+                            ["$type"] = "Models.Soils.Nutrients.Nutrient, Models",
+                            ["Name"] = "Nutrient",
+                            ["ResourceName"] = "Nutrient"
+                        });
+                    }
+
                     if (soilChildren != null && chemicalChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
