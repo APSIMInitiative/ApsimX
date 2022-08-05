@@ -494,9 +494,14 @@
                     string rainMessage = string.Empty;
                     if (dailyRain.Length != 0)
                     {
-                        double totalYearlyRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
-                        rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
-                                    + " is " + totalYearlyRainfall.ToString() + "mm.";
+                        double totalRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
+                        if (startDate.Year == endDate.Year)
+                          rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
+                                      + " is " + totalRainfall.ToString() + "mm.";
+                        else
+                            rainMessage = "Total Rainfall for the years " + startDate.Year.ToString() 
+                                        + " to " + endDate.Year.ToString()
+                                        + " is " + totalRainfall.ToString() + "mm.";
 
                         this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
                     }

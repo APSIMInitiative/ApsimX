@@ -1527,6 +1527,8 @@
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
+                smallestDate = DateTime.MaxValue;
+                largestDate = DateTime.MinValue;
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
