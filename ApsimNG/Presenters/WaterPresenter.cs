@@ -136,11 +136,9 @@
         /// <param name="e">The event arguments.</param>
         private void OnPercentFullChanged(object sender, EventArgs e)
         {
-            double fractionFull;
-            if (!string.IsNullOrEmpty(percentFullEdit.Text))
-                fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
-            else
-                fractionFull = 0;
+            if (string.IsNullOrEmpty(percentFullEdit.Text))
+                return;
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
             ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), fractionFull));
         }
 
