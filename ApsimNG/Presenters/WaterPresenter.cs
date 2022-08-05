@@ -83,12 +83,12 @@
             try
             {
                 DisconnectEvents();
-                pawLabel.Text = water.InitialPAWmm.ToString("F0");
-                percentFullEdit.Text = (water.FractionFull * 100).ToString("F0");
+                pawLabel.Text = water.InitialPAWmm.ToString("F0", CultureInfo.CurrentCulture);
+                percentFullEdit.Text = (water.FractionFull * 100).ToString("F0", CultureInfo.CurrentCulture);
                 filledFromTopCheckbox.Checked = water.FilledFromTop;
                 relativeToDropDown.Values = water.AllowedRelativeTo.ToArray();
                 relativeToDropDown.SelectedValue = water.RelativeTo;
-                depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0");
+                depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0", CultureInfo.CurrentCulture);
                 PopulateWaterGraph(graph, water.Physical.Thickness, water.Physical.AirDry, water.Physical.LL15, water.Physical.DUL, water.Physical.SAT,
                                    water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 ConnectEvents();
@@ -138,7 +138,7 @@
         {
             if (string.IsNullOrEmpty(percentFullEdit.Text))
                 return;
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
             ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), fractionFull));
         }
 
@@ -149,7 +149,7 @@
         {
             var changeFilledFromTop = new ChangeProperty.Property(water, nameof(water.FilledFromTop), filledFromTopCheckbox.Checked);
 
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
             var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
 
             ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
@@ -163,7 +163,7 @@
         {
             var changeRelativeTo = new ChangeProperty.Property(water, nameof(water.RelativeTo), relativeToDropDown.SelectedValue);
 
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
             var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
 
             // Create a single ChangeProperty object with two actual changes.
@@ -178,7 +178,7 @@
         /// <param name="e">The event arguments.</param>
         private void OnDepthWetSoilChanged(object sender, EventArgs e)
         {
-            double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.InvariantCulture);
+            double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.CurrentCulture);
             ChangePropertyValue(nameof(water.DepthWetSoil), depthWetSoil);
         }
 
