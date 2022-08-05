@@ -136,7 +136,13 @@
         /// <param name="e">The event arguments.</param>
         private void OnPercentFullChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(percentFullEdit.Text))
+            // Due to a quirk of gtk, selecting the entire textbox contents and
+            // then commencing typing (so as to overwrite the old value) will
+            // cause this method to be called with an empty string and then
+            // again with each new character in turn. The best thing to do with
+            // an empty string is to just ignore it, but only if there are
+            // pending events.
+            if (string.IsNullOrEmpty(percentFullEdit.Text) && Gtk.Application.EventsPending())
                 return;
             double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
             ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), fractionFull));
@@ -152,6 +158,9 @@
             double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
             var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
 
+            // Create a single ChangeProperty object with two actual changes.
+            // This will cause both changes to be applied (and be undo-able) in
+            // a single atomic action.
             ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
             ChangePropertyValue(changes);
         }
