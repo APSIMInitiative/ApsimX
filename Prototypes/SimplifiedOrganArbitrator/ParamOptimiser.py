@@ -34,6 +34,10 @@ import scipy.optimize
 from skopt import gp_minimize
 from skopt.callbacks import CheckpointSaver
 from skopt import load
+import re
+
+from py_expression_eval import Parser
+parser = Parser()
 
 import winsound
 frequency = 2500  # Set Frequency To 2500 Hertz
@@ -158,6 +162,17 @@ def makeLongString(SimulationSet):
 def CalcScaledValue(Value,RMax,RMin):
     return (Value - RMin)/(RMax-RMin)
 # +
+file
+with open(filePath,'r',encoding="utf8") as ApsimxJSON:
+    Apsimx = json.load(ApsimxJSON)
+    ApsimxJSON.close()
+
+
+with open(filePath,'w') as ApsimxJSON:
+    json.dump(Apsimx,ApsimxJSON,indent=2)
+
+
+# +
 def Preparefile(filePath):
     ## revert .apximx file to last comitt
 #     !del C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db
@@ -172,7 +187,7 @@ def Preparefile(filePath):
     with open(filePath,'w') as ApsimxJSON:
         json.dump(Apsimx,ApsimxJSON,indent=2)
     
-def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet):        
+def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet,paramsTried):        
     ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx')
     start = dt.datetime.now()
     simSet = makeLongString(SimulationSet)
@@ -201,17 +216,98 @@ def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet):
     RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
     
     retVal = max(RegStats.NSE,0) *-1
-    print(str(paramValues) + " run completed " +str(RegStats.n) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
+    print(str(paramsTried) + " run completed " +str(ObsPred.SimulationID.drop_duplicates().count()) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
     return retVal
 
-def runFittingItter(fittingparams):
+def runFittingItter(fittingParams):
     
-    paramValues = calcModelParamValues(fittingparams)
-    
-    return runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet)
+    paramAddresses = ParamRanges.Address.values.tolist()
+    paramSet = Xo.copy()
+    fittingParamsDF = pd.Series(index = paramsToOptimise,data=fittingParams)
+    for p in fittingParamsDF.index:
+        paramSet[p] = fittingParamsDF[p]
+    paramValues = paramSet.values.tolist()
+    return runModelItter(paramAddresses,paramValues,OptimisationVariables,SimulationSet,fittingParams)
+
+def evalExpressions(value):
+    if type(value) != str:
+        ret = value
+    else:
+        members = value.split()
+        if len(members)==1:
+            ret = ParamRanges.loc[members[0],'Xo']
+        else:
+            ref = ParamRanges.loc[members[0],'Xo']
+            opp = members[1]
+            num = float(members[2])
+            expression = 'ref'+opp+'num'
+            ret = parser.parse(expression).evaluate({'ref':ref,'num':num})
+    return ret
 
 
 # -
+
+ParamRanges = pd.read_excel('OptimiseConfig.xlsx',sheet_name='ParamRanges',engine="openpyxl",index_col='Param')
+SimSet = pd.read_excel('OptimiseConfig.xlsx',sheet_name='SimSet',engine="openpyxl")
+VariableWeights = pd.read_excel('OptimiseConfig.xlsx',sheet_name='VariableWeights',engine="openpyxl")
+OptimisationSteps = SimSet.columns.values.tolist()
+paramsToOptimise = []
+
+Xo = pd.Series(index = ParamRanges.index,data=[evalExpressions(x) for x in ParamRanges.loc[:,'Xo']])
+Xo
+
+bounds = pd.Series(index= ParamRanges.index,
+                   data = [(evalExpressions(ParamRanges.loc[x,'Min_feasible']),evalExpressions(ParamRanges.loc[x,'Max_feasible'])) for x in ParamRanges.index])
+bounds
+
+for step in OptimisationSteps[3:]:
+    print(step + " Optimistion step")
+    paramsToOptimise = ParamRanges.loc[:,step].dropna().index.values.tolist()
+    print("fitting these parameters")
+    print(paramsToOptimise)
+    OptimisationVariables = VariableWeights.loc[:,['Variable',step]].dropna().loc[:,'Variable'].values.tolist()
+    print("using these variables")
+    print(OptimisationVariables)
+    SimulationSet = SimSet.loc[:,step].dropna().values.tolist()
+    print("from these simulations")
+    print(SimulationSet)
+    FirstX = Xo.loc[paramsToOptimise].values.tolist()
+    print("start params values are")
+    print(FirstX)
+    boundSet = bounds.loc[paramsToOptimise].values.tolist()
+    print("parameter bounds are")
+    print(boundSet)
+    
+    pos = 0
+    for x in FirstX:
+        if x < boundSet[pos][0]:
+            FirstX[pos] = boundSet[pos][0]
+        if x > boundSet[pos][1]:
+            FirstX[pos] = boundSet[pos][1]
+        pos +=1
+    print("bound constrained start params values are")
+    print(FirstX)
+    
+    Preparefile(Path+'.apsimx')
+
+    RandomCalls = len(paramsToOptimise) * 12
+    OptimizerCalls = max(20,len(paramsToOptimise) * 4)
+    TotalCalls = RandomCalls + OptimizerCalls
+
+    checkpoint_saver = CheckpointSaver("./"+step+"checkpoint.pkl", compress=9)
+    ret = gp_minimize(runFittingItter, boundSet, n_calls=TotalCalls,n_initial_points=RandomCalls,
+                  initial_point_generator='sobol',callback=[checkpoint_saver],x0=FirstX)
+    
+    bestfits = ret.x
+    pi=0
+    for p in paramsToOptimise:
+        Xo[p]= bestfits[pi]
+        pi +=1
+    print("")
+    print("BestFits for "+step)
+    print(paramsToOptimise)
+    print(bestfits)
+    print("")
 
 # ### First run of optimiser, Use only full N full irrigation treatment.  Fit for total biomass, organ bioamss, cover and LAI.  Fit RUE, k leaf size and senescence params
 
