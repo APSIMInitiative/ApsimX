@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Presenters
 {
     using APSIM.Shared.Graphing;
+    using Commands;
     using Models.Soils;
     using System;
     using System.Globalization;
@@ -135,12 +136,12 @@
         /// <param name="e">The event arguments.</param>
         private void OnPercentFullChanged(object sender, EventArgs e)
         {
+            double fractionFull;
             if (!string.IsNullOrEmpty(percentFullEdit.Text))
-                water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+                fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
             else
-                water.FractionFull = 0;
-            Refresh();
-            gridPresenter.Refresh();
+                fractionFull = 0;
+            ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), fractionFull));
         }
 
         /// <summary>Invoked when the filled from top checkbox is changed.</summary>
@@ -148,10 +149,13 @@
         /// <param name="e">The event arguments.</param>
         private void OnFilledFromTopChanged(object sender, EventArgs e)
         {
-            water.FilledFromTop = filledFromTopCheckbox.Checked;
-            water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
-            Refresh();
-            gridPresenter.Refresh();
+            var changeFilledFromTop = new ChangeProperty.Property(water, nameof(water.FilledFromTop), filledFromTopCheckbox.Checked);
+
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
+
+            ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
+            ChangePropertyValue(changes);
         }
 
         /// <summary>Invoked when the relative to drop down is changed.</summary>
@@ -159,10 +163,16 @@
         /// <param name="e">The event arguments.</param>
         private void OnRelativeToChanged(object sender, EventArgs e)
         {
-            water.RelativeTo = relativeToDropDown.SelectedValue;
-            water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
-            Refresh();
-            gridPresenter.Refresh();
+            var changeRelativeTo = new ChangeProperty.Property(water, nameof(water.RelativeTo), relativeToDropDown.SelectedValue);
+
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
+            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
+
+            // Create a single ChangeProperty object with two actual changes.
+            // This will cause both changes to be applied (and be undo-able) in
+            // a single atomic action.
+            ChangeProperty changes = new ChangeProperty(new[] { changeRelativeTo, changeFractionFull });
+            ChangePropertyValue(changes);
         }
 
         /// <summary>Invoked when the depth of wet soil is changed.</summary>
@@ -170,7 +180,29 @@
         /// <param name="e">The event arguments.</param>
         private void OnDepthWetSoilChanged(object sender, EventArgs e)
         {
-            water.DepthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.InvariantCulture);
+            double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.InvariantCulture);
+            ChangePropertyValue(nameof(water.DepthWetSoil), depthWetSoil);
+        }
+
+        /// <summary>
+        /// Change a property of the water model via the command system, then
+        /// update the GUI.
+        /// </summary>
+        /// <param name="propertyName">Name of the property to be changed.</param>
+        /// <param name="propertyValue">New value of the property.</param>
+        private void ChangePropertyValue(string propertyName, object propertyValue)
+        {
+            ChangePropertyValue(new ChangeProperty(water, propertyName, propertyValue));
+        }
+
+        /// <summary>
+        /// Change a property of the water model via the command system, then
+        /// update the GUI.
+        /// </summary>
+        /// <param name="command">The property change to be applied.</param>
+        private void ChangePropertyValue(ChangeProperty command)
+        {
+            explorerPresenter.CommandHistory.Add(command);
             Refresh();
             gridPresenter.Refresh();
         }
