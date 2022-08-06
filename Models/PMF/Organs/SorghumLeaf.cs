@@ -253,38 +253,48 @@ namespace Models.PMF.Organs
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double DltLAI { get; set; }
-        
+
         /// <summary>Gets the Potential DltLAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double DltPotentialLAI { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double DltStressedLAI { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
+        [JsonIgnore]
         public double LAITotal => LAI + LAIDead;
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         public double SLN { get; set; }
 
         /// <summary>Used in metabolic ndemand calc.</summary>
+        [JsonIgnore]
         public double SLN0 { get; set; }
 
         /// <summary>Gets the cover green.</summary>
+        [JsonIgnore]
         [Units("0-1")]
         public double CoverGreen { get; set; }
 
         /// <summary>Gets the cover dead.</summary>
+        [JsonIgnore]
         public double CoverDead { get; set; }
 
         /// <summary>Gets the cover total.</summary>
+        [JsonIgnore]
         [Units("0-1")]
         public double CoverTotal => 1.0 - (1 - CoverGreen) * (1 - CoverDead); 
 
@@ -300,18 +310,22 @@ namespace Models.PMF.Organs
         public bool MicroClimatePresent { get; set; } = false;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
+        [JsonIgnore]
         public double BiomassRUE { get; set; }
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
+        [JsonIgnore]
         public double BiomassTE { get; set; }
 
         /// <summary>Gets or sets the Extinction Coefficient (Dead).</summary>
-        public double KDead { get; set; }                  // 
+        public double KDead { get; set; }
 
         /// <summary>Gets the transpiration.</summary>
+        [JsonIgnore]
         public double Transpiration => WaterAllocation;
-        
+
         /// <summary>Gets or sets the lai dead.</summary>
+        [JsonIgnore]
         public double LAIDead { get; set; }
 
         /// <summary>
@@ -338,44 +352,57 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Nitrogen Photosynthesis Stress.</summary>
+        [JsonIgnore]
         public double NitrogenPhotoStress { get; set; }
 
         /// <summary>Nitrogen Phenology Stress.</summary>
+        [JsonIgnore]
         public double NitrogenPhenoStress { get; set; }
 
         /// <summary>Phosphorous Stress.</summary>
+        [JsonIgnore]
         public double PhosphorusStress { get; set; }
 
         /// <summary>Final Leaf Number.</summary>
+        [JsonIgnore]
         public double FinalLeafNo => culms?.FinalLeafNo ?? 0;
 
         /// <summary>Leaf number.</summary>
+        [JsonIgnore]
         public double LeafNo => culms?.LeafNo ?? 0;
 
         /// <summary> /// Sowing Density (Population). /// </summary>
+        [JsonIgnore]
         public double SowingDensity { get; set; }
 
         /// <summary>The live biomass state at start of the computation round</summary>
+        [JsonIgnore]
         public Biomass StartLive { get; private set; } = null;
 
         /// <summary>The dry matter supply</summary>
+        [JsonIgnore]
         public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
+        [JsonIgnore]
         public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>The dry matter demand</summary>
+        [JsonIgnore]
         public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
+        [JsonIgnore]
         public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
+        [JsonIgnore]
         public BiomassPoolType potentialDMAllocation { get; set; }
         //Also a DMPotentialAllocation present in this file
         //used as DMPotentialAllocation in genericorgan
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        [JsonIgnore]
         public bool IsAboveGround => true;
 
         /// <summary>The live biomass</summary>
@@ -447,33 +474,43 @@ namespace Models.PMF.Organs
 
         /// <summary>Only water stress at this stage.</summary>
         /// Diff between potentialLAI and stressedLAI
+        [JsonIgnore]
         public double LossFromExpansionStress { get; set; }
 
         /// <summary>Total LAI as a result of senescence.</summary>
+        [JsonIgnore]
         public double SenescedLai { get; set; }
 
         /// <summary>Amount of N retranslocated today.</summary>
+        [JsonIgnore]
         public double DltRetranslocatedN { get; set; }
-        
+
         /// <summary>Delta of N removed due to Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedN { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to N Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiN { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLai { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Light Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiLight { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Water Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiWater { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiFrost { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to age senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiAge { get; set; }
 
         /// <summary>Clears this instance.</summary>

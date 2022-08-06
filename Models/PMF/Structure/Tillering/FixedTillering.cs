@@ -8,6 +8,7 @@ using Models.PMF.Phen;
 using Models.Utilities;
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
@@ -56,9 +57,11 @@ namespace Models.PMF.Struct
 		[Link]
 		Phenology phenology = null;
 
-		/// <summary>Number of Fertile Tillers at Harvest</summary>
-		public double FertileTillerNumber { get; set; }
+        /// <summary>Number of Fertile Tillers at Harvest</summary>
+        [JsonIgnore]
+        public double FertileTillerNumber { get; set; }
         /// <summary>Current Number of Tillers</summary>
+        [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
 
         private int floweringStage;

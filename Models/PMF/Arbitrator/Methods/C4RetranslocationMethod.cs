@@ -25,10 +25,9 @@ namespace Models.PMF.Arbitrator
         {
             if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
             {
-                var nArbitrator = arbitrationMethod as SorghumArbitratorN;
-                if (nArbitrator != null)
+                if (arbitrationMethod is SorghumArbitratorN)
                 {
-                    nArbitrator.DoRetranslocation(Organs, BAT, Arbitrator.DM);
+                    (arbitrationMethod as SorghumArbitratorN).DoRetranslocation(Organs, BAT, Arbitrator.DM);
                 }
                 else
                 {

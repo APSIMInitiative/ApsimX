@@ -70,11 +70,14 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		IFunction slaMax = null;
 
-		/// <summary>Number of potential Fertile Tillers at harvest</summary>
-		public double CalculatedTillerNumber { get; private set; }
+        /// <summary>Number of potential Fertile Tillers at harvest</summary>
+        [JsonIgnore]
+        public double CalculatedTillerNumber { get; private set; }
         /// <summary>Current Number of Tillers</summary>
+        [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
         /// <summary>Current Number of Tillers</summary>
+        [JsonIgnore]
         public double DltTillerNumber { get; set; }
 
         /// <summary>Actual Number of Fertile Tillers</summary>
@@ -85,8 +88,9 @@ namespace Models.PMF.Struct
 			set { throw new Exception("Cannot set the FertileTillerNumber for Dynamic Tillering. Make sure you set TilleringMethod before FertileTillerNmber"); }
 		}
 
-		/// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
-		public double SupplyDemandRatio { get; private set; }
+        /// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
+        [JsonIgnore]
+        public double SupplyDemandRatio { get; private set; }
 
 		private int flagStage;
 		private int floweringStage;

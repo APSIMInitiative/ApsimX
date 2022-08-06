@@ -53,12 +53,6 @@ namespace Models.PMF.Arbitrator
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction MaxDiffusion = null;
 
-        //[Link]
-        //private SorghumLeaf leaf = null;
-
-        //[Link]
-        //private Phenology phenology = null;
-
         private const double kgha2gsm = 0.1;
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
         [JsonIgnore]
@@ -67,12 +61,13 @@ namespace Models.PMF.Arbitrator
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
         [JsonIgnore]
         public double[] Diffusion { get; private set; }
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
+
+        /// <summary>N Uptaken through Mass Flow</summary>
+        [JsonIgnore]
         public double NMassFlowSupply { get; private set; }
 
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
+        /// <summary>N Teken up through Diffusion.</summary>
+        [JsonIgnore]
         public double NDiffusionSupply { get; private set; }
 
         /// <summary>The method used to arbitrate N allocations</summary>
@@ -86,7 +81,6 @@ namespace Models.PMF.Arbitrator
             //shouldn't set public variables in here
 
             var grainIndex = 0;  
-            //Organs.ToList().FindIndex(o => (o as IModel).Name == "Grain")
             var rootIndex = 1;
             var leafIndex = 2;
             var stemIndex = 4;
@@ -217,10 +211,6 @@ namespace Models.PMF.Arbitrator
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
                 myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm) * myZone.RootProportions[layer];
-
-                //NH4Supply[layer] = no3massFlow;
-                //onyl 2 fields passed in for returning data. 
-                //actual uptake needs to distinguish between massflow and diffusion
             }
         }
         /// Calculating the actual water uptake across all zones.
