@@ -64,12 +64,14 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
 
-        /// <summary> Set through Sowing Event</summary>
-        public int TilleringMethod { get; set; } 
+		/// <summary> Set through Sowing Event</summary>
+		[JsonIgnore]
+		public int TilleringMethod { get; set; } 
 		
 		private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
 
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
         public double FertileTillerNumber { get => tillering.FertileTillerNumber; }
 
 		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
@@ -80,23 +82,29 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		public IFunction MaxVerticalTillerAdjustment = null;
 
-		/// <summary>Final leaf number.</summary>
-		public double FinalLeafNo { get; set; }
+        /// <summary>Final leaf number.</summary>
+        [JsonIgnore]
+        public double FinalLeafNo { get; set; }
 
-		/// <summary>Leaf number.</summary>
-		public double LeafNo { get { return Culms[0].CurrentLeafNo; } }
+        /// <summary>Leaf number.</summary>
+        [JsonIgnore]
+        public double LeafNo { get { return Culms[0].CurrentLeafNo; } }
 
-		/// <summary> Amount of Leaf that appears today</summary>
-		public double dltLeafNo;
+        /// <summary> Amount of Leaf that appears today</summary>
+        [JsonIgnore]
+        public double dltLeafNo;
 
-		/// <summary> Potential leaf growth for today for all culms</summary>
-		public double dltPotentialLAI { get; set; }
+        /// <summary> Potential leaf growth for today for all culms</summary>
+        [JsonIgnore]
+        public double dltPotentialLAI { get; set; }
 
-		/// <summary> Potential leaf growth after stress for today for all culms</summary>
-		public double dltStressedLAI { get; set; }
+        /// <summary> Potential leaf growth after stress for today for all culms</summary>
+        [JsonIgnore]
+        public double dltStressedLAI { get; set; }
 
-		/// <summary> Collection of Culms </summary>
-		public List<Culm> Culms;
+        /// <summary> Collection of Culms </summary>
+        [JsonIgnore]
+        public List<Culm> Culms;
 
 		/// <summary>Total TT required to get from emergence to floral init.</summary>
         [JsonIgnore]
@@ -108,8 +116,9 @@ namespace Models.PMF.Struct
 			Culms = new List<Culm>();
 		}
 
-		/// <summary> Array of Individual leaf sizeson the first culm</summary>
-		public double[] LeafSizes
+        /// <summary> Array of Individual leaf sizeson the first culm</summary>
+        [JsonIgnore]
+        public double[] LeafSizes
 		{
 			get
 			{

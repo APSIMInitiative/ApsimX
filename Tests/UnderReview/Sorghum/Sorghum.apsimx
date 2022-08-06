@@ -3879,12 +3879,6 @@
                 },
                 {
                   "$type": "Models.PMF.Struct.LeafCulms, Models",
-                  "dltLeafNo": 0.0,
-                  "Culms": [],
-                  "TilleringMethod": 0,
-                  "FinalLeafNo": 0.0,
-                  "dltPotentialLAI": 0.0,
-                  "dltStressedLAI": 0.0,
                   "Name": "LeafCulms",
                   "ResourceName": null,
                   "Children": [
