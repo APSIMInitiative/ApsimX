@@ -500,7 +500,15 @@ namespace Models.PMF.Organs
             Live.StructuralN = 0;
             Live.StorageN = 0;
 
+            DltSenescedN = 0.0;
             DltSenescedLaiN = 0.0;
+            DltRetranslocatedN = 0.0;
+            DltSenescedLai = 0.0;
+            DltSenescedLaiLight = 0.0;
+            DltSenescedLaiWater = 0.0;
+            DltSenescedLaiFrost = 0.0;
+            DltSenescedLaiAge = 0.0;
+
             SenescedLai = 0.0;
             CoverGreen = 0.0;
             CoverDead = 0.0;

@@ -69,7 +69,8 @@ namespace Models.PMF.Arbitrator
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;
-            SDRatio = 0;
+            SDRatio = 0.0;
+            SWAvail = 0.0;
         }
 
         /// <summary>The method used to arbitrate N allocations</summary>

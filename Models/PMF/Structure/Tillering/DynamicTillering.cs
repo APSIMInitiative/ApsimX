@@ -386,10 +386,20 @@ namespace Models.PMF.Struct
 			culms.Culms.ForEach(c => c.DltStressedLAI = c.DltStressedLAI - Math.Max(c.DltStressedLAI / totalDltLeaf * laiReduction, 0.0));
 		}
 
-		/// <summary>Called when crop is sowed</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("PlantSowing")]
+        /// <summary> Reset Culms at start of the simulation </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void StartOfSim(object sender, EventArgs e)
+        {
+            CurrentTillerNumber = 0.0;
+			CalculatedTillerNumber = 0.0;
+			DltTillerNumber = 0.0;
+			SupplyDemandRatio = 0.0;
+        }
+
+        /// <summary>Called when crop is sowed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
 		protected void OnPlantSowing(object sender, SowingParameters data)
 		{
 			if (data.Plant == plant && leaf.TilleringMethod == 1)

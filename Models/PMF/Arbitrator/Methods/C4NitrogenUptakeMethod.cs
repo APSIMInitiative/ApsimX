@@ -236,9 +236,14 @@ namespace Models.PMF.Arbitrator
             //NUptakeSupply units should be g/m^2
             for (int i = 0; i < Organs.Count(); i++)
                 N.UptakeSupply[i] = NSupply / zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+        }
 
-
-
+        /// <summary> Reset Culms at start of the simulation </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void StartOfSim(object sender, EventArgs e)
+        {
+            NDiffusionSupply = 0.0;
+            NMassFlowSupply = 0.0;
         }
     }
 }

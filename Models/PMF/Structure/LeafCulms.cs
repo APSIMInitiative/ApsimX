@@ -130,7 +130,9 @@ namespace Models.PMF.Struct
 			TTTargetFI = 0;
 			FinalLeafNo = 0;
 			dltLeafNo = 0;
-		}
+			dltPotentialLAI = 0.0;
+			dltStressedLAI = 0.0;
+        }
 
 		/// <summary> Reset Culms at start of the simulation </summary>
 		[EventSubscribe("StartOfSimulation")]

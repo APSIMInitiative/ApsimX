@@ -223,10 +223,19 @@ namespace Models.PMF.Struct
             CurrentTillerNumber += fractionToAdd;
 		}
 
-		/// <summary>Called when crop is sowed</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("PlantSowing")]
+        /// <summary> Reset Culms at start of the simulation </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void StartOfSim(object sender, EventArgs e)
+        {
+			FertileTillerNumber = 0.0;
+			CurrentTillerNumber = 0.0;
+
+        }
+
+        /// <summary>Called when crop is sowed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
 		protected void OnPlantSowing(object sender, SowingParameters data)
 		{
 			if (data.Plant == plant)
