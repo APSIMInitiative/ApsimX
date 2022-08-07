@@ -15,7 +15,10 @@ namespace Models.PMF.Arbitrator
     {
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
-        protected IArbitrator Arbitrator = null;
+        protected OrganArbitrator Arbitrator = null;
+
+        private int leafIndex = 2;
+        private int stemIndex = 4;
 
         /// <summary>Does the fixation.</summary>
         /// <param name="Organs">The organs.</param>
@@ -39,9 +42,6 @@ namespace Models.PMF.Arbitrator
                             return;
                         arbitrationMethod.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
-                        int leafIndex = 2;
-                        int stemIndex = 4;
-
                         double grainDifferential = BiomassRetranslocated;
 
                         if (grainDifferential > 0)
@@ -60,6 +60,17 @@ namespace Models.PMF.Arbitrator
                     }
                 }
             }
+        }
+
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        virtual protected void OnPlantSowing(object sender, SowingParameters data)
+        {
+            var organNames = Arbitrator.OrganNames;
+            leafIndex = organNames.IndexOf("Leaf");
+            stemIndex = organNames.IndexOf("Stem");
         }
     }
 }
