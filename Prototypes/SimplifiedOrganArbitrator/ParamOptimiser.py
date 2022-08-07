@@ -162,17 +162,6 @@ def makeLongString(SimulationSet):
 def CalcScaledValue(Value,RMax,RMin):
     return (Value - RMin)/(RMax-RMin)
 # +
-file
-with open(filePath,'r',encoding="utf8") as ApsimxJSON:
-    Apsimx = json.load(ApsimxJSON)
-    ApsimxJSON.close()
-
-
-with open(filePath,'w') as ApsimxJSON:
-    json.dump(Apsimx,ApsimxJSON,indent=2)
-
-
-# +
 def Preparefile(filePath):
     ## revert .apximx file to last comitt
 #     !del C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db
@@ -260,7 +249,15 @@ bounds = pd.Series(index= ParamRanges.index,
                    data = [(evalExpressions(ParamRanges.loc[x,'Min_feasible']),evalExpressions(ParamRanges.loc[x,'Max_feasible'])) for x in ParamRanges.index])
 bounds
 
-for step in OptimisationSteps[3:]:
+step = "Potential canopy"
+paramAddresses = ParamRanges[0:1].Address.values.tolist()
+paramValues = Xo[0:1].copy()
+OptimisationVariables = VariableWeights.loc[:,['Variable',step]].dropna().loc[:,'Variable'].values.tolist()
+SimulationSet = SimSet.loc[:,step].dropna().values.tolist()
+fittingParams = []
+runModelItter(paramAddresses,paramValues,OptimisationVariables,SimulationSet,fittingParams)
+
+for step in OptimisationSteps:
     print(step + " Optimistion step")
     paramsToOptimise = ParamRanges.loc[:,step].dropna().index.values.tolist()
     print("fitting these parameters")
