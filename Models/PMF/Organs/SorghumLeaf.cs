@@ -699,12 +699,12 @@ namespace Models.PMF.Organs
         public double ProvideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             double laiToday = CalcLAI();
-            //whether the retranslocation is added or removed is confusing
-            //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
             double dltNGreen = BAT.StructuralAllocation[leafIndex] + BAT.MetabolicAllocation[leafIndex];
             double nGreenToday = Live.N + dltNGreen + DltRetranslocatedN; //dltRetranslocation is -ve
-            double nProvided = 0.0;
+            double slnToday = calcSLN(laiToday, nGreenToday);
 
+            double nProvided = 0.0;
+            
             if (phenology.Between("Germination", "Flowering"))
             {
                 var targetForDilution = requiredN / 3.0;
@@ -713,162 +713,32 @@ namespace Models.PMF.Organs
                 nGreenToday -= nDiluted;
                 nProvided += nDiluted;
 
-                var targetForNewLeafReduction = requiredN / 2.0;
-                nDiluted = ReduceNewLeafArea(targetForNewLeafReduction);
-                nProvided += nDiluted;
-                requiredN -= nDiluted;
+                var targetForNewLeafReduction = requiredN;// / 2.0; - classic divides this by 2
+                var nDemandRreduced = ReduceNewLeafArea(targetForNewLeafReduction);
+
+                //if it is providing N for leaf it reduces the total leaf demand
+                //it cannot provide N to other organs as it is reducing demand not retranslocating existing
+                if (forLeaf)
+                    requiredN -= nDemandRreduced;
 
                 laiToday = CalcLAI();
-                nDiluted = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
-                nProvided += nDiluted;
+                var nSenesced = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
+                nProvided += nSenesced;
             }
             else
             {
-                if(SLN > 1.0)
-                {
-                    var nDiluted = ProvideNFromDilution(requiredN, nGreenToday, laiToday);
-                    requiredN -= nDiluted;
-                    nGreenToday -= nDiluted;
-                    nProvided += nDiluted;
+                //if SLN is below 1, then limit dilution to half of the required N
+                var targetForDilution = slnToday > 1.0 ? requiredN : requiredN / 2.0;
+                var nDiluted = ProvideNFromDilution(targetForDilution, nGreenToday, laiToday);
+                requiredN -= nDiluted;
+                nGreenToday -= nDiluted;
+                nProvided += nDiluted;
 
-                    nDiluted = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
-                    nProvided += nDiluted;
-                }
-                else
-                {
-                    var targetForDilution = requiredN / 2.0;
-                    var nDiluted = ProvideNFromDilution(targetForDilution, nGreenToday, laiToday);
-                    requiredN -= nDiluted;
-                    nGreenToday -= nDiluted;
-                    nProvided += nDiluted;
-
-                    nDiluted = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
-                    nProvided += nDiluted;
-                }
+                laiToday = CalcLAI();
+                var nSenesced = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
+                nProvided += nSenesced;
             }
             return nProvided;
-
-            //if (phenology.Between("Germination", "Flowering"))
-            //{
-            //    // pre anthesis, get N from dilution, decreasing dltLai and senescence
-            //    double nProvided = Math.Min(dilutionN, requiredN / 3.0);
-            //    DltRetranslocatedN -= nProvided;
-            //    nGreenToday -= nProvided; //jkb
-            //    requiredN -= nProvided;
-            //    if (requiredN <= 0.0001)
-            //        return nProvided;
-
-            //    // decrease dltLai which will reduce the amount of new leaf that is produced
-            //    if (MathUtilities.IsPositive(DltLAI))
-            //    {
-            //        // Only half of the requiredN can be accounted for by reducing DltLAI
-            //        // If the RequiredN is large enough, it will result in 0 new growth
-            //        // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
-            //        double n = DltLAI * NewLeafSLN;
-            //        double laiN = Math.Min(n, requiredN);
-            //        // dh - we don't make this check in old apsim
-            //        if (MathUtilities.IsPositive(laiN))
-            //        {
-            //            DltLAI = (n - laiN) / NewLeafSLN;
-            //            if (forLeaf)
-            //            {
-            //                // should we update the StructuralDemand?
-            //                //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
-            //                requiredN -= laiN;
-            //            }
-            //        }
-            //    }
-
-            //    // recalc the SLN after this N has been removed
-            //    laiToday = CalcLAI();
-            //    slnToday = calcSLN(laiToday, nGreenToday);
-
-            //    var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-            //    maxN = Math.Max(maxN, 0);
-            //    requiredN = Math.Min(requiredN, maxN);
-
-            //    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
-
-            //    // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-            //    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
-
-            //    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
-            //    DltRetranslocatedN -= newN;
-            //    nGreenToday += newN; // local variable
-            //    nProvided += newN;
-            //    DltSenescedLaiN += senescenceLAI;
-
-            //    DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-            //    DltSenescedN += senescenceLAI * SenescedLeafSLN;
-
-            //    return nProvided;
-            //}
-            //else
-            //{
-            //    // if sln > 1, dilution then senescence
-            //    if (slnToday > 1.0)
-            //    {
-            //        double nProvided = Math.Min(dilutionN, requiredN);
-            //        requiredN -= nProvided;
-            //        nGreenToday -= nProvided; //jkb
-            //        DltRetranslocatedN -= nProvided;
-
-            //        if (requiredN <= 0.0001)
-            //            return nProvided;
-
-            //        // rest from senescence
-            //        laiToday = CalcLAI();
-            //        slnToday = calcSLN(laiToday, nGreenToday);
-
-            //        var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-            //        requiredN = Math.Min(requiredN, maxN);
-
-            //        double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
-
-            //        // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-            //        senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
-
-            //        double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
-            //        DltRetranslocatedN -= newN;
-            //        nGreenToday += newN;
-            //        nProvided += newN;
-            //        DltSenescedLaiN += senescenceLAI;
-
-            //        DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-            //        DltSenescedN += senescenceLAI * SenescedLeafSLN;
-            //        return nProvided;
-            //    }
-            //    else
-            //    {
-            //        // half from dilution and half from senescence
-            //        double nProvided = Math.Min(dilutionN, requiredN / 2.0);
-            //        requiredN -= nProvided;
-            //        nGreenToday -= nProvided; //jkb // dh - this should be subtracted, not added
-            //        DltRetranslocatedN -= nProvided;
-
-            //        // rest from senescence
-            //        laiToday = CalcLAI();
-            //        slnToday = calcSLN(laiToday, nGreenToday);
-
-            //        var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-            //        requiredN = Math.Min(requiredN, maxN);
-
-            //        double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
-
-            //        // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-            //        senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
-
-            //        double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
-            //        DltRetranslocatedN -= newN;
-            //        nGreenToday += newN;
-            //        nProvided += newN;
-            //        DltSenescedLaiN += senescenceLAI;
-
-            //        DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-            //        DltSenescedN += senescenceLAI * SenescedLeafSLN;
-            //        return nProvided;
-            //    }
-            //}
         }
         private double ProvideNFromDilution(double requiredN, double nGreenToday, double laiToday)
         {
@@ -892,8 +762,6 @@ namespace Models.PMF.Organs
         private double ReduceNewLeafArea(double requiredN)
         {
             if (MathUtilities.IsNegative(DltLAI)) return 0;
-            if (MathUtilities.IsNegative(requiredN)) return 0;
-
             // decrease dltLai which will reduce the amount of new leaf that is produced
             // If the RequiredN is large enough, it will result in 0 new growth
             // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
@@ -901,7 +769,7 @@ namespace Models.PMF.Organs
             double nProvided = Math.Min(newLeafN, requiredN);
 
             DltLAI = (newLeafN - nProvided) / NewLeafSLN;
-            return nProvided;
+            return nProvided; 
 
             // should we update the StructuralDemand?
             //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
