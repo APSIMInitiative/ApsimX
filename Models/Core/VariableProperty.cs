@@ -808,5 +808,14 @@
 
         /// <summary>Return the remarks comments from the source code.</summary>
         public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
+
+        /// <summary>Get the full name of the property.</summary>
+        public string GetFullName()
+        {
+            if (lowerArraySpecifier != 0 && upperArraySpecifier != 0)
+                return $"{Name}[{lowerArraySpecifier}:{upperArraySpecifier}]";
+            else
+                return Name;
+        }
     }
 }

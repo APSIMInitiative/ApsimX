@@ -251,7 +251,7 @@ namespace UnitTests.Core
         }
 
         [Test]
-        public void TestEditingGenericLists()
+        public void TestEditingArrayElements()
         {
             var overrides = new Override[]
             {
@@ -277,6 +277,11 @@ namespace UnitTests.Core
                 "xyz",
                 "0.5"
             }), stringList.Data);
+
+            // Now undo the overrides.
+            Overrides.Apply(sims1, undos);
+
+            Assert.AreEqual(0, stringList.Data.Count);
         }
     }
 }

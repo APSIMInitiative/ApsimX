@@ -1,10 +1,13 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Models.Core
 {
@@ -83,7 +86,7 @@ namespace Models.Core
                 }
 
                 // Apply the override and return an undo override.
-                string undoPath = CalculateFullPath(variable);
+                string undoPath = CalculateFullPath(variable, model);
                 object oldValue;
                 if (variable.Value is IModel modelToReplace && replacementValue is IModel modelReplacement)
                 {
@@ -91,7 +94,15 @@ namespace Models.Core
                     oldValue = modelToReplace;
                 }
                 else
+                {
+                    // Convert the replacementValue to a full sized array variable if necessary.
+                    // e.g. if path = Data[3:4] then the replacementValue needs to be the full
+                    // array and not just the values that are going to be used
+                    // This gets around a design decision in VariableProperty.Value.set.
+                    replacementValue = ConvertValueToFullArray(model, path, replacementValue);
+
                     oldValue = ChangeVariableValue(variable, replacementValue);
+                }
 
                 undos.Add(new Override(undoPath, oldValue, Override.MatchTypeEnum.NameAndType));
             }
@@ -136,6 +147,7 @@ namespace Models.Core
         {
             for (int i = 0; i < lines.Length; i++)
             {
+                StringUtilities.SplitOffAfterDelimiter(ref lines[i], "//");
                 if (string.IsNullOrWhiteSpace(lines[i]))
                     continue;
 
@@ -147,6 +159,46 @@ namespace Models.Core
                 string value = values[1].Trim();
                 yield return new Override(path, value, Override.MatchTypeEnum.NameAndType);
             }
+        }
+
+        /// <summary>
+        /// Convert a value to a full sized array variable if necessary.
+        /// e.g. if path = Data[3:4] then the replacementValue needs to be the full
+        /// array and not just the 2 values for indexes 3 and 4.
+        /// This gets around a design decision in VariableProperty.Value.set.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="path">The path of the variable.</param>
+        /// <param name="value">The value.</param>
+        private static object ConvertValueToFullArray(IModel model, string path, object value)
+        {
+            var match = Regex.Match(path, @"(?<rawpath>.+)\[(?<startindex>\d+):?(?<endindex>\d+)?]$");
+            if (match.Success)
+            {   
+                var fullArray = model.FindByPath(match.Groups["rawpath"].Value)?.Value as IList;
+                if (fullArray != null)
+                {
+                    int startIndex = Convert.ToInt32(match.Groups["startindex"].Value, CultureInfo.InvariantCulture) - 1;
+                    int endIndex = startIndex;
+                    if (match.Groups["endindex"].Value != string.Empty)
+                        endIndex = Convert.ToInt32(match.Groups["endindex"].Value, CultureInfo.InvariantCulture) - 1;
+                    int numValuesToCopy = endIndex - startIndex + 1;
+                    if (value is IList valueAsArray && endIndex >= startIndex)
+                    {
+                        for (int i = 0; i < numValuesToCopy; i++)
+                        {
+                            if (valueAsArray.Count == 1)
+                                fullArray[startIndex + i] = valueAsArray[0];
+                            else
+                                fullArray[startIndex + i] = Convert.ChangeType(valueAsArray[i], fullArray[startIndex].GetType());
+                        }
+                        return fullArray;
+                    }
+                    else
+                        fullArray[startIndex] = Convert.ChangeType(value, fullArray[startIndex].GetType());
+                }
+            }
+            return value;
         }
 
         /// <summary>
@@ -164,10 +216,6 @@ namespace Models.Core
                 IModel model = composite.Variables.FirstOrDefault(v => v is VariableObject obj && obj.Value is IModel)?.Value as IModel;
                 if (model != null)
                 {
-                    var resourceModel = model.FindAllAncestors().FirstOrDefault(a => !string.IsNullOrEmpty(a.ResourceName));
-                    if (resourceModel != null)
-                        resourceModel.ResourceName = null;
-
                     if (model.Parent is Manager manager && variable.Name == ".Script.Code")
                         manager.RebuildScriptModel();
                 }
@@ -220,8 +268,9 @@ namespace Models.Core
 
         /// <summary>Calculate a full path for an IVariable.</summary>
         /// <param name="variable">The variable.</param>
+        /// <param name="relativeTo">The calculated path should be relative to this model.</param>
         /// <returns>Full path or throws if cannot calculate path.</returns>
-        private static string CalculateFullPath(IVariable variable)
+        private static string CalculateFullPath(IVariable variable, IModel relativeTo)
         {
             var st = new StringBuilder();
             if (variable is VariableComposite composite)
@@ -230,16 +279,22 @@ namespace Models.Core
                 {
                     if (st.Length > 0)
                         st.Append('.');
+
                     if (v is VariableObject && v.Object is IModel model)
                         st.Append(model.FullPath);
+                    else if (v is VariableProperty property)
+                        st.Append(property.GetFullName());
                     else
                         st.Append(v.Name);
                 }
             }
             else if (variable is VariableObject obj && obj.Object is IModel model)
                 st.Append(model.FullPath);
-            
-            return st.ToString();
+
+            // Convert path from absolute to relative.
+            string relativePath = st.ToString().Replace(relativeTo.FullPath, "").TrimStart('.');
+
+            return relativePath;
         }
 
         /// <summary>Encapsulates a keyword=value pair.</summary>
