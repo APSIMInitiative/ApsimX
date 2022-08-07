@@ -128,6 +128,7 @@ namespace Models.CLEM.Activities
                 Name = timeStep.Name,
                 Status = timeStep.Status,
                 Id = timeStep.UniqueID.ToString(),
+                ModelType = (int)ActivityPerformedType.Timer
             };
             LastActivityPerformed = ea;
             OnActivityPerformed(ea);
