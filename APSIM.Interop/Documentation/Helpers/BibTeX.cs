@@ -49,11 +49,12 @@ namespace APSIM.Interop.Documentation.Helpers
                 if (posComma == -1)
                     throw new Exception("Bad format in .bib file around pos " + posAmpersand);
 
+                string articleName = contents.Substring(posOpenBracket + 1, posComma - posOpenBracket - 1);
+
                 int posCloseBracket = StringUtilities.FindMatchingClosingBracket(contents, posOpenBracket, '{', '}');
                 if (posOpenBracket == -1 || posCloseBracket == -1)
-                    throw new Exception("Bad format in .bib file around pos " + posAmpersand);
+                    throw new Exception($"Bad format (closing bracket) in .bib file after article: {articleName}, opening bracket at: {posOpenBracket}");
 
-                string articleName = contents.Substring(posOpenBracket + 1, posComma - posOpenBracket - 1);
                 if (articleName == citationName)
                     return new Citation(contents.Substring(posAmpersand, posCloseBracket - posAmpersand));
                 else
