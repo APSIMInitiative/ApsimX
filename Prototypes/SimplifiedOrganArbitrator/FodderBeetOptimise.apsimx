@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 360,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -5991,7 +5991,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Photosynthesis.RueReductionFactor",
+                                  "VariableName": "[Leaf].Photosynthesis.FT",
                                   "Name": "RUEstress",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -7882,7 +7882,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Soil ThisSoil;\r\n        [Link] private IPhysical soilPhysical;\r\n        [Link] private ISoilWater waterBalance;\n        [Link] private Sample InitSW;\n        [Link] private SoilCrop fodderBeetSoil;\r\n        [Description(\"Amount of Irrgation be applied 0/1\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n        \r\n          \r\n        private void SetSoilLayers()\r\n        {\r\n            /*\r\n            Not used yrt use whenmore detailed info is known\r\n            */\r\n            int i = 0;\r\n            if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.06;\r\n                soilPhysical.LL15[2] = 0.08;\r\n                soilPhysical.LL15[3] = 0.14;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.11;\n                soilPhysical.LL15[7] = 0.11;\r\n                soilPhysical.DUL[0] = 0.34;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.28;\r\n                soilPhysical.DUL[3] = 0.3;\r\n                soilPhysical.DUL[4] = 0.3;\r\n                soilPhysical.DUL[5] = 0.30;\r\n                soilPhysical.DUL[6] = 0.3;\n                soilPhysical.DUL[7] = 0.3;\r\n                soilPhysical.SAT[0] = 0.4;\r\n                soilPhysical.SAT[1] = 0.4;\r\n                soilPhysical.SAT[2] = 0.4;\r\n                soilPhysical.SAT[3] = 0.4;\r\n                soilPhysical.SAT[4] = 0.4;\r\n                soilPhysical.SAT[5] = 0.4;\r\n                soilPhysical.SAT[6] = 0.4;\n                soilPhysical.SAT[7] = 0.4;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.07;\r\n                soilPhysical.LL15[1] = 0.12;\r\n                soilPhysical.LL15[2] = 0.17;\r\n                soilPhysical.LL15[3] = 0.20;\r\n                soilPhysical.LL15[4] = 0.26;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\n                soilPhysical.LL15[7] = 0.30;\r\n                soilPhysical.DUL[0] = 0.30;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.29;\r\n                soilPhysical.DUL[3] = 0.25;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.11;\r\n                soilPhysical.LL15[2] = 0.21;\r\n                soilPhysical.LL15[3] = 0.18;\r\n                soilPhysical.LL15[4] = 0.23;\r\n                soilPhysical.LL15[5] = 0.30;\r\n                soilPhysical.LL15[6] = 0.26;\n                soilPhysical.LL15[7] = 0.26;\r\n                soilPhysical.DUL[0] = 0.25;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.27;\r\n                soilPhysical.DUL[4] = 0.34;\r\n                soilPhysical.DUL[5] = 0.27;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.25;\r\n                soilPhysical.LL15[3] = 0.19;\r\n                soilPhysical.LL15[4] = 0.29;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.34;\n                soilPhysical.LL15[7] = 0.34;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.14;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.27;\r\n                soilPhysical.LL15[3] = 0.27;\r\n                soilPhysical.LL15[4] = 0.27;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\n                soilPhysical.LL15[7] = 0.30;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }\r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.15;\r\n                soilPhysical.LL15[2] = 0.16;\r\n                soilPhysical.LL15[3] = 0.16;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\n                \n                fodderBeetSoil.LL[0] = soilPhysical.LL15[0];\r\n                fodderBeetSoil.LL[1] = soilPhysical.LL15[1];\r\n                fodderBeetSoil.LL[2] = soilPhysical.LL15[2];\r\n                fodderBeetSoil.LL[3] = soilPhysical.LL15[3];\r\n                fodderBeetSoil.LL[4] = soilPhysical.LL15[4];\r\n                fodderBeetSoil.LL[5] = soilPhysical.LL15[5];\r\n                fodderBeetSoil.LL[6] = soilPhysical.LL15[6];\n                fodderBeetSoil.LL[7] = soilPhysical.LL15[7];\n                \n                soilPhysical.AirDry[0] = soilPhysical.LL15[0] * 0.5;\r\n                soilPhysical.AirDry[1] = soilPhysical.LL15[1];\r\n                soilPhysical.AirDry[2] = soilPhysical.LL15[2];\r\n                soilPhysical.AirDry[3] = soilPhysical.LL15[3];\r\n                soilPhysical.AirDry[4] = soilPhysical.LL15[4];\r\n                soilPhysical.AirDry[5] = soilPhysical.LL15[5];\r\n                soilPhysical.AirDry[6] = soilPhysical.LL15[6];\n                soilPhysical.AirDry[7] = soilPhysical.LL15[7];\n                \r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \r\n                soilPhysical.SAT[0] = soilPhysical.DUL[0] * 1.2;\r\n                soilPhysical.SAT[1] = soilPhysical.DUL[1] * 1.2;\r\n                soilPhysical.SAT[2] = soilPhysical.DUL[2] * 1.2;\r\n                soilPhysical.SAT[3] = soilPhysical.DUL[3] * 1.2;\r\n                soilPhysical.SAT[4] = soilPhysical.DUL[4] * 1.2;\r\n                soilPhysical.SAT[5] = soilPhysical.DUL[5] * 1.2;\r\n                soilPhysical.SAT[6] = soilPhysical.DUL[6] * 1.2;\n                soilPhysical.SAT[7] = soilPhysical.DUL[7] * 1.2;\n                \n                InitSW.SWVolumetric[0] = 0.225;\n                InitSW.SWVolumetric[1] = 0.23;\n                InitSW.SWVolumetric[2] = 0.27;\n                InitSW.SWVolumetric[3] = 0.315;\n                InitSW.SWVolumetric[4] = 0.28;\n                InitSW.SWVolumetric[5] = 0.21;\n                InitSW.SWVolumetric[6] = 0.14;\n                InitSW.SWVolumetric[7] = 0.145;\n                waterBalance.Reset();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n                SetSoilLayers();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Specific irrgations\r\n            \r\n            if ((DateUtilities.CompareDates(\"16-Nov\", Clock.Today) == 0))\r\n                    SetSoilLayers();\r\n            \r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if ((DateUtilities.CompareDates(\"1-Feb\", Clock.Today) == 0))\r\n                    Irrigation.Apply(40);\r\n                if ((DateUtilities.CompareDates(\"1-Mar\", Clock.Today) == 0))\r\n                    Irrigation.Apply(33);\r\n            }\r\n        \r\n          \r\n            \r\n            \r\n        }\r\n    }\r\n        \r\n        \r\n}\r\n    \r\n\r\n\r\n      \r\n",
+                          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Soil ThisSoil;\r\n        [Link] private IPhysical soilPhysical;\r\n        [Link] private ISoilWater waterBalance;\n        [Link] private Sample InitSW;\n        [Link] private SoilCrop fodderBeetSoil;\r\n        [Description(\"Amount of Irrgation be applied 0/1\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n        \r\n          \r\n        private void SetSoilLayers()\r\n        {\r\n            /*\r\n            Not used yrt use whenmore detailed info is known\r\n            */\r\n            int i = 0;\r\n            if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.06;\r\n                soilPhysical.LL15[1] = 0.06;\r\n                soilPhysical.LL15[2] = 0.08;\r\n                soilPhysical.LL15[3] = 0.14;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.11;\n                soilPhysical.LL15[7] = 0.11;\r\n                soilPhysical.DUL[0] = 0.34;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.28;\r\n                soilPhysical.DUL[3] = 0.3;\r\n                soilPhysical.DUL[4] = 0.3;\r\n                soilPhysical.DUL[5] = 0.30;\r\n                soilPhysical.DUL[6] = 0.3;\n                soilPhysical.DUL[7] = 0.3;\r\n                soilPhysical.SAT[0] = 0.4;\r\n                soilPhysical.SAT[1] = 0.4;\r\n                soilPhysical.SAT[2] = 0.4;\r\n                soilPhysical.SAT[3] = 0.4;\r\n                soilPhysical.SAT[4] = 0.4;\r\n                soilPhysical.SAT[5] = 0.4;\r\n                soilPhysical.SAT[6] = 0.4;\n                soilPhysical.SAT[7] = 0.4;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.07;\r\n                soilPhysical.LL15[1] = 0.12;\r\n                soilPhysical.LL15[2] = 0.17;\r\n                soilPhysical.LL15[3] = 0.20;\r\n                soilPhysical.LL15[4] = 0.26;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\n                soilPhysical.LL15[7] = 0.30;\r\n                soilPhysical.DUL[0] = 0.30;\r\n                soilPhysical.DUL[1] = 0.26;\r\n                soilPhysical.DUL[2] = 0.29;\r\n                soilPhysical.DUL[3] = 0.25;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.10;\r\n                soilPhysical.LL15[1] = 0.11;\r\n                soilPhysical.LL15[2] = 0.10;\r\n                soilPhysical.LL15[3] = 0.15;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.14;\n                soilPhysical.LL15[7] = 0.14;\n                \n                fodderBeetSoil.LL[0] = soilPhysical.LL15[0];\r\n                fodderBeetSoil.LL[1] = soilPhysical.LL15[1];\r\n                fodderBeetSoil.LL[2] = soilPhysical.LL15[2];\r\n                fodderBeetSoil.LL[3] = soilPhysical.LL15[3];\r\n                fodderBeetSoil.LL[4] = soilPhysical.LL15[4];\r\n                fodderBeetSoil.LL[5] = soilPhysical.LL15[5];\r\n                fodderBeetSoil.LL[6] = soilPhysical.LL15[6];\n                fodderBeetSoil.LL[7] = soilPhysical.LL15[7];\n                \n                soilPhysical.AirDry[0] = soilPhysical.LL15[0] * 0.5;\r\n                soilPhysical.AirDry[1] = soilPhysical.LL15[1];\r\n                soilPhysical.AirDry[2] = soilPhysical.LL15[2];\r\n                soilPhysical.AirDry[3] = soilPhysical.LL15[3];\r\n                soilPhysical.AirDry[4] = soilPhysical.LL15[4];\r\n                soilPhysical.AirDry[5] = soilPhysical.LL15[5];\r\n                soilPhysical.AirDry[6] = soilPhysical.LL15[6];\n                soilPhysical.AirDry[7] = soilPhysical.LL15[7];\n                \r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \r\n                soilPhysical.SAT[0] = soilPhysical.DUL[0] * 1.2;\r\n                soilPhysical.SAT[1] = soilPhysical.DUL[1] * 1.2;\r\n                soilPhysical.SAT[2] = soilPhysical.DUL[2] * 1.2;\r\n                soilPhysical.SAT[3] = soilPhysical.DUL[3] * 1.2;\r\n                soilPhysical.SAT[4] = soilPhysical.DUL[4] * 1.2;\r\n                soilPhysical.SAT[5] = soilPhysical.DUL[5] * 1.2;\r\n                soilPhysical.SAT[6] = soilPhysical.DUL[6] * 1.2;\n                soilPhysical.SAT[7] = soilPhysical.DUL[7] * 1.2;\n                \n                InitSW.SWVolumetric[0] = 0.21;\n                InitSW.SWVolumetric[1] = 0.27;\n                InitSW.SWVolumetric[2] = 0.245;\n                InitSW.SWVolumetric[3] = 0.28;\n                InitSW.SWVolumetric[4] = 0.28;\n                InitSW.SWVolumetric[5] = 0.28;\n                InitSW.SWVolumetric[6] = 0.20;\n                InitSW.SWVolumetric[7] = 0.20;\n                waterBalance.Reset();\n                \r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.25;\r\n                soilPhysical.LL15[3] = 0.19;\r\n                soilPhysical.LL15[4] = 0.29;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.34;\n                soilPhysical.LL15[7] = 0.34;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.14;\r\n                soilPhysical.LL15[1] = 0.21;\r\n                soilPhysical.LL15[2] = 0.27;\r\n                soilPhysical.LL15[3] = 0.27;\r\n                soilPhysical.LL15[4] = 0.27;\r\n                soilPhysical.LL15[5] = 0.32;\r\n                soilPhysical.LL15[6] = 0.30;\n                soilPhysical.LL15[7] = 0.30;\r\n                soilPhysical.DUL[0] = 0.31;\r\n                soilPhysical.DUL[1] = 0.28;\r\n                soilPhysical.DUL[2] = 0.30;\r\n                soilPhysical.DUL[3] = 0.28;\r\n                soilPhysical.DUL[4] = 0.29;\r\n                soilPhysical.DUL[5] = 0.34;\r\n                soilPhysical.DUL[6] = 0.30;\n                soilPhysical.DUL[7] = 0.30;\r\n                soilPhysical.SAT[0] = 0.34;\r\n                soilPhysical.SAT[1] = 0.34;\r\n                soilPhysical.SAT[2] = 0.34;\r\n                soilPhysical.SAT[3] = 0.34;\r\n                soilPhysical.SAT[4] = 0.34;\r\n                soilPhysical.SAT[5] = 0.34;\r\n                soilPhysical.SAT[6] = 0.34;\n                soilPhysical.SAT[7] = 0.34;\r\n                waterBalance.Reset();\r\n            }\r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.15;\r\n                soilPhysical.LL15[2] = 0.16;\r\n                soilPhysical.LL15[3] = 0.16;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\n                \n                fodderBeetSoil.LL[0] = soilPhysical.LL15[0];\r\n                fodderBeetSoil.LL[1] = soilPhysical.LL15[1];\r\n                fodderBeetSoil.LL[2] = soilPhysical.LL15[2];\r\n                fodderBeetSoil.LL[3] = soilPhysical.LL15[3];\r\n                fodderBeetSoil.LL[4] = soilPhysical.LL15[4];\r\n                fodderBeetSoil.LL[5] = soilPhysical.LL15[5];\r\n                fodderBeetSoil.LL[6] = soilPhysical.LL15[6];\n                fodderBeetSoil.LL[7] = soilPhysical.LL15[7];\n                \n                soilPhysical.AirDry[0] = soilPhysical.LL15[0] * 0.5;\r\n                soilPhysical.AirDry[1] = soilPhysical.LL15[1];\r\n                soilPhysical.AirDry[2] = soilPhysical.LL15[2];\r\n                soilPhysical.AirDry[3] = soilPhysical.LL15[3];\r\n                soilPhysical.AirDry[4] = soilPhysical.LL15[4];\r\n                soilPhysical.AirDry[5] = soilPhysical.LL15[5];\r\n                soilPhysical.AirDry[6] = soilPhysical.LL15[6];\n                soilPhysical.AirDry[7] = soilPhysical.LL15[7];\n                \r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \r\n                soilPhysical.SAT[0] = soilPhysical.DUL[0] * 1.2;\r\n                soilPhysical.SAT[1] = soilPhysical.DUL[1] * 1.2;\r\n                soilPhysical.SAT[2] = soilPhysical.DUL[2] * 1.2;\r\n                soilPhysical.SAT[3] = soilPhysical.DUL[3] * 1.2;\r\n                soilPhysical.SAT[4] = soilPhysical.DUL[4] * 1.2;\r\n                soilPhysical.SAT[5] = soilPhysical.DUL[5] * 1.2;\r\n                soilPhysical.SAT[6] = soilPhysical.DUL[6] * 1.2;\n                soilPhysical.SAT[7] = soilPhysical.DUL[7] * 1.2;\n                \n                InitSW.SWVolumetric[0] = 0.225;\n                InitSW.SWVolumetric[1] = 0.23;\n                InitSW.SWVolumetric[2] = 0.27;\n                InitSW.SWVolumetric[3] = 0.315;\n                InitSW.SWVolumetric[4] = 0.28;\n                InitSW.SWVolumetric[5] = 0.21;\n                InitSW.SWVolumetric[6] = 0.14;\n                InitSW.SWVolumetric[7] = 0.145;\n                waterBalance.Reset();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n                SetSoilLayers();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Specific irrgations\r\n            \r\n            if ((DateUtilities.CompareDates(\"16-Nov\", Clock.Today) == 0))\r\n                    SetSoilLayers();\r\n            \r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if ((DateUtilities.CompareDates(\"1-Feb\", Clock.Today) == 0))\r\n                    Irrigation.Apply(40);\r\n                if ((DateUtilities.CompareDates(\"1-Mar\", Clock.Today) == 0))\r\n                    Irrigation.Apply(33);\r\n            }\r\n        \r\n          \r\n            \r\n            \r\n        }\r\n    }\r\n        \r\n        \r\n}\r\n    \r\n\r\n\r\n      \r\n",
                           "Parameters": [
                             {
                               "Key": "IrrFactor",
@@ -8164,13 +8164,13 @@
                               ],
                               "KL": [
                                 0.2,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.2
+                                0.07,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "XF": [
                                 1.0,
@@ -13315,7 +13315,16 @@
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
                   "AnnotationPosition": 0,
-                  "DisabledSeries": [],
+                  "DisabledSeries": [
+                    "Full0: Pred",
+                    "Nil0: Pred",
+                    "Full50: Pred",
+                    "Nil50: Pred",
+                    "Full0: Obs",
+                    "Nil0: Obs",
+                    "Full50: Obs",
+                    "Nil50: Obs"
+                  ],
                   "LegendOutsideGraph": false,
                   "Name": "ProfileWater",
                   "Children": [
@@ -14573,10 +14582,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
+                            "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L1",
@@ -14675,11 +14688,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
                             "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L2",
@@ -14778,11 +14794,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
                             "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L3",
@@ -14881,11 +14900,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
                             "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L4",
@@ -14984,11 +15006,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
                             "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L5",
@@ -15087,11 +15112,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
                             "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L6",
@@ -15190,11 +15218,14 @@
                           "LegendOrientation": 0,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [
+                            "Full0: Pred",
+                            "Nil0: Pred",
+                            "Full50: Pred",
+                            "Nil50: Pred",
                             "Full0: Obs",
                             "Nil0: Obs",
                             "Full50: Obs",
-                            "Nil50: Obs",
-                            "Nil300: Obs"
+                            "Nil50: Obs"
                           ],
                           "LegendOutsideGraph": false,
                           "Name": "L7",
