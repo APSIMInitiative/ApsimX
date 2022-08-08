@@ -494,10 +494,19 @@
                     string rainMessage = string.Empty;
                     if (dailyRain.Length != 0)
                     {
-                        double totalYearlyRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
-                        rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
-                                    + " is " + totalYearlyRainfall.ToString() + "mm.";
-
+                        if (startDate.Year == endDate.Year)
+                        {
+                            double totalRainfall = Math.Round(MathUtilities.Sum(dailyRain), 1);
+                            rainMessage = "Total Rainfall for the year " + startDate.Year.ToString()
+                                        + " is " + totalRainfall.ToString() + " mm.";
+                        }
+                        else
+                        {
+                            double meanRainfall = Math.Round(MathUtilities.Sum(dailyRain) / ((endDate - startDate).TotalDays + 1) * 365.25, 1);
+                            rainMessage = "Mean rainfall for the years " + startDate.Year.ToString()
+                                        + " to " + endDate.Year.ToString()
+                                        + " is " + meanRainfall.ToString() + " mm/yr.";
+                        }
                         this.PopulateRainfallGraph(rainMessage, dailyDates, dailyRain);
                     }
                 }
@@ -631,6 +640,11 @@
 
                 this.weatherDataView.GraphStartYearMaxValue = this.dataEndDate.Year;
             }
+            int oldValue = this.weatherDataView.GraphShowYearsValue;
+            this.weatherDataView.GraphShowYearsValue = 1;
+            int maxNYears = this.dataEndDate.Year - this.dataStartDate.Year + 1;
+            this.weatherDataView.GraphShowYearsMaxValue = maxNYears;
+            this.weatherDataView.GraphShowYearsValue = Math.Min(oldValue, maxNYears);
         }
 
         /// <summary>Create the monthly Summary chart</summary>

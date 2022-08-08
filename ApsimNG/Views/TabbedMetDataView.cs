@@ -514,22 +514,11 @@ namespace UserInterface.Views
 
                 if (moved)
                 {
-                    // On Windows, at least, these controls don't move correctly with the reparented HBox.
-                    // They think they're parented correctly, but are drawn at 0,0 of the main window.
-                    // We can hack around this by reparenting them somewhere else, then moving them back.
+                    // The SpinButton controls lose their font information when they are reparented. We restore it here.
                     Container pa = spinStartYear.Parent as Container;
-
-                    if (spinStartYear.Parent is Container container)
-                        container.Remove(spinStartYear);
-
-                    vbox1.Add(spinStartYear);
-                    vbox1.Remove(spinStartYear);
-                    pa.Add(spinStartYear);
-
-                    pa = spinNYears.Parent as Container;
-                    vbox1.Add(spinNYears);
-                    vbox1.Remove(spinNYears);
-                    pa.Add(spinNYears);
+                    Pango.FontDescription font = pa.PangoContext.FontDescription;
+                    spinStartYear.PangoContext.FontDescription = font; 
+                    spinNYears.PangoContext.FontDescription = font;
                 }
                 if (GraphRefreshClicked != null)
                     GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
