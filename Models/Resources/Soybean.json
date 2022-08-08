@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 154,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -5541,11 +5541,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Australia",
               "Children": [
                 {
@@ -5842,7 +5842,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "USA",
               "Children": [
                 {
@@ -6153,7 +6153,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "China",
               "Children": [
                 {
@@ -6237,7 +6237,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Generic",
               "Children": [
                 {

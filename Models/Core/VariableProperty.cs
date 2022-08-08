@@ -442,6 +442,8 @@
                             }
                             if (newValue is string str && targetType != typeof(string))
                                 newValue = ReflectionUtilities.StringToObject(targetType, str);
+                            else if (!(newValue is string) && targetType == typeof(string))
+                                newValue = ReflectionUtilities.ObjectToString(newValue);
                             array[i - 1] = newValue; // this will modify obj as well
                         }
                     }
@@ -806,5 +808,14 @@
 
         /// <summary>Return the remarks comments from the source code.</summary>
         public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
+
+        /// <summary>Get the full name of the property.</summary>
+        public string GetFullName()
+        {
+            if (lowerArraySpecifier != 0 && upperArraySpecifier != 0)
+                return $"{Name}[{lowerArraySpecifier}:{upperArraySpecifier}]";
+            else
+                return Name;
+        }
     }
 }

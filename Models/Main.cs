@@ -99,7 +99,7 @@
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
                     else
-                        runner = new Runner(files.Select(f => EditFile.Do(f, options.EditFilePath)),
+                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
                                             options.RunTests,
@@ -126,6 +126,14 @@
                 Console.WriteLine(err.ToString());
                 exitCode = 1;
             }
+        }
+
+        private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFilePath));
+            Overrides.Apply(file, overrides);
+            return file;
         }
 
         private static void ReplaceObsoleteArguments(ref string[] args)
