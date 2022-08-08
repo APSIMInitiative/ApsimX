@@ -678,7 +678,7 @@
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
-            PlantZone.Initialize();
+            PlantZone.Initialize(parentPlant.SowingData.Depth);
             Zones.Add(PlantZone);
             if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
                 ZoneRootDepths.Count != ZoneInitialDM.Count)
@@ -693,7 +693,7 @@
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = new NetworkZoneState(parentPlant, soil);
-                    newZone.Initialize();
+                    newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                 }
             }

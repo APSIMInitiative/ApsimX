@@ -153,7 +153,6 @@ namespace Models.PMF.Organs
         /// <summary>Determine if XF constrains root growth to a maximum depth.</summary>
         public void SetMaxDepthFromXF()
         {
-            Clear();
             var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
@@ -170,8 +169,11 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate starting states.</summary>
-        public void Initialize()
+        public void Initialize(double depth)
         {
+            Clear();
+            Depth = depth;
+            RootFront = depth;
             SetMaxDepthFromXF();
             CalculateRAw();
         }
