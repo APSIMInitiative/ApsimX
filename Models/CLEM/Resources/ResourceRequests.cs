@@ -188,7 +188,36 @@ namespace Models.CLEM.Resources
         /// Activity unique Id
         /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// The type of model reported
+        /// </summary>
+        public int ModelType { get; set; }
+
+        /// <summary>
+        /// Indentation level of activity in tree
+        /// </summary>
+        public int Indent { get; set; }
     }
 
+    /// <summary>
+    /// Type of activity performed
+    /// </summary>
+    public enum ActivityPerformedType
+    {
+        /// <summary>
+        /// Activity
+        /// </summary>
+        Activity = 0,
+        /// <summary>
+        /// Activity folder
+        /// </summary>
+        Folder = 1,
+        /// <summary>
+        /// Activity timer
+        /// </summary>
+        Timer = 2
+
+    }
 
 }

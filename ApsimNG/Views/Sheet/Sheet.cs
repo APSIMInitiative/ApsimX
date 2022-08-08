@@ -341,12 +341,12 @@ namespace UserInterface.Views
             if (cr != null)
                 CalculateColumnWidths(cr);
 
+            if (RowCount == 0)
+                RowCount = DataProvider.RowCount;
+
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
-                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.LastOrDefault();
-
-            if (RowCount == 0)
-                RowCount = DataProvider.RowCount; 
+                MaximumNumberHiddenRows = DataProvider.RowCount - Height/RowHeight; 
 
             Initialised?.Invoke(this, new EventArgs());
         }

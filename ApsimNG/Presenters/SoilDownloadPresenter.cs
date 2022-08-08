@@ -263,9 +263,12 @@ namespace UserInterface.Presenters
                             soilDoc.LoadXml(xml);
                             foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
                             {
-                                Soil soil = FileFormat.ReadFromString<Soil>(soilNode.OuterXml, e => throw e, false);
+                                var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
+                                var folder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
+                                var soil = folder.Children[0] as Soil;
+
                                 // fixme: this should be handled by the converter or the importer.
-                                soil.Children.Add(new CERESSoilTemperature());
+                                InitialiseSoil(soil);
                                 soils.Add(new SoilFromDataSource()
                                 {
                                     Soil = soil,
@@ -337,9 +340,10 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false);
-                    soil.Children.Add(new CERESSoilTemperature());
-                    soil.OnCreated();
+                    var soilXML = $"<folder>{soilNodes[0].OuterXml}</folder>";
+                    var soilFolder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
+                    var soil = soilFolder.Children[0] as Soil;
+                    InitialiseSoil(soil);
 
                     soils.Add(new SoilFromDataSource()
                     {
@@ -353,6 +357,41 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowError(err);
             }
             return soils;
+        }
+
+        /// <summary>
+        /// Initialise soil and add in missing children.
+        /// </summary>
+        /// <param name="soil"></param>
+        private static void InitialiseSoil(Soil soil)
+        {
+            soil.Children.Add(new CERESSoilTemperature());
+            var physical = soil.FindChild<Physical>();
+            if (physical != null)
+            {
+                if (soil.FindChild<Solute>("NO3") == null)
+                    soil.Children.Add(new Solute()
+                    {
+                        Name = "NO3",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
+                    });
+                if (soil.FindChild<Solute>("NH4") == null)
+                    soil.Children.Add(new Solute()
+                    {
+                        Name = "NH4",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(0.1, physical.Thickness.Length)
+                    });
+                if (soil.FindChild<Solute>("Urea") == null)
+                    soil.Children.Add(new Solute()
+                    {
+                        Name = "Urea",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(0, physical.Thickness.Length)
+                    });
+            }
+            soil.OnCreated();
         }
 
         /// This alternative approach for obtaining ISRIC soil data need a little bit more work, but is largely complete

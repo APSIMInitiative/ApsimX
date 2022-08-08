@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
 
             // calculate milk intake shortfall for sucklings
             // all in units per day and multiplied at end of this section
-            if (ind.IsSucklingWithMother)
+            if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
                 ind.MilkPotentialIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
