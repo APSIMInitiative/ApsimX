@@ -92,6 +92,7 @@ namespace Models.PMF
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
         /// <summary>The list of organ names to expose order without exposng the list itself</summary>
+        [JsonIgnore]
         public List<string> OrganNames => Organs.Select(o => (o as IOrgan).Name).ToList();
 
         /// <summary>The variables for DM</summary>
