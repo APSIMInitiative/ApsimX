@@ -205,61 +205,79 @@ def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet,par
     RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
     
     retVal = max(RegStats.NSE,0) *-1
-    print(str(paramsTried) + " run completed " +str(ObsPred.SimulationID.drop_duplicates().count()) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
+    globals()["itteration"] += 1
+    print(str(globals()["itteration"] )+"  "+str(paramsTried) + " run completed " +str(ObsPred.SimulationID.drop_duplicates().count()) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
     return retVal
 
 def runFittingItter(fittingParams):
     
-    paramAddresses = ParamRanges.Address.values.tolist()
-    paramSet = Xo.copy()
+    paramAddresses = ParamData.Address.values.tolist()
+    paramSetForItter = currentParamVals.copy() #Start off with full current param set
     fittingParamsDF = pd.Series(index = paramsToOptimise,data=fittingParams)
     for p in fittingParamsDF.index:
-        paramSet[p] = fittingParamsDF[p]
-    paramValues = paramSet.values.tolist()
+        paramSetForItter[p] = fittingParamsDF[p] #replace parameters being fitted with current itteration values
+    for p in paramSetForItter.index:
+        if ParamData.loc[p,'Min_feasible']==np.nan: #for paramteters that reference another
+            paramSetForItter[p] = paramSetForItter[ParamData.loc[p,'BestValue']] #update with current itterations value
+    paramValues = paramSetForItter.values.tolist()
     return runModelItter(paramAddresses,paramValues,OptimisationVariables,SimulationSet,fittingParams)
 
-def evalExpressions(value):
+def evalExpressions(value,refCol):
     if type(value) != str:
         ret = value
     else:
         members = value.split()
         if len(members)==1:
-            ret = ParamRanges.loc[members[0],'Xo']
+            ret = ParamData.loc[members[0],refCol]
         else:
-            ref = ParamRanges.loc[members[0],'Xo']
+            ref = ParamData.loc[members[0],refCol]
             opp = members[1]
             num = float(members[2])
             expression = 'ref'+opp+'num'
             ret = parser.parse(expression).evaluate({'ref':ref,'num':num})
-    return ret
+    return float(ret)
 
 
 # -
 
-ParamRanges = pd.read_excel('OptimiseConfig.xlsx',sheet_name='ParamRanges',engine="openpyxl",index_col='Param')
+ParamData = pd.read_excel('OptimiseConfig.xlsx',sheet_name='ParamData',engine="openpyxl",index_col='Param')
 SimSet = pd.read_excel('OptimiseConfig.xlsx',sheet_name='SimSet',engine="openpyxl")
 VariableWeights = pd.read_excel('OptimiseConfig.xlsx',sheet_name='VariableWeights',engine="openpyxl")
 OptimisationSteps = SimSet.columns.values.tolist()
 paramsToOptimise = []
+itteration = 0
 
-Xo = pd.Series(index = ParamRanges.index,data=[evalExpressions(x) for x in ParamRanges.loc[:,'Xo']])
-Xo
+OptimisationSteps
 
-bounds = pd.Series(index= ParamRanges.index,
-                   data = [(evalExpressions(ParamRanges.loc[x,'Min_feasible']),evalExpressions(ParamRanges.loc[x,'Max_feasible'])) for x in ParamRanges.index])
+bestParamVals = pd.Series(index = ParamData.index,data=[evalExpressions(x,'BestValue') for x in ParamData.loc[:,'BestValue']])
+bestParamVals
+
+bounds = pd.Series(index= ParamData.index,
+                   data = [(evalExpressions(ParamData.loc[x,'Min_feasible'],'Min_feasible'),evalExpressions(ParamData.loc[x,'Max_feasible'],'Max_feasible')) for x in ParamData.index])
 bounds
 
-step = "Potential canopy"
-paramAddresses = ParamRanges[0:1].Address.values.tolist()
-paramValues = Xo[0:1].copy()
-OptimisationVariables = VariableWeights.loc[:,['Variable',step]].dropna().loc[:,'Variable'].values.tolist()
-SimulationSet = SimSet.loc[:,step].dropna().values.tolist()
-fittingParams = []
-runModelItter(paramAddresses,paramValues,OptimisationVariables,SimulationSet,fittingParams)
+# +
+# step = "Potential canopy"
+# paramAddresses = ParamData[0:1].Address.values.tolist()
+# paramValues = currentParamVals[0:1].copy()
+# OptimisationVariables = VariableWeights.loc[:,['Variable',step]].dropna().loc[:,'Variable'].values.tolist()
+# SimulationSet = SimSet.loc[:,step].dropna().values.tolist()
+# fittingParams = []
+# runModelItter(paramAddresses,paramValues,OptimisationVariables,SimulationSet,fittingParams)
+# -
 
-for step in OptimisationSteps:
+ParamData.loc[:,step].dropna()
+
+step = 'Biomass partitioning'
+currentParamVals = bestParamVals.copy() #Get current set of best fits
+for p in ParamData.loc[:,step].dropna().index:
+    currentParamVals[p] = ParamData.loc[p,step] #apply fitting step specific overwrites
+currentParamVals
+
+for step in OptimisationSteps[:]:
+    itteration = 0
     print(step + " Optimistion step")
-    paramsToOptimise = ParamRanges.loc[:,step].dropna().index.values.tolist()
+    paramsToOptimise = ParamData.loc[ParamData.loc[:,step] == 'fit',step].index.values.tolist()
     print("fitting these parameters")
     print(paramsToOptimise)
     OptimisationVariables = VariableWeights.loc[:,['Variable',step]].dropna().loc[:,'Variable'].values.tolist()
@@ -268,12 +286,17 @@ for step in OptimisationSteps:
     SimulationSet = SimSet.loc[:,step].dropna().values.tolist()
     print("from these simulations")
     print(SimulationSet)
-    FirstX = Xo.loc[paramsToOptimise].values.tolist()
+    FirstX = bestParamVals.loc[paramsToOptimise].values.tolist()
     print("start params values are")
     print(FirstX)
     boundSet = bounds.loc[paramsToOptimise].values.tolist()
     print("parameter bounds are")
     print(boundSet)
+    
+    currentParamVals = bestParamVals.copy() #Get current set of best fits
+    for p in ParamData.loc[:,step].dropna().index:
+        if ParamData.loc[p,step] != 'fit':
+            currentParamVals[p] = float(ParamData.loc[p,step]) #apply fitting step specific overwrites
     
     pos = 0
     for x in FirstX:
@@ -288,7 +311,9 @@ for step in OptimisationSteps:
     Preparefile(Path+'.apsimx')
 
     RandomCalls = len(paramsToOptimise) * 12
+    print(str(RandomCalls)+" Random calls")
     OptimizerCalls = max(20,len(paramsToOptimise) * 4)
+    print(str(OptimizerCalls)+" Optimizer calls")
     TotalCalls = RandomCalls + OptimizerCalls
 
     checkpoint_saver = CheckpointSaver("./"+step+"checkpoint.pkl", compress=9)
@@ -298,7 +323,7 @@ for step in OptimisationSteps:
     bestfits = ret.x
     pi=0
     for p in paramsToOptimise:
-        Xo[p]= bestfits[pi]
+        bestParamVals[p]= bestfits[pi]
         pi +=1
     print("")
     print("BestFits for "+step)
