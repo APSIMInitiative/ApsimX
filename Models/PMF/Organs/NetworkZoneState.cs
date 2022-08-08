@@ -176,6 +176,10 @@ namespace Models.PMF.Organs
             RootFront = depth;
             SetMaxDepthFromXF();
             CalculateRAw();
+            for (int layer = 0; layer < Physical.Thickness.Length; layer++)
+            {
+               LLModifier[layer] = 1;
+            }
         }
 
 
