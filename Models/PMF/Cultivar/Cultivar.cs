@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A cultivar model - used to override properties of another model
@@ -20,11 +21,11 @@
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
-    [PresenterName("UserInterface.Presenters.CultivarPresenter")]
+    [PresenterName("UserInterface.Presenters.EditorPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Cultivar : Model
+    public class Cultivar : Model, ILineEditor
     {
         /// <summary>The model the cultvar is relative to.</summary>
         private IModel relativeToModel;
@@ -34,6 +35,10 @@
 
         /// <summary>The collection of commands that must be executed when applying this cultivar./// </summary>
         public string[] Command { get; set; }
+
+        /// <summary>The lines to return to the editor./// </summary>
+        [JsonIgnore]
+        public IEnumerable<string> Lines { get { return Command; } set { Command = value.ToArray(); } }
 
         /// <summary>
         /// Return true iff this cultivar has the same name as, or is an
@@ -59,7 +64,7 @@
         /// Apply commands.
         /// </summary>
         /// <param name="model">The underlying model to apply the commands to</param>
-        public void Apply(Model model)
+        public void Apply(IModel model)
         {
             relativeToModel = model;
             if (Command != null)

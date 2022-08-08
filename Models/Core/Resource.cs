@@ -59,18 +59,18 @@
                         return !child.Children.Any(c => c.GetType() == mc.GetType() &&
                                                         string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
                     });
-                    child.Children.InsertRange(0, childrenToAdd);
-
-                    CopyPropertiesFrom(modelFromResource, child);
-
-                    // Make all descendents of 'child' hidden and readonly.
+                    
+                    // Make all children that area about to be added from resource hidden and readonly.
                     bool isHidden = !isUnderReplacements;
-                    foreach (Model descendant in child.FindAllDescendants())
+                    foreach (Model descendant in childrenToAdd)
                     {
                         descendant.IsHidden = isHidden;
                         descendant.ReadOnly = isHidden;
                     }
 
+                    child.Children.InsertRange(0, childrenToAdd);
+
+                    CopyPropertiesFrom(modelFromResource, child);
                     child.ParentAllDescendants();
                 }
             }
