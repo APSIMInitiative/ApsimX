@@ -1,7 +1,6 @@
 ﻿namespace Models.PMF
 {
     using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
     using System.Collections.Generic;
