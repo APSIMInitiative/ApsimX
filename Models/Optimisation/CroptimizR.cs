@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Models.Sensitivity;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Containers;
+using static Models.Core.Overrides;
 
 namespace Models.Optimisation
 {
@@ -537,7 +538,7 @@ namespace Models.Optimisation
             if (output != null && FindInScope<IDataStore>().Writer is DataStoreWriter)
             {
                 Status = "Running simulations with optimised parameters";
-                IEnumerable<CompositeFactor> optimalValues = GetOptimalValues(output);
+                var optimalValues = GetOptimalValues(output);
                 RunSimsWithOptimalValues(apsimxFileName, "Optimal", optimalValues);
 
                 // Now run sims without optimal values, to populate the 'Current' checkpoint.
@@ -567,7 +568,7 @@ namespace Models.Optimisation
         /// <param name="checkpointName">Name of the checkpoint.</param>
         /// <param name="optimalValues">Changes to be applied to the models.</param>
         /// <param name="fileName">Name of the apsimx file run by the optimiser.</param>
-        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<CompositeFactor> optimalValues)
+        private void RunSimsWithOptimalValues(string fileName, string checkpointName, IEnumerable<Override> optimalValues)
         {
             IDataStore storage = FindInScope<IDataStore>();
 
@@ -576,7 +577,7 @@ namespace Models.Optimisation
             Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
             
             // Apply the optimal values to the cloned simulations.
-            clonedSims = EditFile.ApplyChanges(clonedSims, optimalValues);
+            Overrides.Apply(clonedSims, optimalValues);
 
             DataStore clonedStorage = clonedSims.FindChild<DataStore>();
             clonedStorage.Close();
@@ -598,11 +599,11 @@ namespace Models.Optimisation
         /// parameter values returned by the optimiser.
         /// </summary>
         /// <param name="data">Datatable.</param>
-        private IEnumerable<CompositeFactor> GetOptimalValues(DataTable data)
+        private IEnumerable<Override> GetOptimalValues(DataTable data)
         {
             DataRow optimal = data.AsEnumerable().FirstOrDefault(r => r["Is Optimal"]?.ToString() == "TRUE");
             foreach (Parameter param in Parameters)
-                yield return new CompositeFactor("factor", param.Path, optimal[$"{param.Name} Final"]);
+                yield return new Override(param.Path, optimal[$"{param.Name} Final"], Override.MatchTypeEnum.NameAndType);
         }
 
         /// <summary>
