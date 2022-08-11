@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
                             // treat sucklings separate
                             // potentialIntake defined based on proportion of body weight and MilkLWTFodderSubstitutionProportion when milk intake is low or missing (lost mother) (see RuminantActivityGrow.CalculatePotentialIntake)
                             // they can eat defined potential intake minus what's already been fed. Milk intake assumed elsewhere.
-                            double amountToEat = Math.Min(0, ind.PotentialIntake - ind.Intake);
+                            double amountToEat = Math.Max(0, ind.PotentialIntake - ind.Intake);
                             totalPastureRequired += amountToEat;
                             // desired same as required
                             // TODO: check with researchers, but this should also include the PastureQuality, PastureBiomass and GrazingTime limiters
@@ -315,7 +315,7 @@ namespace Models.CLEM.Activities
                     if (ind.Weaned)
                         eaten = Math.Min(Math.Max(0,ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
-                        eaten = Math.Min(0, ind.PotentialIntake - ind.Intake); ;
+                        eaten = Math.Max(0, ind.PotentialIntake - ind.Intake); ;
 
                     foodDetails.Amount = eaten * shortfall;
                     ind.AddIntake(foodDetails);
