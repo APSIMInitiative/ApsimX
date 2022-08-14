@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 154,
+  "ExplorerWidth": 350,
+  "Version": 155,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -200,7 +200,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Hammer, G.L., McLean, G., Brider, J., van Oosterom, E., Wu, A., Holzworth, D.\n\nThe APSIM-sorghum model is based on a framework of the physiological determinants of crop growth and development (Charles-Edwards, 1982) and is focused at organ scale. It generates the phenotype of a crop as a consequence of underlying physiological processes (Fig. 1) by using the concept of supply and demand balances for light, carbon, water, and nitrogen (Hammer et al., 2001b).\nThe approach is focused around quantifying capture and use of radiation, water, and nitrogen within a framework that predicts the dynamics of crop development and the realized growth of major organs based on their potential growth and whether the supply of carbohydrate and nitrogen can satisfy this potential. Demand for resources is defined by potential organ growth and potential supply by resource capture (Monteith, 1977; Passioura, 1983; Monteith, 1986) (Fig. 1).\n\nArbitration rules and organ level responses are invoked when resource capture cannot satisfy demand. The APSIM-sorghum model retains some features and concepts of earlier models (Sinclair, 1986; Rosenthal et al., 1989; Birch et al., 1990; Sinclair and Amir, 1992; Chapman et al., 1993; Hammer and Muchow, 1994), but has been adapted and redesigned to generate a more explanatory approach to the modeling of the underlying physiology (Hammer et al., 2006).\n\n![Schematic representation of crop growth and development dynamics (a) and crop nitrogen dynamics (b) in Agricultural Production System sIMulator (APSIM)-sorghum model. Connection points between the two schematics are shown by theshaded boxes. After Hammer et al. (2010). SLN, specific leaf nitrogen](SorghumModel.png)\n\n**Crop Nitrogen Dynamics**\n\nCrop N dynamics are modeled based on a physiological approach that accounts for the fact that the bulk of reduced N present in leaves is associated with photosynthesis structures and enzymes (Grindlay, 1997) (Fig. 1b). The rate of light-saturated net photosynthesis has been shown to be a linear function of the amount of leaf N per unit leaf area (specific leaf nitrogen [SLN]), until a species-specific maximum rate of photosynthesis has been reached (Sinclair and Horie,1989; Anten et al., 1995; Grindlay, 1997). Expressing crop N demand relative to canopy expansion thus provides a physiological link between crop N status, light interception, and dry mater accumulation. In addition, the cardinal SLN values for new leaf growth and for leaf death in response to N deficiency are independent of growth stage (van Oosterom et al., 2010a).\n\nDuring the pre-anthesis period, only stems (including rachis) and leaves are expanding, and their N demand is met in a hierarchical fashion (van Oosterom etal., 2010a). First, structural N demand of the stem (and rachis) is met, as structural stem mass is required to support leaf growth. Structural stem N demand is represented by the minimum stem N concentration. If insuﬃcient N has been taken up to meet structural stem N requirement, N can be translocated from leaves by dilution or, in extreme cases of early season N deficiency, by leaf senescence. Second, the N demand of expanding new leaves will be met, and this is determined from their critical SLN. Any additional N uptake will first be allocated to leaves to meet their target SLN and then to stem. For leaves, this N uptake represents \"luxury\" uptake that can occur after full expansion of a leaf, and which does not aﬀect growth and development (van Oosterom et al., 2010a). This hierarchical allocation of N is consistent with observations that under N stress are relatively larger proportion of N is allocated to the leaves (van Oosterom et al.,2010a). Hence, pre-anthesis N allocation ratios are a consequence of model dynamics, rather than a model input.\n\nAfter anthesis, grain becomes the major sink for N, and grain N demand is determined as the product of grain number and N demand per grain. During the first part of grain filling, N demand per grain is constant and independent of grain growth rate and N status of the crop (van Oosterom et al., 2010b). At this time endosperm cells are dividing, so that the accumulation of structural (metabolic) proteins in the grain is the key driver. During the second half of grain filling,grain N demand is linked with grain growth rate as cell division and simultaneous storage of carbohydrate and proteins assumes a greater role (Martre et al.,2006). Grain protein content can thus vary depending on the N supply–demand balance and the carbohydrate supply to the grain. Grain N demand is initially met through stem (plus rachis) N translocation, and if this becomes insuﬃcient,then N translocation from leaf can occur. Maximum N translocation rates from stem and per unit leaf area are a function of the N status of these organs, so that sink demand determines the amount of leaf area that is senescing at any one time(van Oosterom et al., 2010b). The source regulation of N translocation follows a first-order kinetic relationship that is representative of enzyme activity. Leaf SLN thus declines to its structural (minimum) level, and the amount of leaf area senesced, in the absence of other factors that can aﬀect senescence, such as water limitation and shading, depends on the N supply–demand balance.\n\nThe daily rate of crop N uptake is the minimum of demand for N by the crop and potential supply of N from the soil and senescing leaves, capped at a maximum N uptake rate (van Oosterom et al., 2010a). Potential N supply from the soil depends on the available soil N through the profile and on the extent to which roots have explored the soil. N supply from the soil is calculated from the combination of passive uptake, through massﬂow of N taken up with the transpiration stream, and active uptake (van Keulen and Seligman, 1987). Soil N transformations and their modeling in APSIM have been detailed by Probert et al. (1998).",
+              "Text": "# The APSIM NextGen Sorghum Model – Structure and Function\n\n_Hammer, G.L., McLean, G., Brider, J., van Oosterom, E., Wu, A., Holzworth, D.  July 2022_\n\nThe APSIM-sorghum model is based on a framework of the physiological determinants of crop growth and development [(Charles-Edwards, 1982)](CharlesEdwards1982), is focused at organ scale, and has been detailed in Hammer et al. ([2010][hammer_adapting_2010], [2019a][Hammer2019Sorghum]). It generates the phenotype of a crop as a consequence of underlying physiological processes (Fig. 1) by using the concept of supply and demand balances for light, carbon, water, and nitrogen [(Hammer et al., 2001)][Hammer2001TheET]. The approach is focused around quantifying capture and use of radiation, water, and nitrogen within a framework that predicts the dynamics of crop development and the realized growth of major organs based on their potential growth and whether the supply of carbohydrate and nitrogen can satisfy this potential. Demand for resources is defined by potential organ growth and potential supply by resource capture ([Monteith, 1977][Monteith1977]; [Passioura, 1983][Passioura1983Roots]; [Monteith, 1986][monteith_how_1986]) [(Fig. 1)](). Arbitration rules and organ level responses are invoked when resource capture cannot satisfy demand. The APSIM-sorghum model retains some features and concepts of earlier models ([Sinclair, 1986][sinclair_water_1986]; [Rosenthal et al., 1989][rosenthal_sorkam:_1989]; [Birch et al., 1990][Birch1990Development]; [Sinclair and Amir, 1992][Sinclair1992model]; [Chapman et al., 1993][chapman_sunflower_1993]; [Hammer and Muchow, 1994][hammer_assessing_1994]), but has been adapted and redesigned to generate a more explanatory approach to the modelling of the underlying physiology [(Hammer et al., 2006)][hammer_models_2006].\n\nAPSIM-sorghum operates via the dynamic interaction of crop development, crop growth, and crop nitrogen with soil and weather attributes (Fig. 1). Predictive schemas can be separated into crop growth and development dynamics (Fig. 1a) and crop nitrogen dynamics (Fig. 1b) for purposes of description, but the interactions between these major components are critical.\n\n![Schematic representation of crop growth and development dynamics (a) and crop nitrogen dynamics (b) in Agricultural Production System sIMulator (APSIM)-sorghum model. Connection points between the two schematics are shown by the shaded boxes. After Hammer et al. [(2010)][hammer_adapting_2010]. SLN, specific leaf nitrogen](SorghumModel.png)\n\n## Crop Growth and Development Dynamics\n\nPhenology is simulated through a number of development stages by using a thermal time approach ([Muchow and Carberry, 1990][Muchow1990Phenology]; [Hammer and Muchow, 1994][hammer_assessing_1994]), with the temperature response characterized by a base (Tb), optimum (Topt), and maximum (Tm) temperature. Hammer et al. [(1993)][Hammer1993Modelling] and Carberry et al. [(1993)][Carberry1993Modelling] reported values of Tb, Topt, and Tm for sorghum of 11, 32, and 42°C, respectively. The thermal time target for the phase between emergence and panicle initiation is also a function of day length ([Hammer et al., 1989][Hammer1989Genotype]; [Ravi Kumar et al., 2009][Ravi2009Modelling]), and its duration, when divided by the plastochron (°C per leaf), determines total leaf number once an allowance for leaf initials in the embryo has been included. Total leaf number multiplied by the phyllochron (°C per leaf) determines the thermal time to reach flag leaf stage, which is thus an emergent property of the model. Timing of the stages anthesis, and start and end of grain filling are also simulated through thermal time targets ([Muchow and Carberry, 1990][Muchow1990Phenology]; [Hammer and Muchow, 1994][hammer_assessing_1994]; [Ravi Kumar et al., 2009][Ravi2009Modelling]). Drought stress and N stress can both reduce the leaf appearance rate and hence delay phenology during the vegetative stages ([Craufurd et al., 1993][Craufurd1993Effect]; [van Oosterom et al., 2010a][van2010Functional]).\n\nCanopy development is simulated on a whole plant basis given the fertile tiller number and leaf size-leaf number distribution ([Carberry et al., 1993][Carberry1993Modelling]; [van Oosterom et al., 2001][vanOosterom200167]). Expected fertile tiller number can be input or predicted using a dynamic tillering prediction routine. The total plant leaf area at any time is calculated as the sum of main culm and tiller leaf area. Main culm leaf area is determined from the number of fully expanded leaves on the main culm and their size, plus an adjustment for the area of expanding leaves in the whorl ([Hammer et al., 1993][Hammer1993Modelling]). The area of leaves on tillers is determined from the number of fertile tillers and the size of their leaves, which is determined via the allometric association of leaf size distribution on each tiller with that on the main culm. The dynamic tillering routine predicts the total number of tillers produced from a relationship combining the genetic propensity to tiller (input) with availability of surplus assimilate at the time of tiller outgrowth early in crop development ([Alam et al., 2014][Alam2014physiological]). Plant assimilate status is estimated from the balance between radiation-driven supply and main culm leaf expansion-driven demand. Hence, tillering is favoured in high radiation-low temperature conditions as found by Kim et al. [(2010)][Kim2010Regulation]. The number of tillers surviving to produce grain is then dependent on internal plant competition for available assimilate, which will be influenced by the rate of leaf expansion for the entire plant and the plant density. The trajectory of specific leaf area (SLAcm2 g-1) is a good indicator of extent of internal plant competition and is used to drive tiller outgrowth cessation until a balance is reached ([Lafarge and Hammer, 2002][LAFARGE2002Tillering]). It is also used to reduce potential leaf size on the main culm in situations of reduced assimilate availability per plant (eg under high density) where SLA will reach boundary conditions..\n\nThe number of fully expanded leaves at any time is the product of thermal time elapsed since emergence and the leaf appearance rate (phyllochron). This enables calculation of leaf area per plant at any time as outlined above. Actual crop leaf area is the product of plant density and leaf area per plant. Green leaf area index (LAI) is the difference between the total plant leaf area and the senesced leaf area. Under drought stress, the crop will initially cease expanding new leaves, thus reducing transpiration demand, and then commence senescing leaves until demand for transpiration no longer exceeds supply from uptake ([Hammer et al., 2001][Hammer2001TheET]).\n\nAboveground biomass accumulation is simulated as the minimum of light-limited or water-limited growth. In the absence of water limitation, biomass accumulation is the product of the amount of intercepted radiation (IR) and its conversion efficiency, the radiation use efficiency (RUE). The fraction of incident radiation intercepted is a function of the LAI and the canopy extinction coefficient (k), which is a measure of canopy structure ([Lafarge and Hammer, 2002][LAFARGE2002Tillering]). The effects of N supply on crop growth are implicitly incorporated in this approach. Nitrogen limitation will reduce leaf area growth and hence LAI and IR. It can also reduce RUE, which is a function of the N status of the leaves ([Muchow and Sinclair, 1994][Muchow1994Nitrogen]; [Sinclair and Amir, 1992][Sinclair1992model]). Sinclair and Muchow [(1998)][Sinclair1999Radiation][q1] reviewed studies that had measured RUE in many crops and noted a consistent value of 1.25 g MJ−1 for triple-dwarf sorghum under optimum growing conditions. The flexibility of the object-oriented template also allows simulation of crop biomass accumulation via diurnal canopy photosynthesis models where this is required, as in the studies of Sinclair et al. [(2005)][Sinclair2005Potential], Hammer et al. [(2009)][Hammer_etal_2009], and Wu et al. [(2019)][Wu2019Quantifying].\n\nUnder water limitation, aboveground biomass accumulation is the product of realized transpiration and its conversion efficiency, biomass produced per unit of water transpired, or transpiration efficiency (TE). It is necessary to adjust TE to allow for the prevailing vapor pressure deficit (vpd) ([Tanner and Sinclair, 1983][Tanner2015Efficient][q2]; [Kemanian et al., 2005][Kemanian2005Transpiration]). Numerous studies in sorghum ([Tanner and Sinclair, 1983][Tanner2015Efficient][q2]; [Hammer et al., 1997][Hammer1997On]) have found a standard value of 9 Pa for the TE coefficient in sorghum, so that at a vpd of 2 kPa a TE of 4.5 gm−2 mm−1 results. The water supply accessible to the plant depends on the effective rooting depth and the rate at which soil water can be extracted from the soil by the roots. The potential extraction rate is related to the soil water content via an exponential function, parameterized via an extraction decay constant (kl) that incorporates effects of both soil hydraulic conductivity and root length density on water uptake ([Passioura, 1983][Passioura1983Roots]; [Monteith, 1986][monteith_how_1986]; [Robertson et al., 1993][Robertson1993Water]; [Hammer et al., 2001][Hammer2001TheET]). Water extraction occurs from multiple layers, and the total extraction is the sum of that calculated for individual layers. As RUE and TE are based on aboveground biomass only, root mass is not explicitly modelled, but is added to the aboveground biomass accumulation according to a root/shoot ratio that declines with successive growth stages of the crop.\n\nDaily aboveground biomass accumulation is partitioned to plant parts in allometric ratios that depend on the growth stage of the crop via functions that have been found to describe these ratios well ([Jones and Kiniry, 1986][jones_ceres-maize:_1986]). Before the flag leaf stage, new biomass is allocated to stem and leaves. Leaves are partitioned a fraction that decreases with increasing node number up to a maximum absolute allocation to leaf that is set by the ratio of the new leaf area to be grown (described above) and a minimum specific leaf area (cm2 g−1). The remaining biomass is partitioned to stem and rachis. The stem fraction incorporates leaf sheaths, but a distinct allocation to rachis commences after panicle initiation. Between flag leaf and anthesis, accumulated biomass is allocated to the stem and rachis in a fixed ratio.\n\nGrain yield is simulated as the product of grain number and grain size. Maximum grain number is a function of the change in plant biomass between panicle initiation and start grain filling ([Rosenthal et al., 1989][rosenthal_sorkam:_1989]), while grain size is determined by grain growth rate, effective grain filling period, and redistribution of assimilates postanthesis ([Heiniger et al., 1997][Heiniger1997Developing]). If grain mass demand for a day exceeds the daily increase in biomass, the shortfall will first be met through translocation from stem and, if that is insufficient to meet demand of the grain, through translocation from leaves, accelerating their senescence. Conversely, if the daily increase in biomass exceeds the grain mass demand, the excess biomass production is allocated to the stem.\n\nCrop Nitrogen Dynamics\n\nCrop N dynamics are modelled based on a physiological approach that accounts for the fact that the bulk of reduced N present in leaves is associated with photosynthesis structures and enzymes ([Grindlay, 1997][GRINDLAY1997REVIEW]) (Fig. 1b). The rate of light-saturated net photosynthesis has been shown to be a linear function of the amount of leaf N per unit leaf area (specific leaf nitrogen [SLN]), until a species- specific maximum rate of photosynthesis has been reached ([Sinclair and Horie, 1989][SINCLAIR198929]; [Anten et al., 1995][Anten1995Patterns]; [Grindlay, 1997][GRINDLAY1997REVIEW]). Expressing crop N demand relative to canopy expansion thus provides a physiological link between crop N status, light interception, and dry matter accumulation. In addition, the cardinal SLN values for new leaf growth and for leaf death in response to N deficiency are independent of growth stage ([van Oosterom et al., 2010a][van2010Functional]).\n\nDuring the preanthesis period, only stems (including rachis) and leaves are expanding, and their N demand is met in a hierarchical fashion ([van Oosterom et al., 2010a][van2010Functional]). First, structural N demand of the stem (and rachis) is met, as structural stem mass is required to support leaf growth. Structural stem N demand is represented by the minimum stem N concentration. If insufficient N has been taken up to meet structural stem N requirement, N can be translocated from leaves by dilution or, in extreme cases of early season N deficiency, by leaf senescence. Second, the N demand of expanding new leaves will be met, and this is determined from their critical SLN. Any additional N uptake will first be allocated to leaves to meet their target SLN and then to stem. For leaves, this N uptake represents &quot;luxury&quot; uptake that can occur after full expansion of a leaf, and which does not affect growth and development ([van Oosterom et al., 2010a][van2010Functional]). This hierarchical allocation of N is consistent with observations that under N stress a relatively larger proportion of N is allocated to the leaves ([van Oosterom et al., 2010a][van2010Functional]). Hence, preanthesis N allocation ratios are a consequence of model dynamics, rather than a model input.\n\nAfter anthesis, grain becomes the major sink for N, and grain N demand is determined as the product of grain number and N demand per grain. During the first part of grain filling, N demand per grain is constant and independent of grain growth rate and N status of the crop ([van Oosterom et al., 2010b][van2010Functional]). At this time embryonic and endosperm cells are dividing, so that the accumulation of structural (metabolic) proteins in the grain is the key driver. During the second half of grain filling, grain N demand is linked with grain growth rate as cell division and simultaneous storage of carbohydrate and proteins assumes a greater role ([Martre et al., 2006][Martre2006Modelling]). Grain protein content can thus vary depending on the N supply–demand balance and the carbohydrate supply to the grain. Grain N demand is initially met through stem (plus rachis) N translocation, and if this becomes insufficient, then N translocation from leaf can occur. Maximum N translocation rates from stem and per unit leaf area are a function of the N status of these organs, so that sink demand determines the amount of leaf area that is senescing at any one time ([van Oosterom et al., 2010b][van2010Functional]). The source regulation of N translocation follows a first-order kinetic relationship that is representative of enzyme activity. Leaf SLN thus declines to its structural (minimum) level, and the amount of leaf area senesced, in the absence of other factors that can affect senescence, such as water limitation and shading, depends on the N supply–demand balance.\n\nThe daily rate of crop N uptake is the minimum of demand for N by the crop and potential supply of N from the soil and senescing leaves, capped at a maximum N uptake rate ([van Oosterom et al., 2010a][van2010Functional]). Potential N supply from the soil depends on the available soil N through the profile and on the extent to which roots have explored the soil. N supply from the soil is calculated from the combination of passive uptake, through mass flow of N taken up with the transpiration, and active uptake if there is a deficiency ([van Keulen and Seligman, 1987][van_keulen_simulation_1987]). Soil N transformations and their modelling in APSIM have been detailed by Probert et al. [(1998)][probert_apsims_1998].\n\nCrop Model Applications\n\nThe APSIM sorghum model has been tested ([Hammer et al., 2010][hammer_adapting_2010]) and used extensively to support research and decision-making in agronomy ([Meinke and Hochman, 2000][Meinke2000Using]; [Nelson et al., 2002][nelson_infusing_2002]; [Whish et al., 2005][whish_modelling_2005]) and plant breeding (Chapman et al [2000a][chapman_genotype_2000],[b][Chapman2000Genotype], [2003][chapman_evaluating_2003]; Hammer et al., [2005][hammer_trait_2005], [2016][Hammer2016Molecular]). Comprehensive in silico adaptation (GxExM) studies have been reported for current ([Hammer et al., 2014][Hammer2014Crop]) and future ([Hammer et al., 2020][Hammer2020Designing]) climates. Sorghum crop modelling has evolved in capability and reached a credible level of acceptance in agronomy. This has been associated with strong connections between crop physiological experimentation, model development, and agronomists.\n\nWhile advances in knowledge, model improvements, and enhanced interactions with decision-makers will undoubtedly further advance the utility of modelling in agronomy, it is the potential to add significant value to the revolution in plant breeding associated with genomic technologies that is the new modelling frontier ([Hammer et al., 2019b][Hammer2019Biological]). This will require models where capturing biological understanding in a crop growth and development context is as important as the predictive capability of the model—the right answer for the right reason. Models developed for agronomic application will likely not be sufficient. Models with more robust biological underpinning and the ability to link parameters with the genetic architecture of adaptive traits in a stable manner will come to the fore ([Cooper et al., 2014][Cooper2014Predicting]; [Messina et al., 2018][Messina2018Leveraging]).\n\n[q1] in sorghum_references file, 1998 is the year that is recorded. However, in bibfile, it is 1999\n[q2] incorrect citation key, it is in 1983, but key is Tanner2015Efficient",
               "Name": "Introduction",
               "ResourceName": null,
               "Children": [],
@@ -9616,18 +9616,27 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Cultivars",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.PMF.CultivarFolder, Models",
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "Australia",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
+                      ],
+                      "Lines": [
                         "[Leaf].Parameters.aX0.FixedValue = 0.786",
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
@@ -9641,6 +9650,12 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
+                      "Lines": [
                         "[Phenology].TTEndJuvToInit.FixedValue = 114",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
@@ -9660,6 +9675,12 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                         "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
+                      "Lines": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 157",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
                       "Name": "medium",
                       "ResourceName": null,
                       "Children": [],
@@ -9674,6 +9695,12 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                         "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
+                      "Lines": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 201",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
                       "Name": "late",
                       "ResourceName": null,
                       "Children": [],
@@ -9683,6 +9710,14 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 202",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
+                        "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
+                        "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
                         "[Phenology].TTEndJuvToInit.FixedValue = 202",
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
@@ -9708,6 +9743,16 @@
                         "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
                         "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 134.4",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
+                        "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
+                        "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                      ],
                       "Name": "A35xQL36",
                       "ResourceName": null,
                       "Children": [],
@@ -9724,6 +9769,14 @@
                         "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
                         "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 25",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 179",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
+                        "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
+                        "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                      ],
                       "Name": "QL41xQL36",
                       "ResourceName": null,
                       "Children": [],
@@ -9733,6 +9786,17 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                        "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
+                        "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
                         "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
@@ -9764,6 +9828,19 @@
                         "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
                         "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 252",
+                        "[Grain].DMPerSeed.FixedValue = 0.001427844",
+                        "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 10",
+                        "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
+                        "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
+                        "[Leaf].Parameters.leafInitRate.FixedValue = 26.1",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
+                        "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
+                        "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206"
+                      ],
                       "Name": "M35-1",
                       "ResourceName": null,
                       "Children": [],
@@ -9783,6 +9860,17 @@
                         "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
                         "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 34",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 228",
+                        "[Grain].DMPerSeed.FixedValue = 0.0015",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
+                        "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
+                        "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
+                        "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
+                        "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
+                        "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159"
+                      ],
                       "Name": "CSH13R",
                       "ResourceName": null,
                       "Children": [],
@@ -9792,6 +9880,18 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 11",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 13",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 205",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.X[1] = 11",
                         "[Phenology].PhotoModifier.XYPairs.X[2] = 13",
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
@@ -9823,6 +9923,18 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                         "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 88.32",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 120",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
                       "Name": "texas_RS610",
                       "ResourceName": null,
                       "Children": [],
@@ -9832,6 +9944,18 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 57.5",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 115",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
                         "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 57.5",
@@ -9863,6 +9987,18 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                         "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 34.96",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 159",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
+                      ],
                       "Name": "texas_671",
                       "ResourceName": null,
                       "Children": [],
@@ -9872,6 +10008,17 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 130",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.00065",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.83",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 2.3",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 514",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                         "[Phenology].TTEndJuvToInit.FixedValue = 130",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
@@ -9900,6 +10047,16 @@
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 185",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.71",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
+                      ],
                       "Name": "Apollo",
                       "ResourceName": null,
                       "Children": [],
@@ -9909,6 +10066,16 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 185",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.71",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                         "[Phenology].TTEndJuvToInit.FixedValue = 185",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
@@ -9936,6 +10103,16 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 1",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = 451"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 118",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.00065",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.8",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 1",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 451"
+                      ],
                       "Name": "Taurus",
                       "ResourceName": null,
                       "Children": [],
@@ -9945,6 +10122,16 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 118",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.0006",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.86",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 542"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                         "[Phenology].TTEndJuvToInit.FixedValue = 118",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
@@ -9971,6 +10158,15 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = 578"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.0006",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.81",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 578"
+                      ],
                       "Name": "P84G22",
                       "ResourceName": null,
                       "Children": [],
@@ -9980,6 +10176,16 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 135",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.0005",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.84",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                         "[Phenology].TTEndJuvToInit.FixedValue = 135",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
@@ -10007,6 +10213,16 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 20",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 138",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.0005",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.84",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
+                      ],
                       "Name": "P86G56",
                       "ResourceName": null,
                       "Children": [],
@@ -10024,6 +10240,15 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = -101"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 118",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.71",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -101"
+                      ],
                       "Name": "MR43",
                       "ResourceName": null,
                       "Children": [],
@@ -10033,6 +10258,16 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 180",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.0007",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.82",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                         "[Phenology].TTEndJuvToInit.FixedValue = 180",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
@@ -10060,6 +10295,16 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 20",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 174",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.0006",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.82",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
+                      ],
                       "Name": "N_14NUS02",
                       "ResourceName": null,
                       "Children": [],
@@ -10078,6 +10323,16 @@
                         "[Leaf].Parameters.aMaxSlope.FixedValue = 9.3",
                         "[Leaf].Parameters.aMaxIntercept.FixedValue = 384"
                       ],
+                      "Lines": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 110",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.00045",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.84",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 9.3",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 384"
+                      ],
                       "Name": "N_14NUS03",
                       "ResourceName": null,
                       "Children": [],
@@ -10087,6 +10342,16 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 120",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].DMPerSeed.FixedValue = 0.00045",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.81",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 445"
+                      ],
+                      "Lines": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                         "[Phenology].TTEndJuvToInit.FixedValue = 120",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
