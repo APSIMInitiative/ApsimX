@@ -395,7 +395,7 @@ namespace Models.Surface
 
                 irrig = 0.0; // reset irrigation log now that we have used that information;
 
-                potentialDecomposition = SendPotDecompEvent();
+                potentialDecomposition = GetPotentialDecomposition();
             }
             return potentialDecomposition;
         }
@@ -556,6 +556,9 @@ namespace Models.Surface
                 if (pool.CanopyStanding.CoverTotal > 0)
                     Canopies.Add(pool.CanopyStanding);
             }
+
+            if (SoilNitrogen is Nutrient nutrient)
+                nutrient.UpdateSurfaceResidulePoolWithActualDecomp(actualSOMDecomp);
         }
 
         /// <summary>
@@ -799,7 +802,7 @@ namespace Models.Surface
 
         /// <summary>Notify other modules of the potential to decompose.</summary>
         /// <returns></returns>
-        private SurfaceOrganicMatterDecompType SendPotDecompEvent()
+        private SurfaceOrganicMatterDecompType GetPotentialDecomposition()
         {
 
             SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType()

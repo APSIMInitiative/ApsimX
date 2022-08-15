@@ -521,7 +521,7 @@ namespace Models.Soils.Nutrients
 
             for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
                 InitialResidueC += SurfaceResidueDecomposition.Pool[i].FOM.C;
-            FinalResidueC = SurfaceResidue.C[0];
+            FinalResidueC = SurfaceResidueDecomposition.Pool.Select(p => p.FOM.C).Sum();
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC,InitialResidueC,0);
             if (FractionDecomposed <1)
             { }
@@ -543,7 +543,14 @@ namespace Models.Soils.Nutrients
         {
             // Get potential residue decomposition from surfaceom.
             SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
+        }
 
+        /// <summary>
+        /// Update the surface residue pool with actual decom values.
+        /// </summary>
+        /// <param name="actual">Actual decomposition.</param>
+        public void UpdateSurfaceResidulePoolWithActualDecomp(SurfaceOrganicMatterDecompType actual)
+        { 
             var surfaceResiduePool = (NutrientPool)SurfaceResidue;
 
             surfaceResiduePool.C[0] = 0;
@@ -552,8 +559,8 @@ namespace Models.Soils.Nutrients
 
             for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
             {
-                surfaceResiduePool.C[0] += SurfaceResidueDecomposition.Pool[i].FOM.C;
-                surfaceResiduePool.N[0] += SurfaceResidueDecomposition.Pool[i].FOM.N;
+                surfaceResiduePool.C[0] += actual.Pool[i].FOM.C;
+                surfaceResiduePool.N[0] += actual.Pool[i].FOM.N;
             }
         }
 
