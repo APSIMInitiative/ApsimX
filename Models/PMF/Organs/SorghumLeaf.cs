@@ -1176,6 +1176,18 @@ namespace Models.PMF.Organs
                 yield return tag;
             // List the parameters, properties, and processes from this organ that need to be documented:
 
+            var tags = new List<ITag>();
+            tags.Add(new Paragraph("Aboveground biomass accumulation is simulated as the minimum of light-limited or water-limited growth. In the absence of water limitation, biomass accumulation is the product of the amount of intercepted radiation (IR) and its conversion efficiency, the radiation use efficiency (RUE). "));
+            tags.Add(new Paragraph("Under water limitation, aboveground biomass accumulation is the product of realized transpiration and its conversion efficiency, biomass produced per unit of water transpired, or transpiration efficiency(TE)"));
+            yield return new Section("Dry Matter Fixation", tags);
+
+            tags.AddRange(extinctionCoefficientFunction.Document());
+            tags.AddRange(photosynthesis.Document());
+            yield return new Section("Radiation Use Efficiency", tags);
+
+            tags.AddRange(potentialBiomassTEFunction.Document());
+            yield return new Section("Transpiration Efficiency", tags);
+
             // Document initial DM weight.
             yield return new Paragraph($"Initial DM mass = {InitialDMWeight} gm^-2^");
 
@@ -1191,19 +1203,9 @@ namespace Models.PMF.Organs
             nDemandTags.AddRange(nDemands.Document());
             yield return new Section("Nitrogen Demand", nDemandTags);
 
-            // Document N concentration thresholds.
-            yield return new Paragraph($"Minimum N Concentration = {MinNconc}");
-            yield return new Paragraph($"Critical N Concentraion = {CritNconc}");
-            yield return new Paragraph($"Maximum N Concentration = {MaxNconc}");
-
-            // Document DM supplies.
-            yield return new Section("Dry Matter Supply", new Paragraph($"{Name} does not reallocate DM when senescence of the organ occurs."));
 
             // Document DM retranslocation.
             yield return new Section("DM Retranslocation Factor", new Paragraph($"{Name} does not retranslocate non-structural DM."));
-
-            // Document photosynthesis.
-            yield return new Section("Photosynthesis", photosynthesis.Document());
 
             // Document N supplies.
             yield return new Section("Nitrogen Supply", new Paragraph($"{Name} does not reallocate N when senescence of the organ occurs."));
@@ -1213,14 +1215,17 @@ namespace Models.PMF.Organs
 
             // todo: document LAI(/CoverTot?).
             List<ITag> canopyTags = new List<ITag>();
-            canopyTags.AddRange(extinctionCoefficientFunction.Document());
+            canopyTags.AddRange(numberOfLeaves.Document());
+            //canopyTags.AddRange(dltLaifun.Document());
             canopyTags.AddRange(heightFunction.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             // Document senescence and detachment.
             List<ITag> senescenceTags = new List<ITag>();
-            senescenceTags.Add(new Paragraph($"{Name} has senescence parameterised to zero so all biomass in this organ will remain alive."));
-            senescenceTags.Add(new Paragraph($"{Name} has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs."));
+            senescenceTags.AddRange(LightSenescence.Document());
+            senescenceTags.AddRange(WaterSenescence.Document());
+            senescenceTags.AddRange(FrostSenescence.Document());
+            senescenceTags.AddRange(AgeSenescence.Document());
             senescenceTags.AddRange(biomassRemovalModel.Document());
 
             yield return new Section("Senescence and Detachment", senescenceTags);

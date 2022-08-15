@@ -7,17 +7,17 @@ using System.Collections.Generic;
 
 namespace Models.PMF.Struct
 {
-	/// <summary>
-	/// The LeafCulms model manages the additional canopy resources produced by tillering. Two main tillering strategies are provided by default, and are managed via 
-	/// the TilleringMethod switch defined in SorghumLeaf, which can be manipulated via script methods. 
-	/// FixedTillering will use the BudNumber property provided as part of the sowing method to determine the total number of fertile tillers.
-	/// Setting the BudNumber to a negative value will calculate the number of fixed tillers using latitude and sowing density to provide a rule of thumb value. 
-	/// These values have been derived using data from the Australian sorghum growing area, and may not be suitable for other locations.
-	/// DynamicTillering will calculate the potential number of tillers - usually determined by the time the 6th leaf has appeared. 
-	/// The number of fertile tillers is then maintained by the addition or removal of active tillers. Further information provided below for each method.
-	/// 
-	/// </summary>	
-	[Serializable]
+    /// <summary>
+    /// The LeafCulms model manages the canopy resources produced by tillering. Two main tillering strategies are provided by default, and are managed via 
+    /// the TilleringMethod switch defined in SorghumLeaf, which can be manipulated via script methods. 
+    /// FixedTillering will use the FTN property provided as part of the sowing method to determine the total number of fertile tillers.
+    /// Setting FTN to a negative value will calculate the number of fixed tillers using latitude and sowing density to provide a rule of thumb value. 
+    /// These values have been derived using data from the Australian sorghum growing area, and may not be suitable for other locations.
+    /// DynamicTillering will calculate the potential number of tillers - usually determined by the time the 6th leaf has appeared. 
+    /// The number of fertile tillers is then maintained by the addition or removal of active tillers. Further information provided below for each method.
+    /// 
+    /// </summary>	
+    [Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
 	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
