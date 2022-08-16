@@ -39,6 +39,7 @@ namespace Models.CLEM.Activities
         private FoodResourcePacket foodDetails = new FoodResourcePacket();
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
+        private bool isStandAloneModel = false;
 
         /// <summary>
         /// Number of hours grazed
@@ -96,6 +97,18 @@ namespace Models.CLEM.Activities
         public double PotentialIntakePastureQualityLimiter { get; set; }
 
         /// <summary>
+        /// Potential intake limiter based on the biomass of available pasture
+        /// </summary>
+        [JsonIgnore]
+        public double PotentialIntakePastureBiomassLimiter { get; set; }
+
+        /// <summary>
+        /// Potential intake limiter based on the proprtion of 8 hours grazing allowed
+        /// </summary>
+        [JsonIgnore]
+        public double PotentialIntakeGrazingTimeLimiter { get; set; }
+
+        /// <summary>
         /// Dry matter digestibility of pasture consumed (%)
         /// </summary>
         [JsonIgnore]
@@ -121,6 +134,8 @@ namespace Models.CLEM.Activities
         {
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
+
+            isStandAloneModel = true;
 
             this.InitialiseHerd(true, false);
 
@@ -158,8 +173,9 @@ namespace Models.CLEM.Activities
         {
             ResourceRequestList = null;
             this.PoolFeedLimits = null;
+            PotentialIntakeGrazingTimeLimiter = HoursGrazed / 8;
         }
- 
+
         /// <summary>
         /// Calculate the potential intake limiter based on pasture quality.
         /// </summary>
@@ -199,15 +215,18 @@ namespace Models.CLEM.Activities
                 totalPastureRequired = 0;
                 totalPastureDesired = 0;
                 Status = ActivityStatus.NotNeeded;
+                PotentialIntakePastureBiomassLimiter = 1;
 
                 if (herd.Any())
                 {
                     // Stand alone model has not been set by parent RuminantActivityGrazePasture
-                    if ((Parent is RuminantActivityGrazePasture) == false)
+                    if (isStandAloneModel)
                     {
                         SetupPoolsAndLimits(1.0);
                         PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
                     }
+
+                    PotentialIntakePastureBiomassLimiter = 1 - Math.Exp(-herd.FirstOrDefault().BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000);
 
                     // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
@@ -217,17 +236,19 @@ namespace Models.CLEM.Activities
                             // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                             // calculate intake from potential modified by pasture availability and hours grazed
                             // min of grazed and potential remaining
-                            totalPastureRequired += Math.Min(Math.Max(0, ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                            totalPastureRequired += Math.Min(Math.Max(0, ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
                             // potential graing minus low biomass limiter
-                            totalPastureDesired += Math.Min(Math.Max(0, ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8));
+                            totalPastureDesired += Math.Min(Math.Max(0, ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
                         }
                         else
                         {
                             // treat sucklings separate
-                            // they eat what was previously assigned in RuminantGrow minus what's been fed and milk
-                            double amountToEat = Math.Min(0, ind.PotentialIntake - ind.Intake);
+                            // potentialIntake defined based on proportion of body weight and MilkLWTFodderSubstitutionProportion when milk intake is low or missing (lost mother) (see RuminantActivityGrow.CalculatePotentialIntake)
+                            // they can eat defined potential intake minus what's already been fed. Milk intake assumed elsewhere.
+                            double amountToEat = Math.Max(0, ind.PotentialIntake - ind.Intake);
                             totalPastureRequired += amountToEat;
                             // desired same as required
+                            // TODO: check with researchers, but this should also include the PastureQuality, PastureBiomass and GrazingTime limiters
                             totalPastureDesired += amountToEat;
                         }
                     }
@@ -246,11 +267,6 @@ namespace Models.CLEM.Activities
                             RelatesToResource = this.RuminantTypeModel.Name
                         };
                         ResourceRequestList.Add(pastureRequest);
-                        foodDetails = new FoodResourcePacket()
-                        {
-                            DMD = ((RuminantActivityGrazePastureHerd)pastureRequest.AdditionalDetails).DMD,
-                            PercentN = ((RuminantActivityGrazePastureHerd)pastureRequest.AdditionalDetails).N
-                        };
                     }
                 }
                 lastResourceRequest = Clock.Today;
@@ -273,7 +289,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            //Go through amount received and put it into the animals intake with quality measures.
+            // Go through amount received and put it into the animals intake with quality measures.
             // get resource list, handles if already called by parent.
             RequestDetermineResources();
 
@@ -285,13 +301,21 @@ namespace Models.CLEM.Activities
                 double shortfall = (pastureRequest?.Provided??0) / totalPastureRequired;
 
                 // allocate to individuals in proportion to what they requested 
+
+                // current DMD and N of intake is stored in th DMD and N properties of this class as passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
+                foodDetails = new FoodResourcePacket()
+                {
+                    DMD = DMD, 
+                    PercentN = N
+                };
+
                 foreach (Ruminant ind in herd)
                 {
                     double eaten;
                     if (ind.Weaned)
                         eaten = Math.Min(Math.Max(0,ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
-                        eaten = Math.Min(0, ind.PotentialIntake - ind.Intake); ;
+                        eaten = Math.Max(0, ind.PotentialIntake - ind.Intake); ;
 
                     foodDetails.Amount = eaten * shortfall;
                     ind.AddIntake(foodDetails);

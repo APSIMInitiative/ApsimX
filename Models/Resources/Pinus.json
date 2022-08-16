@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 154,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -5475,7 +5475,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "caribaea",
           "Children": [
             {
@@ -5558,7 +5558,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "elliottii",
           "Children": [
             {
@@ -5855,7 +5855,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "elliottiiXcaribaeaF1",
           "Children": [
             {
@@ -5938,7 +5938,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "elliottiiXcaribaeaF2",
           "Children": [
             {
@@ -6021,7 +6021,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "radiata",
           "Children": [
             {
@@ -6240,7 +6240,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "taeda",
           "Children": [
             {

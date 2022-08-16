@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 154,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -4898,7 +4898,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "grandis",
           "Children": [
             {
@@ -5004,7 +5004,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "grandisXurophylla",
           "Children": [
             {
@@ -5076,7 +5076,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "urophyllaXglobulus",
           "Children": [
             {
@@ -5106,7 +5106,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "BrazilClones",
           "Children": [
             {
@@ -5128,7 +5128,7 @@
                 "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.2, 0.17, 0.15",
                 "",
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
-                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
                 "",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
@@ -5166,7 +5166,7 @@
                 "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.19, 0.17, 0.17",
                 "",
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
-                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
                 "",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
@@ -5207,7 +5207,7 @@
                 "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.20, 0.16, 0.15",
                 "",
                 "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  6, 17, 22, 38",
-                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y= 0, 1, 1, 0",
                 "",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1  ",
                 "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0.5, 1, 1, 1, 1, 1, 1",
@@ -5235,7 +5235,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "saligna",
           "Children": [
             {
@@ -5265,7 +5265,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "nitens",
           "Children": [
             {
@@ -5453,7 +5453,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "globulus",
           "Children": [
             {

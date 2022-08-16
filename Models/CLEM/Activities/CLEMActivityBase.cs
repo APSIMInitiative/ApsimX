@@ -497,6 +497,7 @@ namespace Models.CLEM.Activities
                         Name = (timer as IModel).Name,
                         Status = ActivityStatus.Timer,
                         Id = (timer as CLEMModel).UniqueID.ToString(),
+                        ModelType = (int)ActivityPerformedType.Timer
                     });
                 }
             }
@@ -1124,11 +1125,21 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void TriggerOnActivityPerformed()
         {
+            int type = 0;
+            if (GetType().Name.Contains("ActivityTimer"))
+            {
+                type = 2;
+            }
+            if (GetType().Name.Contains("Folder"))
+            {
+                type = 1;
+            }
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
                 Name = this.Name,
                 Status = this.Status,
                 Id = this.UniqueID.ToString(),
+                ModelType = type
             });
         }
 
@@ -1138,12 +1149,22 @@ namespace Models.CLEM.Activities
         /// <param name="status">The status of this activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
+            int type = 0;
+            if (GetType().Name.Contains("ActivityTimer"))
+            {
+                type = 2;
+            }
+            if (GetType().Name.Contains("Folder"))
+            {
+                type = 1;
+            }
             this.Status = status;
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
                 Name = this.Name,
                 Status = status,
                 Id = this.UniqueID.ToString(),
+                ModelType = type
             });
         }
     }

@@ -21,8 +21,10 @@
         /// <summary>The instance of resource.</summary>
         private static Resource instance = null;
 
-        private readonly Dictionary<string, IModel> cache = new Dictionary<string, IModel>();
+        /// <summary>A cache of models from resource.</summary>
+        private readonly Dictionary<string, ResourceModel> cache = new Dictionary<string, ResourceModel>();
 
+        /// <summary>A lock for the cache.</summary>
         private readonly object cacheLock = new object();
 
         /// <summary>Singleton instance of Resource</summary>
@@ -57,18 +59,18 @@
                         return !child.Children.Any(c => c.GetType() == mc.GetType() &&
                                                         string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
                     });
-                    child.Children.InsertRange(0, childrenToAdd);
-
-                    CopyPropertiesFrom(modelFromResource, child);
-
-                    // Make all descendents of 'child' hidden and readonly.
+                    
+                    // Make all children that area about to be added from resource hidden and readonly.
                     bool isHidden = !isUnderReplacements;
-                    foreach (Model descendant in child.FindAllDescendants())
+                    foreach (Model descendant in childrenToAdd)
                     {
                         descendant.IsHidden = isHidden;
                         descendant.ReadOnly = isHidden;
                     }
 
+                    child.Children.InsertRange(0, childrenToAdd);
+
+                    CopyPropertiesFrom(modelFromResource, child);
                     child.ParentAllDescendants();
                 }
             }
@@ -79,24 +81,22 @@
         /// <returns>The newly created model. Throws if not found.</returns>
         public IModel GetModel(string resourceName)
         {
-            if (!cache.TryGetValue(resourceName, out IModel modelFromResource))
+            var resourceModel = GetModelNoClone(resourceName);
+            return resourceModel?.Model.Clone();
+        }
+
+        /// <summary>Remove all children that are from a resource.</summary>
+        /// <param name="model">The model to remove child models from.</param>
+        public IEnumerable<IModel> RemoveResourceChildren(IModel model)
+        {
+            if (string.IsNullOrEmpty(model.ResourceName))
+                return model.Children;
+            else
             {
-                lock (cacheLock)
-                {
-                    if (!cache.TryGetValue(resourceName, out modelFromResource))
-                    {
-                        string contents = GetString(resourceName);
-                        if (string.IsNullOrEmpty(contents))
-                            return null;
-
-                        modelFromResource = FileFormat.ReadFromString<IModel>(contents, e => throw e, false);
-                        modelFromResource = modelFromResource.Children.First();
-                        cache.Add(resourceName, modelFromResource);
-                    }
-                }
+                var resourceModel = GetModelNoClone(model.ResourceName);
+                return model.Children.Where(m => !resourceModel.Model.Children.Any(rc => m.GetType() == rc.GetType() &&
+                                                                                         m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
             }
-
-            return modelFromResource.Clone();
         }
 
         /// <summary>Get a model resource as a string.</summary>
@@ -113,30 +113,7 @@
         /// <param name="resourceName">Name of the resource.</param>
         public IEnumerable<PropertyInfo> GetPropertiesFromResourceModel(string resourceName)
         {
-            string[] propertiesNotToCopy = { "$type", "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName", "Enabled", "ReadOnly" };
-
-            var model = GetModel(resourceName);
-            if (model != null)
-            {
-                var children = JObject.Parse(GetString(resourceName))["Children"] as JArray;
-                if (children == null)
-                    throw new Exception($"Invalid resource {resourceName}");
-
-                var resourceToken = children[0] as JObject;
-                var propertyTokens = resourceToken.Properties();
-                foreach (var propertyName in resourceToken.Properties()
-                                                          .Select(pt => pt.Name)
-                                                          .Where(name => !propertiesNotToCopy.Contains(name)))
-                {
-                    var propertyInfo = model.GetType().GetProperty(propertyName);
-                    if (propertyInfo != null &&
-                        propertyInfo.CanWrite &&
-                        propertyInfo.CanRead &&
-                        propertyInfo.GetCustomAttribute(typeof(DescriptionAttribute)) == null &&
-                        propertyInfo.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null)
-                        yield return propertyInfo;
-                }
-            }
+            return GetModelNoClone(resourceName)?.Properties;
         }
 
         /// <summary>
@@ -163,6 +140,29 @@
 
         /// <summary>Default constructor (private)</summary>
         private Resource() { }
+
+        /// <summary>Get a model from resource.</summary>
+        /// <param name="resourceName">Name of model.</param>
+        /// <returns>The newly created model. Throws if not found.</returns>
+        private ResourceModel GetModelNoClone(string resourceName)
+        {
+            if (!cache.TryGetValue(resourceName, out ResourceModel modelFromResource))
+            {
+                lock (cacheLock)
+                {
+                    if (!cache.TryGetValue(resourceName, out modelFromResource))
+                    {
+                        string contents = GetString(resourceName);
+                        if (string.IsNullOrEmpty(contents))
+                            return null;
+
+                        modelFromResource = new ResourceModel(contents);
+                        cache.Add(resourceName, modelFromResource);
+                    }
+                }
+            }
+            return modelFromResource;
+        }
 
         /// <summary>Copy all public properties from the one model to another.</summary>
         /// <param name="from">Model to copy from.</param>
@@ -212,6 +212,56 @@
                     else if (property.Name != "$type" && !propertiesToExclude.Contains(property.Name))
                         parameterNames.Add(namePrefix + property.Name);
                 }
+            }
+        }
+
+        /// <summary>Encapsulates a model from resources.</summary>
+        private class ResourceModel
+        {
+            /// <summary>Constructor.</summary>
+            /// <param name="resourceJson">The resource JSON.</param>
+            public ResourceModel(string resourceJson)
+            {
+                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false);
+                Model = Model.Children.First();
+                Properties = GetPropertiesFromResourceModel(Model, resourceJson);
+            }
+
+            /// <summary>The model deserialised from resource.</summary>
+            public IModel Model { get; }
+
+            /// <summary>The properties of the model from resource.</summary>
+            public IEnumerable<PropertyInfo> Properties { get; }
+
+            /// <summary>Get a collection of all properties from the specified resource model.</summary>
+            /// <param name="model">The model.</param>
+            /// <param name="resourceJson">The resource JSON.</param>
+            private IEnumerable<PropertyInfo> GetPropertiesFromResourceModel(IModel model, string resourceJson)
+            {
+                string[] propertiesNotToCopy = { "$type", "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName", "Enabled", "ReadOnly" };
+
+                List<PropertyInfo> properties = new List<PropertyInfo>();
+                
+                var children = JObject.Parse(resourceJson)["Children"] as JArray;
+                if (children == null)
+                    throw new Exception($"Invalid resource {model.Name}");
+
+                var resourceToken = children[0] as JObject;
+                var propertyTokens = resourceToken.Properties();
+                foreach (var propertyName in resourceToken.Properties()
+                                                            .Select(pt => pt.Name)
+                                                            .Where(name => !propertiesNotToCopy.Contains(name)))
+                {
+                    var propertyInfo = model.GetType().GetProperty(propertyName);
+                    if (propertyInfo != null &&
+                        propertyInfo.CanWrite &&
+                        propertyInfo.CanRead &&
+                        propertyInfo.GetCustomAttribute(typeof(DescriptionAttribute)) == null &&
+                        propertyInfo.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null)
+                        properties.Add(propertyInfo);
+                }
+
+                return properties;
             }
         }
     }

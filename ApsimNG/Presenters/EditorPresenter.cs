@@ -3,19 +3,19 @@
     using System;
     using System.Drawing;
     using EventArguments;
-    using Models.PMF;
     using Views;
     using Interfaces;
     using Commands;
     using System.Linq;
+    using Models.Core;
 
     /// <summary>
     /// A presenter class for showing a cultivar.
     /// </summary>
-    public class CultivarPresenter : IPresenter
+    public class EditorPresenter : IPresenter
     {
         /// <summary>The cultivar model</summary>
-        private Cultivar cultivar;
+        private ILineEditor model;
 
         /// <summary>The cultivar view</summary>
         private IEditorView view;
@@ -32,11 +32,11 @@
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.cultivar = model as Cultivar;
+            this.model = model as ILineEditor;
             this.view = view as IEditorView;
             this.explorerPresenter = explorerPresenter;
 
-            this.view.Lines = this.cultivar.Command;
+            this.view.Lines = this.model.Lines?.ToArray();
             intellisense = new IntellisensePresenter(this.view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
@@ -63,13 +63,13 @@
         {
             try
             {
-                if (this.view.Lines != this.cultivar.Command)
+                if (this.view.Lines != this.model.Lines)
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    if (cultivar.Command == null || !cultivar.Command.SequenceEqual(view.Lines))
+                    if (model.Lines == null || !model.Lines.SequenceEqual(view.Lines))
                     {
-                        ChangeProperty command = new ChangeProperty(cultivar, nameof(cultivar.Command), this.view.Lines);
+                        ChangeProperty command = new ChangeProperty(model, nameof(model.Lines), this.view.Lines);
                         explorerPresenter.CommandHistory.Add(command);
                     }
 
@@ -90,8 +90,8 @@
             try
             {
                 if (e.ControlShiftSpace)
-                    intellisense.ShowMethodCompletion(cultivar, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, cultivar, true, false, false, false, e.ControlSpace))
+                    intellisense.ShowMethodCompletion(model, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
@@ -105,7 +105,7 @@
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.Lines = this.cultivar.Command;
+            this.view.Lines = this.model.Lines.ToArray();
         }
 
         /// <summary>

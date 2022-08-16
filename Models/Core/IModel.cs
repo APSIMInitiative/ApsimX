@@ -285,6 +285,15 @@ namespace Models.Core
         IVariable FindByPath(string path, bool ignoreCase = false);
 
         /// <summary>
+        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
+        /// Note that this can be a variable/property or a model.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="path">The path of the variable/model.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        IEnumerable<IVariable> FindAllByPath(string path, bool ignoreCase = false);
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
