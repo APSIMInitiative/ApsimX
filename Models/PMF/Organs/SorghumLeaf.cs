@@ -1181,12 +1181,13 @@ namespace Models.PMF.Organs
             tags.Add(new Paragraph("Under water limitation, aboveground biomass accumulation is the product of realized transpiration and its conversion efficiency, biomass produced per unit of water transpired, or transpiration efficiency(TE)"));
             yield return new Section("Dry Matter Fixation", tags);
 
-            tags.AddRange(extinctionCoefficientFunction.Document());
-            tags.AddRange(photosynthesis.Document());
-            yield return new Section("Radiation Use Efficiency", tags);
+            var rueTags = new List<ITag>();
+            rueTags.AddRange(extinctionCoefficientFunction.Document());
+            rueTags.AddRange(photosynthesis.Document());
+            yield return new Section("Radiation Use Efficiency", rueTags);
 
-            tags.AddRange(potentialBiomassTEFunction.Document());
-            yield return new Section("Transpiration Efficiency", tags);
+            //tags.AddRange(potentialBiomassTEFunction.Document());
+            yield return new Section("Transpiration Efficiency", potentialBiomassTEFunction.Document());
 
             // Document initial DM weight.
             yield return new Paragraph($"Initial DM mass = {InitialDMWeight} gm^-2^");
@@ -1225,8 +1226,8 @@ namespace Models.PMF.Organs
             senescenceTags.AddRange(LightSenescence.Document());
             senescenceTags.AddRange(WaterSenescence.Document());
             senescenceTags.AddRange(FrostSenescence.Document());
-            senescenceTags.AddRange(AgeSenescence.Document());
-            senescenceTags.AddRange(biomassRemovalModel.Document());
+
+            senescenceTags.Add(new Section("Biomass Removal", biomassRemovalModel.Document()));
 
             yield return new Section("Senescence and Detachment", senescenceTags);
         }

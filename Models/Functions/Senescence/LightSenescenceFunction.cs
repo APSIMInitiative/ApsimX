@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {
@@ -100,6 +101,17 @@ namespace Models.Functions
             }
             return MathUtilities.Divide(totalLaiEqlbLight, laiEqlbLightTodayQ.Count, 0);
         }
+        
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            List<ITag> senescenceTags = new List<ITag>();
+            senescenceTags.AddRange(senRadnCrit.Document());
+            senescenceTags.AddRange(senLightTimeConst.Document());
+
+            yield return new Section("Light Senescence", senescenceTags);
+        }
+
     }
 
 }
