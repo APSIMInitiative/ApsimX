@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 246,
+  "ExplorerWidth": 285,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -1635,11 +1635,48 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.006,
-                          "Units": null,
+                          "$type": "Models.Functions.MinimumFunction, Models",
                           "Name": "Critical",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.035,
+                              "Units": null,
+                              "Name": "MaxNConc",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "CritNConc",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[StorageRoot].Nitrogen.ConcFunctions.Minimum",
+                                  "Name": "MinNConc",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.2,
+                                  "Units": null,
+                                  "Name": "CritNFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2964,48 +3001,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.025,
+                          "Units": null,
                           "Name": "Critical",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.035,
-                              "Units": null,
-                              "Name": "MaxNConc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "CritNConc",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Nitrogen.ConcFunctions.Minimum",
-                                  "Name": "MinNConc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.2,
-                                  "Units": null,
-                                  "Name": "CritNFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -3870,7 +3870,7 @@
                           ],
                           "Y": [
                             0.015,
-                            0.02
+                            0.019
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -3893,53 +3893,40 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "StressFactor",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "AccumulatedWaterStressEffect",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MovingAverageFunction, Models",
-                              "NumberOfDays": 30,
-                              "StageToStartMovingAverage": "Emergence",
-                              "Name": "AccumulatedWaterStressEffect",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Canopy.Fw",
-                                  "Name": "FW",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": "",
-                              "Name": "Sensitivity",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Memo, Models",
+                          "Text": "",
+                          "Name": "Memo",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": "",
-                          "Name": "UpperLimit",
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.5,
+                            1.0
+                          ],
+                          "Y": [
+                            0.0,
+                            0.5,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].AccumulatedWaterStressEffect",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4031,6 +4018,26 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Weather].MinT",
                       "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MovingAverageFunction, Models",
+                  "NumberOfDays": 30,
+                  "StageToStartMovingAverage": "Emergence",
+                  "Name": "AccumulatedWaterStressEffect",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Canopy.Fw",
+                      "Name": "FW",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4841,7 +4848,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.3,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4860,7 +4867,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.3,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4935,11 +4942,48 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.013,
-                          "Units": null,
+                          "$type": "Models.Functions.MinimumFunction, Models",
                           "Name": "Critical",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.035,
+                              "Units": null,
+                              "Name": "MaxNConc",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "CritNConc",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[petiole].Nitrogen.ConcFunctions.Minimum",
+                                  "Name": "MinNConc",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.2,
+                                  "Units": null,
+                                  "Name": "CritNFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6010,11 +6054,11 @@
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Germination",
                           "End": "StartBolting",
-                          "Name": "PhaseLookupValue",
+                          "Name": "Vegetative",
                           "Children": [
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "MultiplyFunction",
+                              "Name": "Velocity",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -6082,8 +6126,8 @@
                             1.0
                           ],
                           "Y": [
-                            1.0,
-                            1.0,
+                            0.0,
+                            0.5,
                             1.0
                           ],
                           "Name": "XYPairs",
