@@ -253,7 +253,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0\u00c2\u00b0C ([Chakwizira_etal_2016a]).",
+                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0Â°C ([Chakwizira_etal_2016a]).",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -345,7 +345,7 @@
                             },
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25\u00e2\u20ac\u201c30\u00c2\u00b0C with a maximum of 45\u00c2\u00b0C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
+                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25â€“30Â°C with a maximum of 45Â°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
                               "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -469,7 +469,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is an empirical fit where 12.5\u00c2\u00b0Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
+                      "Text": "This is an empirical fit where 12.5Â°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -546,7 +546,7 @@
                         },
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200\u00c2\u00b0Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
+                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200Â°Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -581,7 +581,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This an empirical fit - 400\u00c2\u00b0Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "This an empirical fit - 400Â°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -654,7 +654,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The 800\u00c2\u00b0Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "The 800Â°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -693,7 +693,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is estimated to be 3600\u00c2\u00b0Cd\r\nA value of 3600\u00c2\u00b0Cd (i.e. sum of \u00c2\u00b0Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the \u00e2\u20ac\u0153Maturity\u00e2\u20ac phase. Accumulated thermal time (TTsum) for each phase (planted\u00e2\u20ac\u201cvegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
+                      "Text": "This is estimated to be 3600Â°Cd\r\nA value of 3600Â°Cd (i.e. sum of Â°Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the â€œMaturityâ€ phase. Accumulated thermal time (TTsum) for each phase (plantedâ€“vegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3833,7 +3833,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "A two stage phyllochron (i.e. 100\u00e2\u20ac\u201c50\u00c2\u00b0Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50\u00c2\u00b0Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
+                      "Text": "A two stage phyllochron (i.e. 100â€“50Â°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50Â°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7399,7 +7399,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\n\u00e2\u20ac\u00a2\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\n\u00e2\u20ac\u00a2\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
+              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\nâ€¢\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\nâ€¢\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
               "Name": "Trial details",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -8604,15 +8604,6 @@
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "",
-                      "Parameters": null,
-                      "Name": "SetCropParameters",
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
