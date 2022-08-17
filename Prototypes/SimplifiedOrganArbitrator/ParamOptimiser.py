@@ -178,36 +178,56 @@ def Preparefile(filePath):
         json.dump(Apsimx,ApsimxJSON,indent=2)
     
 def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet,paramsTried):        
-    ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx')
+    ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx') # write marameter set into model
     start = dt.datetime.now()
-    simSet = makeLongString(SimulationSet)
+    simSet = makeLongString(SimulationSet) # make command string with simulations to run
     subprocess.run(['C:/GitHubRepos/ApsimX/bin/Debug/netcoreapp3.1/Models.exe',
                     Path+'.apsimx',
-                   simSet], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                   simSet], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  # Run simulations
     endrun = dt.datetime.now()
     runtime = (endrun-start).seconds
     con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db')
-    ObsPred = pd.read_sql("Select * from PredictedObserved",con)
+    ObsPred = pd.read_sql("Select * from PredictedObserved",con)  # read observed and predicted data
     con.close()
-    ScObsPre = pd.DataFrame(columns = ['ScObs','ScPred','Var','SimulationID'])
+    DataSize = pd.DataFrame(VariableWeights.loc[OptimisationVariables,step])  #data frame with weighting for each variable
+    DataSize.loc[:,'size'] =  [ObsPred.loc[:,"Observed."+v].dropna().size for v in OptimisationVariables] # add the data size for each variable
+    DataSize.loc[:,'sizeBalance'] = [round(DataSize.loc[:,'size'].max()/DataSize.loc[v,'size']) for v in DataSize.index]  # add size wieghting for each variable
+    DataSize.loc[:,'weighting'] = DataSize.loc[:,step] * DataSize.loc[:,'sizeBalance'] # Calculate overall weighting for each variable
+    ScObsPre = pd.DataFrame(columns = ['ScObs','ScPred','Var','SimulationID'])  # make blank dataframe to put scalled obs pred values in
     indloc = 0
     for var in OptimisationVariables:
-        DataPairs = ObsPred.reindex(['Observed.'+var,'Predicted.'+var,'SimulationID'],axis=1).dropna()
+        weighting = DataSize.loc[var,'weighting']
+        DataPairs = ObsPred.reindex(['Observed.'+var,'Predicted.'+var,'SimulationID'],axis=1).dropna() # slice out data we need for doing stats
         for c in DataPairs.columns:
-            DataPairs.loc[:,c] = pd.to_numeric(DataPairs.loc[:,c])
-        VarMax = max(DataPairs.loc[:,'Observed.'+var].max(),DataPairs.loc[:,'Predicted.'+var].max())
-        VarMin = min(DataPairs.loc[:,'Observed.'+var].min(),DataPairs.loc[:,'Predicted.'+var].min())
+            DataPairs.loc[:,c] = pd.to_numeric(DataPairs.loc[:,c])  # ensure all values are numeric, not objects
+        VarMax = max(DataPairs.loc[:,'Observed.'+var].max(),DataPairs.loc[:,'Predicted.'+var].max())  # maximum for variable
+        VarMin = min(DataPairs.loc[:,'Observed.'+var].min(),DataPairs.loc[:,'Predicted.'+var].min())  # minimum for variable
+        DataPairs = pd.DataFrame(index = np.repeat(DataPairs.index,weighting),
+                                  data = np.repeat(DataPairs.values,weighting ,axis=0),columns = DataPairs.columns)  # Replicate data to give required weighting
+        DataPairs.reset_index(inplace=True) # make index unique
         for x in DataPairs.index:
-            ScObsPre.loc[indloc,'ScObs'] = CalcScaledValue(DataPairs.loc[x,'Observed.'+var],VarMax,VarMin)
-            ScObsPre.loc[indloc,'ScPred'] = CalcScaledValue(DataPairs.loc[x,'Predicted.'+var],VarMax,VarMin)
-            ScObsPre.loc[indloc,'Var'] = var
-            ScObsPre.loc[indloc,'SimulationID'] = DataPairs.loc[x,'SimulationID']
+            ScObsPre.loc[indloc,'ScObs'] = CalcScaledValue(DataPairs.loc[x,'Observed.'+var],VarMax,VarMin)  # Scale observed values between VarMin (0) and VarMax (1)
+            ScObsPre.loc[indloc,'ScPred'] = CalcScaledValue(DataPairs.loc[x,'Predicted.'+var],VarMax,VarMin) # Scale predicted values between VarMin (0) and VarMax (1)
+            ScObsPre.loc[indloc,'Var'] = var  # assign variable name for indexing
+            ScObsPre.loc[indloc,'SimulationID'] = DataPairs.loc[x,'SimulationID'] # assign variable name for indexing
             indloc+=1
     RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
-    
+
+    if (RegStats.NSE > globals()["best"]):
+        globals()["best"] = RegStats.NSE
+        graph = plt.figure(figsize=(20,20))
+        for var in OptimisationVariables:
+            varDat = ScObsPre.Var==var
+            vmarker = VariableWeights.loc[var,'marker']
+            vcolor = VariableWeights.loc[var,'color']
+            plt.plot(ScObsPre.loc[varDat,'ScObs'],ScObsPre.loc[varDat,'ScPred'],vmarker,color=vcolor,label=var[11:])
+        plt.legend(loc=(.05,1.05))
+        plt.ylabel('sc Predicted')
+        plt.xlabel('sc Observed')
+
     retVal = max(RegStats.NSE,0) *-1
     globals()["itteration"] += 1
-    print(str(globals()["itteration"] )+"  "+str(paramsTried) + " run completed " +str(ObsPred.SimulationID.drop_duplicates().count()) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
+    print("i" + str(globals()["itteration"] )+"  "+str(paramsTried) + " run completed " +str(len(SimulationSet)) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
     return retVal
 
 def runFittingItter(fittingParams):
@@ -238,15 +258,25 @@ def evalExpressions(value,refCol):
             ret = parser.parse(expression).evaluate({'ref':ref,'num':num})
     return float(ret)
 
+def runModelFullset(paramNames,paramValues):        
+    ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx')
+    start = dt.datetime.now()
+    subprocess.run(['C:/GitHubRepos/ApsimX/bin/Debug/netcoreapp3.1/Models.exe',
+                    Path+'.apsimx'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    endrun = dt.datetime.now()
+    runtime = (endrun-start).seconds
+    print("all sims ran in " +str(runtime)+ " seconds")
+
 
 # -
 
 ParamData = pd.read_excel('OptimiseConfig.xlsx',sheet_name='ParamData',engine="openpyxl",index_col='Param')
 SimSet = pd.read_excel('OptimiseConfig.xlsx',sheet_name='SimSet',engine="openpyxl")
-VariableWeights = pd.read_excel('OptimiseConfig.xlsx',sheet_name='VariableWeights',engine="openpyxl")
+VariableWeights = pd.read_excel('OptimiseConfig.xlsx',sheet_name='VariableWeights',engine="openpyxl",index_col='Variable')
 OptimisationSteps = SimSet.columns.values.tolist()
 paramsToOptimise = []
 itteration = 0
+best = 0
 
 OptimisationSteps
 
@@ -257,13 +287,57 @@ bounds = pd.Series(index= ParamData.index,
                    data = [(evalExpressions(ParamData.loc[x,'Min_feasible'],'Min_feasible'),evalExpressions(ParamData.loc[x,'Max_feasible'],'Max_feasible')) for x in ParamData.index])
 bounds
 
-for step in OptimisationSteps[:]:
+# +
+# runModelFullset(ParamData.Address.values.tolist(),bestParamVals.values.tolist()) #run simulations with current best fit params
+
+# +
+step = 'Nitrogen response'
+OptimisationVariables = VariableWeights.loc[:,step].dropna().index.tolist()
+con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db')
+ObsPred = pd.read_sql("Select * from PredictedObserved",con)
+con.close()
+DataSize = pd.DataFrame(VariableWeights.loc[OptimisationVariables,step])
+DataSize.loc[:,'size'] =  [ObsPred.loc[:,"Observed."+v].dropna().size for v in OptimisationVariables]
+DataSize.loc[:,'sizeBalance'] = [round(DataSize.loc[:,'size'].max()/DataSize.loc[v,'size']) for v in DataSize.index]
+DataSize.loc[:,'weighting'] = DataSize.loc[:,step] * DataSize.loc[:,'sizeBalance']
+ScObsPre = pd.DataFrame(columns = ['ScObs','ScPred','Var','SimulationID'])
+indloc = 0
+for var in OptimisationVariables:
+    weighting = DataSize.loc[var,'weighting']
+    DataPairs = ObsPred.reindex(['Observed.'+var,'Predicted.'+var,'SimulationID'],axis=1).dropna()
+    DataPairs = pd.DataFrame(index = np.repeat(DataPairs.index,weighting),
+                              data = np.repeat(DataPairs.values,weighting ,axis=0),columns = DataPairs.columns)
+    DataPairs.reset_index(inplace=True)
+    for c in DataPairs.columns:
+        DataPairs.loc[:,c] = pd.to_numeric(DataPairs.loc[:,c])
+    VarMax = max(DataPairs.loc[:,'Observed.'+var].max(),DataPairs.loc[:,'Predicted.'+var].max())
+    VarMin = min(DataPairs.loc[:,'Observed.'+var].min(),DataPairs.loc[:,'Predicted.'+var].min())
+    for x in DataPairs.index:
+        ScObsPre.loc[indloc,'ScObs'] = CalcScaledValue(DataPairs.loc[x,'Observed.'+var],VarMax,VarMin)
+        ScObsPre.loc[indloc,'ScPred'] = CalcScaledValue(DataPairs.loc[x,'Predicted.'+var],VarMax,VarMin)
+        ScObsPre.loc[indloc,'Var'] = var
+        ScObsPre.loc[indloc,'SimulationID'] = DataPairs.loc[x,'SimulationID']
+        indloc+=1
+    varDat = ScObsPre.Var==var
+    vmarker = VariableWeights.loc[var,'marker']
+    vcolor = VariableWeights.loc[var,'color']
+    plt.plot(ScObsPre.loc[varDat,'ScObs'],ScObsPre.loc[varDat,'ScPred'],vmarker,color=vcolor,label=var[11:])
+RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
+plt.legend(loc=(.05,1.05))
+plt.ylabel('sc Predicted')
+plt.xlabel('sc Observed')
+
+#retVal = max(RegStats.NSE,0) *-1
+
+# +
+for step in OptimisationSteps[3:]:
     itteration = 0
+    globals()["best"] = 0
     print(step + " Optimistion step")
     paramsToOptimise = ParamData.loc[ParamData.loc[:,step] == 'fit',step].index.values.tolist()
     print("fitting these parameters")
     print(paramsToOptimise)
-    OptimisationVariables = VariableWeights.loc[:,['Variable',step]].dropna().loc[:,'Variable'].values.tolist()
+    OptimisationVariables = VariableWeights.loc[:,step].dropna().index.values.tolist()
     print("using these variables")
     print(OptimisationVariables)
     SimulationSet = SimSet.loc[:,step].dropna().values.tolist()
@@ -308,22 +382,16 @@ for step in OptimisationSteps[:]:
     for p in paramsToOptimise:
         bestParamVals[p]= bestfits[pi]
         pi +=1
+    for p in bestParamVals.index:
+        if ParamData.loc[p,'Min_feasible']==np.nan: #for paramteters that reference another
+            bestParamVals[p] = bestParamVals[ParamData.loc[p,'BestValue']] #update with current itterations value
     print("")
     print("BestFits for "+step)
     print(paramsToOptimise)
     print(bestfits)
     print("")
 
-# + tags=[]
-load("./Potential canopycheckpoint.pkl")
-# -
-
-Params.loc[:,var].iloc[4:7]
-
-
-
-
-
+runModelFullset(ParamData.Address.values.tolist(),bestParamVals.values.tolist()) #run simulations with current best fit params
 
 # + tags=[]
 for step in OptimisationSteps:
