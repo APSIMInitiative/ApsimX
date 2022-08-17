@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 504,
+  "ExplorerWidth": 479,
   "Version": 155,
   "Name": "Simulations",
   "ResourceName": null,
@@ -358,7 +358,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Number of leaves the plant will produce  with no photoperiod effect and grown at an optimum photoperiod 8-12h\r\n",
+                      "Text": "Number of leaves the plant will produce with no photoperiod effect and grown at an optimum photoperiod 8-12h. From Yin and Kropff 1996 Minimum leaves number for main stem ranged between 10-12 leaves. Number of minimum leaves can increase with Temperature for additional 3-4 leaves  \r\n",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -378,7 +378,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The reduction in leaf rate appearance is function of day length optimum at 12 h and it will decrease if photoperios is higher than 12h",
+                      "Text": "Rice is a short day crop thus sensitivity to photoperiod is expressed as increase of leaf rate appearance as a function of day length increase per h  beyond the optimum day length  that presented variability among varieties (10-14h). In this moodel version we will assume optimal day length  at which the variety flower a the minimum number of days after sowing is 12 h.\nIf day length is higher than 12h, number of leaves produced are higher ( adding the Photoleaves) and rate of appearance is slower.Flowering time  can then be delayed up to 2 to 3 times of the duration of BVP while in average it is about 20-30d after PI. A critical photoperiod is defined beyond which a sensitive variety won`t flower and less sensitive variety will have its flowering time delay to a certain degree, a non sensitive variety will flower at any conditions of daylength.(Vergara and Chang,1985)",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -391,14 +391,14 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3.0,
+                  "FixedValue": 4.0,
                   "Units": null,
                   "Name": "EarlyReproductivePpSensitivity",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The phyllochrons duration for the plant to go from leaf 10 to flag leaf ligual appearance at > 12 h Pp compared  is the same as the lower leaves with phyllochron duration  multiply by a photoperiod sensitive factor  with an increase of duration up to three times of the current duration ( from 60 to 180 d, further longer duration means the crop cannot flower with the current condition). Sensitivity to photoperiod factor range then from 0 to 0.1.   ",
+                      "Text": "The phyllochrons duration for the plant to go from leaf 10 to flag leaf ligual appearance at > 12 h Pp compared  is the same as the lower leaves with phyllochron duration  multiply by a photoperiod sensitive factor  with an increase of duration up to three times of the current duration ( from 60 to 180 d, further longer duration means the crop cannot flower with the current condition). Sensitivity to photoperiod is the rate of number of leaves increase per h of increase of daylengh and the factor range then from 0 to 0.1.   ",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -463,7 +463,7 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 40.0,
-                          "Units": null,
+                          "Units": "dd",
                           "Name": "ShootLag",
                           "ResourceName": null,
                           "Children": [],
@@ -486,8 +486,8 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
+                              "FixedValue": 10.0,
+                              "Units": "mm d-1",
                               "Name": "ShootRate",
                               "ResourceName": null,
                               "Children": [],
@@ -509,7 +509,7 @@
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Emergence",
-                  "End": "TerminalSpikelet",
+                  "End": "PanicleInitiation",
                   "Name": "BasicVegetative",
                   "ResourceName": null,
                   "Children": [
@@ -547,7 +547,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].HaunStageTerminalSpikelet",
+                          "VariableName": "[Structure].HaunStagePanicleInitiation",
                           "Name": "HSTS",
                           "ResourceName": null,
                           "Children": [],
@@ -562,26 +562,6 @@
                       "$type": "Models.Memo, Models",
                       "Text": "Panicle initiation is delayed as the photoperido phase is increasng with longer day duration increasing the duration of the Vegetative phase",
                       "Name": "Memo1",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Phen.GerminatingPhase, Models",
-                  "Start": "TerminalSpikelet",
-                  "End": "PanicleInitiation",
-                  "Name": "Panicledevelopement",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This is a phase to divide vegetative stage and reproductive stage as early reproductive stage is overlapping with the basic vegetative stage.",
-                      "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -693,7 +673,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "IncreaseDueToShortPhotoPeriod",
+                              "Name": "IncreaseDueToLongPhotoPeriod",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -708,14 +688,16 @@
                                         8.0,
                                         10.0,
                                         12.0,
-                                        14.0
+                                        14.0,
+                                        16.0
                                       ],
                                       "Y": [
                                         1.0,
                                         1.0,
                                         1.0,
                                         1.0,
-                                        1.0
+                                        1.0,
+                                        1.5
                                       ],
                                       "XVariableName": null,
                                       "Name": "XYPairs",
@@ -1045,7 +1027,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.",
+                      "Text": "The increase of phyllochrons  with long photoperiod for sensitive variety",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -1111,14 +1093,14 @@
                             2.0,
                             6.0,
                             9.0,
-                            12.0,
-                            14.0
+                            14.0,
+                            16.0
                           ],
                           "Y": [
+                            1.2,
+                            1.2,
                             0.7,
                             0.7,
-                            1.0,
-                            1.0,
                             1.3,
                             1.3
                           ],
@@ -1171,7 +1153,7 @@
                             1.0,
                             1.0,
                             1.0,
-                            1.0
+                            1.3
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -1192,7 +1174,7 @@
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "Rice is a short photoperiod crop which when exposes to long day photoperiod  experiences a delay in anthesis. Photoperiod sensitive variety  has then an increased phyllochron for leaf growth during its photoperiod sensitive stage which corresponds to the period when the last 4 leaves of the main stem develop. With the gradient of sensitivity of the variety the needed dd for that period to complete increase with a factor ranging from 1  for non sensitive variety to up to a gradient of responses of the linear relationship between xy of the photoperiod effect defined as genotyic specific. A highly sensitive variety will have a photoperiod effect as below: 8/1/ 10/1 12/1 14/2/16/6\n",
-                          "Name": "Memo_pp",
+                          "Name": "MemoPP",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1243,7 +1225,7 @@
                                     1.0,
                                     1.9,
                                     2.0,
-                                    3.0,
+                                    4.0,
                                     6.0,
                                     7.0
                                   ],
@@ -1251,7 +1233,7 @@
                                     0.0,
                                     0.0,
                                     1.0,
-                                    2.0,
+                                    3.0,
                                     12.0,
                                     27.0
                                   ],
@@ -1453,8 +1435,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "PanicleInitiation",
-                      "End": "Flowering",
+                      "Start": "StartGrainFill",
+                      "End": "Maturity",
                       "Name": "MortalityPhase",
                       "ResourceName": null,
                       "Children": [
@@ -1534,15 +1516,15 @@
                           "X": [
                             3.0,
                             4.0,
-                            5.0,
+                            6.0,
                             6.0,
                             7.0
                           ],
                           "Y": [
                             10.0,
                             200.0,
-                            1000.0,
-                            1100.0,
+                            1200.0,
+                            1200.0,
                             1200.0
                           ],
                           "XVariableName": null,
@@ -1592,6 +1574,43 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "NitrogenStress",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.3,
+                            0.5,
+                            1.0
+                          ],
+                          "Y": [
+                            0.1,
+                            1.0,
+                            1.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].FN",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -1718,7 +1737,7 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "PhotoPeriodReductionFactor",
+                              "Name": "PhotoPeriodFactor",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1726,12 +1745,14 @@
                                   "X": [
                                     8.0,
                                     12.0,
+                                    14.0,
                                     16.0
                                   ],
                                   "Y": [
                                     1.0,
                                     1.0,
-                                    1.0
+                                    1.0,
+                                    1.3
                                   ],
                                   "XVariableName": null,
                                   "Name": "XYPairs",
@@ -1768,12 +1789,12 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Expression": "[Structure].FinalLeafNumber-4",
-                  "Name": "HaunStageTerminalSpikelet",
+                  "Name": "HaunStagePanicleInitiation",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The rice phenology described followed the Haun stage description assuming that Terminal Spikelet is the equivalent of panicle initiation which occurs  when the first of the last four leaves of the crop  is initiated which allows to keep the same apporach in determining termial spikelet in barley as the approach developped for Barley by Brown et al 2013 updated with parameters estimated from  the data of Veragara and Chang 1985.",
+                      "Text": "The rice phenology described followed the Haun stage leaf units described by Yin and Kropff 195 which all leaves appeared at panicle initiation.",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -5228,18 +5249,7 @@
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "0-1",
-                      "Name": "DMConversionEfficiency",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6651,47 +6661,36 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowInDocs": false,
-                  "GraphsPerPage": 6,
-                  "Name": "Australia",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].MinimumLeafNumber.FixedValue = 12",
-                        "[Phenology].PpSensitivity.FixedValue = 0",
-                        "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
-                      ],
-                      "Lines": [
-                        "[Phenology].MinimumLeafNumber.FixedValue = 12",
-                        "[Phenology].PpSensitivity.FixedValue = 0",
-                        "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
-                      ],
-                      "Name": "YRL39",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].MinimumLeafNumber.FixedValue =11",
-                        "[Phenology].PpSensitivity.FixedValue = 0"
-                      ],
-                      "Lines": [
-                        "[Phenology].MinimumLeafNumber.FixedValue =11",
-                        "[Phenology].PpSensitivity.FixedValue = 0"
-                      ],
-                      "Name": "Doongara",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 12",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
+                  "Lines": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 12",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "YRL39",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue =11",
+                    "[Phenology].PpSensitivity.FixedValue = 0"
+                  ],
+                  "Lines": [
+                    "[Phenology].MinimumLeafNumber.FixedValue =11",
+                    "[Phenology].PpSensitivity.FixedValue = 0"
+                  ],
+                  "Name": "Doongara",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
