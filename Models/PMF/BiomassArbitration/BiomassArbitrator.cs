@@ -197,7 +197,7 @@ namespace Models.PMF
                         o.SuppliesAllocated.ReTranslocation = new NutrientPoolsState(
                             0,
                             calcAllocated(NTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Metabolic, Nitrogen.TotalReTranslocationSupply),
-                            calcAllocated(NTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Structural, Nitrogen.TotalReTranslocationSupply));
+                            calcAllocated(NTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Storage, Nitrogen.TotalReTranslocationSupply));
 
                     }
 
