@@ -259,6 +259,11 @@ namespace UnitTests.Storage
             throw new NotImplementedException();
         }
 
+        public string GetViewSQL(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Tuple<string, Type>> GetColumns(string tableName)
         {
             throw new NotImplementedException();

@@ -29,5 +29,11 @@
         /// <param name="name">Name of the view to create</param>
         /// <param name="selectSQL">Select sql statement for the view</param>
         void AddView(string name, string selectSQL);
+
+        /// <summary>
+        /// Return the SQL of a named view
+        /// </summary>
+        /// <param name="name">name of the view</param>
+        string GetViewSQL(string name);
     }
 }
