@@ -285,10 +285,10 @@ namespace Models.CLEM
             var summary = simulation.FindDescendant<Summary>();
 
             // get all validations 
-            ReportErrors(model, summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
             // get all other errors 
-            ReportErrors(model, summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
 
         }
 
