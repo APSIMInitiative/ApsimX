@@ -389,9 +389,23 @@ namespace Models.CLEM.Resources
                 var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
                 if(rumGroup != null)
                 {
-                    var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
-                    if (catGroup != null)
-                        return catGroup;
+                    if (groupName == "") // blank requests the totals across all groups if present.
+                    {
+                        return new RuminantReportGroupDetails
+                        {
+                            GroupName = "All",
+                            TotalAdultEquivalent = rumGroup.RuminantTypeGroup.Sum(a => a.TotalAdultEquivalent),
+                            TotalPrice = rumGroup.RuminantTypeGroup.Sum(a => a.TotalPrice),
+                            TotalWeight = rumGroup.RuminantTypeGroup.Sum(a => a.TotalWeight),
+                            Count = rumGroup.RuminantTypeGroup.Sum(a => a.Count)
+                        };
+                    }
+                    else
+                    {
+                        var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
+                        if (catGroup != null)
+                            return catGroup;
+                    }
                 }
             }
             return new RuminantReportGroupDetails() { Count = 0, TotalAdultEquivalent = 0, TotalWeight = 0, TotalPrice = 0, GroupName = groupName };
