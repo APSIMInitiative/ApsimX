@@ -109,7 +109,9 @@ namespace APSIM.Cli
                 string directory = Path.GetDirectoryName(file);
                 PdfWriter writer = new PdfWriter(new PdfOptions(directory, null));
                 IEnumerable<ITag> tags = options.ParamsDocs ? new ParamsInputsOutputs(model).Document() : model.Document();
-                writer.Write(pdfFile, tags);
+                // Make params/inputs/outputs docs landscape (they have some rather wide tables). Everything else, portrait.
+                bool vertical = !options.ParamsDocs;
+                writer.Write(pdfFile, tags, vertical);
             }
         }
 
