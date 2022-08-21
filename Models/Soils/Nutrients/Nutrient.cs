@@ -144,7 +144,7 @@ namespace Models.Soils.Nutrients
                 else
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
-                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
+                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>().Where(pool => pool != SurfaceResidue);
 
                 foreach (NutrientPool P in pools)
                     for (int i = 0; i < numLayers; i++)
