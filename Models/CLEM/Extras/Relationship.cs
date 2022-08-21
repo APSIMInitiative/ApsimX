@@ -272,19 +272,19 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public void PrepareForTimestep()
         {
-            throw new NotImplementedException();
+            return;
         }
 
         /// <inheritdoc/>
         public List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         /// <inheritdoc/>
         public void PerformTasksForTimestep(double argument = 0)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         #endregion

@@ -1264,7 +1264,10 @@ namespace Models.CLEM.Activities
                             foreach (var removeFilter in reduceBreedersFilters)
                                 foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).OrderBy(a => a.Class).Take(excessBreeders).ToList())
                                 {
-                                    female.SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                    if(female.Class == "PreBreeder")
+                                        female.SaleFlag = HerdChangeReason.ExcessPreBreederSale;
+                                    else
+                                        female.SaleFlag = HerdChangeReason.ExcessBreederSale;
                                     excessBreeders--;
                                 }
                         }
