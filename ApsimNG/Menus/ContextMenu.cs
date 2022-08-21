@@ -761,8 +761,10 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
+                    hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = !child.IsHidden;
+                        child.IsHidden = hidden; 
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);
