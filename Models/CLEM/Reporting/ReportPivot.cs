@@ -86,6 +86,12 @@ namespace Models.CLEM.Reporting
         public string Aggregator { get; set; }
 
         /// <summary>
+        /// Include value name in column names
+        /// </summary>
+        [Description("Include values column name in column names")]
+        public bool IncludeValueColumnNameOutputColumns { get; set; }
+
+        /// <summary>
         /// Populates the aggregate filter
         /// </summary>
         public string[] GetAggregators() => new string[] { "SUM", "AVG", "MAX", "MIN", "COUNT" };
@@ -144,9 +150,9 @@ namespace Models.CLEM.Reporting
         {
             var storage = FindInScope<IDataStore>() ?? datastore;
             string viewSQL = storage.GetViewSQL(Name);
-            if(viewSQL != "")
-                return storage.Reader.GetDataUsingSql(viewSQL);
-            return null;
+            if (viewSQL != "")
+                return storage.Reader.GetData(Name);
+            return new DataTable();
         }
 
         private void CreateView()
@@ -158,6 +164,11 @@ namespace Models.CLEM.Reporting
             var storage = FindInScope<IDataStore>() ?? datastore;
             var report = storage.Reader.GetData(Parent.Name);
 
+            if (report is null)
+                storage.Reader.Refresh();
+
+            report = storage.Reader.GetData(Parent.Name);
+
             // Check sensibility
             if (report is null || Row is null || Column is null || Value is null || Aggregator is null)
                 return;
@@ -167,7 +178,7 @@ namespace Models.CLEM.Reporting
             // Set up date handling
             bool isDate = report.Columns[Column].DataType == typeof(DateTime);
             var cs_format = Time == "Year" ? "yyyy-01-01" : Time == "Month" ? "yyyy-MM-01" : "yyyy-MM-dd";
-            var sql_format = Time == "Year" ? "%Y-01-01" : Time == "Month" ? "%Y-%m-01" : "%Y-%m-%d";
+            var sql_format = Time == "Year" ? "%Y-01-01 12:00" : Time == "Month" ? "%Y-%m-01 12:00" : "%Y-%m-%d 12:00";
 
             string test = isDate
                 ? Time == "Day" ? $"[{Column}]" : $"datetime(strftime('{sql_format}', [{Column}]))"
@@ -178,7 +189,7 @@ namespace Models.CLEM.Reporting
                 .AsEnumerable()
                 .Select(r => isDate ? ((DateTime)r[Column]).ToString(cs_format) : r[Column])
                 .Distinct()
-                .Select(o => $"{Aggregator}(CASE WHEN {test} == '{o}' THEN {Value} ELSE 0 END) AS '{o} {Value}'");
+                .Select(o => $"{Aggregator}(CASE WHEN {test} == '{o}' THEN {Value} ELSE 0 END) AS '{o}{((IncludeValueColumnNameOutputColumns)? ".{Value}" : "")}'");
 
             // Set up the rows in the pivot
             var rows = $"[{Row}]";
@@ -187,7 +198,7 @@ namespace Models.CLEM.Reporting
 
             // Construct the SQL statement
             var builder = new StringBuilder();
-            builder.AppendLine($"SELECT {rows} AS {Row},");
+            builder.AppendLine($"SELECT CheckpointID, SimulationID, Zone, {rows} AS {Row},");
             builder.AppendLine(string.Join(",\n", cols));
             builder.AppendLine($"FROM [{Parent.Name}] GROUP BY {rows}");
 
@@ -198,7 +209,6 @@ namespace Models.CLEM.Reporting
             {
                 // Execute the query
                 SQL = builder.ToString();
-                storage.Reader.ExecuteSql(SQL); // this line will throw error if the SQL is invalid
                 storage.AddView($"{Name}", SQL);
             }
         }
