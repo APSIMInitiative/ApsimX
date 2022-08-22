@@ -158,7 +158,7 @@ namespace Models.CLEM
                         Breed = group.Key.Item1,
                         Herd = group.Key.Item2,
                         Sex = group.Key.Item3.ToString(),
-                        Group = group.Key.Item4,
+                        Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass) ? $"{group.Key.Item3}.{group.Key.Item4}" : group.Key.Item4,
                         Number = group.Count(),
                         Age = group.Average(a => a.Age),
                         AverageWeight = group.Average(a => a.Weight),
@@ -288,6 +288,10 @@ namespace Models.CLEM
         /// Group by class
         /// </summary>
         ByClass,
+        /// <summary>
+        /// Group by sex and class
+        /// </summary>
+        BySexClass,
         /// <summary>
         /// Group by age in years
         /// </summary>
