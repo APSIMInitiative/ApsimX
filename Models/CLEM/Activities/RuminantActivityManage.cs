@@ -1573,15 +1573,40 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ManageMaleBreederNumbers && ValidateSires() is ValidationResult sires)
-                    results.Add(sires);
+                if (ManageMaleBreederNumbers)
+                {
+                    if(ValidateSires() is ValidationResult sires)
+                        results.Add(sires);
+                    if (GrazeFoodStoreNameSires.Contains("."))
+                    {
+                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
+                        {
+                            string[] memberNames = new string[] { "Location is not valid" };
+                            results.Add(new ValidationResult($"The location where purchased ruminant sires are to be placed [r={GrazeFoodStoreNameSires}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                        }
+                    }
 
-                if (ManageFemaleBreederNumbers && ValidateBreeders() is ValidationResult breeders)
-                    results.Add(breeders);
+                }
+
+                if (ManageFemaleBreederNumbers)
+                {
+                    if (ValidateBreeders() is ValidationResult breeders)
+                        results.Add(breeders);
+                    if (GrazeFoodStoreNameBreeders.Contains("."))
+                    {
+                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
+                        {
+                            string[] memberNames = new string[] { "Location is not valid" };
+                            results.Add(new ValidationResult($"The location where purchased ruminant breeders are to be placed [r={GrazeFoodStoreNameBreeders}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                        }
+                    }
+                }
 
                 // unknown entries
                 var unknownPurchases = purchaseDetails
-                    .Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
+                .Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
 
                 if (unknownPurchases.Any())
                     foreach (var item in unknownPurchases)
@@ -1590,6 +1615,33 @@ namespace Models.CLEM.Activities
                         results.Add(new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male (sire) or female in [a={this.Name}].{Environment.NewLine}Check this component and remove from the list if unneeded", memberNames));
                     }
             }
+
+            if (EnableGrowoutMaleProperties())
+            {
+                if (GrazeFoodStoreNameGrowOutMales.Contains("."))
+                {
+                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
+                    {
+                        string[] memberNames = new string[] { "Location is not valid" };
+                        results.Add(new ValidationResult($"The location where grow out male ruminants are to be moved [r={GrazeFoodStoreNameGrowOutMales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                    }
+                }
+            }
+            if (EnableGrowoutFemaleProperties())
+            {
+                if (GrazeFoodStoreNameGrowOutFemales.Contains("."))
+                {
+                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
+                    {
+                        string[] memberNames = new string[] { "Location is not valid" };
+                        results.Add(new ValidationResult($"The location where grow out female ruminants are to be moved [r={GrazeFoodStoreNameGrowOutFemales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                    }
+                }
+            }
+
+
             return results;
         }
 

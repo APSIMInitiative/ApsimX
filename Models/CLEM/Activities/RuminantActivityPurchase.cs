@@ -260,6 +260,17 @@ namespace Models.CLEM.Activities
                     results.Add(new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames));
                 }
             }
+
+            if (GrazeFoodStoreName.Contains("."))
+            {
+                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
+                {
+                    string[] memberNames = new string[] { "Location is not valid" };
+                    results.Add(new ValidationResult($"The location where ruminants are to be placed [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                }
+            }
+
             return results;
         }
         #endregion

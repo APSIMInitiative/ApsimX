@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Performs grazing of a specified herd and pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase
+    class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
         /// Link to clock
@@ -396,6 +396,30 @@ namespace Models.CLEM.Activities
             // order feedpools by age so that diet is taken from youngest greenest first
             this.PoolFeedLimits = this.PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (GrazeFoodStoreTypeName.Contains("."))
+            {
+                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
+                {
+                    string[] memberNames = new string[] { "Location is not valid" };
+                    results.Add(new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                }
+            }
+            return results;
+        }
+        #endregion
+
 
         #region descriptive summary
 
