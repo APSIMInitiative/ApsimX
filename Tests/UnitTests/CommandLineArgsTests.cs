@@ -6,7 +6,6 @@ using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -93,8 +92,8 @@ namespace UnitTests
             Assert.AreEqual(physical.Thickness[1], 150);
 
             // Run Models.exe with /Edit command.
-            sims.Write(apsimxFileName);
-            sims = EditFile.Do(apsimxFileName, configFileName);
+            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFileName));
+            Overrides.Apply(sims, overrides);
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
@@ -115,13 +114,11 @@ namespace UnitTests
             Assert.AreEqual(clock.EndDate.Year, end.Year);
             Assert.AreEqual(clock.EndDate.DayOfYear, end.DayOfYear);
 
-            // These changes should not affect the clock in simulation 2.
-            start = new DateTime(2003, 11, 15);
-            end = new DateTime(2003, 11, 15);
+            // Clock 2 should have been changed as well.
             Assert.AreEqual(clock2.StartDate.Year, start.Year);
             Assert.AreEqual(clock2.StartDate.DayOfYear, start.DayOfYear);
-            Assert.AreEqual(clock2.EndDate.Year, end.Year);
-            Assert.AreEqual(clock2.EndDate.DayOfYear, end.DayOfYear);
+            Assert.AreEqual(clock2.EndDate.Year, 2003);
+            Assert.AreEqual(clock2.EndDate.DayOfYear, 319);
 
             // Sim2 should have been renamed to SimulationVariant35
             Assert.AreEqual(sim2.Name, "SimulationVariant35");

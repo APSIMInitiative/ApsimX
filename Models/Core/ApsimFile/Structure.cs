@@ -176,10 +176,13 @@
         {
             IModel newModel = Apsim.Clone(replacement);
             int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
-            modelToReplace.Parent.Children.Insert(index, newModel as Model);
+            modelToReplace.Parent.Children[index] = newModel;
             newModel.Parent = modelToReplace.Parent;
             newModel.Name = modelToReplace.Name;
             newModel.Enabled = modelToReplace.Enabled;
+
+            // Remove existing model from parent.
+            modelToReplace.Parent = null;
 
             // If a resource model (e.g. maize) is copied into replacements, and its
             // property values changed, these changed values will be overriden with the
@@ -189,7 +192,6 @@
             // necessary.
             newModel.ResourceName = null;
 
-            modelToReplace.Parent.Children.Remove(modelToReplace as Model);
             Apsim.ClearCaches(modelToReplace);
 
             // Don't call newModel.Parent.OnCreated(), because if we're replacing

@@ -187,7 +187,7 @@
                     if (instance is IModel model && !string.IsNullOrEmpty(model.ResourceName))
                     {
                         var resourceMembers = Resource.Instance.GetPropertiesFromResourceModel(model.ResourceName);
-                        if (resourceMembers.Contains(property))
+                        if (resourceMembers != null && resourceMembers.Contains(property))
                             return false;
                     }
 
@@ -240,18 +240,7 @@
                         return model.Children;
 
                     // Return a collection of child models that aren't from a resource.
-                    var resourceModel = Resource.Instance.GetModel(model.ResourceName);
-                    if (resourceModel != null)
-                    {
-                        List<IModel> resourceChildren = resourceModel.Children;
-                        return model.Children.Where(m => !resourceChildren.Any(rc => m.GetType() == rc.GetType() &&
-                                                                                     m.Name.Equals(rc.Name, StringComparison.InvariantCultureIgnoreCase)));
-                    }
-                    else
-                    {
-                        model.ResourceName = null;
-                        return model.Children;
-                    }
+                    return Resource.Instance.RemoveResourceChildren(model);
                 }
             }
         }
