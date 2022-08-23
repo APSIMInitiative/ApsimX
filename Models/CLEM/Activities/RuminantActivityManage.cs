@@ -1719,7 +1719,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"This activity will stop the simulation if the number of breeders exceeds the <i>Maximum number of breeders to stop multiplier</i> <span class=\"setvalue\">{MaxBreedersMultiplierToStop.ToString("#,###")}</span> x <i>Maximum number of breeders</i> which equates to <span class=\"setvalue\">{(MaxBreedersMultiplierToStop * MaximumBreedersKept).ToString("#,###")}</span> individuals.");
+                htmlWriter.Write($"This activity will stop the simulation if the number of breeders exceeds the <i>Maximum number of breeders to stop multiplier</i> <span class=\"setvalue\">{MaxBreedersMultiplierToStop:#0.###}</span> x <i>Maximum number of breeders</i> which equates to <span class=\"setvalue\">{MaxBreedersMultiplierToStop * MaximumBreedersKept:#,###}</span> individuals.");
                 htmlWriter.Write("</div>");
 
                 // adjust herd
@@ -1738,7 +1738,7 @@ namespace Models.CLEM.Activities
                             adjusted = "males";
                     }
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The initial number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the defined maximum herd by scaling the initial population defined by the ruminant cohorts");
+                    htmlWriter.Write($"The number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the maximum herd by scaling the initial ruminant cohorts at the start of the simulation.");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("</div>");
                 }
@@ -1839,7 +1839,7 @@ namespace Models.CLEM.Activities
                     else if (MaximumSiresKept < 1)
                         htmlWriter.Write("The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">" + (Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) + "</span> individuals");
                     else
-                        htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span> will be kept");
+                        htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span> will be maintained");
                     htmlWriter.Write("</div>");
 
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

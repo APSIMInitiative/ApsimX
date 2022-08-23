@@ -9,6 +9,7 @@ using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -268,10 +269,33 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
-            return html;
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
+                switch (GroupStyle)
+                {
+                    case SummarizeRuminantHerdStyle.Classic:
+                        htmlWriter.Write("with age in years and a column for sex");
+                        break;
+                    case SummarizeRuminantHerdStyle.ByClass:
+                        htmlWriter.Write("grouped by class");
+                        break;
+                    case SummarizeRuminantHerdStyle.BySexClass:
+                        htmlWriter.Write("grouped by a combination of sex and class");
+                        break;
+                    case SummarizeRuminantHerdStyle.ByAgeYears:
+                        htmlWriter.Write("grouped by age (in years)");
+                        break;
+                    case SummarizeRuminantHerdStyle.ByAgeMonths:
+                        htmlWriter.Write("grouped by age (in months)");
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString();
+            }
         }
-
     }
 
 
