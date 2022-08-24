@@ -548,9 +548,13 @@ namespace Models.CLEM.Resources
                     html += " by the pricing groups provided for the RuminantType.";
                     break;
                 case RuminantTransactionsGroupingStyle.ByClass:
-                    html += " by the class of individual.";
+                    html += " by the class of individuals.";
+                    break;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    html += " by the sex and class of individuals.";
                     break;
                 default:
+                    html += " by [Unknown grouping style]";
                     break;
             }
             html += "</div>";
