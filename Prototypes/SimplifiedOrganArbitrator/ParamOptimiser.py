@@ -45,6 +45,8 @@ frequency = 2500  # Set Frequency To 2500 Hertz
 duration = 1000  # Set Duration To 1000 ms == 1 second
 # %matplotlib inline
 
+pd.set_option('display.max_rows', 100)
+
 # +
 Path = 'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise'
 
@@ -104,7 +106,14 @@ def findNextChild(Parent,ChildName):
 def findModel(Parent,PathElements):
     for pe in PathElements:
         Parent = findNextChild(Parent,pe)
-    return Parent    
+    return Parent   
+
+def replaceModel(Parent,modelPath,New):
+    PathElements = modelPath.split('.')
+    if PathElements[-1][-1] != "]":
+        findModel(Parent,PathElements[:-1])[PathElements[-1]] = New
+    else:
+        findModel(Parent,PathElements[:-1])[PathElements[-1][0]][int(PathElements[-1][-2])-1] = New
 
 def StopReporting(WheatApsimx,modelPath):
     PathElements = modelPath.split('.')
@@ -129,24 +138,12 @@ def ApplyParamReplacementSet(paramValues,paramNames,filePath):
     with open(filePath,'r',encoding="utf8") as ApsimxJSON:
         Apsimx = json.load(ApsimxJSON)
         ApsimxJSON.close()
-    
-    ## Remove old prameterSet manager in replacements
-    removeModel(Apsimx,'Replacements.SetCropParameters')
 
     ## Add crop coefficient overwrite into replacements
-    codeString = "using Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n     {\r\n        object Pval = 0; \r\n    "
     for p in range(len(paramValues)):
-        codeString +=  "         Pval ="
-        codeString += str(paramValues[p])
-        codeString += ';\r\n         zone.Set(\"'
-        codeString += paramNames[p]
-        codeString += '\", Pval);  \r\n'
-        
-    codeString += '\r\n}\r\n}\r\n  }'
-
-    SetCropParams["Code"] = codeString
-
-    AppendModeltoModelofType(Apsimx,'Models.Core.Replacements, Models',SetCropParams)
+        replaceModel(Apsimx,
+                     paramNames[p],
+                     paramValues[p])
 
     with open(filePath,'w') as ApsimxJSON:
         json.dump(Apsimx,ApsimxJSON,indent=2)
@@ -163,32 +160,28 @@ def makeLongString(SimulationSet):
 def CalcScaledValue(Value,RMax,RMin):
     return (Value - RMin)/(RMax-RMin)
 # +
-def Preparefile(filePath):
-    ## revert .apximx file to last comitt
+def Preparefile():
 #     !del C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db
-    command= "git --git-dir=C:/GitHubRepos/ApsimX/.git --work-tree=C:/GitHubRepos/ApsimX checkout " + filePath 
-    comm=shlex.split(command) # This will convert the command into list format
-    subprocess.run(comm, shell=True) 
-    ## Add blank manager into each simulation
-    with open(filePath,'r',encoding="utf8") as ApsimxJSON:
-        Apsimx = json.load(ApsimxJSON)
-    ApsimxJSON.close()
-    AppendModeltoModelofTypeAndDeleteOldIfPresent(Apsimx,'Models.Core.Zone, Models',BlankManager)
-    with open(filePath,'w') as ApsimxJSON:
-        json.dump(Apsimx,ApsimxJSON,indent=2)
+
     
-def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet,paramsTried):        
-    ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx') # write marameter set into model
+def runModelItter(paramSet,OptimisationVariables,SimulationSet,paramsTried):        
+    paramAddresses = [ParamData.loc[x,'Address'] for x in paramSet.index]
+    absoluteParamValues = deriveIfRelativeTo(paramSet)
+    ApplyParamReplacementSet(absoluteParamValues,paramAddresses,Path+'.apsimx') # write parameter set into model
     start = dt.datetime.now()
     simSet = makeLongString(SimulationSet) # make command string with simulations to run
     subprocess.run(['C:/GitHubRepos/ApsimX/bin/Debug/netcoreapp3.1/Models.exe',
                     Path+'.apsimx',
-                   simSet], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  # Run simulations
+                   simSet], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)  # Run simulations
     endrun = dt.datetime.now()
     runtime = (endrun-start).seconds
     con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db')
-    ObsPred = pd.read_sql("Select * from PredictedObserved",con)  # read observed and predicted data
-    con.close()
+    try:
+        ObsPred = pd.read_sql("Select * from PredictedObserved",con)  # read observed and predicted data
+        con.close()
+    except:
+        con.close()
+        print("Simulations must not have run as no data in PredictedObserved")
     DataSize = pd.DataFrame(VariableWeights.loc[OptimisationVariables,step])  #data frame with weighting for each variable
     DataSize.loc[:,'size'] =  [ObsPred.loc[:,"Observed."+v].dropna().size for v in OptimisationVariables] # add the data size for each variable
     DataSize.loc[:,'sizeBalance'] = [round(DataSize.loc[:,'size'].max()/DataSize.loc[v,'size']) for v in DataSize.index]  # add size wieghting for each variable
@@ -213,53 +206,37 @@ def runModelItter(paramNames,paramValues,OptimisationVariables,SimulationSet,par
             indloc+=1
     RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
 
-    if (RegStats.NSE > globals()["best"]):
-        globals()["best"] = RegStats.NSE
-        graph = plt.figure(figsize=(20,20))
-        for var in OptimisationVariables:
-            varDat = ScObsPre.Var==var
-            vmarker = VariableWeights.loc[var,'marker']
-            vcolor = VariableWeights.loc[var,'color']
-            plt.plot(ScObsPre.loc[varDat,'ScObs'],ScObsPre.loc[varDat,'ScPred'],vmarker,color=vcolor,label=var[11:])
-        plt.legend(loc=(.05,1.05))
-        plt.ylabel('sc Predicted')
-        plt.xlabel('sc Observed')
-
     retVal = max(RegStats.NSE,0) *-1
     globals()["itteration"] += 1
     print("i" + str(globals()["itteration"] )+"  "+str(paramsTried) + " run completed " +str(len(SimulationSet)) + ' sims in ' + str(runtime) + ' seconds.  NSE = '+str(RegStats.NSE))
     return retVal
 
 def runFittingItter(fittingParams):
-    
-    paramAddresses = ParamData.Address.values.tolist()
     paramSetForItter = currentParamVals.copy() #Start off with full current param set
     fittingParamsDF = pd.Series(index = paramsToOptimise,data=fittingParams)
     for p in fittingParamsDF.index:
         paramSetForItter[p] = fittingParamsDF[p] #replace parameters being fitted with current itteration values
-    for p in paramSetForItter.index:
-        if ParamData.loc[p,'Min_feasible']==np.nan: #for paramteters that reference another
-            paramSetForItter[p] = paramSetForItter[ParamData.loc[p,'BestValue']] #update with current itterations value
-    paramValues = paramSetForItter.values.tolist()
-    return runModelItter(paramAddresses,paramValues,OptimisationVariables,SimulationSet,fittingParams)
+    return runModelItter(paramSetForItter,OptimisationVariables,SimulationSet,fittingParams)
 
-def evalExpressions(value,refCol):
-    if type(value) != str:
-        ret = value
-    else:
-        members = value.split()
-        if len(members)==1:
-            ret = ParamData.loc[members[0],refCol]
-        else:
-            ref = ParamData.loc[members[0],refCol]
-            opp = members[1]
-            num = float(members[2])
-            expression = 'ref'+opp+'num'
-            ret = parser.parse(expression).evaluate({'ref':ref,'num':num})
-    return float(ret)
+def deriveIfRelativeTo(paramSet):
+    derived = paramSet.copy()
+    for p in paramSet.index:
+          if RelativeTo[p] != 'nan': #for paramteters that reference another
+            members = RelativeTo[p].split()
+            if len(members) == 1:
+                derived[p] = paramSet[members[0]] #update with current itterations value
+            else:
+                ref = paramSet.loc[members[0]]
+                opp = members[1]
+                expression = 'ref'+opp+'num'
+                num = paramSet[p]
+                derived[p] = parser.parse(expression).evaluate({'ref':ref,'num':num})
+    return derived.values.tolist()
 
-def runModelFullset(paramNames,paramValues):        
-    ApplyParamReplacementSet(paramValues,paramNames,Path+'.apsimx')
+def runModelFullset(paramSet):      
+    paramAddresses = [ParamData.loc[x,'Address'] for x in paramSet.index]
+    absoluteParamValues = deriveIfRelativeTo(paramSet)
+    ApplyParamReplacementSet(absoluteParamValues,paramAddresses,Path+'.apsimx')
     start = dt.datetime.now()
     subprocess.run(['C:/GitHubRepos/ApsimX/bin/Debug/netcoreapp3.1/Models.exe',
                     Path+'.apsimx'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -280,57 +257,64 @@ best = 0
 
 OptimisationSteps
 
-bestParamVals = pd.Series(index = ParamData.index,data=[evalExpressions(x,'BestValue') for x in ParamData.loc[:,'BestValue']])
+bestParamVals = pd.Series(index = ParamData.index,data=ParamData.loc[:,'BestValue'])
 bestParamVals
 
 bounds = pd.Series(index= ParamData.index,
-                   data = [(evalExpressions(ParamData.loc[x,'Min_feasible'],'Min_feasible'),evalExpressions(ParamData.loc[x,'Max_feasible'],'Max_feasible')) for x in ParamData.index])
+                   data = [(ParamData.loc[x,'Min_feasible'],ParamData.loc[x,'Max_feasible']) for x in ParamData.index])
 bounds
 
-# +
-# runModelFullset(ParamData.Address.values.tolist(),bestParamVals.values.tolist()) #run simulations with current best fit params
+RelativeTo = pd.Series(index = ParamData.index,data=ParamData.loc[:,'RelativeTo'],dtype=str)
+RelativeTo
+
+AbsoluteBestParams =  pd.Series(index = ParamData.index,data=deriveIfRelativeTo(bestParamVals))
+AbsoluteBestParams
 
 # +
-step = 'Nitrogen response'
-OptimisationVariables = VariableWeights.loc[:,step].dropna().index.tolist()
-con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db')
-ObsPred = pd.read_sql("Select * from PredictedObserved",con)
-con.close()
-DataSize = pd.DataFrame(VariableWeights.loc[OptimisationVariables,step])
-DataSize.loc[:,'size'] =  [ObsPred.loc[:,"Observed."+v].dropna().size for v in OptimisationVariables]
-DataSize.loc[:,'sizeBalance'] = [round(DataSize.loc[:,'size'].max()/DataSize.loc[v,'size']) for v in DataSize.index]
-DataSize.loc[:,'weighting'] = DataSize.loc[:,step] * DataSize.loc[:,'sizeBalance']
-ScObsPre = pd.DataFrame(columns = ['ScObs','ScPred','Var','SimulationID'])
-indloc = 0
-for var in OptimisationVariables:
-    weighting = DataSize.loc[var,'weighting']
-    DataPairs = ObsPred.reindex(['Observed.'+var,'Predicted.'+var,'SimulationID'],axis=1).dropna()
-    DataPairs = pd.DataFrame(index = np.repeat(DataPairs.index,weighting),
-                              data = np.repeat(DataPairs.values,weighting ,axis=0),columns = DataPairs.columns)
-    DataPairs.reset_index(inplace=True)
-    for c in DataPairs.columns:
-        DataPairs.loc[:,c] = pd.to_numeric(DataPairs.loc[:,c])
-    VarMax = max(DataPairs.loc[:,'Observed.'+var].max(),DataPairs.loc[:,'Predicted.'+var].max())
-    VarMin = min(DataPairs.loc[:,'Observed.'+var].min(),DataPairs.loc[:,'Predicted.'+var].min())
-    for x in DataPairs.index:
-        ScObsPre.loc[indloc,'ScObs'] = CalcScaledValue(DataPairs.loc[x,'Observed.'+var],VarMax,VarMin)
-        ScObsPre.loc[indloc,'ScPred'] = CalcScaledValue(DataPairs.loc[x,'Predicted.'+var],VarMax,VarMin)
-        ScObsPre.loc[indloc,'Var'] = var
-        ScObsPre.loc[indloc,'SimulationID'] = DataPairs.loc[x,'SimulationID']
-        indloc+=1
-    varDat = ScObsPre.Var==var
-    vmarker = VariableWeights.loc[var,'marker']
-    vcolor = VariableWeights.loc[var,'color']
-    plt.plot(ScObsPre.loc[varDat,'ScObs'],ScObsPre.loc[varDat,'ScPred'],vmarker,color=vcolor,label=var[11:])
-RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
-plt.legend(loc=(.05,1.05))
-plt.ylabel('sc Predicted')
-plt.xlabel('sc Observed')
+# step = 'Potential canopy'
+# OptimisationVariables = VariableWeights.loc[:,step].dropna().index.tolist()
+# con = sqlite3.connect(r'C:\GitHubRepos\ApsimX\Prototypes\SimplifiedOrganArbitrator\FodderBeetOptimise.db')
+# ObsPred = pd.read_sql("Select * from PredictedObserved",con)
+# con.close()
+# DataSize = pd.DataFrame(VariableWeights.loc[OptimisationVariables,step])
+# DataSize.loc[:,'size'] =  [ObsPred.loc[:,"Observed."+v].dropna().size for v in OptimisationVariables]
+# DataSize.loc[:,'sizeBalance'] = [round(DataSize.loc[:,'size'].max()/DataSize.loc[v,'size']) for v in DataSize.index]
+# DataSize.loc[:,'weighting'] = DataSize.loc[:,step] * DataSize.loc[:,'sizeBalance']
+# ScObsPre = pd.DataFrame(columns = ['ScObs','ScPred','Var','SimulationID'])
+# indloc = 0
+# for var in OptimisationVariables:
+#     weighting = DataSize.loc[var,'weighting']
+#     DataPairs = ObsPred.reindex(['Observed.'+var,'Predicted.'+var,'SimulationID'],axis=1).dropna()
+#     DataPairs = pd.DataFrame(index = np.repeat(DataPairs.index,weighting),
+#                               data = np.repeat(DataPairs.values,weighting ,axis=0),columns = DataPairs.columns)
+#     DataPairs.reset_index(inplace=True)
+#     for c in DataPairs.columns:
+#         DataPairs.loc[:,c] = pd.to_numeric(DataPairs.loc[:,c])
+#     VarMax = max(DataPairs.loc[:,'Observed.'+var].max(),DataPairs.loc[:,'Predicted.'+var].max())
+#     VarMin = min(DataPairs.loc[:,'Observed.'+var].min(),DataPairs.loc[:,'Predicted.'+var].min())
+#     for x in DataPairs.index:
+#         ScObsPre.loc[indloc,'ScObs'] = CalcScaledValue(DataPairs.loc[x,'Observed.'+var],VarMax,VarMin)
+#         ScObsPre.loc[indloc,'ScPred'] = CalcScaledValue(DataPairs.loc[x,'Predicted.'+var],VarMax,VarMin)
+#         ScObsPre.loc[indloc,'Var'] = var
+#         ScObsPre.loc[indloc,'SimulationID'] = DataPairs.loc[x,'SimulationID']
+#         indloc+=1
+#     varDat = ScObsPre.Var==var
+#     vmarker = VariableWeights.loc[var,'marker']
+#     vcolor = VariableWeights.loc[var,'color']
+#     plt.plot(ScObsPre.loc[varDat,'ScObs'],ScObsPre.loc[varDat,'ScPred'],vmarker,color=vcolor,label=var[11:])
+# RegStats = MUte.MathUtilities.CalcRegressionStats('LN',ScObsPre.loc[:,'ScPred'].values,ScObsPre.loc[:,'ScObs'].values)
+# plt.legend(loc=(.05,1.05))
+# plt.ylabel('sc Predicted')
+# plt.xlabel('sc Observed')
 
-#retVal = max(RegStats.NSE,0) *-1
+# retVal = max(RegStats.NSE,0) *-1
+# -
 
-# +
-for step in OptimisationSteps[3:]:
+OptimisationSteps
+
+SimulationSet
+
+for step in OptimisationSteps[1:]:
     itteration = 0
     globals()["best"] = 0
     print(step + " Optimistion step")
@@ -365,11 +349,11 @@ for step in OptimisationSteps[3:]:
     print("bound constrained start params values are")
     print(FirstX)
     
-    Preparefile(Path+'.apsimx')
+    Preparefile()
 
-    RandomCalls = len(paramsToOptimise) * 12
+    RandomCalls = min(len(paramsToOptimise) * 10,50)
     print(str(RandomCalls)+" Random calls")
-    OptimizerCalls = max(20,len(paramsToOptimise) * 4)
+    OptimizerCalls = 25
     print(str(OptimizerCalls)+" Optimizer calls")
     TotalCalls = RandomCalls + OptimizerCalls
 
@@ -382,16 +366,13 @@ for step in OptimisationSteps[3:]:
     for p in paramsToOptimise:
         bestParamVals[p]= bestfits[pi]
         pi +=1
-    for p in bestParamVals.index:
-        if ParamData.loc[p,'Min_feasible']==np.nan: #for paramteters that reference another
-            bestParamVals[p] = bestParamVals[ParamData.loc[p,'BestValue']] #update with current itterations value
     print("")
     print("BestFits for "+step)
     print(paramsToOptimise)
     print(bestfits)
     print("")
 
-runModelFullset(ParamData.Address.values.tolist(),bestParamVals.values.tolist()) #run simulations with current best fit params
+runModelFullset(bestParamVals) #run simulations with current best fit params
 
 # + tags=[]
 for step in OptimisationSteps:
