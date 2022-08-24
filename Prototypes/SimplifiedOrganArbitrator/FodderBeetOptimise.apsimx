@@ -253,7 +253,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0Â°C ([Chakwizira_etal_2016a]).",
+                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0°C ([Chakwizira_etal_2016a]).",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -345,7 +345,7 @@
                             },
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25â€“30Â°C with a maximum of 45Â°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
+                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25–30°C with a maximum of 45°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
                               "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -469,7 +469,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is an empirical fit where 12.5Â°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
+                      "Text": "This is an empirical fit where 12.5°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -546,7 +546,7 @@
                         },
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200Â°Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
+                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200°Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -581,7 +581,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This an empirical fit - 400Â°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "This an empirical fit - 400°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -654,7 +654,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The 800Â°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "The 800°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -693,7 +693,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is estimated to be 3600Â°Cd\r\nA value of 3600Â°Cd (i.e. sum of Â°Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the â€œMaturityâ€ phase. Accumulated thermal time (TTsum) for each phase (plantedâ€“vegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
+                      "Text": "This is estimated to be 3600°Cd\r\nA value of 3600°Cd (i.e. sum of °Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the “Maturity� phase. Accumulated thermal time (TTsum) for each phase (planted–vegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1124,7 +1124,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 79.7033786061271,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -1134,7 +1134,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 79.7033786061271,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -1144,7 +1144,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -1407,7 +1407,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -1417,7 +1417,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -1427,7 +1427,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -1640,7 +1640,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.035,
+                              "FixedValue": 0.01,
                               "Units": null,
                               "Name": "MaxNConc",
                               "Children": [],
@@ -1663,7 +1663,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.2,
+                                  "FixedValue": 1.5,
                                   "Units": null,
                                   "Name": "CritNFactor",
                                   "Children": [],
@@ -2175,40 +2175,63 @@
                   "Name": "SenescenceRateFunction",
                   "Children": [
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "CoverEffect",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.9,
-                            1.0
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "RelativeRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.25,
+                                0.5,
+                                0.75,
+                                1.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.0,
+                                0.09181946307107787,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Canopy.CoverTotal",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Y": [
-                            0.0,
-                            0.0,
-                            0.005
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Canopy.CoverTotal",
-                          "Name": "XValue",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0001,
+                          "Units": "/d",
+                          "Name": "MaxRate",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2220,40 +2243,61 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "AgeEffect",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            9.0,
-                            12.0
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "RelativeRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                15.0,
+                                30.0,
+                                45.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.08844051867729903,
+                                0.22687062790413612,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].NodeNumber",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Y": [
-                            0.0,
-                            0.0,
-                            0.005
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].NodeNumber",
-                          "Name": "XValue",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.009960649671152885,
+                          "Units": "/d",
+                          "Name": "MaxRate",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2348,7 +2392,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -2358,7 +2402,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -2574,7 +2618,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.5,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -2704,7 +2748,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 56.64204955335168,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -2714,7 +2758,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 56.64204955335168,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -2724,7 +2768,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
+                          "FixedValue": 20.43787279164357,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -2857,7 +2901,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.5,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -3001,18 +3045,55 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.025,
-                          "Units": null,
+                          "$type": "Models.Functions.MinimumFunction, Models",
                           "Name": "Critical",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.035,
+                              "Units": null,
+                              "Name": "MaxNConc",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "CritNConc",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Nitrogen.ConcFunctions.Minimum",
+                                  "Name": "MinNConc",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.5707156371757194,
+                                  "Units": null,
+                                  "Name": "CritNFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.025,
+                          "FixedValue": 0.013545440851570027,
                           "Units": null,
                           "Name": "Minimum",
                           "Children": [],
@@ -3033,8 +3114,8 @@
                 {
                   "$type": "Models.PMF.EnergyBalance, Models",
                   "Albedo": 0.2,
-                  "Gsmax350": 0.02,
-                  "R50": 150.0,
+                  "Gsmax350": 0.010314912483097547,
+                  "R50": 59.689472998310734,
                   "KDead": 0.0,
                   "LAIDead": 0.0,
                   "Fw": 0.0,
@@ -3215,7 +3296,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.74,
+                          "FixedValue": 0.95,
                           "Units": null,
                           "Name": "PotentialExtinctionCoeff",
                           "Children": [
@@ -3241,7 +3322,7 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                0.99,
+                                0.6417916048816809,
                                 1.0
                               ],
                               "Y": [
@@ -3286,7 +3367,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.2,
+                      "FixedValue": 0.578135838582281,
                       "Units": null,
                       "Name": "DeadExtinctionCoefficient",
                       "Children": [],
@@ -3305,7 +3386,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2.2,
+                      "FixedValue": 1.8,
                       "Units": null,
                       "Name": "RUE",
                       "Children": [],
@@ -3341,7 +3422,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            1.0,
+                            0.5542824893023762,
                             1.0
                           ],
                           "Y": [
@@ -3447,15 +3528,15 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            15.0,
-                            26.0,
+                            14.100662607203542,
+                            30.0,
                             45.0
                           ],
                           "Y": [
-                            0.1,
+                            0.0,
                             1.0,
                             1.0,
-                            0.1
+                            0.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -3612,14 +3693,87 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     1.0,
-                                    20.0
+                                    8.79480284154194,
+                                    20.0,
+                                    124.98770334862797
                                   ],
                                   "Y": [
                                     0.05,
-                                    1.0
+                                    0.5,
+                                    1.0,
+                                    0.2
                                   ],
                                   "Name": "XYPairs",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph, Models",
+                                      "Caption": null,
+                                      "Axis": [
+                                        {
+                                          "$type": "Models.Axis, Models",
+                                          "Type": 0,
+                                          "Title": "Y",
+                                          "Inverted": false,
+                                          "Minimum": "NaN",
+                                          "Maximum": "NaN",
+                                          "Interval": "NaN",
+                                          "DateTimeAxis": false,
+                                          "CrossesAtZero": false
+                                        },
+                                        {
+                                          "$type": "Models.Axis, Models",
+                                          "Type": 3,
+                                          "Title": "X",
+                                          "Inverted": false,
+                                          "Minimum": "NaN",
+                                          "Maximum": "NaN",
+                                          "Interval": "NaN",
+                                          "DateTimeAxis": false,
+                                          "CrossesAtZero": false
+                                        }
+                                      ],
+                                      "LegendPosition": 5,
+                                      "LegendOrientation": 0,
+                                      "AnnotationPosition": 0,
+                                      "DisabledSeries": [],
+                                      "LegendOutsideGraph": false,
+                                      "Name": "Graph",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Series, Models",
+                                          "Type": 1,
+                                          "XAxis": 3,
+                                          "YAxis": 0,
+                                          "ColourArgb": -65536,
+                                          "FactorToVaryColours": null,
+                                          "FactorToVaryMarkers": null,
+                                          "FactorToVaryLines": null,
+                                          "Marker": 11,
+                                          "MarkerSize": 0,
+                                          "Line": 0,
+                                          "LineThickness": 0,
+                                          "TableName": null,
+                                          "XFieldName": ".Simulations.Replacements.FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X",
+                                          "YFieldName": ".Simulations.Replacements.FodderBeet.Leaf.DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y",
+                                          "X2FieldName": null,
+                                          "Y2FieldName": null,
+                                          "ShowInLegend": false,
+                                          "IncludeSeriesNameInLegend": false,
+                                          "Cumulative": false,
+                                          "CumulativeX": false,
+                                          "Filter": null,
+                                          "Name": "Series",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -3681,8 +3835,8 @@
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    0.5,
-                                    1.0,
+                                    0.29016278842752025,
+                                    0.8144947817745277,
                                     2.0
                                   ],
                                   "Y": [
@@ -3833,7 +3987,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "A two stage phyllochron (i.e. 100â€“50Â°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50Â°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
+                      "Text": "A two stage phyllochron (i.e. 100–50°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3914,7 +4068,7 @@
                           ],
                           "Y": [
                             0.0,
-                            0.5,
+                            0.6051409516056384,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -3944,7 +4098,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.025,
+                  "FixedValue": 0.03,
                   "Units": "m2",
                   "Name": "AreaLargestLeaf",
                   "Children": [],
@@ -4451,7 +4605,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 2.9308948568377473,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -4584,7 +4738,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.22218642885474493,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4714,7 +4868,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -4724,7 +4878,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -4734,7 +4888,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 100.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -4848,7 +5002,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.3,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4867,7 +5021,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.3,
+                                  "FixedValue": 0.5,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4947,7 +5101,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.035,
+                              "FixedValue": 0.02,
                               "Units": null,
                               "Name": "MaxNConc",
                               "Children": [],
@@ -4970,7 +5124,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.2,
+                                  "FixedValue": 1.5,
                                   "Units": null,
                                   "Name": "CritNFactor",
                                   "Children": [],
@@ -6127,7 +6281,7 @@
                           ],
                           "Y": [
                             0.0,
-                            0.5,
+                            0.2757999252866189,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -7399,7 +7553,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\nâ€¢\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\nâ€¢\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
+              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\n•\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\n•\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
               "Name": "Trial details",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -8604,6 +8758,15 @@
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "",
+                      "Parameters": null,
+                      "Name": "SetCropParameters",
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -10980,7 +11143,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.TotalDead.Wt",
+                      "YFieldName": "FodderBeet.AboveGroundDead.Wt",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11009,7 +11172,7 @@
                       "LineThickness": 0,
                       "TableName": "ObservedData",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.TotalDead.Wt",
+                      "YFieldName": "FodderBeet.AboveGroundDead.Wt",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11543,7 +11706,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.TotalDead.N",
+                      "YFieldName": "FodderBeet.AboveGroundDead.N",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11572,7 +11735,7 @@
                       "LineThickness": 0,
                       "TableName": "ObservedData",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.TotalDead.N",
+                      "YFieldName": "FodderBeet.AboveGroundDead.N",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -12436,7 +12599,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.TotalDead.NConc",
+                      "YFieldName": "FodderBeet.AboveGroundDead.NConc",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -12465,7 +12628,7 @@
                       "LineThickness": 0,
                       "TableName": "ObservedData",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.TotalDead.Nconc",
+                      "YFieldName": "FodderBeet.AboveGroundDead.Nconc",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
