@@ -180,9 +180,9 @@ namespace Models.CLEM
                     else
                     {
                         htmlWriter.Write(@"
-                        <canvas id=""myChart_" + this.Name + @"""><p>Unable to display graph in browser</p></canvas>
+                        <canvas id=""myChart_" + this.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
                         <script>
-                        var ctx = document.getElementById('myChart_" + this.Name + @"').getContext('2d');
+                        var ctx = document.getElementById('myChart_" + this.FullPath + @"').getContext('2d');
                         var myChart = new Chart(ctx, {
                         responsive:false,
                         maintainAspectRatio: true,

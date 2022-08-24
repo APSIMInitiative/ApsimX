@@ -166,7 +166,6 @@ namespace Models.CLEM.Reporting
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)
-//                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.ReportConvertTo([{resHolder.Name}].{pasture.NameWithParent}.{pastureVariable}, {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}) as {pasture.Name}.{pastureVariable}");
                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
 
                 // by pool measures
@@ -175,7 +174,6 @@ namespace Models.CLEM.Reporting
                     for (int j = 0; j <= 12; j++)
                     {
                         variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j})) as {pasture.Name}.{poolVariable}.{j}");
-                        //variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Pool({j}, true).{poolVariable} / [{resHolder.Name}].{pasture.NameWithParent}.ConvertTo({ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}) as {pasture.Name}.{poolVariable}.{j}");
                     }
                 }
             }
@@ -184,44 +182,6 @@ namespace Models.CLEM.Reporting
             variableNames = variableNames.OrderBy(a => a).ToList(); 
             variableNames.Insert(0, "[Clock].Today as Date");
             VariableNames = variableNames.ToArray();
-
-            //if (VariableNames != null)
-            //{
-            //    for (int i = 0; i < this.VariableNames.Length; i++)
-            //    {
-            //        // each variable name is now a GrazeFoodStoreType
-            //        bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
-            //        if (!isDuplicate && this.VariableNames[i] != string.Empty)
-            //        {
-            //            if (this.VariableNames[i].StartsWith("["))
-            //                variableNames.Add(this.VariableNames[i]);
-            //            else
-            //            {
-            //                string[] splitName = this.VariableNames[i].Split('.');
-            //                if (splitName.Count() == 2)
-            //                {
-            //                    // make each pool entry
-            //                    for (int j = 0; j <= 12; j++)
-            //                    {
-            //                        if (splitName[1].ToLower() != "growth" | j == 0)
-            //                            variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Pool(" + j.ToString() + ", true)." + splitName[1] + " as " + splitName[0] + "" + j.ToString() + "" + splitName[1]);
-            //                    }
-            //                    if (splitName[1] == "Amount")
-            //                    {
-            //                        // add amounts
-            //                        variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as TotalAmount");
-            //                        variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as TotalkgPerHa");
-            //                    }
-            //                }
-            //                else
-            //                    throw new ApsimXException(this, "Invalid report property. Expecting full property link or [GrazeFoodStoreTypeName].Property");
-            //            }
-            //        }
-            //    }
-            //    // check if clock.today was included.
-            //    if(!variableNames.Contains("[Clock].Today as Date"))
-            //        variableNames.Insert(0, "[Clock].Today as Date");
-            //}
 
             if (EventNames == null || EventNames.Count() == 0)
                 EventNames = new string[] { "[Clock].CLEMHerdSummary" };
