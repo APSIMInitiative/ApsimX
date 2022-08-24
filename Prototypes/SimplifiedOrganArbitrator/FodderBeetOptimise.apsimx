@@ -253,7 +253,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0ÃÂÃÂÃÂÃÂ°C ([Chakwizira_etal_2016a]).",
+                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0C ([Chakwizira_etal_2016a]).",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -345,7 +345,7 @@
                             },
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂ¢ÃÂÃÂ30ÃÂÃÂÃÂÃÂ°C with a maximum of 45ÃÂÃÂÃÂÃÂ°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
+                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0080\u00c3\u0082\u00c2\u009c30\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0C with a maximum of 45\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
                               "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -469,7 +469,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is an empirical fit where 12.5ÃÂÃÂÃÂÃÂ°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
+                      "Text": "This is an empirical fit where 12.5\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -546,7 +546,7 @@
                         },
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200ÃÂÃÂÃÂÃÂ°Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
+                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -581,7 +581,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This an empirical fit - 400ÃÂÃÂÃÂÃÂ°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "This an empirical fit - 400\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -654,7 +654,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The 800ÃÂÃÂÃÂÃÂ°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "The 800\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -693,7 +693,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is estimated to be 3600ÃÂÃÂÃÂÃÂ°Cd\r\nA value of 3600ÃÂÃÂÃÂÃÂ°Cd (i.e. sum of ÃÂÃÂÃÂÃÂ°Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬Ã\u0085ÃÂMaturityÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ phase. Accumulated thermal time (TTsum) for each phase (plantedÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂ¢ÃÂÃÂvegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
+                      "Text": "This is estimated to be 3600\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd\r\nA value of 3600\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd (i.e. sum of \u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the \u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac\u00c3\u0083\u0085\u00c3\u0082\u00c2\u0093Maturity\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac phase. Accumulated thermal time (TTsum) for each phase (planted\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0080\u00c3\u0082\u00c2\u009cvegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1124,7 +1124,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 79.7033786061271,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -1134,7 +1134,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 79.7033786061271,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -1427,7 +1427,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 100.0,
+                          "FixedValue": 1.7668008773444253,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -2194,7 +2194,7 @@
                               "Y": [
                                 0.0,
                                 0.0,
-                                0.09181946307107787,
+                                0.5967748855439834,
                                 1.0,
                                 1.0
                               ],
@@ -2229,7 +2229,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0001,
+                          "FixedValue": 0.004620873690749359,
                           "Units": "/d",
                           "Name": "MaxRate",
                           "Children": [],
@@ -2260,8 +2260,8 @@
                               ],
                               "Y": [
                                 0.0,
-                                0.08844051867729903,
-                                0.22687062790413612,
+                                0.0,
+                                0.0,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -2295,7 +2295,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.009960649671152885,
+                          "FixedValue": 0.004373912773641921,
                           "Units": "/d",
                           "Name": "MaxRate",
                           "Children": [],
@@ -2392,7 +2392,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 100.0,
+                          "FixedValue": 66.75974986159754,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -2402,7 +2402,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 100.0,
+                          "FixedValue": 66.75974986159754,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -2412,7 +2412,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 12.82876792913538,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -2618,7 +2618,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.5,
+                                  "FixedValue": 0.43787486066071424,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -2748,7 +2748,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 56.64204955335168,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -2758,7 +2758,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 56.64204955335168,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -2768,7 +2768,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 20.43787279164357,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -3073,7 +3073,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.5707156371757194,
+                                  "FixedValue": 1.5,
                                   "Units": null,
                                   "Name": "CritNFactor",
                                   "Children": [],
@@ -3093,7 +3093,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.013545440851570027,
+                          "FixedValue": 0.016765500596190266,
                           "Units": null,
                           "Name": "Minimum",
                           "Children": [],
@@ -3114,8 +3114,8 @@
                 {
                   "$type": "Models.PMF.EnergyBalance, Models",
                   "Albedo": 0.2,
-                  "Gsmax350": 0.010314912483097547,
-                  "R50": 59.689472998310734,
+                  "Gsmax350": 0.014862311266983227,
+                  "R50": 172.43622708274387,
                   "KDead": 0.0,
                   "LAIDead": 0.0,
                   "Fw": 0.0,
@@ -3360,7 +3360,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.95,
+                          "FixedValue": 0.8841216819531543,
                           "Units": null,
                           "Name": "PotentialExtinctionCoeff",
                           "Children": [
@@ -3386,11 +3386,11 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                0.6417916048816809,
+                                0.3,
                                 1.0
                               ],
                               "Y": [
-                                0.5,
+                                1.0,
                                 1.0,
                                 1.0
                               ],
@@ -3431,7 +3431,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.578135838582281,
+                      "FixedValue": 0.5851208949021847,
                       "Units": null,
                       "Name": "DeadExtinctionCoefficient",
                       "Children": [],
@@ -3450,7 +3450,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.8,
+                      "FixedValue": 2.307253466162477,
                       "Units": null,
                       "Name": "RUE",
                       "Children": [],
@@ -3486,7 +3486,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.5542824893023762,
+                            0.6523095638552672,
                             1.0
                           ],
                           "Y": [
@@ -3592,7 +3592,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            14.100662607203542,
+                            10.460452835147072,
                             30.0,
                             45.0
                           ],
@@ -3757,9 +3757,9 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     1.0,
-                                    8.79480284154194,
-                                    20.0,
-                                    124.98770334862797
+                                    10.40106752610388,
+                                    19.876408772683817,
+                                    139.97896237194573
                                   ],
                                   "Y": [
                                     0.05,
@@ -3899,8 +3899,8 @@
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    0.29016278842752025,
-                                    0.8144947817745277,
+                                    0.4545526491957546,
+                                    0.890334877968712,
                                     2.0
                                   ],
                                   "Y": [
@@ -4051,7 +4051,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "A two stage phyllochron (i.e. 100ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂ¢ÃÂÃÂ50ÃÂÃÂÃÂÃÂ°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50ÃÂÃÂÃÂÃÂ°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
+                      "Text": "A two stage phyllochron (i.e. 100\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0080\u00c3\u0082\u00c2\u009c50\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u0082\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00b0Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4132,7 +4132,7 @@
                           ],
                           "Y": [
                             0.0,
-                            0.6051409516056384,
+                            0.6083345573204134,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -4162,7 +4162,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.03,
+                  "FixedValue": 0.031264223467691324,
                   "Units": "m2",
                   "Name": "AreaLargestLeaf",
                   "Children": [],
@@ -4669,7 +4669,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.9308948568377473,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -4802,7 +4802,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.22218642885474493,
+                                  "FixedValue": 0.22244602037739092,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4952,7 +4952,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 100.0,
+                          "FixedValue": 19.228797396490386,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -6345,7 +6345,7 @@
                           ],
                           "Y": [
                             0.0,
-                            0.2757999252866189,
+                            0.3348958703198959,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -7617,7 +7617,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\nÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂÃÂ¢\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\nÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂÃÂ¢\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
+              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\n\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00a2\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\n\u00c3\u0083\u00c2\u0083\u00c3\u0082\u00c2\u00a2\u00c3\u0083\u00c2\u00a2\u00c3\u0082\u00c2\u0082\u00c3\u0082\u00c2\u00ac\u00c3\u0083\u00c2\u0082\u00c3\u0082\u00c2\u00a2\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
               "Name": "Trial details",
               "Children": [],
               "IncludeInDocumentation": true,
