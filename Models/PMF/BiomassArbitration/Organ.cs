@@ -19,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, ICustomDocumentation
+    public class Organ : Model
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -31,10 +31,6 @@
         /// <summary>The surface organic matter model</summary>
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
-
-        /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
-        private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -483,8 +479,7 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading, the name of this organ
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -622,9 +617,6 @@
                     AutoDocumentation.DocumentModel(DetRate, tags, headingLevel + 2, indent);
                 }
 
-                if (biomassRemovalModel != null)
-                    biomassRemovalModel.Document(tags, headingLevel + 1, indent);
-            }
         }
     }
 

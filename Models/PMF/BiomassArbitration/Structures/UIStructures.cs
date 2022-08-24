@@ -16,7 +16,7 @@
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
     [ValidParent(ParentType = typeof(NutrientSupplyFunctions))]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class NutrientPoolFunctions : Model, ICustomDocumentation
+    public class NutrientPoolFunctions : Model
     {
         /// <summary>The demand for the structural fraction.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -41,8 +41,7 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -56,7 +55,7 @@
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+
         }
     }
 
@@ -67,7 +66,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
-    public class NutrientSupplyFunctions : Model, ICustomDocumentation
+    public class NutrientSupplyFunctions : Model
     {
         /// <summary>The supply from reallocaiton from senesed material</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -98,8 +97,7 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -113,7 +111,7 @@
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+
         }
     }
 
@@ -124,7 +122,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
-    public class NutrientDemandFunctions : Model, ICustomDocumentation
+    public class NutrientDemandFunctions : Model
     {
         /// <summary>The demand for the structural fraction.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -165,8 +163,7 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -180,7 +177,6 @@
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 

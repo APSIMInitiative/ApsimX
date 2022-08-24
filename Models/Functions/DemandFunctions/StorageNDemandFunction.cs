@@ -2,9 +2,7 @@
 using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
-using Models.PMF.Organs;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -26,10 +24,6 @@ namespace Models.Functions.DemandFunctions
 
         private IArbitration parentOrgan = null;
 
-        private Organ parentSimpleOrgan = null;
-
-        private string parentOrganType = "";
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -44,17 +38,8 @@ namespace Models.Functions.DemandFunctions
                 {
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
-                    parentOrganType = "IArbitration";
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
-                }
-                if (ParentClass is Organ)
-                {
-                    parentSimpleOrgan = ParentClass as Organ;
-                    ParentOrganIdentified = true;
-                    parentOrganType = "ISubscribeToBiomassArbitration";
-                    if (ParentClass is IPlant)
-                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
                 ParentClass = ParentClass.Parent;
             }
@@ -63,24 +48,6 @@ namespace Models.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            if (parentOrganType == "IArbitration")
-            {
-                double potentialAllocation = parentOrgan.potentialDMAllocation.Structural + parentOrgan.potentialDMAllocation.Metabolic;
-                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + potentialAllocation) - parentOrgan.Live.N);
-                NDeficit *= nitrogenDemandSwitch.Value();
-                return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
-            }
-            if (parentOrganType == "ISubscribeToBiomassArbitration")
-            {
-                double potentialAllocation = parentSimpleOrgan.Carbon.DemandsAllocated.Structural + parentSimpleOrgan.Carbon.DemandsAllocated.Metabolic;
-                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.Nitrogen.Total);
-                NDeficit *= nitrogenDemandSwitch.Value();
-                return Math.Max(0, NDeficit - parentSimpleOrgan.Nitrogen.Demands.Structural - parentSimpleOrgan.Nitrogen.Demands.Metabolic);
-            }
-            else
-                throw new Exception("Could not locate parent organ");
-        }
-
             double potentialAllocation = parentOrgan.potentialDMAllocation.Structural + parentOrgan.potentialDMAllocation.Metabolic;
             double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + potentialAllocation) - parentOrgan.Live.N);
             NDeficit *= nitrogenDemandSwitch.Value();

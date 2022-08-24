@@ -85,12 +85,6 @@ namespace Models.PMF.Organs
         /// <summary>The cost for remobilisation</summary>
         private IFunction remobilisationCost = null;
 
-        private IFunction RootDepthStressFactor = null;
-
-        private IFunction RootFrontCalcSwitch = null;
-
-        private IRootShape RootShape = null;
-
         /// <summary>Zone name</summary>
         new public string Name = null;
 
@@ -200,22 +194,15 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
-        /// <param name="rdsf">Root depth stress factor</param>
-        /// <param name="rs">root switch</param>
-        /// <param name="shape">Remobilisation cost</param>
         public ZoneState(Plant Plant, Soil soil, double depth,
                          NutrientPoolFunctions initialDM, double population, double maxNConc,
-                         IFunction rfv, IFunction mrd, IFunction remobCost,
-                         IFunction rdsf, IFunction rs, IRootShape shape)
+                         IFunction rfv, IFunction mrd, IFunction remobCost)
         {
             this.Soil = soil;
             this.plant = Plant;
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
-            this.RootDepthStressFactor = rdsf;
-            this.RootFrontCalcSwitch = rs;
-            this.RootShape = shape;
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
@@ -280,7 +267,6 @@ namespace Models.PMF.Organs
                     RightDist = plant.SowingData.RowSpacing * 0.5;
                 }
             }
-            root.RootShape.CalcRootProportionInLayers(this);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -357,8 +343,6 @@ namespace Models.PMF.Organs
             Depth = Math.Min(Depth, MaxDepth);
 
             RootFront = Depth;
-            root.RootShape.CalcRootProportionInLayers(this);
-            root.RootShape.CalcRootVolumeProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen

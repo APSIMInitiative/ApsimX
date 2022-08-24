@@ -24,7 +24,7 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
     [ValidParent(ParentType = typeof(BiomassArbitrator))]
-    public class PlantPartitionFractions : Model, ICustomDocumentation
+    public class PlantPartitionFractions : Model
     {
 
         [Link(Type = LinkType.Ancestor)]
@@ -91,8 +91,7 @@ namespace Models.PMF
             /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
             public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -126,7 +125,7 @@ namespace Models.PMF
                     + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
                 tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
                     + organName + "].NitrogenDemandSwitch.", indent));
-            }
+
         }
     }
 }

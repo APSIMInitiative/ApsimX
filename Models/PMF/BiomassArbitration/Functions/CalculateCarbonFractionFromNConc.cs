@@ -17,7 +17,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientProportionFunctions))]
-    public class CalculateCarbonFractionFromNConc : Model, IFunction, ICustomDocumentation
+    public class CalculateCarbonFractionFromNConc : Model, IFunction
     {
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
@@ -109,8 +109,7 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -128,7 +127,6 @@ namespace Models.PMF
                     + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
                 tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
                     + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
-            }
         }
     }
 }

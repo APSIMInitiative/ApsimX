@@ -19,7 +19,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class RootUptakesArbitrator : Model, IUptake, ICustomDocumentation
+    public class RootUptakesArbitrator : Model, IUptake
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -275,8 +275,7 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
@@ -286,7 +285,6 @@ namespace Models.PMF
                 // write children.
                 foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

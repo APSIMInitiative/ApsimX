@@ -875,8 +875,7 @@
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     ZoneState newZone = new ZoneState(parentPlant, soil, ZoneRootDepths[i], ZoneInitialDM[i], parentPlant.Population, maximumNConc.Value(),
-                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost,
-                                                       RootDepthStressFactor, RootFrontCalcSwitch, RootShape);
+                                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
                     Zones.Add(newZone);
                 }
             }
@@ -1054,8 +1053,7 @@
             if (soil == null)
                 throw new Exception("Cannot find soil");
             PlantZone = new ZoneState(parentPlant, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
-                                      rootFrontVelocity, maximumRootDepth, remobilisationCost,
-                                       RootDepthStressFactor, RootFrontCalcSwitch, RootShape);
+                                      rootFrontVelocity, maximumRootDepth, remobilisationCost);
 
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
             if (soilCrop == null)

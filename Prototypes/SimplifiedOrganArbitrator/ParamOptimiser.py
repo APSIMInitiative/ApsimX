@@ -312,7 +312,9 @@ AbsoluteBestParams
 
 OptimisationSteps
 
-for step in OptimisationSteps:
+SimulationSet
+
+for step in OptimisationSteps[1:]:
     itteration = 0
     globals()["best"] = 0
     print(step + " Optimistion step")
@@ -349,9 +351,9 @@ for step in OptimisationSteps:
     
     Preparefile()
 
-    RandomCalls = min(len(paramsToOptimise) * 7,30)
+    RandomCalls = min(len(paramsToOptimise) * 10,50)
     print(str(RandomCalls)+" Random calls")
-    OptimizerCalls = 20
+    OptimizerCalls = 25
     print(str(OptimizerCalls)+" Optimizer calls")
     TotalCalls = RandomCalls + OptimizerCalls
 
@@ -369,8 +371,6 @@ for step in OptimisationSteps:
     print(paramsToOptimise)
     print(bestfits)
     print("")
-
-bestParamVals.values.tolist()
 
 runModelFullset(bestParamVals) #run simulations with current best fit params
 

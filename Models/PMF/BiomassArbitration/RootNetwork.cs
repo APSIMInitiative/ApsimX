@@ -140,7 +140,6 @@
         public bool IsAboveGround { get { return false; } }
 
         /// <summary>A list of other zone names to grow roots in</summary>
-        [JsonIgnore]
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
 
         /// <summary>The root depths for each addition zone.</summary>

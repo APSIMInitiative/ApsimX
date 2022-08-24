@@ -39,7 +39,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model, ICustomDocumentation
+    public class BiomassArbitrator : Model
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -323,9 +323,7 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
+               // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write description of this class.
@@ -334,7 +332,6 @@ namespace Models.PMF
                 // write children.
                 foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
-        }
+       }
     }
 }

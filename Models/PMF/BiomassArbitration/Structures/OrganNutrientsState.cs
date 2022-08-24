@@ -225,7 +225,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeStates : OrganNutrientsState, ICustomDocumentation
+    public class CompositeStates : OrganNutrientsState
     {
         private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 
@@ -275,8 +275,7 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
+
                 // add a heading.
                 tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
@@ -288,7 +287,6 @@
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
                 tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
-            }
         }
     }
 }
