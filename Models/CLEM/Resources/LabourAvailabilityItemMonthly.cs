@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
-    [Description("An individual labour availability item with monthly days available")]
+    [Description("Set the labour availability of specified individuals with monthly days available")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItemMonthly.htm")]
     public class LabourAvailabilityItemMonthly : FilterGroup<LabourType>, ILabourSpecificationItem
@@ -52,16 +52,12 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (!formatForParentControl)
+                if (!FormatForParentControl)
                 {
                     if (MonthlyValues == null)
                         return "\r\n<div class=\"activityentry\">No availability provided</div>";
@@ -88,24 +84,26 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     htmlWriter.Write("</td>");
                     for (int i = 0; i < 12; i++)
+                    {
                         if (MonthlyValues == null)
                             htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
-                        else if (i > MonthlyValues.Count() - 1)
-                            htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
                         else
-                            htmlWriter.Write("<td><span class=\"setvalue\">" + ((this.MonthlyValues.Length - 1 >= i) ? this.MonthlyValues[i].ToString() : "") + "</span></td>");
+                        {
+                            if (i > MonthlyValues.Count() - 1)
+                                htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
+                            else
+                                htmlWriter.Write("<td><span class=\"setvalue\">" + ((this.MonthlyValues.Length - 1 >= i) ? this.MonthlyValues[i].ToString() : "") + "</span></td>");
+                        }
+                    }
                     htmlWriter.Write("</tr>");
                 }
                 else
@@ -114,13 +112,10 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
-            string html = formatForParentControl 
+            string html = FormatForParentControl 
                 ? "<tr><td>" 
                 : "\r\n<div class=\"filterborder clearfix\">";
 
@@ -130,22 +125,16 @@ namespace Models.CLEM.Resources
                 return html;            
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
 

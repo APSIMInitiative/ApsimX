@@ -1,11 +1,11 @@
 ﻿namespace Models.Core
 {
-    using Models.Core.Run;
     using Models.Factorial;
     using Models;
     using Models.PMF;
     using Models.PMF.Interfaces;
     using System;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
@@ -26,98 +26,106 @@
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
-    public class Folder : Model, ICustomDocumentation
+    public class Folder : Model
     {
-        /// <summary>Show page of graphs?</summary>
-        public bool ShowPageOfGraphs { get; set; }
+        /// <summary>Show in the autodocs?</summary>
+        /// <remarks>
+        /// Apparently, not all folders of graphs are intended to be shown in the autodocs.
+        /// Hence, this flag.
+        /// </remarks>
+        [Description("Include in documentation?")]
+        public bool ShowInDocs { get; set; }
 
-        /// <summary>Constructor</summary>
-        public Folder()
+        /// <summary>Number of graphs to show per page.</summary>
+        [Description("Number of graphs to show per page")]
+        public int GraphsPerPage { get; set; } = 6;
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
         {
-            ShowPageOfGraphs = true;
+            yield return new Section(Name, DocumentChildren());
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the appropriate child models (in this case, memos,
+        /// experiments, graphs, and folders).
+        /// </summary>
+        private IEnumerable<ITag> DocumentChildren()
         {
-            if (IncludeInDocumentation)
+            // Write memos.
+            foreach (Memo memo in FindAllChildren<Memo>().Where(memo => memo.Enabled))
+                foreach (ITag tag in memo.Document())
+                    yield return tag;
+
+            foreach (ITag tag in DocumentChildren<Map>())
+                yield return tag;
+
+            // Write experiment descriptions. We don't call experiment.Document() here,
+            // because we want to just show the experiment design (a string) and put it
+            // inside a table cell.
+            IEnumerable<Experiment> experiments = FindAllChildren<Experiment>().Where(experiment => experiment.Enabled);
+            if (experiments.Any())
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                yield return new Paragraph("**List of experiments.**");
+                DataTable table = new DataTable();
+                table.Columns.Add("Experiment Name", typeof(string));
+                table.Columns.Add("Design (Number of Treatments)", typeof(string));
 
-                if (ShowPageOfGraphs)
+                foreach (Experiment experiment in experiments)
                 {
-                    foreach (Memo memo in FindAllChildren<Memo>())
-                        memo.Document(tags, headingLevel, indent);
-
-                    if (FindAllChildren<Experiment>().Any())
-                    {
-                        // Write Phase Table
-                        tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
-                        DataTable tableData = new DataTable();
-                        tableData.Columns.Add("Experiment Name", typeof(string));
-                        tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
-
-                        foreach (IModel child in FindAllChildren<Experiment>())
-                        {
-                            IModel Factors = child.FindChild<Factors>();
-                            string Design = GetTreatmentDescription(Factors);
-                            foreach (Permutation permutation in Factors.FindAllChildren<Permutation>())
-                                Design += GetTreatmentDescription(permutation);
-
-                            var simulationNames = (child as Experiment).GenerateSimulationDescriptions().Select(s => s.Name);
-                            Design += " (" + simulationNames.ToArray().Length + ")";
-
-                            DataRow row = tableData.NewRow();
-                            row[0] = child.Name;
-                            row[1] = Design;
-                            tableData.Rows.Add(row);
-                        }
-                        tags.Add(new AutoDocumentation.Table(tableData, indent));
-
-                    }
-                    int pageNumber = 1;
-                    int i = 0;
-                    List<Graph> children = FindAllChildren<Graph>().ToList();
-                    while (i < children.Count)
-                    {
-                        GraphPage page = new GraphPage();
-                        page.Name = Name + pageNumber;
-                        for (int j = i; j < i + 6 && j < children.Count; j++)
-                            if (children[j].IncludeInDocumentation)
-                                page.Graphs.Add(children[j] as Graph);
-                        if (page.Graphs.Count > 0)
-                            tags.Add(page);
-                        i += 6;
-                        pageNumber++;
-                    }
-
-                    // Document everything else other than graphs
-                    foreach (IModel model in Children)
-                        if (!(model is Graph) && !(model is Memo))
-                            AutoDocumentation.DocumentModel(model, tags, headingLevel + 1, indent);
+                    DataRow row = table.NewRow();
+                    row[0] = experiment.Name;
+                    row[1] = experiment.GetDesign();
+                    table.Rows.Add(row);
                 }
-                else
+                yield return new Table(table);
+            }
+
+            // Write page of graphs.
+            if (ShowInDocs)
+            {
+                var childGraphs = GetChildGraphs();
+                while (childGraphs.Any())
                 {
-                    foreach (IModel model in Children)
-                        AutoDocumentation.DocumentModel(model, tags, headingLevel + 1, indent);
+                    yield return new APSIM.Shared.Documentation.GraphPage(childGraphs.Take(GraphsPerPage));
+                    childGraphs = childGraphs.Skip(GraphsPerPage);
                 }
             }
+
+            // Document experiments individually.
+            foreach (Experiment experiment in experiments.Where(expt => expt.Enabled))
+                foreach (ITag tag in experiment.Document())
+                    yield return tag;
+
+            // Document child folders.
+            foreach (Folder folder in FindAllChildren<Folder>().Where(f => f.Enabled))
+                foreach (ITag tag in folder.Document())
+                    yield return tag;
         }
 
-        private string GetTreatmentDescription(IModel factors)
+        private IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs()
         {
-            string design = "";
-            foreach (Factor factor in factors.FindAllChildren<Factor>())
+            var graphs = new List<APSIM.Shared.Documentation.Graph>();
+            var page = new Models.GraphPage();
+            page.Graphs.AddRange(FindAllChildren<Models.Graph>().Where(g => g.Enabled));
+            var storage = FindInScope<Models.Storage.IDataStore>();
+            foreach (var map in page.GetAllSeriesDefinitions(this, storage.Reader))
             {
-                if (design != "")
-                    design += " x ";
-                design += factor.Name;
+                try
+                {
+                    graphs.Add(map.Graph.ToGraph(map.SeriesDefinitions));
+                }
+                catch (Exception err)
+                {
+                    Console.Error.WriteLine(err);
+                }
             }
-            return design;
+            return graphs;
         }
     }
 }

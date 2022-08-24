@@ -11,7 +11,6 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// A value is returned via Akima spline interpolation of a given set of XY pairs
     /// </summary>
     [Serializable]

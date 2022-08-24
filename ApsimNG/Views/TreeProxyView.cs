@@ -11,6 +11,7 @@
     using Interfaces;
     using System.Drawing;
     using EventArguments;
+    using APSIM.Interop.Graphing.Extensions;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -249,7 +250,7 @@
                 belowGroundGraph.Model.Axes.Clear();
                 belowGroundGraph.Model.Series.Clear();
                 aboveGroundGraph.Model.Title = "Above Ground";
-                aboveGroundGraph.Model.LegendBorder = OxyColors.Transparent;
+                aboveGroundGraph.Model.SetLegendBorder(OxyColors.Transparent);
                 LinearAxis agxAxis = new LinearAxis();
                 agxAxis.Title = "Multiple of Tree Height";
                 agxAxis.AxislineStyle = LineStyle.Solid;
@@ -299,7 +300,7 @@
             try
             {
                 belowGroundGraph.Model.Title = "Below Ground";
-                belowGroundGraph.Model.LegendBorder = OxyColors.Transparent;
+                belowGroundGraph.Model.SetLegendBorder(OxyColors.Transparent);
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
 
@@ -378,8 +379,8 @@
 
             }
             graph.Model.TextColor = foregroundColour;
-            graph.Model.LegendTextColor = foregroundColour;
-            graph.Model.LegendTitleColor = foregroundColour;
+            graph.Model.SetLegendTextColour(foregroundColour);
+            graph.Model.SetLegendTitleColour(foregroundColour);
             graph.Model.SubtitleColor = foregroundColour;
             graph.Model.PlotAreaBorderColor = foregroundColour;
         }

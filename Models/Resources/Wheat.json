@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -15,10 +15,9 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\n# The APSIM Wheat Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\n\nThe model consists of:\n\n* a phenology model to simulate development between developmental phases  \n* a structure model to simulate plant morphology  \n* a collection of organs to simulate the various plant parts  \n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \n",
-          "Name": "TitlePage",
+          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx\">APSIM Wheat 7.5</a>\") and then within the Plant Modelling Framework ([brown_plant_2014]).",
+          "Name": "Introduction",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -70,7 +69,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": true
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -96,7 +96,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": true
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -131,7 +132,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": true
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -157,7 +159,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": true
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -175,7 +178,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": true
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -1023,8 +1027,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 40.0,
-              "ShootRate": 1.5,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -1036,6 +1038,48 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 40.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.5,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -3685,11 +3729,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -4140,7 +4179,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 1.3,
                       "Units": null,
-                      "Name": "Multiplier",
+                      "Name": "Constant",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4294,7 +4333,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 3.0,
                       "Units": null,
-                      "Name": "Multiplier",
+                      "Name": "Constant",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7250,11 +7289,11 @@
           "IncludeDead": true
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "New Zealand",
               "Children": [
                 {
@@ -7687,7 +7726,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Australia",
               "Children": [
                 {
@@ -9004,7 +9043,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Turkey",
               "Children": [
                 {
@@ -9034,7 +9073,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "China",
               "Children": [
                 {
@@ -9057,7 +9096,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "USA",
               "Children": [
                 {
@@ -9141,7 +9180,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Europe",
               "Children": [
                 {
@@ -9212,7 +9251,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Africa",
               "Children": [
                 {
@@ -9237,7 +9276,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Iran",
               "Children": [
                 {
@@ -9260,7 +9299,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Just Added",
               "Children": [
                 {
@@ -9936,6 +9975,16 @@
           "FixedValue": 0.0,
           "Units": null,
           "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,

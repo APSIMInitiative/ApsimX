@@ -1,16 +1,12 @@
 ﻿namespace UserInterface.Views
 {
+    using APSIM.Interop.Mapping;
     using APSIM.Shared.Utilities;
     using Extensions;
     using GeoAPI.Geometries;
     using Gtk;
     using Interfaces;
     using Models;
-    using NetTopologySuite;
-    using NetTopologySuite.Geometries;
-    using SharpMap.Data.Providers;
-    using SharpMap.Layers;
-    using SharpMap.Styles;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -19,11 +15,9 @@
     using System.Linq;
     using System.Reflection;
     using Utility;
-
-#if NETCOREAPP
-    using ExposeEventArgs = Gtk.DrawnArgs;
-    using StateType = Gtk.StateFlags;
-#endif
+    using ApsimCoordinate = Models.Mapping.Coordinate;
+    using Coordinate = GeoAPI.Geometries.Coordinate;
+    using MapTag = Models.Mapping.MapTag;
 
     /// <remarks>
     /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
@@ -49,50 +43,28 @@
     public class MapView : ViewBase, IMapView
     {
         /// <summary>
-        /// Indicates the ratio between steps when zooming.
+        /// Width of the map as shown in the GUI. I'm setting
+        /// this to 718 to match the default page width of the autodocs
+        /// documents.
         /// </summary>
-        private const double zoomStepFactor = 1.5;
-
         /// <remarks>
-        /// The world of mapping and GIS is a rather specialised and complex sub-field. Our needs here
-        /// are fairly simple: we just want to be able to plot locations on a base map. But how are locations
-        /// specified? Where do we get the map? What projection do we use? These remarks are intended to 
-        /// (slightly) clarify what is going on.
-        /// 
-        /// We are using SharpMap to do the map rendering, and BruTile to fetch a suitable base map. The basemap 
-        /// tiles use a "projected" coordinate system, specifically EPSG 3857 (also known as Web Mercator); 
-        /// the units in this system are (perhaps surpisingly) metres. However, the point data we wish to plot
-        /// is expressed as latitude and longitude (using a "geographic" coordinate system, specifically EPSG 4326),
-        /// with units of decimal degrees. Note that both are based on WGS84, so they have the same underlying
-        /// model of the shape of the earth, but use vastly different units. The two transformation objects defined 
-        /// below handle coordinate transformation.
-        /// 
-        /// An earlier version of this unit made a call to SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems
-        /// to obtain the co-ordinate systems. That call then attempted to generate a 3 MByte file with almost 4000 different
-        /// systems in it; we only needed 2. We can generate those we need from their WKT descriptions. If additions reference
-        /// systems are needed, their WKT descriptions should be available for download from spatialreference.org.
+        /// todo: should really check the default page size dynamically.
         /// </remarks>
-        ///  
-        /// <summary>
-        /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
-        /// </summary>
-        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
-                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
-                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
-                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
-
+        private const int defaultWidth = 718;
 
         /// <summary>
-        /// Performs coordinate transformation from  metres (WebMercator) to latitude/longitude (WGS84).
+        /// Height of the map as shown in the GUI. I'm setting
+        /// this to 718 to match the default page width of the autodocs
+        /// documents.
         /// </summary>
-        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
-                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
-                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
-                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
-
+        /// <remarks>
+        /// todo: should really check the default page size dynamically.
+        /// </remarks>
+        private const int defaultHeight = 718;
 
         private SharpMap.Map map;
         private Gtk.Image image;
+        private Gtk.EventBox container;
 
         /// <summary>
         /// Is the user dragging the mouse?
@@ -102,25 +74,7 @@
         /// <summary>
         /// Position of the mouse when the user starts dragging.
         /// </summary>
-        private Map.Coordinate mouseAtDragStart;
-
-        /// <summary>
-        /// Static constructor to perform 1-time initialisation.
-        /// </summary>
-        static MapView()
-        {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-            var coordFactory = new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode);
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(coordFactory,
-                new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory());
-            css.AddCoordinateSystem(3857, coordFactory.CreateFromWkt("PROJCS[\"WGS 84 / Pseudo-Mercator\", GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], PROJECTION[\"Mercator_1SP\"], PARAMETER[\"latitude_of_origin\", 0], PARAMETER[\"central_meridian\", 0], PARAMETER[\"scale_factor\", 1], PARAMETER[\"false_easting\", 0], PARAMETER[\"false_northing\", 0], AUTHORITY[\"EPSG\", \"3857\"]]"));
-            css.AddCoordinateSystem(4326, coordFactory.CreateFromWkt("GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]]"));
-            SharpMap.Session.Instance
-            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
-            .SetCoordinateSystemServices(css)
-            .SetCoordinateSystemRepository(css);
-        }
+        private ApsimCoordinate mouseAtDragStart;
 
         /// <summary>
         /// Zoom level of the map.
@@ -131,7 +85,7 @@
             {
                 if (map == null)
                     return 0;
-                return Math.Round(Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0, 2);
+                return Math.Round(Math.Log(map.MaximumZoom / map.Zoom, MapRenderer.GetZoomStepFactor()) + 1.0, 2);
              }
             set
             {
@@ -142,7 +96,7 @@
                     double setValue = value - 1.0;
                     if (value >= 60.0) // Convert any "old" zoom levels into whole-world maps
                         setValue = 0.0;
-                    map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
+                    map.Zoom = map.MaximumZoom / Math.Pow(MapRenderer.GetZoomStepFactor(), setValue);
                     RefreshMap();
                 }
             }
@@ -151,18 +105,18 @@
         /// <summary>
         /// Center of the map.
         /// </summary>
-        public Map.Coordinate Center
+        public ApsimCoordinate Center
         {
             get
             {
                 if (map == null)
                     return null;
-                Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
-                return new Map.Coordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
+                Coordinate centerLatLon = MapRenderer.GetMetresToLatLon().MathTransform.Transform(map.Center);
+                return new ApsimCoordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
             }
             set
             {
-                Coordinate centerMetric = LatLonToMetres.MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
+                Coordinate centerMetric = MapRenderer.GetLatLonToMetres().MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
                 if (map != null && 
@@ -194,12 +148,20 @@
         public MapView(ViewBase owner) : base(owner)
         {
             image = new Gtk.Image();
-            var container = new Gtk.EventBox();
+
+            image.Halign = Align.Start;
+            image.Valign = Align.Start;
+
+            container = new Gtk.EventBox();
             container.Add(image);
 
             VPaned box = new VPaned();
             PropertiesView = new PropertyView(this);
             box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
+
+            if ( ((ViewBase)PropertiesView).MainWidget is ScrolledWindow scroller)
+                scroller.VscrollbarPolicy = PolicyType.Never;
+
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -208,55 +170,14 @@
             | (int)Gdk.EventMask.ScrollMask);
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
-            image.SizeAllocated += OnSizeAllocated;
-#if NETFRAMEWORK
-            image.ExposeEvent += OnImageExposed;
-#else
+
             image.Drawn += OnImageExposed;
-#endif
+
             container.Destroyed += OnMainWidgetDestroyed;
             container.ScrollEvent += OnMouseScroll;
 
             mainWidget = box;
             mainWidget.ShowAll();
-        }
-
-        /// <summary>
-        /// Initialise the map component.
-        /// </summary>
-        private SharpMap.Map InitMap()
-        {
-            var result = new SharpMap.Map();
-            result.BackColor = Color.LightBlue;
-            result.Center = new Coordinate(0, 0);
-            result.SRID = 3857;
-
-            BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
-            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap, persistentCache: fileCache, userAgent: "APSIM Next Generation"), "OpenStreetMap");
-            result.BackgroundLayer.Add(baseLayer);
-            result.MaximumZoom = baseLayer.Envelope.Width;
-
-            // This layer is used only as a sort of backup in case the BruTile download times out
-            // or is otherwise unavailable.
-            // It should normally be invisible, as it will be covered by the BruTile tile layer.
-            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string apsimx = Directory.GetParent(bin).FullName;
-            string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            if (File.Exists(shapeFileName))
-            {
-                VectorLayer layWorld = new VectorLayer("Countries");
-                layWorld.DataSource = new ShapeFile(shapeFileName, true);
-                layWorld.Style = new VectorStyle();
-                layWorld.Style.EnableOutline = true;
-                Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
-                Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
-                layWorld.Style.Fill = new SolidBrush(background);
-                layWorld.Style.Outline.Color = foreground;
-                layWorld.CoordinateTransformation = LatLonToMetres;
-                result.BackgroundLayer.Insert(0, layWorld);
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -284,24 +205,13 @@
         /// <param name="locNames">Names of the marekrs (unused currently).</param>
         /// <param name="zoom">Zoom level of the map.</param>
         /// <param name="center">Location of the center of the map.</param>
-        public void ShowMap(List<Map.Coordinate> coordinates, List<string> locNames, double zoom, Map.Coordinate center)
+        public void ShowMap(List<ApsimCoordinate> coordinates, List<string> locNames, double zoom, ApsimCoordinate center)
         {
             if (map != null)
                 map.Dispose();
-            map = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
-            List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
-            VectorLayer markerLayer = new VectorLayer("Markers");
-            markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
-            markerLayer.Style.SymbolOffset = new PointF(0, -16); // Offset so the point is marked by the tip of the symbol, not its center
-            markerLayer.DataSource = new GeometryProvider(locations);
-            markerLayer.CoordinateTransformation = LatLonToMetres;
-
-            map.Layers.Add(markerLayer);
-            Zoom = zoom;
-            Coordinate location = LatLonToMetres.MathTransform.Transform(new Coordinate(center.Longitude, center.Latitude));
-            map.Center = location;
+            map = new MapTag(center, zoom, coordinates).ToSharpMap();
+            map.Size = new Size(defaultWidth, defaultHeight);
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -327,20 +237,9 @@
             using (MemoryStream stream = new MemoryStream())
             {
                 image.Save(stream, ImageFormat.Png);
-                stream.Position = 0;
+                stream.Seek(0, SeekOrigin.Begin);
                 return new Gdk.Pixbuf(stream);
             }
-        }
-
-        /// <summary>
-        /// Get an image from an embedded resource.
-        /// </summary>
-        /// <param name="resourceName">Name of the embedded resource.</param>
-        private static System.Drawing.Image GetResourceImage(string resourceName)
-        {
-            //var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-                return System.Drawing.Image.FromStream(stream);
         }
 
         /// <summary>
@@ -370,16 +269,14 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnImageExposed(object sender, ExposeEventArgs args)
+        private void OnImageExposed(object sender, DrawnArgs args)
         {
             try
             {
                 RefreshMap();
-#if NETFRAMEWORK
-                image.ExposeEvent -= OnImageExposed;
-#else
+
                 image.Drawn -= OnImageExposed;
-#endif
+
             }
             catch (Exception err)
             {
@@ -400,7 +297,7 @@
             {
                 isDragging = true;
                 CartesianToGeoCoords(args.Event.X, args.Event.Y, out double lat, out double lon);
-                mouseAtDragStart = new Map.Coordinate(lat, lon);
+                mouseAtDragStart = new ApsimCoordinate(lat, lon);
             }
             catch (Exception err)
             {
@@ -476,36 +373,6 @@
         }
 
         /// <summary>
-        /// Called when the image widget is allocated space.
-        /// Changes the map's size to match allocated size.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnSizeAllocated(object sender, EventArgs args)
-        {
-            try
-            {
-                // Update the map size iff the allocated width and height are both > 0,
-                // and width or height have changed.
-                if (image != null && map != null &&
-                    image.Allocation.Width > 0 && image.Allocation.Height > 0
-                 && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
-                {
-                    image.SizeAllocated -= OnSizeAllocated;
-                    map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    RefreshMap();
-                    image.WidthRequest = image.Allocation.Width;
-                    image.HeightRequest = image.Allocation.Height;
-                    image.SizeAllocated += OnSizeAllocated;
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Called when the main widget is destroyed.
         /// Detaches event handlers.
         /// </summary>
@@ -515,11 +382,13 @@
         {
             try
             {
-                mainWidget.ButtonPressEvent -= OnButtonPress;
-                mainWidget.ButtonReleaseEvent -= OnButtonRelease;
-                mainWidget.ScrollEvent -= OnMouseScroll;
-                image.SizeAllocated -= OnSizeAllocated;
-                mainWidget.Destroyed -= OnMainWidgetDestroyed;
+                image.Drawn -= OnImageExposed;
+                image.Dispose();
+                (PropertiesView as PropertyView).Dispose();
+                container.ButtonPressEvent -= OnButtonPress;
+                container.ButtonReleaseEvent -= OnButtonRelease;
+                container.ScrollEvent -= OnMouseScroll;
+                container.Destroyed -= OnMainWidgetDestroyed;
             }
             catch (Exception err)
             {

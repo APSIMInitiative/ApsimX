@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -14,7 +14,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\n# The APSIM Potato Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n#Building the model.\nThe APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\n\nThe model consists of:\n\n* a phenology model to simulate development between growth phases  \n* a structure model to simulate plant morphology  \n* a collection of organs to simulate the biomass (N and Weight) of various plant parts  \n* an arbitrator to allocate biomass to the various plant organs  \n\n#Pecularities of potato\nPotato is a challenging crop to model because it is vegetatviely propigated.  For seed propigated crops, plants are always equally dormant at planting and their development begins from there.  With potato the physiological status of the seed tubers vary depending on:  \n\n* the conditions the mother plant encountered late in its life (Stress, Desication etc)   \n* the conditions that the tuber was stored in (Cool store, ground store, dry store etc)   \n* treatment of the seed prior to planting (chitting, cutting etc).   \n\nAll of these factors infuence the developmental behaviour of the crop that is produced including:   \n\n* The timing of emergence   \n* The number of stems produced per plant and subsequent tuber number and canopy development   \n* The timing of tuber initiation and subsequent growth and partitioning   \n* The duration of haulm growth and subsequent tuber filling duration   \n\nThere are an enormous number of potato cultivars and they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed potato prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the potato model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. \n\n#Including a potato crop in an APSIM simulation\nThere is a Potato example simulation available by clicking the \"Open an Example\" icon available on the first tab displayed when APSIM Next Gen is opened.  This provides a useful demonstration of how to simulate a potato crop and provides some useful graphs for viewing models predictions.  \nTo incluce a potato crop in a simulation the \"Potato\" model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the \"Paddock\", selecting \"Add\" from the drop down menu and then selecting \"Potato\" from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the potato crop so the next crop can be simulated.  The \"PotatoPlantAndHarvest\" manager module that is included in the \"Potato\" example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.\n##Setting sowing depth (emergence date)\nThe potato model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  Planting depth is set in the 'PotatoPlantAndHarvest' module\n##Setting stem number (tuber number and early canopy growth)\nThe 'PotatoPlantAndHarvest' script sets the \"Number of stems per seed piece\".  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.\n##Setting final leaf number (Crop duration)\nThe duration of a potato crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the \"PotatoPlantAndHarvest\" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.",
+          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n# Building the model.\nThe APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\n\nThe model consists of:\n\n* a phenology model to simulate development between growth phases  \n* a structure model to simulate plant morphology  \n* a collection of organs to simulate the biomass (N and Weight) of various plant parts  \n* an arbitrator to allocate biomass to the various plant organs  \n\n# Pecularities of potato\nPotato is a challenging crop to model because it is vegetatviely propigated.  For seed propigated crops, plants are always equally dormant at planting and their development begins from there.  With potato the physiological status of the seed tubers vary depending on:  \n\n* the conditions the mother plant encountered late in its life (Stress, Desication etc)   \n* the conditions that the tuber was stored in (Cool store, ground store, dry store etc)   \n* treatment of the seed prior to planting (chitting, cutting etc).   \n\nAll of these factors infuence the developmental behaviour of the crop that is produced including:   \n\n* The timing of emergence   \n* The number of stems produced per plant and subsequent tuber number and canopy development   \n* The timing of tuber initiation and subsequent growth and partitioning   \n* The duration of haulm growth and subsequent tuber filling duration   \n\nThere are an enormous number of potato cultivars and they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed potato prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the potato model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. \n\n# Including a potato crop in an APSIM simulation\nThere is a Potato example simulation available by clicking the \"Open an Example\" icon available on the first tab displayed when APSIM Next Gen is opened.  This provides a useful demonstration of how to simulate a potato crop and provides some useful graphs for viewing models predictions.  \nTo incluce a potato crop in a simulation the \"Potato\" model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the \"Paddock\", selecting \"Add\" from the drop down menu and then selecting \"Potato\" from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the potato crop so the next crop can be simulated.  The \"PotatoPlantAndHarvest\" manager module that is included in the \"Potato\" example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.\n## Setting sowing depth (emergence date)\nThe potato model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  Planting depth is set in the 'PotatoPlantAndHarvest' module\n## Setting stem number (tuber number and early canopy growth)\nThe 'PotatoPlantAndHarvest' script sets the \"Number of stems per seed piece\".  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.\n##Setting final leaf number (Crop duration)\nThe duration of a potato crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the \"PotatoPlantAndHarvest\" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.",
           "Name": "TitlePage",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -111,8 +111,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 72.0,
-              "ShootRate": 1.35,
               "Start": "Peeping",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -133,6 +131,48 @@
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 72.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.35,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -338,7 +378,8 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -352,7 +393,8 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -376,7 +418,8 @@
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -390,7 +433,8 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -400,7 +444,8 @@
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.PrioritythenRelativeAllocation, Models",
@@ -2080,11 +2125,6 @@
                   "FixedValue": "0.0"
                 }
               ]
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -3876,7 +3916,7 @@
           "IncludeDead": true
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "CultivarFolder",
           "Children": [
             {
@@ -4064,6 +4104,16 @@
           "FixedValue": 0.0,
           "Units": null,
           "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,

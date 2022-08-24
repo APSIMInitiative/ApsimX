@@ -7,6 +7,7 @@
     using Models.Core.Run;
     using Models.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.WaterModel;
     using NUnit.Framework;
     using System;
@@ -50,24 +51,24 @@
                         Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                         Carbon = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
                     },
-                    new Chemical
+                    new Solute
                     {
+                        Name = "CL",
                         Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-                        CL = new double[] { 38, double.NaN, 500, 490, 500, 500 }
+                        InitialValues = new double[] { 38, double.NaN, 500, 490, 500, 500 },
+                        InitialValuesUnits = Solute.UnitsEnum.ppm
                     },
-                    new Sample
+                    new Water
                     {
                         Thickness = new double[] { 100, 300, 300, 300 },
-                        SW = new double[] { 0.103, 0.238, 0.253, 0.247 },
-                        OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN },
-                        SWUnits = Sample.SWUnitsEnum.Gravimetric
+                        InitialValues = new double[] { 0.103, 0.238, 0.253, 0.247 },
                     },
-                    new Sample
+                    new Solute
                     {
+                        Name = "NO3",
                         Thickness = new double[] { 100, 300 },
-                        NO3 = new double[] { 23, 7 },
-                        OC = new double[] { 1.35, 1.4 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                        InitialValues = new double[] { 23, 7 },
+                        InitialValuesUnits = Solute.UnitsEnum.kgha
                     }
                 }
             };

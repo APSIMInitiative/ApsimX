@@ -20,6 +20,9 @@
         ///<summary>Gets soil water content (mm)</summary>
         double[] SWmm { get; }
 
+        ///<summary>Gets soil water potential (cm)</summary>
+        double[] PSI { get; }
+
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         double[] ESW { get; }
 
@@ -38,6 +41,12 @@
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         double Drainage { get; }
 
+        /// <summary>Subsurface drain (mm)</summary>
+        double SubsurfaceDrain { get; }
+
+        /// <summary>Pond depth (mm).</summary>
+        double Pond { get; }
+
         /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
         double Salb { get; }
 
@@ -49,9 +58,12 @@
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
         double LeachNH4 { get; }
-        
+
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         double LeachUrea { get; }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
+        double LeachCl { get; }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         double[] FlowNO3 { get; }
@@ -101,5 +113,9 @@
 
         ///<summary>Perform tillage</summary>
         void Tillage(string tillageType);
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        void Standardise(double[] targetThickness);
     }
 }

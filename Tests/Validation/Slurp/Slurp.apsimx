@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# SLURP: the Sound of a crop using water\r\n\r\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of crops.  It is usefull for water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model does not predict crop growth, development or yields.  It simply takes up water and nitrogen.   .  \r\n\r\nSLURP has no phenology so the behaviour of the SLURP is the same throughout its ontology (with the exception of root depth being able to increase).  SLURP consists of 2 organs:  \r\n\r\n   1. Leaf which ls represented with a Simpleleaf class and provides a Water uptake demand to the soil arbitrator.  \r\n   2. Root which extracts water and nitrogen from the soil for plant growth  \r\n \r\n\r\n##Inclusion in APSIM simulations\r\nA Slurp crop is included in a simulation the same as any other APSIM crop  \r\n\r\n * The Slurp object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \r\n * It is then planted with a sowing rule  \r\n~~~\r\nSlurp.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \r\n~~~\r\n  * Note that SLURP has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \r\n  * `depth` in the Sow argument is the depth that the crop is sown at.  While this has no effect on emergence in SLURP it sets the depth that the root system is initialised at.  For static crops this depth should be set to the rooting depth that is expected as roots will not grow during the simulation\r\n\r\n##Altering Slurp properties during runs\r\nIn some cases users will wish to change properties of Slurp while the simulation is running.  This can be done using a the set method in a manager script.\r\n\r\n~~~\r\nobject LAIResetValue = leaflai;  \r\nzone.Set(\"Slurp.Leaf.LAIFunction.Value()\", LAIResetValue);  \r\nobject HeightResetValue = CoverToday * MaximumHeight;  \r\nzone.Set(\"Slurp.Leaf.HeightFunction.Value()\", HeightResetValue);\r\n~~~",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,

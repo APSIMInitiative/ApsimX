@@ -6,7 +6,6 @@ using Models.Core;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Returns the temperature of the surface soil layer with the weighting: " +
     /// 0.25*DayBeforeYesterday + 0.5*Yesterday + 0.25*Today
     /// </summary>

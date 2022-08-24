@@ -308,6 +308,13 @@
             return null;
         }
 
+// Note that Microsoft considers use of BinaryFormatter to be "unsafe". 
+// However, we should be OK if we are reasonably sure that we deserialise only
+// objects that we have ourselves serialised. This pragma allow us to use it without
+// having the compiler generate a warning message.
+// (Also note that ApsimX is inherently unsafe in any case, as its Manager allows execution
+// of virtually anything.)
+#pragma warning disable SYSLIB0011
         /// <summary>
         /// Binary serialise the object and return the resulting stream.
         /// </summary>
@@ -336,19 +343,21 @@
             IFormatter formatter = new BinaryFormatter();
             return formatter.Deserialize(stream);
         }
+#pragma warning restore SYSLIB0011
 
         /// <summary>
         /// Convert an object into a json string. 
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <param name="includePrivates">Serialise private members as well as publics?</param>
+        /// <param name="includeChildren">Serialize child models as well?</param>
         /// <returns>The string representation of the object.</returns>
-        public static string JsonSerialise(object source, bool includePrivates)
+        public static string JsonSerialise(object source, bool includePrivates, bool includeChildren = true)
         {
             return JsonConvert.SerializeObject(source, Formatting.Indented,
                     new JsonSerializerSettings
                     {
-                        ContractResolver = new DynamicContractResolver(includePrivates),
+                        ContractResolver = new DynamicContractResolver(includePrivates, includeChildren),
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     });
         }
@@ -357,19 +366,23 @@
         private class DynamicContractResolver : DefaultContractResolver
         {
             private BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            private readonly bool includeChildren;
 
-            public DynamicContractResolver(bool includePrivates)
+            public DynamicContractResolver(bool includePrivates, bool includeChildren)
             {
+                this.includeChildren = includeChildren;
                 if (includePrivates)
                     bindingFlags |= BindingFlags.NonPublic;
             }
 
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
-                var props = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
-                            .Union(
-                            GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
-                            ).ToList();
+                IEnumerable<JsonProperty> fields = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                IEnumerable<JsonProperty> properties = GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                if (!includeChildren)
+                    properties = properties.Where(p => p.PropertyName != "Children");
+                List<JsonProperty> props = fields.Union(properties).ToList();
+
                 // If this type overrides a base class's property or field, then this list
                 // will contain multiple properties with the same name, which causes a
                 // serialization exception when we go to serialize these properties. The
@@ -380,7 +393,6 @@
                 return props.Where(p => p.PropertyName != "Parent" && p.Readable).ToList();
             }
         }
-
 
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'

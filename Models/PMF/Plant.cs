@@ -1,4 +1,4 @@
-﻿namespace Models.PMF
+namespace Models.PMF
 {
     using Models.Core;
     using Models.Functions;
@@ -7,6 +7,7 @@
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using System;
+    using APSIM.Shared.Documentation;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
@@ -14,14 +15,17 @@
     using APSIM.Shared.Utilities;
     using System.Globalization;
 
-    ///<summary>
-    /// # [Name]
-    /// The generic plant model
+    /// <summary>
+    /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
+    /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
+    /// model in much the same way that models can be coupled to construct a simulation.This means that dynamic composition
+    /// of lower level process and organ classes(e.g.photosynthesis, leaf) into larger constructions(e.g.maize, wheat,
+    /// sorghum) can be achieved by the model developer without additional coding.
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation, IPlantDamage
+    public class Plant : Model, IPlant, IPlantDamage, IHasDamageableBiomass
     {
         /// <summary>The summary</summary>
         [Link]
@@ -36,6 +40,11 @@
         [Units("")]
         private IFunction mortalityRate = null;
 
+        /// <summary>The seed mortality rate.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("")]
+        private IFunction seedMortalityRate = null;
+        
         /// <summary>The phenology</summary>
         [Link(Type = LinkType.Child)]
         public IPhenology Phenology = null;
@@ -216,9 +225,27 @@
             }
         }
 
+        /// <summary>The sw uptake</summary>
+        public IReadOnlyList<double> WaterUptake => Root == null ? null : Root.SWUptakeLayered;
+
+        /// <summary>The nitrogen uptake</summary>
+        public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => 0;
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
+                {
+                    yield return new DamageableBiomass(organ.Name, organ.Live, true);
+                    yield return new DamageableBiomass(organ.Name, organ.Dead, false);
+                }
+            }
+        }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -275,7 +302,7 @@
                     message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
-                summary.WriteMessage(this, message);
+                summary.WriteMessage(this, message, MessageType.Diagnostic);
                 if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
                     Flowering.Invoke(this, null);
             }
@@ -290,6 +317,10 @@
             //Reduce plant population in case of mortality
             if (Population > 0.0)
                 Population -= Population * mortalityRate.Value();
+
+            // Seed mortality
+            if (!IsEmerged && SowingData != null && SowingData.Seeds > 0)
+                Population -= Population * seedMortalityRate.Value();
         }
 
         /// <summary>Called at the end of the day.</summary>
@@ -308,13 +339,16 @@
 
         /// <summary>Sow the crop with the specified parameters.</summary>
         /// <param name="cultivar">The cultivar.</param>
-        /// <param name="population">The population.</param>
+        /// <param name="population">The final plant population at emergence.</param>
         /// <param name="depth">The depth mm.</param>
         /// <param name="rowSpacing">The row spacing mm.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0)
+        /// <param name="seeds">The number of seeds sown (/m2).</param>
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
             SowingDate = clock.Today;
 
@@ -327,6 +361,18 @@
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
             SowingData.SkipType = rowConfig;
+            SowingData.Seeds = seeds;
+            SowingData.TilleringMethod = tillering;
+            SowingData.FTN = ftn;
+
+            if (SowingData.Seeds != 0 && SowingData.Population != 0)
+                throw new Exception("Cannot specify both plant population and number of seeds when sowing.");
+
+            if (SowingData.TilleringMethod < -1 || SowingData.TilleringMethod > 1)
+                throw new Exception("Invalid TilleringMethod set in sowingData.");
+
+            if (SowingData.TilleringMethod != 0 && SowingData.FTN > 0.0)
+                throw new Exception("Cannot set a FertileTillerNumber when TilleringMethod is not set to FixedTillering.");
 
             if (rowConfig == 0)
             {
@@ -358,7 +404,10 @@
 
             IsAlive = true;
 
-            this.Population = population;
+            if (population > 0)
+                this.Population = population;
+            else
+                this.Population = SowingData.Population = seeds;
 
             // Find cultivar and apply cultivar overrides.
             Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
@@ -375,7 +424,7 @@
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " mm and a depth of " + depth + " mm"), MessageType.Information);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -387,7 +436,7 @@
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
-            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"), MessageType.Diagnostic);
 
             // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
@@ -433,7 +482,7 @@
         {
             if (IsAlive == false)
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
-            summary.WriteMessage(this, "Crop ending");
+            summary.WriteMessage(this, "Crop ending", MessageType.Information);
 
             // Invoke a plant ending event.
             if (PlantEnding != null)
@@ -453,76 +502,51 @@
             SowingDate = DateTime.MinValue;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the implementation and model parameterisation are provided in the following sections.", indent));
-                // Write Plant Model Table
-                tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
-                DataTable tableData = new DataTable();
-                tableData.Columns.Add("Component Name", typeof(string));
-                tableData.Columns.Add("Component Type", typeof(string));
-
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                {
-                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
-                    {
-                        DataRow row = tableData.NewRow();
-                        row[0] = child.Name;
-                        row[1] = child.GetType().ToString();
-                        tableData.Rows.Add(row);
-                    }
-                }
-                tags.Add(new AutoDocumentation.Table(tableData, indent));
-
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
-            }
+            yield return new Section($"The APSIM {Name} Model", GetTags());
         }
 
-        /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
-        /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
-        public Biomass RemoveBiomass(double amountToRemove)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        private IEnumerable<ITag> GetTags()
         {
-            var defoliatedBiomass = new Biomass();
-            var preRemovalBiomass = AboveGround.Wt*10;
-            foreach (var organ in Organs.Cast<IOrganDamage>())
-            {
-                if (organ.IsAboveGround)
-                {
-                    // These calculations convert organ live weight from g/m2 to kg/ha
-                    var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
-                    var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
-                    var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
-                    var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                    var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                                + organ.Dead.DMDOfStructural * fractionDeadToRemove;
-                    var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
-                    var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
-                    if (defoliatedDM > 0)
-                    {
-                        RemoveBiomass(organ.Name, "Graze",
-                                      new OrganBiomassRemovalType()
-                                      {
-                                          FractionLiveToRemove = fractionLiveToRemove,
-                                          FractionDeadToRemove = fractionDeadToRemove
-                                      });
+            // If first child is a memo, document it first.
+            Memo introduction = Children?.FirstOrDefault() as Memo;
+            if (introduction != null)
+                foreach (ITag tag in introduction.Document())
+                    yield return tag;
 
-                        defoliatedBiomass += new Biomass()
-                        {
-                            StructuralWt = defoliatedDM,
-                            StructuralN = defoliatedN,
-                            DMDOfStructural = defoliatedDigestibility
-                        };
-                    }
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            yield return new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
+
+            // Write Plant Model Table
+            yield return new Paragraph("**List of Plant Model Components.**");
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Component Name", typeof(string));
+            tableData.Columns.Add("Component Type", typeof(string));
+            foreach (IModel child in Children)
+            {
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
+                {
+                    DataRow row = tableData.NewRow();
+                    row[0] = child.Name;
+                    row[1] = child.GetType().ToString();
+                    tableData.Rows.Add(row);
                 }
             }
-            return defoliatedBiomass;
+            yield return new Table(tableData);
+
+            // Document children.
+            foreach (IModel child in Children)
+                if (child != introduction)
+                    yield return new Section(child.Name, child.Document());
         }
 
         /// <summary>

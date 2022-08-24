@@ -32,13 +32,6 @@
         double AssimilateAvailable { get; }
 
         /// <summary>
-        /// Remove biomass from a plant.
-        /// </summary>
-        /// <param name="amount">Amount of biomass to remove (kg/ha).</param>
-        /// <returns>Amount of biomass removed.</returns>
-        Biomass RemoveBiomass(double amount);
-
-        /// <summary>
         /// Remove biomass from an organ.
         /// </summary>
         /// <param name="organName">Name of organ.</param>

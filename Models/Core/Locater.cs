@@ -143,7 +143,7 @@
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
-                        Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
+                        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
                         if (modelTypes.Length == 1)
                             foundModel = relativeToModel.FindAllInScope().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType())) as Model;
                     }
@@ -192,6 +192,9 @@
                 // Now walk the series of '.' separated path bits, assuming the path bits
                 // are child models. Stop when we can't find the child model.
                 string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (namePathBits.Length == 0 && !string.IsNullOrEmpty(namePath))
+                    throw new Exception($"Invalid variable name: '{cacheKey}'");
+
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
@@ -282,26 +285,6 @@
             AddToCache(cacheKey, relativeTo, returnVariable);
 
             return returnVariable;
-        }
-
-        /// <summary>
-        /// Gets all Type instances matching the specified class name with no namespace qualified class name.
-        /// Will not throw. May return empty array.
-        /// </summary>
-        private static Type[] GetTypeWithoutNameSpace(string className)
-        {
-            List<Type> returnVal = new List<Type>();
-
-            Type[] assemblyTypes = Assembly.GetExecutingAssembly().GetTypes();
-            for (int j = 0; j < assemblyTypes.Length; j++)
-            {
-                if (assemblyTypes[j].Name == className)
-                {
-                    returnVal.Add(assemblyTypes[j]);
-                }
-            }
-
-            return returnVal.ToArray();
         }
 
         /// <summary>

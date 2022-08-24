@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# The APSIM-PMF White Clover Model\r\n\r\n\r\n_Rogerio Cichota, Plant and Food Research, New Zealand_\r\n\r\n\r\n##Preamble\r\n\r\nWhite clover (*Trifolium repens*) is a herbaceous perennial herb in the Fabaceae family (former Leguminosae) native of Europe and west Asia.  It can now be be found in swards around the world in places with temperate and subtropical climates ([ThomasChapter1987]; [BrockEtAl1989]).  The plant aboveground consists of prostrate segmented stolons, from which tri-foliate leaves grow on top of a 5-15 cm petiole.  From the axils of each leaf emerges either a flower stalk (peduncle) or a branching stolon.  Roots are quite thick and relatively shallow; the initial taproot dies after a year or so, but roots can also grow from each branching stolon.  These rooted stolon behave and can become independent plants. Cultivated varieties are commonly classified into small-, medium- and large-leaved cultivars, which besides leaf size also reflects variations in plant height and proportion of stolons ([CaradusEtAl1989]).  The inflorescence is typically of white colour and grows about one third higher than the leaves.  As a legume, white clover can host N-fixing bacteria (*Rhizobium*) in a symbiotic relationship. N fixation by rhyzobia can tranfer large quantities of N from the atmosphere into the soil.  This is a major reason why white clover is typically sown alongside grasses in pastures.  Nonetheless, white clover is also a valuable forage, producing very high quality feed and is highly palatable to ruminants.  \r\n\r\n\r\n**Objective:**  The model presented here was built to simulate the growth of white clover as a forage crop.  The current model focus on describing biomass accumulation and regrowth after defoliation in monocultural swards.  The model was developed using the Plant Modelling Framework (PMF) and thus, it is readily possible to use the WhiteClover model in mixed swards, but this usage has not been properly tested yet and should be done with caution.  \r\nThe simulation of variations in N concentration over the growing season can also be considered as incipient and only reasonably good. The model should be updated and its performance revised in the future when more data becomes available.  \r\n\r\n\r\n\r\n## Generic background  \r\n\r\n",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
       "Children": [

@@ -35,8 +35,22 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "HTML version created")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ActivitiesPerformed.htm")]
-    public class ReportActivitiesPerformed : Models.Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
+    public class ReportActivitiesPerformed : Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
     {
+        /// <summary>
+        /// Includes folders in simulation as placeholders in output
+        /// </summary>
+        [Description("Include folders in output")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludeFolders { get; set; }
+
+        /// <summary>
+        /// The style timers are handled in report
+        /// </summary>
+        [Description("Style of handling timers")]
+        [System.ComponentModel.DefaultValue(ReportActivitiesPerformedTimerHandleStyle.InPosition)]
+        public ReportActivitiesPerformedTimerHandleStyle HandleTimers { get; set; }
+
         /// <summary>
         /// Create html version of summary
         /// </summary>
@@ -63,12 +77,17 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public string HtmlOutputFilename { get { return "ActivitiesPerformedSummary.html"; } }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
+
         /// <summary>
         /// Constructor
         /// </summary>
         public ReportActivitiesPerformed()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Default;
+            CLEMModel.SetPropertyDefaults(this);
         }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
@@ -82,7 +101,9 @@ namespace Models.CLEM.Reporting
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
                 "[Activities].LastActivityPerformed.Status as Status",
-                "[Activities].LastActivityPerformed.UniqueID as UniqueID"
+                "[Activities].LastActivityPerformed.Id as UniqueID",
+                "[Activities].LastActivityPerformed.StatusMessage as Message",
+                "[Activities].LastActivityPerformed.ModelType as Type"
             };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
@@ -113,7 +134,9 @@ namespace Models.CLEM.Reporting
                         string simName = this.FindAllAncestors<Simulation>().First().Name;
                         string zoneName = this.FindAllAncestors<ZoneCLEM>().First().Name;
                         var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName);
+                            .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
+                            & (IncludeFolders || (row.Field<int>("Type") != 1))
+                            & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2)) )  );
                         if (filteredData.Any())
                         {
                             data = filteredData.CopyToDataTable();
@@ -191,7 +214,20 @@ namespace Models.CLEM.Reporting
                 if (data != null && data.Rows.Count > 0)
                 {
                     // get unique rows
-                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
+                    List<string> activities;
+                    switch (HandleTimers)
+                    {
+                        case ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart:
+                            activities = data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                            break;
+                        case ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd:
+                            activities = data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                            break;
+                        default:
+                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
+                            break;
+                    }
+                    //List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns
@@ -321,7 +357,7 @@ namespace Models.CLEM.Reporting
                 htmlString.WriteLine("\r\n<div class=\"r1\"><span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span></div>");
 
                 htmlString.Write("\r\n<div class=\"r2\"><div class=\"clearfix defaultbanner\">");
-                htmlString.Write($"<div class=\"namediv\">Report activities performed</div>");
+                htmlString.Write($"<div class=\"namediv\">Report activities performed</div><br />");
                 htmlString.Write($"<div class=\"typediv\">Details</div>");
                 htmlString.Write("</div>");
                 htmlString.Write("\r\n<div class=\"defaultcontent\">");
@@ -410,8 +446,15 @@ namespace Models.CLEM.Reporting
         ///<inheritdoc/>
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
         ///<inheritdoc/>
-        public string ModelSummary(bool formatForParentControl)
+        public string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -441,48 +484,51 @@ namespace Models.CLEM.Reporting
         }
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool formatForParentControl, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (model is ICLEMDescriptiveSummary)
                 {
                     ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(formatForParentControl));
+                    cm.CurrentAncestorList = parentControls.ToList();
+                    cm.CurrentAncestorList.Add(model.GetType().Name);
+
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags());
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary());
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
                     foreach (var item in (model as IModel).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString, markdown2Html));
+                        htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList, htmlString, markdown2Html));
                     }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryClosingTags());
                 }
                 return htmlWriter.ToString();
             }
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryClosingTags(bool formatForParentControl)
+        public string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryOpeningTags(bool formatForParentControl)
+        public string ModelSummaryOpeningTags()
         {
             string overall = "default";
             string extra = "";
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
                 htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
                 htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
@@ -494,13 +540,13 @@ namespace Models.CLEM.Reporting
         public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public string ModelSummaryInnerOpeningTags()
         {
             return "";
         }
@@ -534,5 +580,29 @@ namespace Models.CLEM.Reporting
             return this.Name;
         }
         #endregion
+
+    }
+
+    /// <summary>
+    /// Style of reporting timers
+    /// </summary>
+    public enum ReportActivitiesPerformedTimerHandleStyle
+    {
+        /// <summary>
+        /// Do not include timers in report
+        /// </summary>
+        Ignore,
+        /// <summary>
+        /// Place timers are position in tree
+        /// </summary>
+        InPosition,
+        /// <summary>
+        /// Place all timers at start
+        /// </summary>
+        PlaceAtStart,
+        /// <summary>
+        /// Place all timers at end
+        /// </summary>
+        PlaceAtEnd
     }
 }

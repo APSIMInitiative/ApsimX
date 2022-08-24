@@ -10,7 +10,6 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name]
     /// A post processing model that produces simulation stats.
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]

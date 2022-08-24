@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
+using APSIM.Shared.Documentation;
 using Models.PMF;
 
 namespace Models.Functions.RootShape
@@ -13,8 +14,7 @@ namespace Models.Functions.RootShape
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Root))]
-    [ValidParent(ParentType = typeof(RootNetwork))]
-    public class RootShapeCylinder : Model, IRootShape, ICustomDocumentation
+    public class RootShapeCylinder : Model, IRootShape
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(IStuffForRootShapeThing zone)
@@ -38,25 +38,24 @@ namespace Models.Functions.RootShape
             }
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        public virtual void CalcRootVolumeProportionInLayers(ZoneState zone)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            zone.RootProportionVolume = zone.RootProportions;
+        }
 
-                // add graph and table.
-                //tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.</i>", indent));
-                //tags.Add(new AutoDocumentation.Paragraph("<i>MaximumVPDWeight = " + MaximumVPDWeight + "</i>", indent));
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
 
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

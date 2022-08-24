@@ -119,9 +119,7 @@ namespace Utility
             data = new ListStore(typeof(string), typeof(string), typeof(string));
             tree.Model = data;
             tree.CanFocus = true;
-#if NETFRAMEWORK
-            tree.RulesHint = true; // Allows for alternate-row colouring.
-#endif
+
             tree.CursorChanged += OnSelectionChanged;
             tree.KeyPressEvent += OnKeyPress;
 
@@ -195,7 +193,7 @@ namespace Utility
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
             if (args.Event.Key == Gdk.Key.Escape)
-                window.Cleanup();
+                window.Dispose();
         }
 
         /// <summary>

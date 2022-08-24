@@ -10,7 +10,6 @@
     using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
-    /// # [Name]
     /// The LifeCycle model represents a population of organisms within a zone.  It assembles 
     /// an arbitry number of LifeCyclePhases that cohorts of individuals (of the same developmental
     /// stage) pass through during their life.
@@ -114,7 +113,7 @@
         {
             LifeCyclePhase InfestingPhase = FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
             InfestingPhase.NewCohort(InfestationInfo);
-            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
+            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)", MessageType.Diagnostic);
         }
     }
 }

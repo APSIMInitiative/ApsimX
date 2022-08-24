@@ -8,7 +8,6 @@ using Models.Interfaces;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Returns the difference between today's and yesterday's photoperiods in hours.
     /// </summary>
     [Serializable]

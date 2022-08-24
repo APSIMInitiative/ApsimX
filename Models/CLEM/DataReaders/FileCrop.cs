@@ -24,7 +24,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component specifies a crop data file for the CLEM simulation")]
+    [Description("Access to a crop data file")]
     [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
@@ -400,7 +400,7 @@ namespace Models.CLEM
                     {
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
-                        if(reader.IsCSVFile)
+                        if (reader.IsCSVFile)
                             fileType = "Comma delimited text file (csv)";
 
                         if (reader.IsExcelFile)
@@ -421,7 +421,7 @@ namespace Models.CLEM
 
                     if (this.soilNumIndex == -1)
                         if (this.reader == null || this.reader.Constant(SoilTypeColumnName) == null)
-                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
+                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
 
                     if (this.cropNameIndex == -1)
                         if (this.reader == null || this.reader.Constant(CropNameColumnName) == null)
@@ -440,8 +440,11 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
+
                 return true;
             }
             else
@@ -459,28 +462,29 @@ namespace Models.CLEM
         }
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                else if (!this.FileExists)
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 else
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                {
+                    if (!this.FileExists)
+                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                    else
+                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                }
 
                 if (FileName != null && FileName.Contains(".xls"))
+                {
                     if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
                         htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
                     else
                         htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
+                }
 
                 htmlWriter.Write("\r\n</div>");
 

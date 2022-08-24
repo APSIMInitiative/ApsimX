@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
-    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
+    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock)")]
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <returns>GraxeFoodStore pool</returns>
         public GrazeFoodStorePool Pool(int index, bool getByAge)
         {
-            if(getByAge)
+            if (getByAge)
             {
                 var res = Pools.Where(a => a.Age == index);
                 if (res.Count() > 1)
@@ -75,10 +75,12 @@ namespace Models.CLEM.Resources
                     return res.FirstOrDefault();
             }
             else
+            {
                 if (index < Pools.Count())
                     return Pools[index];
                 else
                     return null;
+            }
         }
 
         /// <summary>
@@ -209,11 +211,18 @@ namespace Models.CLEM.Resources
         public IPastureManager Manager
         {
             get
-            { return manager; }
+            { 
+                return manager;
+            }
             set
             {
-                if(manager!=null)
-                    throw new ApsimXException(this, String.Format("Each [r=GrazeStoreType] can only be managed by a single activity./nTwo managing activities ([a={0}] and [a={1}]) are trying to manage [r={2}]", manager.Name, value.Name, this.Name));
+                if(manager!=null && manager!=value )
+                {
+                    if(manager is CropActivityManageCrop)
+                        Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
+                    else
+                        throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
+                }
                 manager = value;
             }
         }
@@ -348,23 +357,16 @@ namespace Models.CLEM.Resources
             else
                 pools = Pools.Where(a => a.Age >= 12);
 
-            switch (property)
+            return property switch
             {
-                case "Detached":
-                    return pools.Sum(a => a.Detached);
-                case "Growth":
-                    return pools.Sum(a => a.Growth);
-                case "Consumed":
-                    return pools.Sum(a => a.Consumed);
-                case "Amount":
-                    return pools.Sum(a => a.Amount);
-                case "DMD":
-                    return pools.Sum(a => a.Amount* a.DMD)/ pools.Sum(a => a.Amount);
-                case "Nitrogen":
-                    return pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount);
-                default:
-                    throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools");
-            }
+                "Detached" => pools.Sum(a => a.Detached),
+                "Growth" => pools.Sum(a => a.Growth),
+                "Consumed" => pools.Sum(a => a.Consumed),
+                "Amount" => pools.Sum(a => a.Amount),
+                "DMD" => pools.Sum(a => a.Amount * a.DMD) / pools.Sum(a => a.Amount),
+                "Nitrogen" => pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount),
+                _ => throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools"),
+            };
         }
 
         /// <summary>
@@ -398,11 +400,11 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
-        private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
             if(Manager == null)
-                Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
+                Summary.WriteMessage(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name), MessageType.Warning);
         }
 
         /// <summary>
@@ -611,7 +613,7 @@ namespace Models.CLEM.Resources
                 if (newPools.Count() > 1)
                     reason = "Initialise pool " + pool.Age.ToString();
 
-                Add(pool, this, "", reason);
+                Add(pool, null, null, reason);
             }
         }
 
@@ -658,6 +660,11 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
+                if(pool.Age == 0)
+                {
+                    pool.Growth = pool.Amount;
+                }
+
                 // allow decaying or no pools currently available
                 if (PastureDecays || Pools.Count() == 0)
                     Pools.Insert(0, pool);
@@ -870,7 +877,7 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            bool noGrowSeason = false;
+            bool noGrowSeason;
             int first = (int)FirstMonthOfGrowSeason;
             int last = (int)LastMonthOfGrowSeason;
             if (first < last)
@@ -889,12 +896,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -937,11 +940,8 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
         } 

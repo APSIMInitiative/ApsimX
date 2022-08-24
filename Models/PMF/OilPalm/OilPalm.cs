@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -15,18 +15,18 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Soils.Nutrients;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.OilPalm
 {
     /// <summary>
-    /// # [Name]
     /// An oil palm model
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class OilPalm : ModelCollectionFromResource, IPlant, ICanopy, IUptake
+    public class OilPalm : Model, IPlant, ICanopy, IUptake
     {
         #region Canopy interface
         /// <summary>Canopy type</summary>
@@ -240,7 +240,7 @@ namespace Models.PMF.OilPalm
         double[] PotSWUptake;
 
         /// <summary>The sw uptake</summary>
-        double[] SWUptake;
+        public IReadOnlyList<double> WaterUptake { get; private set; }
 
         /// <summary>Potential daily evapotranspiration for the palm canopy</summary>
         /// <value>The pep.</value>
@@ -354,7 +354,7 @@ namespace Models.PMF.OilPalm
         /// <value>The n uptake.</value>
         [JsonIgnore]
         [Units("kg/ha")]
-        public double[] NUptake { get; set; }
+        public IReadOnlyList<double> NitrogenUptake { get; set; }
 
         /// <summary>Daily stem dry matter growth</summary>
         /// <value>The stem growth.</value>
@@ -710,7 +710,7 @@ namespace Models.PMF.OilPalm
             StemMass = 0;
             StemN = 0;
             CropInGround = false;
-            NUptake = new double[] { 0 };
+            NitrogenUptake = new double[] { 0 };
             UnderstoryNUptake = new double[] { 0 };
             UnderstoryCoverGreen = 0;
             StemGrowth = 0;
@@ -736,9 +736,9 @@ namespace Models.PMF.OilPalm
 
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[soilPhysical.Thickness.Length];
-            SWUptake = new double[soilPhysical.Thickness.Length];
+            WaterUptake = new double[soilPhysical.Thickness.Length];
             PotNUptake = new double[soilPhysical.Thickness.Length];
-            NUptake = new double[soilPhysical.Thickness.Length];
+            NitrogenUptake = new double[soilPhysical.Thickness.Length];
 
             UnderstoryPotSWUptake = new double[soilPhysical.Thickness.Length];
             UnderstorySWUptake = new double[soilPhysical.Thickness.Length];
@@ -787,8 +787,11 @@ namespace Models.PMF.OilPalm
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">The row configuration.</param>
+        /// <param name="seeds">The number of seeds sown.</param>
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
             SowingData = new SowingParameters();
             SowingData.Population = population;
@@ -814,7 +817,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Diagnostic);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -946,12 +949,12 @@ namespace Models.PMF.OilPalm
                 if (layer <= LayerIndex(RootDepth))
                     if (Roots[layer].Mass > 0)
                     {
-                        RAw[layer] = SWUptake[layer] / Roots[layer].Mass
+                        RAw[layer] = WaterUptake[layer] / Roots[layer].Mass
                                    * soilPhysical.Thickness[layer]
                                    * RootProportion(layer, RootDepth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
-                        RAn[layer] = NUptake[layer] / Roots[layer].Mass
+                        RAn[layer] = NitrogenUptake[layer] / Roots[layer].Mass
                                    * soilPhysical.Thickness[layer]
                                    * RootProportion(layer, RootDepth);
                         RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
@@ -1206,12 +1209,14 @@ namespace Models.PMF.OilPalm
                 throw new Exception("Total potential soil water uptake is zero");
 
             EP = 0.0;
+            var uptake = new double[soilPhysical.LL15mm.Length];
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
-                SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
-                EP += SWUptake[j];
+                uptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
+                EP += uptake[j];
             }
-            waterBalance.RemoveWater(SWUptake);
+            waterBalance.RemoveWater(uptake);
+            WaterUptake = uptake;
 
             if (PEP > 0.0)
             {
@@ -1253,11 +1258,13 @@ namespace Models.PMF.OilPalm
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
+            double[] uptake = new double[soilPhysical.LL15mm.Length];
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
-                NUptake[j] = PotNUptake[j] * Fr;
-            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NUptake));
+                uptake[j] = PotNUptake[j] * Fr;
+            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, uptake));
+            NitrogenUptake = uptake;
 
-            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
+            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NitrogenUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
 
             double Tot = 0;
@@ -1269,7 +1276,7 @@ namespace Models.PMF.OilPalm
 
             // Calculate fraction of N demand for Vegetative Parts
             if ((Ndemand - DeltaBunchN) > 0)
-                Fr = Math.Max(0.0, ((MathUtilities.Sum(NUptake) - DeltaBunchN) / (Ndemand - DeltaBunchN)));
+                Fr = Math.Max(0.0, ((MathUtilities.Sum(NitrogenUptake) - DeltaBunchN) / (Ndemand - DeltaBunchN)));
             else
                 Fr = 0.0;
 
@@ -1290,7 +1297,7 @@ namespace Models.PMF.OilPalm
 
             double EndN = PlantN;
             double Change = EndN - StartN;
-            double Uptake = MathUtilities.Sum(NUptake) / 10.0;
+            double Uptake = MathUtilities.Sum(NitrogenUptake) / 10.0;
             if (Math.Abs(Change - Uptake) > 0.001)
                 throw new Exception("Error in N Allocation");
 
@@ -1772,6 +1779,34 @@ namespace Models.PMF.OilPalm
         public void BiomassRemovalComplete(double fractionRemoved)
         {
 
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // This should replicate the "old" oilpalm docs, but it
+            // may be better to eventually organise things a bit better
+            // (e.g. grouping certain types of models like cultivars
+            // into their own section.)
+            yield return new Section($"The APSIM Oil Palm Model", GetTags());
+        }
+
+        /// <summary>
+        /// Get tags for child models.
+        /// </summary>
+        private IEnumerable<ITag> GetTags()
+        {
+            foreach (IModel child in Children)
+            {
+                // Don't write memos or constants into their own section.
+                if (child is Memo || child is Constant)
+                    foreach (ITag tag in child.Document())
+                        yield return tag;
+                else
+                    yield return new Section(child.Name, child.Document());
+            }
         }
     }
 }

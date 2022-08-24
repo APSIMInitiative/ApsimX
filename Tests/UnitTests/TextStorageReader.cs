@@ -15,6 +15,7 @@ namespace UnitTests
         private DataTable data = new DataTable();
         private List<string> headings = new List<string>();
         private List<string> units = new List<string>();
+        private Dictionary<string, int> nameIdMap = new Dictionary<string, int>();
 
         /// <summary>Constructor.</summary>
         /// <param name="csvData">The data to read.</param>
@@ -31,6 +32,9 @@ namespace UnitTests
                 foreach (var heading in apsimReader.Headings)
                     headings.Add(heading);
 
+                if (data.Columns.Contains("SimulationID"))
+                    foreach (var id in DataTableUtilities.GetColumnAsIntegers(data, "SimulationID").Distinct())
+                        nameIdMap.Add($"Sim{id}", id);
             }
         }
 
@@ -181,8 +185,8 @@ namespace UnitTests
 
             foreach (var name in simulationNames)
             {
-                string id = name.Replace("Sim", "");
-                ids.Add(Convert.ToInt32(id));
+                if (nameIdMap.TryGetValue(name, out int id))
+                    ids.Add(id);
             }
             return ids;
         }

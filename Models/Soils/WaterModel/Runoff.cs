@@ -1,4 +1,4 @@
-﻿namespace Models.WaterModel
+namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;
@@ -13,9 +13,7 @@
     /// When irrigation is applied it can optionally be included in the runoff calculation. This flag (willRunoff) can be set
     /// when applying irrigation.
     /// 
-    /// ![Alt Text](RunoffRainfallCurves.png)
-    /// Figure: Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff). 
-    /// Response curves for three runoff curve numbers for rainfall varying between 0 and 100 mm per day.
+    /// ![Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff). Response curves for three runoff curve numbers for rainfall varying between 0 and 100 mm per day.](RunoffRainfallCurves.png)
     /// 
     /// The user supplies a curve number for average antecedent rainfall conditions (CN2Bare). 
     /// From this value the wet (high runoff potential) response curve and the dry (low runoff potential) 
@@ -23,12 +21,9 @@
     /// two extremes for calculation of runoff depending on the daily moisture status of the soil. 
     /// The effect of soil moisture on runoff is confined to the effective hydraulic depth as specified in the 
     /// module's ini file and is calculated to give extra weighting to layers closer to the soil surface.
-    /// ![Alt Text](RunoffResponseCurve.png)
-    /// Figure: Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff). 
+    /// ![Runoff response curves (ie runoff as a function of total daily rainfall) are specified by numbers from 0 (no runoff) to 100 (all runoff).](RunoffResponseCurve.png)
     ///
-    /// ![Alt Text](CurveNumberCover.png) 
-    /// Figure: Residue cover effect on runoff curve number where bare soil curve number is 75 and total reduction in 
-    /// curve number is 20 at 80% cover. 
+    /// ![Residue cover effect on runoff curve number where bare soil curve number is 75 and total reduction in curve number is 20 at 80% cover.](CurveNumberCover.png)
     /// 
     /// Surface residues inhibit the transport of water across the soil surface during runoff events and so different 
     /// families of response curves are used according to the amount of crop and residue cover.The extent of the effect 
@@ -41,8 +36,6 @@
     /// cumulative rain, ie.roughness is smoothed out by rain. 
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(WaterBalance))]
     public class RunoffModel : Model, IFunction
     {
@@ -212,7 +205,7 @@
                 TillageCnCumWater = 0.0; 
                 TillageCnRed = 0.0;
 
-                summary.WriteMessage(this, "Tillage CN reduction finished");
+                summary.WriteMessage(this, "Tillage CN reduction finished", MessageType.Diagnostic);
             }
         }
     }

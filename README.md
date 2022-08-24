@@ -1,6 +1,6 @@
 # ApsimX
 
-ApsimX is the next generation of [APSIM](http://www.apsim.info)
+ApsimX is the next generation of [APSIM](https://www.apsim.info)
 
 * APSIM is an agricultural modelling framework used extensively worldwide.
 * It can simulate a wide range of agricultural systems.
@@ -22,7 +22,7 @@ Any recent PC with a minimum of 2Gb of RAM.
 
 ### Installation
 
-Binary releases are available via our [registration system](https://apsimdev.apsim.info/APSIM.Registration.Portal/Main.aspx).
+Binary releases are available via our [registration system](https://registration.apsim.info).
 
 ## Contributing
 
@@ -34,4 +34,4 @@ Please read our [guide](https://apsimnextgeneration.netlify.com/development/cont
 
 ## Publications 
 
-* [doi:10.1016/j.envsoft.2014.07.009](http://dx.doi.org/10.1016/j.envsoft.2014.07.009)
+* [doi:10.1016/j.envsoft.2014.07.009](https://dx.doi.org/10.1016/j.envsoft.2014.07.009)

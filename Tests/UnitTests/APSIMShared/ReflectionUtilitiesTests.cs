@@ -1,24 +1,36 @@
 namespace UnitTests.APSIMShared
 {
     using APSIM.Shared.Utilities;
+    using Models.Core;
     using NUnit.Framework;
     using System;
-    using System.Collections.Generic;
+    using System.IO;
 
     [TestFixture]
     public class ReflectionUtilitiesTests
     {
-        /// <summary>
-        /// Test array conversion. Should allow for comma-separated values.
-        /// </summary>
+        /// <summary>Test csv string to string[] conversion.</summary>
         [Test]
         public void TestStringToObjectArray()
         {
-            string input = "a,b,c";
-            object output = ReflectionUtilities.StringToObject(typeof(string[]), input);
-            string[] expectedOutput = new string[3] { "a", "b", "c" };
-            
-            Assert.AreEqual(expectedOutput, output);
+            Assert.AreEqual(new string[3] { "a", "b", "c" }, 
+                            ReflectionUtilities.StringToObject(typeof(string[]), "a,b,c"));
+        }
+
+        /// <summary>Test yyyy-mm-dd string to DateTime conversion.</summary>
+        [Test]
+        public void TestYYYYMMDDStringToDate()
+        {
+            Assert.AreEqual(new DateTime(2000, 1, 1), 
+                            ReflectionUtilities.StringToObject(typeof(DateTime), "2000-01-01"));
+        }
+
+        /// <summary>Test full date string to DateTime conversion.</summary>
+        [Test]
+        public void TestFullDateStringToDate()
+        {
+            Assert.AreEqual(new DateTime(2000, 1, 10),
+                            ReflectionUtilities.StringToObject(typeof(DateTime), "2000-01-10T00:00:00"));
         }
 
         /// <summary>
@@ -45,6 +57,23 @@ namespace UnitTests.APSIMShared
             string output = ReflectionUtilities.ObjectToString(input);
             string expectedOutput = "a, b,  c, d ";
             Assert.AreEqual(expectedOutput, output);
+        }
+
+        /// <summary>
+        /// Test binary deserealization of SimulationException.
+        /// </summary>
+        [Test]
+        public void TestDeserializeSimulationException()
+        {
+            SimulationException exception = new SimulationException("Custom message", "Name of the simulation", "The filename");
+            using (Stream stream = ReflectionUtilities.BinarySerialise(exception))
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                SimulationException cloned = (SimulationException)ReflectionUtilities.BinaryDeserialise(stream);
+                Assert.AreEqual(exception.Message, cloned.Message);
+                Assert.AreEqual(exception.SimulationName, cloned.SimulationName);
+                Assert.AreEqual(exception.FileName, cloned.FileName);
+            }
         }
     }
 }

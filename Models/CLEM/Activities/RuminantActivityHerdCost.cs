@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -21,66 +23,18 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
+    [Description("Arrange payment of a ruminant herd expense with specified style")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
-    public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
-        private FinanceType bankAccount;
-
-        /// <summary>
-        /// Amount payable
-        /// </summary>
-        [Description("Amount payable")]
-        [Required, GreaterThanValue(0)]
-        public double Amount { get; set; }
-
-        /// <summary>
-        /// Payment style
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
-        [Description("Payment style")]
-        [Required]
-        public AnimalPaymentStyleType PaymentStyle { get; set; }
-
-        /// <summary>
-        /// Bank account to use
-        /// </summary>
-        [Description("Bank account to use")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
-        public string AccountName { get; set; }
-
-        /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of fee for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
-
-        #region validation
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            switch (PaymentStyle)
-            {
-                case AnimalPaymentStyleType.Fixed:
-                case AnimalPaymentStyleType.perHead:
-                case AnimalPaymentStyleType.perAE:
-                    break;
-                default:
-                    string[] memberNames = new string[] { "PaymentStyle" };
-                    results.Add(new ValidationResult("Payment style " + PaymentStyle.ToString() + " is not supported", memberNames));
-                    break;
-            }
-            return results;
-        } 
-        #endregion
+        private int numberToDo;
+        private int numberToSkip;
+        private double amountToDo;
+        private double amountToSkip;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Constructor
@@ -88,7 +42,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityHerdCost()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -98,119 +51,92 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
-            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            List<ResourceRequest> resourcesNeeded = null;
-
-            double amountNeeded = 0;
-            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-            if (herd.Any())
+            switch (type)
             {
-                switch (PaymentStyle)
+                case "RuminantGroup":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>()
+                        );
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                        },
+                        measures: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per AE"
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
+
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.unit)
                 {
-                    case AnimalPaymentStyleType.Fixed:
-                        amountNeeded = Amount;
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case AnimalPaymentStyleType.perHead:
-                        amountNeeded = Amount * herd.Count();
+                    case "per head":
+                        valuesForCompanionModels[valueToSupply.Key] = number;
                         break;
-                    case AnimalPaymentStyleType.perAE:
-                        amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
+                    case "per AE":
+                        amountToDo = uniqueIndividuals.Sum(a => a.AdultEquivalent);
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
-                        break;
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                 }
             }
-
-            if (amountNeeded > 0)
-            {
-                // determine breed
-                // this is too much overhead for a simple reason field, especially given large herds.
-                //List<string> res = herd.Select(a => a.Breed).Distinct().ToList();
-                //string breedName = (res.Count() > 1) ? "Multiple breeds" : res.First();
-                string breedName = "Herd cost";
-
-                resourcesNeeded = new List<ResourceRequest>()
-                {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = amountNeeded,
-                        Resource = bankAccount,
-                        ResourceType = typeof(Finance),
-                        ResourceTypeName = this.AccountName.Split('.').Last(),
-                        ActivityModel = this,
-                        RelatesToResource = breedName,
-                        Category = TransactionCategory
-                    }
-                };
-            }
-            return resourcesNeeded;
+            return null;
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override void AdjustResourcesForTimestep()
         {
-            // get all potential dry breeders
-            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-            int head = herd.Count();
-            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            if (herd.Any())
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                switch (requirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        numberUnits = head / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+                // find shortfall by identifiers as these may have different influence on outcome
+                var shorts = shortfalls.Where(a => a.CompanionModelDetails.unit == "per head").FirstOrDefault();
+                if (shorts != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - shorts.Available / shorts.Required));
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        numberUnits = animalEquivalents / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
-
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-                } 
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.unit == "per AE").FirstOrDefault();
+                if (amountShort != null)
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        #region descriptive summary
-
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            if (numberToDo - numberToSkip > 0)
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
-                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-                htmlWriter.Write(" for all transactions</div>");
-                return htmlWriter.ToString(); 
+                SetStatusSuccessOrPartial(MathUtilities.IsPositive(numberToSkip + amountToSkip));
             }
-        } 
-        #endregion
+        }
 
     }
 }

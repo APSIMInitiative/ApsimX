@@ -3,6 +3,7 @@
     using Core;
     using Models.Functions;
     using System;
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
     using System.Data;
@@ -10,14 +11,13 @@
     using Models.PMF;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class CarbonFlow : Model, ICustomDocumentation
+    public class CarbonFlow : Model
     {
         private NutrientPool[] destinations;
         private double[] carbonFlowToDestination;
@@ -36,7 +36,7 @@
         [Link(ByName = true)]
         ISolute NH4 = null;
 
-        [Link(ByName = true)]
+        [Link(ByName = true, IsOptional =true)]
         ISolute LabileP = null;
 
         /// <summary>
@@ -98,11 +98,16 @@
         {
             NutrientPool source = Parent as NutrientPool;
 
+            int numLayers = source.C.Length;
+
             double[] no3 = NO3.kgha;
             double[] nh4 = NH4.kgha;
-            double[] labileP = LabileP.kgha;
+            double[] labileP;
+            if (LabileP == null)
+                labileP = new double[numLayers];
+            else
+                labileP = LabileP.kgha;
 
-            int numLayers = source.C.Length;
             int numDestinations = destinations.Length;
             for (int i = 0; i < numLayers; i++)
             {
@@ -217,44 +222,30 @@
             }
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // Write Phase Table
+            yield return new Paragraph($"**Destination of C from {Name}**");
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Destination Pool", typeof(string));
+            tableData.Columns.Add("Carbon Fraction", typeof(string));
 
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            if (destinationNames != null)
+                for (int j = 0; j < destinationNames.Length; j++)
+                {
+                    DataRow row = tableData.NewRow();
+                    row[0] = destinationNames[j];
+                    row[1] = destinationFraction[j].ToString();
+                    tableData.Rows.Add(row);
+                }
 
-                // Write Phase Table
-                tags.Add(new AutoDocumentation.Paragraph("**Destination of C from " + this.Name + "**", indent));
-                DataTable tableData = new DataTable();
-                tableData.Columns.Add("Destination Pool", typeof(string));
-                tableData.Columns.Add("Carbon Fraction", typeof(string));
+            yield return new Table(tableData);
 
-                if (destinationNames != null)
-                    for (int j = 0; j < destinationNames.Length; j++)
-                    {
-                        DataRow row = tableData.NewRow();
-                        row[0] = destinationNames[j];
-                        row[1] = destinationFraction[j].ToString();
-                        tableData.Rows.Add(row);
-                    }
-
-                tags.Add(new AutoDocumentation.Table(tableData, indent));
-
-                // write remaining children
-                foreach (IModel memo in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-            }
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
         }
-
     }
 }

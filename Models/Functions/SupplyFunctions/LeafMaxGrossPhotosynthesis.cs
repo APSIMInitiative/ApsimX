@@ -5,11 +5,11 @@ using System.Text;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// # [Name]
     /// Leaf gross photosynthesis rate is determined using an input gross photosynthesis rate at reference CO2 concentration (340~350ppm) and at optimal temperature of 27.5C, 
     /// together with the CO2 concentrartion in the air and the daily daytime temperature. 
     /// For C3 crop, the Ps-CO2 relationship used is from ORYZA2000 Bauman et al (2001)
@@ -97,6 +97,17 @@ namespace Models.Functions.SupplyFunctions
             PmaxGross = Math.Max((float)1.0, Pgmmax * (CO2Func * TempFunc * Fact));
 
             return PmaxGross;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

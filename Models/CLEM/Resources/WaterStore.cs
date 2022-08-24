@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all water store types (e.g. tank, dam, bore) for the simulation.")]
+    [Description("Resource group for all water store types (e.g. tank, dam, bore) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Water/WaterStore.htm")]
     public class WaterStore : ResourceBaseWithTransactions

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -14,7 +14,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\n## Presentation\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  To simulate the aboveground plant structure, including the photosynthesis process, the plantain model uses the SimpleLeaf procedure of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.\n\n\n##Inclusion in APSIM simulations\nA forage plantain crop can be included in a simulation the same as any other APSIM crop.\n\n * - The plantain object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;\n * - To become active and grow, plantain needs to be sown using a manager script with a sowing rule. e.g.:\n~~~\n Plantain.Sow(cultivar: Tonic, population: 300, depth: 10, rowSpacing: 150);  \n~~~\nIf a specified cultivar is not available, a fatal error will be thrown.\n\n\n###Harvest and biomass removal\nPlantain biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:\n~~~\n[EventSubscribe(\"Commencing\")]  \nprivate void OnSimulationCommencing(object sender, EventArgs e)  \n{  \n  RemoveFraction = new RemovalFractions(Plantain.Organs);  \n}  \n[EventSubscribe(\"DoManagement\")]    \nprivate void OnDoManagement(object sender, EventArgs e)  \n{  \n  if (Clock.Today.Date == HarvestDate)  \n  {  \n    RemoveFraction.SetFractionToRemove(\"Leaf\", 0.80);  \n    RemoveFraction.SetFractionToRemove(\"Stem\", 0.50);  \n    RemoveFraction.SetFractionToResidue(\"leaf\",0.05);\n    Plantain.Harvest(RemoveFraction);  \n  }\n}  \n~~~\nThe RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.\n\n\n###Crop termination\nTo fully terminate a crop the EndCrop event should be raised:\n~~~\n Plantain.EndCrop();  \n~~~\nOnce a crop has been ended the field is open to be used by another APSIM plant model, or another plantain crop.  Note that ending plantain is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.\n\n\n## Acknowledgements\nThis model was developed with help from Brittany Paton and Russel McAuliffe organising data and simulations. Datasets were kindly shared by Julia M. Lee and the Forages for Reduced Nitrogen Leaching (FRNL) programme.  \n",
+          "Text": "_Rogerio Cichota, AgResearch, New Zealand_\n\n\n## Preamble\n\nPlantain (*Plantago lanceolata*), also know as English plantain, ribgrass, or ribwort, is a herbaceous perennial herb with a broad distribution in the native grasslands of Eurasia ([SagarHarper_1964]; [StewartPlantain_1996]).  It is now common around the world in suitable habitats with temperate and subtropical climates.  The plant consists of a rosette of basal semi-erect leaves which may have one or more flowering stalks.  The leaves are green to grey-green in colour, have a characteristic lanceolate shape with 3 to 5 parallel veins along the length and have few or no hairs.  The stems are leafless, growing some 10-15cm above the leaves and have scattered hairs toward the base of the plant.  Each stalk terminates in an ovoid inflorescence containing many small flowers each with a pointed bract.  The inflrescence is 1-4cm long and changes shape over time (from a cone to a cilinder) as the flowers mature from the based to the top, the colour also changes from the initial grey-green to light brown when mature.  The flowering period goes from late spring to early fall and varies between plants, it can last several months for a population of plants in a given locale.  Plantain does not need vernalisation to trigger flowering.  The flowers are wind-pollinated and are replaced by a small seed capsule containing two small seeds, with weight varying between 1.5 and 2.0 mg per seed. Seeds have an oblong shape and the colour varies from dark brown to black.  The root system consists of a relatively shallow crown of coarse fibrous roots including adventitious roots ([SandersonElwinger_2000a]) and although technically a taprooted species it does not have the typical solid deep taproot.  Plantain can allocate greater proportion of roots at depth, giving a competitive advantage over shallow root grasses ([StewartPlantain_1996]; [NieEtAl_2008]; [vanDenBergeEtAl_2014]).\n\nSelection of plantain cultivars for use as forage have focused mostly on narrow leaf varieties, which have an erect, bushy, growth habit and ability to tiller under grazing ([StewartPlantain_1996]), more recently some emphasis has also been put on the ability to growth over cold periods.  Forage plantain can grow large leaves, up to around 40cm instead of typical 15-25cm, and these are highly palatable to grazing animals, being specifically targeted by sheep ([SagarHarper_1964]; [StewartPlantain_1996]; [RumballKeog_1997]; [QuijadaThesis_2015]). Reproductive organs are less palatable and mature stalks are avoided by grazers ([StewartPlantain_1996]; [MoorheadPigot_2009]; [AyalaEtAl_2011]).  Plantain is highly nutritious, has good digestibility, and the mineral composition usually is higher than ryegras-clover swards ([StewartPlantain_1996]; [JacobsWard_2010]; [ElgersmaEtal_2014]; [LeeEtAlYields_2015]).  Potential medicinal effects of plantain have been suggested and few bio-active compounds that may alter rumen fermentation and N partitionin in the animal are being investigated ([StewartPlantain_1996]; [QuijadaThesis_2015]; [JansmaThesis_2016]).  \n\n\n\n**Objective:**  The model presented here has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantin crop.  Currently, the focus is on describing biomass accumulation and regrowth after harvest on monocultural swards. As part of APSIM's PMF, using plantain in mixed swards is possible, but this has not been properly tested yet.  Likewise, describing the effect of population decrease on plant growth was not attempted; for swards free of weeds and within typical population ranges, the changes in plant size (number of tillers) and LAI should compensate for loss of population, but competition with weeds and others would alter this pattern significantly.  \nSimulating variations in plant N concentration (seasonal or due to changes in soil status)  is not a major focus of the current model.  Further development of PMF's supply/demand processes are needed for capturing the variations in N content typically seen in perennial species.  \n\n## Presentation\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  To simulate the aboveground plant structure, including the photosynthesis process, the plantain model uses the SimpleLeaf procedure of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.\n\n\n## Inclusion in APSIM simulations\n\nA forage plantain crop can be included in a simulation the same as any other APSIM crop.\n\n - The plantain object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;\n - To become active and grow, plantain needs to be sown using a manager script with a sowing rule. e.g.:\n~~~\n Plantain.Sow(cultivar: Tonic, population: 300, depth: 10, rowSpacing: 150);  \n~~~\nIf a specified cultivar is not available, a fatal error will be thrown.\n\n\n### Harvest and biomass removal\n\nPlantain biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:\n~~~\n[EventSubscribe(\"Commencing\")]  \nprivate void OnSimulationCommencing(object sender, EventArgs e)  \n{  \n  RemoveFraction = new RemovalFractions(Plantain.Organs);  \n}  \n[EventSubscribe(\"DoManagement\")]    \nprivate void OnDoManagement(object sender, EventArgs e)  \n{  \n  if (Clock.Today.Date == HarvestDate)  \n  {  \n    RemoveFraction.SetFractionToRemove(\"Leaf\", 0.80);  \n    RemoveFraction.SetFractionToRemove(\"Stem\", 0.50);  \n    RemoveFraction.SetFractionToResidue(\"leaf\",0.05);\n    Plantain.Harvest(RemoveFraction);  \n  }\n}  \n~~~\nThe RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.\n\n\n### Crop termination\nTo fully terminate a crop the EndCrop event should be raised:\n~~~\n Plantain.EndCrop();  \n~~~\nOnce a crop has been ended the field is open to be used by another APSIM plant model, or another plantain crop.  Note that ending plantain is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.\n\n\n## Acknowledgements\nThis model was developed with help from Brittany Paton and Russel McAuliffe organising data and simulations. Datasets were kindly shared by Julia M. Lee and the Forages for Reduced Nitrogen Leaching (FRNL) programme.  \n",
           "Name": "GeneralDescription",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -111,8 +111,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 15.0,
-              "ShootRate": 10.0,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -133,6 +131,48 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 15.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 10.0,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -331,7 +371,8 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -345,7 +386,8 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -379,7 +421,8 @@
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -393,7 +436,8 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -403,7 +447,8 @@
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -828,7 +873,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.022,
+                  "FixedValue": 0.02,
                   "Units": "m^2/g",
                   "Name": "SpecificLeafArea",
                   "Children": [],
@@ -909,8 +954,8 @@
                   ],
                   "Y": [
                     100.0,
-                    350.0,
-                    500.0
+                    200.0,
+                    200.0
                   ],
                   "Name": "XYPairs",
                   "Children": [],
@@ -4813,8 +4858,8 @@
                     0.003
                   ],
                   "Y": [
-                    0.02,
-                    0.03
+                    0.01,
+                    0.02
                   ],
                   "Name": "XYPairs",
                   "Children": [],
@@ -5379,32 +5424,9 @@
               "Name": "InitialWt",
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.Constant, Models",
                   "Name": "Structural",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": "g/plant",
-                      "Name": "InitialRootWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].Population",
-                      "Name": "Population",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "FixedValue": "0.002"
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -5417,11 +5439,6 @@
                   "FixedValue": "0.0"
                 }
               ]
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -6175,7 +6192,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
@@ -6231,6 +6248,16 @@
           "FixedValue": 0.0,
           "Units": null,
           "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,

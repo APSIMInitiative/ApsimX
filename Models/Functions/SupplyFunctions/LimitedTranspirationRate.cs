@@ -8,11 +8,11 @@ using System.Xml.Serialization;
 using System.Linq;
 using Models.PMF;
 using Models.PMF.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// # [Name]
     /// This module simulates photosynthesis using the Soil-Plant-Atmosphere System Simulation(SPASS) developed by Wang(1997), with a few modifications, such as a downscaling to hourly time step with the temperature diurnal pattern from Resource et al. (1981). Hence, the model simulates hourly potential biomass assimilation.VPD is calculated as the difference between hourly saturated vapor pressure(SVP) and SVP at minimum temperature(Messina et al., 2015) and is used to calculate hourly transpiration as follows:
     /// 
     /// TR<sub>pot,t</sub> = (ΔDM<sub>pot, t</sub>× VPD<sub>t</sub>) / TEC
@@ -192,6 +192,18 @@ namespace Models.Functions.SupplyFunctions
         {
             return dailyActDM;
         }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         //------------------------------------------------------------------------------------------------
 
         /// <summary>Daily growth increment of total plant biomass</summary>

@@ -35,6 +35,7 @@ EXE_PATH="$bundle_res/bin/ApsimNG"
 export DYLD_LIBRARY_PATH="$bundle_lib"
 
 # Other misc env vars used by gtk.
+export GSETTINGS_SCHEMA_DIR="$bundle_data/glib-2.0/schemas"
 export XDG_CONFIG_DIRS="$bundle_etc"/xdg
 export XDG_DATA_DIRS="$bundle_data"
 export GTK_DATA_PREFIX="$bundle_res"

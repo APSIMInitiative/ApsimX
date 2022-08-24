@@ -6,7 +6,6 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
@@ -20,7 +19,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents a shared market place for CLEM farms")]
+    [Description("A shared market place for CLEM farms")]
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
@@ -90,23 +89,9 @@ namespace Models.CLEM
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
-            // commencing is too early as Summary has not been created for reporting.
-            // some values assigned in commencing will not be checked before processing, but will be caught here
-            // each ZoneCLEM and Market will call this validation for all children
-            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
+            // see ZoneCLEM OnCLEMValidate for more details
             if (!ZoneCLEM.Validate(this, "", this, summary))
-            {
-                string error = "@i:Invalid parameters in model";
-
-                // get all validations 
-                if (summary.Messages() != null)
-                    foreach (DataRow item in summary.Messages().Rows)
-                        if (item[3].ToString().StartsWith("Invalid"))
-                            error += "\r\n" + item[3].ToString();
-
-                throw new ApsimXException(this, error.Replace("&shy;", "."));
-            }
+                ZoneCLEM.ReportInvalidParameters(this);
         }
 
         #region validation
@@ -145,19 +130,31 @@ namespace Models.CLEM
             }
 
             return results;
-        } 
+        }
         #endregion
 
         #region descriptive summary
+
         /// <inheritdoc/>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
+        /// <inheritdoc/>
+        public string GetFullSummary(object model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
+                var parents = parentControls.ToList();
+                parents.Add(model.GetType().Name);
+
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, "", markdown2Html));
+                    htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
                 htmlWriter.Write("</div>");
+
                 return htmlWriter.ToString();
             }
         } 

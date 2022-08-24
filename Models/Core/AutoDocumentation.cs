@@ -19,6 +19,8 @@
     {
         private static XmlDocument doc = null;
 
+        private static object lockObject = new object();
+
         /// <summary>Gets the units from a declaraion.</summary>
         /// <param name="model">The model containing the declaration field.</param>
         /// <param name="fieldName">The declaration field name.</param>
@@ -83,11 +85,11 @@
         {
             if (model == null)
                 return;
-            if (force || (model.IncludeInDocumentation && model.Enabled))
+            if (force || (/*model.IncludeInDocumentation &&*/ model.Enabled))
             {
-                if (model is ICustomDocumentation)
-                    (model as ICustomDocumentation).Document(tags, headingLevel, indent);
-                else
+                // if (model is ICustomDocumentation)
+                //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
+                // else
                     DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
             }
         }
@@ -104,12 +106,9 @@
         {
             if (model == null)
                 return;
+
             if (doc == null)
-            {
-                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
-                doc = new XmlDocument();
-                doc.Load(fileName);
-            }
+                InitialiseDoc();
 
             string nameToFindInSummary = "members/T:" + model.GetType().FullName.Replace("+", ".") + "/summary";
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
@@ -191,6 +190,22 @@
         }
 
         /// <summary>
+        /// Initialise the doc instance.
+        /// </summary>
+        private static void InitialiseDoc()
+        {
+            lock (lockObject)
+            {
+                if (doc == null)
+                {
+                    string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                    doc = new XmlDocument();
+                    doc.Load(fileName);
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the summary of a member (class, field, property)
         /// </summary>
         /// <param name="path">The path to the member.</param>
@@ -201,7 +216,7 @@
             if (rawSummary != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(rawSummary, @"\n\s+", "\n");
+                return Regex.Replace(rawSummary, @"\n[ \t]+", "\n");
             }
             return null;
         }
@@ -217,11 +232,7 @@
                 return path;
 
             if (doc == null)
-            {
-                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
-                doc = new XmlDocument();
-                doc.Load(fileName);
-            }
+                InitialiseDoc();
 
             path = path.Replace("+", ".");
 
@@ -244,11 +255,7 @@
                 return path;
 
             if (doc == null)
-            {
-                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
-                doc = new XmlDocument();
-                doc.Load(fileName);
-            }
+                InitialiseDoc();
 
             path = path.Replace("+", ".");
 
@@ -540,7 +547,7 @@
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (child.IncludeInDocumentation &&
+                if (/*child.IncludeInDocumentation &&*/
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
         }

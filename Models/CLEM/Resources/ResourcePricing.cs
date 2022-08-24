@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStoreType))]
     [ValidParent(ParentType = typeof(ProductStoreTypeManure))]
     [ValidParent(ParentType = typeof(WaterType))]
-    [Description("This component defines the pricing of a resource type")]
+    [Description("Defines the pricing of a resource type")]
     [Version(1, 0, 2, "Includes option to specify sale and purchase pricing")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
@@ -138,12 +138,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

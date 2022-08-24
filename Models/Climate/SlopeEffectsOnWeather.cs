@@ -1,4 +1,4 @@
-﻿namespace Models.Climate
+namespace Models.Climate
 {
     using Models.Core;
     using System;
@@ -311,10 +311,10 @@
             // NOTE: dVapPressure has a variable upper bound, it cannot be higher than the saturated VP
             //       this upper limit will be assumed equal to 95% of saturation at daily Tmax
 
-            summary.WriteMessage(this, "     Weather variables will be adjusted for slope and aspect");
-            summary.WriteMessage(this, "      - Radiation and temperature adjusted based on the model described by Cichota (2015)");
-            summary.WriteMessage(this, "      - Rainfall, wind, and vapour pressure are simple relative changes - not explicitly linked to slope");
-            summary.WriteMessage(this, "      - The values of RH, if existent, will be adjusted whenever the temperature or vp change");
+            summary.WriteMessage(this, "     Weather variables will be adjusted for slope and aspect", MessageType.Diagnostic);
+            summary.WriteMessage(this, "      - Radiation and temperature adjusted based on the model described by Cichota (2015)", MessageType.Diagnostic);
+            summary.WriteMessage(this, "      - Rainfall, wind, and vapour pressure are simple relative changes - not explicitly linked to slope", MessageType.Diagnostic);
+            summary.WriteMessage(this, "      - The values of RH, if existent, will be adjusted whenever the temperature or vp change", MessageType.Diagnostic);
         }
 
         /// <summary>Evaluate whether weather data is to be adjusted due to slope and aspect.</summary>

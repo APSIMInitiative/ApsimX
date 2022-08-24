@@ -8,7 +8,6 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.PMF;
 using Models.Soils;
-using Models.Soils.Standardiser;
 using Models.Storage;
 using NUnit.Framework;
 using UnitTests.Storage;
@@ -100,7 +99,7 @@ namespace UnitTests.Core
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false);
             foreach (Soil soil in sims.FindAllDescendants<Soil>())
-                SoilStandardiser.Standardise(soil);
+                soil.Standardise();
             DataStore storage = sims.FindDescendant<DataStore>();
             storage.UseInMemoryDB = true;
             Clock clock = sims.FindDescendant<Clock>();

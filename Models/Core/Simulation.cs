@@ -1,7 +1,7 @@
-﻿using APSIM.Shared.JobRunning;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Soils.Standardiser;
 using Models.Storage;
 using Newtonsoft.Json;
 using System;
@@ -12,7 +12,6 @@ using System.Threading;
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
     /// A simulation model
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]
@@ -21,7 +20,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, ICustomDocumentation, IReportsStatus
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
     {
         [Link]
         private ISummary summary = null;
@@ -165,6 +164,12 @@ namespace Models.Core
         public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
 
         /// <summary>
+        /// Called when models should disconnect from events to which they've
+        /// dynamically subscribed.
+        /// </summary>
+        public event EventHandler UnsubscribeFromEvents;
+
+        /// <summary>
         /// Simulation has completed. Clear scope and locator
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -207,59 +212,60 @@ namespace Models.Core
         /// </summary>
         public void Prepare()
         {
-
-            // Remove disabled models.
-            RemoveDisabledModels(this);
-
-            // Standardise the soil.
-            var soils = FindAllDescendants<Soils.Soil>();
-            foreach (Soils.Soil soil in soils)
-                SoilStandardiser.Standardise(soil);
-
-            // If this simulation was not created from deserialisation then we need
-            // to parent all child models correctly and call OnCreated for each model.
-            bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
-            if (!hasBeenDeserialised)
-            {
-                // Parent all models.
-                this.ParentAllDescendants();
-
-                // Call OnCreated in all models.
-                foreach (IModel model in FindAllDescendants().ToList())
-                    model.OnCreated();
-            }
-
-            // Call OnPreLink in all models.
-            // Note the ToList(). This is important because some models can
-            // add/remove models from the simulations tree in their OnPreLink()
-            // method, and FindAllDescendants() is lazy.
-            FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
-
-            if (Services == null || Services.Count < 1)
-            {
-                var simulations = FindAncestor<Simulations>();
-                if (simulations != null)
-                    Services = simulations.GetServices();
-                else
-                {
-                    Services = new List<object>();
-                    IDataStore storage = this.FindInScope<IDataStore>();
-                    if (storage != null)
-                        Services.Add(this.FindInScope<IDataStore>());
-                    Services.Add(new ScriptCompiler());
-                }
-            }
-
-            var links = new Links(Services);
-            var events = new Events(this);
-
             try
             {
+                // Remove disabled models.
+                RemoveDisabledModels(this);
+
+                // Standardise the soil.
+                var soils = FindAllDescendants<Soils.Soil>();
+                foreach (Soils.Soil soil in soils)
+                    soil.Standardise();
+
+                // If this simulation was not created from deserialisation then we need
+                // to parent all child models correctly and call OnCreated for each model.
+                bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
+                if (!hasBeenDeserialised)
+                {
+                    // Parent all models.
+                    this.ParentAllDescendants();
+
+                    // Call OnCreated in all models.
+                    foreach (IModel model in FindAllDescendants().ToList())
+                        model.OnCreated();
+                }
+
+                // Call OnPreLink in all models.
+                // Note the ToList(). This is important because some models can
+                // add/remove models from the simulations tree in their OnPreLink()
+                // method, and FindAllDescendants() is lazy.
+                FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
+
+                if (Services == null || Services.Count < 1)
+                {
+                    var simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        Services = simulations.GetServices();
+                    else
+                    {
+                        Services = new List<object>();
+                        IDataStore storage = this.FindInScope<IDataStore>();
+                        if (storage != null)
+                            Services.Add(this.FindInScope<IDataStore>());
+                    }
+                }
+
+                if (!Services.OfType<ScriptCompiler>().Any())
+                    Services.Add(new ScriptCompiler());
+
+                var links = new Links(Services);
+                var events = new Events(this);
+
                 // Connect all events.
                 events.ConnectEvents();
 
                 // Resolve all links
-                links.Resolve(this, true);
+                links.Resolve(this, true, throwOnFail: true);
 
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
@@ -298,7 +304,7 @@ namespace Models.Core
             {
                 // Exception occurred. Write error to summary.
                 simulationError = new SimulationException("", err, Name, FileName);
-                summary?.WriteError(this, simulationError.ToString());
+                summary?.WriteMessage(this, simulationError.ToString(), Models.Core.MessageType.Error);
 
                 // Rethrow exception
                 throw simulationError;
@@ -323,6 +329,14 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Cleanup the simulation after the run.
+        /// </summary>
+        public void Cleanup()
+        {
+            UnsubscribeFromEvents?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Remove all disabled child models from the specified model.
         /// </summary>
         /// <param name="model"></param>
@@ -332,26 +346,35 @@ namespace Models.Core
             model.Children.ForEach(child => RemoveDisabledModels(child));
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
-        }
-
         /// <summary>
         /// Gets the locater model.
         /// </summary>
         protected override Locater Locator()
         {
             return Locater;
+        }
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, DocumentChildren());
+        }
+
+        private IEnumerable<ITag> DocumentChildren()
+        {
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+            foreach (ITag tag in DocumentChildren<Graph>())
+                yield return tag;
+            foreach (ITag tag in DocumentChildren<Map>())
+                yield return tag;
+            foreach (ITag tag in FindAllDescendants<Manager>().SelectMany(m => m.Document()))
+                yield return tag;
         }
     }
 }

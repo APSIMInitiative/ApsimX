@@ -4,7 +4,6 @@
     using Models.PMF.Interfaces;
 
     /// <summary>
-    /// # [Name]
     /// Calculate cohort population using stem population.
     /// </summary>
     [Serializable]    

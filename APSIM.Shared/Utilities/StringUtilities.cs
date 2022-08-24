@@ -273,7 +273,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static string RemoveAfter(string st, char openBracket)
         {
-            int Pos = st.IndexOf(openBracket);
+            int Pos = st.LastIndexOf(openBracket);
             if (Pos != -1)
                 return st.Substring(0, Pos);
             else
@@ -285,7 +285,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static string GetAfter(string st, string delimiter)
         {
-            int Pos = st.IndexOf(delimiter);
+            int Pos = st.LastIndexOf(delimiter);
             if (Pos != -1)
                 return st.Substring(Pos + delimiter.Length);
             else

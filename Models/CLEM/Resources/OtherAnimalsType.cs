@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
-    [Description("This resource represents an other animal group (e.g. Chickens).")]
+    [Description("This resource represents an other animal type (e.g. chickens)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -84,7 +84,7 @@ namespace Models.CLEM.Resources
                 if (child is OtherAnimalsTypeCohort)
                 {
                     ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
-                    Add(child, this, "", "Setup");
+                    Add(child, null, null, "Initial numbers");
                 }
             }
         }

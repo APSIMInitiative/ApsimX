@@ -50,7 +50,7 @@
         public void Destroy()
         {
             menuItem.Activated -= OnMenuClicked;
-            menuItem.Cleanup();
+            menuItem.Dispose();
         }
 
         private void OnMenuClicked(object sender, EventArgs e)

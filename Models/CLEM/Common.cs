@@ -1,11 +1,74 @@
-﻿using Models.CLEM.Resources;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Models.CLEM
 {
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ActivityStatus
+    {
+        /// <summary>
+        /// Performed with all resources available
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Performed with partial resources available
+        /// </summary>
+        Partial,
+        /// <summary>
+        /// Insufficient resources so activity ignored
+        /// </summary>
+        Ignored,
+        /// <summary>
+        /// Insufficient resources so simulation stopped
+        /// </summary>
+        Critical,
+        /// <summary>
+        /// Indicates a timer occurred successfully
+        /// </summary>
+        Timer,
+        /// <summary>
+        /// Indicates a calculation event occurred
+        /// </summary>
+        Calculation,
+        /// <summary>
+        /// Indicates activity occurred but was not needed
+        /// </summary>
+        NotNeeded,
+        /// <summary>
+        /// Indicates activity caused a warning and was not performed
+        /// </summary>
+        Warning,
+        /// <summary>
+        /// Indicates activity was place holder or parent activity
+        /// </summary>
+        NoTask,
+        /// <summary>
+        /// Insufficient resources so activity skipped
+        /// </summary>
+        Skipped,
+
+    }
+
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ResourceAllocationStyle
+    {
+        /// <summary>
+        /// Automatically perform in CLEMGetResourcesRequired
+        /// </summary>
+        Automatic,
+        /// <summary>
+        /// Manually perform in activity code.
+        /// </summary>
+        Manual,
+        /// <summary>
+        /// Controlled by parent activity.
+        /// </summary>
+        ByParent,
+    }
 
     /// <summary>
     /// Crop store style
@@ -122,60 +185,6 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Reasons link to herd change for use with manual mark for sale
-    /// </summary>
-    public enum MarkForSaleReason
-    {
-        /// <summary>
-        /// Reason not provided
-        /// </summary>
-        NotProvided = 0,
-        /// <summary>
-        /// Individual sold as marked for sale
-        /// </summary>
-        MarkedSale = 4,
-        /// <summary>
-        /// Individual reached sale weight or age
-        /// </summary>
-        AgeWeightSale = 12,
-        /// <summary>
-        /// Individual consumed by household
-        /// </summary>
-        Consumed = 15,
-        /// <summary>
-        /// Destocking sale
-        /// </summary>
-        DestockSale = 16,
-        /// <summary>
-        /// Dry breeder sold
-        /// </summary>
-        DryBreederSale = 6,
-        /// <summary>
-        /// Individual reached maximim age and sold
-        /// </summary>
-        MaxAgeSale = 10,
-        /// <summary>
-        /// Trade individual sold weight/age
-        /// </summary>
-        TradeSale = 5 
-    }
-
-    /// <summary>
-    /// Mustering timing type
-    /// </summary>
-    public enum MusterTimingType
-    {
-        /// <summary>
-        /// At start of time step
-        /// </summary>
-        StartOfTimestep,
-        /// <summary>
-        /// At end of time step
-        /// </summary>
-        EndOfTimeStep
-    }
-
-    /// <summary>
     /// Animal pricing style
     /// </summary>
     public enum PricingStyleType
@@ -214,115 +223,37 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Crop payment style
+    /// Labour limit type calculation type
     /// </summary>
-    public enum CropPaymentStyleType
+    public enum LabourLimitType
     {
         /// <summary>
-        /// Fixed price
+        /// Represents a rate or fixed days specified
         /// </summary>
-        Fixed = 0,
+        AsDaysRequired,
         /// <summary>
-        /// Amount per unit of land
+        /// Relates to the total days allowed
         /// </summary>
-        perUnitOfLand = 3,
+        AsTotalAllowed,
         /// <summary>
-        /// Amount per hectare
+        /// As proportion of the days required
         /// </summary>
-        perHa = 1,
-        /// <summary>
-        /// Amount per tree
-        /// </summary>
-        perTree = 2,
+        ProportionOfDaysRequired
     }
 
     /// <summary>
-    /// Crop payment style
+    /// Style to calculate hired labour payment
     /// </summary>
-    public enum ResourcePaymentStyleType
+    public enum PayHiredLabourCalculationStyle
     {
         /// <summary>
-        /// Fixed price
+        /// Use labour available in LabourAvailability for all hired labour
         /// </summary>
-        Fixed,
+        ByAvailableLabour,
         /// <summary>
-        /// Amount per unit of resource
+        /// Use the hired labour used in timestep
         /// </summary>
-        perUnit,
-        /// <summary>
-        /// Amount per block of resource
-        /// </summary>
-        perBlock,
-    }
-
-    /// <summary>
-    /// Animal payment style
-    /// </summary>
-    public enum AnimalPaymentStyleType
-    {
-        /// <summary>
-        /// Fixed price
-        /// </summary>
-        Fixed,
-        /// <summary>
-        /// Amount per head
-        /// </summary>
-        perHead,
-        /// <summary>
-        /// Amount per adult equivilant
-        /// </summary>
-        perAE,
-        /// <summary>
-        /// Proportion of total sales
-        /// </summary>
-        ProportionOfTotalSales,
-        /// <summary>
-        /// Amount per hectare
-        /// </summary>
-        perHa,
-        /// <summary>
-        /// Amount per unit of land
-        /// </summary>
-        perUnitOfLand
-    }
-
-    /// <summary>
-    /// Labour allocation unit type
-    /// </summary>
-    public enum LabourUnitType
-    {
-        /// <summary>
-        /// Fixed price
-        /// </summary>
-        Fixed = 0,
-        /// <summary>
-        /// Labour per unit of land
-        /// </summary>
-        perUnitOfLand = 7,
-        /// <summary>
-        /// Labour per hectare
-        /// </summary>
-        perHa = 1,
-        /// <summary>
-        /// Labour per Tree
-        /// </summary>
-        perTree = 2,
-        /// <summary>
-        /// Labour per head
-        /// </summary>
-        perHead = 3,
-        /// <summary>
-        /// Labour per adult equivilant
-        /// </summary>
-        perAE = 4,
-        /// <summary>
-        /// Labour per kg
-        /// </summary>
-        perKg = 5,
-        /// <summary>
-        /// Labour per unit
-        /// </summary>
-        perUnit = 6,
+        ByLabourUsedInTimeStep
     }
 
     /// <summary>
@@ -372,7 +303,7 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Possible actions when only partial requested resources are available
+    /// Possible actions when only partial resources requested are available
     /// </summary>
     public enum OnPartialResourcesAvailableActionTypes
     {
@@ -385,9 +316,13 @@ namespace Models.CLEM
         /// </summary>
         SkipActivity,
         /// <summary>
-        /// Receive resources available and perform activity
+        /// Use available resources to perform activity
         /// </summary>
-        UseResourcesAvailable
+        UseAvailableResources,
+        /// <summary>
+        /// Use available resources with shortfall influencing other activities
+        /// </summary>
+        UseAvailableWithImplications,
     }
 
     /// <summary>
@@ -592,18 +527,70 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Style of ruminant tag application
+    /// Style to identify different ruminant groups needed by activities
     /// </summary>
-    public enum RuminantStockGroupStyle
+    public enum RuminantGroupStyleSecondary
     {
         /// <summary>
-        /// Animals to select
+        /// No style specified
         /// </summary>
-        Select = 0,
+        NotSpecified = 0,
+
         /// <summary>
-        /// Animals to destock
+        /// Select females to remove
         /// </summary>
-        Destock = 5,
+        Females = 100,
+
+        /// <summary>
+        /// Female pre-breeders to remove
+        /// </summary>
+        FemalePreBreeders = 110,
+
+        /// <summary>
+        /// Female breeders to remove
+        /// </summary>
+        FemaleBreeders = 120,
+
+        /// <summary>
+        /// Select males to remove
+        /// </summary>
+        Males = 200,
+
+        /// <summary>
+        /// Male pre-breeders to remove
+        /// </summary>
+        MalePreBreeders = 210,
+
+        /// <summary>
+        /// Male breeders to remove
+        /// </summary>
+        MaleBreeders = 220,
+    }
+
+    /// <summary>
+    /// Tertiary style to identify different ruminant groups needed by activities
+    /// </summary>
+    public enum RuminantGroupStyleTertiary
+    {
+        /// <summary>
+        /// No style specified
+        /// </summary>
+        NotSpecified = 0,
+
+        /// <summary>
+        /// From the specified herd available
+        /// </summary>
+        FromHerd = 10,
+
+        /// <summary>
+        /// From only individuals flagged for sale
+        /// </summary>
+        FromSales = 20,
+
+        /// <summary>
+        /// From the current list of potential purchases
+        /// </summary>
+        FromPurchases = 30,
     }
 
     /// <summary>
@@ -742,9 +729,9 @@ namespace Models.CLEM
     public enum RuminantClass
     {
         /// <summary>
-        /// Calf
+        /// Suckling
         /// </summary>
-        Calf,
+        Suckling,
         /// <summary>
         /// Weaner
         /// </summary>
@@ -790,10 +777,151 @@ namespace Models.CLEM
         /// <summary>
         /// Take a proportion of the group selected
         /// </summary>
-        Proportion,
+        TakeProportion,
         /// <summary>
         /// Take a set number of individuals
         /// </summary>
-        Individuals
+        TakeIndividuals,
+        /// <summary>
+        /// Skip a proportion of the group selected and return the remainder
+        /// </summary>
+        SkipProportion,
+        /// <summary>
+        /// Skip a set number of individuals and return the remainder
+        /// </summary>
+        SkipIndividuals
     }
+
+    /// <summary>
+    /// Position for reducing individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilteredPositionStyle
+    {
+        /// <summary>
+        /// Take/Skip from start
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Take/Skip from end
+        /// </summary>
+        End
+    }
+
+    /// <summary>
+    /// The overall style of ruminants required
+    /// </summary>
+    public enum GetRuminantHerdSelectionStyle
+    {
+        /// <summary>
+        /// All individuals currently in herd both including marked for sale
+        /// </summary>
+        AllOnFarm,
+        /// <summary>
+        /// Individuals in purchase list yet to be bought
+        /// </summary>
+        ForPurchase,
+        /// <summary>
+        /// Individuals currently marked for sale in the herd
+        /// </summary>
+        MarkedForSale,
+        /// <summary>
+        /// Individuals not marked for sale in the herd
+        /// </summary>
+        NotMarkedForSale,
+    }
+
+    /// <summary>
+    /// The types of labels provided for use by companion models
+    /// </summary>
+    public enum CompanionModelLabelType
+    {
+        /// <summary>
+        /// The child identifiers available
+        /// </summary>
+        Identifiers,
+        /// <summary>
+        /// The resource measures available
+        /// </summary>
+        Measure
+    }
+
+    /// <summary>
+    /// Reporting style for Memos in Descriptive summary
+    /// </summary>
+    public enum DescriptiveSummaryMemoReportingType
+    {
+        /// <summary>
+        /// Present where they occur in the tree structure
+        /// </summary>
+        InPlace,
+        /// <summary>
+        /// Present at the top of the property list
+        /// </summary>
+        AtTop,
+        /// <summary>
+        /// Present at the bottom of the property list
+        /// </summary>
+        AtBottom,
+        /// <summary>
+        /// Do not present Memos
+        /// </summary>
+        Ignore
+    }
+
+    /// <summary>
+    /// A list of labels used for communication between an activity and companion models
+    /// </summary>
+    [Serializable]
+    public struct LabelsForCompanionModels
+    {
+        /// <summary>
+        /// List of available identifiers
+        /// </summary>
+        public List<string> Identifiers;
+        /// <summary>
+        /// List of available measures
+        /// </summary>
+        public List<string> Measures;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="identifiers"></param>
+        /// <param name="measures"></param>
+        public LabelsForCompanionModels(List<string> identifiers, List<string> measures)
+        {
+            Identifiers = identifiers;
+            Measures = measures;
+        }
+    }
+
+    /// <summary>
+    /// Additional linq extensions
+    /// </summary>
+    public static class LinqExtensions
+    {
+        /// <summary>
+        /// Method to extend linq and allow DistinctBy for unions
+        /// Provided by MoreLinQ
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <returns></returns>
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
+         (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            HashSet<TKey> knownKeys = new HashSet<TKey>();
+            foreach (TSource element in source)
+            {
+                if (knownKeys.Add(keySelector(element)))
+                {
+                    yield return element;
+                }
+            }
+        }
+
+    }
+
 }

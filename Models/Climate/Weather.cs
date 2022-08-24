@@ -705,64 +705,63 @@
                 this.reader.SeekToDate(date);
             }
 
-            object[] values;
 
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
 
             try
             {
-                values = this.reader.GetNextLineOfData();
+                readMetData.Raw = reader.GetNextLineOfData();
             }
             catch (IndexOutOfRangeException err)
             {
                 throw new Exception($"Unable to retrieve weather data on {date.ToString("yyy-MM-dd")} in file {FileName}", err);
             }
 
-            if (date != this.reader.GetDateFromValues(values))
+            if (date != this.reader.GetDateFromValues(readMetData.Raw))
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
 
             if (this.radiationIndex != -1)
-                readMetData.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
+                readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.Radn = this.reader.ConstantAsDouble("radn");
 
             if (this.maximumTemperatureIndex != -1)
-                readMetData.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
+                readMetData.MaxT = Convert.ToSingle(readMetData.Raw[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.MaxT = this.reader.ConstantAsDouble("maxt");
 
             if (this.minimumTemperatureIndex != -1)
-                readMetData.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
+                readMetData.MinT = Convert.ToSingle(readMetData.Raw[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.MinT = this.reader.ConstantAsDouble("mint");
 
             if (this.rainIndex != -1)
-                readMetData.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
+                readMetData.Rain = Convert.ToSingle(readMetData.Raw[this.rainIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.Rain = this.reader.ConstantAsDouble("rain");
 
             if (this.evaporationIndex == -1)
                 readMetData.PanEvap = double.NaN;
             else
-                readMetData.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
+                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[this.evaporationIndex], CultureInfo.InvariantCulture);
 
             if (this.rainfallHoursIndex == -1)
                 readMetData.RainfallHours = double.NaN;
             else
-                readMetData.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
+                readMetData.RainfallHours = Convert.ToSingle(readMetData.Raw[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
 
             if (this.vapourPressureIndex == -1)
                 readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
             else
-                readMetData.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
+                readMetData.VP = Convert.ToSingle(readMetData.Raw[this.vapourPressureIndex], CultureInfo.InvariantCulture);
 
             if (this.windIndex == -1)
                 readMetData.Wind = 3.0;
             else
-                readMetData.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
+                readMetData.Wind = Convert.ToSingle(readMetData.Raw[this.windIndex], CultureInfo.InvariantCulture);
 
             if (co2Index != -1)
-                readMetData.CO2 = Convert.ToDouble(values[co2Index], CultureInfo.InvariantCulture);
+                readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
             {
@@ -776,7 +775,7 @@
                 if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
             }
             else
-                readMetData.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
+                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
 
             if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
             {
@@ -786,7 +785,7 @@
                     readMetData.DayLength = -1;
             }
             else
-                readMetData.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
+                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[this.dayLengthIndex], CultureInfo.InvariantCulture);
 
             return readMetData;
         }
@@ -922,6 +921,18 @@
         }
 
         /// <summary>
+        /// Read a user-defined value from today's weather data.
+        /// </summary>
+        /// <param name="columnName">Name of the column.</param>
+        public double GetValue(string columnName)
+        {
+            int columnIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, columnName);
+            if (columnIndex == -1)
+                throw new InvalidOperationException($"Column {columnName} does not exist in {FileName}");
+            return Convert.ToDouble(TodaysMetData.Raw[columnIndex], CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
         /// Calculate the amp and tav 'constant' values for this weather file
         /// and store the values into the File constants.
         /// </summary>
@@ -951,7 +962,7 @@
         /// <param name="amp">The calculated amp value</param>
         private void ProcessMonthlyTAVAMP(out double tav, out double amp)
         {
-            int savedPosition = reader.GetCurrentPosition();
+            long savedPosition = reader.GetCurrentPosition();
 
             // init return values
             tav = 0;

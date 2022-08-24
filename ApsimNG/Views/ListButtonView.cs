@@ -169,17 +169,7 @@
             button.Homogeneous = false;
             Label btnLabel = new Label(text);
 
-#if NETFRAMEWORK
-            // Unsure why, but sometimes the label's font is incorrect
-            // (inconsistent with default font).
-            // todo - check if this is necessary in gtk3
-            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
-            {
-                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-                if (font != null && font != btnLabel.Style.FontDescription)
-                    btnLabel.ModifyFont(font);
-            }
-#endif
+
             btnLabel.Justify = Justification.Center;
             btnLabel.Realized += BtnLabel_Realized;
             button.LabelWidget = btnLabel;

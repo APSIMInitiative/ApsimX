@@ -26,7 +26,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component specifies a resource input file for the CLEM simulation")]
+    [Description("Access to a resource input file")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/ResourceDataReader.htm")]
     public class FileResource : CLEMModel, IValidatableObject
@@ -305,8 +305,10 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
 
                 return true;
             }
@@ -326,12 +328,8 @@ namespace Models.CLEM
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -340,15 +338,17 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
                 }
-                else if (!this.FileExists)
-                {
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                }
                 else
                 {
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                    if (!this.FileExists)
+                    {
+                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                    }
                 }
-
                 if (FileName != null && FileName.Contains(".xls"))
                 {
                     if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")

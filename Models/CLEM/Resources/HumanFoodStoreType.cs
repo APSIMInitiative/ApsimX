@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
-    [Description("This resource represents a human food store (e.g. milk, eggs, wheat).")]
+    [Description("This resource represents a human food store (e.g. milk, eggs, wheat)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStoreType.htm")]
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, this, "", "Starting value");
+                Add(initialpPool, null, null, "Starting value");
             }
         }
 
@@ -285,12 +285,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -305,8 +301,10 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("</span> kg");
                 }
                 else
+                {
                     if (ConvertToKg != 1)
                         htmlWriter.Write("<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg");
+                }
 
                 htmlWriter.Write("\r\n</div>");
                 if (StartingAmount > 0)

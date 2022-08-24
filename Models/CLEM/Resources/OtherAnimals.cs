@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all other animals types (not ruminants) for the simulation.")]
+    [Description("Resource group for all other animals types (not ruminants) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimals.htm")]
     public class OtherAnimals: ResourceBaseWithTransactions

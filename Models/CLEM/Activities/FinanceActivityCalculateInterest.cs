@@ -6,20 +6,18 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.IO;
+using System.Diagnostics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>manage enterprise activity</summary>
-    /// <summary>This activity undertakes the overheads of running the enterprise.</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <summary>Interest calculation activity</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity peforms monthly interest transactions.")]
+    [Description("Performs monthly interest calculations and transactions")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/CalculateInterest.htm")]
     public class FinanceActivityCalculateInterest : CLEMActivityBase
@@ -44,7 +42,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
             if (finance != null)
@@ -56,8 +54,8 @@ namespace Models.CLEM.Activities
                     {
                         if (accnt.InterestRatePaid > 0)
                         {
-                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "", "Interest");
-                            SetStatusSuccess();
+                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, null, "Interest");
+                            SetStatusSuccessOrPartial();
                         }
                     }
                     else if (accnt.Balance < 0)
@@ -81,7 +79,7 @@ namespace Models.CLEM.Activities
                                 interestRequest.ResourceTypeName = accnt.NameWithParent;
                                 interestRequest.Available = accnt.FundsAvailable;
                                 ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
-                                OnShortfallOccurred(rre);
+                                ActivitiesHolder.ReportActivityShortfall(rre);
 
                                 switch (OnPartialResourcesAvailableAction)
                                 {
@@ -90,7 +88,7 @@ namespace Models.CLEM.Activities
                                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                                         Status = ActivityStatus.Ignored;
                                         break;
-                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
+                                    case OnPartialResourcesAvailableActionTypes.UseAvailableResources:
                                         Status = ActivityStatus.Partial;
                                         break;
                                     default:
@@ -108,7 +106,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -119,7 +117,7 @@ namespace Models.CLEM.Activities
                 {
                     resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
                     finance = resHolder.FindResourceGroup<Finance>();
-                    if (!finance.Enabled)
+                    if (finance != null && !finance.Enabled)
                         finance = null;
                 }
 
@@ -133,10 +131,12 @@ namespace Models.CLEM.Activities
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                             htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
                         else
+                        {
                             if (accnt.InterestRateCharged > 0)
-                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
+                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
                             else
-                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                        }
                     }
                 }
                 return htmlWriter.ToString(); 

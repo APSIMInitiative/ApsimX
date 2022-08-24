@@ -8,7 +8,6 @@ using Models.PMF.Interfaces;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// Specifies the removal of organ biomass by Pest/Disease.  If organs implement ICanopy this will remove LAI in 
     /// proportion to the amount of biomass removed.  If organ implements IRoot RLD will be decreased in proportion
     /// biomass removed

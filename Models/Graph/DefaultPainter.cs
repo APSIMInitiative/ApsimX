@@ -1,5 +1,6 @@
 ﻿namespace Models
 {
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using System.Drawing;
 

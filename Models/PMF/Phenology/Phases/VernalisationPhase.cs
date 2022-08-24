@@ -4,13 +4,13 @@ using Models.Core;
 using Models.Functions;
 using System.IO;
 using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and reaches [End] when
-    /// vernalisation saturation occurs
+    /// This phase goes from the specified start stage to the specified end stage
+    /// and reaches end when vernalisation saturation occurs.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -59,7 +59,10 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase() { ProgressThroughPhase = 0.0; }
+        public void ResetPhase()
+        {
+            ProgressThroughPhase = 0.0;
+        }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
@@ -67,8 +70,13 @@ namespace Models.PMF.Phen
         {
             ResetPhase();
         }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"The {Name} phase goes from the {Start} stage to the {End} stage and reaches {End} when vernalisation saturation occurs.");
+        }
     }
 }
-
-      
-      

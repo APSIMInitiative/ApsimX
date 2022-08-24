@@ -28,7 +28,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component uses a pricing input file to manage prices throughout the simulation")]
+    [Description("Access to a pricing input file to manage prices")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PriceDataReader.htm")]
     public class FilePricing : CLEMModel, IValidatableObject
@@ -166,11 +166,11 @@ namespace Models.CLEM
                     if (!column.ToString().Equals(DateColumnName, StringComparison.OrdinalIgnoreCase) && double.TryParse(priceFileAsRows[0][cnt].ToString(), out double res))
                     {
                         // update
-                        var components = pricingComonentsFound.Where(a => (a as IModel).Name == column.ToString());
+                        var components = pricingComonentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
                         if (components.Count() > 1)
                         {
                             string warn = $"Multiple resource [r=PricingComponents] named [{column}] were found when applying pricing by [a={this.Name}]. \r\n Ensure input price applies to all these components or provide unique component names";
-                            Warnings.CheckAndWrite(warn, Summary, this);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                         foreach (IResourcePricing resourcePricing in components)
                             resourcePricing.SetPrice(res, this);
@@ -264,8 +264,10 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
                 return true;
             }
             else
@@ -284,12 +286,8 @@ namespace Models.CLEM
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

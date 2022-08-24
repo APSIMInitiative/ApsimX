@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourPricing))]
-    [Description("This labour price group sets the pay rate for the selected group of individuals.")]
+    [Description("Set the pay rate for the selected group of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourPriceGroup.htm")]
     public class LabourPriceGroup : FilterGroup<LabourType>
@@ -40,52 +40,25 @@ namespace Models.CLEM.Groupings
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
-            if (!formatForParentControl)
+            if (!FormatForParentControl)
             {
                 html += "\r\n<div class=\"activityentry\">";
-                html += "Pay ";
-                if (Value.ToString() == "0")
-                {
-                    html += "<span class=\"errorlink\">NOT SET";
-                }
-                else
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += Value.ToString("#,0.##");
-                }
-                html += "</span> for a days work";
-                html += "</div>";
+                html += $"Pay {CLEMModel.DisplaySummaryValueSnippet(Value, warnZero:true)} for a days work</div>";
             }
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
-            if (formatForParentControl)
+            if (FormatForParentControl)
             {
-                if (Value.ToString() == "0")
-                {
-                    html += "</td><td><span class=\"errorlink\">NOT SET";
-                }
-                else
-                {
-                    html += "</td><td><span class=\"setvalue\">";
-                    html += this.Value.ToString("#,0.##");
-                }
-                html += "</span></td>";
+                html += $"</td><td>{CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)}</td>";
                 html += "</tr>";
             }
             else
@@ -95,14 +68,11 @@ namespace Models.CLEM.Groupings
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (formatForParentControl)            
+            if (FormatForParentControl)            
                 html += "<tr><td>" + this.Name + "</td><td>";
             else            
                 html += "\r\n<div class=\"filterborder clearfix\">";            
@@ -113,22 +83,16 @@ namespace Models.CLEM.Groupings
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         } 
         #endregion
     }

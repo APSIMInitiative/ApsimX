@@ -1,5 +1,3 @@
-﻿
-
 namespace Models.PMF.Library
 {
     using Models.Core;
@@ -7,18 +5,25 @@ namespace Models.PMF.Library
     using Interfaces;
     using Soils;
     using System;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using System.Data;
 
     /// <summary>
-    /// # [Name]
-    /// This class impliments biomass removal from live + dead pools.
+    /// This organ will respond to certain management actions by either removing some
+    /// of its biomass from the system or transferring some of its biomass to the soil
+    /// surface residues. The following table describes the default proportions of live
+    /// and dead biomass that are transferred out of the simulation using "Removed" or
+    /// to soil surface residue using "To Residue" for a range of management actions.
+    /// The total percentage removed for live or dead must not exceed 100%. The
+    /// difference between the total and 100% gives the biomass remaining on the plant.
+    /// These can be changed during a simulation using a manager script.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.CompositePropertyPresenter")]
-    public class BiomassRemoval : Model, ICustomDocumentation
+    public class BiomassRemoval : Model
     {
         [Link]
         Plant plant = null;
@@ -85,9 +90,9 @@ namespace Models.PMF.Library
                         summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
                                                  + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
                                                  + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                                 + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                                                 + toResidue.ToString("0.0") + "% is returned to the surface organic matter.", MessageType.Diagnostic);
                         summary.WriteMessage(Parent, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
-                                                 + Removed.N.ToString("0.0") + " g/m2 of N.");
+                                                 + Removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
                     }
                     return remainingLiveFraction;
                 }
@@ -215,41 +220,33 @@ namespace Models.PMF.Library
             return remainingLiveFraction;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            DataTable data = new DataTable();
+            data.Columns.Add("Method", typeof(string));
+            data.Columns.Add("% Live Removed", typeof(int));
+            data.Columns.Add("% Dead Removed", typeof(int));
+            data.Columns.Add("% Live To Residue", typeof(int));
+            data.Columns.Add("% Dead To Residue", typeof(int));
+
+            foreach (OrganBiomassRemovalType removal in this.FindAllChildren<OrganBiomassRemovalType>())
             {
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                tags.Add(new AutoDocumentation.Paragraph("This organ will respond to certain management actions by either removing some of its biomass from the system or transferring some of its biomass to the soil surface residues.  The following table describes the default proportions of live and dead biomass that are transferred out of the simulation using \"Removed\" or to soil surface residue using \"To Residue\" for a range of management actions. The total percentage removed for live or dead must not exceed 100%. The difference between the total and 100% gives the biomass remaining on the plant. These can be changed during a simulation using a manager script.", indent));
-
-                DataTable data = new DataTable();
-                data.Columns.Add("Method", typeof(string));
-                data.Columns.Add("% Live Removed", typeof(int));
-                data.Columns.Add("% Dead Removed", typeof(int));
-                data.Columns.Add("% Live To Residue", typeof(int));
-                data.Columns.Add("% Dead To Residue", typeof(int));
-
-                foreach (OrganBiomassRemovalType removal in this.FindAllChildren<OrganBiomassRemovalType>())
-                {
-                    DataRow row = data.NewRow();
-                    data.Rows.Add(row);
-                    row["Method"] = removal.Name;
-                    row["% Live Removed"] = removal.FractionLiveToRemove * 100;
-                    row["% Dead Removed"] = removal.FractionDeadToRemove * 100;
-                    row["% Live To Residue"] = removal.FractionLiveToResidue * 100;
-                    row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
-                }
-
-                foreach (Memo childMemo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(childMemo, tags, headingLevel + 1, indent);
-
-                tags.Add(new AutoDocumentation.Table(data, indent));
+                DataRow row = data.NewRow();
+                data.Rows.Add(row);
+                row["Method"] = removal.Name;
+                row["% Live Removed"] = removal.FractionLiveToRemove * 100;
+                row["% Dead Removed"] = removal.FractionDeadToRemove * 100;
+                row["% Live To Residue"] = removal.FractionLiveToResidue * 100;
+                row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
             }
+
+            yield return new Table(data);
         }
     }
 }

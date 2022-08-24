@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -91,8 +91,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 0.0,
-              "ShootRate": 0.0,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -113,6 +111,48 @@
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -330,7 +370,8 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -344,7 +385,8 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -368,7 +410,8 @@
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -382,7 +425,8 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -392,7 +436,8 @@
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -3378,11 +3423,6 @@
                   "FixedValue": "0.0"
                 }
               ]
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -5259,7 +5299,7 @@
             "[Phenology].Senescing.Target.FixedValue = 750",
             "[Phenology].YieldIncreasing.Target.FixedValue = 1051.0",
             "[Product].DryMatterContent.FixedValue = 0.11",
-            "[Product].ExpectedYield.FixedValue = 7000",
+            "[Product].ExpectedYield.FixedValue = 8000",
             "[Product].HarvestIndex.FixedValue = 0.8",
             "[Product].MaximumNConc.FixedValue = 0.014",
             "[Product].MinimumNConc.FixedValue = 0.0098",
@@ -5276,7 +5316,39 @@
             "[Stover].XoBiomass.FixedValue = 1350.0",
             "[Stover].bBiomass.FixedValue = 270.0"
           ],
-          "Name": "Onions",
+          "Name": "Onions_Autumn",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Cultivar, Models",
+          "Command": [
+            "[Nodule].FixationMetabolicCost.FixedValue = 0",
+            "[Nodule].FixationRate.FixedValue = 0",
+            "[Phenology].CanopyExpanding.Target.FixedValue = 733.0",
+            "[Phenology].Senescing.Target.FixedValue = 750",
+            "[Phenology].YieldIncreasing.Target.FixedValue = 717.0",
+            "[Product].DryMatterContent.FixedValue = 0.11",
+            "[Product].ExpectedYield.FixedValue = 7000",
+            "[Product].HarvestIndex.FixedValue = 0.8",
+            "[Product].MaximumNConc.FixedValue = 0.014",
+            "[Product].MinimumNConc.FixedValue = 0.0098",
+            "[Root].KLModifier.XYPairs.Y = 1,1,1,1,1,1,1,0.223,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+            "[Root].MaximumNConc.FixedValue = 0.01",
+            "[Root].MaximumRootDepth.FixedValue = 400",
+            "[Root].MinimumNConc.FixedValue = 0.01",
+            "[Root].RootProportion.FixedValue = 0.1",
+            "[Stover].Cover.Expanding.SigCoverFunction.Xo.FixedValue = 780",
+            "[Stover].Cover.Expanding.SigCoverFunction.Ymax.FixedValue = 0.8",
+            "[Stover].Cover.Expanding.SigCoverFunction.b.FixedValue = 120",
+            "[Stover].MaximumNConc.FixedValue = 0.02",
+            "[Stover].MinimumNConc.FixedValue = 0.02",
+            "[Stover].XoBiomass.FixedValue = 1100.0",
+            "[Stover].bBiomass.FixedValue = 220.0"
+          ],
+          "Name": "Onions_Spring",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -6151,6 +6223,16 @@
           "FixedValue": 0.0,
           "Units": null,
           "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,

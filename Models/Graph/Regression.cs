@@ -1,5 +1,6 @@
 namespace Models
 {
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.Run;
@@ -106,46 +107,57 @@ namespace Models
                         }
                     }
                 }
-
-                if (ForEachSeries)
+                try
                 {
-                    // Display a regression line for each series.
-                    // todo - should this also filter on checkpoint name?
-                    int numDefinitions = definitions.Count();
-                    foreach (SeriesDefinition definition in definitions)
+                    if (ForEachSeries)
                     {
-                        if (definition.X is double[] && definition.Y is double[])
+                        // Display a regression line for each series.
+                        // todo - should this also filter on checkpoint name?
+                        foreach (SeriesDefinition definition in definitions)
                         {
-                            SeriesDefinition regressionSeries = PutRegressionLineOnGraph(definition.X, definition.Y, definition.Colour, null);
-                            if (regressionSeries != null)
+                            if (definition.X is double[] && definition.Y is double[])
                             {
-                                regressionLines.Add(regressionSeries);
-                                equationColours.Add(definition.Colour);
+                                SeriesDefinition regressionSeries = PutRegressionLineOnGraph(definition.X, definition.Y, definition.Colour, null);
+                                if (regressionSeries != null)
+                                {
+                                    regressionLines.Add(regressionSeries);
+                                    equationColours.Add(definition.Colour);
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
-                    var regresionLineName = "Regression line";
-                    if (checkpointName != "Current")
-                        regresionLineName = "Regression line (" + checkpointName + ")";
-
-                    // Display a single regression line for all data.
-                    if (x.Count > 0 && y.Count == x.Count)
+                    else
                     {
-                        SeriesDefinition regressionSeries = PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
-                        if (regressionSeries != null)
+                        var regresionLineName = "Regression line";
+                        if (checkpointName != "Current")
+                            regresionLineName = "Regression line (" + checkpointName + ")";
+
+                        // Display a single regression line for all data.
+                        if (x.Count > 0 && y.Count == x.Count)
                         {
-                            regressionLines.Add(regressionSeries);
-                            equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                            SeriesDefinition regressionSeries = PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
+                            if (regressionSeries != null)
+                            {
+                                regressionLines.Add(regressionSeries);
+                                equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                            }
                         }
                     }
+
+                    if (showOneToOne)
+                    {
+                        if (x.Count > 0 && y.Count == x.Count)
+                            regressionLines.Add(Put1To1LineOnGraph(x, y));
+                    }
                 }
-
-                if (showOneToOne)
-                    regressionLines.Add(Put1To1LineOnGraph(x, y));
-
+                catch (Exception err)
+                {
+                    IEnumerable<string> xs = definitions.Select(d => d.XFieldName).Distinct();
+                    IEnumerable<string> ys = definitions.Select(d => d.YFieldName).Distinct();
+                    string xFields = string.Join(", ", xs);
+                    string yFields = string.Join(", ", ys);
+                    throw new InvalidOperationException($"Unable to create regression line for checkpoint {checkpointName}. (x variables = [{xFields}], y variables = [{yFields}])", err);
+                }
                 checkpointNumber++;
             }
 

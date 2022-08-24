@@ -1,17 +1,14 @@
-﻿using Models.Core;
-using Models.PMF;
+﻿using APSIM.Shared.Documentation;
+using Models.Core;
 using Models.PMF.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// Returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs.
-    /// </summary>
+    /// <summary>Returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs.</summary>
     [Serializable]
-    [Description("Demand is calculated as a fraction of the total plant supply term.")]
-    public class PartitionFractionDemandFunction : Model, IFunction, ICustomDocumentation
+    public class PartitionFractionDemandFunction : Model, IFunction
     {
         /// <summary>The partition fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -22,7 +19,6 @@ namespace Models.Functions.DemandFunctions
         ITotalDMFixationSupply arbitrator = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
             if (arbitrator != null)
@@ -31,31 +27,15 @@ namespace Models.Functions.DemandFunctions
                 return 0;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction x [Arbitrator].DM.TotalFixationSupply</i>", indent));
-
-                // write children
-                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent+1);
-            }
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+            yield return new Paragraph($"*{Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*");
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }
-
-

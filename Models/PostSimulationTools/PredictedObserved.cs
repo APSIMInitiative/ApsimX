@@ -15,7 +15,6 @@ namespace Models.PostSimulationTools
     using System.Threading;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
@@ -233,9 +232,6 @@ namespace Models.PostSimulationTools
 
                     List<string> unitFieldNames = new List<string>();
                     List<string> unitNames = new List<string>();
-
-                    // write units to table.
-                    reader.Refresh();
 
                     foreach (string fieldName in commonCols)
                     {

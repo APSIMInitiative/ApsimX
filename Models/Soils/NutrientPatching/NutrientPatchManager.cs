@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.NutrientPatching
+namespace Models.Soils.NutrientPatching
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -20,9 +20,6 @@
         [Link]
         private Clock clock = null;
 
-        [Link]
-        private Soil soil = null;
-        
         [Link]
         private IPhysical soilPhysical = null;
         
@@ -279,12 +276,12 @@
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
                 else if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -292,7 +289,7 @@
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -300,7 +297,7 @@
             {
                 if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -310,7 +307,7 @@
             }
             else
             {
-                summary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.");
+                summary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.", MessageType.Diagnostic);
                 isDataOK = false;
             }
 
@@ -384,7 +381,7 @@
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     values[i] += solutesAsList[s].kgha[i] * areas[s];
             }
-            return new Solute(soil, name, values);
+            return new Solute(name, values);
         }
 
         /// <summary>
@@ -619,9 +616,9 @@
                     else if (OldPatch_NewArea < minimumPatchArea)
                     {
                         // remaining area is too small or negative, patch will be created but old one will be deleted
-                        summary.WriteWarning(this, " attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
+                        summary.WriteMessage(this, " attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
                                           + ") to a value too small or negative (" + OldPatch_NewArea.ToString("#0.00#")
-                                          + "). The patch will be eliminated.");
+                                          + "). The patch will be eliminated.", MessageType.Warning);
 
                         // mark old patch for deletion
                         idPatchesToDelete.Add(idPatchesAffected[i]);
@@ -667,7 +664,7 @@
                             summary.WriteMessage(this, "create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") +
                                          ", based on existing patch(" + idPatchesAffected[i].ToString() +
                                          ") - Old area = " + OldPatch_OldArea.ToString("#0.00#") +
-                                         ", new area = " + OldPatch_NewArea.ToString("#0.00#"));
+                                         ", new area = " + OldPatch_NewArea.ToString("#0.00#"), MessageType.Diagnostic);
                         }
                     }
                 }
@@ -767,7 +764,7 @@
 
             if (SelectedIDs.Count == 0)
             { // no valid patch was found, notify user
-                summary.WriteMessage(this, " No valid patch was found to base the new patch being added - operation will be ignored");
+                summary.WriteMessage(this, " No valid patch was found to base the new patch being added - operation will be ignored", MessageType.Diagnostic);
             }
             return SelectedIDs;
         }

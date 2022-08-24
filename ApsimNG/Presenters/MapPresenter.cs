@@ -60,6 +60,7 @@
         /// </summary>
         public void Detach()
         {
+            propertyPresenter.Detach();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             if (view != null)
             {
@@ -104,7 +105,17 @@
             // Store the property values.
             properties.Add(new Commands.ChangeProperty.Property(this.map, "Zoom", this.view.Zoom));
             properties.Add(new Commands.ChangeProperty.Property(this.map, "Center", this.view.Center));
+
+            // This ViewChanged event occurs when the user drags/scrolls or otherwise
+            // modifies the map, in which case the view is responsible for applying these
+            // changes to the map shown in the UI. We need to now apply these changes to
+            // the model, but we don't want to tell the view to redraw itself afterward,
+            // so we need to disconnect our OnModelChanged callback from the ModelChanged
+            // event. Note that if the view is changed via the properties UI, we *do* want
+            // to trap the ModelChanged event and tell the view to redraw itself.
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(properties));
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // properties.Add()
             // this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(map, "Zoom", this.view.Zoom));

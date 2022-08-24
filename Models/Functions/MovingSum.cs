@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -10,14 +11,13 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// A function that accumulates values from child functions
     /// </summary>
     [Serializable]
     [Description("Maintains a moving sum of a given value for a user-specified number of simulation days")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class MovingSumFunction : Model, IFunction, ICustomDocumentation
+    public class MovingSumFunction : Model, IFunction
     {
         /// <summary>The number of days over which to calculate the moving sum</summary>
         [Description("Number of Days")]
@@ -41,7 +41,6 @@ namespace Models.Functions
                 return value;
             }
         }
-
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -73,24 +72,13 @@ namespace Models.Functions
             return MathUtilities.Sum(AccumulatedValues);
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                Name = this.Name;
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                if (FindAllChildren<IFunction>().Count() == 1)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving sum of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            if (FindAllChildren<IFunction>().Count() == 1)
+                yield return new Paragraph($"{Name} is calculated from a moving sum of {ChildFunction}.Name over a series of {NumberOfDays} days.");
         }
     }
 }

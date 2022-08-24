@@ -11,7 +11,6 @@
     using System.Threading;
 
     /// <summary>
-    /// # [Name]
     /// A post processing model that creates a probability table.
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]

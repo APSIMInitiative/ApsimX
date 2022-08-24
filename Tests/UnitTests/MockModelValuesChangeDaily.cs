@@ -23,7 +23,7 @@
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>
         [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
+        public void OnStartOfDay(object sender, EventArgs e)
         {
             A = aValues[dayIndex];
             B = bValues[dayIndex];

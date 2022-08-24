@@ -64,6 +64,9 @@ namespace UserInterface.Views
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
 
+        private Widget refColWidget = null;
+        private int headerHeight = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -154,14 +157,31 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            if (refColWidget != null)
+            {
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
+            }
+            while (Fixedcolview.Columns.Length > 0)
+            {
+                TreeViewColumn col = Fixedcolview.GetColumn(0);
+                foreach (CellRenderer render in col.Cells)
+                {
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                }
+
+                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
+            }
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
-#if NETFRAMEWORK
-                foreach (CellRenderer render in col.CellRenderers)
-#else
+
                 foreach (CellRenderer render in col.Cells)
-#endif
+
                 {
                     if (render is CellRendererText)
                     {
@@ -176,20 +196,6 @@ namespace UserInterface.Views
                     render.Dispose();
                 }
                 Grid.RemoveColumn(Grid.GetColumn(0));
-            }
-            while (Fixedcolview.Columns.Length > 0)
-            {
-                TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.GetCells())
-                {
-                    if (render is CellRendererText)
-                    {
-                        CellRendererText textRender = render as CellRendererText;
-                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
-                    }
-                }
-
-                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
             }
         }
 
@@ -277,12 +283,7 @@ namespace UserInterface.Views
             }
 
             gridmodel = new ListStore(colTypes);
-#if NETFRAMEWORK
-            Grid.ModifyBase(StateType.Active, Fixedcolview.Style.Base(StateType.Selected));
-            Grid.ModifyText(StateType.Active, Fixedcolview.Style.Text(StateType.Selected));
-            Fixedcolview.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-            Fixedcolview.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-#endif
+
 
             image1.Visible = false;
             // Now set up the grid columns
@@ -291,7 +292,7 @@ namespace UserInterface.Views
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
-                pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
+                pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.svg");
                 pixbufRender.Xalign = 0.5f;
 
                 if (i == 0 || i == nCols-1)
@@ -346,14 +347,7 @@ namespace UserInterface.Views
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 //fixedColumn.Sizing = TreeViewColumnSizing.GrowOnly;
                 fixedColumn.Resizable = false;
-                if (i == 0)
-                {
-                    fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
-                }
-                else
-                {
-                    fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
-                }
+                fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
                 fixedColumn.Visible = true;
                 Fixedcolview.AppendColumn(fixedColumn);
@@ -401,11 +395,9 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-#if NETFRAMEWORK
-        public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
-#else
+
         public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
-#endif
+
         {
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
@@ -445,6 +437,9 @@ namespace UserInterface.Views
                     case "NoTask":
                         iconName = "NoTask";
                         break;
+                    case "Skipped":
+                        iconName = "Skipped";
+                        break;
                 }
                 (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+iconName+".png");
             }
@@ -457,11 +452,9 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-#if NETFRAMEWORK
-        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
-#else
+
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
-#endif
+
         {
             TreePath path = model.GetPath(iter);
             Gtk.TreeView view = col.TreeView as Gtk.TreeView;
@@ -628,7 +621,7 @@ namespace UserInterface.Views
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
                     {
-                        foreach (CellRenderer render in col.GetCells())
+                        foreach (CellRenderer render in col.Cells)
                         {
                             if (render is CellRendererText)
                             {
@@ -677,11 +670,19 @@ namespace UserInterface.Views
                 if (Fixedcolview.Columns.Length > i)
                 {
                     Fixedcolview.Columns[i].Visible = i < number;
+                    if (Fixedcolview.Columns[i].Visible && headerHeight > 0 && Fixedcolview.Columns[i].Widget != null)
+                        Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
                 }
 
                 if (Grid.Columns.Length > i)
                 {
                     Grid.Columns[i].Visible = i >= number;
+                    if (refColWidget == null & Grid.Columns[i].Visible)
+                    {
+                        refColWidget = Grid.Columns[i].Widget;
+                        if (refColWidget != null)
+                            refColWidget.SizeAllocated += RefColWidget_SizeAllocated;
+                    }
                 }
             }
             if (number > 0)
@@ -734,23 +735,39 @@ namespace UserInterface.Views
             numberLockedCols = number;
         }
 
+        /// <summary>
+        /// This is intended to assure the header height of the Fixedcolview grid matches that of the main grid.
+        /// By detecting when Gtk has allocated height for the main grid headers, we adjust the fixed grid headers
+        /// to match. This is not as robust or generalised as it might be, but should suffice for the purposes of this view.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void RefColWidget_SizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            try
+            {
+                headerHeight = refColWidget.AllocatedHeight;
+                for (int i = 0; i < numberLockedCols; i++)
+                {
+                    Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
+                }
+                // We have the value we need, so we can clean up. There's no real need to return, as we don't expect
+                // the column headers to change.
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>Get screenshot of grid.</summary>
         public System.Drawing.Image GetScreenshot()
         {
-#if NETFRAMEWORK
-            // Create a Bitmap and draw the DataGridView on it.
-            int width;
-            int height;
-            Gdk.Window gridWindow = hbox1.GdkWindow;  // Should we draw from hbox1 or from gridview?
-            gridWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
-#else
+
             throw new NotImplementedException();
-#endif
+
         }
 
         /// <summary>
@@ -781,7 +798,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Does some cleanup work on the Grid.
         /// </summary>
-        public void Dispose()
+        public void DoDisposal()
         {
             ClearGridColumns();
             gridmodel.Dispose();
@@ -800,7 +817,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments.</param>
         private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            Dispose();
+            DoDisposal();
         }
 
     }

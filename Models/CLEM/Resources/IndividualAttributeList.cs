@@ -32,6 +32,15 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Check if the individual has any attributes added
+        /// </summary>
+        /// <returns></returns>
+        public bool AttributesPresent
+        {
+            get { return (attributes != null); }
+        }
+
+        /// <summary>
         /// Check if the selected attribute exists on this individual
         /// </summary>
         /// <param name="tag">Attribute label</param>
@@ -76,7 +85,7 @@ namespace Models.CLEM.Resources
         /// <param name="tag">Attribute label</param>
         public void Remove(string tag)
         {
-            if (attributes is null || attributes.ContainsKey(tag))
+            if (attributes != null && attributes.ContainsKey(tag))
                 attributes.Remove(tag);
         }
 

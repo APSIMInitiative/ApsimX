@@ -6,7 +6,6 @@ using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Nutrients;
-using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
 using System;
@@ -63,12 +62,6 @@ namespace UserInterface.Presenters
         /// <summary>Add soil to simulation button.</summary>
         private ButtonView addSoilButton;
 
-        /// <summary>Apsoil help button.</summary>
-        private ButtonView apsoilButton;
-
-        /// <summary>Isric help button.</summary>
-        private ButtonView isricButton;
-
         /// <summary>The main presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
@@ -98,26 +91,25 @@ namespace UserInterface.Presenters
             radiusEditBox = view.GetControl<EditView>("radiusEditBox");
             searchButton = view.GetControl<ButtonView>("searchButton");
             addSoilButton = view.GetControl<ButtonView>("addSoilButton");
-            apsoilButton = view.GetControl<ButtonView>("apsoilButton");
-            isricButton = view.GetControl<ButtonView>("isricButton");
 
             PopulateView();
 
             searchButton.Clicked += OnSearchClicked;
             addSoilButton.Clicked += OnAddSoilButtonClicked;
-            apsoilButton.Clicked += OnApsoilButtonClicked;
-            isricButton.Clicked += OnIsricButtonClicked;
         }
 
         /// <summary>Detach the view from this presenter.</summary>
         public void Detach()
         {
             if (countryDropDown.SelectedValue != string.Empty)
+            {
                 Configuration.Settings.DownloadFromDataSourceCountry = countryDropDown.SelectedValue;
+                Configuration.Settings.Save();
+            }
 
             searchButton.Clicked -= OnSearchClicked;
             addSoilButton.Clicked -= OnAddSoilButtonClicked;
-            view.MainWidget.Cleanup();
+            view.Dispose();
         }
 
         /// <summary>Populate the controls.</summary>
@@ -201,7 +193,7 @@ namespace UserInterface.Presenters
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
                     var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
-                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
+                    var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
                     var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
                     row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
                     row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
@@ -242,22 +234,6 @@ namespace UserInterface.Presenters
             explorerPresenter.Populate();
         }
 
-        /// <summary>User has clicked the APSOIL help button.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnApsoilButtonClicked(object sender, EventArgs e)
-        {
-            Process.Start("https://www.apsim.info/apsim-model/apsoil/");
-        }
-
-        /// <summary>User has clicked the ISRIC help button.</summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnIsricButtonClicked(object sender, EventArgs e)
-        {
-            Process.Start("https://www.isric.org/explore/soilgrids");
-        }
-
         /// <summary>Return zero or more APSOIL soils.</summary>
         private IEnumerable<SoilFromDataSource> GetApsoilSoils()
         {
@@ -287,9 +263,12 @@ namespace UserInterface.Presenters
                             soilDoc.LoadXml(xml);
                             foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
                             {
-                                Soil soil = FileFormat.ReadFromString<Soil>(soilNode.OuterXml, e => throw e, false);
+                                var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
+                                var folder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
+                                var soil = folder.Children[0] as Soil;
+
                                 // fixme: this should be handled by the converter or the importer.
-                                soil.Children.Add(new CERESSoilTemperature());
+                                InitialiseSoil(soil);
                                 soils.Add(new SoilFromDataSource()
                                 {
                                     Soil = soil,
@@ -361,9 +340,10 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false);
-                    soil.Children.Add(new CERESSoilTemperature());
-                    soil.OnCreated();
+                    var soilXML = $"<folder>{soilNodes[0].OuterXml}</folder>";
+                    var soilFolder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
+                    var soil = soilFolder.Children[0] as Soil;
+                    InitialiseSoil(soil);
 
                     soils.Add(new SoilFromDataSource()
                     {
@@ -377,6 +357,41 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowError(err);
             }
             return soils;
+        }
+
+        /// <summary>
+        /// Initialise soil and add in missing children.
+        /// </summary>
+        /// <param name="soil"></param>
+        private static void InitialiseSoil(Soil soil)
+        {
+            soil.Children.Add(new CERESSoilTemperature());
+            var physical = soil.FindChild<Physical>();
+            if (physical != null)
+            {
+                if (soil.FindChild<Solute>("NO3") == null)
+                    soil.Children.Add(new Solute()
+                    {
+                        Name = "NO3",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(1.0, physical.Thickness.Length)
+                    });
+                if (soil.FindChild<Solute>("NH4") == null)
+                    soil.Children.Add(new Solute()
+                    {
+                        Name = "NH4",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(0.1, physical.Thickness.Length)
+                    });
+                if (soil.FindChild<Solute>("Urea") == null)
+                    soil.Children.Add(new Solute()
+                    {
+                        Name = "Urea",
+                        Thickness = physical.Thickness,
+                        InitialValues = MathUtilities.CreateArrayOfValues(0, physical.Thickness.Length)
+                    });
+            }
+            soil.OnCreated();
         }
 
         /// This alternative approach for obtaining ISRIC soil data need a little bit more work, but is largely complete
@@ -610,8 +625,9 @@ namespace UserInterface.Presenters
                 Physical waterNode = new Physical();
                 Organic organicMatter = new Organic();
                 WaterBalance soilWater = new WaterBalance();
-                InitialWater initialWater = new InitialWater();
-                Sample initialNitrogen = new Sample();
+                Water initialWater = new Water();
+                Solute no3 = new Solute();
+                Solute nh4 = new Solute();
                 Nutrient nutrient = new Nutrient();
                 nutrient.ResourceName = "Nutrient";
 
@@ -626,7 +642,8 @@ namespace UserInterface.Presenters
                 newSoil.Children.Add(organicMatter);
                 newSoil.Children.Add(analysis);
                 newSoil.Children.Add(initialWater);
-                newSoil.Children.Add(initialNitrogen);
+                newSoil.Children.Add(no3);
+                newSoil.Children.Add(nh4);
                 newSoil.Children.Add(new CERESSoilTemperature());
                 newSoil.ParentAllDescendants();
                 newSoil.OnCreated();
@@ -662,13 +679,14 @@ namespace UserInterface.Presenters
                 organicMatter.Thickness = thickness;
 
                 initialWater.Name = "Initial water";
-                initialWater.PercentMethod = InitialWater.PercentMethodEnum.FilledFromTop;
+                initialWater.FilledFromTop = true;
                 initialWater.FractionFull = 0.0;
 
                 // Initialise nitrogen to 0.0
-                initialNitrogen.Name = "Initial nitrogen";
-                initialNitrogen.NH4 = new double[layerCount];
-                initialNitrogen.NO3 = new double[layerCount];
+                no3.Name = "NO3";
+                no3.InitialValues = new double[layerCount];
+                nh4.Name = "NH4";
+                nh4.InitialValues = new double[layerCount];
 
                 double tAvg = (maxTemp + minTemp) / 2.0;
                 soilWater.CNCov = 0.0;

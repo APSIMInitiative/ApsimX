@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the breeding of a specified type of other animal.")]
+    [Description("Manages the breeding of a specified type of other animal")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBreed.htm")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase
@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         public OtherAnimalsType SelectedOtherAnimalsType;
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this timer is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime NextDueDate { get; set; }
@@ -78,7 +78,6 @@ namespace Models.CLEM.Activities
         public OtherAnimalsActivityBreed()
         {
             this.SetDefaults();
-            TransactionCategory = "OtherAnimal.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -130,30 +129,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
-            if (breeders == 0)
-            {
-                return new GetDaysLabourRequiredReturnArgs(0, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
-            }
-
-            double daysNeeded = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    daysNeeded = Math.Ceiling(breeders / requirement.UnitSize) * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
-        }
-
     }
 }

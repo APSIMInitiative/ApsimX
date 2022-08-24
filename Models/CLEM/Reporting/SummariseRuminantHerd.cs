@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    [Description("This component will generate summarised details for a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdSummary.htm")]
     public class SummariseRuminantHerd: CLEMModel
@@ -36,6 +36,13 @@ namespace Models.CLEM
         /// </summary>
         [Description("Grouping style")]
         public SummarizeRuminantHerdStyle GroupStyle { get; set; }
+
+        /// <summary>
+        /// Include total population column
+        /// </summary>
+        [Description("Include total population column")]
+        public bool IncludeTotalColumn { get; set; }
+
 
         /// <summary>
         /// Report item was generated event handler
@@ -84,7 +91,7 @@ namespace Models.CLEM
                 var filtergroup = current.Children.OfType<RuminantGroup>();
                 if (filtergroup.Count() > 1)
                 {
-                    Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
+                    Summary.WriteMessage(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.", MessageType.Warning);
                 }
                 if (filtergroup.FirstOrDefault() != null)
                 {
@@ -172,6 +179,37 @@ namespace Models.CLEM
                     ReportDetails = item.Info;
                     ReportItemGenerated(ReportDetails);
                 }
+
+                if(IncludeTotalColumn)
+                {
+                    var herdGroups = herd.GroupBy(a => a.HerdName);
+                    var herdResult = herdGroups.Select(group => new
+                    {
+                        Group = group.Key,
+                        Info = new HerdReportItemGeneratedEventArgs
+                        {
+                            TimeStep = timestep,
+                            Breed = "All",
+                            Herd = group.Key,
+                            Sex = "All",
+                            Group = group.Key,
+                            Number = group.Count(),
+                            Age = group.Average(a => a.Age),
+                            AverageWeight = group.Average(a => a.Weight),
+                            AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
+                            AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
+                            AverageIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageProportionPotentialIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageWeightGain = group.Average(a => a.WeightGain),
+                            AdultEquivalents = group.Sum(a => a.AdultEquivalent),
+                            NumberPregnant = group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count(),
+                            NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
+                            NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
+                        }
+                    });
+                    ReportDetails = herdResult.FirstOrDefault().Info;
+                    ReportItemGenerated(ReportDetails);
+                }
             }
             else
             {
@@ -227,12 +265,8 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;

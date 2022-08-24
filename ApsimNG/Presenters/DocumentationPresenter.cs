@@ -137,7 +137,7 @@ namespace UserInterface.Presenters
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
             foreach (EventInfo evnt in model.GetType().GetEvents(flags))
             {
-                if (!evnt.IsSpecialName && !evnt.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource)))
+                if (!evnt.IsSpecialName)
                 {
                     DataRow row = table.NewRow();
 
@@ -165,8 +165,7 @@ namespace UserInterface.Presenters
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
             foreach (PropertyInfo property in model.GetType().GetProperties(flags))
             {
-                if (property.GetCustomAttribute<DescriptionAttribute>() == null &&
-                    !property.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource)))
+                if (property.GetCustomAttribute<DescriptionAttribute>() == null)
                 {
                     DataRow row = table.NewRow();
 
@@ -194,7 +193,7 @@ namespace UserInterface.Presenters
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
             foreach (MethodInfo method in model.GetType().GetMethods(flags))
             {
-                if (!method.IsSpecialName && !method.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource)))
+                if (!method.IsSpecialName)
                 {
                     DataRow row = table.NewRow();
 

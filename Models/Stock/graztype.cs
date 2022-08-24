@@ -72,7 +72,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The ungrazeable amount of green in a paddock
         /// </summary>
-        public const double Ungrazeable = 40.0;  // g/m^2 
+        public const double Ungrazeable = 0.0;  // g/m^2 - setting this to zero because the forages have already removed the ungrazable portion.
 
     /// <summary>
     /// Maximum soil layers

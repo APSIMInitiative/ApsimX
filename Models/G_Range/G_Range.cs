@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Models
@@ -10,6 +10,7 @@ namespace Models
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
     using Models.PMF;
+    using Models.Soils;
 
     /// <summary>
     /// Implements the plant growth model logic abstracted from G_Range
@@ -43,7 +44,7 @@ namespace Models
         Soils.IPhysical soilPhysical = null;
 
         [Link]
-        Soils.Sample initial = null;
+        Organic organic = null;
 
         [Link(IsOptional = true)]
         Soils.SoilCrop SoilCrop = null;
@@ -98,7 +99,10 @@ namespace Models
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">The bud number.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1) { }
+        /// <param name="seeds">The number of seeds sown.</param>
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0) { }
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         public bool IsReadyForHarvesting { get { return false; } }
@@ -108,6 +112,12 @@ namespace Models
 
         /// <summary>End the crop</summary>
         public void EndCrop() { }
+
+        /// <summary>Daily soil water uptake from each soil layer (mm)</summary>
+        public IReadOnlyList<double> WaterUptake => throw new NotImplementedException("Uptake isn't calculated in GRange.");
+
+        /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
+        public IReadOnlyList<double> NitrogenUptake => throw new NotImplementedException("Uptake isn't calculated in GRange.");
 
         #endregion
 
@@ -2049,18 +2059,18 @@ namespace Models
             double max = vLarge;
             if (Double.IsNaN(var))
             {
-                summary.WriteWarning(this, "Variable " + varName + " was NaN");
+                summary.WriteMessage(this, "Variable " + varName + " was NaN", MessageType.Warning);
                 return min;
             }
             else if (var < min)
             {
                 if (!varName.Contains("carbonSourceSink") &&!varName.Contains("holdingTank"))
-                    summary.WriteWarning(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value");
+                    summary.WriteMessage(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value", MessageType.Warning);
                 return min;
             }
             else if (var > max)
             {
-                summary.WriteWarning(this, "Variable " + varName + " was above the maximum allowed value");
+                summary.WriteMessage(this, "Variable " + varName + " was above the maximum allowed value", MessageType.Warning);
                 return max;
             }
             return Double.NaN;

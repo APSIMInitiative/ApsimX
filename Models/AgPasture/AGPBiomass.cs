@@ -18,7 +18,7 @@
 
         /// <summary>N concentration.</summary>
         [Units("kg/ha")]
-        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
+        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0, 0.000000001); } }
 
         /// <summary>Digestibility of biomass.</summary>
         [Units("kg/kg")]

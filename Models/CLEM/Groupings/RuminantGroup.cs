@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using Models.CLEM.Interfaces;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,57 +23,57 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
+    [ValidParent(ParentType = typeof(RuminantActivityFeed))]
+    [ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    [ValidParent(ParentType = typeof(RuminantActivityMilking))]
+    [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityMove))]
-    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    [ValidParent(ParentType = typeof(RuminantActivityShear))]
+    [ValidParent(ParentType = typeof(RuminantActivityTag))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
+    [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
-    [Description("Selects specific individuals ruminants from the herd using filters and sorts.")]
+    [Description("Selects specific individuals ruminants from the herd")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
     public class RuminantGroup : FilterGroup<Ruminant>
     {
-        /// <summary>
-        /// The reason for this filter group
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
-        [Description("Reason")]
-        [Required]
-        public RuminantStockGroupStyle Reason { get; set; }
-
-        /// <summary>
-        /// Constructor to apply defaults
-        /// </summary>
-        public RuminantGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            this.SetDefaults();
-        }
-
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+            /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
+        {
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"filtername\">");
+                htmlWriter.Write($"<div class=\"filtername\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
-                    htmlWriter.Write(this.Name);
-                }
+                    htmlWriter.Write($"{Name}");
+                if ((Identifier ?? "") != "")
+                    htmlWriter.Write($" - applies to {Identifier}");
+
                 htmlWriter.Write($"</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
         #endregion
-
     }
 }

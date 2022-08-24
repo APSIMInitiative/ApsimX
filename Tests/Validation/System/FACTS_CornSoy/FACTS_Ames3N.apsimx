@@ -308,7 +308,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system.\n\n![Alt Text](Diagrams_soy_phenology_comparison.png)\n\n**Figure [FigureNumber]:** Comparison of soybean phenological stages for APSIM Classic and APSIM Next Generation.",
+                  "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system.\n\n![Comparison of soybean phenological stages for APSIM Classic and APSIM Next Generation.](Diagrams_soy_phenology_comparison.png)",
                   "Name": "Introduction",
                   "Children": [],
                   "IncludeInDocumentation": true,

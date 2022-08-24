@@ -3,6 +3,7 @@
     using Models;
     using System;
     using Views;
+    using APSIM.Shared.Graphing;
 
     /// <summary>This presenter lets the set properties of a graph annotation.</summary>
     public class AnnotationPresenter : IPresenter
@@ -27,7 +28,7 @@
 
             dropDown = (view as ViewBase).GetControl<DropDownView>("combobox1");
             dropDown.Values = new string[] { "TopLeft", "TopRight", "BottomLeft", "BottomRight" };
-            dropDown.SelectedValue = graphModel.AnnotationPosition.ToString();
+            dropDown.SelectedValue = graphModel.AnnotationLocation.ToString();
 
             // Trap events from the view.
             dropDown.Changed += OnDropDownChanged;
@@ -43,13 +44,12 @@
         {
             try
             {
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graphModel, "AnnotationPosition", Enum.Parse(typeof(Graph.AnnotationPositionType), dropDown.SelectedValue)));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graphModel, "AnnotationPosition", Enum.Parse(typeof(AnnotationPosition), dropDown.SelectedValue)));
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
     }
 }

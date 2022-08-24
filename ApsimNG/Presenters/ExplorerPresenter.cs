@@ -150,7 +150,7 @@
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
             this.CommandHistory = new CommandHistory(this.view.Tree);
-            this.mainMenu = new MainMenu(this);
+            this.mainMenu = new MainMenu(MainPresenter);
             this.ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
 
@@ -214,7 +214,10 @@
             try
             {
                 if (File.Exists(ApsimXFile.FileName))
+                {
                     Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+                    Configuration.Settings.Save();
+                }
             }
             catch
             {
@@ -230,7 +233,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Cleanup();
+                (this.view as Views.ExplorerView).Dispose();
             }
 
             this.ContextMenu = null;
@@ -242,27 +245,20 @@
 
         public bool FileHasPendingChanges()
         {
-            try
-            {
-                // Need to hide the right hand panel because some views may not save
-                // their contents until they get a 'Detach' call.
-                this.HideRightHandPanel();
+            // Need to hide the right hand panel because some views may not save
+            // their contents until they get a 'Detach' call.
+            this.HideRightHandPanel();
 
-                // Check the command history (beta feature - see comment in the
-                // property description for more details).
-                if (Configuration.Settings.UseFastFileClose)
-                    return CommandHistory.Modified;
+            // Check the command history (beta feature - see comment in the
+            // property description for more details).
+            if (Configuration.Settings.UseFastFileClose)
+                return CommandHistory.Modified;
 
-                // The fallback is to write the file to json then compare to the
-                // file on disk.
-                string newSim = FileFormat.WriteToString(ApsimXFile);
-                string origSim = File.ReadAllText(ApsimXFile.FileName);
-                return string.Compare(newSim, origSim) != 0;
-            }
-            finally
-            {
-                this.ShowRightHandPanel();
-            }
+            // The fallback is to write the file to json then compare to the
+            // file on disk.
+            string newSim = FileFormat.WriteToString(ApsimXFile);
+            string origSim = File.ReadAllText(ApsimXFile.FileName);
+            return string.Compare(newSim, origSim) != 0;
         }
 
         /// <summary>
@@ -346,6 +342,7 @@
                     WriteSimulation(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
+                    Configuration.Settings.Save();
                     MainPresenter.UpdateMRUDisplay();
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
                     return true;
@@ -881,10 +878,11 @@
                 {
                     MenuDescriptionArgs desc = new MenuDescriptionArgs();
                     desc.Name = mainMenuName.MenuName;
-                    desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
+                    desc.ResourceNameForImage = $"ApsimNG.Resources.MenuImages.{desc.Name.Replace(" ", "")}.svg";
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
+                    desc.ShortcutKey = mainMenuName.Hotkey;
 
                     descriptions.Add(desc);
                 }
@@ -959,12 +957,7 @@
                     string fromParentPath = StringUtilities.ParentName(dragObject.NodePath);
 
                     ICommand cmd = null;
-                    if (e.Copied)
-                    {
-                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
-                        CommandHistory.Add(command, true);
-                    }
-                    else if (e.Moved)
+                    if (e.Moved)
                     {
                         if (fromParentPath != toParentPath)
                         {
@@ -975,6 +968,16 @@
                                 CommandHistory.Add(cmd);
                             }
                         }
+                    }
+                    else if (e.Copied)
+                    {
+                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
+                        CommandHistory.Add(command, true);
+                    }
+                    else if (e.Linked)
+                    {
+                        // tbi
+                        MainPresenter.ShowMessage("Linked models TBI", Simulation.MessageType.Information);
                     }
                     view.Tree.ExpandChildren(toParent.FullPath, false);
                 }
@@ -1081,7 +1084,7 @@
         {
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
-            string resourceName = (model as ModelCollectionFromResource)?.ResourceName;
+            string resourceName = model.ResourceName;
             description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name, resourceName);
 
             description.ToolTip = model.GetType().Name;
@@ -1091,7 +1094,7 @@
                 if (!child.IsHidden)
                     description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
-            description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
             return description;
         }
@@ -1107,36 +1110,61 @@
             // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
             // an image with the same resource name as the model (e.g. Wheat). If this fails, try the model type name.
             // Otherwise, we attempt to find an icon with the same name as the model's type.
+            // lie112 made the namespace type lookup first as this is most appropriate, before modeltype
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
-
-            string resourceNameForImage;
-            ManifestResourceInfo info = null;
-            if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
+            string resourceNameForImage = null;
+            bool exists =false;
+            if (!string.IsNullOrEmpty(resourceName))
             {
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + resourceName + ".png";
-                info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
-
-                // If there's no image for resource name (e.g. Wheat.png), try the model name (e.g. Plant.png)
-                if (info == null)
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                (exists, resourceNameForImage) = CheckIfIconExists(resourceName);
+                if (!exists)
+                    (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
-            else
+            if (!exists)
             {
-                string modelNamespace = modelType.FullName.Split('.')[1] + ".";
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
+                string modelNamespace = modelType.FullName;
+                if (modelNamespace.StartsWith("Models."))
+                    modelNamespace = modelNamespace.Substring(7);
+                (exists, resourceNameForImage) = CheckIfIconExists(modelNamespace);
 
-                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                if (!exists)
+                    (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
 
-            // Check to see if you can find the image in the resource for this project.
-            info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
-            if (info == null)
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            if (!exists)
+                (exists, resourceNameForImage) = CheckIfIconExists(modelName);
 
             return resourceNameForImage;
+        }
+
+        /// <summary>
+        /// Check if an icon exists as an embedded resource in this assembly
+        /// (ApsimNG). Return true if it exists, and if so, the second element
+        /// of the tuple will be the name of the resource.
+        /// </summary>
+        /// <param name="iconName"></param>
+        /// <returns></returns>
+        public static (bool, string) CheckIfIconExists(string iconName)
+        {
+            string[] extensions = new[]
+            {
+                ".svg",
+                ".png"
+            };
+            foreach (string extension in extensions)
+            {
+                string resourceName = GetResourceName(iconName, extension);
+                if (Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceName) != null)
+                    return (true, resourceName);
+            }
+            return (false, null);
+        }
+
+        private static string GetResourceName(string name, string extension)
+        {
+            return $"ApsimNG.Resources.TreeViewImages.{name}{extension}";
         }
 
         #endregion

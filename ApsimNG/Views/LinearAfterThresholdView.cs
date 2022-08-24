@@ -38,11 +38,9 @@ namespace UserInterface.Views
         {
             properties = new PropertyView(this);
             graph = new GraphView(this);
-#if NETFRAMEWORK
-            panel = new VPaned();
-#else
+
             panel = new Paned(Orientation.Vertical);
-#endif
+
             panel.Pack1(properties.MainWidget, false, false);
             panel.Pack2(graph.MainWidget, true, false);
             panel.Destroyed += OnDestroyed;
@@ -54,7 +52,7 @@ namespace UserInterface.Views
         {
             try
             {
-                panel.Cleanup();
+                panel.Dispose();
             }
             catch (Exception err)
             {

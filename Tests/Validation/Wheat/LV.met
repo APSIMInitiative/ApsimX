@@ -1,8 +1,8 @@
 [weather.met.weather]
 !station number = 074000
 !station name =  ARDLETHAN POST OFFICE
-latitude = -34.3567  (DECIMAL DEGREES)
-longitude =  146.9032  (DECIMAL DEGREES)
+latitude = -0  (DECIMAL DEGREES)
+longitude =  0  (DECIMAL DEGREES)
 tav = 16.60 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
 amp = 17.22 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 

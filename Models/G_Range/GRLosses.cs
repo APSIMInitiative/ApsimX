@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -318,12 +318,12 @@ namespace Models
             if (relativeWaterContent[0] > vLarge)
             {
                 relativeWaterContent[0] = vLarge;
-                summary.WriteWarning(this, "Relative water content reset to very large in Water_Loss, layer 1");
+                summary.WriteMessage(this, "Relative water content reset to very large in Water_Loss, layer 1", MessageType.Warning);
             }
             if (relativeWaterContent[0] < 0.0)
             {
                 relativeWaterContent[0] = 0.0;
-                summary.WriteWarning(this, "Relative water content reset to 0.0 in Water_Loss, layer 1");
+                summary.WriteMessage(this, "Relative water content reset to 0.0 in Water_Loss, layer 1", MessageType.Warning);
             }
 
             // Update water available pools minus evaporation from top layer

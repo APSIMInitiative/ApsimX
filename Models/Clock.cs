@@ -1,4 +1,4 @@
-﻿namespace Models
+namespace Models
 {
     using Models.Core;
     using Models.Core.Run;
@@ -19,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Clock : Model, IClock, ICustomDocumentation
+    public class Clock : Model, IClock
     {
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
@@ -176,6 +176,12 @@
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
 
+        /// <summary>
+        /// Occurs when dcaps performs its calculations. This needs to happen
+        /// between DoPotentialPlantGrowth and DoPotentialPlantPartitioning.
+        /// </summary>
+        public event EventHandler DoDCAPST;
+
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
         public event EventHandler CLEMInitialiseResource;
         /// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
@@ -290,11 +296,11 @@
             if (CLEMInitialiseActivity != null)
                 CLEMInitialiseActivity.Invoke(this, args);
 
-            if (FinalInitialise != null)
-                FinalInitialise.Invoke(this, args);
-
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);
+
+            if (FinalInitialise != null)
+                FinalInitialise.Invoke(this, args);
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
@@ -351,6 +357,8 @@
 
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
+
+                DoDCAPST?.Invoke(this, args);
 
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
@@ -457,105 +465,7 @@
             if (EndOfSimulation != null)
                 EndOfSimulation.Invoke(this, args);
 
-            Summary?.WriteMessage(this, "Simulation terminated normally");
-        }
-
-        /// <summary>
-        /// Create clock documentation.
-        /// </summary>
-        /// <param name="tags">Documentation tags.</param>
-        /// <param name="headingLevel">The heading level.</param>
-        /// <param name="indent">The indent level.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            tags.Add(new AutoDocumentation.Heading("Clock", headingLevel));
-            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel+1, indent, false);
-            DocumentEventOrder(tags, headingLevel + 1, indent);
-        }
-
-        /// <summary>
-        /// Document the event order. Cannot assume the order based on the order
-        /// of the event declarations.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel">The heading level.</param>
-        /// <param name="indent">The indent level.</param>
-        private void DocumentEventOrder(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        { 
-            // The strategy here is to create an instance of clock and call it's
-            // timestep method (OnDoCommence) for two days. WE will subscribe to
-            // all the clock methods via a method (Handler) in an instance of an 
-            // EventHanderClass. This method will then sort out what is a event 
-            // from the daily time step, what is an event from before the timestep
-            // and post timestep events.
-            var clock = new Clock();
-            var methodInfo = typeof(EventHandlerClass).GetMethod("Handler", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-            var preTimestepEvents = new List<string>();
-            var timestepEvents = new List<string>();
-            var postTimestepEvents = new List<string>();
-            foreach (var eventMember in clock.GetType().GetEvents())
-            {
-                var handlerInstance = new EventHandlerClass()
-                {
-                    EventName = eventMember.Name,
-                    PreTimestepEvents = preTimestepEvents,
-                    TimestepEvents = timestepEvents,
-                    PostTimestepEvents = postTimestepEvents
-                };
-                var handler =
-                     Delegate.CreateDelegate(eventMember.EventHandlerType,
-                     handlerInstance,                        
-                     methodInfo);
-                eventMember.AddEventHandler(
-                    clock,
-                    handler);
-            }
-
-            clock.Start = new DateTime(1900, 1, 1);
-            clock.End = new DateTime(1900, 1, 2);
-
-            var commenceMethod = clock.GetType().GetMethod("OnDoCommence", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            commenceMethod.Invoke(clock, new object[] { clock, new CommenceArgs() });
-
-            var table = new DataTable();
-            tags.Add(new AutoDocumentation.Heading("Pre-timestep events (in order)", headingLevel));
-            DataTableUtilities.AddColumn(table, "Events", preTimestepEvents.ToArray());
-            tags.Add(new AutoDocumentation.Table(table, indent));
-
-            var table2 = new DataTable();
-            tags.Add(new AutoDocumentation.Heading("Timestep events (in order)", headingLevel));
-            DataTableUtilities.AddColumn(table2, "Events", timestepEvents.ToArray());
-            tags.Add(new AutoDocumentation.Table(table2, indent));
-
-            var table3 = new DataTable();
-            tags.Add(new AutoDocumentation.Heading("Post-timestep events (in order)", headingLevel));
-            DataTableUtilities.AddColumn(table3, "Events", postTimestepEvents.ToArray());
-            tags.Add(new AutoDocumentation.Table(table3, indent));
-        }
-
-        /// <summary>
-        /// A helper class for determining which of the clock events are timestep
-        /// events and what come before or after the timestep.
-        /// </summary>
-        private class EventHandlerClass
-        {
-            public string EventName { get; set; }
-            public List<string> PreTimestepEvents { get; set; }
-            public List<string> TimestepEvents { get; set; }
-            public List<string> PostTimestepEvents { get; set; }
-
-            public void Handler(object sender, EventArgs e)
-            {
-                if (EventName == "EndOfSimulation")
-                    PostTimestepEvents.Add(EventName);
-                else if (PreTimestepEvents.Contains(EventName))
-                {
-                    PreTimestepEvents.Remove(EventName);
-                    TimestepEvents.Add(EventName);
-                }
-                else
-                    PreTimestepEvents.Add(EventName);
-            }
+            Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Information);
         }
     }
 }

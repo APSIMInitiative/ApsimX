@@ -35,7 +35,7 @@
         {
             try
             {
-                (Specification as EditView).MainWidget.Cleanup();
+                (Specification as EditView).Dispose();
 
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;

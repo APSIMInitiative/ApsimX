@@ -4,14 +4,15 @@ using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
+using APSIM.Shared.Graphing;
 using Models.Core.Run;
+using System.Threading;
 
 namespace UserInterface.Presenters
 {
@@ -45,9 +46,14 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Background thread responsible for refreshing the view.
         /// </summary>
-        private BackgroundWorker processingThread;
+        private Task processingThread;
 
-        private WorkerStatus status = new WorkerStatus();
+        /// <summary>
+        /// Cancellation token used to cancel the work.
+        /// </summary>
+        private CancellationTokenSource cts = new CancellationTokenSource();
+
+        private DateTime startTime;
 
         /// <summary>
         /// Attaches the model to the view.
@@ -71,12 +77,18 @@ namespace UserInterface.Presenters
             properties = new PropertyPresenter();
             properties.Attach(panel, this.view.PropertiesView, presenter);
 
-            processingThread = new BackgroundWorker();
-            processingThread.DoWork += WorkerThread;
-            processingThread.RunWorkerCompleted += OnProcessingFinished;
-            processingThread.WorkerSupportsCancellation = true;
+            (processingThread, startTime) = StartWork();
+        }
 
-            processingThread.RunWorkerAsync();
+        /// <summary>
+        /// Start drawing graphs in a background thread and return a task
+        /// instance representing this task.
+        /// </summary>
+        private (Task, DateTime) StartWork()
+        {
+            cts = new CancellationTokenSource();
+            Task task = Task.Run(WorkerThread).ContinueWith(_ => OnProcessingFinished());
+            return (task, DateTime.Now);
         }
 
         /// <summary>
@@ -84,8 +96,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            processingThread.CancelAsync();
-            processingThread.DoWork -= WorkerThread;
+            cts.Cancel();
+            processingThread.Wait();
 
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.view.GraphViewCreated -= ModifyGraphView;
@@ -95,25 +107,15 @@ namespace UserInterface.Presenters
 
         private void Refresh()
         {
-            lock (status)
-            {
-                if (status.IsWorking)
-                {
-                    status.Restart = true;
-                    processingThread.CancelAsync();
-                }
-                else
-                    processingThread.RunWorkerAsync();
-            }
+            cts.Cancel();
+            processingThread.Wait();
+            (processingThread, startTime) = StartWork();
         }
 
-        private void WorkerThread(object sender, DoWorkEventArgs e)
+        private void WorkerThread()
         {
-            lock (status)
-                status.IsWorking = true;
-
             ClearGraphs();
-            Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
+            Graph[] graphs = panel.FindAllChildren<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)
@@ -126,52 +128,36 @@ namespace UserInterface.Presenters
                     {
                         CreatePageOfGraphs(sim, graphs);
 
-                        if (processingThread.CancellationPending)
-                        {
-                            e.Cancel = true;
+                        if (cts.Token.IsCancellationRequested)
                             return;
-                        }
                     }
                 }
             }
         }
 
-        private void OnProcessingFinished(object sender, RunWorkerCompletedEventArgs e)
+        private void OnProcessingFinished()
         {
             try
             {
-                bool restart = false;
-                lock (status)
-                {
-                    status.IsWorking = false;
-
-                    if (status.Restart)
-                    {
-                        restart = true;
-                        status.Restart = false;
-                    }
-                }
-
-                if (restart)
-                    processingThread.RunWorkerAsync();
-                else if (e.Error != null)
-                    presenter.MainPresenter.ShowError(e.Error);
-                else if (!e.Cancelled)
+                if (processingThread.Exception != null)
+                    presenter.MainPresenter.ShowError(processingThread.Exception);
+                else if (!cts.Token.IsCancellationRequested)
                 {
                     // The worker thread has finished. Now standardise the axes (if necessary).
-                    // This will freeze the UI thread while working, but it's easier than the
-                    // alternative which is to have certain parts of this running on the main
-                    // thread, and certain parts running on the worker thread. In such an
-                    // implementation, large chunks of functionality would need to be moved
-                    // into the view and the synchronisation would be a nightmare.
+                    // There are a few complications here:
+                    // - This must be run on the UI thread
+                    // - This must not run until after the graph panel view has
+                    //   finished processing all graph tabs (ie it has set the
+                    //   view objects to GraphView instances).
+                    // I've opted for the simple approach of Gtk.Application.Invoke().
+                    // Arguably we shouldn't be relying on the Gtk API here but
+                    // this is going to be much simpler than the alternatives.
                     if (panel.SameXAxes || panel.SameYAxes)
-                    {
-                        presenter.MainPresenter.ShowWaitCursor(true);
-                        StandardiseAxes();
-                        presenter.MainPresenter.ShowWaitCursor(false);
-                    }
+                        Gtk.Application.Invoke((_, __) => StandardiseAxes());
+
                     int numGraphs = graphs.SelectMany(g => g.Graphs).Count();
-                    presenter.MainPresenter.ShowMessage($"{panel.Name}: finished loading {numGraphs} graphs.", Simulation.MessageType.Information);
+                    TimeSpan elapsed = DateTime.Now - startTime;
+                    presenter.MainPresenter.ShowMessage($"{panel.Name}: finished loading {numGraphs} graphs in {elapsed.TotalSeconds}s.", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)
@@ -193,52 +179,75 @@ namespace UserInterface.Presenters
 
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
         {
+            if (!panel.Cache.ContainsKey(sim))
+                panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
+
             IStorageReader storage = GetStorage();
-            GraphTab tab = new GraphTab(sim, this.presenter);
+            GraphPage graphPage = new GraphPage();
+
+            // Configure graphs by applying user overrides.
             for (int i = 0; i < graphs.Length; i++)
             {
-                Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
-                graph.Parent = panel;
-                graph.ParentAllDescendants();
+                if (graphs[i] != null && graphs[i].Enabled)
+                    graphPage.Graphs.Add(ConfigureGraph(graphs[i], sim));
 
-                if (panel.LegendOutsideGraph)
-                    graph.LegendOutsideGraph = true;
-
-                if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
-                    graph.LegendOrientation = (Graph.LegendOrientationType)Enum.Parse(typeof(Graph.LegendOrientationType), panel.LegendOrientation.ToString());
-
-                if (graph != null && graph.Enabled)
-                {
-                    // Apply transformation to graph.
-                    panel.Script.TransformGraph(graph, sim);
-
-                    if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
-                        graph.LegendPosition = (Graph.LegendPositionType)Enum.Parse(typeof(Graph.LegendPositionType), panel.LegendPosition.ToString());
-
-                    // Create and fill cache entry if it doesn't exist.
-                    if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
-                    {
-                        if (!storage.TryGetSimulationID(sim, out int _))
-                            throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
-
-                        var graphPage = new GraphPage();
-                        graphPage.Graphs.Add(graph);
-                        var definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
-
-                        if (!panel.Cache.ContainsKey(sim))
-                            panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
-
-                        panel.Cache[sim][i] = definitions[0].SeriesDefinitions;
-                    }
-                    tab.AddGraph(graph, panel.Cache[sim][i]);
-                }
-
-                if (processingThread.CancellationPending)
+                if (cts.Token.IsCancellationRequested)
                     return;
             }
 
+            // If any sims in this tab are missing from the cache, then populate
+            // the cache via the GraphPage instance.
+            if (panel.Cache[sim].Count != graphs.Length)
+            {
+                // Read data from storage.
+                IReadOnlyList<GraphPage.GraphDefinitionMap> definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
+
+                // Now populate the cache for this simulation. The definitions
+                // should - in theory - be the same length as the graphs array.
+                for (int i = 0; i < graphs.Length; i++)
+                {
+                    GraphPage.GraphDefinitionMap definition = definitions[i];
+                    panel.Cache[sim][i] = definition.SeriesDefinitions;
+                    if (cts.Token.IsCancellationRequested)
+                        return;
+                }
+            }
+
+            // Finally, add the graphs to the tab.
+            GraphTab tab = new GraphTab(sim, this.presenter);
+            for (int i = 0; i < graphPage.Graphs.Count; i++)
+                tab.AddGraph(graphPage.Graphs[i], panel.Cache[sim][i]);
+
             this.graphs.Add(tab);
             view.AddTab(tab, panel.NumCols);
+        }
+
+        private Graph ConfigureGraph(Graph graph, string simulationName)
+        {
+            graph = (Graph)ReflectionUtilities.Clone(graph);
+            graph.Parent = panel;
+            graph.ParentAllDescendants();
+
+            // Apply transformation to graph.
+            panel.Script.TransformGraph(graph, simulationName);
+
+            if (panel.LegendOutsideGraph)
+                graph.LegendOutsideGraph = true;
+
+            if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
+                graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
+
+            if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
+                graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
+            return graph;
+        }
+
+        private GraphPage.GraphDefinitionMap FindMatchingDefinition(IReadOnlyList<GraphPage.GraphDefinitionMap> allDefinitions, Graph graph)
+        {
+            GraphPage.GraphDefinitionMap match = allDefinitions.FirstOrDefault(m => m.Graph == graph);
+            if (match == null)
+                throw new KeyNotFoundException($"Graph {graph.Name} not found. Programming error...");
+            return match;
         }
 
         /// <summary>
@@ -247,38 +256,93 @@ namespace UserInterface.Presenters
         /// </summary>
         private void StandardiseAxes()
         {
+            if (!panel.Cache.Any())
+                return;
+
             // Loop over each graph. ie if each tab contains five
             // graphs, then loop over these five graphs.
             int graphsPerPage = panel.Cache.First().Value.Count;
             for (int i = 0; i < graphsPerPage; i++)
             {
-                // Get all graph series for this graph from each simulation.
-                // ie. get the data behind each lai graph in each simulation.
-                List<SeriesDefinition> series = panel.Cache.Values.SelectMany(v => v[i]).ToList();
-
-                // Now draw all these series onto a single graph.
-                GraphPresenter graphPresenter = new GraphPresenter();
-                GraphView graphView = new GraphView(view as ViewBase);
-                presenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(graphs[0].Graphs[i].Graph, graphView, presenter);
-                graphPresenter.DrawGraph(series);
-
-                Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
-                Axis[] xAxes = axes.Where(a => a.Type == Axis.AxisType.Bottom || a.Type == Axis.AxisType.Top).ToArray();
-                Axis[] yAxes = axes.Where(a => a.Type == Axis.AxisType.Left|| a.Type == Axis.AxisType.Right).ToArray();
-
-                foreach (GraphTab tab in graphs)
+                if (panel.SameXAxes)
                 {
-                    if (tab.Graphs[i].View != null)
-                    {
-                        if (panel.SameXAxes)
-                            FormatAxes(tab.Graphs[i].View, xAxes);
-                        if (panel.SameYAxes)
-                            FormatAxes(tab.Graphs[i].View, yAxes);
-                    }
+                    StandardiseAxis(AxisPosition.Bottom, i);
+                    StandardiseAxis(AxisPosition.Top, i);
+                }
+
+                if (panel.SameYAxes)
+                {
+                    StandardiseAxis(AxisPosition.Left, i);
+                    StandardiseAxis(AxisPosition.Right, i);
                 }
             }
         }
+
+        /// <summary>
+        /// Modify the nth graph in each tab such that it has the same axis
+        /// max and min on the given axis.
+        /// </summary>
+        /// <param name="axisType">The axis to be modified.</param>
+        /// <param name="index">The index of the graph in each tab to be modified.</param>
+        private void StandardiseAxis(AxisPosition axisType, int index)
+        {
+            double max = GetAxisMax(axisType, index);
+            if (!double.IsNaN(max))
+                SetAxisMax(axisType, index, max);
+
+            double min = GetAxisMin(axisType, index);
+            if (!double.IsNaN(min))
+                SetAxisMin(axisType, index, min);
+        }
+
+        /// <summary>
+        /// Set the axis minimum for the nth graph in each graph tab.
+        /// </summary>
+        /// <param name="axisType">The type of axis to be modified.</param>
+        /// <param name="graphIndex">The index of the graph in each tab to be modified.</param>
+        /// <param name="value">The new axis minimum value.</param>
+        private void SetAxisMin(AxisPosition axisType, int graphIndex, double value)
+        {
+            foreach (GraphView view in GetGraphViews(graphIndex))
+                view.SetAxisMin(value, axisType);
+        }
+
+        /// <summary>
+        /// Set the axis maximum for the nth graph in each graph tab.
+        /// </summary>
+        /// <param name="axisType">The type of axis to be modified.</param>
+        /// <param name="graphIndex">The index of the graph in each tab to be modified.</param>
+        /// <param name="value">The new axis maximum value.</param>
+        private void SetAxisMax(AxisPosition axisType, int graphIndex, double value)
+        {
+            foreach (GraphView view in GetGraphViews(graphIndex))
+                view.SetAxisMax(value, axisType);
+        }
+
+        /// <summary>
+        /// Get the graph view instances for the nth graph in each tab.
+        /// </summary>
+        /// <param name="index">Index of the graph in each tab.</param>
+        private IEnumerable<GraphView> GetGraphViews(int index)
+        {
+            return graphs.Select(t => t.Graphs[index].View);
+        }
+
+        /// <summary>
+        /// Get the smallest value on the given axis of the given graph across
+        /// all tabs.
+        /// </summary>
+        /// <param name="axisType">The axis type (e.g. top, left, ...).</param>
+        /// <param name="graphIndex">The index of the graph to be examined in each tab.</param>
+        private double GetAxisMin(AxisPosition axisType, int graphIndex) => graphs.Min(t => t.Graphs[graphIndex].View.AxisMinimum(axisType));
+
+        /// <summary>
+        /// Get the largest value on the given axis of the given graph across
+        /// all tabs.
+        /// </summary>
+        /// <param name="axisType">The axis type (e.g. top, left, ...).</param>
+        /// <param name="graphIndex">The index of the graph to be examined in each tab.</param>
+        private double GetAxisMax(AxisPosition axisType, int graphIndex) => graphs.Max(t => t.Graphs[graphIndex].View.AxisMaximum(axisType));
 
         /// <summary>
         /// Force a graph to use a given set of axes.
@@ -289,12 +353,12 @@ namespace UserInterface.Presenters
         {
             foreach (Axis axis in axes)
             {
-                graphView.FormatAxis(axis.Type,
-                                     graphView.AxisTitle(axis.Type),
+                graphView.FormatAxis(axis.Position,
+                                     graphView.AxisTitle(axis.Position),
                                      axis.Inverted,
-                                     axis.Minimum,
-                                     axis.Maximum,
-                                     axis.Interval,
+                                     axis.Minimum ?? double.NaN,
+                                     axis.Maximum ?? double.NaN,
+                                     axis.Interval ?? double.NaN,
                                      axis.CrossesAtZero);
             }
         }
@@ -336,12 +400,6 @@ namespace UserInterface.Presenters
         {
             if (processingThread != null)
                 processingThread.Dispose();
-        }
-
-        private class WorkerStatus
-        {
-            public bool IsWorking { get; set; }
-            public bool Restart { get; set; }
         }
 
         public class PanelGraph

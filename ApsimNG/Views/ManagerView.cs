@@ -44,10 +44,10 @@ namespace UserInterface.Views
             propertyEditor = new PropertyView(this);
             scriptEditor = new EditorView(this)
             {
-#if NETCOREAPP
+
                 ShowLineNumbers = true,
                 Language = "c-sharp",
-#endif
+
             };
             notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(((ViewBase)scriptEditor).MainWidget, new Label("Script"));
@@ -58,9 +58,9 @@ namespace UserInterface.Views
         {
             try
             {
-                propertyEditor.MainWidget.Cleanup();
+                propertyEditor.Dispose();
                 propertyEditor = null;
-                (scriptEditor as ViewBase)?.MainWidget?.Cleanup();
+                (scriptEditor as ViewBase)?.Dispose();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

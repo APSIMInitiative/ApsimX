@@ -13,5 +13,23 @@
         /// <param name="columnIndex">The index of the current selected column.</param>
         /// <param name="rowIndex">The index of the current selected row</param>
         void GetSelection(out int columnIndex, out int rowIndex);
+
+        /// <summary>Moves the selected cell to the left one column.</summary>
+        void MoveLeft(bool shift = false);
+
+        /// <summary>Moves the selected cell to the right one column.</summary>
+        void MoveRight(bool shift = false);
+
+        /// <summary>Moves the selected cell up one row.</summary>
+        void MoveUp(bool shift = false);
+
+        /// <summary>Moves the selected cell down one row.</summary>
+        void MoveDown(bool shift = false);
+        
+        /// <summary>Copy cells to clipboard.</summary>
+        void Copy();
+
+        /// <summary>Past cells from clipboard.</summary>
+        void Paste();
     }
 }

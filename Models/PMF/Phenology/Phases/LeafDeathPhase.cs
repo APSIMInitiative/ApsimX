@@ -5,14 +5,14 @@ using Newtonsoft.Json;
 using Models.PMF.Struct;
 using System.IO;
 using Models.Functions;
-
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The <i>[Name]</i> phase goes from the <i>[Start]</i> stage to the <i>[End] stage</i> 
-    /// which occurs when all leaves have fully senesced. 
+    /// This phase goes from the specified start stage to the specified end stage,
+    /// which occurs when all leaves have fully senesced.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -91,9 +91,16 @@ namespace Models.PMF.Phen
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        {
+            ResetPhase();
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"The *{Name}* phase goes from the *{Start}* stage to the *{End}* stage, which occurs when all leaves have fully senesced.");
+        }
     }
 }
-
-      
-      

@@ -8,6 +8,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
+    using APSIM.Shared.Graphing;
+    using Series = Models.Series;
+    using Moq;
+    using System.Data;
+    using System;
+    using UnitTests.Storage;
 
     [TestFixture]
     class SeriesTests
@@ -58,9 +64,9 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].YFieldName, "Col2");
             Assert.IsNull(definitions[0].SeriesDefinitions[0].YError);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Line, LineType.Solid);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].LineThickness, LineThickness.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].MarkerSize, MarkerSize.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].ShowInLegend, false);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Title, "Series");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Type, SeriesType.Bar);
@@ -68,8 +74,8 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Y as double[], new int[] { 10, 10, 20, 20 });
             Assert.IsNull(definitions[0].SeriesDefinitions[0].X2);
             Assert.IsNull(definitions[0].SeriesDefinitions[0].Y2);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].XAxis, Axis.AxisType.Bottom);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].YAxis, Axis.AxisType.Left);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].XAxis, AxisPosition.Bottom);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].YAxis, AxisPosition.Left);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].XFieldUnits, "()");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].YFieldUnits, "(g)");
         }
@@ -134,15 +140,15 @@
                 Assert.AreEqual(definition.YFieldName, "Col2");
                 Assert.IsNull(definition.YError);
                 Assert.AreEqual(definition.Line, LineType.Solid);
-                Assert.AreEqual(definition.LineThickness, LineThicknessType.Normal);
+                Assert.AreEqual(definition.LineThickness, LineThickness.Normal);
                 Assert.AreEqual(definition.Marker, MarkerType.FilledCircle);
-                Assert.AreEqual(definition.MarkerSize, MarkerSizeType.Normal);
+                Assert.AreEqual(definition.MarkerSize, MarkerSize.Normal);
                 Assert.AreEqual(definition.ShowInLegend, false);
                 Assert.AreEqual(definition.Type, SeriesType.Bar);
                 Assert.IsNull(definition.X2);
                 Assert.IsNull(definition.Y2);
-                Assert.AreEqual(definition.XAxis, Axis.AxisType.Bottom);
-                Assert.AreEqual(definition.YAxis, Axis.AxisType.Left);
+                Assert.AreEqual(definition.XAxis, AxisPosition.Bottom);
+                Assert.AreEqual(definition.YAxis, AxisPosition.Left);
                 Assert.AreEqual(definition.XFieldUnits, "()");
                 Assert.AreEqual(definition.YFieldUnits, "(g)");
             }
@@ -224,15 +230,15 @@
                 Assert.AreEqual(definition.XFieldName, "Col1");
                 Assert.AreEqual(definition.YFieldName, "Col2");
                 Assert.IsNull(definition.YError);
-                Assert.AreEqual(definition.LineThickness, LineThicknessType.Normal);
+                Assert.AreEqual(definition.LineThickness, LineThickness.Normal);
                 Assert.AreEqual(definition.Marker, MarkerType.FilledCircle);
-                Assert.AreEqual(definition.MarkerSize, MarkerSizeType.Normal);
+                Assert.AreEqual(definition.MarkerSize, MarkerSize.Normal);
                 Assert.AreEqual(definition.ShowInLegend, false);
                 Assert.AreEqual(definition.Type, SeriesType.Bar);
                 Assert.IsNull(definition.X2);
                 Assert.IsNull(definition.Y2);
-                Assert.AreEqual(definition.XAxis, Axis.AxisType.Bottom);
-                Assert.AreEqual(definition.YAxis, Axis.AxisType.Left);
+                Assert.AreEqual(definition.XAxis, AxisPosition.Bottom);
+                Assert.AreEqual(definition.YAxis, AxisPosition.Left);
                 Assert.AreEqual(definition.XFieldUnits, "()");
                 Assert.AreEqual(definition.YFieldUnits, "(g)");
             }
@@ -607,15 +613,15 @@
 
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].Title, "Regression line");
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].Type, SeriesType.Scatter);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[1].LineThickness, LineThicknessType.Normal);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[1].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].LineThickness, LineThickness.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].MarkerSize, MarkerSize.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].X as double[], new double[] { 1, 4 });
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].Y as double[], new double[] { 1, 2.5 });
 
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].Title, "1:1 line");
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].Type, SeriesType.Scatter);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[2].LineThickness, LineThicknessType.Normal);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[2].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[2].LineThickness, LineThickness.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[2].MarkerSize, MarkerSize.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].X as double[], new double[] { 1, 4 });
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].Y as double[], new double[] { 1, 4 });
 
@@ -1246,6 +1252,72 @@
         }
 
         /// <summary>
+        /// Create a single xy series definition with no vary by.
+        /// Ensure it only pulls in experiments in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithNoSimulationName()
+        {
+            var simulations = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1"),
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Series()
+                            {
+                                Name = "s0",
+                                TableName = "Observed",
+                                XFieldName = "x",
+                                YFieldName = "y",
+                            },
+                            new Series()
+                            {
+                                Name = "s1",
+                                TableName = "Report",
+                                XFieldName = "x",
+                                YFieldName = "y",
+                            }
+                        }
+                    }
+                }
+            };
+
+            simulations.ParentAllDescendants();
+
+            List<string> checkpoints = new List<string>() { "Current" };
+
+            DataTable report = new DataTable("Report");
+            report.Columns.Add("SimulationName", typeof(string));
+            report.Columns.Add("x", typeof(double));
+            report.Columns.Add("y", typeof(double));
+            report.Rows.Add("Sim1", 0, 1);
+            report.Rows.Add("Sim1", 1, 3);
+
+            DataTable obs = new DataTable("Observed");
+            obs.Columns.Add("x", typeof(double));
+            obs.Columns.Add("y", typeof(double));
+            obs.Rows.Add(0, 1);
+            obs.Rows.Add(1, 2);
+
+            IStorageReader reader = new MockStorageReader(report, obs);
+
+            Graph graph = simulations.FindDescendant<Graph>();
+            GraphPage page = new GraphPage();
+            page.Graphs.Add(graph);
+            List<GraphPage.GraphDefinitionMap> definitions = page.GetAllSeriesDefinitions(graph, reader, null);
+
+            Assert.AreEqual(1, definitions.Count);
+            Assert.AreEqual(1, definitions[0].SeriesDefinitions.Count);
+        }
+
+        /// <summary>
         /// Create a single xy series definition with a 'Vary By Experiment'.
         /// Ensure it only pulls in experiments in scope.
         /// </summary>
@@ -1509,6 +1581,62 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].YError.ToList()[0], 0.8, 0.000001);
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].YError.ToList()[1], 0.6, 0.000001);
         }
+
+        /// <summary>Ensure a series definition that has no data doesn't throw exception.</summary>
+        [Test]
+        public void SeriesWithMissingData()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<IModel>()
+                {
+                    new Graph()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series",
+                                TableName = "Report",
+                                XFieldName = "Col1",
+                                YFieldName = "Col2",
+                                FactorToVaryColours = "Exp"
+                            }
+                        }
+                    },
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim3", "Exp", "Exp1")
+                    })
+                }
+            };
+            folder.ParentAllDescendants();
+
+            string data =
+                "CheckpointName    SimulationID   Exp Col1  Col2\r\n" +
+                "            ()              ()    ()   ()   (g)\r\n" +
+                "       Current               1  Exp1    1    10\r\n" +
+                "       Current               1  Exp1    1    10\r\n" +
+                "       Current               2  Exp2    2    20\r\n" +
+                "       Current               2  Exp2    2    20\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var graph = folder.Children[0] as Graph;
+            var series = graph.Children[0] as Series;
+
+            var descriptors = series.GetDescriptorNames(reader).ToList();
+            Assert.AreEqual(descriptors[0], "Exp");
+
+            var page = new GraphPage();
+            page.Graphs.Add(graph);
+            var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
+
+            Assert.AreEqual(definitions.Count, 1);
+            Assert.AreEqual(definitions[0].SeriesDefinitions.Count, 0);
+        }
+
 
         /// <summary>Create some test data and return a storage reader. </summary>
         private static IStorageReader CreateTestData()

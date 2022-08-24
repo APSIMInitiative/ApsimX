@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -505,15 +505,15 @@ namespace Models.Aqua
             //Check there is any food in the pond.
             if ((FoodAvailable.TotalDM <= 0.0) && (Prawns.NumberOfPrawns > 0))
                 {
-                Summary.WriteWarning(this, "There is no food in the pond. The prawns are starving");
+                Summary.WriteMessage(this, "There is no food in the pond. The prawns are starving", MessageType.Warning);
                 return 0.0; 
                 }
 
             //Check there is enough food in the pond
             if (potDMConsumed_kg > FoodAvailable.TotalDM)
                 {
-                Summary.WriteWarning(this, "Not enough food in pond for prawns to eat today." +
-                   Environment.NewLine + "Reducing dry matter consumed from " + Math.Round(potDMConsumed_kg,3) + " (kg) to " + Math.Round(FoodAvailable.TotalDM, 3) + " (kg)");
+                Summary.WriteMessage(this, "Not enough food in pond for prawns to eat today." +
+                   Environment.NewLine + "Reducing dry matter consumed from " + Math.Round(potDMConsumed_kg,3) + " (kg) to " + Math.Round(FoodAvailable.TotalDM, 3) + " (kg)", MessageType.Warning);
 
                 //just give them what is there
                 return MathUtilities.Divide(FoodAvailable.TotalDM, Prawns.NumberOfPrawns, 0.0) * kg2g;  //convert kg to grams

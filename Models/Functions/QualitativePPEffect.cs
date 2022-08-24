@@ -5,7 +5,6 @@ namespace Models.Functions
 {
 
     ///<summary>
-    /// # [Name]
     /// Qualitative Photoperiod effect on developmental rate
     ///</summary>
     [Serializable]

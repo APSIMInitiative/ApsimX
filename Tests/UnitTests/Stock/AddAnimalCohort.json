@@ -881,8 +881,8 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -1277,8 +1277,8 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -6383,8 +6383,8 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -6779,8 +6779,8 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -11885,8 +11885,8 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -12281,8 +12281,8 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -17387,8 +17387,8 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -17783,8 +17783,8 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -22889,8 +22889,8 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -23285,8 +23285,8 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -28391,8 +28391,8 @@
     },
     "Genotype": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -28787,8 +28787,8 @@
     "FibreDiam": 26.315578743325368,
     "MatedTo": {
       "Name": "Small Merino",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",

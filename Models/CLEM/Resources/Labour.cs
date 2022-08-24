@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -19,10 +19,10 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all labour types (people) for the simulation.")]
+    [Description("Resource group for all labour types (people) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
-    public class Labour: ResourceBaseWithTransactions, IValidatableObject
+    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -89,12 +89,8 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
-                value += ind.GetDietDetails(metric)*ind.Individuals;
-
-            if(reportPerAE)
-                value /= (AdultEquivalents(includeHiredLabour));
-
-            return value;
+                value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
+            return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
         }
 
         /// <summary>
@@ -108,6 +104,21 @@ namespace Models.CLEM.Resources
         {
             int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
             return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
+        }
+
+        /// <inheritdoc/>
+        public LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() { "Adult equivalent" },
+                        measures: new List<string>()
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         #region validation
@@ -128,7 +139,7 @@ namespace Models.CLEM.Resources
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
-                    Summary.WriteWarning(this, warningString);
+                    Summary.WriteMessage(this, warningString, MessageType.Warning);
                 }
             }
             return results;
@@ -143,7 +154,7 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             // locate AE relationship
-            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
+            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Adult equivalent");
 
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
@@ -314,7 +325,7 @@ namespace Models.CLEM.Resources
             double ae = 0;
             foreach (LabourType person in Items)
                 if (!person.Hired | (includeHired))
-                    ae += (CalculateAE(person.AgeInMonths)??1)*person.Individuals;
+                    ae += (CalculateAE(person.AgeInMonths)??1)*Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
             return ae;
         }
 
@@ -336,7 +347,7 @@ namespace Models.CLEM.Resources
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
-                    Summary.WriteWarning(this, warningString);
+                    Summary.WriteMessage(this, warningString, MessageType.Warning);
                 }
             }
             return 0;
@@ -386,7 +397,7 @@ namespace Models.CLEM.Resources
                             if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].");
+                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].", MessageType.Warning);
                             }
                         }
                     }
@@ -404,12 +415,12 @@ namespace Models.CLEM.Resources
                         price = matchIndividual.Value;
                     }
                     else
-                        Summary.WriteWarning(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
+                        Summary.WriteMessage(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]", MessageType.Warning);
 
                     if (!warningsNotFound.Contains(criteria))
                     {
                         warningsNotFound.Add(criteria);
-                        Summary.WriteWarning(this, warningString);
+                        Summary.WriteMessage(this, warningString, MessageType.Warning);
                     }
                 }
                 else
@@ -433,12 +444,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

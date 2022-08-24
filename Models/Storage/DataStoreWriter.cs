@@ -228,7 +228,8 @@
                     commandRunner?.Stop();
                     commandRunner = null;
                     commands.Clear();
-                    simulationIDs.Clear();
+                    lock (lockObject)
+                        simulationIDs.Clear();
                     checkpointIDs.Clear();
                     simulationNamesThatHaveBeenCleanedUp.Clear();
                     units.Clear();
@@ -438,7 +439,8 @@
             if (dbConnection == null)
                 return;
 
-            simulationIDs.Clear();
+            lock (lockObject)
+                simulationIDs.Clear();
             if (dbConnection.TableExists("_Simulations"))
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
@@ -448,7 +450,8 @@
                     string folderName = null;
                     if (data.Columns.Contains("FolderName"))
                         folderName = row["FolderName"].ToString();
-                    simulationIDs.Add(row["Name"].ToString(),
+                    lock (lockObject)
+                        simulationIDs.Add(row["Name"].ToString(),
                                       new SimulationDetails() { ID = id, FolderName = folderName });
                 }
             }

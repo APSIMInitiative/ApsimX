@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
@@ -15,30 +15,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
-    <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
-    <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Compile Remove="Importer\**" />
-    <EmbeddedResource Remove="Importer\**" />
-    <None Remove="Importer\**" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Remove="Manager.cs.rej" />
-    <None Remove="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="MathNet.Numerics" Version="4.11.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
@@ -46,57 +25,24 @@
     <PackageReference Include="System.CodeDom" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Remove="DataStore.cs" />
-    <Compile Remove="Functions\BoundFunction.cs" />
-    <Compile Remove="GRange.cs" />
-    <Compile Remove="Lifecycle\LifeStage.cs" />
-    <Compile Remove="Lifecycle\LifeStageGrowth.cs" />
-    <Compile Remove="Lifecycle\LifeStageImmigration.cs" />
-    <Compile Remove="Lifecycle\LifeStageMortality.cs" />
-    <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
-    <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
-    <Compile Remove="Plant\BiomassSummariser.cs" />
-    <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
-    <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
-    <Compile Remove="Report\RowEnumerator.cs" />
-    <Compile Remove="Resources\Scripts\*.cs" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.7.0-1.final" />
     <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="0.1.1" />
     <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
     <PackageReference Include="PdfSharpCore" Version="1.2.11" />
-  </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
-    <Reference Include="System.ComponentModel.DataAnnotations">
-      <Private>false</Private>
-    </Reference>
-    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
-	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
-  <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-  </ItemGroup>
+    <EmbeddedResource Include="Resources\**" />
+    <None Remove="Resources\**" />
+    <Compile Remove="Resources\Scripts\*.cs" />
+    <Compile Remove="DCaPST\Scripts\*.cs" />
+    <None Remove="Importer\**" />
+    <Compile Remove="Importer\**" />
+    <EmbeddedResource Remove="Importer\**" />
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-
-  <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">
-    <Copy Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="..\DeploymentSupport\Windows\Bin64\sqlite3.dll" DestinationFolder="$(OutputPath)" />
-  </Target>
 
 </Project>

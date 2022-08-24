@@ -1,15 +1,11 @@
 ﻿namespace UserInterface.Classes
 {
-    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
     using System;
     using System.Drawing;
+    using Utility;
     using Views;
-
-#if NETCOREAPP
-    using StateType = Gtk.StateFlags;
-#endif
 
     /// <summary>
     /// Represents a grid column.
@@ -216,7 +212,9 @@
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-                    Gdk.Color bg = button.GetBackgroundColour(StateType.Normal);
+#pragma warning disable 0612
+                    Gdk.Color bg = button.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning restore 0612
 
                     return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
                 }
@@ -231,11 +229,9 @@
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-#if NETFRAMEWORK
-                    button.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
-#else
+
                     throw new NotImplementedException("tbi - gtk3 equivalent");
-#endif
+
                 }
             }
         }
@@ -249,10 +245,7 @@
             {
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
-                {
-                    Gdk.Color fg = label.GetForegroundColour(StateType.Normal);
-                    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
-                }
+                    return label.StyleContext.GetColor(StateFlags.Normal).ToColour();
                 else
                    return System.Drawing.Color.Black;
             }
@@ -262,11 +255,9 @@
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
                 {
-#if NETFRAMEWORK
-                    label.ModifyFg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
-#else
+
                     throw new NotImplementedException("tbi - gtk3 equivalent");
-#endif
+
                 }
             }
         }

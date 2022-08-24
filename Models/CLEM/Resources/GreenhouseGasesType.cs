@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GreenhouseGases))]
-    [Description("This resource represents a greenhouse gas (e.g. CO2).")]
+    [Description("This resource represents a greenhouse gas (e.g. CO2)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -60,7 +60,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-                Add(StartingAmount, this, "", "Starting value");
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         #region transactions
@@ -168,12 +168,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             if (StartingAmount > 0)

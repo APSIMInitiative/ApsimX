@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF;
 using Models.PMF.Organs;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.RootShape
 {
@@ -13,7 +13,7 @@ namespace Models.Functions.RootShape
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Root))]
-    public class RootShapeSemiEllipse : Model, IRootShape, ICustomDocumentation
+    public class RootShapeSemiEllipse : Model, IRootShape
     {
         /// <summary>The Root Angle</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -63,6 +63,26 @@ namespace Models.Functions.RootShape
             }
         }
 
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        public void CalcRootVolumeProportionInLayers(ZoneState zone)
+        {
+            zone.RootProportionVolume = zone.RootProportions;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         private double DegToRad(double degs)
         {
             return degs * Math.PI / 180.0;
@@ -91,27 +111,6 @@ namespace Models.Functions.RootShape
             double hDistNew = Math.Min(hDist, Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootSpread, 2) * (1 - a), 0, 100000)));
             layerArea = layerThick * hDistNew;
             return layerArea;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // add graph and table.
-                //tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.</i>", indent));
-                //tags.Add(new AutoDocumentation.Paragraph("<i>MaximumVPDWeight = " + MaximumVPDWeight + "</i>", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

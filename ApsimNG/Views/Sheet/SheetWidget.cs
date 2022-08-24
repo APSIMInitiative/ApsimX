@@ -20,8 +20,7 @@ namespace UserInterface.Views
     /// </remarks>
     public class SheetWidget : EventBox
     {
-        /// <summary>The instance that contains the look and behaviour of the widget.</summary>
-        private readonly Sheet sheet;
+        private Sheet _sheet;
 
         /// <summary>The width of the grid lines in pixels.</summary>
         private const double lineWidth = 0.2;
@@ -30,16 +29,38 @@ namespace UserInterface.Views
         private const int mouseWheelScrollRows = 10;
 
         /// <summary>Constructor</summary>
-        /// <param name="sheetEngine">The instance that contains the look and behaviour of the widget.</param>
-        public SheetWidget(Sheet sheetEngine)
+        public SheetWidget()
         {
             CanFocus = true;
-            sheet = sheetEngine;
-            sheet.RedrawNeeded += OnRedrawNeeded;
-#if NETCOREAPP
-            this.StyleContext.AddClass("sheet");
-#endif
             AddEvents((int)EventMask.ScrollMask);
+        }
+
+        /// <summary>The instance that contains the look and behaviour of the widget.</summary>
+        public Sheet Sheet
+        {
+            get => _sheet;
+            set
+            {
+                _sheet = value;
+                _sheet.RedrawNeeded += OnRedrawNeeded;
+                this.StyleContext.AddClass("sheet");
+            }
+        }
+
+        public void SetClipboard(string text)
+        {
+            var clipboardName = "CLIPBOARD";
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            cb.Text = text;
+        }
+
+        public string GetClipboard()
+        {
+            var clipboardName = "CLIPBOARD";
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            return cb.WaitForText();
         }
 
         private void OnRedrawNeeded(object sender, EventArgs e)
@@ -47,34 +68,7 @@ namespace UserInterface.Views
             QueueDraw();
         }
 
-#if NETFRAMEWORK
-        /// <summary>Called by base class to draw the sheet widget.</summary>
-        /// <param name="expose">The expose event arguments.</param>
-        protected override bool OnExposeEvent(EventExpose expose)
-        {
-            try
-            {
-                Context cr = CairoHelper.Create(expose.Window);
 
-                // Do initialisation
-                if (sheet.ColumnWidths == null)
-                    Initialise(cr);
-
-                base.OnExposeEvent(expose);
-
-                sheet.Draw(new CairoContext(cr, this));
-
-                ((IDisposable)cr.Target).Dispose();
-                ((IDisposable)cr).Dispose();
-            }
-            catch (Exception err)
-            {
-                ViewBase.MasterView.ShowError(err);
-            }
-
-            return true;
-        }
-#else
         /// <summary>Called by base class to draw the sheet widget.</summary>
         /// <param name="cr">The context to draw in.</param>
         protected override bool OnDrawn(Context cr)
@@ -82,12 +76,12 @@ namespace UserInterface.Views
             try
             {
                 // Do initialisation
-                if (sheet.ColumnWidths == null)
+                if (Sheet.ColumnWidths == null)
                     Initialise(cr);
 
                 base.OnDrawn(cr);
 
-                sheet.Draw(new CairoContext(cr, this));
+                Sheet.Draw(new CairoContext(cr, this));
 
             }
             catch (Exception err)
@@ -97,21 +91,18 @@ namespace UserInterface.Views
 
             return true;
         }
-#endif
+
 
         /// <summary>Initialise the widget.</summary>
         /// <param name="cr">The drawing context.</param>
         private void Initialise(Context cr)
         {
-#if NETFRAMEWORK
-            sheet.Width = Parent.Allocation.Width;
-            sheet.Height = Parent.Allocation.Height;
-#else
-            sheet.Width = this.AllocatedWidth;
-            sheet.Height = this.AllocatedHeight;
-#endif
+
+            Sheet.Width = this.AllocatedWidth;
+            Sheet.Height = this.AllocatedHeight;
+
             if (cr != null)
-                sheet.Initialise(new CairoContext(cr, this));
+                Sheet.Initialise(new CairoContext(cr, this));
 
             GrabFocus();
         }
@@ -122,7 +113,7 @@ namespace UserInterface.Views
             {
                 base.OnSizeAllocated(allocation);
 
-                sheet.Resize(allocation.Width, allocation.Height);
+                Sheet.Resize(allocation.Width, allocation.Height);
             }
             catch (Exception err)
             {
@@ -138,7 +129,7 @@ namespace UserInterface.Views
             try
             {
                 SheetEventKey keyParams = evnt.ToSheetEventKey();
-                sheet.InvokeKeyPress(keyParams);
+                Sheet.InvokeKeyPress(keyParams);
             }
             catch (Exception ex)
             {
@@ -157,7 +148,7 @@ namespace UserInterface.Views
                 if (evnt.Type == EventType.ButtonPress)
                 {
                     SheetEventButton buttonParams = evnt.ToSheetEventButton();
-                    sheet.InvokeButtonPress(buttonParams);
+                    Sheet.InvokeButtonPress(buttonParams);
                 }
             }
             catch (Exception ex)
@@ -173,15 +164,13 @@ namespace UserInterface.Views
             try
             {
                 int delta;
-#if NETFRAMEWORK
-                delta = e.Direction == Gdk.ScrollDirection.Down ? -120 : 120;
-#else
+
                 if (e.Direction == Gdk.ScrollDirection.Smooth)
                     delta = e.DeltaY < 0 ? mouseWheelScrollRows : -mouseWheelScrollRows;
                 else
                     delta = e.Direction == Gdk.ScrollDirection.Down ? -mouseWheelScrollRows : mouseWheelScrollRows;
-#endif
-                sheet.InvokeScroll(delta);
+
+                Sheet.InvokeScroll(delta);
             }
             catch (Exception err)
             {

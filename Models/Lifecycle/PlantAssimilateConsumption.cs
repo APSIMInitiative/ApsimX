@@ -7,7 +7,6 @@ using Models.PMF.Interfaces;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// For Pests/Diseases that take assimilate dirrect from the vessels. 
     /// for example aphids
     /// </summary>

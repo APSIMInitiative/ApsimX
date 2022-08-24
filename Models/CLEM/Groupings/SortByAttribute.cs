@@ -18,12 +18,10 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Defines a sort rule using the Attribute details of the individual")]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
+    [Description("Defines a sort order using the Attribute details of the individual")]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/SortByAttribute.htm")]
     public class SortByAttribute : CLEMModel, ISort
     {
         /// <summary>
@@ -44,13 +42,42 @@ namespace Models.CLEM.Groupings
         [Description("Sort direction")]
         public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
+        /// <summary>
+        /// Value to sort by if attribute is missing
+        /// </summary>
+        [Description("Value used when attribute missing")]
+        [Required(AllowEmptyStrings = false)]
+        public string MissingAttributeValue { get; set; }
+
         /// <inheritdoc/>
         public object OrderRule<T>(T t)
         {
-            if (FilterStyle == AttributeFilterStyle.Exists)
-                return (t as Ruminant).Attributes.Exists(AttributeTag);
-            else
-                return (t as Ruminant).Attributes.GetValue(AttributeTag).StoredValue;
+            if (t is IAttributable)
+            {
+                if (FilterStyle == AttributeFilterStyle.Exists)
+                {
+                    bool exists = ((IAttributable)t).Attributes.Exists(AttributeTag);
+                    return Convert.ToInt32(exists);
+                }
+                else
+                {
+                    IndividualAttributeList indAttList = ((IAttributable)t).Attributes;
+                    bool exists = (indAttList.AttributesPresent) ? indAttList.Exists(AttributeTag) : false;
+                    if (exists)
+                        return indAttList.GetValue(AttributeTag).StoredValue;
+                    else
+                        switch (indAttList.GetValue(AttributeTag))
+                        {
+                            case IndividualAttribute _:
+                                return float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
+                            case CLEMGenotypeAttribute _:
+                                return MissingAttributeValue;
+                            default:
+                                return null;
+                        }
+                }
+            }
+            return 0;
         }
 
         /// <summary>
@@ -94,20 +121,20 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

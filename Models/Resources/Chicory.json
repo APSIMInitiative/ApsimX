@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -14,7 +14,16 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\n# Presentation\n\nThis model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  The model was built using the Plant Modelling Framework (PMF) described by [brown_plant_2014].  To simulate the aboveground plant structure, including the photosynthesis process, the Chicory model uses the SimpleLeaf organ type of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.\n\n\n# Inclusion in APSIM simulations\nA forage chicory crop can be included in a simulation the same as any other APSIM crop.\n\n  * - The chicory object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;\n  * - To become active, chicory needs to be sown using a manager script with a sowing rule. e.g.:\n~~~\n  Chicory.Sow(cultivar: Puna, population: 200, depth: 10, rowSpacing: 150);  \n~~~\nIf a specified cultivar is not available, a fatal error will be thrown.\n\n\n## Harvest and biomass removal\nChicory biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, like for other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:\n~~~\n[EventSubscribe(\"Commencing\")]  \nprivate void OnSimulationCommencing(object sender, EventArgs e)  \n{  \n  RemoveFraction = new RemovalFractions(Chicory.Organs);  \n}  \n[EventSubscribe(\"DoManagement\")]    \nprivate void OnDoManagement(object sender, EventArgs e)  \n{  \n  if (Clock.Today.Date == HarvestDate)  \n  {  \n    RemoveFraction.SetFractionToRemove(\"Leaf\", 0.80);  \n    RemoveFraction.SetFractionToRemove(\"Stem\", 0.50);  \n    RemoveFraction.SetFractionToResidue(\"leaf\",0.05);\n    Chicory.Harvest(RemoveFraction);  \n  }\n}  \n~~~\nThe RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.\n\n\n## Crop termination\nTo fully terminate a crop the EndCrop event should be raised:\n~~~\n  Chicory.EndCrop();  \n~~~\nOnce a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.  \n\n\n# Acknowledgements\nThis model was developed with help from Russel McAuliffe and Brittany Paton organising data and simulations. Datasets were kindly shared by Julia M. Lee, Hamish E. Brown, and the Forages for Reduced Nitrogen Leaching (FRNL) programme.\n",
+          "Text": "_Rogerio Cichota, AgResearch, New Zealand_\r\n\r\n\r\n##Preamble\r\nChicory (*Cichorium intybus* L.) is a perennial herb of the family Asteraceae native of Europe and Asia, but which can now be found in meadows worldwide ([Garnock-Jones_1987]; [HareEtAl_1990]; [AlloushEtAl_2003]; [LiKemp_2005]).  Two main varieties have been selected for agricultural uses, leaf chicory (var. *foliosum*), which has been cultivated for salads as well as a forage for livestock, and root chicory (var. *sativum*), grown for the taproots, which are used as a coffee substitute and more recently as dietary supplement ([DielenEtAl_2005]; [ErnstEtAl_1995]; [JurgonskiEtAl_2011]).  Wild varieties are considered a weed in many countries.  \r\nThe chicory plant has large shiny hairless leaves that grow from a basal rosette ([HareEtAl_1990]; [ErnstEtAl_1995]; [ReaumePanflet2010]), it has a thick deep taproot which holds carbohydrate reserves that allow prompt re-growth after winter or defoliation.  When vernalised, chicory will produce stems which contain several bright blue flowers, the stems become woody when flower buds start to appear.  Leaves do grow on stems but are quite small and decrease in size from the base to apex.  Flower buds form sequentially in the axils of the upper leaves of the main stem and branches.  Seeds reach maturity rapidly so the same plant will have young flowers and ripe seeds at the same time ([HareEtAl_1990]; [MoloneyMilne_1993]; [ClaphamEtAl_2001]; [ReaumePanflet2010]).  \r\nForage chicory is considered a moderately persistent herb under grazing conditions, its initial rosette can split into multiple crowns after the first growing season ([MoloneyMilne_1993]; [LiEtAl_1997c]; [ClaphamEtAl_2001]; [LiKemp_2005]).  Rapid establishment during spring/summer months provides a great competitive advantage for forage chicory over weeds, and it can be used as a monoculture or in mixed swards.  Chicory has shown resilience and potential to produce high yields at a wide range of management strategies ([ClarkEtAl_1990a]; [JungEtAl_1996]; [LiEtAl_1997b]; [LabreveuxEtAl_2004]), and is highly palatable to ruminants ([ClarkEtAl_1990b]; [JungEtAl_1996]).  The palatability of forage chicory will lead to preferential grazing and result in a competitive disadvantage for chicory in mixed swards, compromising its persistence.  Although it is classified as a perennial plant, the population in a chicory sward will decrease over time due to a variety of reasons, such as disease, selective grazing, and physical damage by trampling.  \r\n\r\n\r\n**Objective:**  The model presented here has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage chicory crop.  Currently, the focus is mainly on describing biomass accumulation and regrowth after harvest on monocultural swards.  As part of APSIM's PMF, using chicory for multicropping is possible, but this has not been fully tested.  Likewise, describing the effect of population decrease on plant growth was not attempted; for swards free of weeds and within typical population ranges, the changes in plant size (number of crowns) and LAI should compensate for loss of population (e.g. [LiEtAl_1997b]), but competition with weeds would alter this pattern significantly.  \r\nSimulating variations in plant N concentration (seasonal or due to changes in soil status)  is not a focus of the current model.  Further development of PMF's supply/demand processes are needed for capturing the variations in N content typically seen in perennial species.  \r\n\r\n\r\n## Generic background  \r\n",
+          "Name": "TitlePage",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "\n# Presentation\n\nThis model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  The model was built using the Plant Modelling Framework (PMF) described by [brown_plant_2014].  To simulate the aboveground plant structure, including the photosynthesis process, the Chicory model uses the SimpleLeaf organ type of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.\n\n\n# Inclusion in APSIM simulations\nA forage chicory crop can be included in a simulation the same as any other APSIM crop.\n\n  - The chicory object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;\n  - To become active, chicory needs to be sown using a manager script with a sowing rule. e.g.:\n~~~\n  Chicory.Sow(cultivar: Puna, population: 200, depth: 10, rowSpacing: 150);  \n~~~\nIf a specified cultivar is not available, a fatal error will be thrown.\n\n\n## Harvest and biomass removal\nChicory biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, like for other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:\n~~~\n[EventSubscribe(\"Commencing\")]  \nprivate void OnSimulationCommencing(object sender, EventArgs e)  \n{  \n  RemoveFraction = new RemovalFractions(Chicory.Organs);  \n}  \n[EventSubscribe(\"DoManagement\")]    \nprivate void OnDoManagement(object sender, EventArgs e)  \n{  \n  if (Clock.Today.Date == HarvestDate)  \n  {  \n    RemoveFraction.SetFractionToRemove(\"Leaf\", 0.80);  \n    RemoveFraction.SetFractionToRemove(\"Stem\", 0.50);  \n    RemoveFraction.SetFractionToResidue(\"leaf\",0.05);\n    Chicory.Harvest(RemoveFraction);  \n  }\n}  \n~~~\nThe RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.\n\n\n## Crop termination\nTo fully terminate a crop the EndCrop event should be raised:\n~~~\n  Chicory.EndCrop();  \n~~~\nOnce a crop has been ended the field is open to be used by another APSIM plant model, or another chicory crop.  Note that ending chicory is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.  \n\n\n# Acknowledgements\nThis model was developed with help from Russel McAuliffe and Brittany Paton organising data and simulations. Datasets were kindly shared by Julia M. Lee, Hamish E. Brown, and the Forages for Reduced Nitrogen Leaching (FRNL) programme.\n",
           "Name": "GeneralDescription",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -218,8 +227,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 75.0,
-              "ShootRate": 10.0,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -240,6 +247,48 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 75.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 10.0,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -487,7 +536,8 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -501,7 +551,8 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -535,7 +586,8 @@
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -549,7 +601,8 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -559,7 +612,8 @@
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -6542,11 +6596,6 @@
                   "FixedValue": "0.0"
                 }
               ]
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -7526,7 +7575,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
@@ -7580,6 +7629,16 @@
           "FixedValue": 0.0,
           "Units": null,
           "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,

@@ -387,7 +387,7 @@
                                             "   {\r\n" +
                                             "      [Link]\r\n" +
                                             "      ISummary summary = null;\r\n" +
-                                            "      public void Run() { summary.WriteMessage(this, \"Passed Test\"); }\r\n" +
+                                            "      public void Run() { summary.WriteMessage(this, \"Passed Test\", MessageType.Information); }\r\n" +
                                             "   }\r\n" +
                                             "}"
                                 }

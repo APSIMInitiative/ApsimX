@@ -1,8 +1,23 @@
-﻿namespace UserInterface.Views
+﻿using System.Drawing;
+
+namespace UserInterface.Views
 {
     /// <summary>Encapsulates the xy pixel bounds of a sheet cell.</summary>
     public class CellBounds
     {
+        /// <summary>
+        /// Create a new <see cref="CellBounds"/> instance from a
+        /// <see cref="Rectangle"/>.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        public CellBounds(Rectangle rectangle)
+        {
+            Left = rectangle.X;
+            Top = rectangle.Y;
+            Width = rectangle.Width;
+            Height = rectangle.Height;
+        }
+
         /// <summary>Constructor</summary>
         /// <param name="cellX">The top left corner x position of the cell in pixels.</param>
         /// <param name="cellY">The top left corner y position of the cell in pixels.</param>
@@ -34,15 +49,25 @@
         /// <summary>The bottom right corner y position of the cell in pixels</summary>
         public int Bottom => Top + Height;
 
-        /// <summary>Converts the cell bounds into a Cairo rectange clipped to a window width and height.</summary>
-        /// <param name="windowWidth">Width of a window in pixels.</param>
-        /// <param name="windowHeight">Height of a window in pixels.</param>
-        public CellBounds ToClippedRectangle(int windowWidth, int windowHeight)
+        /// <summary>Constrains the rectangle to the given width and height.</summary>
+        /// <param name="width">Width of a window in pixels.</param>
+        /// <param name="height">Height of a window in pixels.</param>
+        public CellBounds Clip(int width, int height)
         {
-            if (Right > windowWidth || Bottom > windowHeight)
-                return new CellBounds(Left, Top, windowWidth - Left, windowHeight - Top);
+            if (Right > width || Bottom > height)
+                return new CellBounds(Left, Top, width - Left, height - Top);
             else
                 return this;
+        }
+
+        /// <summary>
+        /// Convert this <see cref="CellBounds"/> instance into a
+        /// <see cref="Rectangle"/> instance.
+        /// </summary>
+        /// <returns></returns>
+        public Rectangle ToRectangle()
+        {
+            return new Rectangle(Left, Top, Width, Height);
         }
 
         /// <summary>

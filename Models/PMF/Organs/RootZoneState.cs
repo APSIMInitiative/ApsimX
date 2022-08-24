@@ -3,7 +3,6 @@ using Models.Core;
 using System;
 using Models.Functions;
 using System.Linq;
-using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -158,6 +157,11 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootProportions</summary>
         public double[] RootProportions { get; set; }
 
+        /// <summary>
+        /// Proportion of the layer volume occupied by root, for each layer.
+        /// </summary>
+        public double[] RootProportionVolume { get; set; }
+
         /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
         public double[] LLModifier { get; set; }
 
@@ -238,11 +242,11 @@ namespace Models.PMF.Organs
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
             double[] fromStructural = new double[1] { initialDM.Structural.Value() };
-            double[] toStructural = Layers.MapMass(fromStructural, fromLayer, Physical.Thickness);
+            double[] toStructural = SoilUtilities.MapMass(fromStructural, fromLayer, Physical.Thickness);
             double[] fromMetabolic = new double[1] { initialDM.Metabolic.Value() };
-            double[] toMetabolic = Layers.MapMass(fromMetabolic, fromLayer, Physical.Thickness);
+            double[] toMetabolic = SoilUtilities.MapMass(fromMetabolic, fromLayer, Physical.Thickness);
             double[] fromStorage = new double[1] { initialDM.Storage.Value() };
-            double[] toStorage = Layers.MapMass(fromStorage, fromLayer, Physical.Thickness);
+            double[] toStorage = SoilUtilities.MapMass(fromStorage, fromLayer, Physical.Thickness);
 
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
@@ -276,6 +280,7 @@ namespace Models.PMF.Organs
                     RightDist = plant.SowingData.RowSpacing * 0.5;
                 }
             }
+            root.RootShape.CalcRootProportionInLayers(this);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -286,6 +291,7 @@ namespace Models.PMF.Organs
             DeltaNO3 = new double[Physical.Thickness.Length];
             DeltaNH4 = new double[Physical.Thickness.Length];
             RootProportions = new double[Physical.Thickness.Length];
+            RootProportionVolume = new double[Physical.Thickness.Length];
             LLModifier = new double[Physical.Thickness.Length];
 
             Depth = 0.0;
@@ -318,7 +324,6 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
-            var rootDepthWaterStress = RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
@@ -330,7 +335,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; 
+                Depth = Depth + rootfrontvelocity * xf[RootLayer];
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -351,20 +356,9 @@ namespace Models.PMF.Organs
             MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);
 
-            //RootFront - needed by sorghum
-            if (RootFrontCalcSwitch?.Value() == 1)
-            {
-                var dltRootFront = rootfrontvelocity * rootDepthWaterStress * xf[RootLayer];
-
-                double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
-                dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront += dltRootFront;
-            }
-            else
-            {
-                RootFront = Depth;
-            }
-            RootShape.CalcRootProportionInLayers(this);
+            RootFront = Depth;
+            root.RootShape.CalcRootProportionInLayers(this);
+            root.RootShape.CalcRootVolumeProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen

@@ -66,7 +66,7 @@ namespace Models.CLEM.Reporting
                                 }
                             }
                             else
-                                throw new ApsimXException(this, "Invalid report property. Expecting full property link or GrazeFoodStoreTypeName.Property");
+                                throw new ApsimXException(this, "Invalid report property. Expecting full property link or [GrazeFoodStoreTypeName].Property");
                         }
                     }
                 }

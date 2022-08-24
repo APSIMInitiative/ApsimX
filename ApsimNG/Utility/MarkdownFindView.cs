@@ -82,13 +82,14 @@ namespace Utility
             btnFindNext.Clicked -= BtnFindNext_Click;
             btnFindPrevious.Clicked -= BtnFindPrevious_Click;
             btnCancel.Clicked -= BtnCancel_Click;
+            btnHighlightAll.Clicked -= BtnHighlightAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
         }
 
         public void Destroy()
         {
-            window1.Cleanup();
+            window1.Dispose();
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
@@ -109,7 +110,7 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(window1, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
-            md.Cleanup();
+            md.Dispose();
         }
 
         private void UpdateTitleBar()

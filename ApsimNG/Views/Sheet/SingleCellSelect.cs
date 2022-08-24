@@ -1,6 +1,6 @@
-﻿using Gdk;
-using System;
+﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace UserInterface.Views
 {
@@ -8,16 +8,16 @@ namespace UserInterface.Views
     public class SingleCellSelect : ISheetSelection
     {
         /// <summary>The sheet.</summary>
-        private Sheet sheet;
+        protected Sheet sheet;
 
         /// <summary>The sheet widget.</summary>
-        private SheetWidget sheetWidget;
+        protected SheetWidget sheetWidget;
 
         /// <summary>The index of the current selected column.</summary>
-        private int selectedColumnIndex;
+        protected int selectedColumnIndex;
 
         /// <summary>The index of the current selected row.</summary>
-        private int selectedRowIndex;
+        protected int selectedRowIndex;
 
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
@@ -39,14 +39,11 @@ namespace UserInterface.Views
             sheet.MouseClick -= OnMouseClickEvent;
         }
 
-        /// <summary>The optional sheet editor</summary>
-        public ISheetEditor Editor { get; set; }
-
         /// <summary>Gets whether a cell is selected.</summary>
         /// <param name="columnIndex">The index of the current selected column.</param>
         /// <param name="rowIndex">The index of the current selected row</param>
         /// <returns>True if selected, false otherwise.</returns>
-        public bool IsSelected(int columnIndex, int rowIndex)
+        public virtual bool IsSelected(int columnIndex, int rowIndex)
         {
             return selectedColumnIndex == columnIndex && selectedRowIndex == rowIndex;
         }
@@ -63,26 +60,26 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user presses a key.</summary>
         /// <param name="sender">Sender of event.</param>
         /// <param name="evnt">The event data.</param>
-        private void OnKeyPressEvent(object sender, SheetEventKey evnt)
+        protected virtual void OnKeyPressEvent(object sender, SheetEventKey evnt)
         {
-            if (Editor == null || !Editor.IsEditing)
+            if (evnt.Key != Keys.None && (sheet.CellEditor == null || !sheet.CellEditor.IsEditing))
             {
                 if (evnt.Key == Keys.Right && evnt.Control)
                     MoveToFarRight();
                 else if (evnt.Key == Keys.Left && evnt.Control)
                     MoveToFarLeft();
-                else if (evnt.Key == Keys.Down && evnt.Control)
+                else if ((evnt.Key == Keys.Down && evnt.Control) || evnt.Key == Keys.End)
                     MoveToBottom();
-                else if (evnt.Key == Keys.Up && evnt.Control)
+                else if ((evnt.Key == Keys.Up && evnt.Control) || evnt.Key == Keys.Home)
                     MoveToTop();
                 else if (evnt.Key == Keys.Left)
-                    MoveLeft();
+                    MoveLeft(evnt.Shift);
                 else if (evnt.Key == Keys.Right)
-                    MoveRight();
+                    MoveRight(evnt.Shift);
                 else if (evnt.Key == Keys.Down)
-                    MoveDown();
+                    MoveDown(evnt.Shift);
                 else if (evnt.Key == Keys.Up)
-                    MoveUp();
+                    MoveUp(evnt.Shift);
                 else if (evnt.Key == Keys.PageDown)
                     PageDown();
                 else if (evnt.Key == Keys.PageUp)
@@ -90,27 +87,45 @@ namespace UserInterface.Views
 
                 sheet.Refresh();
             }
+            else if (sheet.CellEditor != null && evnt.KeyValue < 255)
+            {
+                if (evnt.KeyValue == 'c' && evnt.Control)
+                    Copy();
+                else if (evnt.KeyValue == 'v' && evnt.Control)
+                    Paste();
+                else
+                    sheet.CellEditor.Edit(evnt.KeyValue);
+            }
         }
 
         /// <summary>Invoked when the user clicks a mouse button.</summary>
         /// <param name="sender">Sender of event.</param>
         /// <param name="evnt">The event data.</param>
-        private void OnMouseClickEvent(object sender, SheetEventButton evnt)
+        protected virtual void OnMouseClickEvent(object sender, SheetEventButton evnt)
         {
             int colIndex;
             int rowIndex;
             if (sheet.CellHitTest(evnt.X, evnt.Y, out colIndex, out rowIndex) &&
                 rowIndex >= sheet.NumberFrozenRows)
             {
-                selectedColumnIndex = colIndex;
-                selectedRowIndex = rowIndex;
-                sheetWidget.GrabFocus();
-                sheet.Refresh();
+                // If the cell is already selected then go into edit mode.
+                if (IsSelected(colIndex, rowIndex))
+                {
+                    sheet.CellEditor?.Edit();
+                }
+                else
+                {
+                    sheet.CellEditor?.EndEdit();
+                    selectedColumnIndex = colIndex;
+                    selectedRowIndex = rowIndex;
+                    sheetWidget.GrabFocus();
+                    sheet.Refresh();
+                }
             }
         }
 
         /// <summary>Moves the selected cell to the left one column.</summary>
-        private void MoveLeft()
+        public virtual void MoveLeft(bool shift = false)
         {
             selectedColumnIndex = Math.Max(selectedColumnIndex - 1, 0);
             if (!sheet.FullyVisibleColumnIndexes.Contains(selectedColumnIndex))
@@ -118,7 +133,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell to the right one column.</summary>
-        private void MoveRight()
+        public virtual void MoveRight(bool shift = false)
         {
             selectedColumnIndex = Math.Min(selectedColumnIndex + 1, sheet.DataProvider.ColumnCount - 1);
             if (!sheet.FullyVisibleColumnIndexes.Contains(selectedColumnIndex))
@@ -126,7 +141,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell up one row.</summary>
-        private void MoveUp()
+        public virtual void MoveUp(bool shift = false)
         {
             selectedRowIndex = Math.Max(selectedRowIndex - 1, sheet.NumberFrozenRows);
             if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))
@@ -134,9 +149,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell down one row.</summary>
-        private void MoveDown()
+        public virtual void MoveDown(bool shift = false)
         {
-            selectedRowIndex = Math.Min(selectedRowIndex + 1, sheet.DataProvider.RowCount - 1);
+            selectedRowIndex = Math.Min(selectedRowIndex + 1, sheet.RowCount - 1);
             if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))
                 sheet.ScrollDown();
         }
@@ -153,7 +168,7 @@ namespace UserInterface.Views
         private void PageDown()
         {
             int pageSize = sheet.FullyVisibleRowIndexes.Count() - sheet.NumberFrozenRows;
-            selectedRowIndex = Math.Min(selectedRowIndex + pageSize, sheet.DataProvider.RowCount-1);
+            selectedRowIndex = Math.Min(selectedRowIndex + pageSize, sheet.RowCount-1);
             sheet.ScrollDownPage();
         }
 
@@ -174,7 +189,7 @@ namespace UserInterface.Views
         /// <summary>Moves the selected cell to bottom row.</summary>
         private void MoveToBottom()
         {
-            selectedRowIndex = sheet.DataProvider.RowCount - 1;
+            selectedRowIndex = sheet.RowCount - 1;
             sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
         }
 
@@ -183,6 +198,36 @@ namespace UserInterface.Views
         {
             selectedRowIndex = sheet.NumberFrozenRows;
             sheet.NumberHiddenRows = 0;
+        }
+
+        /// <summary>Copy cells to clipboard.</summary>
+        public virtual void Copy()
+        {
+            sheetWidget.SetClipboard(sheet.DataProvider.GetCellContents(selectedColumnIndex, selectedRowIndex));
+        }
+
+        /// <summary>Paste cells from clipboard.</summary>
+        public virtual void Paste()
+        {
+            int rowIndex = selectedRowIndex;
+
+            foreach (string line in sheetWidget.GetClipboard().Split("\n", StringSplitOptions.RemoveEmptyEntries))
+            {
+                int columnIndex = selectedColumnIndex;
+                foreach (string word in line.Split('\t'))
+                {
+                    if (!sheet.DataProvider.IsColumnReadonly(columnIndex))
+                        sheet.DataProvider.SetCellContents(columnIndex, rowIndex, word);
+                    columnIndex++;
+                    if (columnIndex == sheet.DataProvider.ColumnCount)
+                        break;
+                }
+
+                rowIndex++;
+                if (rowIndex == sheet.DataProvider.RowCount)
+                    break;
+            }
+            sheet.Refresh();
         }
     }
 }

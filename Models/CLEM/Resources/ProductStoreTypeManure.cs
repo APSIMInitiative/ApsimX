@@ -133,6 +133,7 @@ namespace Models.CLEM.Resources
                     pool.Age++;
                     pool.Amount *= DecayRate;
                     pool.ProportionMoisture *= MoistureDecayRate;
+                    pool.ProportionMoisture = Math.Max(pool.ProportionMoisture, 0.05);
                 }
                 store.Pools.RemoveAll(a => a.Age > MaximumAge);
             }
@@ -279,12 +280,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -336,21 +333,15 @@ namespace Models.CLEM.Resources
         public double ProportionMoisture { get; set; }
 
         /// <summary>
-        /// Acluclate wet weight of pool
+        /// Calculate wet weight of pool
         /// </summary>
-        /// <param name="moistureDecayRate"></param>
-        /// <param name="proportionMoistureFresh"></param>
-        /// <returns></returns>
-        public double WetWeight(double moistureDecayRate, double proportionMoistureFresh)
+        /// <returns>Wet weight</returns>
+        public double WetWeight
         {
-            double moisture = proportionMoistureFresh;
-            for (int i = 0; i < Age; i++)
+            get
             {
-                moisture *= moistureDecayRate;
+                return Amount * (1 + ProportionMoisture);
             }
-            moisture = Math.Max(moisture, 0.05);
-            return Amount * (1 + moisture);
         }
-
     }
 }

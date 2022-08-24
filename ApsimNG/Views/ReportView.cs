@@ -177,11 +177,12 @@
                 variableEditor.StyleChanged -= OnStyleChanged;
                 notebook1.SwitchPage -= OnSwitchPage;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
-                (variableEditor as ViewBase).MainWidget.Cleanup();
+                groupByEdit.Dispose();
+                (variableEditor as ViewBase).Dispose();
                 variableEditor = null;
-                (frequencyEditor as ViewBase).MainWidget.Cleanup();
+                (frequencyEditor as ViewBase).Dispose();
                 frequencyEditor = null;
-                dataStoreView1.MainWidget.Cleanup();
+                dataStoreView1.Dispose();
                 dataStoreView1 = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

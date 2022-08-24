@@ -18,6 +18,7 @@ namespace Models.CLEM.Groupings
     [Description("Defines the number of individuals to take")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/TakeFromFiltered.htm")]
     public class TakeFromFiltered : CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -28,9 +29,17 @@ namespace Models.CLEM.Groupings
         public TakeFromFilterStyle TakeStyle { get; set; }
 
         /// <summary>
+        /// Take position
+        /// </summary>
+        [Description("From")]
+        [Required]
+        [System.ComponentModel.DefaultValueAttribute(TakeFromFilteredPositionStyle.Start)]
+        public TakeFromFilteredPositionStyle TakePositionStyle { get; set; }
+
+        /// <summary>
         /// Value to take
         /// </summary>
-        [Description("Take")]
+        [Description("Value")]
         [System.ComponentModel.DefaultValueAttribute(1.0f)]
         public float Value { get; set; }
 
@@ -50,7 +59,7 @@ namespace Models.CLEM.Groupings
         public int NumberToTake(int groupSize)
         {
             int numberToTake;
-            if (TakeStyle == TakeFromFilterStyle.Individuals)
+            if (TakeStyle == TakeFromFilterStyle.TakeIndividuals || TakeStyle == TakeFromFilterStyle.SkipIndividuals)
                 numberToTake = Convert.ToInt32(Value);
             else
                 numberToTake = Convert.ToInt32(Math.Ceiling(Value * groupSize));
@@ -88,10 +97,11 @@ namespace Models.CLEM.Groupings
                     cssError = "<span class = \"filtererror\">";
                     cssClose = "</span>";
                 }
-
-                takeWriter.Write($"Take: ");
+                bool isTake = (TakeStyle.ToString().Contains("Take"));
+                bool isIndividuals = (TakeStyle == TakeFromFilterStyle.TakeIndividuals || TakeStyle == TakeFromFilterStyle.SkipIndividuals);
+                takeWriter.Write((isTake)?$"Take: ": "Skip: ");
                 string errorString = "";
-                if (Value < 0 || (TakeStyle == TakeFromFilterStyle.Proportion & Value > 1))
+                if (Value < 0 || (isIndividuals & Value > 1))
                     errorString = "Invalid";
 
                 if (errorString != "")
@@ -99,9 +109,9 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     takeWriter.Write(cssSet);
-                    takeWriter.Write(((TakeStyle == TakeFromFilterStyle.Proportion) ? Value.ToString("P0") : $"{Convert.ToInt32(Value)}"));
+                    takeWriter.Write((!isIndividuals ? Value.ToString("P0") : $"{Convert.ToInt32(Value)}"));
                     takeWriter.Write(cssClose);
-                    takeWriter.WriteLine(((TakeStyle == TakeFromFilterStyle.Proportion) ? "" : " individuals"));
+                    takeWriter.WriteLine(((!isIndividuals) ? "" : " individuals"));
                 }
                 return takeWriter.ToString();
             }
@@ -112,18 +122,21 @@ namespace Models.CLEM.Groupings
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+            bool isProportion = (TakeStyle == TakeFromFilterStyle.TakeProportion || TakeStyle == TakeFromFilterStyle.SkipProportion);
             if (Value == 0)
             {
                 string[] memberNames = new string[] { "Invalid value to take from filter" };
-                results.Add(new ValidationResult($"Provide a {((TakeStyle == TakeFromFilterStyle.Proportion)?"proportion":"number of individuals")} greater than 0 for [f={Name}] in [f={Parent.Name}]", memberNames));
+                results.Add(new ValidationResult($"Provide a {((isProportion)?"proportion":"number of individuals")} greater than 0 for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
             }
 
-            if (TakeStyle == TakeFromFilterStyle.Proportion)
+            if (isProportion)
             {
                 if (Value > 1)
                 {
-                    string[] memberNames = new string[] { "Invalid proportion to take from filter" };
-                    results.Add(new ValidationResult($"The proportion to take from [f={Name}] in [f={Parent.Name}] must be less than or equal to 1", memberNames));
+                    bool isTake = (TakeStyle.ToString().Contains("Take"));
+
+                    string[] memberNames = new string[] { $"Invalid proportion to {(isTake?"take":"skip")} from filter" };
+                    results.Add(new ValidationResult($"The proportion to {(isTake ? "take" : "skip")} from [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] must be less than or equal to 1", memberNames));
                 }
             }
             return results;
@@ -133,7 +146,7 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHtmlString()}</div>";
         }
@@ -142,7 +155,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
@@ -152,7 +165,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

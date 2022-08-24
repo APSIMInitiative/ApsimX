@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
@@ -13,7 +14,7 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateAtEvent : Model, IFunction, ICustomDocumentation
+    public class AccumulateAtEvent : Model, IFunction
     {
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -60,23 +61,12 @@ namespace Models.Functions
             return accumulatedValue;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("**" + this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
-                                                            + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Paragraph($"**{Name}** is a daily accumulation of the values of functions listed below between the {StartStageName} and {EndStageName} stages. Function values added to the accumulate total each day are:");
         }
 
         ///7. Private methods
@@ -123,6 +113,15 @@ namespace Models.Functions
 
                 accumulatedValue += DailyIncrement;
             }
+        }
+
+        /// <summary>Called when [EndCrop].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            accumulatedValue = 0;
         }
     }
 }

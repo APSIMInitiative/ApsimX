@@ -5,7 +5,6 @@ using Models.Functions;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// Iterates through each cohort and adds the value of the Expression: 
     /// </summary>
 

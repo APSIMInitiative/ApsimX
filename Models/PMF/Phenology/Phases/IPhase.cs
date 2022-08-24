@@ -1,14 +1,11 @@
 
 namespace Models.PMF.Phen
 {
-    using System.IO;
-    
+    using Models.Core;
+
     /// <summary>Interface for a function</summary>
-    public interface IPhase
+    public interface IPhase : IModel
     {
-        /// <summary>The plases name</summary>
-        string Name { get; }
-        
         /// <summary>The start</summary>
         string Start { get; }
 

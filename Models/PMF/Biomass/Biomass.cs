@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 namespace Models.PMF
 {
     /// <summary>
-    /// # [Name]
     /// Biomass of plant organs
     /// </summary>
     [Serializable]
@@ -28,8 +27,6 @@ namespace Models.PMF
         protected double _MetabolicWt = 0;
         /// <summary>The metabolic n</summary>
         protected double _MetabolicN = 0;
-        /// <summary>Dry matter digestibility. 0.7 for live, 0.4 for dead </summary>
-        protected double _DMDOfStructural = 0.6;
 
 
         /// <summary>Gets or sets the non structural n.</summary>
@@ -191,19 +188,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Dry matter digestibility. 0.7 for live, 0.4 for dead </summary>
-        public double DMDOfStructural
-        {
-            get
-            {
-                return _DMDOfStructural;
-            }
-            set
-            {
-                _DMDOfStructural = value;
-            }
-        }
-
         /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
         public Biomass() { }
 
@@ -217,7 +201,6 @@ namespace Models.PMF
             _StructuralN = from.StructuralN;
             _StorageN = from.StorageN;
             _MetabolicN = from.MetabolicN;
-            _DMDOfStructural = from.DMDOfStructural;
         }
 
         /// <summary>Clears this instance.</summary>
@@ -229,15 +212,11 @@ namespace Models.PMF
             _StructuralN = 0.0;
             _StorageN = 0.0;
             _MetabolicN = 0.0;
-            _DMDOfStructural = 0.0;
         }
         /// <summary>Adds the specified a.</summary>
         /// <param name="a">a.</param>
         public void Add(Biomass a)
         {
-            _DMDOfStructural = MathUtilities.Divide(_DMDOfStructural * _StructuralWt + a._DMDOfStructural * a._StructuralWt
-                                                    , _StructuralWt + a._StructuralWt
-                                                    , 0);
             _StructuralWt += a._StructuralWt;
             _StorageWt += a._StorageWt;
             _MetabolicWt += a._MetabolicWt;
@@ -249,10 +228,6 @@ namespace Models.PMF
         /// <param name="a">a.</param>
         public void Subtract(Biomass a)
         {
-            _DMDOfStructural = MathUtilities.Divide(_DMDOfStructural * _StructuralWt - a._DMDOfStructural * a._StructuralWt
-                                                    , _StructuralWt - a._StructuralWt
-                                                    , 0);
-            _DMDOfStructural = Math.Max(_DMDOfStructural, 0);
             _StructuralWt -= a._StructuralWt;
             _StorageWt -= a._StorageWt;
             _MetabolicWt -= a._MetabolicWt;
@@ -270,8 +245,6 @@ namespace Models.PMF
             _StructuralN *= scalar;
             _StorageN *= scalar;
             _MetabolicN *= scalar;
-            _DMDOfStructural *= scalar;
-            _DMDOfStructural = Math.Max(_DMDOfStructural, 0);
         }
         /// <summary>Sets to.</summary>
         /// <param name="a">a.</param>
@@ -283,7 +256,6 @@ namespace Models.PMF
             _StructuralN = a.StructuralN;
             _StorageN = a.StorageN;
             _MetabolicN = a.MetabolicN;
-            _DMDOfStructural = a._DMDOfStructural;
         }
         /// <summary>Implements the operator +.</summary>
         /// <param name="a">a.</param>
@@ -299,9 +271,6 @@ namespace Models.PMF
                 StructuralN = a.StructuralN + b.StructuralN,
                 StorageN = a.StorageN + b.StorageN,
                 MetabolicN = a.MetabolicN + b.MetabolicN,
-                DMDOfStructural = MathUtilities.Divide(a.DMDOfStructural * a.StructuralWt + b.DMDOfStructural * b.StructuralWt
-                                                       , a.StructuralWt + b.StructuralWt
-                                                       , 0)
             };
 
         }
@@ -319,9 +288,6 @@ namespace Models.PMF
                 StructuralN = a.StructuralN - b.StructuralN,
                 StorageN = a.StorageN - b.StorageN,
                 MetabolicN = a.MetabolicN - b.MetabolicN,
-                DMDOfStructural = Math.Max(0, MathUtilities.Divide(a.DMDOfStructural * a.StructuralWt - b.DMDOfStructural * b.StructuralWt
-                                                                 , a.StructuralWt - b.StructuralWt
-                                                                 , 0))
             };
         }
         /// <summary>Implements the operator *.</summary>
@@ -338,7 +304,6 @@ namespace Models.PMF
                 StructuralN = a.StructuralN * Fraction,
                 StorageN = a.StorageN * Fraction,
                 MetabolicN = a.MetabolicN * Fraction,
-                DMDOfStructural = Math.Max(0, a.DMDOfStructural * Fraction)
             };
         }
     }

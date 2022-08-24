@@ -5,12 +5,11 @@ using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {
-    /// <summary>
-    /// # [Name]
-    /// Accumulates [ChildFunctionList] between [Start] and [End]
+    /// <summary>Accumulates a child function between a start and end stage.
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
@@ -123,6 +122,16 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             return AccumulatedValue;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"*{Name}* = Accumulated {ChildFunctionList} between {StartStageName.ToLower()} and {EndStageName.ToLower()}");
+
+            foreach (var child in Children)
+                foreach (var tag in child.Document())
+                    yield return tag;
         }
 
         /// <summary>Called when [cut].</summary>

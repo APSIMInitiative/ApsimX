@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Functions;
@@ -11,11 +11,11 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// # [Name]
     /// This organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
@@ -577,7 +577,7 @@ namespace Models.PMF.Organs
         /// <param name="fraction">The fraction of leaf to kill</param>
         public void Kill(double fraction)
         {
-            Summary.WriteMessage(this, "Killing " + fraction + " of live leaf on plant");
+            Summary.WriteMessage(this, "Killing " + fraction + " of live leaf on plant", MessageType.Diagnostic);
             cohort.KillLeavesUniformly(fraction);
         }
 
@@ -671,5 +671,30 @@ namespace Models.PMF.Organs
 
             cohort.ReduceLeavesUniformly(remainingLiveFraction, remainingDeadFraction);
         }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Document memos.
+            foreach (var memo in FindAllChildren<Memo>())
+                foreach (var tag in memo.Document())
+                    yield return tag;
+
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
+
+            // Document everything else.
+            foreach (var child in Children.Where(child => !(child is Memo) &&
+                                                          !(child is Constant)))
+                yield return new Section(child.Name, child.Document());
+        }
+
     }
 }

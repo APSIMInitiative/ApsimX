@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APSIM.Shared.Utilities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -81,7 +82,7 @@ namespace Models.CLEM
             double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((maxvalue >= 0)&&(maxvalue<=100))
+            if ((MathUtilities.IsGreaterThanOrEqual(maxvalue, 0)) && MathUtilities.IsLessThanOrEqual(maxvalue, 100))
                 return ValidationResult.Success;
             else
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
@@ -123,7 +124,7 @@ namespace Models.CLEM
 
             // allow for arrays of values to be checked
             foreach (double item in listvalues)
-                if (((item < 0) | (item > 1)))
+                if (MathUtilities.IsNegative(item) | MathUtilities.IsGreaterThan(item, 1))
                     return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
 
             return ValidationResult.Success;
@@ -136,7 +137,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class MonthAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December] )";
+        private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December]";
 
         /// <summary>
         /// 
@@ -206,7 +207,7 @@ namespace Models.CLEM
 
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if (maxvalue > compareValue)
+            if (MathUtilities.IsGreaterThan(maxvalue, compareValue))
                 return ValidationResult.Success;
             else
             {
@@ -251,7 +252,7 @@ namespace Models.CLEM
 
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if (maxvalue >= compareValue)
+            if (MathUtilities.IsGreaterThanOrEqual(maxvalue, compareValue))
                 return ValidationResult.Success;
             else
             {
@@ -261,6 +262,71 @@ namespace Models.CLEM
         }
     }
 
+    /// <summary>
+    /// Tests if herd change reason is of a specified style (purchase or sale)
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class HerdSaleReasonAttribute : ValidationAttribute
+    {
+        private string DefaultErrorMessage;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        public HerdSaleReasonAttribute(object value)
+        {
+            compareStyle = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        private string compareStyle { get; set; }
+
+        /// <summary>
+        /// Perfom validation method
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (!Enum.TryParse<HerdChangeReason>(value.ToString(), out HerdChangeReason changeReason))
+                throw new Exception($"The property type {value.GetType().Name} is not permitted for HerdSaleReasonValidation attribute");
+
+            string result = "";
+            switch (changeReason)
+            {
+                case HerdChangeReason.MarkedSale:
+                case HerdChangeReason.TradeSale:
+                case HerdChangeReason.DryBreederSale:
+                case HerdChangeReason.ExcessBreederSale:
+                case HerdChangeReason.ExcessPreBreederSale:
+                case HerdChangeReason.ExcessSireSale:
+                case HerdChangeReason.MaxAgeSale:
+                case HerdChangeReason.AgeWeightSale:
+                case HerdChangeReason.DestockSale:
+                    result = "sale";
+                    break;
+                case HerdChangeReason.TradePurchase:
+                case HerdChangeReason.BreederPurchase:
+                case HerdChangeReason.SirePurchase:
+                case HerdChangeReason.RestockPurchase:
+                    result = "purchase";
+                    break;
+                default:
+                    break;
+            }
+
+            string[] memberNames = new string[] { validationContext.MemberName };
+
+            if (result == compareStyle)
+                return ValidationResult.Success;
+            else
+            {
+                DefaultErrorMessage = $"Value [{ changeReason.ToString() }] must be a {compareStyle} change reason";
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
+        }
+    }
 
     /// <summary>
     /// Tests if date greater than specified property name
@@ -298,7 +364,7 @@ namespace Models.CLEM
 
             double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
 
-            if (maxvalue > minvalue)
+            if (MathUtilities.IsGreaterThan(maxvalue, minvalue))
                 return ValidationResult.Success;
             else
             {
@@ -344,7 +410,7 @@ namespace Models.CLEM
 
             double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
 
-            if (maxvalue >= minvalue)
+            if (MathUtilities.IsGreaterThanOrEqual(maxvalue, minvalue))
                 return ValidationResult.Success;
             else
             {
@@ -385,11 +451,13 @@ namespace Models.CLEM
             DefaultErrorMessage += " (expecting " + numberOfArrayItems.ToString() + " values)";
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if(value.GetType().IsArray)
+            if (value.GetType().IsArray)
+            {
                 if ((value as Array).Length == numberOfArrayItems)
                     return ValidationResult.Success;
                 else
                     return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
             else
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
         }

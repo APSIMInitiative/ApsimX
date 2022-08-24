@@ -1,22 +1,20 @@
 ﻿namespace UserInterface.Views
 {
-    using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using Extensions;
     using EventArguments;
     using EventArguments.DirectedGraph;
     using Gtk;
-    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using System.Linq;
-
-#if NETCOREAPP
-    using ExposeEventArgs = Gtk.DrawnArgs;
-    using StateType = Gtk.StateFlags;
-#endif
+    using Color = System.Drawing.Color;
+    using Point = System.Drawing.Point;
+    using APSIM.Interop.Visualisation;
+    using APSIM.Shared.Graphing;
+    using Utility;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -61,7 +59,7 @@
         /// <summary>
         /// Position of the last moved node.
         /// </summary>
-        private PointD lastPos;
+        private Point lastPos;
 
         /// <summary>
         /// List of nodes. These are currently circles with text in them.
@@ -95,11 +93,9 @@
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-#if NETFRAMEWORK
-            drawable.ExposeEvent += OnDrawingAreaExpose;
-#else
+
             drawable.Drawn += OnDrawingAreaExpose;
-#endif
+
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
@@ -110,26 +106,14 @@
                 VscrollbarPolicy = PolicyType.Always
             };
 
-#if NETFRAMEWORK
-            scroller.AddWithViewport(drawable);
-#else
+
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
-#endif
+
 
             mainWidget = scroller;
             drawable.Realized += OnRealized;
             drawable.SizeAllocated += OnRealized;
-            if (owner == null)
-            {
-                DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
-            }
-            else
-            {
-                // Needs to be reimplemented for gtk3.
-                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetForegroundColour(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetBackgroundColour(StateType.Normal));
-            }
             mainWidget.Destroyed += OnDestroyed;
         }
 
@@ -179,16 +163,7 @@
         /// <summary>Export the view to the image</summary>
         public System.Drawing.Image Export()
         {
-#if NETFRAMEWORK
-            int width;
-            int height;
-            MainWidget.GdkWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
-#else
+
             var window = new OffscreenWindow();
             window.Add(MainWidget);
 
@@ -211,25 +186,25 @@
                 System.Drawing.Bitmap bitmap = new Bitmap(stream);
                 return bitmap;
             }
-#endif
+
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
-        private void OnDrawingAreaExpose(object sender, ExposeEventArgs args)
+        private void OnDrawingAreaExpose(object sender, DrawnArgs args)
         {
             try
             {
                 DrawingArea area = (DrawingArea)sender;
 
-#if NETFRAMEWORK
-                Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
-#else
                 Cairo.Context context = args.Cr;
-#endif
-                foreach (DGArc tmpArc in arcs)
-                    tmpArc.Paint(context);
-                foreach (DGNode tmpNode in nodes)
-                    tmpNode.Paint(context);
+
+                DGObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
+#pragma warning disable 0612
+                DGObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
+#pragma warning restore 0612
+
+                CairoContext drawingContext = new CairoContext(context, MainWidget);
+                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
 
                 ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
@@ -246,8 +221,8 @@
             try
             {
                 // Get the point clicked by the mouse.
-                PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
-
+                Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
+                
                 if (args.Event.Button == 1)
                 {
                     mouseDown = true;
@@ -302,7 +277,7 @@
             try
             {
                 // Get the point clicked by the mouse.
-                PointD movePoint = new PointD(args.Event.X, args.Event.Y);
+                Point movePoint = new Point((int)args.Event.X, (int)args.Event.Y);
 
                 // If an object is under the mouse then move it
                 if (mouseDown && SelectedObject != null)
@@ -335,7 +310,7 @@
                         OnGraphObjectMoved?.Invoke(this, new ObjectMovedArgs(SelectedObject));
                     else
                     {
-                        PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+                        Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
                         // Look through nodes for the click point
                         DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
 

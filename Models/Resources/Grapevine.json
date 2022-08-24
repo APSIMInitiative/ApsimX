@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -14,7 +14,7 @@
       "Name": "Grapevine",
       "Children": [
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Varieties",
           "Children": [
             {
@@ -7356,7 +7356,8 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "ShowInDocs": false
             },
             {
               "$type": "Models.Core.Folder, Models",
@@ -7934,76 +7935,7 @@
                                             48.0
                                           ],
                                           "Name": "XYPairs",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph, Models",
-                                              "Caption": null,
-                                              "Axis": [
-                                                {
-                                                  "$type": "Models.Axis, Models",
-                                                  "Type": 0,
-                                                  "Title": "Y",
-                                                  "Inverted": false,
-                                                  "Minimum": "NaN",
-                                                  "Maximum": "NaN",
-                                                  "Interval": "NaN",
-                                                  "DateTimeAxis": false,
-                                                  "CrossesAtZero": false
-                                                },
-                                                {
-                                                  "$type": "Models.Axis, Models",
-                                                  "Type": 3,
-                                                  "Title": "X",
-                                                  "Inverted": false,
-                                                  "Minimum": "NaN",
-                                                  "Maximum": "NaN",
-                                                  "Interval": "NaN",
-                                                  "DateTimeAxis": false,
-                                                  "CrossesAtZero": false
-                                                }
-                                              ],
-                                              "LegendPosition": 5,
-                                              "LegendOrientation": 0,
-                                              "AnnotationPosition": 0,
-                                              "DisabledSeries": [],
-                                              "LegendOutsideGraph": false,
-                                              "Name": "Graph",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Series, Models",
-                                                  "Type": 1,
-                                                  "XAxis": 3,
-                                                  "YAxis": 0,
-                                                  "ColourArgb": -65536,
-                                                  "FactorToVaryColours": null,
-                                                  "FactorToVaryMarkers": null,
-                                                  "FactorToVaryLines": null,
-                                                  "Marker": 11,
-                                                  "MarkerSize": 0,
-                                                  "Line": 0,
-                                                  "LineThickness": 0,
-                                                  "TableName": null,
-                                                  "XFieldName": ".Simulations.Replacements.Grapevine.Berry.YieldComponent.BerryNum.PostEventValue.BerryNumFun.MultiplyFunction.MetFun.TmaxFlow.XYPairs.X",
-                                                  "YFieldName": ".Simulations.Replacements.Grapevine.Berry.YieldComponent.BerryNum.PostEventValue.BerryNumFun.MultiplyFunction.MetFun.TmaxFlow.XYPairs.Y",
-                                                  "X2FieldName": null,
-                                                  "Y2FieldName": null,
-                                                  "ShowInLegend": false,
-                                                  "IncludeSeriesNameInLegend": false,
-                                                  "Cumulative": false,
-                                                  "CumulativeX": false,
-                                                  "Filter": null,
-                                                  "Name": "Series",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -8495,7 +8427,8 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "ShowInDocs": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -10235,16 +10168,6 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "RootDepthStressFactor",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.01,
               "Units": "g/g",
               "Name": "initialNConcFunction",
@@ -10506,6 +10429,16 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.OrganArbitrator, Models",
           "Name": "Arbitrator",
           "Children": [
@@ -10553,7 +10486,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10579,7 +10513,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.QPrioritythenRelativeAllocation, Models",
@@ -10614,7 +10549,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10640,7 +10576,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10658,7 +10595,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",

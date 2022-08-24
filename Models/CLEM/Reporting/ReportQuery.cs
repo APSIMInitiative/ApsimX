@@ -4,6 +4,7 @@ using Models.CLEM.Interfaces;
 using Models.Storage;
 using System;
 using System.Data;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -40,10 +41,8 @@ namespace Models.CLEM.Reporting
             var storage = FindInScope<IDataStore>();
             if (storage != null)
             {
-                if (SaveView(storage, out _))
-                {
-                    return storage.Reader.GetDataUsingSql(SQL);
-                }
+                SaveView(storage);
+                return storage.Reader.GetDataUsingSql(SQL);                
             }
             return new DataTable();
         }
@@ -52,21 +51,13 @@ namespace Models.CLEM.Reporting
         /// Saves the view post-simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            string errorMsg;
-            if(!SaveView(dataStore, out errorMsg))
-            {
-                throw new ApsimXException(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nError: {errorMsg}\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created by disabling it in the first run and then enabling again.");
-  
-                // TODO: this next line replaces the one above when the summary model can be written to in Completed to report all such errors and not simply stop with this error 
-                //summary.WriteWarning(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
-            }
-        }
+        private void OnCompleted(object sender, EventArgs e) => SaveView(dataStore);        
 
-        private bool SaveView(IDataStore store, out string errorMsg)
+        private void SaveView(IDataStore store)
         {
-            errorMsg = "";
+            if (Name.Any(c => c == ' '))
+                throw new Exception($"Invalid name: {Name}\nNames cannot contain spaces.");
+
             try
             {
                 if (SQL != null && SQL != "")
@@ -74,13 +65,14 @@ namespace Models.CLEM.Reporting
                     (store.Reader as DataStoreReader).ExecuteSql(SQL);
                     store.AddView(Name, SQL);
                 }
-                return true;
             }
             catch (Exception ex)
             {
-                errorMsg = ex.Message;
+                var msg = $"Invalid SQL: Unable to create query report [{Name}] using SQL provided" +
+                    $"\r\nError: {ex.Message}" +
+                    $"\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created by disabling it in the first run and then enabling again.";
+                throw new ApsimXException(this, msg);
             }
-            return false;
         }
     }
 }

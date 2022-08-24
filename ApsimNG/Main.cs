@@ -18,24 +18,21 @@
         [STAThread]
         public static int Main(string[] args)
         {
-            LoadTheme();
-#if NETCOREAPP
-            Task.Run(() => Intellisense.CodeCompletionService.Init());
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-#endif
-
-            Gtk.Application.Init();
-#if NETFRAMEWORK
-            Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
-#else
-            Gtk.Settings.Default.SetProperty("gtk-overlay-scrolling", new GLib.Value(0));
-#endif
-            IntellisensePresenter.Init();
-            MainView mainForm = new MainView();
-            MainPresenter mainPresenter = new MainPresenter();
-
             try
             {
+                LoadTheme();
+
+                Task.Run(() => Intellisense.CodeCompletionService.Init());
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                Gtk.Application.Init();
+
+                Gtk.Settings.Default.SetProperty("gtk-overlay-scrolling", new GLib.Value(0));
+
+                IntellisensePresenter.Init();
+                MainView mainForm = new MainView();
+                MainPresenter mainPresenter = new MainPresenter();
+
                 mainPresenter.Attach(mainForm, args);
                 mainForm.MainWidget.ShowAll();
                 if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
@@ -51,7 +48,7 @@
 
         private static void LoadTheme()
         {
-#if NETCOREAPP
+
             if (!ProcessUtilities.CurrentOS.IsLinux && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GTK_THEME")))
             {
                 string themeName;
@@ -64,7 +61,7 @@
                 //themeName = "Windows10Dark";
                 Environment.SetEnvironmentVariable("GTK_THEME", themeName);
             }
-#endif
+
         }
     }
 }

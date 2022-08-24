@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the growth and aging of a specified type of other animal.")]
+    [Description("Performs the growth and aging of a specified type of other animal")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityGrow.htm")]
     public class OtherAnimalsActivityGrow : CLEMActivityBase
@@ -41,14 +41,6 @@ namespace Models.CLEM.Activities
         {
             // locate OtherAnimalsType resource
             animalType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public OtherAnimalsActivityGrow()
-        {
-            TransactionCategory = "OtherAnimal.Manage";
         }
 
         /// <summary>

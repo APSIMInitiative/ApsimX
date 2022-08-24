@@ -2,15 +2,13 @@
 using Models.Core;
 using Models.PMF.Phen;
 using Models.PMF;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// # [Name]
-    /// Relative growth rate demand function
-    /// </summary>
+    /// <summary>This function calculates DM demand beyond the start stage as the product of current organ wt (g), relative growth rate and the specified organ number.</summary>
     [Serializable]
-    [Description("This must be renamed DMDemandFunction for the source code to recoginise it!!!!  This function calculates DM demand beyond the start stage as the product of current organ wt (g), relative growth rate and the specified organ number.")]
     public class RelativeGrowthRateDemandFunction : Model, IFunction
     {
         /// <summary>The initial wt</summary>
@@ -49,6 +47,16 @@ namespace Models.Functions.DemandFunctions
             return OrganDemand * OrganNumber.Value(arrayIndex);
         }
 
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
     }
 }
 

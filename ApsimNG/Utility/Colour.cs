@@ -15,7 +15,7 @@ namespace Utility
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>
         /// <returns>The same colour as a System.Drawing.Color object.</returns>
-        public static Color FromGtk(Gdk.Color colour)
+        public static Color FromGtk(this Gdk.Color colour)
         {
             return Color.FromArgb((int)(colour.Red / 65535.0 * 255), (int)(colour.Green / 65535.0 * 255), (int)(colour.Blue / 65535.0 * 255));
         }
@@ -46,7 +46,7 @@ namespace Utility
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>
         /// <returns>The same colour as a Cairo.Color.</returns>
-        public static Cairo.Color ToCairo(Color colour)
+        public static Cairo.Color ToCairo(this Color colour)
         {
             return new Cairo.Color(colour.R / 255.0, colour.G / 255.0, colour.B / 255.0);
         }
@@ -65,31 +65,25 @@ namespace Utility
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>
         /// <returns>The same colour as a Cairo.Color.</returns>
-        public static OxyColor ToOxy(Color colour)
+        public static OxyColor ToOxy(this Color colour)
         {
-            return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+            return APSIM.Interop.Graphing.EnumerationExtensions.ToOxyColour(colour);
         }
 
         /// <summary>
         /// Convert from an OxyColor to a System.Drawing.Color.
         /// </summary>
         /// <param name="colour">The colour to be converted.</param>
-        internal static Color FromOxy(OxyColor colour)
+        internal static Color FromOxy(this OxyColor colour)
         {
             return Color.FromArgb(colour.R, colour.G, colour.B);
-        }
-
-        internal static (int Red, int Green, int Blue) ToCairo(Gdk.Color colour)
-        {
-            var c = FromGtk(colour);
-            return (c.R, c.G, c.B);
         }
 
         internal static OxyColor ToOxy(Gdk.Color colour)
         {
             return ToOxy(FromGtk(colour));
         }
-#if NETCOREAPP
+
         /// <summary>
         /// Convert a System.Drawing.Color to a Gdk.RGBA.
         /// </summary>
@@ -121,6 +115,5 @@ namespace Utility
                 Convert.ToInt32(MathUtilities.Bound(colour.Blue, 0, 1) * 0xff)
             );
         }
-#endif
     }
 }

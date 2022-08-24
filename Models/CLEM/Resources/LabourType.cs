@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -11,18 +11,16 @@ using System.IO;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the initialisation parameters for a land type person who can do labour 
-    /// who is a family member.
-    /// eg. AdultMale, AdultFemale etc.
+    /// This stores the initialisation parameters for a labour type (person) who can do labour 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
-    [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
+    [Description("This resource represents a labour type (i.e. individual or cohort)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
-    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable
+    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable
     {
         private double ageInMonths = 0;
 
@@ -50,18 +48,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Sex")]
         [Required]
+        [FilterByProperty]
         public Sex Sex { get; set; }
 
         /// <summary>
         /// Age in years.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
        
         /// <summary>
         /// Age in months.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AgeInMonths
         {
             get
@@ -85,6 +86,7 @@ namespace Models.CLEM.Resources
         /// Adult equivalent.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AdultEquivalent
         {
             get
@@ -93,16 +95,30 @@ namespace Models.CLEM.Resources
                 if(adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship identified with \"AE\" in the component name.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
-                        parent.Summary.WriteWarning(this, warning);
+                        parent.Summary.WriteMessage(this, warning, MessageType.Warning);
                     }
                 }
                 return adultEquivalent??1;
             }
         }
+
+        /// <summary>
+        /// Adult equivalents of all individuals.
+        /// </summary>
+        [JsonIgnore]
+        [FilterByProperty]
+        public double TotalAdultEquivalents
+        {
+            get
+            {
+                return (adultEquivalent ?? 1)*Convert.ToDouble(Individuals, System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
+
 
         /// <summary>
         /// Total value of resource
@@ -158,7 +174,7 @@ namespace Models.CLEM.Resources
             if (DietaryComponentList is null)
                 return 0;
             else
-                return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+                return DietaryComponentList.Where(a => a.FoodStore?.Name == foodTypeName).Sum(a => a.AmountConsumed);
         }
 
         /// <summary>
@@ -172,7 +188,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Number of individuals")]
         [Required, GreaterThanEqualValue(0)]
-        public int Individuals { get; set; }
+        public decimal Individuals { get; set; }
 
         /// <summary>
         /// Hired labour switch
@@ -193,7 +209,7 @@ namespace Models.CLEM.Resources
         public double LastActivityRequestAmount { get; set; }
 
         /// <summary>
-        /// The number of hours provided to the current activity
+        /// The number of days provided to the current activity
         /// </summary>
         [JsonIgnore]
         public double LastActivityLabour { get; set; }
@@ -202,6 +218,7 @@ namespace Models.CLEM.Resources
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AvailableDays { get; private set; }
 
         /// <summary>
@@ -398,16 +415,12 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl == false)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("<div class=\"activityentry\">");
                     if (this.Individuals == 0)
@@ -430,28 +443,22 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryClosingTags(formatForParentControl);
+                return base.ModelSummaryClosingTags();
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryOpeningTags(formatForParentControl);
+                return base.ModelSummaryOpeningTags();
         }
 
         #endregion

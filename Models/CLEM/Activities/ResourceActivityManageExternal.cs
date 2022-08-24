@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -22,14 +22,15 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the input and output of resources specified in a file")]
+    [Description("Manage the input and output of external resources specified in a file")]
     [HelpUri(@"Content/Features/Activities/All resources/ManageExternalResource.htm")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivityManageExternal: CLEMActivityBase
+    public class ResourceActivityManageExternal: CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
-
+        private double[,] amountToDo;
+        private double[,] valueToDo;
         private FileResource fileResource = null;
         private FinanceType bankAccount = null;
         [JsonIgnore]
@@ -46,24 +47,39 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of resource data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource data reader required")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileResource) } })]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileResource) } })]
         public string ResourceDataReader { get; set; }
 
         /// <summary>
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [System.ComponentModel.DefaultValue("No financial implications")]
+        [System.ComponentModel.DefaultValue("No financial transactions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No financial implications", typeof(Finance) } })]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceActivityManageExternal()
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            base.SetDefaults();
+            switch (type)
+            {
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() {
+                            "fixed",
+                            "per amount incoming",
+                            "per amount outgoing",
+                            "per dollar value incoming",
+                            "per dollar value outgoing",
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
+
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -72,7 +88,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get bank account object to use if provided
-            if (AccountName != "No financial implications")
+            if (AccountName != "No financial transactions")
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             // get reader
@@ -101,9 +117,11 @@ namespace Models.CLEM.Activities
         #endregion
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> requests = new List<ResourceRequest>();
+            amountToDo = new double[,] { { 0, 0 }, { 0, 0 } };
+            valueToDo = new double[,] { { 0, 0 }, { 0, 0 } };
+
             earned = 0;
             spent = 0;
 
@@ -118,98 +136,158 @@ namespace Models.CLEM.Activities
                 {
                     // find resource
                     string resName = item[fileResource.ResourceNameColumnName].ToString();
+                    IEnumerable<IResourceType> found = null;
 
                     if (resName.Contains("."))
                         resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                     else
                     {
-                        var found = Resources.FindAllDescendants<IResourceType>(resName);
+                        found = Resources.FindAllDescendants<IResourceType>(resName);
                         if (found.Count() == 1)
                         {
                             resource = found.FirstOrDefault();
-
-                            // highlight unsupported resource types
-                            // TODO: add ability to include labour (days) and ruminants (number added/removed)
-                            switch (resource.GetType().ToString())
-                            {
-                                case "Models.CLEM.Resources.LandType":
-                                case "Models.CLEM.Resources.RuminantType":
-                                case "Models.CLEM.Resources.LabourType":
-                                case "Models.CLEM.Resources.GrazeFoodStoreType":
-                                case "Models.CLEM.Resources.OtherAnimalsType":
-                                    string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
-                                    Warnings.CheckAndWrite(warn, Summary, this);
-                                    resource = null;
-                                    break;
-                            default:
-                                    break;
-                            }
-
-                            // if finances
-                            if (resource != null && bankAccount != null)
-                            {
-                                double amount = Convert.ToDouble(item[fileResource.AmountColumnName], CultureInfo.InvariantCulture);
-
-                                // get price of resource
-                                ResourcePricing price = resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
-
-                                double amountAvailable = (amount < 0) ? Math.Min(Math.Abs(amount), resource.Amount) : amount;
-
-                                double packets = amountAvailable / price.PacketSize;
-                                if (price.UseWholePackets)
-                                    packets = Math.Truncate(packets);
-
-                                if (amount < 0)
-                                    earned += packets * price.PricePerPacket;
-                                else
-                                    spent += packets * price.PricePerPacket;
-                            }
-                        }
-                        else
-                        {
-                            string warn = "";
-                            if (found.Count() == 0)
-                                warn = $"[a={this.Name}] could not find a resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
-                            else
-                                warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
-
-                            Warnings.CheckAndWrite(warn, Summary, this);
                         }
                     }
                     if(resource != null)
+                    { 
+                        // highlight unsupported resource types
+                        // TODO: add ability to include labour (days) and ruminants (number added/removed)
+                        switch (resource.GetType().ToString())
+                        {
+                            case "Models.CLEM.Resources.LandType":
+                            case "Models.CLEM.Resources.RuminantType":
+                            case "Models.CLEM.Resources.LabourType":
+                            case "Models.CLEM.Resources.GrazeFoodStoreType":
+                            case "Models.CLEM.Resources.OtherAnimalsType":
+                                string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                                resource = null;
+                                break;
+                        default:
+                                break;
+                        }
+
+                        // if finances
+                        if (resource != null && bankAccount != null)
+                        {
+                            double amount = Convert.ToDouble(item[fileResource.AmountColumnName], CultureInfo.InvariantCulture);
+
+                            // get price of resource
+                            ResourcePricing price = resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
+
+                            double amountAvailable = (amount < 0) ? Math.Min(Math.Abs(amount), resource.Amount) : amount;
+
+                            double packets = amountAvailable / price.PacketSize;
+                            if (price.UseWholePackets)
+                                packets = Math.Truncate(packets);
+
+                            if (amount < 0)
+                            {
+                                amountToDo[0, 0] += packets * price.PacketSize;
+                                valueToDo[0, 0] += packets * price.PricePerPacket;
+                                earned += packets * price.PricePerPacket;
+                            }
+                            else
+                            {
+                                amountToDo[1, 0] += packets * price.PacketSize;
+                                valueToDo[1, 0] += packets * price.PricePerPacket;
+                                spent += packets * price.PricePerPacket;
+                            }
+                        }
                         resourceList.Add(resource);
+                    }
+                    else
+                    {
+                        string warn = "";
+                        if (found is null)
+                            warn = $"[a={this.Name}] could not find a resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
+                        else if (found.Count() == 0)
+                            warn = $"[a={this.Name}] could not find a resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
+                        else if (found.Count() > 1)
+                            warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                    }
                 }
             }
-            return requests;
+
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per amount incoming":
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo[1, 0];
+                        break;
+                    case "per dollar value incoming":
+                        valuesForCompanionModels[valueToSupply.Key] = valueToDo[1, 0];
+                        break;
+                    case "per amount outgoing":
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo[0, 0];
+                        break;
+                    case "per dollar value outgoing":
+                        valuesForCompanionModels[valueToSupply.Key] = valueToDo[0, 0];
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override void AdjustResourcesForTimestep()
         {
-            double daysNeeded;
-            switch (requirement.UnitType)
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+
+            // incoming or outgoing shortfalls
+            int skipped = 0;
+            List<string> inOut = new List<string>() { "outgoing", "incoming" };
+            for (int i = 0; i < inOut.Count; i++)
             {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                var sel_shortfalls = shortfalls.Where(a => a.CompanionModelDetails.unit.Contains("incoming"));
+                if (sel_shortfalls.Any())
+                {
+                    // purchase shortfalls
+                    var unitShort = sel_shortfalls.FirstOrDefault();
+                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity || OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                    {
+                        skipped++;
+                    }
+                    else
+                    {
+                        switch (unitShort.CompanionModelDetails.identifier.Split(" ").First())
+                        {
+                            case "amount":
+                                amountToDo[i, 1] = Convert.ToInt32(amountToDo[i, 0] * (1 - unitShort.Available / unitShort.Required));
+                                break;
+                            default:
+                                throw new NotImplementedException($"Cannot use {unitShort.CompanionModelDetails.identifier} unit to influence ResourceActivitymanageExternal when shortfalls occur in [a={NameWithParent}]");
+                        }
+
+                        if (unitShort.Available == 0)
+                        {
+                            Status = ActivityStatus.Warning;
+                            AddStatusMessage($"Resource shortfall prevented any {inOut[i]} action");
+                        }
+                    }
+                }
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "External", null);
+            if (skipped == 2)
+            {
+                Status = ActivityStatus.Skipped;
+            }
         }
 
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
-            this.Status = ActivityStatus.NotNeeded;
-
-            // get labour shortfall
-            double labourLimit = this.LabourLimitProportion;
-            // get finance purchase shortfall
-            double financeLimit = (spent - earned > 0) ? Math.Min(bankAccount.Amount, spent - earned) / (spent - earned) : 1;
-
             if (resourceList.Count() == 0)
             {
                 if (currentEntries.Count > 0)
@@ -218,43 +296,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (financeLimit < 1)
-                {
-                    ResourceRequest purchaseRequest = new ResourceRequest
-                    {
-                        ActivityModel = this,
-                        Required = spent - earned,
-                        Available = bankAccount.Amount,
-                        Provided = bankAccount.Amount,
-                        AllowTransmutation = false,
-                        ResourceType = typeof(Finance),
-                        ResourceTypeName = AccountName,
-                        Category = "External purchases"
-                    };
-                    ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-                    OnShortfallOccurred(rre);
-                }
-
-                if (financeLimit < 1 || labourLimit < 1)
-                {
-                    switch (OnPartialResourcesAvailableAction)
-                    {
-                        case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteWarning(this, $"Insufficient [r={AccountName}] resource of type [r=FinanceType] for activity [a={this.NameWithParent}]");
-                                Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
-                                Status = ActivityStatus.Critical;
-                                throw new ApsimXException(this, $"@i:Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
-                        case OnPartialResourcesAvailableActionTypes.SkipActivity:
-                            this.Status = ActivityStatus.Ignored;
-                            return;
-                        default:
-                            break;
-                    }
-                    this.Status = ActivityStatus.Partial;
-                }
-                else
-                    this.Status = ActivityStatus.Success;
-
+                double[] amountPerformed = new double[2] { 0, 0 };
                 // loop through all resources to exchange and make transactions
                 for (int i = 0; i < currentEntries.Count; i++)
                 {
@@ -275,7 +317,12 @@ namespace Models.CLEM.Activities
                         if (isSale)
                         {
                             // sell, so limit to labour and amount available
-                            amount = Math.Min(amount * labourLimit, resourceList[i].Amount);
+                            double amountPossible = amountToDo[0, 0] - amountToDo[0, 1];
+                            double amountRemaining = 0;
+                            if(amountPossible > amountPerformed[0])
+                                amountRemaining = amountPossible - amountPerformed[0];
+                            
+                            amount = Math.Min(amountRemaining, Math.Min(amount, resourceList[i].Amount));
                             if (amount > 0)
                             {
                                 if (price != null)
@@ -301,8 +348,14 @@ namespace Models.CLEM.Activities
                         }
                         else
                         {
+                            double amountPossible = amountToDo[1, 0] - amountToDo[1, 1];
+                            double amountRemaining = 0;
+                            if (amountPossible > amountPerformed[1])
+                                amountRemaining = amountPossible - amountPerformed[1];
+
+                            amount = Math.Min(amountRemaining, amount);
+
                             // limit to labour and financial constraints as this is a purchase
-                            amount *= Math.Min(labourLimit, financeLimit);
                             if (amount > 0)
                             {
                                 if (price != null)
@@ -331,13 +384,14 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-
+            SetStatusSuccessOrPartial(amountToDo[0,1]+amountToDo[1,1] > 0);
         }
+
 
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

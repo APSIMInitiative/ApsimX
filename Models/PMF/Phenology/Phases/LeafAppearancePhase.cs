@@ -4,13 +4,13 @@ using Models.Core;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Functions;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and 
-    /// It continues until the final main-stem leaf has finished expansion.  
+    /// This phase goes from the specified start stage to the specified end stage and 
+    /// it continues until the final main-stem leaf has finished expansion.
     /// The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron)
     /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). 
     /// </summary>
@@ -104,6 +104,17 @@ namespace Models.PMF.Phen
             First = true;
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and it continues until the final main-stem leaf has finished expansion. The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber)");
+
+            // Write memos
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -112,7 +123,3 @@ namespace Models.PMF.Phen
         private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); } 
     }
 }
-
-
-
-

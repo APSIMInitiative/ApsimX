@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils;
 using Models.Soils.Nutrients;
@@ -11,7 +11,7 @@ namespace Models
     /// <summary>This model is responsible for applying fertiliser.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Fertiliser :  ModelCollectionFromResource
+    public class Fertiliser :  Model
     {
         /// <summary>The soil</summary>
         [Link] private IPhysical soilPhysical = null;
@@ -114,7 +114,7 @@ namespace Models
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
                 if (doOutput)
-                    Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
+                    Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1), MessageType.Diagnostic);
 
                 Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
             }

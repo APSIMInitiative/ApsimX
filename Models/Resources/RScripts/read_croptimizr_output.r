@@ -29,4 +29,4 @@ for (param in param_names) {
 }
 cols <- c(cols, 'Message')
 colnames(df) <- cols
-write.table(df, row.names = F, col.names = T, sep = ',')
+write.table(df, file = output_file, row.names = F, col.names = T, sep = ',')

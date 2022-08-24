@@ -22,12 +22,12 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with a pasture production database.")]
+    [Description("Manages a pasture (GrazeFoodStoreType) by allocating land, tracking pasture state and ecological indicators, communicating with a pasture production database")]
     [Version(1, 0, 2, "Now supports generic pasture production data reader")]
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
-    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
+    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -41,19 +41,34 @@ namespace Models.CLEM.Activities
         private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
         private List<PastureDataType> pastureDataList;
+        private Relationship relationshipLC;
+        private Relationship relationshipGBA;
 
         /// <summary>
         /// Land type where pasture is located
         /// </summary>
-        [Description("Land type where pasture is located")]
+        [Description("Land type to use")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Land) } })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
+        /// Area requested
+        /// </summary>
+        [Description("Land area requested")]
+        [Required, GreaterThanEqualValue(0)]
+        public double AreaRequested { get; set; }
+
+        /// <summary>
+        /// Use unallocated available
+        /// </summary>
+        [Description("Use Land type's unallocated land")]
+        public bool UseAreaAvailable { get; set; }
+
+        /// <summary>
         /// Pasture type to use
         /// </summary>
-        [Description("Pasture to manage")]
+        [Description("GrazeFoodStore type managed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string FeedTypeName { get; set; }
@@ -61,22 +76,15 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of the model for the pasture input file
         /// </summary>
-        [Description("Name of pasture data reader")]
+        [Description("Pasture data reader to use")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
         public string PastureDataReader { get; set; }
-
-        /// <summary>
-        /// Starting amount (kg)
-        /// </summary>
-        [Description("Starting Amount (kg/ha)")]
-        [Required, GreaterThanEqualValue(0)]
-        public double StartingAmount { get; set; }
 
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
-        [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
+        [Description("Starting stocking rate (AEs/sqkm)")]
         [Required, GreaterThanEqualValue(0)]
         public double StartingStockingRate { get; set; }
 
@@ -99,19 +107,6 @@ namespace Models.CLEM.Activities
         public RelationshipRunningValue GrassBasalArea { get; set; }
 
         /// <summary>
-        /// Area requested
-        /// </summary>
-        [Description("Area of pasture")]
-        [Required, GreaterThanEqualValue(0)]
-        public double AreaRequested { get; set; }
-
-        /// <summary>
-        /// Use unallocated available
-        /// </summary>
-        [Description("Use unallocated land")]
-        public bool UseAreaAvailable { get; set; }
-
-        /// <summary>
         /// Feed type
         /// </summary>
         [JsonIgnore]
@@ -128,7 +123,25 @@ namespace Models.CLEM.Activities
         /// </summary>
         public PastureActivityManage()
         {
-            TransactionCategory = "Pasture.Manage";
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "Utilisation % to change in Land condition index",
+                            "Utilisation % to change in Grass basal area"
+                        },
+                        measures: new List<string>()
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         #region validation
@@ -140,15 +153,31 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (LandConditionIndex == null)
+            if (relationshipLC == null)
             {
-                string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] named [LC] below a [a=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
+                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
+                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames));
             }
-            if (GrassBasalArea == null)
+            else
             {
-                string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] named [GBA] below a [a=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
+                if (LandConditionIndex == null)
+                {
+                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames));
+                }
+            }
+            if (relationshipGBA == null)
+            {
+                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
+                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames));
+            }
+            else
+            {
+                if (GrassBasalArea == null)
+                {
+                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames));
+                }
             }
             if (filePasture == null)
             {
@@ -171,8 +200,15 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
-            GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+
+            relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index").FirstOrDefault();
+            if (relationshipLC != null)
+                LandConditionIndex = relationshipLC.FindChild<RelationshipRunningValue>();
+
+            relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area").FirstOrDefault();
+            if (relationshipGBA != null)
+                GrassBasalArea = relationshipGBA.FindChild<RelationshipRunningValue>();
+
             filePasture = zoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
@@ -309,21 +345,17 @@ namespace Models.CLEM.Activities
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture, this, "", "Growth");
+                    this.LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                 }
             }
 
             // report activity performed.
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
-                Activity = new BlankActivity()
-                {
-                    Status = zoneCLEM.IsEcologicalIndicatorsCalculationMonth()? ActivityStatus.Calculation: ActivityStatus.Success,
-                    Name = this.Name
-                }
+                Name = this.Name,
+                Status = zoneCLEM.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
+                Id = this.UniqueID.ToString(),
             };
-            activitye.Activity.SetGuID(this.UniqueID);
-            this.OnActivityPerformed(activitye);
         }
 
         /// <summary>
@@ -340,77 +372,98 @@ namespace Models.CLEM.Activities
             // But before any management, buying and selling of animals.
 
             // add this months stocking rate to running total 
-            stockingRateSummed += CalculateStockingRateRightNow();
+            stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
-            CalculateEcologicalIndicators();
+            //If it is time to do yearly calculation
+            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            {
+                CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, zoneCLEM.EcologicalIndicatorsCalculationInterval, clock.StartDate, zoneCLEM.EcologicalIndicatorsNextDueDate);
+                //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
+
+                // Reset running total for stocking rate
+                stockingRateSummed = 0;
+
+                GetPastureDataList_TodayToNextEcolCalculation();
+            }
         }
 
-        private double CalculateStockingRateRightNow()
+        /// <summary>
+        /// Calulate the current stocking rate
+        /// </summary>
+        /// <param name="herd">Herd to consider</param>
+        /// <param name="paddockName">Name of paddock with animals</param>
+        /// <param name="areaSqKm">Area of paddock in Square Km</param>
+        /// <returns>Current stocking rate (AE/sq km)</returns>
+        public static double CalculateStockingRateRightNow(RuminantHerd herd, string paddockName, double areaSqKm)
         {
-            var herd = Resources.FindResourceGroup<RuminantHerd>();
             if (herd != null)
             {
-                string paddock = FeedTypeName;
-                if(paddock.Contains("."))
-                    paddock = paddock.Substring(paddock.IndexOf(".")+1);
+                if(paddockName.Contains("."))
+                    paddockName = paddockName.Substring(paddockName.IndexOf(".")+1);
 
-                return herd.Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+                return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.AdultEquivalent) / areaSqKm;
             }
             else
                 return 0;
         }
 
         /// <summary>
-        /// Method to perform calculation of all ecological indicators.
+        /// Method to perform calculation of all Ecological indicators.
         /// </summary>
-        private void CalculateEcologicalIndicators()
+        /// <param name="grazeFoodStore">Graze food store to consider</param>
+        /// <param name="landConIndex">Land condition value</param>
+        /// <param name="grassBasalAreaIndex">Grass basal area value</param>
+        /// <param name="summedStockRate">Running sum of stocking rate</param>
+        /// <param name="interval">Ecological indicator interval</param>
+        /// <param name="NextDueDate">Next ecological indicator calulation date</param>
+        /// <param name="startDate">Simulation start date</param>
+        public static void CalculateEcologicalIndicators(GrazeFoodStoreType grazeFoodStore, RelationshipRunningValue landConIndex, RelationshipRunningValue grassBasalAreaIndex, double summedStockRate, int interval, DateTime startDate, DateTime NextDueDate )
         {
-
-            //If it is time to do yearly calculation
-            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (grazeFoodStore != null)
             {
                 // Calculate change in Land Condition index and Grass basal area
-                double utilisation = LinkedNativeFoodType.PercentUtilisation;
+                double utilisation = grazeFoodStore.PercentUtilisation;
 
-                LandConditionIndex.Modify(utilisation);
-                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
-                GrassBasalArea.Modify(utilisation);
-                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.Value;
+                if (landConIndex != null)
+                {
+                    landConIndex.Modify(utilisation);
+                    grazeFoodStore.CurrentEcologicalIndicators.LandConditionIndex = landConIndex.Value;
+                }
+
+                if (grassBasalAreaIndex != null)
+                {
+                    grassBasalAreaIndex.Modify(utilisation);
+                    grazeFoodStore.CurrentEcologicalIndicators.GrassBasalArea = grassBasalAreaIndex.Value;
+                }
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((zoneCLEM.EcologicalIndicatorsNextDueDate.Year - clock.StartDate.Year) * 12) + zoneCLEM.EcologicalIndicatorsNextDueDate.Month - clock.StartDate.Month+1;
-                if (monthdiff >= zoneCLEM.EcologicalIndicatorsCalculationInterval)
-                    monthdiff = zoneCLEM.EcologicalIndicatorsCalculationInterval;
+                int monthdiff = ((NextDueDate.Year - startDate.Year) * 12) + NextDueDate.Month - startDate.Month + 1;
+                if (monthdiff >= interval)
+                    monthdiff = interval;
 
-                LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = stockingRateSummed / monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.StockingRate = summedStockRate / monthdiff;
 
                 //perennials
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value, 3.35) / Math.Pow(LandConditionIndex.Value, 3.35 + 137.7)) - 2.2;
+                if (landConIndex != null)
+                    grazeFoodStore.CurrentEcologicalIndicators.Perennials = 92.2 * (1 - Math.Pow(landConIndex.Value, 3.35) / Math.Pow(landConIndex.Value, 3.35 + 137.7)) - 2.2;
 
                 //%utilisation
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
-
-                // Reset running total for stocking rate
-                stockingRateSummed = 0;
+                grazeFoodStore.CurrentEcologicalIndicators.Utilisation = utilisation;
 
                 // calculate averages
-                LinkedNativeFoodType.CurrentEcologicalIndicators.Cover /= monthdiff;
-                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea /= monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.Cover /= monthdiff;
+                grazeFoodStore.CurrentEcologicalIndicators.TreeBasalArea /= monthdiff;
 
                 //TreeC
                 // I didn't include the / area as tba is already per ha. I think NABSA has this wrong
-                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeCarbon = LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea * 6286 * 0.46;
+                grazeFoodStore.CurrentEcologicalIndicators.TreeCarbon = grazeFoodStore.CurrentEcologicalIndicators.TreeBasalArea * 6286 * 0.46;
 
                 //methane
                 //soilC
                 //Burnkg
                 //methaneFire
                 //N2OFire
-
-                //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
-                GetPastureDataList_TodayToNextEcolCalculation();
-
             }
         }
 
@@ -420,18 +473,8 @@ namespace Models.CLEM.Activities
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
             // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators) 
-            // every so many months (specified by  not every month.
+            // every so many months (specified by user, not every month.
             // And the month they are updated on each year is whatever the starting month was for the run.
-
-            // Shaun's code. back to front from NABSA
-            //pkGrassBA = (int)(Math.Round(grassBasalArea / 2, 0) * 2); //weird way but this is how NABSA does it.
-            //pkLandCon = (int)(Math.Round((landConditionIndex - 1.1) / 2, 0) * 2 + 1);
-            //
-            // No reason for this grouping so just round.
-            //
-            // NABSA
-            //pkLandCon = (int)(Math.Round(landConditionIndex / 2, 0) * 2); //weird way but this is how NABSA does it.
-            //pkGrassBA = (int)(Math.Round((grassBasalArea - 1.1) / 2, 0) * 2 + 1);
 
             pastureDataList = filePasture.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clock.Today.AddDays(1), zoneCLEM.EcologicalIndicatorsCalculationInterval);
@@ -447,7 +490,16 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<Relationship>(), true, "childgroupactivityborder", "Relationships for change in land condition and grass basal area as function of utilisation:", "")
+            };
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -468,10 +520,6 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
                 }
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha");
                 htmlWriter.Write("</div>");
 
                 return htmlWriter.ToString(); 

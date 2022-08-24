@@ -7,6 +7,7 @@
     using Models.Interfaces;
     using Models.PMF;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Storage;
     using Models.Surface;
     using NUnit.Framework;
@@ -123,9 +124,9 @@
             Soil s = sims.Children[0].Children[0] as Soil;
             Assert.AreEqual(s.Name, "Soil");
 
-            InitialWater initWater = s.Children[0] as InitialWater;
-            Assert.AreEqual(initWater.FractionFull, 0.5);
-            Assert.AreEqual(initWater.PercentMethod, InitialWater.PercentMethodEnum.FilledFromTop);
+            Water initWater = s.Children[0] as Water;
+            Assert.AreEqual(initWater.FractionFull, 0.5, 0.000000001);
+            Assert.IsTrue(initWater.FilledFromTop);
 
             Physical w = s.Children[1] as Physical;
             Assert.AreEqual(w.Thickness, new double[] { 150, 150, 300, 300 });
@@ -144,8 +145,6 @@
 
             Chemical a = s.Children[6] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(a.NO3N, new double[] { 6.5, 2.1, 2.1, 1.0 });
-            Assert.AreEqual(a.NH4N, new double[] { 0.5, 0.1, 0.1, 0.2 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
 
