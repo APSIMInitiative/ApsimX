@@ -40,6 +40,6 @@ You now need to create a link to your ApsimX fork that you created earlier.
 
 We suggest you name the remote repository the same as your GitHub user name, hence the need to enter it twice. The reason for linking to two repositories will become evident later. You ALWAYS **pull** from the ApsimX repository and **push** to your forked repository.
 
-At this point, you have all source code. If you wish to compile the code yourself, see [here](/development/contribute/compile/). If you don't wish to compile the code, you can run any of the examples/prototypes/test sets with the released version of apsim, but it will need to be up-to-date.
+At this point, you have all source code. If you wish to compile the code yourself, see [here](/contribute/compile/). If you don't wish to compile the code, you can run any of the examples/prototypes/test sets with the released version of apsim, but it will need to be up-to-date.
 
-After you have made some changes to the code or test sets, you will need to [commit your changes](/development/contribute/sourcetree/commit/).
+After you have made some changes to the code or test sets, you will need to [commit your changes](/contribute/sourcetree/commit/).
