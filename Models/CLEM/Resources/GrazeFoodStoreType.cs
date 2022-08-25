@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock)")]
+    [Version(1, 0, 3, "Fully automated version with user properties")]
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
@@ -32,6 +33,8 @@ namespace Models.CLEM.Resources
 
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
+        private double biomassAddedThisYear;
+        private double biomassConsumed;
 
         /// <summary>
         /// Unit type
@@ -44,44 +47,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
-
-        /// <summary>
-        /// Return the specified pool 
-        /// </summary>
-        /// <param name="index">index to use</param>
-        /// <param name="getByAge">return where index is age</param>
-        /// <returns>GraxeFoodStore pool</returns>
-        public GrazeFoodStorePool Pool(int index, bool getByAge)
-        {
-            if (getByAge)
-            {
-                var res = Pools.Where(a => a.Age == index);
-                if (res.Count() > 1)
-                {
-                    // return an average pool for N and DMD
-                    GrazeFoodStorePool average = new GrazeFoodStorePool()
-                    {
-                        Age = index,
-                        Consumed = res.Sum(a => a.Consumed),
-                        Detached = res.Sum(a => a.Detached),
-                        Growth = res.Sum(a => a.Growth),
-                        DMD = res.Sum(a => a.DMD * a.Amount) / res.Sum(a => a.Amount),
-                        Nitrogen = res.Sum(a => a.Nitrogen * a.Amount) / res.Sum(a => a.Amount)
-                    };
-                    average.Set(res.Sum(a => a.Amount));
-                    return average;
-                }
-                else
-                    return res.FirstOrDefault();
-            }
-            else
-            {
-                if (index < Pools.Count())
-                    return Pools[index];
-                else
-                    return null;
-            }
-        }
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -228,6 +193,27 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Return the specified pool 
+        /// </summary>
+        /// <param name="index">index to use</param>
+        /// <param name="getByAge">return where index is age</param>
+        /// <returns>GraxeFoodStore pool</returns>
+        public IEnumerable<GrazeFoodStorePool> Pool(int index, bool getByAge)
+        {
+            if (getByAge)
+            {
+                return Pools.Where(a => (index < 12) ? a.Age == index : a.Age >= 12);
+            }
+            else
+            {
+                if (index < Pools.Count())
+                    return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Total value of resource
         /// </summary>
         public double? Value
@@ -251,9 +237,6 @@ namespace Models.CLEM.Resources
                     return 0;
             }
         }
-
-        private double biomassAddedThisYear;
-        private double biomassConsumed;
 
         /// <summary>
         /// Percent utilisation
@@ -338,35 +321,71 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Method to provide conversion factor to tonnes and/or hectares
+        /// </summary>
+        public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
+        {
+            if ((hectares && Manager is null)|(age>11))
+                return 0;
+
+            double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area:1);
+            double valueToUse = 0;
+            switch (grazeProperty)
+            {
+                case "Amount":
+                    if(age < 0)
+                        valueToUse = Pools.Sum(a => a.Amount);
+                    else
+                        valueToUse = Pool(age, true).Sum(a => a.Amount);
+                    break;
+                case "Growth":
+                    return Pool(0, true).Sum(a => a.Growth);
+                case "Consumed":
+                    if (age < 0)
+                        valueToUse = Pools.Sum(a => a.Consumed);
+                    else
+                        valueToUse = Pool(age, true).Sum(a => a.Consumed);
+                    break;
+                case "Detached":
+                    if (age < 0)
+                        valueToUse = Pools.Sum(a => a.Detached);
+                    else
+                        valueToUse = Pool(age, true).Sum(a => a.Detached);
+                    break;
+                case "Nitrogen":
+                    if (age < 0)
+                        return Nitrogen;
+                    else
+                    {
+                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
+                        valueToUse = pools.Sum(a => a.Nitrogen * a.Amount) / pools.Sum(a => a.Amount);
+                    }
+                    break;
+                case "DMD":
+                    if (age < 0)
+                        return DMD;
+                    else
+                    {
+                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
+                        valueToUse = pools.Sum(a => a.DMD * a.Amount) / pools.Sum(a => a.Amount);
+                    }
+                    break;
+                case "Age":
+                    if (age < 0)
+                        return Pools.Sum(a => a.Amount * a.Age) / this.Amount;
+                    break;
+                default:
+                    throw new ApsimXException(this, $"Property [{grazeProperty}] not available for reporting pools");
+            }
+            return valueToUse / convert;
+        }
+
+        /// <summary>
         /// Constructor 
         /// </summary>
         public GrazeFoodStoreType()
         {
             SetDefaults();
-        }
-
-        /// <summary>
-        /// Get a property of pools by pool age
-        /// </summary>
-        public double GetValueByPoolAge(int age, string property)
-        {
-            IEnumerable<GrazeFoodStorePool> pools;
-            // group all pools >12 months old.
-            if (age < 12)
-                pools = Pools.Where(a => a.Age == age);
-            else
-                pools = Pools.Where(a => a.Age >= 12);
-
-            return property switch
-            {
-                "Detached" => pools.Sum(a => a.Detached),
-                "Growth" => pools.Sum(a => a.Growth),
-                "Consumed" => pools.Sum(a => a.Consumed),
-                "Amount" => pools.Sum(a => a.Amount),
-                "DMD" => pools.Sum(a => a.Amount * a.DMD) / pools.Sum(a => a.Amount),
-                "Nitrogen" => pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount),
-                _ => throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools"),
-            };
         }
 
         /// <summary>
