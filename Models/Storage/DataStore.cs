@@ -288,7 +288,6 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                dbReader.ExecuteSql(selectSQL);
                 connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
             }
             else

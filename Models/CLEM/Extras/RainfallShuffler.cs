@@ -45,6 +45,13 @@ namespace Models.CLEM
         public List<ShuffleYear> ShuffledYears { get; set; }
 
         /// <summary>
+        /// List of shuffled years
+        /// </summary>
+        [JsonIgnore]
+        public DateTime[] ShuffledYearsArray { get; set; }
+
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public RainfallShuffler()
@@ -83,7 +90,7 @@ namespace Models.CLEM
             yearOffset = yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble()).ToList();
             // create shuffled month/date
             ShuffledYears = storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset } ).ToList();
-
+            ShuffledYearsArray = ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1)).ToArray<DateTime>();
         }
 
         #region descriptive summary

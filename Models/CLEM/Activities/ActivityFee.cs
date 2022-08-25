@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [Description("Define an expense based on tasks of parent activity")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/All/Fee.htm")]
+    [HelpUri(@"Content/Features/Activities/ActivityFee.htm")]
 
     public class ActivityFee : CLEMActivityBase, IActivityCompanionModel
     {

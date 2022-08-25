@@ -1573,15 +1573,40 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ManageMaleBreederNumbers && ValidateSires() is ValidationResult sires)
-                    results.Add(sires);
+                if (ManageMaleBreederNumbers)
+                {
+                    if(ValidateSires() is ValidationResult sires)
+                        results.Add(sires);
+                    if (GrazeFoodStoreNameSires.Contains("."))
+                    {
+                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
+                        {
+                            string[] memberNames = new string[] { "Location is not valid" };
+                            results.Add(new ValidationResult($"The location where purchased ruminant sires are to be placed [r={GrazeFoodStoreNameSires}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                        }
+                    }
 
-                if (ManageFemaleBreederNumbers && ValidateBreeders() is ValidationResult breeders)
-                    results.Add(breeders);
+                }
+
+                if (ManageFemaleBreederNumbers)
+                {
+                    if (ValidateBreeders() is ValidationResult breeders)
+                        results.Add(breeders);
+                    if (GrazeFoodStoreNameBreeders.Contains("."))
+                    {
+                        ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                        if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
+                        {
+                            string[] memberNames = new string[] { "Location is not valid" };
+                            results.Add(new ValidationResult($"The location where purchased ruminant breeders are to be placed [r={GrazeFoodStoreNameBreeders}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                        }
+                    }
+                }
 
                 // unknown entries
                 var unknownPurchases = purchaseDetails
-                    .Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
+                .Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
 
                 if (unknownPurchases.Any())
                     foreach (var item in unknownPurchases)
@@ -1590,6 +1615,33 @@ namespace Models.CLEM.Activities
                         results.Add(new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male (sire) or female in [a={this.Name}].{Environment.NewLine}Check this component and remove from the list if unneeded", memberNames));
                     }
             }
+
+            if (EnableGrowoutMaleProperties())
+            {
+                if (GrazeFoodStoreNameGrowOutMales.Contains("."))
+                {
+                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
+                    {
+                        string[] memberNames = new string[] { "Location is not valid" };
+                        results.Add(new ValidationResult($"The location where grow out male ruminants are to be moved [r={GrazeFoodStoreNameGrowOutMales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                    }
+                }
+            }
+            if (EnableGrowoutFemaleProperties())
+            {
+                if (GrazeFoodStoreNameGrowOutFemales.Contains("."))
+                {
+                    ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                    if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
+                    {
+                        string[] memberNames = new string[] { "Location is not valid" };
+                        results.Add(new ValidationResult($"The location where grow out female ruminants are to be moved [r={GrazeFoodStoreNameGrowOutFemales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                    }
+                }
+            }
+
+
             return results;
         }
 
@@ -1667,7 +1719,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"This activity will stop the simulation if the number of breeders exceeds the <i>Maximum number of breeders to stop multiplier</i> <span class=\"setvalue\">{MaxBreedersMultiplierToStop.ToString("#,###")}</span> x <i>Maximum number of breeders</i> which equates to <span class=\"setvalue\">{(MaxBreedersMultiplierToStop * MaximumBreedersKept).ToString("#,###")}</span> individuals.");
+                htmlWriter.Write($"This activity will stop the simulation if the number of breeders exceeds the <i>Maximum number of breeders to stop multiplier</i> <span class=\"setvalue\">{MaxBreedersMultiplierToStop:#0.###}</span> x <i>Maximum number of breeders</i> which equates to <span class=\"setvalue\">{MaxBreedersMultiplierToStop * MaximumBreedersKept:#,###}</span> individuals.");
                 htmlWriter.Write("</div>");
 
                 // adjust herd
@@ -1686,7 +1738,7 @@ namespace Models.CLEM.Activities
                             adjusted = "males";
                     }
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The initial number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the defined maximum herd by scaling the initial population defined by the ruminant cohorts");
+                    htmlWriter.Write($"The number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the maximum herd by scaling the initial ruminant cohorts at the start of the simulation.");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("</div>");
                 }
@@ -1787,7 +1839,7 @@ namespace Models.CLEM.Activities
                     else if (MaximumSiresKept < 1)
                         htmlWriter.Write("The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">" + (Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) + "</span> individuals");
                     else
-                        htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span> will be kept");
+                        htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span> will be maintained");
                     htmlWriter.Write("</div>");
 
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");

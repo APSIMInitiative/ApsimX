@@ -661,6 +661,7 @@ namespace Models.CLEM
                 " AND "+LandConColumnName+" = " + landConditionCategory +
                 " AND "+StkRateColumnName+" = " + stkRateCategory;
 
+            Dictionary<int, int> orderOfYears = new Dictionary<int, int>();
             if (shuffler != null)
             {
                 // need to check for all random year month matches in database
@@ -669,14 +670,19 @@ namespace Models.CLEM
                 DateTime currentDate = ecolCalculationDate;
                 sqlQuery += " AND (";
                 bool firstEntry = true;
+                int indx = 0;
                 while (currentDate <= endDate)
                 {
+                    indx++;
                     if(!firstEntry)
                         sqlQuery += " OR ";
                     firstEntry = false;
                     var foundEntry = shuffler.ShuffledYears.Where(a => a.Year == currentDate.Year && a.Month == currentDate.Month).FirstOrDefault();
-                    if(foundEntry != null)
+                    if (foundEntry != null)
+                    {
                         sqlQuery += "( " + YearColumnName + " = " + foundEntry.RandomYear + " AND " + MonthColumnName + " = " + currentDate.Month + ")";
+                        orderOfYears.Add(foundEntry.RandomYear * 100 + currentDate.Month, indx);
+                    }
 
                     currentDate = currentDate.AddMonths(1);
                 }
@@ -699,6 +705,7 @@ namespace Models.CLEM
             }
             
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
+            
             if(results.Rows.Count == 0)
             {
                 switch (MissingDataAction)
@@ -714,12 +721,24 @@ namespace Models.CLEM
                 return null;
             }
 
+            // restore shuffled order
+            if (shuffler != null)
+            {
+                results.Columns.Add("Order", typeof(Int32));
+                foreach (DataRow row in results.Rows)
+                {
+                    row["Order"] = orderOfYears.GetValueOrDefault(Convert.ToInt32(row["Year"]) * 100 + Convert.ToInt32(row["Month"]));
+                }
+                results.DefaultView.Sort = "Order";
+                results = results.DefaultView.ToTable();
+            }
+
             // re-label shuffled years
             if (shuffler != null)
             {
                 foreach (DataRow row in results.Rows)
                 {
-                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"], CultureInfo.InvariantCulture)).FirstOrDefault().Year;
+                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"], CultureInfo.InvariantCulture) & a.Month == Convert.ToInt32(row["Month"], CultureInfo.InvariantCulture)).FirstOrDefault().Year;
                 }
             }
 
