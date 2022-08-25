@@ -5934,7 +5934,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.EnergyBalance, Models",
+              "$type": "Models.PMF.BiomassArbitration.EnergyBalance, Models",
               "Albedo": 0.25,
               "Gsmax350": 0.015,
               "R50": 150.0,
