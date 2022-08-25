@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
+    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
         private Clock clock = null;
@@ -77,7 +77,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityWean()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.[Type].Wean";
         }
 
         /// <inheritdoc/>
@@ -250,6 +249,29 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(weaned != numberToDo);
             }
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if(GrazeFoodStoreName.Contains("."))
+            {
+                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
+                {
+                    string[] memberNames = new string[] { "Location is not valid" };
+                    results.Add(new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                }
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

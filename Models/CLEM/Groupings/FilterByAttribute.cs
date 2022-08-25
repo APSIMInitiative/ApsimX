@@ -179,15 +179,21 @@ namespace Models.CLEM.Groupings
                 bool truefalse = IsOperatorTrueFalseTest();
                 if (FilterStyle == AttributeFilterStyle.Exists | truefalse)
                 {
-                    filterWriter.Write(" is");
+                    bool nothingAdded = true;
                     if (truefalse)
                         if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
-                            filterWriter.Write(" not");
-                    filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)})");
+                        {
+                            filterWriter.Write(" does not have");
+                            nothingAdded = false;
+                        }
+                    if(nothingAdded)
+                        filterWriter.Write(" has");
+
+                    filterWriter.Write($" attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
                 }
                 else
                 {
-                    filterWriter.Write($" Attribute-{CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                    filterWriter.Write($" Attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
                 }

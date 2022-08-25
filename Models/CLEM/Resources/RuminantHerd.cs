@@ -252,7 +252,7 @@ namespace Models.CLEM.Resources
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
-                RelatesToResource = ind.BreedParams.NameWithParent,
+                RelatesToResource = null, // ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -273,30 +273,10 @@ namespace Models.CLEM.Resources
             // Remove mother ID from any suckling offspring
             if (ind is RuminantFemale)
             {
-                string reason;
-                switch (ind.SaleFlag)
-                {
-                    case HerdChangeReason.Consumed:
-                    case HerdChangeReason.DiedUnderweight:
-                    case HerdChangeReason.DiedMortality:
-                        reason = "MotherDied";
-                        break;
-                    case HerdChangeReason.MarkedSale:
-                    case HerdChangeReason.TradeSale:
-                    case HerdChangeReason.ExcessBreederSale:
-                    case HerdChangeReason.MaxAgeSale:
-                        reason = "MotherSold";
-                        break;
-                    default:
-                        reason = "Unknown";
-                        break;
-                }
-
                 while ((ind as RuminantFemale).SucklingOffspringList.Any())
                 {
                     Ruminant offspring = (ind as RuminantFemale).SucklingOffspringList.FirstOrDefault();
-                    offspring.Wean(true, reason);
-                    offspring.Mother = null;
+                    offspring.MotherLost();
                 }
             }
 
@@ -321,7 +301,7 @@ namespace Models.CLEM.Resources
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
-                RelatesToResource = ind.BreedParams.NameWithParent,
+                RelatesToResource = null, //ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -409,9 +389,23 @@ namespace Models.CLEM.Resources
                 var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
                 if(rumGroup != null)
                 {
-                    var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
-                    if (catGroup != null)
-                        return catGroup;
+                    if (groupName == "") // blank requests the totals across all groups if present.
+                    {
+                        return new RuminantReportGroupDetails
+                        {
+                            GroupName = "All",
+                            TotalAdultEquivalent = rumGroup.RuminantTypeGroup.Sum(a => a.TotalAdultEquivalent),
+                            TotalPrice = rumGroup.RuminantTypeGroup.Sum(a => a.TotalPrice),
+                            TotalWeight = rumGroup.RuminantTypeGroup.Sum(a => a.TotalWeight),
+                            Count = rumGroup.RuminantTypeGroup.Sum(a => a.Count)
+                        };
+                    }
+                    else
+                    {
+                        var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
+                        if (catGroup != null)
+                            return catGroup;
+                    }
                 }
             }
             return new RuminantReportGroupDetails() { Count = 0, TotalAdultEquivalent = 0, TotalWeight = 0, TotalPrice = 0, GroupName = groupName };
@@ -469,11 +463,13 @@ namespace Models.CLEM.Resources
         /// <returns>A grouped summary of individuals</returns>
         public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {
+            bool multi = individuals.Select(a => a.BreedParams.Name).Distinct().Count() > 1;
             var groupedInd = from ind in individuals
                                     group ind by ind.BreedParams.Name into breedGroup
                                     select new RuminantReportTypeDetails()
                                     {
                                         RuminantTypeName = breedGroup.Key,
+                                        RuminantTypeNameToDisplay = (multi?breedGroup.Key:""),
                                         RuminantTypeGroup = from gind in breedGroup
                                                  group gind by gind.GetTransactionCategory(TransactionStyle, priceStyle) into catind
                                                  select new RuminantReportGroupDetails()
@@ -552,9 +548,13 @@ namespace Models.CLEM.Resources
                     html += " by the pricing groups provided for the RuminantType.";
                     break;
                 case RuminantTransactionsGroupingStyle.ByClass:
-                    html += " by the class of individual.";
+                    html += " by the class of individuals.";
+                    break;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    html += " by the sex and class of individuals.";
                     break;
                 default:
+                    html += " by [Unknown grouping style]";
                     break;
             }
             html += "</div>";
@@ -573,6 +573,11 @@ namespace Models.CLEM.Resources
         /// Name of ruminant type
         /// </summary>
         public string RuminantTypeName { get; set; }
+
+        /// <summary>
+        /// Name of ruminant type
+        /// </summary>
+        public string RuminantTypeNameToDisplay { get; set; }
 
         /// <summary>
         /// A list of all the details for the type

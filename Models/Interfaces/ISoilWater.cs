@@ -20,6 +20,9 @@
         ///<summary>Gets soil water content (mm)</summary>
         double[] SWmm { get; }
 
+        ///<summary>Gets soil water potential (cm)</summary>
+        double[] PSI { get; }
+
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         double[] ESW { get; }
 

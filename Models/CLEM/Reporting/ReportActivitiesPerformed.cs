@@ -35,8 +35,22 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "HTML version created")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ActivitiesPerformed.htm")]
-    public class ReportActivitiesPerformed : Models.Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
+    public class ReportActivitiesPerformed : Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
     {
+        /// <summary>
+        /// Includes folders in simulation as placeholders in output
+        /// </summary>
+        [Description("Include folders in output")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludeFolders { get; set; }
+
+        /// <summary>
+        /// The style timers are handled in report
+        /// </summary>
+        [Description("Style of handling timers")]
+        [System.ComponentModel.DefaultValue(ReportActivitiesPerformedTimerHandleStyle.InPosition)]
+        public ReportActivitiesPerformedTimerHandleStyle HandleTimers { get; set; }
+
         /// <summary>
         /// Create html version of summary
         /// </summary>
@@ -73,6 +87,7 @@ namespace Models.CLEM.Reporting
         public ReportActivitiesPerformed()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Default;
+            CLEMModel.SetPropertyDefaults(this);
         }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
@@ -87,7 +102,8 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastActivityPerformed.Name as Name",
                 "[Activities].LastActivityPerformed.Status as Status",
                 "[Activities].LastActivityPerformed.Id as UniqueID",
-                "[Activities].LastActivityPerformed.StatusMessage as Message"
+                "[Activities].LastActivityPerformed.StatusMessage as Message",
+                "[Activities].LastActivityPerformed.ModelType as Type"
             };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
@@ -118,7 +134,9 @@ namespace Models.CLEM.Reporting
                         string simName = this.FindAllAncestors<Simulation>().First().Name;
                         string zoneName = this.FindAllAncestors<ZoneCLEM>().First().Name;
                         var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName);
+                            .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
+                            & (IncludeFolders || (row.Field<int>("Type") != 1))
+                            & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2)) )  );
                         if (filteredData.Any())
                         {
                             data = filteredData.CopyToDataTable();
@@ -196,7 +214,20 @@ namespace Models.CLEM.Reporting
                 if (data != null && data.Rows.Count > 0)
                 {
                     // get unique rows
-                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
+                    List<string> activities;
+                    switch (HandleTimers)
+                    {
+                        case ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart:
+                            activities = data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                            break;
+                        case ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd:
+                            activities = data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                            break;
+                        default:
+                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
+                            break;
+                    }
+                    //List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns
@@ -549,5 +580,29 @@ namespace Models.CLEM.Reporting
             return this.Name;
         }
         #endregion
+
+    }
+
+    /// <summary>
+    /// Style of reporting timers
+    /// </summary>
+    public enum ReportActivitiesPerformedTimerHandleStyle
+    {
+        /// <summary>
+        /// Do not include timers in report
+        /// </summary>
+        Ignore,
+        /// <summary>
+        /// Place timers are position in tree
+        /// </summary>
+        InPosition,
+        /// <summary>
+        /// Place all timers at start
+        /// </summary>
+        PlaceAtStart,
+        /// <summary>
+        /// Place all timers at end
+        /// </summary>
+        PlaceAtEnd
     }
 }

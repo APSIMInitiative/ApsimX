@@ -23,7 +23,6 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
-    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(SpecifyRuminant))]
     [Description("Cohort component for specifying an individual during simulation or initalising the herd at the start")]
     [Version(1, 0, 3, "Includes set previous conception specification")]
@@ -54,6 +53,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Number of individuals")]
         [Required, GreaterThanEqualValue(0)]
+        [Core.Display(VisibleCallback = "DisplayNumber")]
         public double Number { get; set; }
 
         /// <summary>
@@ -84,6 +84,11 @@ namespace Models.CLEM.Resources
         [Description("Breeding sire?")]
         [Required]
         public bool Sire { get; set; }
+
+        /// <summary>
+        /// Display nuber of individuals
+        /// </summary>
+        public bool DisplayNumber { get { return Parent is RuminantInitialCohorts; }  }
 
         /// <summary>
         /// Constructor
@@ -126,10 +131,13 @@ namespace Models.CLEM.Resources
         /// <param name="number">The number of individuals to create</param>
         /// <param name="initialAttributes">The initial attributes found from parent and this cohort</param>
         /// <param name="ruminantType">The breed parameters if overwritten</param>
+        /// <param name="getUniqueID">Switch to determine if unique id is assigned. Not needed when added to purchase list</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
+        public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, RuminantType ruminantType = null, bool getUniqueID = true)
         {
             List<Ruminant> individuals = new List<Ruminant>();
+            if (initialAttributes is null)
+                initialAttributes = new List<ISetAttribute>();
 
             if (number > 0)
             {
@@ -156,20 +164,23 @@ namespace Models.CLEM.Resources
 
                     Ruminant ruminant = Ruminant.Create(Sex, parent, Age, weight);          
 
-                    ruminant.ID = ruminantHerd.NextUniqueID;
+                    if(getUniqueID)
+                        ruminant.ID = ruminantHerd.NextUniqueID;
                     ruminant.Breed = parent.Breed;
                     ruminant.HerdName = parent.Name;
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)
-                        if(Age >= ((parent.NaturalWeaningAge == 0)?parent.GestationLength: parent.NaturalWeaningAge))
+                    {
+                        if (Age >= ((parent.NaturalWeaningAge == 0) ? parent.GestationLength : parent.NaturalWeaningAge))
                         {
                             string limitstring = (parent.NaturalWeaningAge == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge}]";
                             string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
-                        else
-                            ruminant.SetUnweaned();
+                    }
+                    else
+                        ruminant.Wean(false, "Initial state", true);
 
                     if (Sire)
                     {

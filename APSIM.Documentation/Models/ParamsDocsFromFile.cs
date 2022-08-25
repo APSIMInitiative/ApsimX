@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models
         /// <param name="output">Name of the file which will be generated.</param>
         /// <param name="options">Pdf generation options.</param>
         /// <param name="path">(Optional) path to model to be documented.</param>
-        public ParamsDocsFromFile(string input, string output, PdfOptions options, string path = null) : base(input, output, options)
+        public ParamsDocsFromFile(string input, string output, PdfOptions options, string path = null) : base("Interface", input, output, options)
         {
             this.path = path;
         }

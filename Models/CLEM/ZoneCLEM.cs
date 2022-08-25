@@ -79,6 +79,20 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
+        /// Build TransactionCategory from tree structure
+        /// </summary>
+        [Description("Build TransactionCategory from tree structure")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool BuildTransactionCategoryFromTree { get; set; }
+
+        /// <summary>
+        /// Use model name as TransactionCategory
+        /// </summary>
+        [Description("Use component name as TransactionCategory")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool UseModelNameAsTransactionCategory { get; set; }
+
+        /// <summary>
         /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
@@ -271,10 +285,10 @@ namespace Models.CLEM
             var summary = simulation.FindDescendant<Summary>();
 
             // get all validations 
-            ReportErrors(model, summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
             // get all other errors 
-            ReportErrors(model, summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
 
         }
 
@@ -432,7 +446,7 @@ namespace Models.CLEM
                     htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with ");
                     if (rnd.Seed == 0)
                         htmlWriter.Write("every run using a different sequence.");
                     else

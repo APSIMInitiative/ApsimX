@@ -7,13 +7,13 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Base class for all models
     /// </summary>
     [Serializable]
     [ValidParent(typeof(Folder))]
-    [ValidParent(typeof(Replacements))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
     public abstract class Model : IModel
@@ -36,6 +36,9 @@
         /// Gets or sets the name of the model
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>The name of the resource.</summary>
+        public string ResourceName { get; set; }
 
         /// <summary>
         /// Gets or sets a list of child models.   
@@ -506,6 +509,53 @@
         public IVariable FindByPath(string path, bool ignoreCase = false)
         {
             return Locator().GetInternal(path, this, ignoreCase);
+        }
+
+        /// <summary>
+        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
+        /// Note that this can be a variable/property or a model.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="path">The path of the variable/model.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        public IEnumerable<IVariable> FindAllByPath(string path, bool ignoreCase = false)
+        {
+            IEnumerable<IModel> matches = null;
+
+            // Remove a square bracketed model name and change our relativeTo model to 
+            // the referenced model.
+            if (path.StartsWith("["))
+            {
+                int posCloseBracket = path.IndexOf(']');
+                if (posCloseBracket != -1)
+                {
+                    string modelName = path.Substring(1, posCloseBracket - 1);
+                    path = path.Remove(0, posCloseBracket + 1).TrimStart('.');
+                    matches = FindAllInScope(modelName);
+                    if (!matches.Any())
+                    {
+                        // Didn't find a model with a name matching the square bracketed string so
+                        // now try and look for a model with a type matching the square bracketed string.
+                        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
+                        if (modelTypes.Length == 1)
+                            matches = FindAllInScope().Where(m => modelTypes[0].IsAssignableFrom(m.GetType()));
+                    }
+                }
+            }
+            else
+                matches = new IModel[] { this };
+
+            foreach (Model match in matches)
+            {
+                if (string.IsNullOrEmpty(path))
+                    yield return new VariableObject(match);
+                else
+                {
+                    var variable = Locator().GetInternal(path, match, ignoreCase);
+                    if (variable != null)
+                        yield return variable;
+                }
+            }
         }
 
         /// <summary>

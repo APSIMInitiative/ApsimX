@@ -55,14 +55,6 @@ namespace Models.CLEM.Activities
         [Required]
         public bool MoveSucklings { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityMove()
-        {
-            TransactionCategory = "Livestock.[Type].Move";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

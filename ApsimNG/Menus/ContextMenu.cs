@@ -753,8 +753,7 @@
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         [ContextMenu(MenuName = "Show Model Structure",
-                     IsToggle = true,
-                     AppliesTo = new Type[] { typeof(ModelCollectionFromResource) })]
+                     IsToggle = true)]
         public void ShowModelStructure(object sender, EventArgs e)
         {
             try
@@ -762,8 +761,10 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
+                    hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = !child.IsHidden;
+                        child.IsHidden = hidden; 
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);
@@ -839,7 +840,7 @@
                     return;
                 
                 // Don't allow users to change read-only status of released models.
-                if (model is ModelCollectionFromResource || model.FindAncestor<ModelCollectionFromResource>() != null)
+                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
                     return;
 
                 bool readOnly = !model.ReadOnly;

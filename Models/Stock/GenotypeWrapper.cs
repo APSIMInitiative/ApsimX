@@ -3,13 +3,10 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
-    using Models.Core.Run;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Xml;
+    using static Models.Core.Overrides;
 
     /// <summary>
     /// Wraps a single genotype and lazy loads from a resource file if it needs to.
@@ -111,7 +108,7 @@
         private Genotype ReadParametersFromPRM(List<string> parameterXmlSections)
         {
             // Parse the xml
-            var overrides = new List<PropertyReplacement>();
+            var overrides = new List<Override>();
             foreach (var parameterXml in parameterXmlSections)
             {
                 // Load XML
@@ -135,16 +132,16 @@
         /// </summary>
         /// <param name="parameterNode"></param>
         /// <returns></returns>
-        private List<PropertyReplacement> ReadPRMSection(XmlNode parameterNode)
+        private List<Override> ReadPRMSection(XmlNode parameterNode)
         {
-            var commands = new List<PropertyReplacement>();
+            var commands = new List<Override>();
             ConvertScalarToCommand(parameterNode, "editor", "sEditor", commands);
             ConvertScalarToCommand(parameterNode, "edited", "sEditDate", commands);
             var dairyString = XmlUtilities.Value(parameterNode, "dairy");
             if (dairyString == "true")
-                commands.Add(new PropertyReplacement("bDairyBreed", true));
+                commands.Add(new Override("bDairyBreed", true, Override.MatchTypeEnum.NameAndType));
             else if (dairyString == "false")
-                commands.Add(new PropertyReplacement("bDairyBreed", false));
+                commands.Add(new Override("bDairyBreed", false, Override.MatchTypeEnum.NameAndType));
             ConvertScalarToCommand(parameterNode, "srw", "BreedSRW", commands);
             ConvertScalarToCommand(parameterNode, "c-pfw", "FleeceRatio", commands);
             ConvertScalarToCommand(parameterNode, "c-mu", "MaxFleeceDiam", commands);
@@ -197,11 +194,11 @@
         /// <param name="parameterName">The name of the XML child parameter.</param>
         /// <param name="animalParamName">The name of a GrazPlan parameter.</param>
         /// <param name="commands">The list of comamnds to add to.</param>
-        private static void ConvertScalarToCommand(XmlNode parameterNode, string parameterName, string animalParamName, List<PropertyReplacement> commands)
+        private static void ConvertScalarToCommand(XmlNode parameterNode, string parameterName, string animalParamName, List<Override> commands)
         {
             var value = XmlUtilities.Value(parameterNode, parameterName);
             if (!string.IsNullOrEmpty(value))
-                commands.Add(new PropertyReplacement(animalParamName, value));
+                commands.Add(new Override(animalParamName, value, Override.MatchTypeEnum.NameAndType));
         }
 
         /// <summary>
@@ -213,7 +210,7 @@
         /// <param name="commands">The list of comamnds to add to.</param>
         /// <param name="numValuesInArray">The number of values that should be in the array.</param>
         private static void ConvertArrayToCommands(XmlNode parentNode, string parameterName,
-                                                   string animalParamName, List<PropertyReplacement> commands,
+                                                   string animalParamName, List<Override> commands,
                                                    int numValuesInArray)
         {
             var parameterNode = FindChildWithPrefix(parentNode, parameterName);
@@ -231,12 +228,12 @@
                             if (animalParamName == "IntakeLactC")
                             {
                                 if (i == 0)
-                                    commands.Add(new PropertyReplacement($"FDairyIntakePeak", values[i]));
+                                    commands.Add(new Override($"FDairyIntakePeak", values[i], Override.MatchTypeEnum.NameAndType));
                                 else
-                                    commands.Add(new PropertyReplacement($"{animalParamName}[{i + 1}]", values[i])); 
+                                    commands.Add(new Override($"{animalParamName}[{i + 1}]", values[i], Override.MatchTypeEnum.NameAndType)); 
                             }
                             else
-                                commands.Add(new PropertyReplacement($"{animalParamName}[{i + 2}]", values[i]));  // 1 based array indexing before equals sign.
+                                commands.Add(new Override($"{animalParamName}[{i + 2}]", values[i], Override.MatchTypeEnum.NameAndType));  // 1 based array indexing before equals sign.
                         }
                     }
                 }
@@ -248,7 +245,7 @@
                     {
                         // There must be an index specified e.g. c-w-0
                         var index = Convert.ToInt32(nodeName.Replace(parameterName, ""));
-                        commands.Add(new PropertyReplacement($"{animalParamName}[{index + 1}]", stringValue));   // 1 based array indexing before equals sign.
+                        commands.Add(new Override($"{animalParamName}[{index + 1}]", stringValue, Override.MatchTypeEnum.NameAndType));   // 1 based array indexing before equals sign.
                     }
                     else
                     {
@@ -266,7 +263,7 @@
                         stringValue = StringUtilities.BuildString(values, ",");
 
                         // Create the command.
-                        commands.Add(new PropertyReplacement(animalParamName, stringValue));
+                        commands.Add(new Override(animalParamName, stringValue, Override.MatchTypeEnum.NameAndType));
                     }
                 }
             }
@@ -298,7 +295,7 @@
         /// <param name="animalParamNames">The names of a multiple GrazPlan paramaters, one for each parameter value.</param>
         /// <param name="commands">The list of comamnds to add to.</param>
         private static void ConvertArrayToScalars(XmlNode parameterNode, string parameterName,
-                                                  string[] animalParamNames, List<PropertyReplacement> commands)
+                                                  string[] animalParamNames, List<Override> commands)
         {
             var stringValue = XmlUtilities.Value(parameterNode, parameterName);
             if (!string.IsNullOrEmpty(stringValue))
@@ -309,7 +306,7 @@
                 for (int i = 0; i < values.Length; i++)
                 {
                     if (!string.IsNullOrEmpty(values[i]))
-                        commands.Add(new PropertyReplacement(animalParamNames[i], values[i]));
+                        commands.Add(new Override(animalParamNames[i], values[i], Override.MatchTypeEnum.NameAndType));
                 }
             }
         }

@@ -65,14 +65,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public ProductStoreType CashmereStoreType { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityShear()
-        {
-            TransactionCategory = "Livestock.[Type].Shear";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
@@ -214,8 +206,8 @@ namespace Models.CLEM.Activities
                         break;
                 }
                 // add clip to stores
-                (WoolStoreType as IResourceType).Add(kgWoolShorn, this, this.PredictedHerdName, TransactionCategory);
-                (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdName, TransactionCategory);
+                (WoolStoreType as IResourceType).Add(kgWoolShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial(shorn != numberToDo || MathUtilities.IsPositive(amountToDo));
             }

@@ -84,7 +84,7 @@ namespace Models.CLEM.Resources
                 if (child is OtherAnimalsTypeCohort)
                 {
                     ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
-                    Add(child, this, "", "Setup");
+                    Add(child, null, null, "Initial numbers");
                 }
             }
         }

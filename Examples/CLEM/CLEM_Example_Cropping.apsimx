@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 377,
-  "Version": 151,
+  "ExplorerWidth": 285,
+  "Version": 152,
   "Name": "Simulations",
   "Children": [
     {
@@ -65,6 +65,8 @@
               "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
+              "BuildTransactionCategoryFromTree": false,
+              "UseModelNameAsTransactionCategory": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
@@ -659,8 +661,8 @@
                     },
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                      "TransactionCategory": "Folder",
                       "OnPartialResourcesAvailableAction": 0,
+                      "TransactionCategory": "Folder",
                       "Notes": null,
                       "SelectedTab": null,
                       "Name": "Tomato Paste",
@@ -842,6 +844,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
@@ -862,6 +866,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
@@ -882,6 +888,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
@@ -1534,6 +1542,8 @@
               "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
+              "BuildTransactionCategoryFromTree": false,
+              "UseModelNameAsTransactionCategory": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
@@ -1736,8 +1746,8 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                      "TransactionCategory": "Folder",
                       "OnPartialResourcesAvailableAction": 0,
+                      "TransactionCategory": "Folder",
                       "Notes": null,
                       "SelectedTab": null,
                       "Name": "Manage crops",
@@ -2103,8 +2113,8 @@
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
-                                      "OffsetMonthHarvestStart": -5,
-                                      "OffsetMonthHarvestStop": -5,
+                                      "OffsetMonthHarvestStart": -4,
+                                      "OffsetMonthHarvestStop": -4,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "PlantSorghum",
@@ -2285,7 +2295,7 @@
                                   "BankAccount": null,
                                   "Identifier": null,
                                   "BankAccountName": "Finances.General account",
-                                  "Measure": "per ha",
+                                  "Measure": "per ha harvested",
                                   "Amount": 218.0,
                                   "TransactionCategory": "Crop.[Activity]",
                                   "OnPartialResourcesAvailableAction": 0,
@@ -2423,7 +2433,7 @@
                       "ReportAnimalWeight": false,
                       "ReportLandEntire": false,
                       "ReportLabourIndividuals": false,
-                      "SelectedTab": null,
+                      "SelectedTab": "Data",
                       "VariableNames": [
                         "Labour",
                         "ProductStore",
@@ -2464,8 +2474,10 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
-                      "SelectedTab": null,
+                      "SelectedTab": "Properties",
                       "VariableNames": [
                         "Labour"
                       ],
@@ -2484,8 +2496,10 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
-                      "SelectedTab": null,
+                      "SelectedTab": "Data",
                       "VariableNames": [
                         "Finances"
                       ],
@@ -2504,8 +2518,10 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
-                      "SelectedTab": null,
+                      "SelectedTab": "Data",
                       "VariableNames": [
                         "ProductStore"
                       ],
@@ -2531,8 +2547,10 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
-                      "SelectedTab": null,
+                      "SelectedTab": "Data",
                       "VariableNames": null,
                       "EventNames": null,
                       "GroupByVariableName": null,

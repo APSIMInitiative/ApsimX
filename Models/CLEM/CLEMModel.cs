@@ -503,7 +503,8 @@ namespace Models.CLEM
                         }
                         else
                         {
-                            htmlWriter.Write((item as CLEMModel).GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
+                            if(item is CLEMModel)
+                                htmlWriter.Write((item as CLEMModel).GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
                         }
                     }
                     if(!models.Any() && MissingText!="")
@@ -690,11 +691,13 @@ namespace Models.CLEM
                     }
                     htmlWriter.Write("</div>");
 
-                    if (((this as CLEMActivityBase).TransactionCategory ?? "") != "")
-                        htmlWriter.Write($"<div class=\"partialdiv\">tag: {(this as CLEMActivityBase).TransactionCategory}</div>");
+                    if (this is CLEMActivityBase)
+                    {
+                        string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase);
+                    if (transCat != "")
+                            htmlWriter.Write($"<div class=\"partialdiv\">tag: {transCat}</div>");
+                    }
                 }
-
-                //htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
                 return htmlWriter.ToString(); 
             }
         }

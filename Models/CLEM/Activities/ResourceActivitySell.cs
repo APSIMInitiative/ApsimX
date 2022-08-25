@@ -64,14 +64,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceActivitySell()
-        {
-            TransactionCategory = "Sales";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {

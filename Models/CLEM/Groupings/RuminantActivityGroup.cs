@@ -33,7 +33,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummary()
         {
             string html = "<div class=\"filtername\">";
-            html += "This filter is applied to this activity and all activities within this branch</div>";
+            html += "This ruminant filter is applied to this activity and all activities within this branch</div>";
             return html;
         }
 

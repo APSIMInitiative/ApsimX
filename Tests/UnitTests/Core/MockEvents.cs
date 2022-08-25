@@ -16,7 +16,7 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
-        public void ConnectEvents(List<IModel> models)
+        public void ReconnectEvents(string publisherName = null, string eventName = null)
         {
             throw new NotImplementedException();
         }

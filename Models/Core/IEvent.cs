@@ -25,8 +25,11 @@ namespace Models.Core
         /// <summary>Connect all events in the specified simulation.</summary>
         void ConnectEvents();
 
-        /// <summary>Connect all events in the specified model to simulation events.</summary>
-        void ConnectEvents(List<IModel> models);
+        /// <summary>Disconnect and reconnect specified event in the specified simulation
+        /// This ensures correct tree-based model order after models are added during runtime</summary>
+        /// <param name="publisherName">Name of publishing model</param>
+        /// <param name="eventName">Name of event</param>
+        void ReconnectEvents(string publisherName = null, string eventName = null);
 
         /// <summary>Connect all events in the specified simulation.</summary>
         void DisconnectEvents();

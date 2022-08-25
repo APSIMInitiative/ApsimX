@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, this, "", "Starting value");
+                Add(initialpPool, null, null, "Starting value");
             }
         }
 

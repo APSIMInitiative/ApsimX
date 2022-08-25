@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM.Activities
 {
@@ -31,11 +32,6 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        [NonSerialized]
-        private IEvent events = null;
-
         /// <summary>
         /// Number of hours grazed
         /// Based on 8 hour grazing days
@@ -45,22 +41,15 @@ namespace Models.CLEM.Activities
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityGrazeAll()
-        {
-            TransactionCategory = "Livestock.Grazing";
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
-            List<IModel> grazePastureList = new List<IModel>();
             if (grazeFoodStore != null)
             {
                 this.InitialiseHerd(true, true);
@@ -69,13 +58,17 @@ namespace Models.CLEM.Activities
                 Guid currentUid = UniqueID;
                 foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
+                    string transCat = "";
+                    if (!buildTransactionFromTree)
+                        transCat = TransactionCategory;
+
                     RuminantActivityGrazePasture grazePasture = new RuminantActivityGrazePasture
                     {
                         ActivitiesHolder = ActivitiesHolder,
                         CLEMParentName = CLEMParentName,
                         GrazeFoodStoreTypeName = pastureType.NameWithParent,
                         HoursGrazed = HoursGrazed,
-                        TransactionCategory = TransactionCategory,
+                        TransactionCategory = transCat,
                         GrazeFoodStoreModel = pastureType,
                         Clock = clock,
                         Parent = this,
@@ -102,7 +95,7 @@ namespace Models.CLEM.Activities
                             Name = grazePasture.Name + "_" + herdType.Name,
                             OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
                             ActivitiesHolder = ActivitiesHolder,
-                            TransactionCategory = TransactionCategory,
+                            TransactionCategory = transCat,
                             Status = ActivityStatus.NoTask
                         };
                         currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
@@ -115,11 +108,9 @@ namespace Models.CLEM.Activities
                         grazePastureHerd.InitialiseHerd(true, true);
                         grazePasture.Children.Add(grazePastureHerd);
                     }
-
-                    grazePastureList.Add(grazePasture);
-                    Children.Add(grazePasture);
+                    Structure.Add(grazePasture, this);
                 }
-                events.ConnectEvents(grazePastureList);
+                this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
             }
             else
                 Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);

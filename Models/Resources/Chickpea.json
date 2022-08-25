@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 152,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -8622,11 +8622,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Australian cvv",
               "Children": [
                 {
@@ -8884,7 +8884,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "ICRISAT cvv",
               "Children": [
                 {
@@ -9003,7 +9003,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Other cvv",
               "Children": [
                 {
@@ -9058,7 +9058,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Archived Cultivars",
           "Children": [
             {
