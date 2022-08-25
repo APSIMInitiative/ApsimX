@@ -73,6 +73,9 @@ namespace Models.PMF.Organs
         /// <summary>The parent plant</summary>
         public Plant plant { get; set; }
 
+        /// <summary>The root organ</summary>
+        public Root root = null;
+
         /// <summary>Is the Weirdo model present in the simulation?</summary>
         public bool IsWeirdoPresent { get; set; }
 
@@ -186,6 +189,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
+        /// <param name="Root">The parent root organ</param>
         /// <param name="soil">The soil in the zone.</param>
         /// <param name="depth">Root depth (mm)</param>
         /// <param name="initialDM">Initial dry matter</param>
@@ -194,12 +198,13 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
-        public ZoneState(Plant Plant, Soil soil, double depth,
+        public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
                          NutrientPoolFunctions initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost)
         {
             this.Soil = soil;
             this.plant = Plant;
+            this.root = Root;
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
@@ -267,6 +272,7 @@ namespace Models.PMF.Organs
                     RightDist = plant.SowingData.RowSpacing * 0.5;
                 }
             }
+            root.RootShape.CalcRootProportionInLayers(this);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -343,6 +349,8 @@ namespace Models.PMF.Organs
             Depth = Math.Min(Depth, MaxDepth);
 
             RootFront = Depth;
+            root.RootShape.CalcRootProportionInLayers(this);
+            root.RootShape.CalcRootVolumeProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen

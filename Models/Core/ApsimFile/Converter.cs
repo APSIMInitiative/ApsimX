@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 155; } }
+        public static int LatestVersion { get { return 156; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4590,11 +4590,32 @@ namespace Models.Core.ApsimFile
                 cultivarFolder["$type"] = "Models.Core.Folder, Models";
         }
 
+       
+        /// <summary>
+        /// Change the namespace of the Coordinate type.
+        /// Change the namespace of the DirectedGraph type.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion156(JObject root, string fileName)
+        {
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemandAndPriority"))
+            {
+                    demand["$type"] = "Models.PMF.NutrientDemandFunctions, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemand"))
+            {
+                demand["$type"] = "Models.PMF.NutrientPoolFunctions, Models";
+            }
+        } 
+
         /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
+        /// 
+
         private static void UpgradeToVersion889(JObject root, string fileName)
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))
