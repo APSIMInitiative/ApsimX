@@ -33,10 +33,6 @@
         [Link]
         private Plant parentPlant = null;
 
-        /// <summary>The parent organ</summary>
-        [Link(Type = LinkType.Ancestor)]
-        private Organ parentOrgan= null;
- 
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRer = null;
@@ -74,7 +70,7 @@
         IFunction DeadAreaIndex = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.PlantType+ "_" + parentOrgan.Name; } }
+        public string CanopyType { get { return Plant.PlantType+ "_" + this.Parent.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
