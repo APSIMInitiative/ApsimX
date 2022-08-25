@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 156,
+  "Version": 155,
   "Name": "Simulations",
   "Children": [
     {
@@ -2881,7 +2881,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "DMDemandPriorityFactors",
               "Children": [
                 {
@@ -2902,7 +2902,7 @@
               ]
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "NDemandPriorityFactors",
               "Children": [
                 {
@@ -3363,7 +3363,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -3560,7 +3560,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -3692,7 +3692,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "InitialWt",
               "Children": [
                 {
@@ -5387,7 +5387,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "DMDemandPriorityFactors",
               "Children": [
                 {
@@ -5408,7 +5408,7 @@
               ]
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "NDemandPriorityFactors",
               "Children": [
                 {
@@ -5877,7 +5877,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -6065,7 +6065,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -6196,7 +6196,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "InitialWt",
               "Children": [
                 {
@@ -6715,7 +6715,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -6936,7 +6936,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientDemandFunctions, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -7067,7 +7067,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.NutrientPoolFunctions, Models",
+              "$type": "Models.PMF.BiomassDemand, Models",
               "Name": "InitialWt",
               "Children": [
                 {
