@@ -4607,6 +4607,18 @@ namespace Models.Core.ApsimFile
             {
                 demand["$type"] = "Models.PMF.NutrientPoolFunctions, Models";
             }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "EnergyBalance"))
+            {
+                demand["$type"] = "Models.PMF.EnergyBalance, Models";
+            }
+            
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, "BiomassDemand", "NutrientPoolFunctions");
+                JsonUtilities.ReplaceManagerCode(manager, "BiomassDemandAndPriority", "NutrientDemandFunctions");
+                JsonUtilities.ReplaceManagerCode(manager, "Reallocation", "ReAllocation");
+                JsonUtilities.ReplaceManagerCode(manager, "Retranslocation", "ReTranslocation");
+            }
         } 
 
         /// <summary>
