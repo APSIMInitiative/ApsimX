@@ -9,6 +9,7 @@ using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {
@@ -16,7 +17,7 @@ namespace Models.Functions
     /// [DocumentMathFunction /]
     /// </summary>
     [Serializable]
-    [Description("Calculate WaterSenescenceFunction")]
+    [Description("Water Senescence")]
     public class WaterSenescenceFunction : Model, IFunction
     {
         [Link(Type = LinkType.Ancestor)]
@@ -132,6 +133,17 @@ namespace Models.Functions
                 totalSDRatio -= sdRatioQ.Dequeue();
             }
             return MathUtilities.Divide(totalSDRatio, sdRatioQ.Count, 0);
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            List<ITag> senescenceTags = new List<ITag>();
+            senescenceTags.AddRange(senWaterTimeConst.Document());
+            senescenceTags.AddRange(senThreshold.Document());
+            senescenceTags.Add(new Paragraph("SDRatio is the Water Supply divided by the Water Demand (found in Arbitrator). It will return 1.0 unless there is less Supply than Demand"));
+
+            yield return new Section("Water Senescence", senescenceTags);
         }
 
     }

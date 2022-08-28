@@ -53,12 +53,6 @@ namespace Models.PMF.Arbitrator
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction MaxDiffusion = null;
 
-        //[Link]
-        //private SorghumLeaf leaf = null;
-
-        //[Link]
-        //private Phenology phenology = null;
-
         private const double kgha2gsm = 0.1;
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
         [JsonIgnore]
@@ -67,13 +61,20 @@ namespace Models.PMF.Arbitrator
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
         [JsonIgnore]
         public double[] Diffusion { get; private set; }
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
+
+        /// <summary>N Uptaken through Mass Flow</summary>
+        [JsonIgnore]
         public double NMassFlowSupply { get; private set; }
 
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
+        /// <summary>N Teken up through Diffusion.</summary>
+        [JsonIgnore]
         public double NDiffusionSupply { get; private set; }
+
+        //cache indexes on start of simulation
+        private int grainIndex = 0;
+        private int rootIndex = 1;
+        private int leafIndex = 2;
+        private int stemIndex = 4;
 
         /// <summary>The method used to arbitrate N allocations</summary>
         public List<ZoneWaterAndN> GetUptakeEstimates(SoilState soilstate, IArbitration[] Organs)
@@ -84,12 +85,6 @@ namespace Models.PMF.Arbitrator
 
             //this function is called 4 times as part of estimates
             //shouldn't set public variables in here
-
-            var grainIndex = 0;  
-            //Organs.ToList().FindIndex(o => (o as IModel).Name == "Grain")
-            var rootIndex = 1;
-            var leafIndex = 2;
-            var stemIndex = 4;
 
             var rootDemand = N.StructuralDemand[rootIndex] + N.MetabolicDemand[rootIndex];
             var stemDemand = /*N.StructuralDemand[stemIndex] + */N.MetabolicDemand[stemIndex];
@@ -126,8 +121,6 @@ namespace Models.PMF.Arbitrator
 
                 //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
 
-                //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
-                //sorghum uses Diffusion & Massflow variables currently
                 double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
                 double[] organNH4Supply = new double[zone.NH4N.Length];
 
@@ -136,7 +129,6 @@ namespace Models.PMF.Arbitrator
                 {
                     CalculateNitrogenSupply(myZone, zone);
 
-                    //new code
                     double[] diffnAvailable = new double[myZone.Diffusion.Length];
                     for (var i = 0; i < myZone.Diffusion.Length; ++i)
                     {
@@ -147,7 +139,6 @@ namespace Models.PMF.Arbitrator
 
                     var potentialSupply = totalMassFlow + totalDiffusion;
                     var actualDiffusion = 0.0;
-                    //var actualMassFlow = DltTT > 0 ? totalMassFlow : 0.0;
 
                     if (TTFMFromFlowering.Value() > NUptakeCease.Value())
                         totalMassFlow = 0;
@@ -172,7 +163,6 @@ namespace Models.PMF.Arbitrator
                     {
                         var massFlowLayerFraction = MathUtilities.Divide(myZone.MassFlow[layer], totalMassFlow, 0.0);
                         var diffusionLayerFraction = MathUtilities.Divide(diffnAvailable[layer], totalDiffusion, 0.0);
-                        //organNH4Supply[layer] = massFlowLayerFraction * root.MassFlow[layer];
                         organNO3Supply[layer] = (massFlowLayerFraction * actualMassFlow +
                             diffusionLayerFraction * actualDiffusion) / kgha2gsm;  //convert to kg/ha
                     }
@@ -217,10 +207,6 @@ namespace Models.PMF.Arbitrator
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
                 myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm) * myZone.RootProportions[layer];
-
-                //NH4Supply[layer] = no3massFlow;
-                //onyl 2 fields passed in for returning data. 
-                //actual uptake needs to distinguish between massflow and diffusion
             }
         }
         /// Calculating the actual water uptake across all zones.
@@ -236,9 +222,22 @@ namespace Models.PMF.Arbitrator
             //NUptakeSupply units should be g/m^2
             for (int i = 0; i < Organs.Count(); i++)
                 N.UptakeSupply[i] = NSupply / zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+        }
 
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        virtual protected void OnPlantSowing(object sender, SowingParameters data)
+        {
+            NDiffusionSupply = 0.0;
+            NMassFlowSupply = 0.0;
 
-
+            var organNames = Arbitrator.OrganNames;
+            grainIndex = organNames.IndexOf("Grain");
+            rootIndex = organNames.IndexOf("Root"); 
+            leafIndex = organNames.IndexOf("Leaf");
+            stemIndex = organNames.IndexOf("Stem");
         }
     }
 }
