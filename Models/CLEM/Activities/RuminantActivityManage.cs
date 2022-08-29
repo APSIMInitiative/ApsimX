@@ -863,7 +863,7 @@ namespace Models.CLEM.Activities
                             number = uniqueIndividuals.Count();
                         }
                         break;
-                    case "Adjust - new grow out females ":
+                    case "Adjust - new grow out females":
                         if (GrowOutYoungFemales)
                         {
                             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectFemalesForGrowOut");
