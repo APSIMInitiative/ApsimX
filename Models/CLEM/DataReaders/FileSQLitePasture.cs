@@ -36,6 +36,7 @@ namespace Models.CLEM
 
         private List<ValidationResult> validationResults;
         private RainfallShuffler shuffler = null;
+        private RandomNumberGenerator rndClem = null;
 
         /// <summary>
         /// All the distinct Stocking Rates that were found in the database
@@ -223,6 +224,8 @@ namespace Models.CLEM
         {
             // look for a shuffler
             shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
+            if (shuffler != null)
+                rndClem = FindInScope<RandomNumberGenerator>();
         }
 
         /// <summary>
@@ -662,7 +665,7 @@ namespace Models.CLEM
                 " AND "+StkRateColumnName+" = " + stkRateCategory;
 
             Dictionary<int, int> orderOfYears = new Dictionary<int, int>();
-            if (shuffler != null)
+            if (shuffler != null && (rndClem?.Iteration??-9999) != shuffler.DoNotShuffleIteration)
             {
                 // need to check for all random year month matches in database
                 // this takes into account keeping seasonal rainfall together while shuffling the years
