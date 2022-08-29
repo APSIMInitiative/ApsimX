@@ -61,7 +61,7 @@ namespace UserInterface.Views
                         presenter.SimulationFilter = new List<string>() { tab.SimulationName };
                         tab.Presenter.ApsimXFile.Links.Resolve(presenter);
 
-                        GraphView view = new GraphView();
+                        GraphView view = new GraphView(null);
                         presenter.Attach(tab.Graphs[n].Graph, view, tab.Presenter, tab.Graphs[n].Cache);
                         GraphViewCreated?.Invoke(this, new CustomDataEventArgs<IGraphView>(view));
                         view.ShowControls(false);

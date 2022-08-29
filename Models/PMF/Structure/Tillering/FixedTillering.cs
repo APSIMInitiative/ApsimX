@@ -8,6 +8,7 @@ using Models.PMF.Phen;
 using Models.Utilities;
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
@@ -56,9 +57,11 @@ namespace Models.PMF.Struct
 		[Link]
 		Phenology phenology = null;
 
-		/// <summary>Number of Fertile Tillers at Harvest</summary>
-		public double FertileTillerNumber { get; set; }
+        /// <summary>Number of Fertile Tillers at Harvest</summary>
+        [JsonIgnore]
+        public double FertileTillerNumber { get; set; }
         /// <summary>Current Number of Tillers</summary>
+        [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
 
         private int floweringStage;
@@ -125,7 +128,7 @@ namespace Models.PMF.Struct
 
 		private double calcLeafAppearance(Culm culm)
 		{
-			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
+			var leavesRemaining = Math.Max(0.0, culms.FinalLeafNo - culm.CurrentLeafNo);
 			var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
 			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
@@ -223,10 +226,19 @@ namespace Models.PMF.Struct
             CurrentTillerNumber += fractionToAdd;
 		}
 
-		/// <summary>Called when crop is sowed</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("PlantSowing")]
+        /// <summary> Reset Culms at start of the simulation </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void StartOfSim(object sender, EventArgs e)
+        {
+			FertileTillerNumber = 0.0;
+			CurrentTillerNumber = 0.0;
+
+        }
+
+        /// <summary>Called when crop is sowed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
 		protected void OnPlantSowing(object sender, SowingParameters data)
 		{
 			if (data.Plant == plant)

@@ -52,9 +52,11 @@ namespace Models.PMF.Arbitrator
         public double WAllocated { get; protected set; }
 
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
+		[JsonIgnore]
         public double SDRatio { get; set; }
 
         /// <summary>Total available SW.</summary>
+		[JsonIgnore]
         public double SWAvail { get; private set; }
 
         /// <summary>Things the plant model does when the simulation starts</summary>
@@ -69,7 +71,8 @@ namespace Models.PMF.Arbitrator
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;
-            SDRatio = 0;
+            SDRatio = 0.0;
+            SWAvail = 0.0;
         }
 
         /// <summary>The method used to arbitrate N allocations</summary>
