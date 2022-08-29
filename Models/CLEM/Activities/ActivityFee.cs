@@ -90,6 +90,8 @@ namespace Models.CLEM.Activities
                 string relatesTo = null;
                 if (Parent as CLEMRuminantActivityBase != null)
                     relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdNameToDisplay;
+                if (Parent as ResourceActivityBuy != null)
+                    relatesTo = (Parent as ResourceActivityBuy).ResourceName;
 
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
