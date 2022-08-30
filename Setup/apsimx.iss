@@ -71,8 +71,8 @@ Source: ..\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Fl
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
 Source: ..\Examples\*; DestDir: {autodocs}\Apsim\Examples; Flags: recursesubdirs
-Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdirs
-Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs
+Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdirs; skipifsourcedoesntexist
+Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs; skipifsourcedoesntexist
 
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
