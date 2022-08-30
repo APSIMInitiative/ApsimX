@@ -138,7 +138,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Slurp"),
                 ModelWithNoResourceRow("SoilArbitrator"),
                 SoilWaterDocs(),
-                CreateUnderReviewPlantRow("Sorghum"),
+                StandardPmfPlantRow("Sorghum"),
                 StandardPmfPlantRow("Soybean"),
                 SugarcaneRow(),
                 StockRow(),
