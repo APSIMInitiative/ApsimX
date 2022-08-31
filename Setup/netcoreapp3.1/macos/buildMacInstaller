@@ -53,7 +53,10 @@ copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.
 copy "$DIR/launcher.sh" $appdir/MacOS/ApsimNG
 copy $template/Contents/Resources/ApsimNG.icns $appdir/Resources/
 copy "$apsimx/Examples" $appdir/Resources/
-copy "$apsimx/Tests/UnderReview" $appdir/Resources/
+if [[ -d "$apsimx/Tests/UnderReview" ]];
+then
+    copy "$apsimx/Tests/UnderReview" $appdir/Resources/
+fi
 copy "$apsimx/ApsimNG/Resources/world" $appdir/Resources/ApsimNG/Resources/
 copy "$apsimx/bin/Release/netcoreapp3.1/osx-x64/publish/*" $appdir/Resources/bin/
 copy "$apsimx/APSIM.bib" $appdir/Resources/
