@@ -35,10 +35,10 @@ namespace Models.PMF
 
         /// <summary> List of Child Functions to represent each organ</summary>
         /// 
-        public IEnumerable<IFunction> ChildFunctions;
+        public IEnumerable<IFunction> ChildFunctions { get; set; }
 
         /// <summary>Dictionary containing each organs partitioning fraction</summary>
-        public Dictionary<string, double> PartitionFractions = new Dictionary<string, double>();
+        public Dictionary<string, double> PartitionFractions { get; set; } = new Dictionary<string, double>();
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>

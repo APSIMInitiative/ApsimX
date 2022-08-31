@@ -17,7 +17,7 @@ namespace Models.Functions.RootShape
     public class RootShapeCylinder : Model, IRootShape
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(IStuffForRootShapeThing zone)
+        public void CalcRootProportionInLayers(IRootGeometryData zone)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
             zone.RootArea = (zone.RightDist + zone.LeftDist) * zone.Depth / 1e6;

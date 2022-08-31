@@ -146,10 +146,10 @@
         [JsonIgnore]
         public double WaterAllocation {
             get { return waterAllocation; }
-            set { waterAllocation = value; allocationMade(); }
+            set { waterAllocation = value; AllocationMade(); }
         }
 
-        private void allocationMade()
+        private void AllocationMade()
         {
             Fw = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
         }

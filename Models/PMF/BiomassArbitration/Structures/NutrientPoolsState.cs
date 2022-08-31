@@ -2,22 +2,8 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
-    /// <summary>
-    /// An interface that any class that has a NutrientPoolState child must implement
-    /// </summary>
-    public interface IParentOfNutrientsPoolState
-    {
-        /// <summary>Update own properties and tell parent class to update its properties that are derived from this</summary>
-        void UpdateProperties();
-    }
 
     /// <summary>
     /// The class that holds states of Structural, Metabolic and Storage components of a resource

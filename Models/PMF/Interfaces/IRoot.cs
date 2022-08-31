@@ -20,16 +20,4 @@ namespace Models.PMF.Interfaces
         /// <summary>Root length density modifier due to damage.</summary>
         double RootLengthDensityModifierDueToDamage { get; set; }
     }
-    
-    /// <summary>
-    /// Like Grout but just for the roots
-    /// </summary>
-    public interface IAmRoout : IOrgan, IWaterNitrogenUptake
-    {
-        /// <summary>Root length density.</summary>
-        double[] LengthDensity { get; }
-
-        /// <summary>Root length density modifier due to damage.</summary>
-        double RootLengthDensityModifierDueToDamage { get; set; }
-    }
 }

@@ -10,50 +10,9 @@ using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
-    /// <summary>
-    /// Interface for root zone objects to talk to root shape model
-    /// </summary>
-    public interface IStuffForRootShapeThing
-    {
-        /// <summary>The soil in this zone</summary>
-        Soil Soil { get; set; }
-
-       /// <summary>The parent plant</summary>
-        Plant plant { get; set; }
-
-        /// <summary>Gets or sets the length.</summary>
-        double Length { get; set; }
-
-        /// <summary>Gets or sets the depth.</summary>
-        [Units("mm")]
-        double Depth { get; set; }
-
-        /// <summary>Gets the RootFront</summary>
-        double RootLength { get; }
-
-        /// <summary>Gets the RootFront</summary>
-        double RootFront { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        double RootSpread { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        double LeftDist { get; set; }
-        /// <summary>Gets the RootFront</summary>
-        double RightDist { get; set; }
-
-        /// <summary>Gets the RootProportions</summary>
-        double[] RootProportions { get; set; }
-
-        /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
-        double[] LLModifier { get; set; }
-
-        /// <summary>Soil area occipied by roots</summary>
-        [Units("m2")]
-        double RootArea { get; set; }
-    }
-
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class ZoneState: Model, IStuffForRootShapeThing
+    public class ZoneState: Model, IRootGeometryData
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
@@ -87,9 +46,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The cost for remobilisation</summary>
         private IFunction remobilisationCost = null;
-
-        /// <summary>Zone name</summary>
-        new public string Name = null;
 
         /// <summary>The water uptake</summary>
         public double[] WaterUptake { get; set; }

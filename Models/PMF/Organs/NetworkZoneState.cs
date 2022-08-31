@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model, IStuffForRootShapeThing
+    public class NetworkZoneState : Model, IRootGeometryData
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
