@@ -84,7 +84,8 @@ namespace UserInterface.Views
                     PageDown();
                 else if (evnt.Key == Keys.PageUp)
                     PageUp();
-
+                else if (evnt.Key == Keys.Delete)
+                    Delete();
                 sheet.Refresh();
             }
             else if (sheet.CellEditor != null && evnt.KeyValue < 255)
@@ -228,6 +229,12 @@ namespace UserInterface.Views
                     break;
             }
             sheet.Refresh();
+        }
+
+        /// <summary>Delete contents of cells.</summary>
+        public virtual void Delete()
+        {
+            sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, null);
         }
     }
 }

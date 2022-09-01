@@ -12,7 +12,8 @@
         PageDown,
         Home,
         End,
-        Return
+        Return,
+        Delete
     }
 
     public class SheetEventKey
