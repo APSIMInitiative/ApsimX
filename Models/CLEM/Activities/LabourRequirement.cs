@@ -9,9 +9,9 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
-using System.Text.Json.Serialization;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
