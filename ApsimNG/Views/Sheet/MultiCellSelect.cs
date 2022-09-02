@@ -141,7 +141,7 @@ namespace UserInterface.Views
         {
             for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
-                    sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, null);
+                    sheet.DataProvider.SetCellContents(columnIndex, rowIndex, null);
         }
     }
 }

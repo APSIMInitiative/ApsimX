@@ -225,8 +225,6 @@ namespace UserInterface.Views
                 }
 
                 rowIndex++;
-                if (rowIndex == sheet.DataProvider.RowCount)
-                    break;
             }
             sheet.Refresh();
         }
