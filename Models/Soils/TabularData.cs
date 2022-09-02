@@ -193,12 +193,17 @@ namespace Models.Soils
                 {
                     if (!property.IsReadOnly)
                     {
-                        if (property.DataType == typeof(string[]))
-                            property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
-                        else if (property.DataType == typeof(double[]))
+                        if (numLayers == -1)
+                            property.Value = null;
+                        else
                         {
-                            var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
-                            property.Value = values;
+                            if (property.DataType == typeof(string[]))
+                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
+                            else if (property.DataType == typeof(double[]))
+                            {
+                                var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                                property.Value = values;
+                            }
                         }
                     }
                 }
