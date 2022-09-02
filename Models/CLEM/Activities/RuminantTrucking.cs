@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
-using System.Text.Json.Serialization;
 using Models.CLEM.Groupings;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
