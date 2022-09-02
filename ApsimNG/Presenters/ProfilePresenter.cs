@@ -13,7 +13,7 @@
         private NewGridPresenter gridPresenter;
 
         ///// <summary>The property presenter.</summary>
-        //private PropertyPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -54,7 +54,7 @@
             water = this.model.FindInScope<Water>();
 
             var propertyView = view.GetControl<PropertyView>("properties");
-            var propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
@@ -76,6 +76,8 @@
         public void Detach()
         {
             DisconnectEvents();
+            gridPresenter.Detach();
+            propertyPresenter.Detach();
             view.Dispose();
         }
 

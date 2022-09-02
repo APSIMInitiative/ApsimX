@@ -55,6 +55,9 @@ namespace UserInterface.Views
         /// <param name="rowIndex">Row index of cell.</param>
         public string GetCellContents(int colIndex, int rowIndex)
         {
+            if (colIndex >= Data.Columns.Count || rowIndex - numHeadingRows >= Data.Rows.Count)
+                return null;
+
             if (rowIndex == 0)
                 return Data.Columns[colIndex].ColumnName;
             else if (numHeadingRows == 2 && rowIndex == 1)
@@ -79,7 +82,10 @@ namespace UserInterface.Views
                 while (i >= Data.Rows.Count)
                     Data.Rows.Add(Data.NewRow());
 
-                if (Data.Rows[i][colIndex].ToString() != value.ToString())
+                var existingValue = Data.Rows[i][colIndex];
+                if (existingValue != null && value == null ||
+                    existingValue == null && value != null ||
+                    existingValue.ToString() != value.ToString())
                 {
                     Data.Rows[i][colIndex] = value;
                     CellChanged?.Invoke(this, colIndex, rowIndex);
