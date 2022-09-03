@@ -1081,7 +1081,7 @@
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
           "LightProfile": null,
-          "KDead": 0.3,
+          "KDead": 0.6,
           "LAIDead": 0.0,
           "DMSupply": null,
           "NSupply": null,
@@ -1678,11 +1678,26 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "m^2/m^2",
-              "Name": "LaiDead",
-              "Children": [],
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "LAIDead",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].SpecificArea",
+                  "Name": "SLA",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Dead.Wt",
+                  "Name": "LeafDeadWt",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
