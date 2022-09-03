@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 349,
   "Version": 155,
   "Name": "Simulations",
   "ResourceName": null,
@@ -44687,7 +44687,8 @@
                               "Specifications": [
                                 "[SowingRule].Script.SowingRate=30",
                                 "[SowingRule].Script.SowingDepth=50",
-                                "[SowingRule].Script.SowingDate=2015-01-13"
+                                "[SowingRule].Script.SowingDate=2015-01-13",
+                                "[HarvestAfterDate].Script.HarvestDate = 12-apr"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -44702,7 +44703,8 @@
                               "Specifications": [
                                 "[SowingRule].Script.SowingRate=25",
                                 "[SowingRule].Script.CultivarName=Crystal",
-                                "[SowingRule].Script.SowingDate=2016-01-15"
+                                "[SowingRule].Script.SowingDate=2016-01-15",
+                                "[HarvestAfterDate].Script.HarvestDate = 12-apr-2016"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -44717,7 +44719,8 @@
                               "Specifications": [
                                 "[SowingRule].Script.SowingRate=43",
                                 "",
-                                "[SowingRule].Script.SowingDate=2016-12-23"
+                                "[SowingRule].Script.SowingDate=2016-12-23",
+                                "[HarvestAfterDate].Script.HarvestDate = 24-mar-2017"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -44977,16 +44980,6 @@
                             }
                           ],
                           "Name": "SowingRule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                          "Parameters": [],
-                          "Name": "HarvestRule",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -45661,6 +45654,21 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "20-Nov"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -46227,16 +46235,6 @@
                             }
                           ],
                           "Name": "SowingRule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                          "Parameters": [],
-                          "Name": "HarvestRule",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -46873,6 +46871,21 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "20-Nov"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -47007,7 +47020,8 @@
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
                                 "[SowingRule].Script.SowingDate=2016-02-10",
-                                "[Operations]"
+                                "[Operations]",
+                                "[HarvestAfterDate].Script.HarvestDate= 28-may"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -47038,7 +47052,8 @@
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
                                 "[SowingRule].Script.SowingDate=2016-01-14",
-                                "[Operations]"
+                                "[Operations]",
+                                "[HarvestAfterDate].Script.HarvestDate= 20-apr"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -47069,7 +47084,8 @@
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
                                 "[SowingRule].Script.SowingDate=2015-12-08",
-                                "[Operations]"
+                                "[Operations]",
+                                "[HarvestAfterDate].Script.HarvestDate= 13-mar"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -47111,7 +47127,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "Descriptors": null,
-                  "Name": "HRS",
+                  "Name": "HRSBase",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -47346,42 +47362,6 @@
                             }
                           ],
                           "Name": "SowingRule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                          "Parameters": [],
-                          "Name": "HarvestRule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report, Models",
-                          "VariableNames": [
-                            "[Clock].Today",
-                            "[Mungbean].Phenology.Stage",
-                            "[Mungbean].Phenology.CurrentStageName",
-                            "[Mungbean].AboveGround.Wt",
-                            "[Mungbean].AboveGround.N",
-                            "[Mungbean].Grain.Total.Wt*10 as Yield",
-                            "[Mungbean].Grain.NConc",
-                            "[Mungbean].Grain.Size",
-                            "[Mungbean].Grain.Number",
-                            "[Mungbean].Grain.Total.Wt",
-                            "[Mungbean].Grain.Total.N",
-                            "[Mungbean].Total.Wt"
-                          ],
-                          "EventNames": [
-                            "[Soybean].Harvesting"
-                          ],
-                          "GroupByVariableName": null,
-                          "Name": "HarvestReport",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -48014,6 +47994,21 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "20-Nov"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -48151,7 +48146,8 @@
                                 "[SowingRule].Script.SowingRate=33",
                                 "[SurfaceOrganicMatter].InitialResidueType=canola",
                                 "[SurfaceOrganicMatter].InitialResidueMass=11000",
-                                "[SurfaceOrganicMatter].InitialCNR=40"
+                                "[SurfaceOrganicMatter].InitialCNR=40",
+                                "[HarvestAfterDate].Script.HarvestDate=31-mar"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -48168,7 +48164,8 @@
                                 "[SowingRule].Script.SowingRate=26",
                                 "[SurfaceOrganicMatter].InitialResidueType=canola",
                                 "[SurfaceOrganicMatter].InitialResidueMass=11000",
-                                "[SurfaceOrganicMatter].InitialCNR=40"
+                                "[SurfaceOrganicMatter].InitialCNR=40",
+                                "[HarvestAfterDate].Script.HarvestDate=31-mar"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -48181,7 +48178,7 @@
                             {
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
-                                ""
+                                "[HarvestAfterDate].Script.HarvestDate=16-mar"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -48198,7 +48195,8 @@
                                 "[SowingRule].Script.SowingRate=36",
                                 "[SurfaceOrganicMatter].InitialResidueType=fieldpea",
                                 "[SurfaceOrganicMatter].InitialResidueMass=0",
-                                "[SurfaceOrganicMatter].InitialCNR=0"
+                                "[SurfaceOrganicMatter].InitialCNR=0",
+                                "[HarvestAfterDate].Script.HarvestDate=16-mar"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -48215,7 +48213,8 @@
                                 "[SowingRule].Script.SowingRate=23",
                                 "[SurfaceOrganicMatter].InitialResidueType=fieldpea",
                                 "[SurfaceOrganicMatter].InitialResidueMass=0",
-                                "[SurfaceOrganicMatter].InitialCNR=0"
+                                "[SurfaceOrganicMatter].InitialCNR=0",
+                                "[HarvestAfterDate].Script.HarvestDate=29-apr"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -48246,7 +48245,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "2015-12-08T00:00:00",
-                      "End": "2017-06-06T00:00:00",
+                      "End": "2016-06-06T00:00:00",
                       "Name": "clock",
                       "ResourceName": null,
                       "Children": [],
@@ -48475,16 +48474,6 @@
                             }
                           ],
                           "Name": "SowingRule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                          "Parameters": [],
-                          "Name": "HarvestRule",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -49078,6 +49067,21 @@
                               "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "20-Nov"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -50071,6 +50075,21 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "HarvestDate",
+                          "Value": "19-mar"
+                        }
+                      ],
+                      "Name": "HarvestAfterDate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -50413,16 +50432,6 @@
                         }
                       ],
                       "Name": "SowingRule",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                      "Parameters": [],
-                      "Name": "HarvestRule",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -51024,6 +51033,21 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "HarvestDate",
+                          "Value": "12-mar"
+                        }
+                      ],
+                      "Name": "HarvestAfterDate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -51366,16 +51390,6 @@
                         }
                       ],
                       "Name": "SowingRule",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                      "Parameters": [],
-                      "Name": "HarvestRule",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -51989,6 +52003,21 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "HarvestDate",
+                          "Value": "10-may"
+                        }
+                      ],
+                      "Name": "HarvestAfterDate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -52331,16 +52360,6 @@
                         }
                       ],
                       "Name": "SowingRule",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                      "Parameters": [],
-                      "Name": "HarvestRule",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -52969,6 +52988,21 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "HarvestDate",
+                          "Value": "20-may"
+                        }
+                      ],
+                      "Name": "HarvestAfterDate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -53099,7 +53133,8 @@
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
                                 "[SowingRule].Script.SowingDate=2014-12-23",
-                                "[Operations]"
+                                "[Operations]",
+                                "[HarvestAfterDate].Script.HarvestDate=19-mar-2015"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -53130,7 +53165,8 @@
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
                                 "[SowingRule].Script.SowingDate=2015-12-11",
-                                "[Operations]"
+                                "[Operations]",
+                                "[HarvestAfterDate].Script.HarvestDate=8-mar-2016"
                               ],
                               "Paths": null,
                               "Values": null,
@@ -53172,7 +53208,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "Descriptors": null,
-                  "Name": "Warra",
+                  "Name": "WarraBase",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -53386,6 +53422,10 @@
                           "Code": "\r\nusing Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Mungbean;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Sow();\r\n           \r\n                    \r\n               }\r\n               public void Sow()\r\n               {Mungbean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
+                              "Key": "SowingDate",
+                              "Value": "12/10/2013 00:00:00"
+                            },
+                            {
                               "Key": "RowSpacing",
                               "Value": "250"
                             },
@@ -53400,23 +53440,9 @@
                             {
                               "Key": "CultivarName",
                               "Value": "Jade"
-                            },
-                            {
-                              "Key": "SowingDate",
-                              "Value": "12/10/2013 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                          "Parameters": [],
-                          "Name": "HarvestRule",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -54031,6 +54057,21 @@
                             }
                           ],
                           "Name": "AutoIrr",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant mungbean;\r\n        [Link(Type = LinkType.Path, Path = \"[mungbean].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                mungbean.Harvest();\r\n                mungbean.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "20-Nov"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -55061,6 +55102,84 @@
                   "TableName": "PredictedObservedNitrogenDaily",
                   "XFieldName": "Predicted.Mungbean.Grain.Live.N",
                   "YFieldName": "Observed.Mungbean.Grain.Live.N",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 2,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Daily GrainWt",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16776961,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "PredictedObservedBiomassDaily",
+                  "XFieldName": "Predicted.Mungbean.Grain.Wt",
+                  "YFieldName": "Observed.Mungbean.Grain.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
