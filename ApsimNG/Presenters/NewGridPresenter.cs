@@ -126,7 +126,6 @@
             {
                 try
                 {
-                    SaveGridToModel();
                     CellChanged.Invoke(sender, colIndex, rowIndex);
                 }
                 catch (Exception err)

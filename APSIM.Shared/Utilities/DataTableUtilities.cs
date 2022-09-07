@@ -116,8 +116,9 @@ namespace APSIM.Shared.Utilities
 
         static private bool IsValid(object value)
         {
-            return value.GetType() == typeof(string) && !string.IsNullOrEmpty((string)value) ||
-                   value.GetType() == typeof(double) && !double.IsNaN((double)value);
+            return value != null &&
+                   (value.GetType() == typeof(string) && !string.IsNullOrEmpty((string)value) ||
+                    value.GetType() == typeof(double) && !double.IsNaN((double)value));
         }
 
         /// <summary>
