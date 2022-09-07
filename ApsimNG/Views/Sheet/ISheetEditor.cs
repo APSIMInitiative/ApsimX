@@ -10,6 +10,6 @@
         void Edit(char defaultChar = char.MinValue);
 
         /// <summary>End edit more.</summary>
-        void EndEdit();
+        void EndEdit(bool saveEdit = true);
     }
 }

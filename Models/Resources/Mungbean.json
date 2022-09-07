@@ -1081,7 +1081,7 @@
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
           "LightProfile": null,
-          "KDead": 0.3,
+          "KDead": 0.6,
           "LAIDead": 0.0,
           "DMSupply": null,
           "NSupply": null,
@@ -1661,7 +1661,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.05,
+              "FixedValue": 0.02,
               "Units": "/d",
               "Name": "DetachmentRate",
               "Children": [],
@@ -1678,11 +1678,26 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "m^2/m^2",
-              "Name": "LaiDead",
-              "Children": [],
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "LAIDead",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].SpecificArea",
+                  "Name": "SLA",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Dead.Wt",
+                  "Name": "LeafDeadWt",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6146,7 +6161,7 @@
                 "[Phenology].EarlyGrainFilling.Target.FixedValue=100",
                 "[Phenology].MidGrainFilling.Target.FixedValue=150",
                 "[Phenology].LateGrainFilling.Target.FixedValue=150",
-                "[Phenology].Maturing.Target.FixedValue=100",
+                "[Phenology].Maturing.Target.FixedValue=300",
                 "[Phenology].Ripening.Target.FixedValue=100",
                 "",
                 "",
@@ -6164,17 +6179,17 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Vegetative.Target.FixedValue=450",
+                "[Phenology].Vegetative.Target.FixedValue=380",
                 "[Phenology].EarlyFlowering.Target.FixedValue=30",
                 "[Phenology].EarlyPodDevelopment.Target.FixedValue=50",
                 "[Phenology].EarlyGrainFilling.Target.FixedValue=250",
                 "[Phenology].MidGrainFilling.Target.FixedValue=200",
                 "[Phenology].LateGrainFilling.Target.FixedValue=200",
-                "[Phenology].Maturing.Target.FixedValue=100",
+                "[Phenology].Maturing.Target.FixedValue=350",
                 "[Phenology].Ripening.Target.FixedValue=100",
                 "",
                 "",
-                "[Leaf].Photosynthesis.RUE.FixedValue=1.1",
+                "[Leaf].Photosynthesis.RUE.FixedValue=1.3",
                 "",
                 "",
                 "[Phenology].Emerging.Target.ShootLag.FixedValue=10",

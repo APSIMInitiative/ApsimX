@@ -2,10 +2,10 @@
 {
     using APSIM.Shared.Documentation;
     using Models.Core;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A cultivar model - used to override properties of another model

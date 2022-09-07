@@ -38,8 +38,9 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
+        [System.ComponentModel.DefaultValueAttribute("No finance required")]
         public string AccountName { get; set; }
 
         /// <summary>
@@ -63,6 +64,14 @@ namespace Models.CLEM.Activities
         [Description("Value for selling style")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ResourceActivitySell()
+        {
+            this.SetDefaults();
+        }
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
@@ -91,7 +100,9 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get bank account object to use
-            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
+            if(AccountName != "No finance required")
+                bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
+            
             // get resource type to sell
             resourceToSell = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             // find market if present
@@ -288,8 +299,11 @@ namespace Models.CLEM.Activities
                         break;
                 }
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" with sales placed in ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                if (AccountName != "No finance required")
+                {
+                    htmlWriter.Write(" with sales placed in ");
+                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                }
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
