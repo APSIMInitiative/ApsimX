@@ -232,6 +232,10 @@
                     XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(child));
                     this.AddFoldersAndSimulations(child, newFolder);
                 }
+                else
+                {
+                    this.AddComponent(child, ref destParent);
+                }
                 child = child.NextSibling;
             }
         }
