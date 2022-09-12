@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 462,
   "Version": 155,
   "Name": "Simulations",
   "ResourceName": null,
@@ -6393,7 +6393,7 @@
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
-                      "TableName": "DrainSpaceUSA2",
+                      "TableName": "DrainSpace",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "AnnualTileDrainage",
                       "X2FieldName": null,
@@ -6488,7 +6488,7 @@
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
-                      "TableName": "DrainSpaceUSA2",
+                      "TableName": "DrainSpace",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "AnnualTileNLeaching",
                       "X2FieldName": null,
@@ -6583,7 +6583,7 @@
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
-                      "TableName": "DrainSpaceUSA2",
+                      "TableName": "DrainSpace",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Yield_crop",
                       "X2FieldName": null,
@@ -9446,7 +9446,7 @@
                           "MarkerSize": 0,
                           "Line": 2,
                           "LineThickness": 0,
-                          "TableName": "WT_obsUSA3",
+                          "TableName": "WT_obs",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Watertable",
                           "X2FieldName": null,
@@ -29244,11 +29244,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29296,11 +29296,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29348,11 +29348,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29400,11 +29400,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29452,11 +29452,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29504,11 +29504,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29556,11 +29556,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29608,11 +29608,11 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29660,15 +29660,15 @@
                           "Name": "Cl",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -29683,7 +29683,7 @@
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29694,7 +29694,7 @@
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29704,7 +29704,7 @@
                       "Name": "Clock",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29713,7 +29713,7 @@
                       "Name": "summaryfile",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29721,7 +29721,7 @@
                       "Name": "SoilArbitrator",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29737,7 +29737,7 @@
                       "Name": "MicroClimate",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29873,7 +29873,7 @@
                       "Name": "Forages",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -29892,7 +29892,7 @@
                           "Name": "CalculateRollingWaterBalance",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -29912,7 +29912,7 @@
                           "Name": "SoilChlorideBalance",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -29931,7 +29931,7 @@
                           "Name": "SWIM3_SetLowerBC",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -29978,7 +29978,7 @@
                           "Name": "AutomaticIrrigation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -29994,7 +29994,7 @@
                           "Name": "SurfaceOrganicMatter",
                           "ResourceName": "SurfaceOrganicMatter",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30022,7 +30022,7 @@
                           "Name": "AddFertiliser",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30242,7 +30242,7 @@
                           "Name": "AddWater",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30274,7 +30274,7 @@
                               "Name": "Notes",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30449,7 +30449,7 @@
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30457,7 +30457,7 @@
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30529,7 +30529,7 @@
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30573,7 +30573,7 @@
                               "Name": "Chemical",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30603,7 +30603,7 @@
                               "Name": "Water",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30646,11 +30646,11 @@
                                   "Name": "SwimSubsurfaceDrain",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": false,
+                                  "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30701,7 +30701,7 @@
                               "Name": "Cl",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30725,7 +30725,7 @@
                               "Name": "LayerStructure",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30733,7 +30733,7 @@
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -30890,7 +30890,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30898,7 +30898,7 @@
                           "Name": "Irrigation",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30906,7 +30906,7 @@
                           "Name": "Fertiliser",
                           "ResourceName": "Fertiliser",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -30924,25 +30924,15 @@
                           "Name": "Report",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.Surface;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private SurfaceOrganicMatter surfaceOM;\r\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link(ByName = true)] private Solute cl;\r\n        [Link] Swim3 swim3;\r\n        [Link(ByName = true)] private Solute no3;\r\n  \r\n        // add (no3+nh4) uptake as Cl uptake to IPlant\r\n\r\n        public double ClBalanceCumulative  { get; set; }\r\n        public double ClBalanceToday  { get; set; }\r\n\r\n        public double SoilClAtInitialisation  { get; set; }\r\n        public double SoilClYesterday  { get; set; }\r\n        public double SoilClNow  { get; set; }\r\n\r\n        public double ClAddedToday  { get; set; }\r\n        public double ClRemovedToday  { get; set; }\r\n        public double ClAddedCumulative  { get; set; }\r\n        public double ClRemovedCumulative  { get; set; }\r\n\r\n\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate) \r\n            {\r\n                cl.AddKgHaDelta(SoluteSetterType.Other, new double[] {100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});\r\n                no3.AddKgHaDelta(SoluteSetterType.Other, new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}); \r\n                SoilClAtInitialisation = cl.kgha.Sum();  \r\n                SoilClYesterday = SoilClAtInitialisation;\r\n                SoilClNow = SoilClAtInitialisation;\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            SoilClYesterday = SoilClNow; // capture yesterday's value before overwriting\r\n            SoilClNow =  cl.kgha.Sum();  \r\n\r\n            // fertiliser only as this is a bar soil simulation\r\n            ClAddedToday = 0.0; // ???? how to get this\r\n            ClAddedCumulative+= ClAddedToday;\r\n            \r\n            // leached only for chloride\r\n            ClRemovedToday = swim3.LeachCL;  \r\n            ClRemovedCumulative += ClRemovedToday;\r\n\r\n            ClBalanceToday = ClAddedToday - ClRemovedToday - (SoilClNow - SoilClYesterday);\r\n            ClBalanceCumulative = ClAddedCumulative - ClRemovedCumulative - (SoilClNow - SoilClAtInitialisation);\r\n            // need to add a warning value and a crash value and make a crash\r\n        }\r\n    }\r\n}\r\n",
-                          "Parameters": [],
-                          "Name": "SetSoluteInSoil1",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -31011,11 +31001,11 @@
                           "Name": "Stored",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -31077,11 +31067,11 @@
                           "Name": "Leached",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -31143,15 +31133,15 @@
                           "Name": "Balance",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],

@@ -2302,9 +2302,6 @@ namespace Models.Soils
                 var soluteParam = FindInScope<Solute>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
-                for (int j = 0; j < soluteParam.FIP.Length; j++)
-                    if (soluteParam.FIP[j] < 1.0)
-                        throw new Exception("In the current implementation FIP must be equal to 1 to enforce a linear isotherm. Nonlinear isotherms were causing mass balance errors - this might be resolved in the future, " + solute_names[i]);
                 fip[i] = SoilUtilities.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 exco[i] = SoilUtilities.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 ex[i] = MathUtilities.Multiply(exco[i], soilPhysical.BD);
@@ -3631,12 +3628,6 @@ namespace Models.Soils
                     if (i1 == -1)
                         _h = Math.Max(0.0, _h + pondingData.v);
                     //_h = Math.Max(0.0, _h + dp[-1]);
-                }
-
-                if (Diagnostics)
-                {
-                    var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
-                    summary.WriteMessage(this, msg, MessageType.Diagnostic);
                 }
             }
             while (fail && it < itlim);
