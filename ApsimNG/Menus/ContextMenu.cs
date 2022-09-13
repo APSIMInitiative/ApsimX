@@ -420,6 +420,26 @@
             }
         }
 
+        [ContextMenu(MenuName = "Copy manager snippet for model",
+                     FollowsSeparator = true)]
+        public void CopyManagerSnippet(object sender, EventArgs e)
+        {
+            try
+            {
+                string path = explorerPresenter.CurrentNodePath;
+                string modelType = explorerPresenter.CurrentNode.GetType().Name;
+                string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
+
+                string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
+                                 $"[Link(Path=\"{path}\")] private {modelType} {modelType.ToLower()};";
+                explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
