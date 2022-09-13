@@ -93,6 +93,27 @@ namespace Models.Soils
         /// <summary>Solute amount (ppm)</summary>
         public double[] ppm { get { return SoilUtilities.kgha2ppm(Physical.Thickness, Physical.BD, kgha); } }
 
+        /// <summary>Depth constant (mm) used to calculate amount of solute lost in runoff water.</summary>
+        public double DepthConstant { get; set; }
+
+        /// <summary>MaxDepthSoluteAccessible (mm) used to calculate amount of solute lost in runoff water.</summary>
+        public double MaxDepthSoluteAccessible { get; set; }
+
+        /// <summary>RunoffEffectivenessAtMovingSolute (0-1) used to calculate amount of solute lost in runoff water.</summary>
+        public double RunoffEffectivenessAtMovingSolute { get; set; }
+
+        /// <summary>MaxEffectiveRunoff (mm) used to calculate amount of solute lost in runoff water.</summary>
+        public double MaxEffectiveRunoff { get; set; }
+
+        /// <summary>Amount of solute in solution (kg/ha).</summary>
+        public double[] AmountInSolution { get; set; }
+
+        /// <summary>Concentration of solute adsorbed (ug/g soil).</summary>
+        public double[] ConcAdsorbSolute { get; set; }
+
+        /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
+        public double[] AmountLostInRunoff { get; set; }
+
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -100,6 +121,7 @@ namespace Models.Soils
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Reset();
+            AmountLostInRunoff = new double[Thickness.Length];
         }
 
         /// <summary>

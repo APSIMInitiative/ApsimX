@@ -1234,6 +1234,9 @@ namespace Models.Soils
                         SWIMSolTime[solnum][counter] = TEMPSolTime[counter];
                         SWIMSolAmt[solnum][counter] = TEMPSolAmt[counter];
                     }
+
+                    // Zero the amount solute lost in runoff array
+                    Array.Clear(solutes[solnum].AmountLostInRunoff, 0, Thickness.Length);
                 }
 
                 SubSurfaceInFlow = new double[n + 1];
@@ -2500,6 +2503,7 @@ namespace Models.Soils
         {
             double[] solute_n = new double[n + 1];     // solute concn in layers(kg/ha)
             double[] dlt_solute_s = new double[n + 1]; // solute concn in layers(kg/ha)
+            double[] depthMidPoints = SoilUtilities.ToMidPoints(soilPhysical.Thickness);
 
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
@@ -2558,7 +2562,39 @@ namespace Models.Soils
                         solute_n[node] = Ctot;
                         dlt_solute_s[node] = Ctot - cslstart[solnum][node];
                     }
+
                     solutes[solnum].SetKgHa(SoluteSetterType.Soil, solute_n);
+
+                    // Calculate an amount of solution in solution (kg/ha)
+                    double[] concInWater = ConcWaterSolute(solnum);
+                    solutes[solnum].AmountInSolution = MathUtilities.Multiply(concInWater, th);
+                    solutes[solnum].AmountInSolution = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, 
+                                                                              solutes[solnum].AmountInSolution);
+                    solutes[solnum].ConcAdsorbSolute = ConcAdsorbSolute(solnum);
+
+                    // Calculate amount of solute lost (kg/ha) in runoff water.
+                    if (TD_runoff > 0 && 
+                        solutes[solnum].DepthConstant > 0 && 
+                        solutes[solnum].MaxDepthSoluteAccessible > 0 &&
+                        solutes[solnum].MaxEffectiveRunoff > 0 &&
+                        solutes[solnum].RunoffEffectivenessAtMovingSolute > 0)
+                    {
+                        for (int layer = 0; layer < depthMidPoints.Length; layer++)
+                        {
+                            double depthAvailabilityFactor = 0;
+                            if (depthMidPoints[layer] <= solutes[solnum].MaxDepthSoluteAccessible)
+                                depthAvailabilityFactor = Math.Pow(solutes[solnum].DepthConstant / depthMidPoints[layer], 2);
+
+                            double runoffAmountFactor = Math.Min(1.0, TD_runoff / solutes[solnum].MaxEffectiveRunoff);
+
+                            solutes[solnum].AmountLostInRunoff[layer] = solutes[solnum].AmountInSolution[layer] *
+                                                                        depthAvailabilityFactor *
+                                                                        runoffAmountFactor *
+                                                                        solutes[solnum].RunoffEffectivenessAtMovingSolute;
+                        }
+                        var delta = MathUtilities.Multiply_Value(solutes[solnum].AmountLostInRunoff, -1.0);
+                        solutes[solnum].AddKgHaDelta(SoluteSetterType.Soil, delta);
+                    }
                 }
             }
         }
@@ -4198,7 +4234,7 @@ namespace Models.Soils
             return concWaterSolute;
         }
 
-        private void ConcAdsorbSolute(string solname, ref double[] concAdsorbSolute)
+        private double[] ConcAdsorbSolute(int solnum)
         {
             //+  Purpose
             //      Calculate the concentration of solute adsorbed (ug/g soil). Note that
@@ -4211,89 +4247,78 @@ namespace Models.Soils
             //+  Changes
             //     30-01-2010 - RCichota - added test for -ve values, causes a fatal error if so
 
-            concAdsorbSolute = new double[n + 1];  // init with zeroes
-            double[] solute_n = new double[n + 1]; // solute at each node
+            double[] concAdsorbSolute = new double[n + 1];  // init with zeroes
+            double[] solute_n = null; // solute at each node
 
-            int solnum = SoluteNumber(solname);
+            if (solnum >= 0)
+            {
+                for (int node = 0; node <= n; node++)
+                {
+                    solute_n = (double[])solutes[solnum].kgha.Clone();
 
-            throw new NotImplementedException(" SWIM doesn't implement ConcAdsorbSolute");
-            //if (solnum >= 0)
-            //{
-            //    // only continue if solute exists.
-            //    if (solute_owners[solnum] != 0)
-            //    {
-            //        string compName = Paddock.SiblingNameFromId(solute_owners[solnum]);
-            //        if (!My.Get(compName + "." + solname, out solute_n))
-            //            throw new Exception("No module has registered ownership for solute: " + solname);
-            //    }
+                    //````````````````````````````````````````````````````````````````````````````````
+                    //RC            Changes by RCichota, 30/Jan/2010
+                    // Note: Sometimes small numerical errors can leave -ve concentrations.
+                    // This will check for -ve or very small values being passed by other modules
+                    //  and define the appropriate response:
 
-            //    for (int node = 0; node <= n; node++)
-            //    {
+                    if (solute_n[node] < -(negative_conc_fatal))
+                    {
 
-            //        //````````````````````````````````````````````````````````````````````````````````
-            //        //RC            Changes by RCichota, 30/Jan/2010
-            //        // Note: Sometimes small numerical errors can leave -ve concentrations.
-            //        // This will check for -ve or very small values being passed by other modules
-            //        //  and define the appropriate response:
+                        string mess = String.Format("   Total {0}({1,3}) = {2,12:G6}",
+                                        solute_names[solnum],
+                                        node,
+                                        solute_n[node]);
+                        throw new Exception("-ve value for solute was passed to SWIM" + Environment.NewLine + mess);
+                    }
 
-            //        if (solute_n[node] < -(negative_conc_fatal))
-            //        {
+                    else if (solute_n[node] < -(negative_conc_warn))
+                    {
+                        string mess = String.Format("   Total {0}({1,3}) = {2,12:G6} - Value will be set to zero",
+                                        solute_names[solnum],
+                                        node,
+                                        solute_n[node]);
+                        IssueWarning("'-ve value for solute was passed to SWIM" + Environment.NewLine + mess);
 
-            //            string mess = String.Format("   Total {0}({1,3}) = {2,12:G6}",
-            //                            solute_names[solnum],
-            //                            node,
-            //                            solute_n[node]);
-            //            throw new Exception("-ve value for solute was passed to SWIM" + Environment.NewLine + mess);
+                        solute_n[node] = 0.0;
+                    }
 
-            //            solute_n[node] = 0.0;
-            //        }
+                    else if (solute_n[node] < 1.0e-100)
+                    {
+                        // Value is REALLY small, no need to tell user,
+                        // set value to zero to avoid underflow with reals
 
-            //        else if (solute_n[node] < -(negative_conc_warn))
-            //        {
-            //            string mess = String.Format("   Total {0}({1,3}) = {2,12:G6} - Value will be set to zero",
-            //                            solute_names[solnum],
-            //                            node,
-            //                            solute_n[node]);
-            //            IssueWarning("'-ve value for solute was passed to SWIM" + Environment.NewLine + mess);
+                        solute_n[node] = 0.0;
+                    }
 
-            //            solute_n[node] = 0.0;
-            //        }
+                    // else Value is positive and considerable
 
-            //        else if (solute_n[node] < 1.0e-100)
-            //        {
-            //            // Value is REALLY small, no need to tell user,
-            //            // set value to zero to avoid underflow with reals
+                    //````````````````````````````````````````````````````````````````````````````````
 
-            //            solute_n[node] = 0.0;
-            //        }
+                    // convert solute from kg/ha to ug/cc soil
+                    // ug Sol    kg Sol    ug   ha(node)
+                    // ------- = ------- * -- * -------
+                    // cc soil   ha(node)  kg   cc soil
 
-            //        // else Value is positive and considerable
+                    solute_n[node] = solute_n[node]   // kg/ha
+                                * 1.0e9               // ug/kg
+                                / (dx[node] * 1.0e8); // cc soil/ha
 
-            //        //````````````````````````````````````````````````````````````````````````````````
+                    double concWaterSolute = SolveFreundlich(node, solnum, solute_n[node]);
 
-            //        // convert solute from kg/ha to ug/cc soil
-            //        // ug Sol    kg Sol    ug   ha(node)
-            //        // ------- = ------- * -- * -------
-            //        // cc soil   ha(node)  kg   cc soil
+                    //                  conc_adsorb_solute(node) =
+                    //     :              ddivide(solute_n(node)
+                    //     :                         - conc_water_solute * g%th(node)
+                    //     :                      ,p%rhob(node)
+                    //     :                      ,0d0)
 
-            //        solute_n[node] = solute_n[node]   // kg/ha
-            //                    * 1.0e9               // ug/kg
-            //                    / (dx[node] * 1.0e8); // cc soil/ha
+                    concAdsorbSolute[node] = ex[solnum][node] * Math.Pow(concWaterSolute, fip[solnum][node]);
+                }
+            }
 
-            //        double concWaterSolute = SolveFreundlich(node, solnum, solute_n[node]);
-
-            //        //                  conc_adsorb_solute(node) =
-            //        //     :              ddivide(solute_n(node)
-            //        //     :                         - conc_water_solute * g%th(node)
-            //        //     :                      ,p%rhob(node)
-            //        //     :                      ,0d0)
-
-            //        concAdsorbSolute[node] = ex[solnum][node] * Math.Pow(concWaterSolute, fip[solnum][node]);
-            //    }
-            //}
-
-            //else
-            //    throw new Exception("You have asked apswim to use a solute that it does not know about :-" + solname);
+            else
+                throw new Exception("You have asked apswim to use a solute that it does not know about.");
+            return concAdsorbSolute;
         }
 
         private int SoluteNumber(string solname)
