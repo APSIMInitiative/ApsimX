@@ -567,6 +567,10 @@ namespace Models.Soils
         [JsonIgnore]
         public double PotentialInfiltration { get; set; }
 
+        ///<summary>Soil thickness for each layer (mm)(</summary>
+        [JsonIgnore]
+        public double[] Thickness { get { return physical.Thickness; } }
+
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [JsonIgnore]
         public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
@@ -2162,7 +2166,7 @@ namespace Models.Soils
 
         private void CNRunoff()
         {
-            CoverSurfaceRunoff(ref _cover_surface_runoff);
+            CalculateCoverSurfaceRunoff(ref _cover_surface_runoff);
 
             double startOfDay = Time(year, day, TimeToMins(apsim_time));
             double endOfDay = Time(year, day, TimeToMins(apsim_time) + (int)apsim_timestep);
@@ -2174,7 +2178,7 @@ namespace Models.Soils
             TD_runoff += CN_runoff;
         }
 
-        private void CoverSurfaceRunoff(ref double coverSurfaceRunoff)
+        private void CalculateCoverSurfaceRunoff(ref double coverSurfaceRunoff)
         {
             // cover cn response from perfect   - ML  & dms 7-7-95
             // nb. perfect assumed crop canopy was 1/2 effect of mulch
