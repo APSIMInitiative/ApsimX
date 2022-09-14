@@ -409,23 +409,6 @@ namespace Models.Soils
             }
         }
 
-        /// <summary></summary>
-        [JsonIgnore]
-        [Units("/h")]
-        private double scon
-        {
-            get
-            {
-                return gsurf;
-            }
-            set
-            {
-                gsurf = value;
-                if (gsurf > _g1 || gsurf < _g0)
-                    throw new Exception("Scon set to a value outside of specified decay curve");
-            }
-        }
-
         ///<summary>Volumetric water content</summary>
         [JsonIgnore]
         [Units("mm/mm")]
@@ -447,10 +430,6 @@ namespace Models.Soils
         [Units("mm")]
         public double[] PAWmm => MathUtilities.Multiply(PAW, physical.Thickness);
 
-        /// <summary>Soil water content of layer.</summary>
-        [Units("cm^3/cm^3")]
-        private double[] swf => _swf;
-
         ///<summary>Extractable soil water relative to LL15</summary>
         [JsonIgnore]
         [Units("mm")]
@@ -468,14 +447,6 @@ namespace Models.Soils
         /// <summary>Amount of rainfall intercepted by crop and residue canopies</summary>
         [JsonIgnore]
         public double PrecipitationInterception { get; set; }
-
-        /// <summary></summary>
-        [Units("mm")]
-        private double wp => _wp;
-
-        /// <summary></summary>
-        [Units("mm")]
-        private double[] p => _p;
 
         /// <summary>Water potential of layer</summary>
         [JsonIgnore]
@@ -498,7 +469,10 @@ namespace Models.Soils
             }
         }
 
-        /// <summary></summary>
+        /// <summary>
+        /// Soil water potential including solute concentration effects. Not currently active. 
+        /// Maybe useful in the future for salinity effects on plant water uptake.
+        /// </summary>
         [Units("cm")]
         private double[] psio
         {
@@ -515,21 +489,17 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Amount of water runoff</summary>
+        /// <summary>Water runoff</summary>
         [Units("mm")]
         public double Runoff => TD_runoff;
 
-        /// <summary></summary>
-        [Units("mm")]
-        private double cn_runoff => CN_runoff;
-
-        /// <summary></summary>
+        /// <summary>Surface cover effects on runoff curve number reduction.</summary>
         [Units("0-1")]
-        private double cover_surface_runoff => _cover_surface_runoff;
+        public double CoverSurfaceRunoff => _cover_surface_runoff;
 
-        /// <summary></summary>
+        /// <summary>Water infiltration (rainfall and irrigation) into the surface layer.</summary>
         [Units("mm")]
-        private double Infiltration => TD_wflow[0];
+        public double Infiltration => TD_wflow[0];
 
         /// <summary>Actual (realised) soil water evaporation</summary>
         [Units("mm")]
@@ -540,7 +510,7 @@ namespace Models.Soils
         [Units("mm")]
         public double Eos => TD_pevap;
 
-        /// <summary>Amount of water drainage from bottom of profile</summary>
+        /// <summary>Water drainage from bottom of profile</summary>
         [JsonIgnore]
         [Units("mm")]
         public double Drainage => TD_drain;
@@ -549,10 +519,6 @@ namespace Models.Soils
         [JsonIgnore]
         [Units("mm")]
         public double Eo { get; set; }
-
-        /// <summary></summary>
-        [Units("cm")]
-        private double[] psix => _psix;
 
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement)</summary>
         [JsonIgnore]
@@ -574,44 +540,9 @@ namespace Models.Soils
         [JsonIgnore]
         public bool WaterVapourConductivityOn { get; set; }
 
-        /// <summary></summary>
-        [JsonIgnore]
-        [Units("mm")]
-        private double hmin
-        {
-            get
-            {
-                return isbc == 2 ? _hmin * 10.0 : _hmin;
-            }
-            set
-            {
-                _hmin = value;
-            }
-        }
-
-        /// <summary></summary>
-        [Units("mm")]
-        private double h => _h * 10.0;
-
         /// <summary>Pond depth.</summary>
         [Units("mm")]
         public double Pond => _h * 10.0;
-
-        /// <summary></summary>
-        [Units("/h")]
-        private double scon_min => _g0;
-
-        /// <summary></summary>
-        [Units("/h")]
-        private double scon_max => _g1;
-
-        /// <summary></summary>
-        [Units("mm")]
-        private double dr => (CRain(t) - CRain(t - _dt)) * 10.0;
-
-        /// <summary></summary>
-        [Units("min")]
-        private double dt => _dt * 60.0;
 
         /// <summary>Subsurface drain.</summary>
         [Units("mm")]
@@ -632,16 +563,9 @@ namespace Models.Soils
             }
         }
 
-        /// <summary></summary>
-        private double work=> _work;
-
-        /// <summary>Set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        /// <summary>Rainfall less than intercepted by the canopy and residue components (Set by Microclimate).</summary>
         [JsonIgnore]
         public double PotentialInfiltration { get; set; }
-
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
-        [JsonIgnore]
-        public double[] Thickness { get { return physical.Thickness; } }
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [JsonIgnore]
@@ -698,14 +622,6 @@ namespace Models.Soils
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]
         public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement a Flux property"); } }
-
-        /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
-        [JsonIgnore]
-        public double ResidueInterception
-        {
-            get { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
-            set { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
-        }
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
         [JsonIgnore]
@@ -2108,7 +2024,7 @@ namespace Models.Soils
                     solutes[solnum].AmountInSolution = MathUtilities.Multiply(concInWater, th);
                     solutes[solnum].AmountInSolution = SoilUtilities.ppm2kgha(physical.Thickness, physical.BD, 
                                                                               solutes[solnum].AmountInSolution);
-                    solutes[solnum].ConcAdsorbSolute = ConcAdsorbSolute(solnum);
+                    solutes[solnum].ConcAdsorpSolute = ConcAdsorptionSolute(solnum);
 
                     // Calculate amount of solute lost (kg/ha) in runoff water.
                     if (TD_runoff > 0 && 
@@ -2346,7 +2262,7 @@ namespace Models.Soils
 
             // reduce CN2 for the day due to cover effect
 
-            double cover_fract = MathUtilities.Divide(cover_surface_runoff, CNCov, 0.0, divideTolerance);
+            double cover_fract = MathUtilities.Divide(CoverSurfaceRunoff, CNCov, 0.0, divideTolerance);
             cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
 
             double cn2_new = CN2Bare - (CNRed * cover_fract);
@@ -3750,7 +3666,7 @@ namespace Models.Soils
             return concWaterSolute;
         }
 
-        private double[] ConcAdsorbSolute(int solnum)
+        private double[] ConcAdsorptionSolute(int solnum)
         {
             //+  Purpose
             //      Calculate the concentration of solute adsorbed (ug/g soil). Note that
@@ -3763,7 +3679,7 @@ namespace Models.Soils
             //+  Changes
             //     30-01-2010 - RCichota - added test for -ve values, causes a fatal error if so
 
-            double[] concAdsorbSolute = new double[n + 1];  // init with zeroes
+            double[] concAdsorpSolute = new double[n + 1];  // init with zeroes
             double[] solute_n = null; // solute at each node
 
             if (solnum >= 0)
@@ -3828,13 +3744,13 @@ namespace Models.Soils
                     //     :                      ,p%rhob(node)
                     //     :                      ,0d0)
 
-                    concAdsorbSolute[node] = ex[solnum][node] * Math.Pow(concWaterSolute, fip[solnum][node]);
+                    concAdsorpSolute[node] = ex[solnum][node] * Math.Pow(concWaterSolute, fip[solnum][node]);
                 }
             }
 
             else
                 throw new Exception("You have asked apswim to use a solute that it does not know about.");
-            return concAdsorbSolute;
+            return concAdsorpSolute;
         }
 
         private double SolveFreundlich(int node, int solnum, double Ctot)

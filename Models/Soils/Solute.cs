@@ -111,7 +111,7 @@ namespace Models.Soils
 
         /// <summary>Concentration of solute adsorbed (ug/g soil).</summary>
         [JsonIgnore]
-        public double[] ConcAdsorbSolute { get; set; }
+        public double[] ConcAdsorpSolute { get; set; }
 
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         [JsonIgnore]
