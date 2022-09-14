@@ -42,7 +42,7 @@
         double[] AmountInSolution { get; set; }
 
         /// <summary>Concentration of solute adsorbed (ug/g soil).</summary>
-        double[] ConcAdsorbSolute { get; set; }
+        double[] ConcAdsorpSolute { get; set; }
 
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
         double[] AmountLostInRunoff { get; set; }
