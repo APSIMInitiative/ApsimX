@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 508,
-  "Version": 154,
+  "ExplorerWidth": 285,
+  "Version": 155,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -525,6 +525,10 @@
                       "D0": 0.0,
                       "Exco": null,
                       "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -560,6 +564,10 @@
                       "D0": 0.0,
                       "Exco": null,
                       "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -595,6 +603,10 @@
                       "D0": 0.0,
                       "Exco": null,
                       "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -1316,6 +1328,10 @@
                       "D0": 0.0,
                       "Exco": null,
                       "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -1351,6 +1367,10 @@
                       "D0": 0.0,
                       "Exco": null,
                       "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -1386,6 +1406,10 @@
                       "D0": 0.0,
                       "Exco": null,
                       "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
@@ -1681,6 +1705,25 @@
               "ResourceName": null,
               "Children": [
                 {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        \r\n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\r\n        [Description(\"What lower boundary condition is wanted?\")] \r\n        public LowerBCTypeOptions LowerBCType { get; set; }\r\n        \r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")]\r\n        [Display(EnabledCallback = \"IsPotential\")] \r\n        public double LowerBCValue { get; set; }\r\n        \r\n        /// <summary></summary>\r\n        public bool IsPotential => LowerBCType == LowerBCTypeOptions.potential;\r\n        \r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\r\n                else\r\n                    throw new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "LowerBCType",
+                      "Value": "potential"
+                    },
+                    {
+                      "Key": "LowerBCValue",
+                      "Value": "10000"
+                    }
+                  ],
+                  "Name": "SWIMSetLowerBC",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 0,
                   "ASCOrder": null,
@@ -1861,18 +1904,6 @@
                     },
                     {
                       "$type": "Models.Soils.LayerStructure, Models",
-                      "Depth": [
-                        "0-10",
-                        "10-30",
-                        "30-50",
-                        "50-100",
-                        "100-200",
-                        "200-400",
-                        "400-700",
-                        "700-1000",
-                        "1000-1300",
-                        "1300-1500"
-                      ],
                       "Thickness": [
                         10.0,
                         20.0,
@@ -1893,12 +1924,6 @@
                     },
                     {
                       "$type": "Models.Soils.Swim3, Models",
-                      "PrecipitationInterception": 0.0,
-                      "ersoil": 1E-06,
-                      "ernode": 1E-06,
-                      "slcerr": 1E-06,
-                      "theta": null,
-                      "PSI": null,
                       "Salb": 0.13,
                       "CN2Bare": 75.0,
                       "CNRed": 20.0,
@@ -1917,19 +1942,9 @@
                       "DTHC": 0.0,
                       "DTHP": 1.0,
                       "Diagnostics": false,
-                      "WaterTable": 0.0,
                       "Name": "Swim",
                       "ResourceName": null,
                       "Children": [
-                        {
-                          "$type": "Models.Soils.SwimWaterTable, Models",
-                          "WaterTableDepth": 10000.0,
-                          "Name": "SwimWaterTable",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Soils.SwimSubsurfaceDrain, Models",
                           "DrainDepth": 500.0,
@@ -2177,6 +2192,10 @@
                         1.0,
                         1.0
                       ],
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
@@ -2240,6 +2259,10 @@
                         1.0,
                         1.0
                       ],
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "NH4",
                       "ResourceName": null,
                       "Children": [],
@@ -2303,6 +2326,10 @@
                         1.0,
                         1.0
                       ],
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
                       "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
