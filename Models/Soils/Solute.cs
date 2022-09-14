@@ -106,12 +106,15 @@ namespace Models.Soils
         public double MaxEffectiveRunoff { get; set; }
 
         /// <summary>Amount of solute in solution (kg/ha).</summary>
+        [JsonIgnore]
         public double[] AmountInSolution { get; set; }
 
         /// <summary>Concentration of solute adsorbed (ug/g soil).</summary>
+        [JsonIgnore]
         public double[] ConcAdsorbSolute { get; set; }
 
         /// <summary>Amount of solute lost in runoff water (kg/ha).</summary>
+        [JsonIgnore]
         public double[] AmountLostInRunoff { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>
