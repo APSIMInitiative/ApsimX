@@ -233,14 +233,15 @@ namespace APSIM.Documentation
 
         private static IDocumentationRow ModelWithNoResourceRow(string modelName, bool isUnderReview = false, IEnumerable<IDocumentationCell> extraCells = null)
         {
+            Console.WriteLine($"Creating documentation for {modelName}");
             string validationFile;
             if (isUnderReview)
             {
                 modelName = $"{modelName} (Under review)";
-                validationFile = Path.Combine(validation, modelName, $"{modelName}.apsimx");
+                validationFile = Path.Combine(underReview, modelName, $"{modelName}.apsimx");
             }
             else
-                validationFile = Path.Combine(underReview, modelName, $"{modelName}.apsimx");
+                validationFile = Path.Combine(validation, modelName, $"{modelName}.apsimx");
             IEnumerable<string> inputs = new string[1] { validationFile };
             
             IDocumentationFile paramsDocs = new ParamsDocsFromFile(validationFile, $"{modelName}-params.pdf", options);
