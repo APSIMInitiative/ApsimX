@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 381,
+  "ExplorerWidth": 300,
   "Version": 155,
   "Name": "Simulations",
   "ResourceName": null,
@@ -16960,7 +16960,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -19164,7 +19164,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -20893,7 +20893,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -22727,7 +22727,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -24485,7 +24485,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -26243,7 +26243,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -30296,7 +30296,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                      "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "ResourceName": null,
@@ -35903,7 +35903,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -37012,7 +37012,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -38378,7 +38378,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -39744,7 +39744,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -42243,7 +42243,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "..\\..\\..\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
