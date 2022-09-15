@@ -232,6 +232,10 @@
                     XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(child));
                     this.AddFoldersAndSimulations(child, newFolder);
                 }
+                else
+                {
+                    this.AddComponent(child, ref destParent);
+                }
                 child = child.NextSibling;
             }
         }
@@ -337,19 +341,15 @@
                 else if (compNode.Name.ToLower() == "swim")
                 {
                     newNode = CopyNode(compNode, destParent, "Swim3");
-                    this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
-
-                    // may need to copy more details for SoilNitrogen
+                    AddNutrients(compNode, ref destParent);
                 }
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
                     newNode = CopyNode(compNode, destParent, "SoilWater");
                     this.soilWaterExists = newNode != null;
-                    this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
-
-                    // may need to copy more details for SoilNitrogen
+                    AddNutrients(compNode, ref destParent);
                 }
                 else if (compNode.Name == "InitialWater")
                 {
@@ -442,6 +442,52 @@
                 throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
             }
             return newNode;
+        }
+
+        /// <summary>
+        /// Add the Nutrient component and NO3, NH4, UREA
+        /// </summary>
+        /// <param name="compNode">The source component node in the .apsim file</param>
+        /// <param name="destParent">The parent of the new component in the .apsimx file</param>
+        private void AddNutrients(XmlNode compNode, ref XmlNode destParent)
+        {
+            this.AddCompNode(destParent, "Nutrient", "Nutrient");
+            XmlNode newNO3Node = this.AddCompNode(destParent, "Solute", "NO3");
+            XmlNode newNH4Node = this.AddCompNode(destParent, "Solute", "NH4");
+            XmlNode newUREANode = this.AddCompNode(destParent, "Solute", "UREA");
+
+            XmlNode srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+            if (srcNode != null)
+            {
+                XmlNode arrayNode;
+                
+                // values are ppm
+                // find soil layers and values for NO3
+                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
+                this.CopyNodeAndValueArray(arrayNode, newNO3Node, "Thickness", "Thickness");
+                arrayNode = XmlUtilities.Find(srcNode, "NO3");
+                this.CopyNodeAndValueArray(arrayNode, newNO3Node, "NO3", "InitialValues");
+
+                // find soil layers and values for NH4
+                srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
+                this.CopyNodeAndValueArray(arrayNode, newNH4Node, "Thickness", "Thickness");
+                arrayNode = XmlUtilities.Find(srcNode, "NH4");
+                this.CopyNodeAndValueArray(arrayNode, newNH4Node, "NH4", "InitialValues");
+
+                // find soil layers for UREA
+                srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
+                this.CopyNodeAndValueArray(arrayNode, newUREANode, "Thickness", "Thickness");
+
+                // initialise the UREA with some default values
+                InitNodeValueArray(newUREANode, "InitialValues", arrayNode.ChildNodes.Count, 0.0);
+                XmlNode childNode = newUREANode.AppendChild(newUREANode.OwnerDocument.CreateElement("InitialValuesUnits"));
+                if (childNode != null)
+                {
+                    childNode.InnerText = "1";  // ensure kg/ha units
+                }
+            }
         }
 
         private void StripMissingValues(XmlNode newNode, string arrayName)
@@ -659,9 +705,8 @@
             this.CopyNodeAndValue(compNode, newNode, "LocationAccuracy", "LocationAccuracy", false);
             this.CopyNodeAndValue(compNode, newNode, "DataSource", "DataSource", false);
             this.CopyNodeAndValue(compNode, newNode, "Comments", "Comments", false);
-
             this.AddChildComponents(compNode, newNode);
-
+            
             return newNode;
         }
 
@@ -1275,6 +1320,25 @@
                         childNode.InnerText = string.Empty;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Create an array of specified size and initialise all elements
+        /// to the specified value
+        /// </summary>
+        /// <param name="destParentNode">Parent xml node</param>
+        /// <param name="destName">Name of the new node</param>
+        /// <param name="count">Count of child values to add</param>
+        /// <param name="value">The init value</param>
+        private void InitNodeValueArray(XmlNode destParentNode, string destName, int count, double value)
+        {
+            XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
+
+            for (int i = 0; i < count; i++)
+            {
+                XmlNode valNode = childNode.AppendChild(destParentNode.OwnerDocument.CreateElement("double"));
+                valNode.InnerText = string.Format("{0:f}", value);
             }
         }
 
