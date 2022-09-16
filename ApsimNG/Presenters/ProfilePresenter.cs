@@ -99,7 +99,7 @@
                 else if (model is Organic organic)
                     PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
 
-                numLayersLabel.Text = $"{gridPresenter.NumRows()} rows";
+                numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
                 ConnectEvents();
             }
             catch (Exception err)

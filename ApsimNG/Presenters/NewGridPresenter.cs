@@ -216,7 +216,8 @@
 
         public int NumRows()
         {
-            return grid.Sheet.DataProvider.RowCount - 1;
+            var provider = grid.Sheet.DataProvider as DataTableProvider;
+            return grid.Sheet.DataProvider.RowCount - grid.Sheet.NumberFrozenRows;
         }
 
 
