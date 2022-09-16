@@ -214,6 +214,12 @@
             dataProvider.CellChanged += OnCellChanged;
         }
 
+        public int NumRows()
+        {
+            return grid.Sheet.DataProvider.RowCount - 1;
+        }
+
+
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()
         {
