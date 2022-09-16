@@ -124,7 +124,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("FodderBeet"),
                 StandardPmfPlantRow("Gliricidia"),
                 StandardPmfPlantRow("Maize"),
-                MicroClimateRow(),
+                ModelWithNoResourceRow("MicroClimate", extraCells: new[] { new DocumentationCell(new ExternalDocument("Science Documentation", microClimateScience)) }),
                 StandardPmfPlantRow("Mungbean", new ExternalDocument("Video", "https://www.youtube.com/watch?v=nyDZkT1JTXw")),
                 StandardPmfPlantRow("Nutrient"),
                 StandardPmfPlantRow("Oats"),
@@ -142,16 +142,11 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Soybean"),
                 SugarcaneRow(),
                 StockRow(),
+                ModelWithNoResourceRow("SWIM", isUnderReview:true),
                 StandardPmfPlantRow("Wheat"),
                 StandardPmfPlantRow("WhiteClover"),
             };
             return new DocumentationTable($"Model Documentation for version {Simulations.ApsimVersion}", cols, rows);
-        }
-
-        private static IDocumentationRow MicroClimateRow()
-        {
-            IDocumentationCell scienceCell = new DocumentationCell(new ExternalDocument("Science Documentation", microClimateScience));
-            return ModelWithNoResourceRow("MicroClimate", new[] { scienceCell });
         }
 
         private static IDocumentationRow AgPastureDocsRow(string name, string resourceFile, string validationFile, string outFile, bool documentSpeciesTable)
@@ -236,15 +231,25 @@ namespace APSIM.Documentation
             return CustomDocsRow("SoilWater", "Description & validation", inputs, $"{modelName}.pdf", paramsCell.ToEnumerable());
         }
 
-        private static IDocumentationRow ModelWithNoResourceRow(string modelName, IEnumerable<IDocumentationCell> extraCells = null)
+        private static IDocumentationRow ModelWithNoResourceRow(string modelName, bool isUnderReview = false, IEnumerable<IDocumentationCell> extraCells = null)
         {
-            string validationFile = Path.Combine(validation, modelName, $"{modelName}.apsimx");
+            Console.WriteLine($"Creating documentation for {modelName}");
+            string validationFile;
+            string displayName = modelName;
+            if (isUnderReview)
+            {
+                displayName += " (under review)";
+                validationFile = Path.Combine(underReview, modelName, $"{modelName}.apsimx");
+            }
+            else
+                validationFile = Path.Combine(validation, modelName, $"{modelName}.apsimx");
             IEnumerable<string> inputs = new string[1] { validationFile };
             
             IDocumentationFile paramsDocs = new ParamsDocsFromFile(validationFile, $"{modelName}-params.pdf", options);
             IDocumentationCell paramsCell = new DocumentationCell(paramsDocs);
             extraCells = extraCells == null ? paramsCell.ToEnumerable() : extraCells.Prepend(paramsCell);
-            return CustomDocsRow(modelName, "Description & validation", inputs, $"{modelName}.pdf", extraCells);
+           
+            return CustomDocsRow(displayName, "Description & validation", inputs, $"{modelName}.pdf", extraCells);
         }
 
         private static IDocumentationRow CreateUnderReviewPlantRow(string modelName)
