@@ -235,9 +235,10 @@ namespace APSIM.Documentation
         {
             Console.WriteLine($"Creating documentation for {modelName}");
             string validationFile;
+            string displayName = modelName;
             if (isUnderReview)
             {
-                modelName = $"{modelName} (Under review)";
+                displayName += " (under review)";
                 validationFile = Path.Combine(underReview, modelName, $"{modelName}.apsimx");
             }
             else
@@ -247,7 +248,8 @@ namespace APSIM.Documentation
             IDocumentationFile paramsDocs = new ParamsDocsFromFile(validationFile, $"{modelName}-params.pdf", options);
             IDocumentationCell paramsCell = new DocumentationCell(paramsDocs);
             extraCells = extraCells == null ? paramsCell.ToEnumerable() : extraCells.Prepend(paramsCell);
-            return CustomDocsRow(modelName, "Description & validation", inputs, $"{modelName}.pdf", extraCells);
+           
+            return CustomDocsRow(displayName, "Description & validation", inputs, $"{modelName}.pdf", extraCells);
         }
 
         private static IDocumentationRow CreateUnderReviewPlantRow(string modelName)
