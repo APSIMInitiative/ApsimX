@@ -136,14 +136,17 @@
             ISoilWater sw = s.Children[2] as ISoilWater;
             Assert.AreEqual(sw.Thickness, new double[] { 150, 150, 300, 300 });
 
-            Assert.IsTrue(s.Children[3] is SoilNitrogen);
-            Assert.IsTrue(s.Children[4] is CERESSoilTemperature);
-            Organic som = s.Children[5] as Organic;
+            Assert.IsTrue(s.Children[9] is Nutrient);
+            Assert.IsTrue(s.Children[3] is CERESSoilTemperature);
+            Assert.IsTrue(s.Children[4] is Solute);
+            Assert.IsTrue(s.Children[5] is Solute);
+            Assert.IsTrue(s.Children[6] is Solute);
+            Organic som = s.Children[7] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
-            Chemical a = s.Children[6] as Chemical;
+            Chemical a = s.Children[8] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
