@@ -335,6 +335,23 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Convert the specified string to a double. Will throw a user-readable
+        /// message if conversion fails.
+        /// </summary>
+        /// <param name="str">The string to be converted to a number.</param>
+        public static double ParseDouble(string str)
+        {
+            try
+            {
+                return Convert.ToDouble(str, CultureInfo.InvariantCulture);
+            }
+            catch (Exception error)
+            {
+                throw new InvalidOperationException($"Cannot convert '{str}' to a number", error);
+            }
+        }
+
+        /// <summary>
         /// Return a string with double quotes around St
         /// </summary>
         /// <param name="st"></param>
