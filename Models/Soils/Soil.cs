@@ -269,19 +269,19 @@
                             summary.WriteMessage(null, $"OC value of {organic.Carbon[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
                     }
 
-                if (!MathUtilities.ValuesInArray(water.Volumetric))
+                if (!MathUtilities.ValuesInArray(water.InitialValues))
                     message.AppendLine("No starting soil water values found.");
                 else
                     for (int layer = 0; layer != physical.Thickness.Length; layer++)
                     {
                         int layerNumber = layer + 1;
 
-                        if (water.Volumetric[layer] == MathUtilities.MissingValue || double.IsNaN(water.Volumetric[layer]))
+                        if (water.InitialValues[layer] == MathUtilities.MissingValue || double.IsNaN(water.InitialValues[layer]))
                             message.AppendLine($"Soil water value missing in layer {layerNumber}");
-                        else if (MathUtilities.GreaterThan(water.Volumetric[layer], physical.SAT[layer], 3))
-                            message.AppendLine($"Soil water of {water.Volumetric[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layer].ToString("f3")}");
-                        else if (MathUtilities.LessThan(water.Volumetric[layer], physical.AirDry[layer], 3))
-                            message.AppendLine($"Soil water of {water.Volumetric[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
+                        else if (MathUtilities.GreaterThan(water.InitialValues[layer], physical.SAT[layer], 3))
+                            message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is above saturation of {physical.SAT[layer].ToString("f3")}");
+                        else if (MathUtilities.LessThan(water.InitialValues[layer], physical.AirDry[layer], 3))
+                            message.AppendLine($"Soil water of {water.InitialValues[layer].ToString("f3")} in layer {layerNumber} is below air-dry value of {physical.AirDry[layer].ToString("f3")}");
                     }
 
                 for (int layer = 0; layer != physical.Thickness.Length; layer++)
