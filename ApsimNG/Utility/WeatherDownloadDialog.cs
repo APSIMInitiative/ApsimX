@@ -48,6 +48,7 @@ namespace Utility
         private ScrolledWindow scroller;
         private VBox vbox1;
         Box dialogVBox;
+        private bool singleInstance = false;
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -122,17 +123,23 @@ namespace Utility
 
         private void BtnBrowse_Clicked(object sender, EventArgs e)
         {
-            try
+            if (!singleInstance)
             {
-                string fileName = ViewBase.AskUserForFileName("Choose a location for saving the weather file", Utility.FileDialog.FileActionType.Save, "APSIM Weather file (*.met)|*.met", entryFilePath.Text);
-                if (!String.IsNullOrEmpty(fileName))
+                try
                 {
-                    entryFilePath.Text = fileName;
+                    singleInstance = true;
+                    string fileName = ViewBase.AskUserForFileName("Choose a location for saving the weather file", Utility.FileDialog.FileActionType.Save, "APSIM Weather file (*.met)|*.met", entryFilePath.Text);
+                    singleInstance = false;
+                    if (!String.IsNullOrEmpty(fileName))
+                    {
+                        entryFilePath.Text = fileName;
+                    }
                 }
-            }
-            catch (Exception err)
-            {
-                ShowMessage(MessageType.Error, err.Message, "Error");
+                catch (Exception err)
+                {
+                    ShowMessage(MessageType.Error, err.Message, "Error");
+                }
+                dialog1.GrabFocus(); // not working
             }
         }
 
@@ -153,56 +160,92 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnOk_Clicked(object sender, EventArgs e)
         {
+            bool validEntries = false;
+            bool proceed = true;
             try
             {
-                if (!CheckValue(entryLatitude) || !CheckValue(entryLongitude))
-                    return;
                 if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                 {
                     ShowMessage(MessageType.Warning, "You must provide a file name for saving the weather data", "No file path");
                     BtnBrowse_Clicked(this, null);
-                    return;
+                    if (String.IsNullOrWhiteSpace(entryFilePath.Text))
+                        proceed = false;
                 }
-                string newWeatherPath = null;
-                WaitCursor = true;
-                try
+                
+                if (proceed)
                 {
-                    if (radioSiloDataDrill.Active)
-                        newWeatherPath = GetDataDrill();
-                    else if (radioSiloPatchPoint.Active)
-                        newWeatherPath = GetPatchPoint();
-                    else if (radioNASA.Active)
-                        newWeatherPath = GetNasaChirps();
-                }
-                finally
-                {
-                    WaitCursor = false;
-                }
-                if (string.IsNullOrWhiteSpace(newWeatherPath))
-                {
-                    ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
-                }
-                else
-                {
-                    if (dest is Weather)
+                    string newWeatherPath = null;
+                    try
                     {
-                        // If there is an existing Weather model (and there usually will be), is it better to replace
-                        // the model, or modify the FullFileName of the original?
-                        IPresenter currentPresenter = explorerPresenter.CurrentPresenter;
-                        if (currentPresenter is MetDataPresenter)
-                            (currentPresenter as MetDataPresenter).OnBrowse(newWeatherPath);
-                        else
-                            explorerPresenter.CommandHistory.Add(new UserInterface.Commands.ChangeProperty(dest, "FullFileName", newWeatherPath));
+                        bool validGeo = CheckValue(entryLatitude);
+                        validGeo = validGeo && CheckValue(entryLongitude);
+                        if (validGeo)
+                        {
+                            if (radioSiloDataDrill.Active)
+                            {
+                                validEntries = ValidateDataDrillChoice();
+                                if (validEntries)
+                                {
+                                    WaitCursor = true;
+                                    newWeatherPath = GetDataDrill();
+                                }
+                            }
+                            else if (radioSiloPatchPoint.Active)
+                            {
+                                validEntries = ValidatePatchPointChoice();
+                                if (validEntries)
+                                {
+                                    WaitCursor = true;
+                                    newWeatherPath = GetPatchPoint();
+                                }
+                            }
+                            else if (radioNASA.Active)
+                            {
+                                validEntries = ValidateNasaChoice();
+                                if (validEntries)
+                                {
+                                    WaitCursor = true;
+                                    newWeatherPath = GetNasaChirps();
+                                }
+                            }
+                        }
                     }
-                    else if (dest is Simulation)
+                    finally
                     {
-                        Weather newWeather = new Weather();
-                        newWeather.FullFileName = newWeatherPath;
-                        var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter.GetNodeDescription);
-                        explorerPresenter.CommandHistory.Add(command, true);
+                        WaitCursor = false;
+                    }
+
+                    if (validEntries && string.IsNullOrWhiteSpace(newWeatherPath))
+                    {
+                        ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
+                    }
+                    else
+                    {
+                        if (validEntries)
+                        {
+                            if (dest is Weather)
+                            {
+                                // If there is an existing Weather model (and there usually will be), is it better to replace
+                                // the model, or modify the FullFileName of the original?
+                                IPresenter currentPresenter = explorerPresenter.CurrentPresenter;
+                                if (currentPresenter is MetDataPresenter)
+                                    (currentPresenter as MetDataPresenter).OnBrowse(newWeatherPath);
+                                else
+                                    explorerPresenter.CommandHistory.Add(new UserInterface.Commands.ChangeProperty(dest, "FullFileName", newWeatherPath));
+                            }
+                            else if (dest is Simulation)
+                            {
+                                Weather newWeather = new Weather();
+                                newWeather.FullFileName = newWeatherPath;
+                                var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter.GetNodeDescription);
+                                explorerPresenter.CommandHistory.Add(command, true);
+                            }
+                        }
                     }
                 }
-                dialog1.Dispose();
+                if (validEntries || !proceed)
+                    dialog1.Dispose();
+                
             }
             catch (Exception err)
             {
@@ -405,32 +448,41 @@ namespace Utility
             return result;
         }
 
+        private bool ValidateDataDrillChoice()
+        {
+            bool proceed = true;
+            DateTime startDate = calendarStart.Date;
+            DateTime endDate = calendarEnd.Date; 
+            if (startDate.Year < 1889)
+            {
+                ShowMessage(MessageType.Warning, "SILO data is not available before 1889", "Invalid start date");
+                proceed = false;
+            }
+                        if (endDate.CompareTo(DateTime.Today) >= 0)
+            {
+                ShowMessage(MessageType.Warning, "SILO data end date can be no later than yesterday", "Invalid end date");
+                proceed = false;
+            }
+            if (endDate.CompareTo(startDate) < 0)
+            {
+                ShowMessage(MessageType.Warning, "The end date must be after the start date!", "Invalid dates");
+                proceed = false;
+            }
+            if (String.IsNullOrWhiteSpace(entryEmail.Text))
+            {
+                ShowMessage(MessageType.Warning, "The SILO data API requires you to provide your e-mail address", "E-mail address required");
+                proceed = false;
+            }
+            return proceed;
+        }
+
         public string GetDataDrill()
         {
             string newWeatherPath = null;
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
             DateTime startDate = calendarStart.Date;
-            if (startDate.Year < 1889)
-            {
-                ShowMessage(MessageType.Warning, "SILO data is not available before 1889", "Invalid start date");
-                return null;
-            }
             DateTime endDate = calendarEnd.Date;
-            if (endDate.CompareTo(DateTime.Today) >= 0)
-            {
-                ShowMessage(MessageType.Warning, "SILO data end date can be no later than yesterday", "Invalid end date");
-                return null;
-            }
-            if (endDate.CompareTo(startDate) < 0)
-            {
-                ShowMessage(MessageType.Warning, "The end date must be after the start date!", "Invalid dates");
-                return null;
-            }
-            if (String.IsNullOrWhiteSpace(entryEmail.Text))
-            {
-                ShowMessage(MessageType.Warning, "The SILO data API requires you to provide your e-mail address", "E-mail address required");
-                return null;
-            }
+            
             string url = String.Format("https://www.longpaddock.qld.gov.au/cgi-bin/silo/DataDrillDataset.php?start={0:yyyyMMdd}&finish={1:yyyyMMdd}&lat={2}&lon={3}&format=apsim&username={4}&password=silo",
                             startDate, endDate, entryLatitude.Text, entryLongitude.Text, System.Net.WebUtility.UrlEncode(entryEmail.Text));
             MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
@@ -456,32 +508,41 @@ namespace Utility
             return newWeatherPath;
         }
 
+        private bool ValidatePatchPointChoice()
+        {
+            bool proceed = true;
+            DateTime startDate = calendarStart.Date;
+            DateTime endDate = calendarEnd.Date; 
+            if (startDate.Year < 1889)
+            {
+                ShowMessage(MessageType.Warning, "SILO data is not available before 1889", "Invalid start date");
+                proceed = false;
+            }
+            if (endDate.CompareTo(DateTime.Today) >= 0)
+            {
+                ShowMessage(MessageType.Warning, "SILO data end date can be no later than yesterday", "Invalid end date");
+                proceed = false;
+            }
+            if (endDate.CompareTo(startDate) < 0)
+            {
+                ShowMessage(MessageType.Warning, "The end date must be after the start date!", "Invalid dates");
+                proceed = false;
+            }
+            if (String.IsNullOrWhiteSpace(entryEmail.Text))
+            {
+                ShowMessage(MessageType.Warning, "The SILO data API requires you to provide your e-mail address", "E-mail address required");
+                proceed = false;
+            }
+
+            return proceed;
+        }
+
         public string GetPatchPoint()
         {
             string newWeatherPath = null;
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
             DateTime startDate = calendarStart.Date;
-            if (startDate.Year < 1889)
-            {
-                ShowMessage(MessageType.Warning, "SILO data is not available before 1889", "Invalid start date");
-                return null;
-            }
             DateTime endDate = calendarEnd.Date;
-            if (endDate.CompareTo(DateTime.Today) >= 0)
-            {
-                ShowMessage(MessageType.Warning, "SILO data end date can be no later than yesterday", "Invalid end date");
-                return null;
-            }
-            if (endDate.CompareTo(startDate) < 0)
-            {
-                ShowMessage(MessageType.Warning, "The end date must be after the start date!", "Invalid dates");
-                return null;
-            }
-            if (String.IsNullOrWhiteSpace(entryEmail.Text))
-            {
-                ShowMessage(MessageType.Warning, "The SILO data API requires you to provide your e-mail address", "E-mail address required");
-                return null;
-            }
 
             // Patch point get a bit complicated. We need a BOM station number, but can't really expect the user
             // to know that in advance. So what we can attempt to do is use the provided lat and long in the geocoding service
@@ -639,23 +700,31 @@ namespace Utility
             }
         }
 
+        private bool ValidateNasaChoice()
+        {
+            DateTime startDate = calendarStart.Date;
+            DateTime endDate = calendarEnd.Date;
+            bool proceed = true;
+            if (startDate.Year < 1981)
+            {
+                ShowMessage(MessageType.Warning, "NASA/CHIRPS data is not available before 1981", "Invalid start date");
+                proceed = false;
+            }
+            if (endDate.CompareTo(DateTime.Today) >= 0)
+            {
+                ShowMessage(MessageType.Warning, "NASA/CHRIPS data end date can be no later than yesterday", "Invalid end date");
+                proceed = false;
+            }
+            return proceed;
+        }
+
         public string GetNasaChirps()
         {
             string newWeatherPath = null;
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
             DateTime startDate = calendarStart.Date;
-            if (startDate.Year < 1981)
-            {
-                ShowMessage(MessageType.Warning, "NASA/CHIRPS data is not available before 1981", "Invalid start date");
-                return null;
-            }
             DateTime endDate = calendarEnd.Date;
-            if (endDate.CompareTo(DateTime.Today) >= 0)
-            {
-                ShowMessage(MessageType.Warning, "NASA/CHRIPS data end date can be no later than yesterday", "Invalid end date");
-                return null;
-            }
-
+            
             double latitude = double.Parse(entryLatitude.Text, CultureInfo.CurrentCulture);
             double longitude = double.Parse(entryLongitude.Text, CultureInfo.CurrentCulture);
 
