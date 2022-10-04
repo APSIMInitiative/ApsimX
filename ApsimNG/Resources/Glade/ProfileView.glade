@@ -94,6 +94,24 @@
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="padding">2</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="numLayersLabel">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">start</property>
+        <property name="label" translatable="yes">10 layers</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="padding">2</property>
+        <property name="pack-type">end</property>
         <property name="position">3</property>
       </packing>
     </child>
