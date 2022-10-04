@@ -406,7 +406,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantSowing")]
 		protected void OnPlantSowing(object sender, SowingParameters data)
 		{
-			if (data.Plant == plant && leaf.TilleringMethod == 1)
+			if (data.Plant == plant && data.TilleringMethod == 1)
 			{
 				radiationAverages = new List<double>();
 				plantsPerMetre = data.RowSpacing / 1000.0 * data.SkipDensityScale;
