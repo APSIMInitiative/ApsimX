@@ -4697,7 +4697,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 4.0,
+                              "FixedValue": 3.0,
                               "Units": null,
                               "Name": "CriticalValue",
                               "ResourceName": null,
@@ -10214,7 +10214,9 @@
       ],
       "Enabled": true,
       "ReadOnly": false
-    }  ],
+    }
+
+  ],
   "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
