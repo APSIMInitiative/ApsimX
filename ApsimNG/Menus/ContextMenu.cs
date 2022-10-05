@@ -484,7 +484,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil), typeof(Zone) })]
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Folder), typeof(Zone) })]
         public void DownloadSoil(object sender, EventArgs e)
         {
             try
