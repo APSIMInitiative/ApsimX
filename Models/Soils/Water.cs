@@ -37,14 +37,14 @@
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial water values</summary>
         [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
         [Display(Format = "N1")]
