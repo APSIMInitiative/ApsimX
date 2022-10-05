@@ -85,11 +85,28 @@
                 }
                 yield return new Table(table);
             }
+            else
+            {
+                // No experiments - look for free standing simulations.
+                foreach (Simulation simulation in FindAllChildren<Simulation>().Where(simulation => simulation.Enabled))
+                {
+                    yield return new Paragraph($"**{simulation.Name}**");
+                    foreach (Folder folder in simulation.FindAllChildren<Folder>().Where(folder => folder.Enabled && folder.ShowInDocs))
+                    {
+                        var childGraphs = GetChildGraphs(folder);
+                        while (childGraphs.Any())
+                        {
+                            yield return new APSIM.Shared.Documentation.GraphPage(childGraphs.Take(GraphsPerPage));
+                            childGraphs = childGraphs.Skip(GraphsPerPage);
+                        }
+                    }
+                }
+            }
 
             // Write page of graphs.
             if (ShowInDocs)
             {
-                var childGraphs = GetChildGraphs();
+                var childGraphs = GetChildGraphs(this);
                 while (childGraphs.Any())
                 {
                     yield return new APSIM.Shared.Documentation.GraphPage(childGraphs.Take(GraphsPerPage));
@@ -108,12 +125,12 @@
                     yield return tag;
         }
 
-        private IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs()
+        private IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs(IModel parent)
         {
             var graphs = new List<APSIM.Shared.Documentation.Graph>();
             var page = new Models.GraphPage();
-            page.Graphs.AddRange(FindAllChildren<Models.Graph>().Where(g => g.Enabled));
-            var storage = FindInScope<Models.Storage.IDataStore>();
+            page.Graphs.AddRange(parent.FindAllChildren<Models.Graph>().Where(g => g.Enabled));
+            var storage = parent.FindInScope<Models.Storage.IDataStore>();
             foreach (var map in page.GetAllSeriesDefinitions(this, storage.Reader))
             {
                 try
