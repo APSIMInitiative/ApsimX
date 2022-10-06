@@ -758,18 +758,15 @@ namespace Models.Soils
         /// <summary>
         /// Reset the model
         /// </summary>
-        public void OnReset()
+        public void Reset()
         {
             ZeroVariables();
             GetOtherVariables();
             InitDefaults();
-            //ReadConstants();
             ReadParam();
             ReadSoluteParams();
-            // RegisterSoluteOutputs(); // This is the wrong place! We don't yet know what solutes are being modelled
             InitCalc();
             CheckInputs();
-            //SendNewProfile();
         }
 
         /// <summary>
@@ -931,12 +928,6 @@ namespace Models.Soils
             ibbc = 1;
         }
 
-        ///<summary>Perform a reset</summary>
-        public void Reset()
-        {
-            throw new NotImplementedException("SWIM doesn't implement a reset method");
-        }
-
         ///<summary>Perform tillage</summary>
         public void Tillage(string tillageType)
         {
@@ -963,7 +954,7 @@ namespace Models.Soils
                 isbc = 1;
 
             ErrorChecking();
-            OnReset();
+            Reset();
             initDone = true;
             Sum_Report();
         }
