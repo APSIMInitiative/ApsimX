@@ -123,18 +123,30 @@
         public static IEnumerable<string> GetModelParameterNames(string resourceName)
         {
             string contents = Resource.GetString(resourceName);
-            if (contents != null)
+            return GetModelParameterNamesFromJSON(contents);
+        }
+
+        /// <summary>
+        /// Get a list of parameter names for a model represented as a JSON string.
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<string> GetModelParameterNamesFromJSON(string jsonString)
+        {
+            if (jsonString != null)
             {
                 var parameterNames = new List<string>();
 
-                var json = JObject.Parse(contents);
+                var json = JObject.Parse(jsonString);
                 var children = json["Children"] as JArray;
-                var simulations = children[0];
+                JToken simulations;
+                if (children.Count == 0)
+                    simulations = json;
+                else
+                    simulations = children[0];
 
                 GetParametersFromToken(simulations, null, parameterNames);
                 return parameterNames;
             }
-
             return null;
         }
 

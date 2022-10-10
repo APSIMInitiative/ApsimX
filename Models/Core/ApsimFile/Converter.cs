@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 155; } }
+        public static int LatestVersion { get { return 156; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4600,6 +4600,29 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject cultivarFolder in JsonUtilities.ChildrenRecursively(root, "CultivarFolder"))
                 cultivarFolder["$type"] = "Models.Core.Folder, Models";
+        }
+
+        /// <summary>
+        /// Change PredictedObserved to make SimulationName an explicit first field to match on.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion156(JObject root, string fileName)
+        {
+            foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
+            {
+                var fieldName3 = predictedObserved["FieldName3UsedForMatch"];
+                if (!string.IsNullOrEmpty(fieldName3.Value<string>()))
+                    predictedObserved["FieldName4UsedForMatch"] = fieldName3.Value<string>();
+                var fieldName2 = predictedObserved["FieldName2UsedForMatch"];
+                if (!string.IsNullOrEmpty(fieldName2.Value<string>()))
+                    predictedObserved["FieldName3UsedForMatch"] = fieldName2.Value<string>();
+                var fieldName1 = predictedObserved["FieldNameUsedForMatch"];
+                if (!string.IsNullOrEmpty(fieldName1.Value<string>()))
+                    predictedObserved["FieldName2UsedForMatch"] = fieldName1.Value<string>();
+                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
+
+            }
         }
 
         /// <summary>
