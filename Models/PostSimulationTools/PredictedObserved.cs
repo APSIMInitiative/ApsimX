@@ -58,6 +58,11 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldName3UsedForMatch { get; set; }
 
+        /// <summary>Gets or sets the third field name used for match.</summary>
+        [Description("Fourth field name to use for matching predicted with observed data (optional)")]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
+        public string FieldName4UsedForMatch { get; set; }
+
         /// <summary>
         /// Normally, the only columns added to the PredictedObserved table are
         /// those which exist in both predicted and observed tables. If this is
@@ -104,25 +109,24 @@ namespace Models.PostSimulationTools
                 // This should be all columns which exist in one table but not both.
                 IEnumerable<string> uncommonCols = predictedDataNames.Except(observedDataNames).Union(observedDataNames.Except(predictedDataNames));
 
-                IStorageReader reader = dataStore.Reader;
-                string match1ObsShort = reader.BriefColumnName(ObservedTableName, FieldNameUsedForMatch);
-                string match2ObsShort = reader.BriefColumnName(ObservedTableName, FieldName2UsedForMatch);
-                string match3ObsShort = reader.BriefColumnName(ObservedTableName, FieldName3UsedForMatch);
+                IEnumerable<string> fieldNamesToMatch = new string[] { FieldNameUsedForMatch, FieldName2UsedForMatch, FieldName3UsedForMatch, FieldName4UsedForMatch }
+                                                        .Where(f => !string.IsNullOrEmpty(f))
+                                                        .Select(f => f == "SimulationName" ? "SimulationID" : f);
 
-                string match1PredShort = reader.BriefColumnName(PredictedTableName, FieldNameUsedForMatch);
-                string match2PredShort = reader.BriefColumnName(PredictedTableName, FieldName2UsedForMatch);
-                string match3PredShort = reader.BriefColumnName(PredictedTableName, FieldName3UsedForMatch);
+                IEnumerable<string> shortObservedFieldNamesToMatch = fieldNamesToMatch.Select(f => dataStore.Reader.BriefColumnName(ObservedTableName, f));
+
+                bool useSimulationNameForMatch = fieldNamesToMatch.Contains("SimulationID");
 
                 StringBuilder query = new StringBuilder("SELECT ");
                 for (int i = 0; i < commonCols.Count; i++)
                 {
                     string s = commonCols[i];
-                    string obsColShort = reader.BriefColumnName(ObservedTableName, s);
-                    string predColShort = reader.BriefColumnName(PredictedTableName, s);
+                    string obsColShort = dataStore.Reader.BriefColumnName(ObservedTableName, s);
+                    string predColShort = dataStore.Reader.BriefColumnName(PredictedTableName, s);
                     if (i != 0)
                         query.Append(", ");
 
-                    if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
+                    if (fieldNamesToMatch.Contains(s))
                         query.Append($"O.\"{obsColShort}\"");
                     else
                         query.Append($"O.\"{obsColShort}\" AS \"Observed.{obsColShort}\", P.\"{predColShort}\" AS \"Predicted.{predColShort}\"");
@@ -148,11 +152,10 @@ namespace Models.PostSimulationTools
                 query.AppendLine();
                 query.AppendLine($"FROM [{ObservedTableName}] O");
                 query.AppendLine($"INNER JOIN [{PredictedTableName}] P");
-                query.Append($"USING ([SimulationID], [CheckpointID], [{FieldNameUsedForMatch}]");
-                if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
-                    query.Append($", \"{FieldName2UsedForMatch}\"");
-                if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
-                    query.Append($", \"{FieldName3UsedForMatch}\"");
+                query.Append($"USING ([CheckpointID]");
+
+                foreach (var fieldName in fieldNamesToMatch)
+                    query.Append($", \"{fieldName}\"");
                 query.AppendLine(")");
 
                 int checkpointID = dataStore.Writer.GetCheckpointID("Current");
@@ -174,17 +177,20 @@ namespace Models.PostSimulationTools
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
-                    query.Append(" AND O.[SimulationID] in (");
-                    foreach (string simulationName in simulationNames)
+                    if (useSimulationNameForMatch)
                     {
-                        if (simulationName != simulationNames[0])
-                            query.Append(',');
-                        query.Append(dataStore.Writer.GetSimulationID(simulationName, null));
+                        query.Append(" AND O.[SimulationID] in (");
+                        foreach (string simulationName in simulationNames)
+                        {
+                            if (simulationName != simulationNames[0])
+                                query.Append(',');
+                            query.Append(dataStore.Writer.GetSimulationID(simulationName, null));
+                        }
+                        query.Append(")");
                     }
-                    query.Append(")");
                 }
 
-                DataTable predictedObservedData = reader.GetDataUsingSql(query.ToString());
+                DataTable predictedObservedData = dataStore.Reader.GetDataUsingSql(query.ToString());
 
                 if (predictedObservedData != null)
                 {
@@ -193,16 +199,16 @@ namespace Models.PostSimulationTools
                         if (column.ColumnName.StartsWith("Predicted."))
                         {
                             string shortName = column.ColumnName.Substring("Predicted.".Length);
-                            column.ColumnName = "Predicted." + reader.FullColumnName(PredictedTableName, shortName);
+                            column.ColumnName = "Predicted." + dataStore.Reader.FullColumnName(PredictedTableName, shortName);
                         }
                         else if (column.ColumnName.StartsWith("Observed."))
                         {
                             string shortName = column.ColumnName.Substring("Observed.".Length);
-                            column.ColumnName = "Observed." + reader.FullColumnName(ObservedTableName, shortName);
+                            column.ColumnName = "Observed." + dataStore.Reader.FullColumnName(ObservedTableName, shortName);
                         }
-                        else if (column.ColumnName.Equals(match1ObsShort) || column.ColumnName.Equals(match2ObsShort) || column.ColumnName.Equals(match3ObsShort))
+                        else if (shortObservedFieldNamesToMatch.Contains(column.ColumnName))
                         {
-                            column.ColumnName = reader.FullColumnName(ObservedTableName, column.ColumnName);
+                            column.ColumnName = dataStore.Reader.FullColumnName(ObservedTableName, column.ColumnName);
                         }
                     }
 
@@ -235,7 +241,7 @@ namespace Models.PostSimulationTools
 
                     foreach (string fieldName in commonCols)
                     {
-                        string units = reader.Units(PredictedTableName, fieldName);
+                        string units = dataStore.Reader.Units(PredictedTableName, fieldName);
                         if (units != null && units != "()")
                         {
                             string unitsMinusBrackets = units.Replace("(", "").Replace(")", "");
@@ -251,7 +257,7 @@ namespace Models.PostSimulationTools
                         // The Writer replaces tables, rather than appends to them,
                         // so we actually need to re-write the existing units table values
                         // Is there a better way to do this?
-                        DataView allUnits = new DataView(reader.GetData("_Units"));
+                        DataView allUnits = new DataView(dataStore.Reader.GetData("_Units"));
                         allUnits.Sort = "TableName";
                         DataTable tableNames = allUnits.ToTable(true, "TableName");
                         foreach (DataRow row in tableNames.Rows)
@@ -272,8 +278,8 @@ namespace Models.PostSimulationTools
                 else
                 {
                     // Determine what went wrong.
-                    DataTable predictedData = reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
-                    DataTable observedData = reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
+                    DataTable predictedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
+                    DataTable observedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
                     if (predictedData == null || predictedData.Rows.Count == 0)
                         throw new Exception(Name + ": Cannot find any predicted data.");
                     else if (observedData == null || observedData.Rows.Count == 0)

@@ -245,7 +245,7 @@ namespace APSIM.Documentation
                 validationFile = Path.Combine(validation, modelName, $"{modelName}.apsimx");
             IEnumerable<string> inputs = new string[1] { validationFile };
             
-            IDocumentationFile paramsDocs = new ParamsDocsFromFile(validationFile, $"{modelName}-params.pdf", options);
+            IDocumentationFile paramsDocs = new ParamsDocsFromFile(validationFile, $"{modelName}-params.pdf", options, path:modelName);
             IDocumentationCell paramsCell = new DocumentationCell(paramsDocs);
             extraCells = extraCells == null ? paramsCell.ToEnumerable() : extraCells.Prepend(paramsCell);
            
