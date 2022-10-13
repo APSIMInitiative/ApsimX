@@ -24,6 +24,7 @@ namespace APSIM.Documentation
         private const string agpScience = "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf";
         private const string microClimateScience = "https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf";
         private const string grazPlan = "https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf";
+        private const string swim = "https://apsimdev.apsim.info/ApsimX/Documents/SWIMv21UserManual.pdf";
 
         private static PdfOptions options = PdfOptions.Default;
 
@@ -142,7 +143,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Soybean"),
                 SugarcaneRow(),
                 StockRow(),
-                ModelWithNoResourceRow("SWIM", isUnderReview:true),
+                ModelWithNoResourceRow("SWIM", extraCells: new[] { new DocumentationCell(new ExternalDocument("SWIM Technical Documentation (1996)", swim)) }),
                 StandardPmfPlantRow("Wheat"),
                 StandardPmfPlantRow("WhiteClover"),
             };
