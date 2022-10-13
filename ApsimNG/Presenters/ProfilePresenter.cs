@@ -33,6 +33,9 @@
         /// <summary>Graph.</summary>
         private GraphView graph;
 
+        /// <summary>Label showing number of layers.</summary>
+        private LabelView numLayersLabel;
+
         /// <summary>Default constructor</summary>
         public ProfilePresenter()
         {
@@ -59,6 +62,8 @@
 
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
+
+            numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
             if (!propertyView.AnyProperties)
             {
@@ -93,7 +98,8 @@
                                                       water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 else if (model is Organic organic)
                     PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
-                
+
+                numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
                 ConnectEvents();
             }
             catch (Exception err)
