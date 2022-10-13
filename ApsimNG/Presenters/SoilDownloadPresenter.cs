@@ -245,7 +245,7 @@ namespace UserInterface.Presenters
                 double longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
                 double radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
-                using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url))
+                using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result)
                 {
                     stream.Position = 0;
                     XmlDocument doc = new XmlDocument();
@@ -255,7 +255,7 @@ namespace UserInterface.Presenters
                     {
                         string name = node["Name"].InnerText;
                         string infoUrl = $"https://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SoilXML?Name={name}";
-                        using (MemoryStream infoStream = WebUtilities.ExtractDataFromURL(infoUrl))
+                        using (MemoryStream infoStream = WebUtilities.ExtractDataFromURL(infoUrl).Result)
                         {
                             infoStream.Position = 0;
                             string xml = HttpUtility.HtmlDecode(Encoding.UTF8.GetString(infoStream.ToArray()));
@@ -295,7 +295,7 @@ namespace UserInterface.Presenters
                 longitudeEditBox.Text + "&latitude=" + latitudeEditBox.Text;
             try
             {
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result;
                 stream.Position = 0;
                 XmlDocument doc = new XmlDocument();
                 doc.Load(stream);
@@ -332,7 +332,7 @@ namespace UserInterface.Presenters
                 longitudeEditBox.Text + "&lat=" + latitudeEditBox.Text;
             try
             {
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result;
                 stream.Position = 0;
                 XmlDocument doc = new XmlDocument();
                 doc.Load(stream);
@@ -434,7 +434,7 @@ namespace UserInterface.Presenters
                 double[] textureToAlb = new double[] { 0.12, 0.12, 0.13, 0.13, 0.12, 0.13, 0.13, 0.14, 0.13, 0.13, 0.16, 0.19, 0.13 };
                 double[] textureToCN2 = new double[] { 73.0, 73.0, 73.0, 73.0, 73.0, 73.0, 73.0, 73.0, 68.0, 73.0, 68.0, 68.0, 73.0 };
                 double[] textureToSwcon = new double[] { 0.25, 0.3, 0.3, 0.4, 0.5, 0.5, 0.5, 0.5, 0.6, 0.5, 0.6, 0.75, 0.5 };
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result;
                 stream.Position = 0;
                 JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
                 while (reader.Read())
@@ -849,7 +849,7 @@ namespace UserInterface.Presenters
                 string url = googleGeocodingApi + "latlng=" + latitudeEditBox.Text + ',' + longitudeEditBox.Text;
                 try
                 {
-                    MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                    MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result;
                     stream.Position = 0;
                     JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
                     while (reader.Read())
@@ -877,7 +877,7 @@ namespace UserInterface.Presenters
         {
             var country = countries.First(c => c.Name == countryDropDown.SelectedValue);
             string url = $"{googleGeocodingApi}components=country:{country.TwoLetterCode}|locality:{placeNameEditBox.Text}";
-            using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url))
+            using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result)
             {
                 stream.Position = 0;
                 using (JsonTextReader reader = new JsonTextReader(new StreamReader(stream)))
