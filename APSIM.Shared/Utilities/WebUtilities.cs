@@ -99,7 +99,7 @@
         /// <param name="mediaType">Preferred media type to return</param>
         /// <param name="cancellationToken">Token for cancellation</param>
         /// <returns>Data stream obtained from the URL</returns>
-        public async static Task<Stream> AsyncGetStreamTask(string url, string mediaType, CancellationToken cancellationToken)
+        public async static Task<Stream> AsyncGetStreamTask(string url, string mediaType, CancellationToken cancellationToken = default)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
