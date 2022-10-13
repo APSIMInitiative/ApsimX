@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 156,
   "Name": "Simulations",
   "ResourceName": null,
@@ -1857,22 +1857,6 @@
                       "InitialCNR": 100.0,
                       "Name": "SurfaceOM",
                       "ResourceName": "SurfaceOrganicMatter",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.MicroClimate, Models",
-                      "a_interception": 0.0,
-                      "b_interception": 1.0,
-                      "c_interception": 0.0,
-                      "d_interception": 0.0,
-                      "SoilHeatFluxFraction": 0.4,
-                      "MinimumHeightDiffForNewLayer": 0.0,
-                      "NightInterceptionFraction": 0.5,
-                      "ReferenceHeight": 2.0,
-                      "Name": "MicroClimate",
-                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
