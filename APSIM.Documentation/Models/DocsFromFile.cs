@@ -30,20 +30,21 @@ namespace APSIM.Documentation.Models
         /// <summary>
         /// Display name of the file.
         /// </summary>
-        public string Name { get; private set; } = "PDF";
+        public string Name { get; }
 
         /// <summary>
         /// The output name of the file.
         /// </summary>
-        public string OutputFileName { get; private set; }
+        public string OutputFileName { get; }
 
         /// <summary>
         /// Create a new <see cref="DocsFromFile"/> instance for the given input file.
         /// </summary>
+        /// <param name="name">Name to show on web site.</param>
         /// <param name="input">The input file.</param>
         /// <param name="output">Name of the file which will be generated.</param>
         /// <param name="options">Pdf generation options.</param>
-        public DocsFromFile(string input, string output, PdfOptions options) : this(input.ToEnumerable(), output, options)
+        public DocsFromFile(string name, string input, string output, PdfOptions options) : this(name, input.ToEnumerable(), output, options)
         {
         }
 
@@ -51,11 +52,13 @@ namespace APSIM.Documentation.Models
         /// Create a new <see cref="DocsFromFile"/> instance for
         /// the given input files.
         /// </summary>
+        /// <param name="name">Name to show on web site.</param>
         /// <param name="inputs">Input files from which a document will be generated.</param>
         /// <param name="output">Name of the file which will be generated.</param>
         /// <param name="options">Pdf generation options.</param>
-        public DocsFromFile(IEnumerable<string> inputs, string output, PdfOptions options)
+        public DocsFromFile(string name, IEnumerable<string> inputs, string output, PdfOptions options)
         {
+            Name = name;
             inputFiles = inputs;
             this.options = options;
             OutputFileName = output;

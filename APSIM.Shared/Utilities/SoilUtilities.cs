@@ -313,7 +313,9 @@
                 double[] newValues = MapMass(massValues, thickness.ToArray(), toThickness, allowMissingValues);
 
                 // Convert mass back to concentration and return
-                return MathUtilities.Divide(newValues, toThickness);
+                if (newValues != null)
+                    newValues = MathUtilities.Divide(newValues, toThickness);
+                return newValues;
             }
             return fromValues;
         }
@@ -327,7 +329,7 @@
         public static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
                                        bool allowMissingValues = false)
         {
-            if (fromValues == null || fromThickness == null)
+            if (fromValues == null || fromThickness == null || toThickness == null)
                 return null;
 
             double[] FromThickness = MathUtilities.RemoveMissingValuesFromBottom((double[])fromThickness.Clone());

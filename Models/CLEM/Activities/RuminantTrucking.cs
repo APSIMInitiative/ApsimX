@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
-using System.Text.Json.Serialization;
 using Models.CLEM.Groupings;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -352,7 +352,7 @@ namespace Models.CLEM.Activities
                     case "RuminantFeedGroup":
                         valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
-                    case "LabourGroup":
+                    case "LabourRequirement":
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":

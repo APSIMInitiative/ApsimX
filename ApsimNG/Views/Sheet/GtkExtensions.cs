@@ -21,6 +21,12 @@ namespace UserInterface.Views
                 keyParams.Key = Keys.PageDown;
             else if (evnt.Key == Gdk.Key.Return)
                 keyParams.Key = Keys.Return;
+            else if (evnt.Key == Gdk.Key.Home)
+                keyParams.Key = Keys.Home;
+            else if (evnt.Key == Gdk.Key.End)
+                keyParams.Key = Keys.End;
+            else if (evnt.Key == Gdk.Key.Delete)
+                keyParams.Key = Keys.Delete;
             else
                 keyParams.KeyValue = (char)evnt.KeyValue;
             keyParams.Control = evnt.State == ModifierType.ControlMask;

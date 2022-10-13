@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 151,
+  "Version": 152,
   "Name": "Simulations",
   "Children": [
     {
@@ -74,6 +74,8 @@
               "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
+              "BuildTransactionCategoryFromTree": false,
+              "UseModelNameAsTransactionCategory": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
@@ -766,8 +768,8 @@
                     },
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                      "TransactionCategory": null,
                       "OnPartialResourcesAvailableAction": 0,
+                      "TransactionCategory": null,
                       "Notes": null,
                       "SelectedTab": null,
                       "Name": "Manage herd",
@@ -839,10 +841,10 @@
                             {
                               "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                               "Value": 1.0,
+                              "Measure": "Feed provided",
                               "TransactionCategory": "Feed.[Product].[Ruminants]",
                               "RandomiseBeforeSorting": false,
                               "Identifier": null,
-                              "Measure": "",
                               "Notes": null,
                               "SelectedTab": null,
                               "Name": "Feed all",
@@ -935,8 +937,10 @@
                         {
                           "$type": "Models.CLEM.Activities.RuminantActivityManage, Models",
                           "ManageFemaleBreederNumbers": true,
-                          "PerformDestocking": true,
-                          "PerformStocking": true,
+                          "PerformFemaleDestocking": true,
+                          "PerformFemaleStocking": true,
+                          "PerformMaleDestocking": true,
+                          "PerformMaleStocking": true,
                           "MaximumBreedersKept": 10,
                           "MinimumBreedersKept": 2,
                           "MaxBreedersMultiplierToStop": 2.0,
@@ -1179,6 +1183,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
@@ -1199,6 +1205,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
@@ -1219,6 +1227,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
@@ -1239,6 +1249,8 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [

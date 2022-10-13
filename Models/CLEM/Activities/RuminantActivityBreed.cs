@@ -42,8 +42,6 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
-        //private Dictionary<string, IIndividualAttribute> randomHerdAttributes = new Dictionary<string, IIndividualAttribute>();
-
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
@@ -62,14 +60,6 @@ namespace Models.CLEM.Activities
         [Description("Infer pregnancy status at startup")]
         [Required]
         public bool InferStartupPregnancy { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityBreed()
-        {
-            TransactionCategory = "Livestock.[Type].Breeding";
-        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -128,7 +118,7 @@ namespace Models.CLEM.Activities
 
                         // must be breeders to bother checking any further
                         // must be either uncontrolled mating or the timing of controlled mating
-                        if (breeders.Count() > 0 & (!useControlledMating || this.TimingCheck(previousDate)))
+                        if (breeders.Count() > 0 & (!useControlledMating || controlledMating.TimingCheck(previousDate)))
                         {
                             int numberPossible = 0;
                             int numberServiced = 1;
@@ -199,6 +189,8 @@ namespace Models.CLEM.Activities
                                                     }
                                                 }
                                             }
+                                            else
+                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, conceiveDate));
                                         }
                                     }
                                 }
@@ -319,7 +311,6 @@ namespace Models.CLEM.Activities
                         newSucklingRuminant.Location = female.Location;
                         newSucklingRuminant.Mother = female;
                         newSucklingRuminant.Number = 1;
-                        newSucklingRuminant.SetUnweaned();
                         // suckling/calf weight from Freer
                         newSucklingRuminant.PreviousWeight = newSucklingRuminant.Weight;
                         newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
@@ -402,15 +393,21 @@ namespace Models.CLEM.Activities
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                         if (numberServiced < numberPossible)
                         {
-                            // calculate conception
-                            double conceptionRate = ConceptionRate(female, out status);
+                            double conceptionRate = 0;
+
+                            if (female.ActivityDeterminedConceptionRate != null)
+                                // If an activity controlled mating has previously determined conception rate and saved it (it will not be null if mated)
+                                // This conception rate can be used instead of determining conception here. 
+                                conceptionRate = female.ActivityDeterminedConceptionRate ?? 0;
+                            else
+                                // calculate conception
+                                conceptionRate = ConceptionRate(female, out status);
 
                             // if mandatory attributes are present in the herd, save male value with female details.
                             // update male for both successful and failed matings (next if statement
                             if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
                             {
                                 object male = null;
-
                                 if (useControlledMating)
                                 {
                                     bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
@@ -427,16 +424,12 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            // If an activity controlled mating has previously determined conception rate and saved it (it will not be null if mated)
-                            // This conception rate can be used instead of determining conception here. 
-                            if (female.ActivityDeterminedConceptionRate != null)
-                                conceptionRate = female.ActivityDeterminedConceptionRate ?? 0;
-
-
-                            if (female.ActivityDeterminedConceptionRate != null || conceptionRate > 0)
+                            // conception rate will be -ve for unsuccessful matings from controlled mating. a value of 0 still represents not mated
+                            if (Math.Abs(conceptionRate) > 0)
                             {
-                                //ActivitydeterminedConception rate > 0, otherwise rate caclulated above versus the random number approach
-                                if ((female.ActivityDeterminedConceptionRate != null)?female.ActivityDeterminedConceptionRate > 0: RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                // if controlled mating (ActiDetConcepRate not null and rate > 0 then successful mating), otherwise compare with random and conception rate for natural mating.
+                                //ActivitydeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
+                                if ((female.ActivityDeterminedConceptionRate != null)?conceptionRate > 0:RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
 

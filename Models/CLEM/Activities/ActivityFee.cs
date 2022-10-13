@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [Description("Define an expense based on tasks of parent activity")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/All/Fee.htm")]
+    [HelpUri(@"Content/Features/Activities/ActivityFee.htm")]
 
     public class ActivityFee : CLEMActivityBase, IActivityCompanionModel
     {
@@ -68,7 +68,6 @@ namespace Models.CLEM.Activities
         public ActivityFee()
         {
             this.SetDefaults();
-            TransactionCategory = "[General].[Type].[Action]";
             AllocationStyle = ResourceAllocationStyle.Manual;
             ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
@@ -88,9 +87,11 @@ namespace Models.CLEM.Activities
             resourceRequest = null;
             if (MathUtilities.IsPositive(argument))
             {
-                string relatesTo = "";
+                string relatesTo = null;
                 if (Parent as CLEMRuminantActivityBase != null)
-                    relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdName;
+                    relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdNameToDisplay;
+                if (Parent as ResourceActivityBuy != null)
+                    relatesTo = (Parent as ResourceActivityBuy).ResourceName;
 
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()

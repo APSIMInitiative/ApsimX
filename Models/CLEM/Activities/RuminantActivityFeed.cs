@@ -94,7 +94,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityFeed()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.[Type].Feeding";
         }
 
         /// <inheritdoc/>
@@ -106,7 +105,7 @@ namespace Models.CLEM.Activities
                 case "RuminantFeedGroupMonthly":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
-                        measures: new List<string>()
+                        measures: new List<string>() { "Feed provided" }
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
@@ -174,9 +173,9 @@ namespace Models.CLEM.Activities
                 switch (valueToSupply.Key.type)
                 {
                     case "RuminantFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = 0;
+                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
                         break;
-                    case "LabourGroup":
+                    case "LabourRequirement":
                     case "ActivityFee":
                         switch (valueToSupply.Key.identifier)
                         {
@@ -313,7 +312,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = $"{TransactionCategory}.Wastage",
-                        RelatesToResource = this.PredictedHerdName,
+                        RelatesToResource = this.PredictedHerdNameToDisplay,
                     };
                     ResourceRequestList.Insert(0, wastedRequest);
                 }
@@ -331,7 +330,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = $"{TransactionCategory}.Overfed wastage",
-                        RelatesToResource = this.PredictedHerdName
+                        RelatesToResource = this.PredictedHerdNameToDisplay
                     };
                     ResourceRequestList.Insert(0, excessRequest);
                 }

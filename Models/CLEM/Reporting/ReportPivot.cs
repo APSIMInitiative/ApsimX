@@ -3,6 +3,8 @@ using Models.Core;
 using Models.Core.Attributes;
 using Models.Storage;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -18,7 +20,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Generates a pivot table from a Report")]
     [Version(1, 0, 0, "")]
-    public class ReportPivot : Model, ICLEMUI
+    public class ReportPivot : Model, ICLEMUI, IValidatableObject
     {
         [Link]
         private IDataStore datastore = null;
@@ -32,7 +34,7 @@ namespace Models.CLEM.Reporting
         /// Tracks the active selection in the value box
         /// </summary>
         [Description("Values column")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetValueNames))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetValueNames))]
         public string Value { get; set; }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace Models.CLEM.Reporting
         /// Tracks the active selection in the row box
         /// </summary>
         [Description("Rows column")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetRowNames))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetRowNames))]
         public string Row { get; set; }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace Models.CLEM.Reporting
         /// Tracks the active selection in the column box
         /// </summary>
         [Description("Columns columns")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetColumnNames))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetColumnNames))]
         public string Column { get; set; }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace Models.CLEM.Reporting
         /// Tracks the active selection in the time box
         /// </summary>
         [Description("Time filter")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetTimes))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetTimes))]
         public string Time { get; set; }
 
         /// <summary>
@@ -80,8 +82,14 @@ namespace Models.CLEM.Reporting
         /// Tracks the active selection in the time box
         /// </summary>
         [Description("Aggregation method")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetAggregators))]
+        [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetAggregators))]
         public string Aggregator { get; set; }
+
+        /// <summary>
+        /// Include value name in column names
+        /// </summary>
+        [Description("Include values column name in column names")]
+        public bool IncludeValueColumnNameOutputColumns { get; set; }
 
         /// <summary>
         /// Populates the aggregate filter
@@ -140,6 +148,15 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable GenerateTable()
         {
+            var storage = FindInScope<IDataStore>() ?? datastore;
+            string viewSQL = storage.GetViewSQL(Name);
+            if (viewSQL != "")
+                return storage.Reader.GetData(Name);
+            return new DataTable();
+        }
+
+        private void CreateView()
+        {
             if (Name.Any(c => c == ' '))
                 throw new ApsimXException(this, $"Invalid name: {Name}\nNames cannot contain spaces.");
 
@@ -147,27 +164,32 @@ namespace Models.CLEM.Reporting
             var storage = FindInScope<IDataStore>() ?? datastore;
             var report = storage.Reader.GetData(Parent.Name);
 
+            if (report is null)
+                storage.Reader.Refresh();
+
+            report = storage.Reader.GetData(Parent.Name);
+
             // Check sensibility
             if (report is null || Row is null || Column is null || Value is null || Aggregator is null)
-                return null;
+                return;
             if (report.Columns.Count == 0)
-                return null;
+                return;
 
             // Set up date handling
             bool isDate = report.Columns[Column].DataType == typeof(DateTime);
             var cs_format = Time == "Year" ? "yyyy-01-01" : Time == "Month" ? "yyyy-MM-01" : "yyyy-MM-dd";
-            var sql_format = Time == "Year" ? "%Y-01-01" : Time == "Month" ? "%Y-%m-01" : "%Y-%m-%d";
+            var sql_format = Time == "Year" ? "%Y-01-01 12:00" : Time == "Month" ? "%Y-%m-01 12:00" : "%Y-%m-%d 12:00";
 
-            string test = isDate 
-                ? Time == "Day" ? $"[{Column}]" : $"datetime(strftime('{sql_format}', [{Column}]))" 
-                : $"[{Column}]";            
+            string test = isDate
+                ? Time == "Day" ? $"[{Column}]" : $"datetime(strftime('{sql_format}', [{Column}]))"
+                : $"[{Column}]";
 
             // Set up the columns in the pivot
             var cols = report
                 .AsEnumerable()
                 .Select(r => isDate ? ((DateTime)r[Column]).ToString(cs_format) : r[Column])
                 .Distinct()
-                .Select(o => $"{Aggregator}(CASE WHEN {test} == '{o}' THEN {Value} ELSE NULL END) AS '{o} {Value}'");
+                .Select(o => $"{Aggregator}(CASE WHEN {test} == '{o}' THEN {Value} ELSE 0 END) AS '{o}{((IncludeValueColumnNameOutputColumns)? ".{Value}" : "")}'");
 
             // Set up the rows in the pivot
             var rows = $"[{Row}]";
@@ -176,21 +198,45 @@ namespace Models.CLEM.Reporting
 
             // Construct the SQL statement
             var builder = new StringBuilder();
-            builder.AppendLine($"SELECT {rows} AS {Row},");
+            builder.AppendLine($"SELECT CheckpointID, SimulationID, Zone, {rows} AS {Row},");
             builder.AppendLine(string.Join(",\n", cols));
             builder.AppendLine($"FROM [{Parent.Name}] GROUP BY {rows}");
 
-            // Execute the query
-            SQL = builder.ToString();
-            storage.Reader.ExecuteSql(SQL);
-            storage.AddView($"{Name}", SQL);
-            return storage.Reader.GetDataUsingSql(SQL);
+            // check if the query already exists in the datastore
+
+            string viewSQL = storage.GetViewSQL(Name);
+            if (!viewSQL.EndsWith(builder.ToString().TrimEnd(new char[] { '\r', '\n' })))
+            {
+                // Execute the query
+                SQL = builder.ToString();
+                storage.AddView($"{Name}", SQL);
+            }
         }
 
         /// <summary>
         /// Saves the view post-simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e) => GenerateTable();
+        private void OnCompleted(object sender, EventArgs e) => CreateView();
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (FindAllInScope<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
+            {
+                string[] memberNames = new string[] { "Duplicate report name" };
+                results.Add(new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
     }
 }

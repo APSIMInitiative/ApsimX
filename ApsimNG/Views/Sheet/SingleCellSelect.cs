@@ -68,9 +68,9 @@ namespace UserInterface.Views
                     MoveToFarRight();
                 else if (evnt.Key == Keys.Left && evnt.Control)
                     MoveToFarLeft();
-                else if (evnt.Key == Keys.Down && evnt.Control)
+                else if ((evnt.Key == Keys.Down && evnt.Control) || evnt.Key == Keys.End)
                     MoveToBottom();
-                else if (evnt.Key == Keys.Up && evnt.Control)
+                else if ((evnt.Key == Keys.Up && evnt.Control) || evnt.Key == Keys.Home)
                     MoveToTop();
                 else if (evnt.Key == Keys.Left)
                     MoveLeft(evnt.Shift);
@@ -84,7 +84,8 @@ namespace UserInterface.Views
                     PageDown();
                 else if (evnt.Key == Keys.PageUp)
                     PageUp();
-
+                else if (evnt.Key == Keys.Delete)
+                    Delete();
                 sheet.Refresh();
             }
             else if (sheet.CellEditor != null && evnt.KeyValue < 255)
@@ -224,10 +225,14 @@ namespace UserInterface.Views
                 }
 
                 rowIndex++;
-                if (rowIndex == sheet.DataProvider.RowCount)
-                    break;
             }
             sheet.Refresh();
+        }
+
+        /// <summary>Delete contents of cells.</summary>
+        public virtual void Delete()
+        {
+            sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, null);
         }
     }
 }

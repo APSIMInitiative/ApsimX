@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 152; } }
+        public static int LatestVersion { get { return 156; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -115,10 +115,22 @@ namespace Models.Core.ApsimFile
                 {
                     var initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitWater"));
                     if (initWater == null)
+                    {
                         initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".InitialWater"));
+                        if (initWater != null)
+                        {
+                            // Models.Soils.InitialWater doesn't exist anymore
+                            initWater["$type"] = "Models.Soils.Water, Models";
+                            JsonUtilities.RenameModel(initWater as JObject, "Water");
+                        }
+                    }
                     if (initWater == null)
                         initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample") && string.Equals("Initial Water", c["Name"].Value<string>(), StringComparison.InvariantCultureIgnoreCase));
+                    if (initWater == null)
+                        initWater = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Water,"));
                     var sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Sample"));
+                    if (sample == null)
+                        sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
                     bool res = false;
                     if (initWater == null)
@@ -2947,7 +2959,7 @@ namespace Models.Core.ApsimFile
                     JObject zone = JsonUtilities.Ancestor(manager.Token, typeof(Zone));
                     if (zone == null)
                     {
-                        JObject replacements = JsonUtilities.Ancestor(manager.Token, typeof(Replacements));
+                        JObject replacements = JsonUtilities.Ancestor(manager.Token, "Replacements");
                         if (replacements != null)
                         {
                             JObject replacement = JsonUtilities.ChildrenRecursively(root).Where(j => j != manager.Token && j["Name"].ToString() == manager.Token["Name"].ToString()).FirstOrDefault();
@@ -3030,7 +3042,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
             {
-                if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, typeof(Replacements)) != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
+                if ((plant["ResourceName"] == null || JsonUtilities.Ancestor(plant, "Replacements") != null) && JsonUtilities.ChildWithName(plant, "MortalityRate", ignoreCase: true) == null)
                 {
                     Constant mortalityRate = new Constant();
                     mortalityRate.Name = "MortalityRate";
@@ -4041,6 +4053,18 @@ namespace Models.Core.ApsimFile
                     var soilChildren = soil["Children"] as JArray;
                     var chemicalChildren = chemical["Children"] as JArray;
                     var bdToken = physical["BD"] as JArray;
+
+                    // Add a nutrient model if neither Nutrient or SoilNitrogen exists.
+                    if (nutrient == null && soilNitrogen == null)
+                    {
+                        soilChildren.Add(new JObject()
+                        {
+                            ["$type"] = "Models.Soils.Nutrients.Nutrient, Models",
+                            ["Name"] = "Nutrient",
+                            ["ResourceName"] = "Nutrient"
+                        });
+                    }
+
                     if (soilChildren != null && chemicalChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
@@ -4539,6 +4563,66 @@ namespace Models.Core.ApsimFile
             }
 
             return (null, null, null);
+        }
+
+        /// <summary>
+        /// Replace replacements with a simple folder.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion153(JObject root, string fileName)
+        {
+            foreach (JObject replacements in JsonUtilities.ChildrenRecursively(root, "Replacements"))
+            {
+                replacements["$type"] = "Models.Core.Folder, Models";
+            }
+        }
+
+        /// <summary>
+        /// Change .psi to .PSI (uppercase)
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion154(JObject root, string fileName)
+        {
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".psi", ".PSI");
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+                JsonUtilities.ReplaceManagerCode(manager, ".psi", ".PSI");
+        }
+
+        /// <summary>
+        /// Replace CultivarFolder with a simple folder.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion155(JObject root, string fileName)
+        {
+            foreach (JObject cultivarFolder in JsonUtilities.ChildrenRecursively(root, "CultivarFolder"))
+                cultivarFolder["$type"] = "Models.Core.Folder, Models";
+        }
+
+        /// <summary>
+        /// Change PredictedObserved to make SimulationName an explicit first field to match on.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion156(JObject root, string fileName)
+        {
+            foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
+            {
+                var fieldName3 = predictedObserved["FieldName3UsedForMatch"];
+                if (!string.IsNullOrEmpty(fieldName3.Value<string>()))
+                    predictedObserved["FieldName4UsedForMatch"] = fieldName3.Value<string>();
+                var fieldName2 = predictedObserved["FieldName2UsedForMatch"];
+                if (!string.IsNullOrEmpty(fieldName2.Value<string>()))
+                    predictedObserved["FieldName3UsedForMatch"] = fieldName2.Value<string>();
+                var fieldName1 = predictedObserved["FieldNameUsedForMatch"];
+                if (!string.IsNullOrEmpty(fieldName1.Value<string>()))
+                    predictedObserved["FieldName2UsedForMatch"] = fieldName1.Value<string>();
+                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
+
+            }
         }
 
         /// <summary>

@@ -28,12 +28,11 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private string grazeStore = "";
-        private RuminantType herdToUse;
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
         private int numberToDo;
         private int numberToSkip;
-        private double calculatedNumber = 0;
+        private RuminantType rumTypeToUse;
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchases in for grazing
@@ -50,6 +49,13 @@ namespace Models.CLEM.Activities
         [Description("Label of tag to assign")]
         public string TagLabel { get; set; }
 
+        /// <summary>
+        /// Number to purchase
+        /// </summary>
+        [Description("Number to purchase")]
+        [Required, GreaterThanEqualValue(0)]
+        public int NumberToPurchase { get; set; }
+
         // TODO: decide how many to stock.
         // stocking rate for paddock
         // fixed number
@@ -60,7 +66,6 @@ namespace Models.CLEM.Activities
         public RuminantActivityPurchase()
         {
             SetDefaults();
-            TransactionCategory = "Livestock.[Type].Purchase";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -103,10 +108,7 @@ namespace Models.CLEM.Activities
             InitialiseHerd(false, false);
 
             // get herd to add to 
-            herdToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            //if(!herdToUse.PricingAvailable())
-            //    Summary.WriteMessage(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]", MessageType.Warning);
+            rumTypeToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -140,21 +142,10 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             numberToSkip = 0;
-            double number = 0;
-            calculatedNumber = 0;
+            numberToDo = NumberToPurchase;
             if (numberToStock != null && foodStore != null)
                 //NOTE: ensure calculation method in relationship is fixed values
-                calculatedNumber = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
-
-            foreach (SpecifyRuminant purchaseSpecific in FindAllChildren<SpecifyRuminant>())
-            {
-                RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
-                if (calculatedNumber > 0)
-                    number += Math.Round(calculatedNumber * purchaseSpecific.Proportion);
-                else
-                    number += Math.Round(purchasetype.Number * purchaseSpecific.Proportion);
-            }
-            numberToDo = (int)number;
+                numberToDo = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
@@ -202,46 +193,27 @@ namespace Models.CLEM.Activities
 
                 foreach (SpecifyRuminant purchaseSpecific in FindAllChildren<SpecifyRuminant>())
                 {
-                    double number = 0;
-                    RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
-                    if (calculatedNumber > 0)
-                        number = Math.Round(calculatedNumber * purchaseSpecific.Proportion);
-                    else
-                        number = Math.Round(purchasetype.Number * purchaseSpecific.Proportion);
-
-                    for (int i = 0; i < Math.Ceiling(number); i++)
+                    int number = Convert.ToInt32(Math.Ceiling(numberToDo - numberToSkip * purchaseSpecific.Proportion));
+                    if (number > 0)
                     {
-                        double u1 = RandomNumberGenerator.Generator.NextDouble();
-                        double u2 = RandomNumberGenerator.Generator.NextDouble();
-                        double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
-                                     Math.Sin(2.0 * Math.PI * u2);
-                        double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
+                        RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
+                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, purchasetype.FindAllChildren<ISetAttribute>().ToList(), rumTypeToUse, false);
 
-                        var ruminant = Ruminant.Create(purchasetype.Sex, herdToUse, purchasetype.Age, weight);
-
-                        ruminant.ID = 0;
-                        ruminant.Breed = purchaseSpecific.BreedParams.Name;
-                        ruminant.HerdName = purchaseSpecific.BreedParams.Breed;
-                        ruminant.PurchaseAge = purchasetype.Age;
-                        ruminant.SaleFlag = HerdChangeReason.TradePurchase;
-                        ruminant.Location = grazeStore;
-                        ruminant.PreviousWeight = ruminant.Weight;
-
-                        if((TagLabel??"") != "")
-                            // add trade tag for this trade activity
-                            ruminant.Attributes.Add(TagLabel);
-
-                        if (ruminant is RuminantFemale female)
+                        foreach (var ind in purchaseIndividuals)
                         {
-                            female.WeightAtConception = ruminant.Weight;
-                            female.NumberOfBirths = 0;
+                            ind.PurchaseAge = purchasetype.Age;
+                            ind.SetAgeEnteredSimulation(purchasetype.Age);
+                            ind.SaleFlag = HerdChangeReason.TradePurchase;
+                            ind.Location = grazeStore;
+                            if ((TagLabel ?? "") != "")
+                                ind.Attributes.Add(TagLabel);
                         }
 
-                        HerdResource.PurchaseIndividuals.Add(ruminant);
-                        purchased++;
+                        HerdResource.PurchaseIndividuals.AddRange(purchaseIndividuals);
+                        purchased += number;
                     }
-                    SetStatusSuccessOrPartial(purchased != numberToDo);
                 }
+                SetStatusSuccessOrPartial(purchased != numberToDo);
             }
         }
 
@@ -288,6 +260,17 @@ namespace Models.CLEM.Activities
                     results.Add(new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames));
                 }
             }
+
+            if (GrazeFoodStoreName.Contains("."))
+            {
+                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
+                {
+                    string[] memberNames = new string[] { "Location is not valid" };
+                    results.Add(new ValidationResult($"The location where ruminants are to be placed [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                }
+            }
+
             return results;
         }
         #endregion

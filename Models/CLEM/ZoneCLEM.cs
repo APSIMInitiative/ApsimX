@@ -79,6 +79,20 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
+        /// Build TransactionCategory from tree structure
+        /// </summary>
+        [Description("Build TransactionCategory from tree structure")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool BuildTransactionCategoryFromTree { get; set; }
+
+        /// <summary>
+        /// Use model name as TransactionCategory
+        /// </summary>
+        [Description("Use component name as TransactionCategory")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool UseModelNameAsTransactionCategory { get; set; }
+
+        /// <summary>
         /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
@@ -271,35 +285,34 @@ namespace Models.CLEM
             var summary = simulation.FindDescendant<Summary>();
 
             // get all validations 
-            var errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter "));
-
-            // report error and stop
-            if (errorsThisSim.Any())
-            {
-                // create combined inner exception
-                string innerExceptionString = "";
-                foreach (var error in errorsThisSim)
-                    innerExceptionString += $"{error.Text}{Environment.NewLine}";
-
-                Exception innerException = new Exception(innerExceptionString);
-                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
-            }
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
             // get all other errors 
-            errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter "));
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
 
+        }
+
+        /// <summary>
+        /// Check and throw error is error messages occur
+        /// </summary>
+        /// <param name="model">Model performing validation</param>
+        /// <param name="messages">List of messages</param>
+        /// <exception cref="ApsimXException"></exception>
+        public static void ReportErrors(IModel model, IEnumerable<Models.Logging.Message> messages)
+        {
             // report error and stop
-            if (errorsThisSim.Any())
+            if (messages.Any())
             {
                 // create combined inner exception
                 string innerExceptionString = "";
-                foreach (var error in errorsThisSim)
+                foreach (var error in messages)
                     innerExceptionString += $"{error.Text}{Environment.NewLine}";
 
                 Exception innerException = new Exception(innerExceptionString);
-                throw new ApsimXException(model, $"{errorsThisSim.Count()} error{(errorsThisSim.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
+                throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
+
 
         /// <summary>
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
@@ -433,7 +446,7 @@ namespace Models.CLEM
                     htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with ");
                     if (rnd.Seed == 0)
                         htmlWriter.Write("every run using a different sequence.");
                     else

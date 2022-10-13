@@ -44,6 +44,15 @@ namespace Models.CLEM.Groupings
         public double Value { get; set; }
 
         /// <summary>
+        /// Payment style
+        /// </summary>
+        public override string Measure
+        {
+            get { return "Feed provided"; }
+            set {; }
+        }
+
+        /// <summary>
         /// Get the value for the current month
         /// </summary>
         [JsonIgnore]
@@ -73,7 +82,6 @@ namespace Models.CLEM.Groupings
 
         /// <inheritdoc/>
         [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
@@ -82,7 +90,6 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public RuminantFeedGroup()
         {
-            TransactionCategory = "Feed.[Product].[Ruminants]";
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
@@ -144,9 +151,9 @@ namespace Models.CLEM.Groupings
                 Resource = feedActivityParent.FeedType,
                 ResourceType = typeof(AnimalFoodStore),
                 ResourceTypeName = feedActivityParent.FeedTypeName,
-                ActivityModel = this,
-                Category = TransactionCategory,
-                RelatesToResource = feedActivityParent.PredictedHerdName,
+                ActivityModel = Parent as CLEMActivityBase,
+                Category = (Parent as CLEMActivityBase).TransactionCategory,
+                RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay,
                 AdditionalDetails = foodPacket
             };
 

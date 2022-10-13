@@ -16,6 +16,9 @@ namespace Models.Core
         /// </summary>
         string Name { get; set; }
 
+        /// <summary>The name of the resource.</summary>
+        string ResourceName { get; set; }
+
         /// <summary>
         /// Gets or sets the parent model. Can be null if model has no parent.
         /// </summary>
@@ -280,6 +283,15 @@ namespace Models.Core
         /// <param name="path">The path of the variable/model.</param>
         /// <param name="ignoreCase">Perform a case-insensitive search?</param>
         IVariable FindByPath(string path, bool ignoreCase = false);
+
+        /// <summary>
+        /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
+        /// Note that this can be a variable/property or a model.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="path">The path of the variable/model.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        IEnumerable<IVariable> FindAllByPath(string path, bool ignoreCase = false);
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 

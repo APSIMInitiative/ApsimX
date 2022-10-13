@@ -420,6 +420,26 @@
             }
         }
 
+        [ContextMenu(MenuName = "Copy manager snippet for model",
+                     FollowsSeparator = true)]
+        public void CopyManagerSnippet(object sender, EventArgs e)
+        {
+            try
+            {
+                string path = explorerPresenter.CurrentNodePath;
+                string modelType = explorerPresenter.CurrentNode.GetType().Name;
+                string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
+
+                string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
+                                 $"[Link(Path=\"{path}\")] private {modelType} {modelType.ToLower()};";
+                explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
@@ -464,7 +484,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil), typeof(Zone) })]
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Folder), typeof(Zone) })]
         public void DownloadSoil(object sender, EventArgs e)
         {
             try
@@ -753,8 +773,7 @@
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         [ContextMenu(MenuName = "Show Model Structure",
-                     IsToggle = true,
-                     AppliesTo = new Type[] { typeof(ModelCollectionFromResource) })]
+                     IsToggle = true)]
         public void ShowModelStructure(object sender, EventArgs e)
         {
             try
@@ -762,8 +781,10 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
+                    hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = !child.IsHidden;
+                        child.IsHidden = hidden; 
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);
@@ -839,7 +860,7 @@
                     return;
                 
                 // Don't allow users to change read-only status of released models.
-                if (model is ModelCollectionFromResource || model.FindAncestor<ModelCollectionFromResource>() != null)
+                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
                     return;
 
                 bool readOnly = !model.ReadOnly;

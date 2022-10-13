@@ -10,7 +10,10 @@
         Down,
         PageUp,
         PageDown,
-        Return
+        Home,
+        End,
+        Return,
+        Delete
     }
 
     public class SheetEventKey

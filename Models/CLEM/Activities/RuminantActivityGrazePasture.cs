@@ -10,6 +10,7 @@ using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM.Activities
 {
@@ -27,7 +28,7 @@ namespace Models.CLEM.Activities
     [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase
+    public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
         /// Link to clock
@@ -35,11 +36,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Link]
         public Clock Clock = null;
-
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        [NonSerialized]
-        private IEvent events = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -64,14 +60,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityGrazePasture()
-        {
-            TransactionCategory = "Livestock.Grazing";
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -85,6 +73,13 @@ namespace Models.CLEM.Activities
 
             //Create list of children by breed
             Guid currentUid = UniqueID;
+            List<IModel> grazePastureList = new List<IModel>();
+
+            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
+            string transCat = "";
+            if (!buildTransactionFromTree)
+                transCat = TransactionCategory;
+
             foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
             {
                 RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
@@ -99,7 +94,7 @@ namespace Models.CLEM.Activities
                     Clock = this.Clock,
                     Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name,
                     OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
-                    TransactionCategory = TransactionCategory
+                    TransactionCategory = transCat
                 };
                 currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
                 grazePastureHerd.UniqueID = currentUid;
@@ -107,8 +102,9 @@ namespace Models.CLEM.Activities
                 grazePastureHerd.SetLinkedModels(Resources);
                 grazePastureHerd.InitialiseHerd(true, true);
                 Children.Add(grazePastureHerd);
-                events.ConnectEvents(grazePastureHerd);
+                Structure.Add(grazePastureHerd, this);
             }
+            this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
         }
 
         /// <inheritdoc/>
@@ -153,6 +149,29 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.NoTask;
             return;
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (GrazeFoodStoreTypeName.Contains("."))
+            {
+                ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
+                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
+                {
+                    string[] memberNames = new string[] { "Location is not valid" };
+                    results.Add(new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
+                }
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

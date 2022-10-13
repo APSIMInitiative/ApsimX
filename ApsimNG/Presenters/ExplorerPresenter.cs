@@ -1084,7 +1084,7 @@
         {
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
-            string resourceName = (model as ModelCollectionFromResource)?.ResourceName;
+            string resourceName = model.ResourceName;
             description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name, resourceName);
 
             description.ToolTip = model.GetType().Name;
@@ -1114,15 +1114,15 @@
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
-            string resourceNameForImage;
-            bool exists;
-            if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
+            string resourceNameForImage = null;
+            bool exists =false;
+            if (!string.IsNullOrEmpty(resourceName))
             {
                 (exists, resourceNameForImage) = CheckIfIconExists(resourceName);
                 if (!exists)
                     (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
-            else
+            if (!exists)
             {
                 string modelNamespace = modelType.FullName;
                 if (modelNamespace.StartsWith("Models."))

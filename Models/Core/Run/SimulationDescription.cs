@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using static Models.Core.Overrides;
 
     /// <summary>
     /// Encapsulates all the bits that are need to construct a simulation
@@ -22,7 +23,7 @@
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
         [NonSerialized]
-        private List<IReplacement> replacementsToApply = new List<IReplacement>();
+        private List<Override> replacementsToApply = new List<Override>();
 
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
@@ -87,24 +88,12 @@
         public string Status => SimulationToRun?.Status;
 
         /// <summary>
-        /// Add an override to replace an existing model, as specified by the
-        /// path, with a replacement model.
+        /// Add an override to replace an existing value
         /// </summary>
-        /// <param name="replacement">An instance of a replacement that needs to be applied when simulation is run.</param>
-        public void AddOverride(IReplacement replacement)
+        /// <param name="change">The override to addd.</param>
+        public void AddOverride(Override change)
         {
-            replacementsToApply.Add(replacement);
-        }
-
-        /// <summary>
-        /// Add a property override to replace an existing value, as specified by a
-        /// path.
-        /// </summary>
-        /// <param name="path">The path to use to locate the model to replace.</param>
-        /// <param name="replacement">The model to use as the replacement.</param>
-        public void AddOverride(string path, object replacement)
-        {
-            replacementsToApply.Add(new PropertyReplacement(path, replacement));
+            replacementsToApply.Add(change);
         }
 
         /// <summary>
@@ -121,10 +110,9 @@
         /// </summary>
         /// <param name="cancelToken"></param>
         /// <param name="changes"></param>
-        public void Run(CancellationTokenSource cancelToken, IEnumerable<IReplacement> changes)
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<Override> changes)
         {
-            foreach (IReplacement change in changes)
-                change.Replace(SimulationToRun);
+            Overrides.Apply(SimulationToRun, changes);
             Run(cancelToken);
         }
 
@@ -176,7 +164,7 @@
 
                 newSimulation.Parent = null;
                 newSimulation.ParentAllDescendants();
-                replacementsToApply.ForEach(r => r.Replace(newSimulation));
+                Overrides.Apply(newSimulation, replacementsToApply);
 
                 // Give the simulation the descriptors.
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
@@ -228,14 +216,11 @@
         {
             if (topLevelModel != null)
             {
-                IModel replacements = topLevelModel.FindChild<Replacements>();
+                IModel replacements = topLevelModel.FindChild<Folder>("Replacements");
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (IModel replacement in replacements.Children)
-                    {
-                        var modelReplacement = new ModelReplacement(null, replacement);
-                        replacementsToApply.Insert(0, modelReplacement);
-                    }
+                    foreach (IModel replacement in replacements.Children.Where(m => m.Enabled))
+                        replacementsToApply.Insert(0, new Override(replacement.Name, replacement, Override.MatchTypeEnum.Name));
                 }
             }
         }

@@ -66,7 +66,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityBuySell()
         {
-            TransactionCategory = "Livestock.[Type].Manage";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -159,6 +158,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalSell")]
         private void OnCLEMAnimalSellPerformActivity(object sender, EventArgs e)
         {
+            Status = ActivityStatus.NotNeeded;
             task = "Sell";
             ResourceRequestList.Clear();
             ManageActivityResourcesAndTasks("Sales");
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
                     IndividualsToBeTrucked = uniqueIndividuals;
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    if (truckingBuy != null)
+                    if (truckingSell != null)
                         foreach (var trucking in truckingSell)
                             trucking.ManuallyGetResourcesPerformActivity();
 
@@ -221,7 +221,7 @@ namespace Models.CLEM.Activities
                     if (truckingBuy is null)
                     {
                         // no trucking found
-                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase)?.CalculateValue(a)??0);
                         numberTrucked = numberToDo;
                     }
                     else
@@ -229,7 +229,7 @@ namespace Models.CLEM.Activities
                         // all trucking has been allocated and each trucking component knows its individuals
                         foreach (var trucking in truckingBuy)
                         {
-                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase)?.CalculateValue(a)??0);
                             numberTrucked += trucking.IndividualsToBeTrucked.Count();
                         }
                     }
@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
                             Required = herdValue,
                             AllowTransmutation = false,
                             Category = TransactionCategory,
-                            RelatesToResource = this.PredictedHerdName,
+                            RelatesToResource = this.PredictedHerdNameToDisplay,
                             AdditionalDetails = "Purchases",
                             ResourceType = typeof(Finance),
                             ResourceTypeName = BankAccountName,
@@ -286,7 +286,7 @@ namespace Models.CLEM.Activities
                     if (truckingSell is null)
                     {
                         // no trucking found
-                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                        herdValue = IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(a)??0);
                         numberTrucked = numberToDo;
                     }
                     else
@@ -294,7 +294,7 @@ namespace Models.CLEM.Activities
                         // all trucking has been allocated and each trucking component knows its individuals
                         foreach (var trucking in truckingSell)
                         {
-                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                            herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams?.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(a)??0);
                             numberTrucked += trucking.IndividualsToBeTrucked.Count();
                         }
                     }
@@ -404,7 +404,7 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     AllowTransmutation = false,
                                     Category = TransactionCategory,
-                                    RelatesToResource = this.PredictedHerdName
+                                    RelatesToResource = this.PredictedHerdNameToDisplay
                                 };
                                 purchaseRequest.Available = bankAccount.Amount;
                                 purchaseRequest.Required = request.Required-valueOfSkipped;
@@ -435,8 +435,8 @@ namespace Models.CLEM.Activities
                                 Required = item2.TotalPrice ?? 0,
                                 Available = item2.TotalPrice ?? 0,
                                 AllowTransmutation = false,
-                                Category = $"{TransactionCategory}.{item2.GroupName}",
-                                RelatesToResource = this.PredictedHerdName,
+                                Category = TransactionCategory,
+                                RelatesToResource = $"{PredictedHerdNameToDisplay}.{item2.GroupName}".TrimStart('.')
                             });
                         }
                     }
@@ -470,7 +470,7 @@ namespace Models.CLEM.Activities
                     var groupedIndividuals = HerdResource.SummarizeIndividualsByGroups(taskIndividuals, PurchaseOrSalePricingStyleType.Sale);
                     foreach (var item in groupedIndividuals)
                         foreach (var item2 in item.RuminantTypeGroup)
-                            bankAccount.Add(item2.TotalPrice, this, item.RuminantTypeName, $"{TransactionCategory}.{item2.GroupName}");
+                            bankAccount.Add(item2.TotalPrice, this, $"{item.RuminantTypeNameToDisplay}.{item2.GroupName}".TrimStart('.'), TransactionCategory);
                 }
             }
             else // purchases
@@ -483,11 +483,8 @@ namespace Models.CLEM.Activities
                     ind.ID = HerdResource.NextUniqueID;
                     HerdResource.AddRuminant(ind, this);
                 }
-                if (head == numberToDo)
-                    SetStatusSuccessOrPartial();
-                else
-                    this.Status = ActivityStatus.Partial;
             }
+            SetStatusSuccessOrPartial(head < numberToDo);
         }
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)

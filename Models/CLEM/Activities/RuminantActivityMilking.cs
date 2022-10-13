@@ -41,14 +41,6 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
         public string ResourceTypeName { get; set; }
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantActivityMilking()
-        {
-            TransactionCategory = "Livestock.[Type].Milking";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
@@ -202,7 +194,7 @@ namespace Models.CLEM.Activities
                         break;
                 }
                 // add clip to stores
-                (milkStore as IResourceType).Add(amountDone, this, this.PredictedHerdName, TransactionCategory);
+                (milkStore as IResourceType).Add(amountDone, this, this.PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
             }

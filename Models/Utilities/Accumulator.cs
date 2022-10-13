@@ -36,7 +36,7 @@ namespace Models.Utilities
         /// </summary>
         public void Update()
         {
-            if (values.Count > numberOfDays)
+            if (values.Count > 0 && values.Count >= numberOfDays)
                 values.RemoveAt(0);
 
             try

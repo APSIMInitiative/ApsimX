@@ -91,7 +91,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityPredictiveStocking()
         {
-            TransactionCategory = "Livestock.[Type].Destock";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -166,52 +165,57 @@ namespace Models.CLEM.Activities
             {
                 IEnumerable<Ruminant> paddockIndividuals = uniqueIndividuals.Where(a => a.Location == pasture.Name);
 
-                // total adult equivalents not marked for sale of all breeds on pasture for utilisation
-                double totalAE = paddockIndividuals.Sum(a => a.AdultEquivalent);
-
-                double shortfallAE = 0;
-                // Determine total feed requirements for dry season for all ruminants on the pasture
-                // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
-
-                double pastureBiomass = pasture.Amount;
-
-                // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
-                // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.
-                double detachrate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
-                // Assume a consumption rate of 2% of body weight.
-                double feedRequiredAE = paddockIndividuals.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * 30.4; //  2% of AE animal per day
-                for (int i = 0; i < monthsToAssess; i++)
+                // if animals present in paddock
+                if (paddockIndividuals.Any())
                 {
-                    // only include detachemnt if current biomass is positive, not already overeaten
-                    if (MathUtilities.IsPositive(pastureBiomass))
-                        pastureBiomass *= (1.0 - detachrate);
+                    // total adult equivalents not marked for sale of all breeds on pasture for utilisation
+                    double totalAE = paddockIndividuals.Sum(a => a.AdultEquivalent);
 
-                    if (i > 0) // not in current month as already consumed by this time.
-                        pastureBiomass -= (feedRequiredAE * totalAE);
-                }
+                    double shortfallAE = 0;
+                    // Determine total feed requirements for dry season for all ruminants on the pasture
+                    // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
 
-                // Shortfall in Fodder in kg per hectare
-                // pasture at end of period in kg/ha
-                double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
-                PasturePredicted = pastureShortFallKgHa;
-                // shortfall from low limit
-                pastureShortFallKgHa = Math.Max(0, FeedLowLimit - pastureShortFallKgHa);
-                // Shortfall in Fodder in kg for paddock
-                double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
+                    double pastureBiomass = pasture.Amount;
 
-                if (MathUtilities.IsPositive(pastureShortFallKg))
-                {
-                    // number of AE to sell to balance shortfall_kg over entire season
-                    shortfallAE = pastureShortFallKg / (feedRequiredAE * monthsToAssess);
-                    AeToDestock += shortfallAE;
-                    int number = paddockIndividuals.Count();
-                    numberToDo += number;
-                    amountToDo += totalAE;
-                    paddockShortfalls.Add((pasture.Name, number, totalAE, shortfallAE));
-                }
-                else
-                {
-                    paddockShortfalls.Add((pasture.Name, 0, 0, 0));
+                    // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
+                    // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.
+                    double detachrate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
+                    // Assume a consumption rate of 2% of body weight.
+                    double feedRequiredAE = paddockIndividuals.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * 30.4; //  2% of AE animal per day
+                    for (int i = 0; i < monthsToAssess; i++)
+                    {
+                        // only include detachemnt if current biomass is positive, not already overeaten
+                        if (MathUtilities.IsPositive(pastureBiomass))
+                            pastureBiomass *= (1.0 - detachrate);
+
+                        if (i > 0) // not in current month as already consumed by this time.
+                            pastureBiomass -= (feedRequiredAE * totalAE);
+                    }
+
+                    // Shortfall in Fodder in kg per hectare
+                    // pasture at end of period in kg/ha
+                    double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
+                    PasturePredicted = pastureShortFallKgHa;
+                    // shortfall from low limit
+                    pastureShortFallKgHa = Math.Max(0, FeedLowLimit - pastureShortFallKgHa);
+                    // Shortfall in Fodder in kg for paddock
+                    double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
+
+                    if (MathUtilities.IsPositive(pastureShortFallKg))
+                    {
+                        // number of AE to sell to balance shortfall_kg over entire season
+                        shortfallAE = pastureShortFallKg / (feedRequiredAE * monthsToAssess);
+                        AeToDestock += shortfallAE;
+                        int number = paddockIndividuals.Count();
+                        numberToDo += number;
+                        amountToDo += totalAE;
+                        paddockShortfalls.Add((pasture.Name, number, totalAE, shortfallAE));
+                    }
+                    else
+                    {
+                        paddockShortfalls.Add((pasture.Name, 0, 0, 0));
+                    }
+
                 }
             }
 

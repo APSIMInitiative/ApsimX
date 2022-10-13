@@ -10,13 +10,11 @@ using Models.PMF.Phen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using APSIM.Shared.Documentation;
 using Models.Utilities;
 
 namespace Models.PMF.Organs
 {
-
     /// <summary>
     /// SorghumLeaf reproduces the functionality provided by the sorghum and maize models in Apsim Classic.
     /// It provides the core functions of intercepting radiation, producing biomass through photosynthesis, and determining the plant's transpiration demand.  
@@ -32,6 +30,10 @@ namespace Models.PMF.Organs
 
         [Link]
         private ISummary summary = null;
+
+        /// <summary>The method used to arbitrate N allocations</summary>
+        [Link]
+        private OrganArbitrator Arbitrator = null;
 
         /// <summary> Culms on the leaf controls tillering</summary>
         [Link]
@@ -134,7 +136,7 @@ namespace Models.PMF.Organs
         private bool leafInitialised = false;
         private double nDeadLeaves;
         private double dltDeadLeaves;
-        
+        private int leafIndex;
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
@@ -154,8 +156,13 @@ namespace Models.PMF.Organs
 
         /// <summary>Determined by the tillering method chosen.</summary>
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
-        [Description("")]
-        public double FertileTillerNumber { get; set; }
+        [Description("Fertile Tiller Number")]
+        public double FertileTillerNumber => culms.FertileTillerNumber;
+
+        /// <summary>Determined by the tillering method chosen.</summary>
+        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        [Description("Current Tiller Number")]
+        public double CurrentTillerNumber => culms.CurrentTillerNumber;
 
         /// <summary>The initial biomass dry matter weight</summary>
         [Description("Initial leaf dry matter weight")]
@@ -253,38 +260,48 @@ namespace Models.PMF.Organs
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double DltLAI { get; set; }
-        
+
         /// <summary>Gets the Potential DltLAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double DltPotentialLAI { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double DltStressedLAI { get; set; }
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
+        [JsonIgnore]
         public double LAITotal => LAI + LAIDead;
 
         /// <summary>Gets the LAI</summary>
+        [JsonIgnore]
         public double SLN { get; set; }
 
         /// <summary>Used in metabolic ndemand calc.</summary>
+        [JsonIgnore]
         public double SLN0 { get; set; }
 
         /// <summary>Gets the cover green.</summary>
+        [JsonIgnore]
         [Units("0-1")]
         public double CoverGreen { get; set; }
 
         /// <summary>Gets the cover dead.</summary>
+        [JsonIgnore]
         public double CoverDead { get; set; }
 
         /// <summary>Gets the cover total.</summary>
+        [JsonIgnore]
         [Units("0-1")]
         public double CoverTotal => 1.0 - (1 - CoverGreen) * (1 - CoverDead); 
 
@@ -300,18 +317,22 @@ namespace Models.PMF.Organs
         public bool MicroClimatePresent { get; set; } = false;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
+        [JsonIgnore]
         public double BiomassRUE { get; set; }
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
+        [JsonIgnore]
         public double BiomassTE { get; set; }
 
         /// <summary>Gets or sets the Extinction Coefficient (Dead).</summary>
-        public double KDead { get; set; }                  // 
+        public double KDead { get; set; }
 
         /// <summary>Gets the transpiration.</summary>
+        [JsonIgnore]
         public double Transpiration => WaterAllocation;
-        
+
         /// <summary>Gets or sets the lai dead.</summary>
+        [JsonIgnore]
         public double LAIDead { get; set; }
 
         /// <summary>
@@ -338,44 +359,57 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Nitrogen Photosynthesis Stress.</summary>
+        [JsonIgnore]
         public double NitrogenPhotoStress { get; set; }
 
         /// <summary>Nitrogen Phenology Stress.</summary>
+        [JsonIgnore]
         public double NitrogenPhenoStress { get; set; }
 
         /// <summary>Phosphorous Stress.</summary>
+        [JsonIgnore]
         public double PhosphorusStress { get; set; }
 
         /// <summary>Final Leaf Number.</summary>
+        [JsonIgnore]
         public double FinalLeafNo => culms?.FinalLeafNo ?? 0;
 
         /// <summary>Leaf number.</summary>
+        [JsonIgnore]
         public double LeafNo => culms?.LeafNo ?? 0;
 
         /// <summary> /// Sowing Density (Population). /// </summary>
+        [JsonIgnore]
         public double SowingDensity { get; set; }
 
         /// <summary>The live biomass state at start of the computation round</summary>
+        [JsonIgnore]
         public Biomass StartLive { get; private set; } = null;
 
         /// <summary>The dry matter supply</summary>
+        [JsonIgnore]
         public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
+        [JsonIgnore]
         public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>The dry matter demand</summary>
+        [JsonIgnore]
         public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
+        [JsonIgnore]
         public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
+        [JsonIgnore]
         public BiomassPoolType potentialDMAllocation { get; set; }
         //Also a DMPotentialAllocation present in this file
         //used as DMPotentialAllocation in genericorgan
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        [JsonIgnore]
         public bool IsAboveGround => true;
 
         /// <summary>The live biomass</summary>
@@ -447,33 +481,43 @@ namespace Models.PMF.Organs
 
         /// <summary>Only water stress at this stage.</summary>
         /// Diff between potentialLAI and stressedLAI
+        [JsonIgnore]
         public double LossFromExpansionStress { get; set; }
 
         /// <summary>Total LAI as a result of senescence.</summary>
+        [JsonIgnore]
         public double SenescedLai { get; set; }
 
         /// <summary>Amount of N retranslocated today.</summary>
+        [JsonIgnore]
         public double DltRetranslocatedN { get; set; }
-        
+
         /// <summary>Delta of N removed due to Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedN { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to N Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiN { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLai { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Light Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiLight { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Water Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiWater { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiFrost { get; set; }
-        
+
         /// <summary>Delta of LAI removed due to age senescence.</summary>
+        [JsonIgnore]
         public double DltSenescedLaiAge { get; set; }
 
         /// <summary>Clears this instance.</summary>
@@ -500,7 +544,15 @@ namespace Models.PMF.Organs
             Live.StructuralN = 0;
             Live.StorageN = 0;
 
+            DltSenescedN = 0.0;
             DltSenescedLaiN = 0.0;
+            DltRetranslocatedN = 0.0;
+            DltSenescedLai = 0.0;
+            DltSenescedLaiLight = 0.0;
+            DltSenescedLaiWater = 0.0;
+            DltSenescedLaiFrost = 0.0;
+            DltSenescedLaiAge = 0.0;
+
             SenescedLai = 0.0;
             CoverGreen = 0.0;
             CoverDead = 0.0;
@@ -651,139 +703,111 @@ namespace Models.PMF.Organs
         /// <summary>Calculate the amount of N to retranslocate</summary>
         public double ProvideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
-            int leafIndex = 2;
             double laiToday = CalcLAI();
-            //whether the retranslocation is added or removed is confusing
-            //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
             double dltNGreen = BAT.StructuralAllocation[leafIndex] + BAT.MetabolicAllocation[leafIndex];
             double nGreenToday = Live.N + dltNGreen + DltRetranslocatedN; //dltRetranslocation is -ve
-            //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
+
+            double nProvided = 0.0;
             
-            var thermalTime = dltTT.Value();
-            var dilutionN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-            dilutionN = Math.Max(dilutionN, 0);
             if (phenology.Between("Germination", "Flowering"))
             {
-                // pre anthesis, get N from dilution, decreasing dltLai and senescence
-                double nProvided = Math.Min(dilutionN, requiredN / 3.0);
-                DltRetranslocatedN -= nProvided;
-                nGreenToday -= nProvided; //jkb
-                requiredN -= nProvided;
-                if (requiredN <= 0.0001)
-                    return nProvided;
+                var targetForDilution = requiredN / 3.0;
+                var nDiluted = ProvideNFromDilution(targetForDilution, nGreenToday, laiToday);
+                requiredN -= nDiluted;
+                nGreenToday -= nDiluted;
+                nProvided += nDiluted;
 
-                // decrease dltLai which will reduce the amount of new leaf that is produced
-                if (MathUtilities.IsPositive(DltLAI))
-                {
-                    // Only half of the requiredN can be accounted for by reducing DltLAI
-                    // If the RequiredN is large enough, it will result in 0 new growth
-                    // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
-                    double n = DltLAI * NewLeafSLN;
-                    double laiN = Math.Min(n, requiredN);
-                    // dh - we don't make this check in old apsim
-                    if (MathUtilities.IsPositive(laiN))
-                    {
-                        DltLAI = (n - laiN) / NewLeafSLN;
-                        if (forLeaf)
-                        {
-                            // should we update the StructuralDemand?
-                            //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
-                            requiredN -= laiN;
-                        }
-                    }
-                }
+                var targetForNewLeafReduction = requiredN;// / 2.0; - classic divides this by 2
+                var nDemandRreduced = ReduceNewLeafArea(targetForNewLeafReduction);
 
-                // recalc the SLN after this N has been removed
+                //if it is providing N for leaf it reduces the total leaf demand
+                //it cannot provide N to other organs as it is reducing demand not retranslocating existing
+                if (forLeaf)
+                    requiredN -= nDemandRreduced;
+
                 laiToday = CalcLAI();
-                slnToday = calcSLN(laiToday, nGreenToday);
-
-                var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-                maxN = Math.Max(maxN, 0);
-                requiredN = Math.Min(requiredN, maxN);
-
-                double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
-
-                // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
-
-                double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
-                DltRetranslocatedN -= newN;
-                nGreenToday += newN; // local variable
-                nProvided += newN;
-                DltSenescedLaiN += senescenceLAI;
-
-                DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                DltSenescedN += senescenceLAI * SenescedLeafSLN;
-
-                return nProvided;
+                var nSenesced = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
+                nProvided += nSenesced;
             }
             else
             {
-                // if sln > 1, dilution then senescence
-                if (slnToday > 1.0)
-                {
-                    double nProvided = Math.Min(dilutionN, requiredN);
-                    requiredN -= nProvided;
-                    nGreenToday -= nProvided; //jkb
-                    DltRetranslocatedN -= nProvided;
+                //if SLN is below 1, then limit dilution to half of the required N
+                var targetForDilution = slnToday > 1.0 ? requiredN : requiredN / 2.0;
+                var nDiluted = ProvideNFromDilution(targetForDilution, nGreenToday, laiToday);
+                requiredN -= nDiluted;
+                nGreenToday -= nDiluted;
+                nProvided += nDiluted;
 
-                    if (requiredN <= 0.0001)
-                        return nProvided;
-
-                    // rest from senescence
-                    laiToday = CalcLAI();
-                    slnToday = calcSLN(laiToday, nGreenToday);
-
-                    var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-                    requiredN = Math.Min(requiredN, maxN);
-
-                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
-
-                    // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
-
-                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
-                    DltRetranslocatedN -= newN;
-                    nGreenToday += newN;
-                    nProvided += newN;
-                    DltSenescedLaiN += senescenceLAI;
-
-                    DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                    DltSenescedN += senescenceLAI * SenescedLeafSLN;
-                    return nProvided;
-                }
-                else
-                {
-                    // half from dilution and half from senescence
-                    double nProvided = Math.Min(dilutionN, requiredN / 2.0);
-                    requiredN -= nProvided;
-                    nGreenToday -= nProvided; //jkb // dh - this should be subtracted, not added
-                    DltRetranslocatedN -= nProvided;
-
-                    // rest from senescence
-                    laiToday = CalcLAI();
-                    slnToday = calcSLN(laiToday, nGreenToday);
-
-                    var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
-                    requiredN = Math.Min(requiredN, maxN);
-
-                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
-
-                    // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
-
-                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
-                    DltRetranslocatedN -= newN;
-                    nGreenToday += newN;
-                    nProvided += newN;
-                    DltSenescedLaiN += senescenceLAI;
-
-                    DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                    DltSenescedN += senescenceLAI * SenescedLeafSLN;
-                    return nProvided;
-                }
+                laiToday = CalcLAI();
+                var nSenesced = ProvideNThroughSenescence(requiredN, nGreenToday, laiToday);
+                nProvided += nSenesced;
             }
+            return nProvided;
+        }
+        private double ProvideNFromDilution(double requiredN, double nGreenToday, double laiToday)
+        {
+            //0/negative checks
+            if (MathUtilities.IsNegative(requiredN)) return 0;
+            if (MathUtilities.IsNegative(nGreenToday)) return 0;
+            if (MathUtilities.IsNegative(laiToday)) return 0;
+
+            double slnToday = calcSLN(laiToday, nGreenToday);
+
+
+            var thermalTime = dltTT.Value();
+            var maxDilutionN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
+            maxDilutionN = Math.Max(maxDilutionN, 0); //greater than 0 check
+            var nProvided = Math.Min(maxDilutionN, requiredN);
+
+            DltRetranslocatedN -= nProvided; //DltRetranslocatedN is a -ve (kept the same as classic)
+            return nProvided;
+        }
+
+        private double ReduceNewLeafArea(double requiredN)
+        {
+            if (MathUtilities.IsNegative(DltLAI)) return 0;
+            // decrease dltLai which will reduce the amount of new leaf that is produced
+            // If the RequiredN is large enough, it will result in 0 new growth
+            // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
+            double newLeafN = DltLAI * NewLeafSLN; //amount of N in newLeaf
+            double nProvided = Math.Min(newLeafN, requiredN);
+
+            DltLAI = (newLeafN - nProvided) / NewLeafSLN;
+            return nProvided; 
+
+            // should we update the StructuralDemand?
+            //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
+        }
+
+        private double ProvideNThroughSenescence(double requiredN, double nGreenToday, double laiToday)
+        {
+            if (MathUtilities.IsNegative(requiredN)) return 0;
+            if (MathUtilities.IsNegative(nGreenToday)) return 0;
+            if (MathUtilities.IsNegative(laiToday)) return 0;
+
+            //calculate max N that can be removed.
+            //Should check that the N removed from Dilution already is covered by the repeated dilution slope calcs
+            var slnToday = calcSLN(laiToday, nGreenToday);
+            var thermalTime = dltTT.Value();
+            var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
+            maxN = Math.Max(maxN, 0); //-ve check
+            //can only remove what is available
+            requiredN = Math.Min(requiredN, maxN);
+
+            double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
+            // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
+            senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
+
+            double nProvided = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
+            DltRetranslocatedN -= nProvided; //DltRetranslocatedN should be -ve value
+            //nGreenToday += providedN; // local variable
+            //nProvided += providedN;
+            DltSenescedLaiN += senescenceLAI;
+            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
+            DltSenescedN += senescenceLAI * SenescedLeafSLN;
+
+            return nProvided;
         }
 
         /// <summary>Senesce the Leaf Area.</summary>
@@ -975,18 +999,16 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Called when crop is being sown</summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sowingData"></param>
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, EventArgs e)
+        private void OnPlantSowing(object sender, SowingParameters sowingData)
         {
-            var sowingData = e as SowingParameters;
-            
+            if (sowingData.Plant != plant) throw new Exception("Not the sowing event for this plant??");
+
             if (sowingData.SkipRow < 0 || sowingData.SkipRow > 2)
-                throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
+            throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
 
             //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
             var outerSkips = sowingData.SkipRow > 0 ? 2 : 0;
@@ -999,6 +1021,11 @@ namespace Models.PMF.Organs
             var totalCover = nonSkipCover + outerSkipCovered;
 
             sowingData.SkipDensityScale = MathUtilities.Divide(totalWidth, totalCover, 1.0);
+
+            SowingDensity = sowingData.Population;
+            nDeadLeaves = 0;
+            var organNames = Arbitrator.OrganNames;
+            leafIndex = organNames.IndexOf(Name);
 
         }
 
@@ -1122,21 +1149,6 @@ namespace Models.PMF.Organs
             NDemand.Storage = nDemands.Storage.Value();
         }
 
-        /// <summary>Called when crop is being sown</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowingParameters data)
-        {
-            if (data.Plant == plant)
-            {
-                //OnPlantSowing let structure do the clear so culms isn't cleared before initialising the first one
-                //Clear();
-                SowingDensity = data.Population;
-                nDeadLeaves = 0;
-            }
-        }
-
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1169,6 +1181,19 @@ namespace Models.PMF.Organs
                 yield return tag;
             // List the parameters, properties, and processes from this organ that need to be documented:
 
+            var tags = new List<ITag>();
+            tags.Add(new Paragraph("Aboveground biomass accumulation is simulated as the minimum of light-limited or water-limited growth. In the absence of water limitation, biomass accumulation is the product of the amount of intercepted radiation (IR) and its conversion efficiency, the radiation use efficiency (RUE). "));
+            tags.Add(new Paragraph("Under water limitation, aboveground biomass accumulation is the product of realized transpiration and its conversion efficiency, biomass produced per unit of water transpired, or transpiration efficiency(TE)"));
+            yield return new Section("Dry Matter Fixation", tags);
+
+            var rueTags = new List<ITag>();
+            rueTags.AddRange(extinctionCoefficientFunction.Document());
+            rueTags.AddRange(photosynthesis.Document());
+            yield return new Section("Radiation Use Efficiency", rueTags);
+
+            //tags.AddRange(potentialBiomassTEFunction.Document());
+            yield return new Section("Transpiration Efficiency", potentialBiomassTEFunction.Document());
+
             // Document initial DM weight.
             yield return new Paragraph($"Initial DM mass = {InitialDMWeight} gm^-2^");
 
@@ -1184,19 +1209,9 @@ namespace Models.PMF.Organs
             nDemandTags.AddRange(nDemands.Document());
             yield return new Section("Nitrogen Demand", nDemandTags);
 
-            // Document N concentration thresholds.
-            yield return new Paragraph($"Minimum N Concentration = {MinNconc}");
-            yield return new Paragraph($"Critical N Concentraion = {CritNconc}");
-            yield return new Paragraph($"Maximum N Concentration = {MaxNconc}");
-
-            // Document DM supplies.
-            yield return new Section("Dry Matter Supply", new Paragraph($"{Name} does not reallocate DM when senescence of the organ occurs."));
 
             // Document DM retranslocation.
             yield return new Section("DM Retranslocation Factor", new Paragraph($"{Name} does not retranslocate non-structural DM."));
-
-            // Document photosynthesis.
-            yield return new Section("Photosynthesis", photosynthesis.Document());
 
             // Document N supplies.
             yield return new Section("Nitrogen Supply", new Paragraph($"{Name} does not reallocate N when senescence of the organ occurs."));
@@ -1206,15 +1221,18 @@ namespace Models.PMF.Organs
 
             // todo: document LAI(/CoverTot?).
             List<ITag> canopyTags = new List<ITag>();
-            canopyTags.AddRange(extinctionCoefficientFunction.Document());
+            canopyTags.AddRange(numberOfLeaves.Document());
+            //canopyTags.AddRange(dltLaifun.Document());
             canopyTags.AddRange(heightFunction.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             // Document senescence and detachment.
             List<ITag> senescenceTags = new List<ITag>();
-            senescenceTags.Add(new Paragraph($"{Name} has senescence parameterised to zero so all biomass in this organ will remain alive."));
-            senescenceTags.Add(new Paragraph($"{Name} has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs."));
-            senescenceTags.AddRange(biomassRemovalModel.Document());
+            senescenceTags.AddRange(LightSenescence.Document());
+            senescenceTags.AddRange(WaterSenescence.Document());
+            senescenceTags.AddRange(FrostSenescence.Document());
+
+            senescenceTags.Add(new Section("Biomass Removal", biomassRemovalModel.Document()));
 
             yield return new Section("Senescence and Detachment", senescenceTags);
         }

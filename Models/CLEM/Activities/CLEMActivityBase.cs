@@ -47,7 +47,6 @@ namespace Models.CLEM.Activities
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 
@@ -264,7 +263,43 @@ namespace Models.CLEM.Activities
             return new LabelsForCompanionModels();
         }
 
-        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <summary>
+        /// Method to create Transaction category based on settings in ZoneCLEM
+        /// </summary>
+        public static string UpdateTransactionCategory(CLEMActivityBase model, string relatesToValue = "")
+        {
+            List<string> transCatsList = new List<string>();
+            if (model.parentZone is null)
+                model.parentZone = model.FindAncestor<ZoneCLEM>();
+
+            if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
+            {
+                transCatsList.Add((model.Parent as CLEMActivityBase).TransactionCategory);
+                //transCatsList = model.FindAllAncestors<CLEMActivityBase>().Where(a => a != model.Parent).Select(a => model.parentZone.UseModelNameAsTransactionCategory ? ((a.TransactionCategory == "_") ? "" : a.Name) : a.TransactionCategory).Reverse().ToList();
+            }
+
+            transCatsList.Add(model.parentZone.UseModelNameAsTransactionCategory ? ((model.TransactionCategory == "_") ? "" : model.Name) : model.TransactionCategory);
+            transCatsList = transCatsList.Where(a => a != "").ToList();
+
+            string transCat = (transCatsList.Any()) ? String.Join(".", transCatsList) : "";
+
+            if (transCat.Contains("[RelatesTo]"))
+                transCat.Replace("[RelatesTo]", relatesToValue??"");
+
+            return transCat;
+        }
+
+        /// <summary>An event handler to perform any start of simulation tasks</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        protected virtual void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            // create Transaction category based on Zone settings
+            TransactionCategory = UpdateTransactionCategory(this);
+        }
+
+        /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfSimulation")]
@@ -462,6 +497,7 @@ namespace Models.CLEM.Activities
                         Name = (timer as IModel).Name,
                         Status = ActivityStatus.Timer,
                         Id = (timer as CLEMModel).UniqueID.ToString(),
+                        ModelType = (int)ActivityPerformedType.Timer
                     });
                 }
             }
@@ -586,7 +622,7 @@ namespace Models.CLEM.Activities
                                         }
                                         else
                                         {
-                                            if((companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
+                                            if(companionChild is CLEMActivityBase && (companionChild as CLEMActivityBase).Status != ActivityStatus.Skipped)
                                                 companionChild.PerformTasksForTimestep(unitsProvided);
                                         }
                                     }
@@ -715,57 +751,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        ///// <summary>
-        ///// Method to provide the proportional limit based on labour shortfall
-        ///// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
-        ///// </summary>
-        ///// <returns></returns>
-        //public double LabourLimitProportion
-        //{
-        //    get
-        //    {
-        //        double proportion = 1.0;
-        //        if (ResourceRequestList == null)
-        //            return proportion;
-
-        //        double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
-
-        //        foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
-        //            if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourGroup).Parent as LabourRequirement).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
-        //                proportion *= item.Provided / item.Required;
-        //        return proportion;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Method to provide the proportional limit based on specified resource type
-        ///// A proportion less than 1 will only be returned if LabourShortfallAffectsActivity is true in the LabourRequirement
-        ///// </summary>
-        ///// <returns></returns>
-        //public double LimitProportion(Type resourceType)
-        //{
-        //    double proportion = 1.0;
-        //    if (ResourceRequestList == null)
-        //        return proportion;
-
-        //    if (resourceType == typeof(LabourType))
-        //        return LabourLimitProportion;
-
-        //    double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
-
-        //    foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType))
-        //    {
-        //        if (resourceType == typeof(LabourType))
-        //        {
-        //            if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourGroup).Parent as LabourRequirement).OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
-        //                proportion *= item.Provided / item.Required;
-        //        }
-        //        else // all other types
-        //            proportion = item.Provided / item.Required;
-        //    }
-        //    return proportion;
-        //}
-
         /// <summary>
         /// Method to determine if activity limited based on labour shortfall has been set
         /// </summary>
@@ -788,7 +773,6 @@ namespace Models.CLEM.Activities
             if (resourceRequests is null || !resourceRequests.Any())
             {
                 // nothing to do
-                this.Status = ActivityStatus.NotNeeded;
                 return true;
             }
 
@@ -923,9 +907,6 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.Critical;
                 throw new ApsimXException(this, errorMessage);
             }
-
-            //if (!deficitFound && Status != ActivityStatus.Skipped)
-            //    Status = ActivityStatus.Success;
 
             return (Status == ActivityStatus.Skipped);
         }
@@ -1144,11 +1125,21 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void TriggerOnActivityPerformed()
         {
+            int type = 0;
+            if (GetType().Name.Contains("ActivityTimer"))
+            {
+                type = 2;
+            }
+            if (GetType().Name.Contains("Folder"))
+            {
+                type = 1;
+            }
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
                 Name = this.Name,
                 Status = this.Status,
                 Id = this.UniqueID.ToString(),
+                ModelType = type
             });
         }
 
@@ -1158,12 +1149,22 @@ namespace Models.CLEM.Activities
         /// <param name="status">The status of this activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
+            int type = 0;
+            if (GetType().Name.Contains("ActivityTimer"))
+            {
+                type = 2;
+            }
+            if (GetType().Name.Contains("Folder"))
+            {
+                type = 1;
+            }
             this.Status = status;
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
                 Name = this.Name,
                 Status = status,
                 Id = this.UniqueID.ToString(),
+                ModelType = type
             });
         }
     }

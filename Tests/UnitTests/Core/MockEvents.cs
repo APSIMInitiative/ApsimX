@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Models;
 using Models.Core;
 
@@ -15,7 +16,7 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
-        public void ConnectEvents(IModel model)
+        public void ReconnectEvents(string publisherName = null, string eventName = null)
         {
             throw new NotImplementedException();
         }

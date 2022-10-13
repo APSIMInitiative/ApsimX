@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
         private double age;
         private double normalisedWeight;
         private double adultEquivalent;
+        private int weaned = 0;
 
         /// <summary>
         /// Get the value to use for the transaction style requested
@@ -97,6 +98,11 @@ namespace Models.CLEM.Resources
         /// Link to individual's mother
         /// </summary>
         public int MotherID { get; private set; }
+
+        /// <summary>
+        /// Individual is suckling, still with mother and not weaned
+        /// </summary>
+        public bool IsSucklingWithMother { get { return weaned < 0 && mother != null;  } }
 
         /// <summary>
         /// Sex of individual
@@ -294,7 +300,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Determine the category of this individual
         /// </summary>
@@ -376,20 +381,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (!Weaned);
-            }
-        }
-
-
-        /// <summary>
-        /// Determine if unweaned calf - replaced by IsSuckling
-        /// </summary>
-        [FilterByProperty]
-        public bool IsCalf
-        {
-            get
-            {
-                throw new NotImplementedException("The IsCalf property is deprecated. Please use new IsSuckling property");
+                return !Weaned;
             }
         }
 
@@ -593,15 +585,30 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Method called on offspring when mother is lost (e.g. dies or sold)
+        /// </summary>
+        public void MotherLost()
+        {
+            if (Mother != null)
+            {
+                Mother.SucklingOffspringList.Remove(this);
+                Mother = null;
+            }
+        }
+
+        /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean(bool report, string reason)
+        public void Wean(bool report, string reason, bool atNaturalWeaningAge = false)
         {
             weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
-            if (this.Mother != null)
+            if (weaned > Math.Ceiling(BreedParams.GestationLength))
+                weaned = Convert.ToInt32(Math.Ceiling(BreedParams.GestationLength));
+
+            if (Mother != null)
             {
-                this.Mother.SucklingOffspringList.Remove(this);
-                this.Mother.NumberOfWeaned++;
+                Mother.SucklingOffspringList.Remove(this);
+                Mother.NumberOfWeaned++;
             }
             if (report)
             {
@@ -615,21 +622,19 @@ namespace Models.CLEM.Resources
 
         }
 
-        private int weaned = -1;
-
         /// <summary>
         /// Method to set the weaned status to unweaned for new born individuals.
         /// </summary>
         public void SetUnweaned()
         {
-            weaned = -1;
+            weaned = 0;
         }
 
         /// <summary>
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool Weaned { get { return (weaned >= 0); } }
+        public bool Weaned { get { return weaned > 0; } }
 
         /// <summary>
         /// Number of months since weaned
@@ -639,7 +644,10 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return Convert.ToInt32(Math.Round(Age - weaned, 4));
+                if(weaned > 0)
+                    return Convert.ToInt32(Math.Round(Age - weaned, 4));
+                else
+                    return 0;
             }
         }
 
@@ -723,8 +731,9 @@ namespace Models.CLEM.Resources
             this.Wool = 0;
             this.Cashmere = 0;
             int ageInt = Convert.ToInt32(Math.Round(Age, 4));
-            int weanage = Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
-            this.weaned = (ageInt <= weanage)?ageInt:weanage;
+            int weanage = Convert.ToInt32(Math.Round((BreedParams.NaturalWeaningAge == 0) ? BreedParams.GestationLength : BreedParams.NaturalWeaningAge, 4));//   Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
+            //this.weaned = (ageInt <= weanage)?ageInt:weanage;
+            this.weaned = (ageInt < weanage) ? 0 : weanage;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
         }

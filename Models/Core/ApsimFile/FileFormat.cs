@@ -113,6 +113,9 @@
                 errorHandler(err);
             }
 
+            // Replace all models that have a ResourceName with the official, released models.
+            Resource.Instance.Replace(newModel);
+
             // Call created in all models.
             if (initInBackground)
                 Task.Run(() => InitialiseModel(newModel, errorHandler));
@@ -122,7 +125,12 @@
             return newModel;
         }
 
-        private static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
+        /// <summary>
+        /// Initialise a model
+        /// </summary>
+        /// <param name="newModel"></param>
+        /// <param name="errorHandler"></param>
+        public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
         {
             foreach (var model in newModel.FindAllDescendants().ToList())
             {
@@ -140,15 +148,6 @@
         /// <summary>A contract resolver class to only write settable properties.</summary>
         private class WritablePropertiesOnlyResolver : DefaultContractResolver
         {
-            protected override List<MemberInfo> GetSerializableMembers(Type objectType)
-            {
-                List<MemberInfo> result = base.GetSerializableMembers(objectType);
-                result.RemoveAll(m => m is PropertyInfo &&
-                                      !(m as PropertyInfo).CanWrite);
-                result.RemoveAll(m => m.GetCustomAttribute(typeof(LinkAttribute)) != null);
-                return result;
-            }
-
             protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
             {
                 if (member.Name == "Children")
@@ -161,49 +160,47 @@
             {
                 JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-                if (property.PropertyName == "Children")
+                property.ShouldSerialize = instance =>
                 {
-                    property.ShouldSerialize = instance =>
-                    {
-                        if (instance is IOptionallySerialiseChildren opt)
-                            return opt.DoSerialiseChildren;
+                    if (member.GetCustomAttribute<LinkAttribute>() != null ||
+                        member.GetCustomAttribute<JsonIgnoreAttribute>() != null)
+                        return false;
 
+                    // Serialise public fields.
+                    if (member is FieldInfo f)
+                        return f.IsPublic;
+
+                    // Only serialise public properties
+                    // If a memberinfo has a link, JsonIgnore or is readonly then don't serialise it.
+                    if (!(member is PropertyInfo property) ||
+                        !property.GetMethod.IsPublic ||
+                        !property.CanWrite ||
+                        property.SetMethod.IsPrivate)
+                        return false;
+
+                    // If a memberinfo has a description attribute serialise it.
+                    if (member.GetCustomAttribute<DescriptionAttribute>() != null)
                         return true;
-                    };
-                }
-                else if (typeof(ModelCollectionFromResource).IsAssignableFrom(member.DeclaringType))
-                {
-                    property.ShouldSerialize = instance =>
+
+                    // If the instance has come from a resource then don't serialise the member if it has
+                    // come from the resource (e.g. Definitions from Fertiliser model)
+                    if (instance is IModel model && !string.IsNullOrEmpty(model.ResourceName))
                     {
-                        var link = member.GetCustomAttribute<LinkAttribute>();
-                        var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
-                        if (link != null || jsonIgnore != null)
+                        var resourceMembers = Resource.Instance.GetPropertiesFromResourceModel(model.ResourceName);
+                        if (resourceMembers != null && resourceMembers.Contains(property))
                             return false;
+                    }
 
-                        // If this property has a description attribute, then it's settable
-                        // from the UI, in which case it should always be serialized.
-                        var description = member.GetCustomAttribute<DescriptionAttribute>();
-                        if (description != null)
-                            return true;
-
-                        // If the model is under a replacements node, or if the model doesn't have
-                        // a resource name (ie if it's a prototype), then serialize everything.
-                        ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
-                        if (resource.FindAncestor<Replacements>() != null || string.IsNullOrEmpty(resource.ResourceName))
-                            return true;
-
-                        // Otherwise, only serialize if the property is inherited from
-                        // Model or ModelCollectionFromResource.
-                        return member.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource));
-                    };
-                }
+                    // Serialise everything else.
+                    return true;
+                };
 
                 return property;
             }
 
             private class ChildrenProvider : IValueProvider
             {
-                private MemberInfo memberInfo;
+                private readonly MemberInfo memberInfo;
 
                 public ChildrenProvider(MemberInfo memberInfo)
                 {
@@ -212,8 +209,8 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is ModelCollectionFromResource m && m.FindAncestor<Replacements>() == null)
-                        return m.ChildrenToSerialize;
+                    if (target is IModel m)
+                        return ChildrenToSerialize(m);
 
                     return new ExpressionValueProvider(memberInfo).GetValue(target);
                 }
@@ -221,6 +218,29 @@
                 public void SetValue(object target, object value)
                 {
                     new ExpressionValueProvider(memberInfo).SetValue(target, value);
+                }
+
+                /// <summary>
+                /// Gets all child models which are not part of the 'official' model resource.
+                /// Generally speaking, this is all models which have been added by the user
+                /// (e.g. cultivars).
+                /// </summary>
+                /// <remarks>
+                /// This returns all child models which do not have a matching model in the
+                /// resource model's children. A match is defined as having the same name and
+                /// type.
+                /// </remarks>
+                private IEnumerable<IModel> ChildrenToSerialize(IModel model)
+                {
+                    if (model is Manager)
+                        return new Model[0];
+
+                    // Serialise all child if ResourceName is empty or the model is under Replacements.
+                    if (string.IsNullOrEmpty(model.ResourceName) || model.FindAncestor<Folder>("Replacements") != null)
+                        return model.Children;
+
+                    // Return a collection of child models that aren't from a resource.
+                    return Resource.Instance.RemoveResourceChildren(model);
                 }
             }
         }

@@ -231,6 +231,10 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] SWmm { get; set; }
 
+        ///<summary> Who knows</summary>
+        [JsonIgnore]
+        public double[] PSI { get { throw new NotImplementedException(); } }
+
         ///<summary> this is the layer structure that parameters are entered against for this object</summary>
         public double[] Thickness { get; set; }
 

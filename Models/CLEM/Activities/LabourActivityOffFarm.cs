@@ -37,14 +37,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityOffFarm()
-        {
-            TransactionCategory = "[General].[OffFarm].Income";
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
@@ -96,7 +88,7 @@ namespace Models.CLEM.Activities
             // receive payment for labour if bank type exists
             if (bankType != null)
             {
-                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "", TransactionCategory);
+                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, null, TransactionCategory);
                 SetStatusSuccessOrPartial(ResourceRequestList.Where(a => a.ActivityModel is LabourRequirement).Where(a => a.Available < a.Provided).Any());
             }
         }

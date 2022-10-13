@@ -35,7 +35,6 @@ namespace Models.CLEM.Activities
         protected CropActivityTask()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Crop.[Type].[Action]";
         }
 
         /// <inheritdoc/>

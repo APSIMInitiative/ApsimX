@@ -46,7 +46,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ManureActivityCollectPaddock()
         {
-            TransactionCategory = "Livestock.All.Manure";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -58,7 +57,7 @@ namespace Models.CLEM.Activities
         {
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            // locate a cut and carry limiter associarted with this event.
+            // locate a cut and carry limiter associated with this event.
             limiter = ActivityCarryLimiter.Locate(this);
         }
 

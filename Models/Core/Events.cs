@@ -44,20 +44,18 @@
                             publisher.ConnectSubscriber(subscriber);
         }
 
-        /// <summary>Connect all events in the specified model to simulation events</summary>
-        public void ConnectEvents(IModel model)
+        /// <inheritdoc/>
+        public void ReconnectEvents(string publisherName = null, string eventName = null)
         {
-            // Get a list of all models that need to have event subscriptions resolved in.
-            var modelsToInspectForSubscribers = new List<IModel>();
-            modelsToInspectForSubscribers.Add(model);
-            modelsToInspectForSubscribers.AddRange(model.FindAllDescendants());
+            // disconnect named events
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(relativeTo);
+            allModels.AddRange(relativeTo.FindAllDescendants());
+            List<Publisher> publishers = Publisher.FindAll(allModels).Where(a => a.Model.GetType().FullName.Contains(publisherName??"") && a.EventInfo.Name.Contains(eventName??"")).ToList();
+            foreach (Events.Publisher publisher in publishers)
+                publisher.DisconnectAll();
 
-            // Get a list of models in scope that publish events.
-            var modelsToInspectForPublishers = scope.FindAll(model).ToList();
-
-            // Get a complete list of all models in scope
-            var publishers = Publisher.FindAll(modelsToInspectForPublishers);
-            var subscribers = Subscriber.GetAll(modelsToInspectForSubscribers);
+            var subscribers = Subscriber.GetAll(allModels);
 
             foreach (Publisher publisher in publishers)
                 if (subscribers.ContainsKey(publisher.Name))
@@ -65,7 +63,6 @@
                         if (scope.InScopeOf(subscriber.Model, publisher.Model))
                             publisher.ConnectSubscriber(subscriber);
         }
-
 
         /// <summary>Disconnect all events in the specified simulation.</summary>
         public void DisconnectEvents()

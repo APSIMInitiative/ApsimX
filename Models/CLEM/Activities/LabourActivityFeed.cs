@@ -68,7 +68,6 @@ namespace Models.CLEM.Activities
         public LabourActivityFeed()
         {
             this.SetDefaults();
-            TransactionCategory = "Crop.[Type].[FeedPeople]";
         }
 
         /// <inheritdoc/>
@@ -206,7 +205,7 @@ namespace Models.CLEM.Activities
                     case "LabourFeedGroup":
                         valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
-                    case "LabourGroup":
+                    case "LabourRequirement":
                     case "ActivityFee":
                         switch (valueToSupply.Key.identifier)
                         {

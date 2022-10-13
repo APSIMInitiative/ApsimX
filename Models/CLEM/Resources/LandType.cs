@@ -118,7 +118,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             if (UsableArea > 0)
-                Add(UsableArea, this, this.NameWithParent, "Initialise");
+                Add(UsableArea, null, null, "Starting value");
 
             // take away buildings (allows building to change over time. 
             if (PortionBuildings > 0)

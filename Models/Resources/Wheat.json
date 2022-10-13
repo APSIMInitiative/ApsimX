@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 152,
+  "Version": 156,
   "Name": "Simulations",
   "Children": [
     {
@@ -7289,11 +7289,11 @@
           "IncludeDead": true
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "New Zealand",
               "Children": [
                 {
@@ -7726,7 +7726,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Australia",
               "Children": [
                 {
@@ -9043,7 +9043,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Turkey",
               "Children": [
                 {
@@ -9073,7 +9073,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "China",
               "Children": [
                 {
@@ -9096,7 +9096,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "USA",
               "Children": [
                 {
@@ -9180,7 +9180,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Europe",
               "Children": [
                 {
@@ -9251,7 +9251,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Africa",
               "Children": [
                 {
@@ -9276,7 +9276,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Iran",
               "Children": [
                 {
@@ -9299,7 +9299,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Just Added",
               "Children": [
                 {

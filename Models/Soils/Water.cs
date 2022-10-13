@@ -37,14 +37,14 @@
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial water values</summary>
         [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
         [Display(Format = "N1")]
@@ -58,6 +58,37 @@
         [JsonIgnore]
         [Units("mm/mm")]
         public double[] Volumetric { get; set; }
+
+        /// <summary>Soil water potential (kPa)</summary>
+        [Units("kPa")]
+        [JsonIgnore]
+        public double[] Potential
+        {
+            get
+            {
+                return MathUtilities.Multiply_Value(WaterModel.PSI, 0.1);
+            }
+        }
+
+        /// <summary>Soil water potential (kPa)</summary>
+        [Units("-")]
+        [JsonIgnore]
+        public double[] pF
+        {
+            get
+            {
+                double[] psi = WaterModel.PSI;
+                double[] value = new double[WaterModel.PSI.Length];
+                for (int layer = 0; layer < Thickness.Length; layer++)
+                {
+                    if (psi[layer] < 0.0)
+                        value[layer] = Math.Log10(-psi[layer]);
+                    else
+                        value[layer] = 0; 
+                }
+                return value;
+            }
+        }
 
         /// <summary>Plant available water (mm).</summary>
         [Units("mm")]
@@ -174,6 +205,9 @@
 
         /// <summary>Finds the 'physical' node.</summary>
         public IPhysical Physical => FindInScope<IPhysical>();
+
+        /// <summary>Finds the 'physical' node.</summary>
+        public ISoilWater WaterModel => FindInScope<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL

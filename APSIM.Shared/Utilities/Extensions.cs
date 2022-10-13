@@ -37,6 +37,20 @@ namespace APSIM.Shared.Utilities
             return writer.ToString();
         }
 
+        /// <summary>
+        /// Remove trailing blank strings from collection of values.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public static IList<string> TrimEnd(this IList<string> values)
+        {
+            int i;
+            for (i = values.Count - 1; i >= 0; i--)
+                if (!string.IsNullOrEmpty(values[i]))
+                    break;
+            return values.Take(i+1).ToList();
+        }
+
 
     }
 }
