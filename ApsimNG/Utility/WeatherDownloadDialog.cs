@@ -13,6 +13,8 @@ namespace Utility
     using System.Globalization;
     using System.IO;
     using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Threading.Tasks;
     using UserInterface.Commands;
     using UserInterface.Extensions;
     using UserInterface.Presenters;
@@ -41,6 +43,7 @@ namespace Utility
         private Button btnBrowse = null;
         private Entry entryEmail = null;
 
+        private Gtk.Label labelDest = null;
         private Model dest = null; // The destination. Should either be a Weather (to be replaced) or a Simulation (to which the Weather will be added)
         private IModel replaceNode;
         private ExplorerView owningView;
@@ -49,6 +52,7 @@ namespace Utility
         private VBox vbox1;
         Box dialogVBox;
         private bool singleInstance = false;
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -80,6 +84,7 @@ namespace Utility
             calendarStart = (Gtk.Calendar)builder.GetObject("calendarStart");
             calendarEnd = (Gtk.Calendar)builder.GetObject("calendarEnd");
             entryFilePath = (Entry)builder.GetObject("entryFilePath");
+            labelDest = (Gtk.Label)builder.GetObject("label6");
             btnBrowse = (Button)builder.GetObject("btnBrowse");
             entryEmail = (Entry)builder.GetObject("entryEmail");
 
@@ -121,6 +126,12 @@ namespace Utility
             }
         }
 
+        /// <summary>
+        /// Get the file name for the saved weather data. Ensures
+        /// that only one file open dialog can be opened at a time.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnBrowse_Clicked(object sender, EventArgs e)
         {
             if (!singleInstance)
@@ -153,12 +164,12 @@ namespace Utility
 
         /// <summary>
         /// Handles presses of the "ok" button
-        /// Attempts to retrieve the indicated soil description and put it in place of the original soil.
+        /// Attempts to retrieve the weather data.
         /// Closes the dialog if successful
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void BtnOk_Clicked(object sender, EventArgs e)
+        private async void BtnOk_Clicked(object sender, EventArgs e)
         {
             bool validEntries = false;
             bool proceed = true;
@@ -187,7 +198,9 @@ namespace Utility
                                 if (validEntries)
                                 {
                                     WaitCursor = true;
-                                    newWeatherPath = GetDataDrill();
+                                    btnCancel.Label = "Stop";
+                                    labelDest.Text = "Downloading...";
+                                    newWeatherPath = await GetDataDrill();
                                 }
                             }
                             else if (radioSiloPatchPoint.Active)
@@ -196,7 +209,9 @@ namespace Utility
                                 if (validEntries)
                                 {
                                     WaitCursor = true;
-                                    newWeatherPath = GetPatchPoint();
+                                    btnCancel.Label = "Stop";
+                                    labelDest.Text = "Downloading...";
+                                    newWeatherPath = await GetPatchPoint();
                                 }
                             }
                             else if (radioNASA.Active)
@@ -205,7 +220,9 @@ namespace Utility
                                 if (validEntries)
                                 {
                                     WaitCursor = true;
-                                    newWeatherPath = GetNasaChirps();
+                                    btnCancel.Label = "Stop";
+                                    labelDest.Text = "Downloading...";
+                                    newWeatherPath = await GetNasaChirps();
                                 }
                             }
                         }
@@ -218,6 +235,7 @@ namespace Utility
                     if (validEntries && string.IsNullOrWhiteSpace(newWeatherPath))
                     {
                         ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
+                        validEntries = false;   // don't close dialog yet
                     }
                     else
                     {
@@ -274,7 +292,7 @@ namespace Utility
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void BtnGetPlacename_Clicked(object sender, EventArgs e)
+        private async void BtnGetPlacename_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -282,23 +300,35 @@ namespace Utility
                     return;
                 string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
 
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-                stream.Position = 0;
-                JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
-                while (reader.Read())
+                try
                 {
-                    if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("formatted_address"))
+                    btnGetPlacename.Label = "Stop";
+                    WaitCursor = true;
+                    var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
+                    stream.Position = 0;
+                    JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
+                    while (reader.Read())
                     {
-                        reader.Read();
-                        entryPlacename.Text = reader.Value.ToString();
-                        break;
+                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("formatted_address"))
+                        {
+                            reader.Read();
+                            entryPlacename.Text = reader.Value.ToString();
+                            break;
+                        }
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource = new CancellationTokenSource();
                 }
             }
             catch (Exception err)
             {
                 ShowMessage(MessageType.Error, err.Message, "Error");
             }
+            WaitCursor = false;
+            btnGetPlacename.Label = "Get placename for location";
         }
 
         /// <summary>
@@ -310,7 +340,7 @@ namespace Utility
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        private void BtnGetLocation_Clicked(object sender, EventArgs e)
+        private async void BtnGetLocation_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -320,44 +350,56 @@ namespace Utility
                 // yet have things set up for the global soil database
                 string url = googleGeocodingApi + "components=" + (radioAus.Active ? "country:AU|" : "") + "locality:" + entryPlacename.Text;
 
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-                stream.Position = 0;
-                JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
-                while (reader.Read())
+                try
                 {
-                    if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("location"))
+                    btnGetLocation.Label = "Stop";
+                    WaitCursor = true;
+                    var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
+                    stream.Position = 0;
+                    JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
+                    while (reader.Read())
                     {
-                        reader.Read(); // Read the "start object" token
-                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("location"))
                         {
-                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lat"))
+                            reader.Read(); // Read the "start object" token
+                            while (reader.Read() && reader.TokenType != JsonToken.EndObject)
                             {
-                                reader.Read();
-                                entryLatitude.Text = reader.Value.ToString();
+                                if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lat"))
+                                {
+                                    reader.Read();
+                                    entryLatitude.Text = reader.Value.ToString();
+                                }
+                                else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lng"))
+                                {
+                                    reader.Read();
+                                    entryLongitude.Text = reader.Value.ToString();
+                                }
                             }
-                            else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lng"))
+                            break;
+                        }
+                        else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("status"))
+                        {
+                            reader.Read();
+                            string status = reader.Value.ToString();
+                            if (status == "ZERO_RESULTS")
                             {
-                                reader.Read();
-                                entryLongitude.Text = reader.Value.ToString();
+                                ShowMessage(MessageType.Warning, String.Format("No location matching the name '{0}' could be found.", entryPlacename.Text), "Location not found");
                             }
                         }
-                        break;
                     }
-                    else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("status"))
-                    {
-                        reader.Read();
-                        string status = reader.Value.ToString();
-                        if (status == "ZERO_RESULTS")
-                        {
-                            ShowMessage(MessageType.Warning, String.Format("No location matching the name '{0}' could be found.", entryPlacename.Text), "Location not found");
-                        }
-                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource = new CancellationTokenSource();
                 }
             }
             catch (Exception err)
             {
                 ShowMessage(MessageType.Error, err.Message, "Error");
             }
+            WaitCursor = false;
+            btnGetLocation.Label = "Get location from placename";
         }
 
         /// <summary>
@@ -367,13 +409,21 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnCancel_Clicked(object sender, EventArgs e)
         {
-            try
+            if (btnCancel.Label == "Stop")
             {
-                dialog1.Dispose();
+                cancellationTokenSource.Cancel();
+                btnCancel.Label = "Cancel";
             }
-            catch (Exception err)
+            else
             {
-                ShowMessage(MessageType.Error, err.Message, "Error");
+                try
+                {
+                    dialog1.Dispose();
+                }
+                catch (Exception err)
+                {
+                    ShowMessage(MessageType.Error, err.Message, "Error");
+                }
             }
         }
 
@@ -406,6 +456,7 @@ namespace Utility
                     longitude = weatherObj.Longitude;
                     entryLatitude.Text = latitude.ToString();
                     entryLongitude.Text = longitude.ToString();
+                    weatherObj.CloseDataFile();
                 }
             }
             dialog1.Show();
@@ -448,6 +499,10 @@ namespace Utility
             return result;
         }
 
+        /// <summary>
+        /// Validate the inputs for SILO
+        /// </summary>
+        /// <returns>True if valid</returns>
         private bool ValidateDataDrillChoice()
         {
             bool proceed = true;
@@ -476,7 +531,11 @@ namespace Utility
             return proceed;
         }
 
-        public string GetDataDrill()
+        /// <summary>
+        /// Get the gridded SILO data
+        /// </summary>
+        /// <returns>The file name if the data has been obtained</returns>
+        public async Task<string> GetDataDrill()
         {
             string newWeatherPath = null;
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
@@ -485,29 +544,46 @@ namespace Utility
             
             string url = String.Format("https://www.longpaddock.qld.gov.au/cgi-bin/silo/DataDrillDataset.php?start={0:yyyyMMdd}&finish={1:yyyyMMdd}&lat={2}&lon={3}&format=apsim&username={4}&password=silo",
                             startDate, endDate, entryLatitude.Text, entryLongitude.Text, System.Net.WebUtility.UrlEncode(entryEmail.Text));
-            MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-            stream.Seek(0, SeekOrigin.Begin);
-            string headerLine = new StreamReader(stream).ReadLine();
-            stream.Seek(0, SeekOrigin.Begin);
-            if (headerLine.StartsWith("[weather.met.weather]"))
+
+            try
             {
-                using (FileStream fs = new FileStream(dest, FileMode.Create))
+                var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
+                stream.Seek(0, SeekOrigin.Begin);
+                string headerLine = new StreamReader(stream).ReadLine();
+                stream.Seek(0, SeekOrigin.Begin);
+                if (headerLine.StartsWith("[weather.met.weather]"))
                 {
-                    stream.CopyTo(fs);
-                    fs.Flush();
+                    using (FileStream fs = new FileStream(dest, FileMode.Create))
+                    {
+                        stream.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    if (File.Exists(dest))
+                    {
+                        newWeatherPath = dest;
+                    }
                 }
-                if (File.Exists(dest))
+                else
                 {
-                    newWeatherPath = dest;
+                    ShowMessage(MessageType.Error, new StreamReader(stream).ReadToEnd(), "Not valid APSIM weather data");
                 }
             }
-            else
+            catch (OperationCanceledException)
             {
-                ShowMessage(MessageType.Error, new StreamReader(stream).ReadToEnd(), "Not valid APSIM weather data");
+                WaitCursor = false;
+                labelDest.Text = "Save to";
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
+                await Task.Delay(500);
             }
+
             return newWeatherPath;
         }
 
+        /// <summary>
+        /// Validate the inputs for SILO
+        /// </summary>
+        /// <returns>True if valid</returns>
         private bool ValidatePatchPointChoice()
         {
             bool proceed = true;
@@ -537,7 +613,11 @@ namespace Utility
             return proceed;
         }
 
-        public string GetPatchPoint()
+        /// <summary>
+        /// Get the SILO pathpoint data
+        /// </summary>
+        /// <returns>The file name if the data is retrieved</returns>
+        public async Task<string> GetPatchPoint()
         {
             string newWeatherPath = null;
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
@@ -552,40 +632,52 @@ namespace Utility
             string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
             try
             {
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-                stream.Position = 0;
-                JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
-                // Parsing the JSON gets a little tricky with a forward-reading parser. We're trying to track
-                // down a "short_name" address component of "locality" type (I guess).
                 string locName = "";
-                while (reader.Read())
+                try
                 {
-                    if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("address_components"))
+                    var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
+                    stream.Position = 0;
+                    JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
+                    // Parsing the JSON gets a little tricky with a forward-reading parser. We're trying to track
+                    // down a "short_name" address component of "locality" type (I guess).
+                    while (reader.Read())
                     {
-                        reader.Read();
-                        if (reader.TokenType == JsonToken.StartArray)
+                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("address_components"))
                         {
-                            JArray arr = JArray.Load(reader);
-                            foreach (JToken token in arr)
+                            reader.Read();
+                            if (reader.TokenType == JsonToken.StartArray)
                             {
-                                JToken typesToken = token.Last;
-                                JArray typesArray = typesToken.First as JArray;
-                                for (int i = 0; i < typesArray.Count; i++)
+                                JArray arr = JArray.Load(reader);
+                                foreach (JToken token in arr)
                                 {
-                                    if (typesArray[i].ToString() == "locality")
+                                    JToken typesToken = token.Last;
+                                    JArray typesArray = typesToken.First as JArray;
+                                    for (int i = 0; i < typesArray.Count; i++)
                                     {
-                                        locName = token["short_name"].ToString();
-                                        break;
+                                        if (typesArray[i].ToString() == "locality")
+                                        {
+                                            locName = token["short_name"].ToString();
+                                            break;
+                                        }
                                     }
+                                    if (!string.IsNullOrEmpty(locName))
+                                        break;
                                 }
-                                if (!string.IsNullOrEmpty(locName))
-                                    break;
                             }
                         }
+                        if (!string.IsNullOrEmpty(locName))
+                            break;
                     }
-                    if (!string.IsNullOrEmpty(locName))
-                        break;
                 }
+                catch (OperationCanceledException)
+                {
+                    WaitCursor = false;
+                    labelDest.Text = "Save to";
+                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource = new CancellationTokenSource();
+                    await Task.Delay(500);
+                }
+
                 if (string.IsNullOrEmpty(locName))
                 {
                     ShowMessage(MessageType.Error, "Unable to find a name key for the specified location", "Error determining location");
@@ -598,81 +690,116 @@ namespace Utility
                     locName = regex.Replace(locName, "_");
                 }
                 string stationUrl = String.Format("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?format=name&nameFrag={0}", locName);
-                MemoryStream stationStream = WebUtilities.ExtractDataFromURL(stationUrl);
-                stationStream.Position = 0;
-                StreamReader streamReader = new StreamReader(stationStream);
-                string stationInfo = streamReader.ReadToEnd();
-                string[] stationLines = stationInfo.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-                if (stationLines.Length == 0)
+
+                try
                 {
-                    ShowMessage(MessageType.Error, "Unable to find a BOM station for this location", "Cannot find station");
-                    return null;
-                }
-                if (stationLines.Length == 1)
-                {
-                    string[] lineInfo = stationLines[0].Split('|');
-                    stationNumber = Int32.Parse(lineInfo[0]);
-                }
-                else
-                {
-                    MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.OkCancel,
-                                       "Which station do you wish to use?");
-                    md.Title = "Select BOM Station";
-                    Gtk.TreeView tree = new Gtk.TreeView();
-                    ListStore list = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
-                    tree.AppendColumn("Number", new CellRendererText(), "text", 0);
-                    tree.AppendColumn("Name", new CellRendererText(), "text", 1);
-                    tree.AppendColumn("Latitude", new CellRendererText(), "text", 2);
-                    tree.AppendColumn("Longitude", new CellRendererText(), "text", 3);
-                    tree.AppendColumn("State", new CellRendererText(), "text", 4);
-                    tree.AppendColumn("Elevation", new CellRendererText(), "text", 5);
-                    tree.AppendColumn("Notes", new CellRendererText(), "text", 6);
-                    foreach (string stationLine in stationLines)
+                    try
                     {
-                        string[] lineInfo = stationLine.Split('|');
-                        list.AppendValues(lineInfo);
+                        var stationStream = await WebUtilities.ExtractDataFromURL(stationUrl, cancellationTokenSource.Token);
+                        stationStream.Position = 0;
+                        StreamReader streamReader = new StreamReader(stationStream);
+                        string stationInfo = streamReader.ReadToEnd();
+                        string[] stationLines = stationInfo.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                        if (stationLines.Length == 0)
+                        {
+                            ShowMessage(MessageType.Error, "Unable to find a BOM station for this location", "Cannot find station");
+                            return null;
+                        }
+                        if (stationLines.Length == 1)
+                        {
+                            string[] lineInfo = stationLines[0].Split('|');
+                            stationNumber = Int32.Parse(lineInfo[0]);
+                        }
+                        else
+                        {
+                            MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.OkCancel,
+                                               "Which station do you wish to use?");
+                            md.Title = "Select BOM Station";
+                            Gtk.TreeView tree = new Gtk.TreeView();
+                            ListStore list = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
+                            tree.AppendColumn("Number", new CellRendererText(), "text", 0);
+                            tree.AppendColumn("Name", new CellRendererText(), "text", 1);
+                            tree.AppendColumn("Latitude", new CellRendererText(), "text", 2);
+                            tree.AppendColumn("Longitude", new CellRendererText(), "text", 3);
+                            tree.AppendColumn("State", new CellRendererText(), "text", 4);
+                            tree.AppendColumn("Elevation", new CellRendererText(), "text", 5);
+                            tree.AppendColumn("Notes", new CellRendererText(), "text", 6);
+                            foreach (string stationLine in stationLines)
+                            {
+                                string[] lineInfo = stationLine.Split('|');
+                                list.AppendValues(lineInfo);
+                            }
+                            tree.Model = list;
+                            tree.RowActivated += OnPatchPointSoilSelected;
+
+                            Box box = md.ContentArea;
+
+                            box.PackStart(tree, true, true, 5);
+                            box.ShowAll();
+
+                            ResponseType result = (ResponseType)md.Run();
+                            if (result == ResponseType.Ok)
+                            {
+                                TreeIter iter;
+                                tree.Selection.GetSelected(out iter);
+                                string stationString = (string)list.GetValue(iter, 0);
+                                stationNumber = Int32.Parse(stationString);
+                            }
+                            md.Dispose();
+                        }
                     }
-                    tree.Model = list;
-                    tree.RowActivated += OnPatchPointSoilSelected;
-
-                    Box box = md.ContentArea;
-
-                    box.PackStart(tree, true, true, 5);
-                    box.ShowAll();
-
-                    ResponseType result = (ResponseType)md.Run();
-                    if (result == ResponseType.Ok)
+                    catch (OperationCanceledException)
                     {
-                        TreeIter iter;
-                        tree.Selection.GetSelected(out iter);
-                        string stationString = (string)list.GetValue(iter, 0);
-                        stationNumber = Int32.Parse(stationString);
+                        WaitCursor = false;
+                        labelDest.Text = "Save to";
+                        cancellationTokenSource.Dispose();
+                        cancellationTokenSource = new CancellationTokenSource();
+                        await Task.Delay(500);
                     }
-                    md.Dispose();
                 }
+                catch (OperationCanceledException)
+                {
+                    WaitCursor = false;
+                    labelDest.Text = "Save to";
+                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource = new CancellationTokenSource();
+                    await Task.Delay(500);
+                }
+
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
                     string pointUrl = String.Format("https://www.longpaddock.qld.gov.au/cgi-bin/silo/PatchedPointDataset.php?start={0:yyyyMMdd}&finish={1:yyyyMMdd}&station={2}&format=apsim&username={3}",
                                     startDate, endDate, stationNumber, System.Net.WebUtility.UrlEncode(entryEmail.Text));
-                    MemoryStream pointStream = WebUtilities.ExtractDataFromURL(pointUrl);
-                    pointStream.Seek(0, SeekOrigin.Begin);
-                    string headerLine = new StreamReader(pointStream).ReadLine();
-                    pointStream.Seek(0, SeekOrigin.Begin);
-                    if (headerLine.StartsWith("[weather.met.weather]"))
+                    try
                     {
-                        using (FileStream fs = new FileStream(dest, FileMode.Create))
+                        var pointStream = await WebUtilities.ExtractDataFromURL(pointUrl, cancellationTokenSource.Token);
+                        pointStream.Seek(0, SeekOrigin.Begin);
+                        string headerLine = new StreamReader(pointStream).ReadLine();
+                        pointStream.Seek(0, SeekOrigin.Begin);
+                        if (headerLine.StartsWith("[weather.met.weather]"))
                         {
-                            pointStream.CopyTo(fs);
-                            fs.Flush();
+                            using (FileStream fs = new FileStream(dest, FileMode.Create))
+                            {
+                                pointStream.CopyTo(fs);
+                                fs.Flush();
+                            }
+                            if (File.Exists(dest))
+                            {
+                                newWeatherPath = dest;
+                            }
                         }
-                        if (File.Exists(dest))
+                        else
                         {
-                            newWeatherPath = dest;
+                            ShowMessage(MessageType.Error, new StreamReader(pointStream).ReadToEnd(), "Not valid APSIM weather data");
                         }
                     }
-                    else
+                    catch (OperationCanceledException)
                     {
-                        ShowMessage(MessageType.Error, new StreamReader(pointStream).ReadToEnd(), "Not valid APSIM weather data");
+                        WaitCursor = false;
+                        labelDest.Text = "Save to";
+                        cancellationTokenSource.Dispose();
+                        cancellationTokenSource = new CancellationTokenSource();
+                        await Task.Delay(500);
                     }
                 }
             }
@@ -700,6 +827,10 @@ namespace Utility
             }
         }
 
+        /// <summary>
+        /// Validate the inputs for the NASA data
+        /// </summary>
+        /// <returns>True if valid</returns>
         private bool ValidateNasaChoice()
         {
             DateTime startDate = calendarStart.Date;
@@ -710,15 +841,19 @@ namespace Utility
                 ShowMessage(MessageType.Warning, "NASA/CHIRPS data is not available before 1981", "Invalid start date");
                 proceed = false;
             }
-            if (endDate.CompareTo(DateTime.Today) >= 0)
+            if (endDate.CompareTo(DateTime.Today.AddDays(-45)) >= 0)
             {
-                ShowMessage(MessageType.Warning, "NASA/CHRIPS data end date can be no later than yesterday", "Invalid end date");
+                ShowMessage(MessageType.Warning, "NASA/CHIRPS data end date can be no later than 45 days ago", "Invalid end date");
                 proceed = false;
             }
             return proceed;
         }
 
-        public string GetNasaChirps()
+        /// <summary>
+        /// Get the NASA POWER, CHIRPS data
+        /// </summary>
+        /// <returns>The file name if data is obtained</returns>
+        public async Task<string> GetNasaChirps()
         {
             string newWeatherPath = null;
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
@@ -733,16 +868,28 @@ namespace Utility
 
             string url = String.Format("https://worldmodel.csiro.au/gclimate?lat={0}&lon={1}&format=apsim&start={2:yyyyMMdd}&stop={3:yyyyMMdd}",
                             latitudeStr, longitudeStr, startDate, endDate);
-            MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-            stream.Position = 0;
-            using (FileStream fs = new FileStream(dest, FileMode.OpenOrCreate))
+
+            try
             {
-                stream.CopyTo(fs);
-                fs.Flush();
+                var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
+                stream.Position = 0;
+                using (FileStream fs = new FileStream(dest, FileMode.Create))
+                {
+                    stream.CopyTo(fs);
+                    fs.Flush();
+                }
+                if (File.Exists(dest))
+                {
+                    newWeatherPath = dest;
+                }
             }
-            if (File.Exists(dest))
+            catch (OperationCanceledException)
             {
-                newWeatherPath = dest;
+                WaitCursor = false;
+                labelDest.Text = "Save to";
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
+                await Task.Delay(500);
             }
             return newWeatherPath;
         }
