@@ -351,7 +351,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkRadioButton" id="radioNASA">
-                                    <property name="label" translatable="yes">NASA POWER w/ CHIRPS rainfall (World Modellers)</property>
+                                    <property name="label" translatable="yes">NASA POWER w/ CHIRPS rainfall (Global)</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
