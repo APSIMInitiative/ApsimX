@@ -1241,7 +1241,9 @@ namespace Models.GrazPlan
             {
                 fNewMaxPrevWt = (BaseWeight - bodyCondition * Genotype.GrowthC[3] * fMaxNormWt)
                                  / (bodyCondition * (1.0 - Genotype.GrowthC[3]));
-                fNewMaxPrevWt = Math.Max(BaseWeight, Math.Min(fNewMaxPrevWt, fMaxNormWt));
+                if (this.AgeDays < 750)
+                    fNewMaxPrevWt = Math.Min(fNewMaxPrevWt, fMaxNormWt);
+                fNewMaxPrevWt = Math.Max(BaseWeight, fNewMaxPrevWt);
             }
 
             SetMaxPrevWt(fNewMaxPrevWt);
