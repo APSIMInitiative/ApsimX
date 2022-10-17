@@ -30,12 +30,12 @@ namespace Models.PMF.Phen
         /// <summary> The temperature above which Vrn1 is down regulated </summary>
         [Description("The temperature above which Vrn1 is down regulated")]
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction DeVernalisationTemp = null;
+        IFunction deVernalisationTemp = null;
 
         /// <summary> The rate (/d) that Vrn1 is down regulated when temp is over DVernalisationTemp </summary>
         [Description("The temperature above which Vrn1 is down regulated")]
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction DeVernalisationRate = null;
+        IFunction deVernalisationRate = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -54,12 +54,12 @@ namespace Models.PMF.Phen
             {
                 double dTt = camp.dHS / 24;  //divide by 24 to make hourly
                 double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k.Value() * dX);
-                if (dX < DeVernalisationTemp.Value())
+                if (dX < deVernalisationTemp.Value())
                     return UdVrn1 * dTt;
                 else
                 {
-                    dTt = (dX - DeVernalisationTemp.Value())/24;
-                    return DeVernalisationRate.Value() * dTt;
+                    dTt = (dX - deVernalisationTemp.Value())/24;
+                    return deVernalisationRate.Value() * dTt;
                 }
             }
             else return 0.0;
