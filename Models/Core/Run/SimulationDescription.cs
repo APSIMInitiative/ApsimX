@@ -140,6 +140,11 @@
         {
             try
             {
+                // It is possible that the base simulation is still in the process of being
+                // initialised in another thread. If so, wait to let it finish.
+                while (baseSimulation.IsInitialising)
+                    Thread.Sleep(10);
+
                 AddReplacements();
 
                 Simulation newSimulation;
