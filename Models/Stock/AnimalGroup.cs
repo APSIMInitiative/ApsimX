@@ -1140,6 +1140,13 @@ namespace Models.GrazPlan
                 Result.Young = Young.Split(number * NoOffspring, false, yngDiffs, NODIFF);
                 Result.Young.mothers = Result.Copy();
             }
+
+            // assume that when there are no animals there will be no ages
+            if (NoAnimals == 0)
+            {
+                ages.Clear();
+                this.AgeDays = 0;
+            }
             return Result;
         }
 
@@ -1234,7 +1241,9 @@ namespace Models.GrazPlan
             {
                 fNewMaxPrevWt = (BaseWeight - bodyCondition * Genotype.GrowthC[3] * fMaxNormWt)
                                  / (bodyCondition * (1.0 - Genotype.GrowthC[3]));
-                fNewMaxPrevWt = Math.Max(BaseWeight, Math.Min(fNewMaxPrevWt, fMaxNormWt));
+                if (this.AgeDays < 750)
+                    fNewMaxPrevWt = Math.Min(fNewMaxPrevWt, fMaxNormWt);
+                fNewMaxPrevWt = Math.Max(BaseWeight, fNewMaxPrevWt);
             }
 
             SetMaxPrevWt(fNewMaxPrevWt);
@@ -2216,13 +2225,7 @@ namespace Models.GrazPlan
                 else
                     fPropn = 0.0;
 
-                if (N == 1)
-                    result[N] = fPropn;
-                else
-                {
-                    result[N] = fPropn * result[N - 1];
-                    result[N - 1] = result[N - 1] - result[N];
-                }
+                result[N] = fPropn;
             }
 
             for (N = 1; N <= Genotype.MaxYoung - 1; N++)
@@ -2547,6 +2550,9 @@ namespace Models.GrazPlan
 
                 this.MaleNo = this.MaleNo - numberMales;
                 this.FemaleNo = this.FemaleNo - numberFemales;
+                // assume that when there are no animals there will be no ages
+                if (NoAnimals == 0)
+                    ages.Clear();
                 this.AgeDays = this.ages.MeanAge();
             }
             return Result;
