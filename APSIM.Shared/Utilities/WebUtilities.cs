@@ -97,12 +97,13 @@
         /// </summary>
         /// <param name="url">URL to access</param>
         /// <param name="mediaType">Preferred media type to return</param>
+        /// <param name="cancellationToken">Token for cancellation</param>
         /// <returns>Data stream obtained from the URL</returns>
-        public static async Task<Stream> AsyncGetStreamTask(string url, string mediaType)
+        public async static Task<Stream> AsyncGetStreamTask(string url, string mediaType, CancellationToken cancellationToken = default)
         {
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
-            HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
+            HttpResponseMessage response = await client.GetAsync(url, cancellationToken).ConfigureAwait(false);
             return await response.Content.ReadAsStreamAsync();
         }
 
@@ -112,10 +113,11 @@
         /// </summary>
         /// <typeparam name="T">The return type</typeparam>
         /// <param name="url">The URL of the REST service.</param>
+        /// <param name="cancellationToken">Token for cancellation</param>
         /// <returns>The return data</returns>
-        public static T CallRESTService<T>(string url)
+        public static T CallRESTService<T>(string url, CancellationToken cancellationToken = default)
         {
-            var stream = AsyncGetStreamTask(url, "application/xml").Result;
+            var stream = AsyncGetStreamTask(url, "application/xml", cancellationToken).Result;
             if (typeof(T).Name == "Object")
                 return default(T);
 
@@ -127,26 +129,28 @@
         /// Calls a url and returns the web response in a memory stream
         /// </summary>
         /// <param name="url">The url to call</param>
+        /// <param name="cancellationToken">Token for cancellation</param>
         /// <returns>The data stream</returns>
-        public static MemoryStream ExtractDataFromURL(string url)
+        public static async Task<MemoryStream> ExtractDataFromURL(string url, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             try
             {
-                Stream result = AsyncGetStreamTask(url, "*/*").Result;
+                var result = await AsyncGetStreamTask(url, "*/*", cancellationToken);
                 if (result == null)
                     throw new Exception();
-                if (result is MemoryStream)
-                    return result as MemoryStream;
-                else
-                {
-                    MemoryStream memStream = new MemoryStream();
-                    result.CopyTo(memStream);
-                    return memStream;
-                }
+                
+                MemoryStream memStream = new MemoryStream();
+                result.CopyTo(memStream);
+                return memStream;
             }
-            catch (Exception)
+            catch (OperationCanceledException)
             {
-                throw new Exception("Cannot get data from " + url);
+                throw;  // rethrow to caller
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Cannot get data from " + url, ex);
             }
         }
 
@@ -159,7 +163,7 @@
         /// <param name="cancellationToken">a CancellationToken(defaults to an empty token</param>
         /// <param name="mediaType">Media type to obtain (defaults to */*)</param>
         /// <returns>A Task</returns>
-        public static async void GetAsyncWithProgress(string url, Stream destination,
+        public static async Task GetAsyncWithProgress(string url, Stream destination,
                        IProgress<double> progress = null, CancellationToken cancellationToken = default, string mediaType = "*/*")
         {
             try
