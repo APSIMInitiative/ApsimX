@@ -99,6 +99,7 @@ namespace APSIM.Documentation
                 StandardTutorialRow("Parameter sensitivity (Morris)", "Sensitivity_MorrisMethod"),
                 StandardTutorialRow("Parameter sensitivity (SOBOL)", "Sensitivity_SobolMethod"),
                 StandardTutorialRow("Parameter sensitivity (Factorial ANOVA)", "Sensitivity_FactorialANOVA"),
+                StandardTutorialRow("Predicted/Observed data handling", "PredictedObserved"),
                 StandardTutorialRow("Report", "Report"),
             };
             return new DocumentationTable("Tutorials", cols, rows);
