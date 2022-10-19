@@ -132,7 +132,7 @@
         /// <param name="errorHandler"></param>
         public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
         {
-            IEnumerable<Simulation> simulationList = newModel.FindAllDescendants<Simulation>();
+            List<Simulation> simulationList = newModel.FindAllDescendants<Simulation>().ToList();
             foreach (Simulation simulation in simulationList)
                 simulation.IsInitialising = true;
             try
