@@ -209,7 +209,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\Work\\Repos\\ApsimX\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
