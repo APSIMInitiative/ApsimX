@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Core.Run;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Generates a pivot table from a Report")]
     [Version(1, 0, 0, "")]
-    public class ReportPivot : Model, ICLEMUI, IValidatableObject
+    public class ReportPivot : Model, ICLEMUI, IValidatableObject, IPostSimulationTool
     {
         [Link]
         private IDataStore datastore = null;
@@ -213,12 +214,6 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// Saves the view post-simulation
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e) => CreateView();
-
         #region validation
 
         /// <summary>
@@ -236,6 +231,9 @@ namespace Models.CLEM.Reporting
             }
             return results;
         }
+
+        /// <inheritdoc/>
+        public void Run() => CreateView();
         #endregion
 
     }

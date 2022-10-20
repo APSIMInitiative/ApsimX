@@ -77,6 +77,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityWean()
         {
             this.SetDefaults();
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>

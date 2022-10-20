@@ -5,6 +5,7 @@ using Models.Storage;
 using System;
 using System.Data;
 using System.Linq;
+using Models.Core.Run;
 
 namespace Models.CLEM.Reporting
 {
@@ -17,7 +18,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
-    public class ReportQuery : Model, ICLEMUI
+    public class ReportQuery : Model, ICLEMUI, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -33,6 +34,9 @@ namespace Models.CLEM.Reporting
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
+        /// <inheritdoc/>
+        public void Run() => SaveView(dataStore); 
+
         /// <summary>
         /// Runs the query
         /// </summary>
@@ -44,12 +48,6 @@ namespace Models.CLEM.Reporting
                 return storage.Reader.GetData(Name);
             return new DataTable();
         }
-
-        /// <summary>
-        /// Saves the view post-simulation
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e) => SaveView(dataStore);        
 
         private void SaveView(IDataStore store)
         {
