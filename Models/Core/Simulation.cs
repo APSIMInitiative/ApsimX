@@ -124,6 +124,14 @@ namespace Models.Core
         /// <summary>Is the simulation running?</summary>
         public bool IsRunning { get; private set; } = false;
 
+        /// <summary>
+        /// Is this Simulation in the process of being initialised?
+        /// Use with caution! Leaving this set to "true" will block its
+        /// execution thread.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsInitialising { get; set; } = false;
+
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
