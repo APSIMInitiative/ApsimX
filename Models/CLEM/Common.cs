@@ -181,7 +181,11 @@ namespace Models.CLEM
         /// <summary>
         /// Reduce initial herd to management levels
         /// </summary>
-        ReduceInitialHerd
+        ReduceInitialHerd,
+        /// <summary>
+        /// Sale of weaner
+        /// </summary>
+        WeanerSale
     }
 
     /// <summary>
