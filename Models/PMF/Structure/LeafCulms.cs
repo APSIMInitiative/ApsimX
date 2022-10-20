@@ -72,8 +72,12 @@ namespace Models.PMF.Struct
 		[JsonIgnore]
         public double FertileTillerNumber { get => tillering.FertileTillerNumber; }
 
-		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
+        /// <summary> CurrentTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
+        public double CurrentTillerNumber { get => tillering.CurrentTillerNumber; }
+
+        /// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
 		public IFunction VerticalTillerAdjustment = null;
 
 		/// <summary> Maximum values that Subsequent tillers can be adjusted</summary>

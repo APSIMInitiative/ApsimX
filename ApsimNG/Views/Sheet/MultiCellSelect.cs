@@ -45,6 +45,7 @@ namespace UserInterface.Views
             }
             else
             {
+                sheet.CellEditor?.EndEdit();
                 base.OnMouseClickEvent(sender, evnt);
                 selectedColumnIndexRight = selectedColumnIndex;
                 selectedRowIndexBottom = selectedRowIndex;
@@ -133,6 +134,14 @@ namespace UserInterface.Views
                 }
                 sheetWidget.SetClipboard(textToCopy.ToString());
             }
+        }
+
+        /// <summary>Delete contents of cells.</summary>
+        public override void Delete()
+        {
+            for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
+                for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
+                    sheet.DataProvider.SetCellContents(columnIndex, rowIndex, null);
         }
     }
 }

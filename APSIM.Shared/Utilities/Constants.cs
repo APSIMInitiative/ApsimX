@@ -7,6 +7,29 @@ namespace APSIM.Shared.Utilities
     /// </summary>
     public static class Constants
     {
+        /// <summary>constant to convert m^2 to hectares</summary>
+        public const double sm2ha = 1.0 / 10000.0;
+
+        /// <summary>tonnes to grams</summary>
+        public const double t2g = 1000.0 * 1000.0;
+
+        /// <summary>grams to tonnes</summary>
+        public const double g2t = 1.0 / t2g;
+
+        /// <summary>g water/m^2 to mm water
+        /// 1 g water = 1,000 cubic mm and
+        /// 1 sq m = 1,000,000 sq mm
+        ///</summary>
+        public const double g2mm = 1.0e3 / 1.0e6;
+
+        /// <summary>convert percent to fraction</summary>
+        public const double pcnt2fract = 1.0 / 100.0;
+
+        /// <summary>convert fraction to percent</summary>
+        public const double fract2pcnt = 100.0;
+
+
+
         /// <summary>
         /// ISO 3166 list of English short country names.
         /// </summary>

@@ -126,7 +126,6 @@
             {
                 try
                 {
-                    SaveGridToModel();
                     CellChanged.Invoke(sender, colIndex, rowIndex);
                 }
                 catch (Exception err)
@@ -214,6 +213,13 @@
 
             dataProvider.CellChanged += OnCellChanged;
         }
+
+        public int NumRows()
+        {
+            var provider = grid.Sheet.DataProvider as DataTableProvider;
+            return grid.Sheet.DataProvider.RowCount - grid.Sheet.NumberFrozenRows;
+        }
+
 
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()

@@ -63,6 +63,17 @@ namespace Models.Soils
         /// <param name="data"></param>
         public void SetData(DataTable data)
         {
+            // If Depth is the first column then use the number of values in
+            // that column to resize the other columns.
+            if (data != null && data.Columns.Count > 0 &&
+                data.Columns[0].ColumnName == "Depth")
+            {
+                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth");
+                var numLayers = depths.TrimEnd().Count;
+                while (data.Rows.Count > numLayers)
+                    data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
+            }
+
             foreach (var column in columns)
                 column.Set(data);
         }
@@ -161,7 +172,12 @@ namespace Models.Soils
                     if (property.DataType == typeof(string[]))
                         values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
                     else if (property.DataType == typeof(double[]))
+                    {
                         values = ((double[])propertyValue).Select(v => v.ToString("F3")).ToArray();
+                        for (int i = 0; i < values.Length; i++)
+                            if (values[i] == "NaN")
+                                values[i] = null;
+                    }
 
                     DataTableUtilities.AddColumn(data, Name, values, 1, values.Length);
                 }
@@ -177,10 +193,18 @@ namespace Models.Soils
                 {
                     if (!property.IsReadOnly)
                     {
-                        if (property.DataType == typeof(string[]))
-                            property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
-                        else if (property.DataType == typeof(double[]))
-                            property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                        if (numLayers == -1)
+                            property.Value = null;
+                        else
+                        {
+                            if (property.DataType == typeof(string[]))
+                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
+                            else if (property.DataType == typeof(double[]))
+                            {
+                                var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                                property.Value = values;
+                            }
+                        }
                     }
                 }
             }
