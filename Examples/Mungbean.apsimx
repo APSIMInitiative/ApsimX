@@ -1,1278 +1,264 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 150,
+  "ExplorerWidth": 285,
+  "Version": 156,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
-    {
-      "$type": "Models.Core.Replacements, Models",
-      "Name": "Replacements",
-      "Children": [
-        {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[Mungbean].DaysAfterSowing",
-            "[Mungbean].Phenology.Photoperiod.DayLength",
-            "[Mungbean].Phenology.AccumulatedTT",
-            "[Mungbean].Leaf.DeltaLAI.Vegetative.Delta.LAR",
-            "[Weather].MinT",
-            "[Weather].MeanT",
-            "[Weather].MaxT",
-            "[Soil].Temperature.Value",
-            "([Weather].MaxT-[Weather].MinT) as TempDiff",
-            "",
-            "[Phenology].Photoperiod",
-            "[Mungbean].Root.NSupply",
-            "[Soil].SoilWater.Eo",
-            "[Soil].SoilWater.Es",
-            "[Irrigation].IrrigationApplied",
-            "[Root].WaterUptake",
-            "[Weather].VP",
-            "[Weather].VPD",
-            "[Leaf].Photosynthesis.VPD",
-            "[Soil].SoilWater.Drainage",
-            "[Soil].SoilWater.Runoff",
-            "",
-            "[Soil].SoilWater.pond",
-            "[Mungbean].Phenology.StartFloweringDAS",
-            "",
-            "[Mungbean].Phenology.StartGrainFillingDAS",
-            "[Mungbean].Phenology.EndGrainFillDAS",
-            "[Mungbean].Phenology.MaturityDAS",
-            "[Mungbean].Phenology.AccumulatedTT",
-            "[Mungbean].Leaf.NodeNumber",
-            "[Mungbean].Phenology.CurrentPhaseName",
-            "",
-            "[Mungbean].Phenology.Stage",
-            "[Mungbean].Phenology.CurrentStageName",
-            "[Mungbean].Grain.Wt*10 as Yield",
-            "[Mungbean].Grain.Wt",
-            "[Mungbean].Shell.Wt",
-            "[Mungbean].Shell.N+[Mungbean].Grain.N as Pod.N",
-            "[Mungbean].Stem.Wt",
-            "[Mungbean].Leaf.Wt",
-            "[Mungbean].Root.Wt",
-            "[Mungbean].Grain.Size",
-            "[Mungbean].Leaf.Dead.Wt",
-            "[Mungbean].AboveGround.Wt",
-            "[Mungbean].AboveGroundLive.Wt",
-            "[Mungbean].Grain.Dead.Wt",
-            "[Mungbean].Pod.Wt",
-            "[Mungbean].Grain.HarvestIndex",
-            "[Mungbean].Grain.LiveOnlyHI",
-            "[Mungbean].Leaf.Fw",
-            "[Mungbean].Leaf.Fn",
-            "[Mungbean].Grain.Number",
-            "[Mungbean].Leaf.Area",
-            "[Mungbean].Leaf.Photosynthesis.FT",
-            "[Mungbean].Phenology.Photoperiod",
-            "[Mungbean].Nodule.NFixed",
-            "[Mungbean].Stem.Wt+[Mungbean].Pod.Wt as StemPodWt",
-            "",
-            "[Mungbean].Stem.N",
-            "[Mungbean].Stem.Nconc",
-            "[Mungbean].Leaf.N",
-            "[Mungbean].Stem.Live.N",
-            "[Mungbean].Grain.N",
-            "[Mungbean].Shell.N",
-            "[Mungbean].Shell.Live.N",
-            "[Mungbean].Leaf.Live.N",
-            "[Mungbean].Root.Live.N",
-            "[Mungbean].Leaf.Live.NConc",
-            "[Mungbean].Root.Live.NConc",
-            "[Mungbean].Grain.Nconc",
-            "[Mungbean].Leaf.Nconc",
-            "[Mungbean].Stem.Nconc",
-            "[Mungbean].Pod.NConc",
-            "[Mungbean].Shell.Nconc",
-            "[Mungbean].AboveGround.N",
-            "[Mungbean].Grain.LiveOnlyNHI",
-            "[Mungbean].Grain.NHI",
-            "[Mungbean].Leaf.Dead.N",
-            "[Mungbean].Pod.N",
-            "[Mungbean].Nodule.NFixed",
-            "[Mungbean].Root.RootFrontVelocity",
-            "[Mungbean].Root.RootDepthStressFactor",
-            "",
-            "",
-            "[Mungbean].Leaf.Transpiration",
-            "[Mungbean].Leaf.WaterDemand",
-            "[Mungbean].Root.Depth",
-            "[Mungbean].Leaf.CoverTotal",
-            "[Mungbean].Leaf.CoverTotal*100 as RadiationIntercepted",
-            "[Mungbean].Leaf.CoverDead",
-            "[Mungbean].Leaf.LAI",
-            "[Mungbean].Leaf.Height",
-            "[Mungbean].Leaf.SpecificArea",
-            "",
-            "[Mungbean].Arbitrator.N.TotalPlantDemand",
-            "[Mungbean].Arbitrator.DM.TotalFixationSupply",
-            "[Mungbean].Arbitrator.DM.TotalPlantDemand",
-            "[Mungbean].Leaf.DMDemand.Total",
-            "[Mungbean].Grain.DMDemand.Total",
-            "[Mungbean].Stem.DMDemand.Total",
-            "[Mungbean].Shell.DMDemand.Total",
-            "[Mungbean].Root.DMDemand.Total",
-            "",
-            "",
-            "",
-            "[Soil].Nutrient.MineralN[1] as SoilN_0_10cm",
-            "([Soil].Nutrient.MineralN[2])+(0.3*[Soil].Nutrient.MineralN[1]) as SoilN_10_30cm",
-            "Sum([Soil].Nutrient.MineralN[3:4]) as SoilN_30_60cm",
-            "Sum([Soil].Nutrient.MineralN[5:6]) as SoilN_60_90cm",
-            "[Soil].Nutrient.MineralN[7] as SoilN_90_120cm",
-            "Sum([Soil].Nutrient.MineralN[1:4]) as SoilN90cm",
-            "Sum([Soil].Nutrient.MineralN[1:5]) as SoilN120cm",
-            "",
-            "Sum([Soil].Nutrient.MineralN[1:8]) as TotNO3150",
-            "TotNO3150+(([Soil].Nutrient.MineralN[9]/3)) as TotNO3160",
-            "",
-            "Sum([Soil].SoilWater.PAWmm[1:2]) as SoilPAW0_30cm",
-            "Sum([Soil].SoilWater.PAWmm[3:4]) as SoilPAW30_60cm",
-            "Sum([Soil].SoilWater.PAWmm[5:6]) as SoilPAW60_90cm",
-            "[Soil].SoilWater.PAWmm[7] as SoilPAW90_120cm",
-            "",
-            "[MicroClimate].PrecipitationInterception",
-            "[MicroClimate].PetAerodynamicTerm",
-            "[MicroClimate].PetRadiationTerm",
-            "[Weather].Rain",
-            "",
-            "",
-            "Sum([Soil].SoilWater.SWmm[1:8]) as TotSWmm150",
-            "(TotSWmm150+(0.33*[Soil].SoilWater.SWmm[9])) as TotSWmm160",
-            "([Soil].SoilWater.SW[1]) as SW10",
-            "((0.5*[Soil].SoilWater.SW[1])+(0.5*[Soil].SoilWater.SW[2])) as SW15",
-            "[Soil].SoilWater.SW[2] as SW20",
-            "((0.5*[Soil].SoilWater.SW[2])+(0.5*[Soil].SoilWater.SW[3])) as SW30",
-            "[Soil].SoilWater.SW[3] as SW40",
-            "[Soil].SoilWater.SW[4] as SW50",
-            "((0.5*[Soil].SoilWater.SW[4])+(0.5*[Soil].SoilWater.SW[5])) as SW60",
-            "[Soil].SoilWater.SW[5] as SW70",
-            "[Soil].SoilWater.SW[6] as SW80",
-            "((0.5*[Soil].SoilWater.SW[6])+(0.5*[Soil].SoilWater.SW[7])) as SW90",
-            "[Soil].SoilWater.SW[7] as SW110",
-            "((0.5*[Soil].SoilWater.SW[7])+(0.5*[Soil].SoilWater.SW[8])) as SW120",
-            "[Soil].SoilWater.SW[8] as SW130",
-            "((0.5*[Soil].SoilWater.SW[8])+(0.5*[Soil].SoilWater.SW[9])) as SW150",
-            "",
-            "[Mungbean].Arbitrator.DM.TotalFixationSupply",
-            "sum([Mungbean].Arbitrator.N.Fixation) as NFixed",
-            "[Mungbean].Arbitrator.DM.TotalPlantDemand",
-            "",
-            "",
-            "[Mungbean].Stem.RetranslocationWt",
-            "[Mungbean].Leaf.NSupply.Reallocation",
-            "[Mungbean].Arbitrator.DM.TotalFixationSupply",
-            "sum([Mungbean].Arbitrator.N.Fixation) as NFixed",
-            "[Mungbean].Arbitrator.DM.TotalPlantDemand",
-            "[Mungbean].Root.PlantWaterPotentialFactor",
-            "[Mungbean].Leaf.NodeNumber",
-            "[Mungbean].Leaf.BranchNumber",
-            "[Mungbean].Leaf.Number",
-            "[Mungbean].Leaf.ExtinctionCoefficient",
-            "[Mungbean].Leaf.Live.Wt",
-            "[Mungbean].Leaf.Live.StructuralWt",
-            "[Mungbean].Leaf.Live.MetabolicWt",
-            "[Mungbean].Leaf.Allocated.MetabolicWt",
-            "[Mungbean].Leaf.Allocated.StructuralWt",
-            "[Mungbean].Leaf.Total.StructuralN",
-            "[Mungbean].Leaf.Live.StructuralN",
-            "[Mungbean].Leaf.Total.StorageWt",
-            "[Mungbean].Leaf.Total.MetabolicN",
-            "[Mungbean].Leaf.Total.StorageN",
-            "[Mungbean].Stem.PotentialGrowth",
-            "[Mungbean].Leaf.Dead.StructuralWt",
-            "[Mungbean].Leaf.Dead.MetabolicWt",
-            "[Mungbean].Leaf.Live.N",
-            "[Mungbean].Leaf.Live.NConc",
-            "[Mungbean].Leaf.Dead.Wt",
-            "[Mungbean].Leaf.Dead.N",
-            "[Mungbean].Leaf.Dead.NConc",
-            "[Mungbean].Leaf.SpecificArea",
-            "[Mungbean].Leaf.SpecificAreaCanopy",
-            "[Mungbean].Leaf.Senesced.Wt",
-            "[Mungbean].Leaf.Transpiration",
-            "[Mungbean].Leaf.Total.StructuralWt",
-            "[Mungbean].Stem.Live.Wt",
-            "[Mungbean].Stem.Senesced.Wt",
-            "[Mungbean].Stem.Total.StructuralWt",
-            "[Mungbean].Stem.Live.StructuralWt",
-            "[Mungbean].Stem.Live.StructuralN",
-            "[Mungbean].Stem.Total.StorageWt",
-            "[Mungbean].Stem.PotentialGrowth",
-            "[Mungbean].Leaf.MaximumNConc",
-            "[Mungbean].Leaf.MinimumNConc",
-            "",
-            "",
-            "[Mungbean].Leaf.CriticalNConc",
-            "[Mungbean].Stem.MaximumNConc",
-            "[Mungbean].Stem.MinimumNConc",
-            "[Mungbean].Stem.CriticalNConc",
-            "[Mungbean].Shell.MaximumNConc",
-            "[Mungbean].Shell.MinimumNConc",
-            "[Mungbean].Shell.CriticalNConc",
-            "[Mungbean].Shell.Live.Wt",
-            "[Mungbean].Shell.Total.StructuralWt",
-            "[Mungbean].Shell.Live.StructuralWt",
-            "[Mungbean].Shell.Live.StructuralN",
-            "[Mungbean].Shell.Total.StorageWt",
-            "[Mungbean].Shell.Total.StructuralN",
-            "[Mungbean].Stem.Total.StructuralN"
-          ],
-          "EventNames": [
-            "[Clock].DoReport"
-          ],
-          "GroupByVariableName": null,
-          "Name": "DailyReport",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[Mungbean].Phenology.Stage",
-            "[Mungbean].Phenology.CurrentStageName",
-            "[Mungbean].AboveGround.Wt",
-            "[Mungbean].AboveGround.N",
-            "[Mungbean].Grain.Total.Wt*10 as Yield",
-            "[Mungbean].Grain.NConc",
-            "[Mungbean].Grain.Size",
-            "[Mungbean].Grain.Number",
-            "[Mungbean].Grain.Total.Wt",
-            "[Mungbean].Grain.Total.N",
-            "[Mungbean].Total.Wt",
-            "[Mungbean].Phenology.EmergenceDAS",
-            "[Mungbean].Phenology.StartFloweringDAS",
-            "",
-            "[Mungbean].Phenology.StartGrainFillingDAS",
-            "[Mungbean].Phenology.StartPodDevDAS",
-            "[Mungbean].Phenology.EndGrainFillDAS",
-            "[Mungbean].Phenology.MaturityDAS",
-            "[Mungbean].Leaf.NodeNumber",
-            "[Mungbean].Leaf.Area"
-          ],
-          "EventNames": [
-            "[Mungbean].Harvesting"
-          ],
-          "GroupByVariableName": null,
-          "Name": "HarvestReport",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false
     },
     {
-      "$type": "Models.Factorial.Experiment, Models",
-      "DisabledSimNames": null,
-      "Name": "Example Grazing",
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Simulation",
+      "ResourceName": null,
       "Children": [
         {
-          "$type": "Models.Factorial.Factors, Models",
-          "Name": "Factors",
-          "Children": [
-            {
-              "$type": "Models.Factorial.Permutation, Models",
-              "Name": "Permutation",
-              "Children": [
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[GrazeForageCrop].Script.StockingRate=0,50,100",
-                  "Name": "Stocking Rate",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
+          "$type": "Models.Clock, Models",
+          "Start": "1900-01-01T00:00:00",
+          "End": "2000-12-31T00:00:00",
+          "Name": "clock",
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Core.Simulation, Models",
-          "IsRunning": false,
-          "Descriptors": null,
-          "Name": "Example Grazing",
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "summaryfile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "Soil Arbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "paddock",
+          "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Memo, Models",
-              "Text": "Simple example simulation based in Gatton with the cultivar Jade.\n\n\n\n",
-              "Name": "Memo",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Summary, Models",
-              "Verbosity": 100,
-              "Name": "summaryfile",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
-              "Name": "Soil Arbitrator",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Clock, Models",
-              "Start": "2016-10-01T00:00:00",
-              "End": "2018-10-01T00:00:00",
-              "Name": "clock",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Climate.Weather, Models",
-              "ConstantsFile": null,
-              "FileName": "WeatherFiles\\Gatton.met",
-              "ExcelWorkSheetName": "",
-              "Name": "Weather",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.Forages, Models",
-              "Parameters": [
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "SurfaceOrganicMatter.Residue",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "SurfaceOrganicMatter.Residue",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Leaf",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Leaf",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Grain",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Grain",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Root",
-                  "IsLive": true,
-                  "DigestibilityString": "0",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Root",
-                  "IsLive": false,
-                  "DigestibilityString": "0",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Nodule",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Nodule",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Shell",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Shell",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Stem",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Stem",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                }
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Mungbean].Phenology.Stage",
+                "[Mungbean].Phenology.CurrentStageName",
+                "[Mungbean].AboveGround.Wt",
+                "[Mungbean].AboveGround.N",
+                "[Mungbean].Grain.Total.Wt*10 as Yield",
+                "[Mungbean].Grain.NConc",
+                "[Mungbean].Grain.Size",
+                "[Mungbean].Grain.Number",
+                "[Mungbean].Grain.Wt",
+                "[Mungbean].Grain.N",
+                "[Mungbean].Total.Wt"
               ],
-              "Name": "Forages",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.GrazPlan.Stock, Models",
-              "randFactory": {
-                "$type": "StdUnits.MyRandom, Models"
-              },
-              "RandSeed": 9999,
-              "StockModel": null,
-              "Name": "Stock",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] List<IPlantDamage> forages = null;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n        private string CurrentZone;\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        [Display(Values=\"GetGenotypes\")]\r\n        public string Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing event information\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the stock (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Require > X days of grazable forage before moving stock: \")] \r\n        [Tooltip(\"To prevent stock being moved too often, require that there be a minimum number of grazing-days of forage available before moving the stock on. The forage needed is very simply set as 3% of the stock liveweight\")] \r\n        public int MinGrazingDays { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n        [Separator(\"Supplementary feeding\")]\r\n\r\n        [Description(\"Name of the supplement to feed: \")] \r\n        public string SupplementName { get; set; }\r\n\r\n        [Description(\"Feed the supplement first (i.e. before the new forage is available to the stock)?: \")] \r\n        public bool SupplementFirst { get; set; }\r\n\r\n        [Description(\"Amount of supplementary feeding offered every day (kg DM /head /day): \")] \r\n        public double SupplementEveryDay { get; set; }\r\n\r\n        [Description(\"Additional amount of supplement offered when available biomass is low (kg DM /head /day): \")] \r\n        public double SupplementOnPastureMass { get; set; }\r\n\r\n        [Description(\"Trigger biomass for above rule (kg DM /ha): \")] \r\n        public double TriggerPastureMass { get; set; }\r\n\r\n        public int NumStock { get; set; }\r\n        public bool GrazingSeasonIsOpen { get; set; } // number of stock on the whole farm\r\n        public double HarvestableBiomass { get; set; }\r\n        public double HarvestableBiomassYesterday { get; set; }\r\n\r\n        // Return a list of genotypes to the properties tab.\r\n        public string[] GetGenotypes()\r\n        {\r\n            if (stock != null)\r\n                return stock.Genotypes.Names.ToArray();\r\n            return null;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            CurrentZone = CurrentLocation;\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\", MessageType.Diagnostic);\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if (CurrentZone.ToLower() != \"away\")\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentZone);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentZone, MessageType.Diagnostic);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area), MessageType.Diagnostic);\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentZone + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\", MessageType.Diagnostic);\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\", MessageType.Diagnostic);\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            // Calculate forage mass in the paddock\r\n            HarvestableBiomass = 0.0;\r\n            foreach (var forage in forages)\r\n                foreach (var forageOrgan in forage.Organs)\r\n                    if (forageOrgan.IsAboveGround)\r\n                        HarvestableBiomass += forageOrgan.Live.Wt + forageOrgan.Dead.Wt;\r\n            \r\n            HarvestableBiomass *= 10;  // Convert to kg/ha\r\n\r\n            if (clock.Today == clock.StartDate)\r\n                HarvestableBiomassYesterday = HarvestableBiomass;\r\n\r\n            double deltaHarvestableBiomass = Math.Max(0.0, HarvestableBiomass - HarvestableBiomassYesterday);\r\n\r\n            if (HarvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentZone == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            // The 0.03 is the propostion of body mass that the stock might eat\r\n            double minFodder = Math.Max(PreGrazingDM, Math.Max(0.0, (0.03 * MinGrazingDays * NumStock * Weight) - (deltaHarvestableBiomass * MinGrazingDays))); \r\n            HarvestableBiomassYesterday = HarvestableBiomass;\r\n\r\n            if (CurrentZone == \"Away\" && (HarvestableBiomass >= PreGrazingDM) && HarvestableBiomass >= (PostGrazingDM + minFodder) && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentZone = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentZone);\r\n                summary.WriteMessage(this, \"     Buying stock \", MessageType.Diagnostic);\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentZone = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \", MessageType.Diagnostic);\r\n            }\r\n\r\n            if (CurrentZone != \"Away\")\r\n            {\r\n                if (SupplementEveryDay > 0)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementEveryDay * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementEveryDay * 30.0 * stock.NumberAll, SupplementName);  // i.e. 1 months worth\r\n                        summary.WriteMessage(this, \"SupplementEveryDay: Buying \" + SupplementName + \" of total amount : \" + (SupplementEveryDay * 90 * stock.NumberAll) + \" kg DM\", MessageType.Diagnostic);\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementEveryDay * stock.NumberAll, CurrentZone, SupplementFirst);\r\n                }\r\n\r\n                if (SupplementOnPastureMass > 0 && HarvestableBiomass <= TriggerPastureMass)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementOnPastureMass * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementOnPastureMass * 30.0 * stock.NumberAll, SupplementName);  // i.e. 1 months worth\r\n                        summary.WriteMessage(this, \"SupplementOnBiomass: Buying \" + SupplementName + \" of total amount : \" + (SupplementOnPastureMass * 90 * stock.NumberAll) + \" kg DM\", MessageType.Diagnostic);\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementOnPastureMass * stock.NumberAll, CurrentZone, SupplementFirst);\r\n                }\r\n            }\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = Genotype;\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = Sex;\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            for (int gg = 1; gg <= NumGroups; gg++)\r\n            {\r\n                stock.Sell(stock.Number[gg - 1]);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "Genotype",
-                  "Value": "Large Merino"
-                },
-                {
-                  "Key": "Sex",
-                  "Value": "Male"
-                },
-                {
-                  "Key": "Age",
-                  "Value": "12"
-                },
-                {
-                  "Key": "Weight",
-                  "Value": "100"
-                },
-                {
-                  "Key": "Pregnant",
-                  "Value": "0"
-                },
-                {
-                  "Key": "Lactating",
-                  "Value": "0"
-                },
-                {
-                  "Key": "YoungNumber",
-                  "Value": "0"
-                },
-                {
-                  "Key": "YoungWt",
-                  "Value": "0"
-                },
-                {
-                  "Key": "StockingRate",
-                  "Value": "100"
-                },
-                {
-                  "Key": "CurrentLocation",
-                  "Value": "Away"
-                },
-                {
-                  "Key": "PreGrazingDM",
-                  "Value": "1000"
-                },
-                {
-                  "Key": "MinGrazingDays",
-                  "Value": "7"
-                },
-                {
-                  "Key": "PostGrazingDM",
-                  "Value": "500"
-                },
-                {
-                  "Key": "DoNoGrazingWindow",
-                  "Value": "False"
-                },
-                {
-                  "Key": "NoGrazeStart",
-                  "Value": "1-Nov"
-                },
-                {
-                  "Key": "NoGrazeEnd",
-                  "Value": "31-Jan"
-                },
-                {
-                  "Key": "SupplementName",
-                  "Value": "Silage"
-                },
-                {
-                  "Key": "SupplementFirst",
-                  "Value": "False"
-                },
-                {
-                  "Key": "SupplementEveryDay",
-                  "Value": "0"
-                },
-                {
-                  "Key": "SupplementOnPastureMass",
-                  "Value": "0"
-                },
-                {
-                  "Key": "TriggerPastureMass",
-                  "Value": "100000"
-                }
+              "EventNames": [
+                "[Mungbean].Harvesting"
               ],
-              "Name": "GrazeForageCrop",
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.GrazPlan.Supplement, Models",
-              "SpoilageTime": 0.0,
-              "Stores": [
-                {
-                  "$type": "Models.GrazPlan.StoreType, Models",
-                  "Name": "fodder",
-                  "Stored": 0.0,
-                  "IsRoughage": true,
-                  "DMContent": 0.85,
-                  "DMD": 0.0,
-                  "MEContent": 0.0,
-                  "CPConc": 0.0,
-                  "ProtDg": 0.0,
-                  "PConc": 0.0,
-                  "SConc": 0.0,
-                  "EEConc": 0.0,
-                  "ADIP2CP": 0.0,
-                  "AshAlk": 0.0,
-                  "MaxPassage": 0.0
-                },
-                {
-                  "$type": "Models.GrazPlan.StoreType, Models",
-                  "Name": "silage",
-                  "Stored": 0.0,
-                  "IsRoughage": true,
-                  "DMContent": 1.0,
-                  "DMD": 0.75,
-                  "MEContent": 12.0,
-                  "CPConc": 0.18,
-                  "ProtDg": 0.8,
-                  "PConc": 0.0032,
-                  "SConc": 0.0024,
-                  "EEConc": 0.02,
-                  "ADIP2CP": 0.06,
-                  "AshAlk": 0.6,
-                  "MaxPassage": 0.0
-                }
-              ],
-              "PaddockList": [],
-              "Name": "Supplement",
+              "GroupByVariableName": null,
+              "Name": "HarvestReport",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Core.Zone, Models",
-              "Area": 1.0,
-              "Slope": 0.0,
-              "AspectAngle": 0.0,
-              "Altitude": 50.0,
-              "Name": "paddock",
+              "$type": "Models.Fertiliser, Models",
+              "Name": "fertiliser",
+              "ResourceName": "Fertiliser",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": "Vertosol",
+              "ASCSubOrder": "Black",
+              "SoilType": "Clay",
+              "LocalName": null,
+              "Site": "Norwin",
+              "NearestTown": "Norwin",
+              "Region": "Darling Downs and Granite Belt",
+              "State": "Queensland",
+              "Country": "Australia",
+              "NaturalVegetation": "Qld. Bluegrass, possible Qld. Blue gum",
+              "ApsoilNumber": "900",
+              "Latitude": -27.581836,
+              "Longitude": 151.320206,
+              "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
+              "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
+              "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+              "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Irrigation, Models",
-                  "Name": "Irrigation",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": true
-                },
-                {
-                  "$type": "Models.Fertiliser, Models",
-                  "ResourceName": "Fertiliser",
-                  "Name": "fertiliser",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "InitialResidueName": "wheat",
-                  "InitialResidueType": "wheat",
-                  "InitialResidueMass": 500.0,
-                  "InitialStandingFraction": 0.0,
-                  "InitialCPR": 0.0,
-                  "InitialCNR": 40.0,
-                  "ResourceName": "SurfaceOrganicMatter",
-                  "Name": "SurfaceOrganicMatter",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[DiagnosticsVariables].Script.AccumPlantN",
-                    "[DiagnosticsVariables].Script.AccumMineralisation",
-                    "[DiagnosticsVariables].Script.AccumDenit",
-                    "[DiagnosticsVariables].Script.AccumFert",
-                    "[DiagnosticsVariables].Script.AccumLeach",
-                    "[DiagnosticsVariables].Script.AccumDetach",
-                    "[DiagnosticsVariables].Script.DeltaSoilOMN",
-                    "[DiagnosticsVariables].Script.DeltaSurfaceOMN",
-                    "[DiagnosticsVariables].Script.DeltaSoilMineralN",
-                    "[Mungbean].Root.NSupply",
-                    "[Soil].SoilWater.Eo",
-                    "[Soil].SoilWater.Es",
-                    "[DiagnosticsVariables].Script.SWC",
-                    "[DiagnosticsVariables].Script.DUL",
-                    "[Soil].SoilWater.Drainage",
-                    "[Soil].SoilWater.Runoff",
-                    "[DiagnosticsVariables].Script.OutFlowLat",
-                    "[Soil].SoilWater.pond",
-                    "[DiagnosticsVariables].Script.AccumEO",
-                    "[DiagnosticsVariables].Script.AccumEP",
-                    "[DiagnosticsVariables].Script.AccumES",
-                    "[DiagnosticsVariables].Script.AccumDrainage",
-                    "[DiagnosticsVariables].Script.AccumRunoff",
-                    "[DiagnosticsVariables].Script.AccumRainfall",
-                    "[DiagnosticsVariables].Script.AccumIrrigation",
-                    "[DiagnosticsVariables].Script.AccumOutflowLat",
-                    "[DiagnosticsVariables].Script.SoilWaterDeficit",
-                    "[Mungbean].Grain.Live.Wt",
-                    "[Mungbean].Shell.Live.Wt",
-                    "[Mungbean].Stem.Live.Wt",
-                    "[Mungbean].Stem.Live.Wt",
-                    "[Mungbean].Grain.Live.N",
-                    "[Mungbean].Shell.Live.N",
-                    "[Mungbean].Leaf.Live.Wt",
-                    "[Mungbean].Root.Live.Wt",
-                    "[Mungbean].Leaf.Live.N",
-                    "[Mungbean].Root.Live.N",
-                    "[Mungbean].Leaf.Live.NConc",
-                    "[Mungbean].Root.Live.NConc",
-                    "[Mungbean].Root.WaterSupply",
-                    "[Mungbean].Root.WaterUptake",
-                    "[Mungbean].Leaf.Transpiration",
-                    "[Mungbean].Leaf.WaterDemand",
-                    "[Mungbean].Root.Depth",
-                    "[Mungbean].Leaf.CoverTotal",
-                    "[Mungbean].Leaf.CoverDead",
-                    "[Mungbean].Leaf.LAI",
-                    "[Mungbean].Leaf.Height",
-                    "[Mungbean].Leaf.PotentialBiomass",
-                    "[Soil].SoilWater.SWmm",
-                    "[Soil].Nutrient.NO3.kgha",
-                    "[DiagnosticsVariables].Script.SoilNitrogenContent",
-                    "[Mungbean].Arbitrator.N.TotalPlantDemand",
-                    "[MicroClimate].net_radn",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr",
-                    "[DiagnosticsVariables].Script.FomN",
-                    "[DiagnosticsVariables].Script.HumN",
-                    "[DiagnosticsVariables].Script.BiomN",
-                    "[DiagnosticsVariables].Script.DltNMinRes",
-                    "[DiagnosticsVariables].Script.DltNMinTot",
-                    "[Mungbean].Leaf.Fw",
-                    "[Mungbean].Leaf.Fn",
-                    "[Mungbean].Phenology.CurrentPhase.Name",
-                    "[Mungbean].Phenology.Stage",
-                    "[Mungbean].Pod.Wt",
-                    "[Mungbean].Pod.N",
-                    "[Mungbean].Structure.LeafTipsAppeared",
-                    "[Mungbean].Structure.MainStemPrimordiaNo",
-                    "[Mungbean].Leaf.CohortArea[1]",
-                    "[Mungbean].Leaf.CohortArea[2]",
-                    "[Mungbean].Leaf.CohortArea[3]",
-                    "[Mungbean].Leaf.CohortArea[4]",
-                    "[Mungbean].Leaf.CohortArea[5]",
-                    "[Mungbean].Leaf.CohortArea[6]",
-                    "[Mungbean].Leaf.CohortArea[7]",
-                    "[Mungbean].Leaf.CohortArea[8]",
-                    "[Mungbean].Leaf.CohortArea[9]",
-                    "[Mungbean].Leaf.CohortArea[10]",
-                    "[Mungbean].Leaf.CohortArea[11]",
-                    "[Mungbean].Leaf.CohortArea[12]",
-                    "[Mungbean].Leaf.CohortArea[13]",
-                    "[Mungbean].Leaf.CohortArea[14]",
-                    "[Mungbean].Leaf.CohortArea[15]",
-                    "[Mungbean].Leaf.AppearedCohortNo",
-                    "[Mungbean].Leaf.DeadCohortNo",
-                    "[Mungbean].AboveGround.Wt",
-                    "[Mungbean].Phenology.Stage",
-                    "[Mungbean].Structure.MainStemPrimordiaNo",
-                    "[Mungbean].Phenology.NFF",
-                    "[MungbeanHarvestRule].Script.FinalTag",
-                    "[Mungbean].Grain.NumberFunction",
-                    "[Mungbean].Shell.PodNumber",
-                    "[Mungbean].Phenology.FN",
-                    "[Mungbean].Phenology.FN.TotalNodes",
-                    "[Mungbean].Phenology.FN.VegetativeNodes"
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
                   ],
-                  "EventNames": [
-                    "[Clock].DoReport"
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
+                  "BD": [
+                    1.01056473311131,
+                    1.07145631083388,
+                    1.09393858528057,
+                    1.15861335018721,
+                    1.17301160318016,
+                    1.16287303586874,
+                    1.18749547755906
                   ],
-                  "GroupByVariableName": null,
-                  "Name": "DailyReport",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                  "Parameters": [],
-                  "Name": "HarvestRule",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[Mungbean].Phenology.Stage",
-                    "[Mungbean].Phenology.CurrentStageName",
-                    "[Mungbean].AboveGround.Wt",
-                    "[Mungbean].AboveGround.N",
-                    "[Mungbean].Grain.Total.Wt*10 as Yield",
-                    "[Mungbean].Grain.NConc",
-                    "[Mungbean].Grain.Size",
-                    "[Mungbean].Grain.Number",
-                    "[Mungbean].Grain.Total.Wt",
-                    "[Mungbean].Grain.Total.N",
-                    "[Mungbean].Total.Wt"
+                  "AirDry": [
+                    0.130250054518252,
+                    0.198689390775399,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
                   ],
-                  "EventNames": [
-                    "[Soybean].Harvesting"
+                  "LL15": [
+                    0.260500109036505,
+                    0.248361738469248,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
                   ],
-                  "GroupByVariableName": null,
-                  "Name": "HarvestReport",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Plant, Models",
-                  "ResourceName": "Mungbean",
-                  "Name": "Mungbean",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "Operation": [],
-                  "Name": "Operations",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.MicroClimate, Models",
-                  "a_interception": 0.0,
-                  "b_interception": 1.0,
-                  "c_interception": 0.0,
-                  "d_interception": 0.0,
-                  "SoilHeatFluxFraction": 0.4,
-                  "MinimumHeightDiffForNewLayer": 0.0,
-                  "NightInterceptionFraction": 0.5,
-                  "ReferenceHeight": 2.0,
-                  "Name": "MicroClimate",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Soil, Models",
-                  "RecordNumber": 0,
-                  "ASCOrder": null,
-                  "ASCSubOrder": null,
-                  "SoilType": "APS6Soil",
-                  "LocalName": "APS6Site",
-                  "Site": "APS6Site",
-                  "NearestTown": "Unknown",
-                  "Region": "Lawes",
-                  "State": null,
-                  "Country": null,
-                  "NaturalVegetation": "Unknown",
-                  "ApsoilNumber": null,
-                  "Latitude": 0.0,
-                  "Longitude": 0.0,
-                  "LocationAccuracy": null,
-                  "YearOfSampling": null,
-                  "DataSource": null,
-                  "Comments": null,
-                  "Name": "Soil",
+                  "DUL": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
+                  ],
+                  "SAT": [
+                    0.588654817693846,
+                    0.565676863836273,
+                    0.557192986686577,
+                    0.532787415023694,
+                    0.527354112007486,
+                    0.531179986464627,
+                    0.521888499034317
+                  ],
+                  "KS": [
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.WaterModel.WaterBalance, Models",
-                      "SummerDate": "1-Nov",
-                      "SummerU": 6.0,
-                      "SummerCona": 3.5,
-                      "WinterDate": "1-Apr",
-                      "WinterU": 6.0,
-                      "WinterCona": 3.5,
-                      "DiffusConst": 88.0,
-                      "DiffusSlope": 35.4,
-                      "Salb": 0.13,
-                      "CN2Bare": 60.0,
-                      "CNRed": 20.0,
-                      "CNCov": 0.8,
-                      "DischargeWidth": 0.0,
-                      "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.261,
+                        0.248,
+                        0.28,
+                        0.306,
+                        0.36,
+                        0.392,
+                        0.446
                       ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "ResourceName": "WaterBalance",
-                      "Name": "SoilWater",
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Organic, Models",
-                      "FOMCNRatio": 60.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "Carbon": [
-                        2.08,
-                        1.21,
-                        1.21,
-                        1.15,
-                        1.0,
-                        1.0,
-                        0.8,
-                        0.45,
-                        0.45
-                      ],
-                      "SoilCNRatio": [
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5
-                      ],
-                      "FBiom": [
-                        0.03,
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.04,
+                        0.04,
                         0.02,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
                         0.01
                       ],
-                      "FInert": [
-                        0.45,
-                        0.6,
-                        0.78,
-                        0.78,
-                        0.9,
-                        0.9,
-                        0.99,
-                        0.99,
-                        0.99
-                      ],
-                      "FOM": [
-                        34.71290323127565,
-                        27.03443621919937,
-                        16.397214434990104,
-                        16.397,
-                        9.945,
-                        9.945,
-                        6.032,
-                        3.659,
-                        2.219
-                      ],
-                      "CarbonMetadata": null,
-                      "FOMMetadata": null,
-                      "Name": "Organic",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Chemical, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "NO3N": [
-                        10.0,
-                        5.0,
-                        3.0,
-                        3.0,
-                        2.0,
-                        2.0,
-                        1.0,
-                        0.1,
-                        0.1
-                      ],
-                      "NH4N": [
-                        3.0,
-                        2.0,
+                      "XF": [
                         1.0,
                         1.0,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.5,
-                        0.5
-                      ],
-                      "PH": [
-                        7.5,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0
-                      ],
-                      "CL": null,
-                      "EC": null,
-                      "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
-                      "ECMetadata": null,
-                      "CLMetadata": null,
-                      "ESPMetadata": null,
-                      "PHMetadata": null,
-                      "Name": "Chemical",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "ResourceName": "Nutrient",
-                      "Name": "Nutrient",
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Physical, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "ParticleSizeClay": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "Rocks": null,
-                      "Texture": null,
-                      "BD": [
-                        1.38,
-                        1.34,
-                        1.35,
-                        1.35,
-                        1.5,
-                        1.5,
-                        1.49,
-                        1.46,
-                        1.46
-                      ],
-                      "AirDry": [
-                        0.2,
-                        0.273,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286
-                      ],
-                      "LL15": [
-                        0.208,
-                        0.2731,
-                        0.2857,
-                        0.286,
-                        0.2863,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286
-                      ],
-                      "DUL": [
-                        0.42,
-                        0.42,
-                        0.42,
-                        0.42,
-                        0.4,
-                        0.4,
-                        0.36,
-                        0.36,
-                        0.36
-                      ],
-                      "SAT": [
-                        0.45,
-                        0.45,
-                        0.45,
-                        0.45,
-                        0.43,
-                        0.43,
-                        0.4,
-                        0.4,
-                        0.4
-                      ],
-                      "KS": null,
-                      "BDMetadata": null,
-                      "AirDryMetadata": null,
-                      "LL15Metadata": null,
-                      "DULMetadata": null,
-                      "SATMetadata": null,
-                      "KSMetadata": null,
-                      "RocksMetadata": null,
-                      "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
-                      "Name": "Physical",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.258,
-                            0.273,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286
-                          ],
-                          "KL": [
-                            0.08,
-                            0.08,
-                            0.06,
-                            0.06,
-                            0.06,
-                            0.04,
-                            0.02,
-                            0.02,
-                            0.01
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "MungbeanSoil",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Sample, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "NO3": [
-                        20.0,
-                        5.0,
-                        4.0,
                         1.0,
-                        0.5,
-                        0.5,
-                        0.5,
-                        0.1,
-                        0.1
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
-                      "NH4": [
-                        7.0,
-                        6.0,
-                        8.0,
-                        5.0,
-                        0.5,
-                        0.5,
-                        0.5,
-                        0.1,
-                        0.1
-                      ],
-                      "LabileP": null,
-                      "UnavailableP": null,
-                      "SW": [
-                        0.258,
-                        0.273,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286
-                      ],
-                      "OC": null,
-                      "EC": null,
-                      "CL": null,
-                      "ESP": null,
-                      "PH": [
-                        7.5,
-                        7.9,
-                        8.2,
-                        8.2,
-                        8.9,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0
-                      ],
-                      "SWUnits": 0,
-                      "OCUnits": 0,
-                      "PHUnits": 0,
-                      "Name": "Initial Water",
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "MungbeanSoil",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1282,1244 +268,370 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.Interfaces;\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPhysical soilPhysical;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n\n\n        [Description(\"Crop to irrigate\")]\n        public IPlant Crop { get; set; }\n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [Description(\"Minimum weeks between irrigations\")]\n        public double weeks { get; set; }\n\n        [Description(\"Minimum days after sowing for first irrigation\")]\n        public int afterSowing { get; set; }\n\n        private double irrigationGap = 0;    // gap between irrigations\n\n        /// <summary>Called at start of simulation. Performs some basic error checking. </summary>\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void ErrorChecking(object sender, EventArgs args)\n        {\n            if (Crop == null)\n                throw new Exception(\"No crop was specified in script \" + Parent.Name);\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (AutoIrrigationOn && Crop.IsAlive)\n            {\n                   irrigationGap += 1;                // increment gap between irrigations\n                CalculateFASW();                // calc FASW and WaterDeficit\n                if ((FASW < FASWThreshold) && (irrigationGap >= weeks * 7))\n                {\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                    irrigationGap = 0;            // reset\n                }\n            }\n            else\n            {\n                irrigationGap = weeks * 7 - afterSowing - 1;    // allow irrigation a number of days after it becomes alive/sown\n            }\n        }\n\n        // Calculate the fraction of the potential available sw\n        // Calculate the deficit amount from DUL\n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex(FASWDepth);\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);    // tricky function that sums up to before nlayr\n\n            double part_layer = MathUtilities.Divide((FASWDepth - cumdep), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0) + part_layer * waterBalance.SWmm[nlayr])\n                            - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0) + part_layer * DUL[nlayr])\n                                - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\n            \n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        // Get index of the layer that has this depth in it \n        private int GetLayerIndex(double pointDepth)\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            int layerIdx = 0;\n            while ((layerIdx < cumThickness.Length) && (pointDepth > cumThickness[layerIdx]))\n            {\n                layerIdx += 1;\n            }\n\n            return layerIdx;\n        }\n    }\n}\n",
-                  "Parameters": [
-                    {
-                      "Key": "AutoIrrigationOn",
-                      "Value": "True"
-                    },
-                    {
-                      "Key": "Crop",
-                      "Value": "[Mungbean]"
-                    },
-                    {
-                      "Key": "FASWThreshold",
-                      "Value": "0.9"
-                    },
-                    {
-                      "Key": "FASWDepth",
-                      "Value": "600"
-                    },
-                    {
-                      "Key": "weeks",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "afterSowing",
-                      "Value": "0"
-                    }
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 5.0,
+                  "SummerCona": 5.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 5.0,
+                  "WinterCona": 5.0,
+                  "DiffusConst": 40.0,
+                  "DiffusSlope": 16.0,
+                  "Salb": 0.12,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
+                  "PSIDul": -100.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
                   ],
-                  "Name": "AutoIrr",
+                  "SWCON": [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "KLAT": null,
+                  "Name": "SoilWater",
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}\r\n",
-                  "Parameters": [
-                    {
-                      "Key": "Crop",
-                      "Value": "[Mungbean]"
-                    },
-                    {
-                      "Key": "SowDate",
-                      "Value": "24-Oct"
-                    },
-                    {
-                      "Key": "CultivarName",
-                      "Value": "Jade"
-                    },
-                    {
-                      "Key": "SowingDepth",
-                      "Value": "50"
-                    },
-                    {
-                      "Key": "RowSpacing",
-                      "Value": "250"
-                    },
-                    {
-                      "Key": "Population",
-                      "Value": "30"
-                    }
+                  "$type": "Models.Soils.Organic, Models",
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
                   ],
-                  "Name": "Sow on a fixed date",
+                  "Carbon": [
+                    1.2,
+                    0.96,
+                    0.6,
+                    0.3,
+                    0.18,
+                    0.12,
+                    0.12
+                  ],
+                  "CarbonUnits": 0,
+                  "SoilCNRatio": [
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0
+                  ],
+                  "FBiom": [
+                    0.04,
+                    0.02,
+                    0.02,
+                    0.02,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.4,
+                    0.6,
+                    0.8,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "FOM": [
+                    347.1290323127564,
+                    270.3443621919937,
+                    163.97214434990104,
+                    99.45413288704063,
+                    60.32198083112468,
+                    36.58713082867487,
+                    22.1912165985086
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "Biomass",
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "SimulationName",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "DailyReport",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Mungbean.AboveGround.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Factorial.Experiment, Models",
-      "DisabledSimNames": null,
-      "Name": "Example Crop",
-      "Children": [
-        {
-          "$type": "Models.Factorial.Factors, Models",
-          "Name": "Factors",
-          "Children": [
-            {
-              "$type": "Models.Factorial.Permutation, Models",
-              "Name": "Permutation",
-              "Children": [
+                },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "PH": [
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0
+                  ],
+                  "PHUnits": 0,
+                  "EC": null,
+                  "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
+                  "Name": "Chemical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
+                  ],
+                  "RelativeTo": null,
+                  "FilledFromTop": false,
                   "Name": "Water",
-                  "Children": [
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[AutoIrr].Script.AutoIrrigationOn=True"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "Irr",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[AutoIrr].Script.AutoIrrigationOn=False"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "RF",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "Temperature",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
                   ],
+                  "InitialValues": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "Enabled": true,
               "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Simulation, Models",
-          "IsRunning": false,
-          "Descriptors": null,
-          "Name": "Example Crop",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "Simple example simulation based in Gatton with the cultivar Jade.\n\n\n\n",
-              "Name": "Memo",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
             },
             {
-              "$type": "Models.Summary, Models",
-              "Verbosity": 100,
-              "Name": "summaryfile",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
-              "Name": "Soil Arbitrator",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Clock, Models",
-              "Start": "2016-10-01T00:00:00",
-              "End": "2018-10-01T00:00:00",
-              "Name": "clock",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Climate.Weather, Models",
-              "ConstantsFile": null,
-              "FileName": "WeatherFiles\\Gatton.met",
-              "ExcelWorkSheetName": "",
-              "Name": "Weather",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.Forages, Models",
-              "Parameters": [
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "SurfaceOrganicMatter.Residue",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "SurfaceOrganicMatter.Residue",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Leaf",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Leaf",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Grain",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Grain",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Root",
-                  "IsLive": true,
-                  "DigestibilityString": "0",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Root",
-                  "IsLive": false,
-                  "DigestibilityString": "0",
-                  "FractionConsumable": 0.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Nodule",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Nodule",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Shell",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Shell",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Stem",
-                  "IsLive": true,
-                  "DigestibilityString": "0.7",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 100.0,
-                  "UseDigestibilityFromModel": false
-                },
-                {
-                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                  "Name": "Mungbean.Stem",
-                  "IsLive": false,
-                  "DigestibilityString": "0.3",
-                  "FractionConsumable": 1.0,
-                  "MinimumAmount": 0.0,
-                  "UseDigestibilityFromModel": false
-                }
-              ],
-              "Name": "Forages",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.GrazPlan.Stock, Models",
-              "randFactory": {
-                "$type": "StdUnits.MyRandom, Models"
-              },
-              "RandSeed": 9999,
-              "StockModel": null,
-              "Name": "Stock",
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
+              "InitialResidueName": "maize",
+              "InitialResidueType": "maize",
+              "InitialResidueMass": 100.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 55.0,
+              "Name": "SurfaceOrganicMatter",
+              "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] List<IPlantDamage> forages = null;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n        private string CurrentZone;\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        [Display(Values=\"GetGenotypes\")]\r\n        public string Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing event information\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the stock (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Require > X days of grazable forage before moving stock: \")] \r\n        [Tooltip(\"To prevent stock being moved too often, require that there be a minimum number of grazing-days of forage available before moving the stock on. The forage needed is very simply set as 3% of the stock liveweight\")] \r\n        public int MinGrazingDays { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n        [Separator(\"Supplementary feeding\")]\r\n\r\n        [Description(\"Name of the supplement to feed: \")] \r\n        public string SupplementName { get; set; }\r\n\r\n        [Description(\"Feed the supplement first (i.e. before the new forage is available to the stock)?: \")] \r\n        public bool SupplementFirst { get; set; }\r\n\r\n        [Description(\"Amount of supplementary feeding offered every day (kg DM /head /day): \")] \r\n        public double SupplementEveryDay { get; set; }\r\n\r\n        [Description(\"Additional amount of supplement offered when available biomass is low (kg DM /head /day): \")] \r\n        public double SupplementOnPastureMass { get; set; }\r\n\r\n        [Description(\"Trigger biomass for above rule (kg DM /ha): \")] \r\n        public double TriggerPastureMass { get; set; }\r\n\r\n        public int NumStock { get; set; }\r\n        public bool GrazingSeasonIsOpen { get; set; } // number of stock on the whole farm\r\n        public double HarvestableBiomass { get; set; }\r\n        public double HarvestableBiomassYesterday { get; set; }\r\n\r\n        // Return a list of genotypes to the properties tab.\r\n        public string[] GetGenotypes()\r\n        {\r\n            if (stock != null)\r\n                return stock.Genotypes.Names.ToArray();\r\n            return null;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            CurrentZone = CurrentLocation;\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\", MessageType.Diagnostic);\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if (CurrentZone.ToLower() != \"away\")\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentZone);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentZone, MessageType.Diagnostic);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area), MessageType.Diagnostic);\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentZone + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\", MessageType.Diagnostic);\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\", MessageType.Diagnostic);\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            // Calculate forage mass in the paddock\r\n            HarvestableBiomass = 0.0;\r\n            foreach (var forage in forages)\r\n                foreach (var forageOrgan in forage.Organs)\r\n                    if (forageOrgan.IsAboveGround)\r\n                        HarvestableBiomass += forageOrgan.Live.Wt + forageOrgan.Dead.Wt;\r\n            \r\n            HarvestableBiomass *= 10;  // Convert to kg/ha\r\n\r\n            if (clock.Today == clock.StartDate)\r\n                HarvestableBiomassYesterday = HarvestableBiomass;\r\n\r\n            double deltaHarvestableBiomass = Math.Max(0.0, HarvestableBiomass - HarvestableBiomassYesterday);\r\n\r\n            if (HarvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentZone == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            // The 0.03 is the propostion of body mass that the stock might eat\r\n            double minFodder = Math.Max(PreGrazingDM, Math.Max(0.0, (0.03 * MinGrazingDays * NumStock * Weight) - (deltaHarvestableBiomass * MinGrazingDays))); \r\n            HarvestableBiomassYesterday = HarvestableBiomass;\r\n\r\n            if (CurrentZone == \"Away\" && (HarvestableBiomass >= PreGrazingDM) && HarvestableBiomass >= (PostGrazingDM + minFodder) && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentZone = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentZone);\r\n                summary.WriteMessage(this, \"     Buying stock \", MessageType.Diagnostic);\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentZone = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \", MessageType.Diagnostic);\r\n            }\r\n\r\n            if (CurrentZone != \"Away\")\r\n            {\r\n                if (SupplementEveryDay > 0)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementEveryDay * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementEveryDay * 30.0 * stock.NumberAll, SupplementName);  // i.e. 1 months worth\r\n                        summary.WriteMessage(this, \"SupplementEveryDay: Buying \" + SupplementName + \" of total amount : \" + (SupplementEveryDay * 90 * stock.NumberAll) + \" kg DM\", MessageType.Diagnostic);\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementEveryDay * stock.NumberAll, CurrentZone, SupplementFirst);\r\n                }\r\n\r\n                if (SupplementOnPastureMass > 0 && HarvestableBiomass <= TriggerPastureMass)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementOnPastureMass * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementOnPastureMass * 30.0 * stock.NumberAll, SupplementName);  // i.e. 1 months worth\r\n                        summary.WriteMessage(this, \"SupplementOnBiomass: Buying \" + SupplementName + \" of total amount : \" + (SupplementOnPastureMass * 90 * stock.NumberAll) + \" kg DM\", MessageType.Diagnostic);\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementOnPastureMass * stock.NumberAll, CurrentZone, SupplementFirst);\r\n                }\r\n            }\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = Genotype;\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = Sex;\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            for (int gg = 1; gg <= NumGroups; gg++)\r\n            {\r\n                stock.Sell(stock.Number[gg - 1]);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
-                  "Key": "Genotype",
-                  "Value": "Large Merino"
+                  "Key": "Crop",
+                  "Value": "[Mungbean]"
                 },
                 {
-                  "Key": "Sex",
-                  "Value": "Male"
+                  "Key": "SowDate",
+                  "Value": "5-Dec"
                 },
                 {
-                  "Key": "Age",
-                  "Value": "12"
+                  "Key": "CultivarName",
+                  "Value": "Emerald"
                 },
                 {
-                  "Key": "Weight",
-                  "Value": "100"
+                  "Key": "SowingDepth",
+                  "Value": "30"
                 },
                 {
-                  "Key": "Pregnant",
-                  "Value": "0"
+                  "Key": "RowSpacing",
+                  "Value": "250"
                 },
                 {
-                  "Key": "Lactating",
-                  "Value": "0"
-                },
-                {
-                  "Key": "YoungNumber",
-                  "Value": "0"
-                },
-                {
-                  "Key": "YoungWt",
-                  "Value": "0"
-                },
-                {
-                  "Key": "StockingRate",
-                  "Value": "100"
-                },
-                {
-                  "Key": "CurrentLocation",
-                  "Value": "Away"
-                },
-                {
-                  "Key": "PreGrazingDM",
-                  "Value": "1000"
-                },
-                {
-                  "Key": "MinGrazingDays",
-                  "Value": "7"
-                },
-                {
-                  "Key": "PostGrazingDM",
-                  "Value": "500"
-                },
-                {
-                  "Key": "DoNoGrazingWindow",
-                  "Value": "False"
-                },
-                {
-                  "Key": "NoGrazeStart",
-                  "Value": "1-Nov"
-                },
-                {
-                  "Key": "NoGrazeEnd",
-                  "Value": "31-Jan"
-                },
-                {
-                  "Key": "SupplementName",
-                  "Value": "Silage"
-                },
-                {
-                  "Key": "SupplementFirst",
-                  "Value": "False"
-                },
-                {
-                  "Key": "SupplementEveryDay",
-                  "Value": "0"
-                },
-                {
-                  "Key": "SupplementOnPastureMass",
-                  "Value": "0"
-                },
-                {
-                  "Key": "TriggerPastureMass",
-                  "Value": "100000"
+                  "Key": "Population",
+                  "Value": "30"
                 }
               ],
-              "Name": "GrazeForageCrop",
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.GrazPlan.Supplement, Models",
-              "SpoilageTime": 0.0,
-              "Stores": [
-                {
-                  "$type": "Models.GrazPlan.StoreType, Models",
-                  "Name": "fodder",
-                  "Stored": 0.0,
-                  "IsRoughage": true,
-                  "DMContent": 0.85,
-                  "DMD": 0.0,
-                  "MEContent": 0.0,
-                  "CPConc": 0.0,
-                  "ProtDg": 0.0,
-                  "PConc": 0.0,
-                  "SConc": 0.0,
-                  "EEConc": 0.0,
-                  "ADIP2CP": 0.0,
-                  "AshAlk": 0.0,
-                  "MaxPassage": 0.0
-                },
-                {
-                  "$type": "Models.GrazPlan.StoreType, Models",
-                  "Name": "silage",
-                  "Stored": 0.0,
-                  "IsRoughage": true,
-                  "DMContent": 1.0,
-                  "DMD": 0.75,
-                  "MEContent": 12.0,
-                  "CPConc": 0.18,
-                  "ProtDg": 0.8,
-                  "PConc": 0.0032,
-                  "SConc": 0.0024,
-                  "EEConc": 0.02,
-                  "ADIP2CP": 0.06,
-                  "AshAlk": 0.6,
-                  "MaxPassage": 0.0
-                }
-              ],
-              "PaddockList": [],
-              "Name": "Supplement",
+              "Name": "Sow on a fixed date",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
-              "$type": "Models.Core.Zone, Models",
-              "Area": 1.0,
-              "Slope": 0.0,
-              "AspectAngle": 0.0,
-              "Altitude": 50.0,
-              "Name": "paddock",
-              "Children": [
+              "$type": "Models.Manager, Models",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+              "Parameters": [
                 {
-                  "$type": "Models.Irrigation, Models",
-                  "Name": "Irrigation",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": true
-                },
-                {
-                  "$type": "Models.Fertiliser, Models",
-                  "ResourceName": "Fertiliser",
-                  "Name": "fertiliser",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "InitialResidueName": "wheat",
-                  "InitialResidueType": "wheat",
-                  "InitialResidueMass": 500.0,
-                  "InitialStandingFraction": 0.0,
-                  "InitialCPR": 0.0,
-                  "InitialCNR": 40.0,
-                  "ResourceName": "SurfaceOrganicMatter",
-                  "Name": "SurfaceOrganicMatter",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[DiagnosticsVariables].Script.AccumPlantN",
-                    "[DiagnosticsVariables].Script.AccumMineralisation",
-                    "[DiagnosticsVariables].Script.AccumDenit",
-                    "[DiagnosticsVariables].Script.AccumFert",
-                    "[DiagnosticsVariables].Script.AccumLeach",
-                    "[DiagnosticsVariables].Script.AccumDetach",
-                    "[DiagnosticsVariables].Script.DeltaSoilOMN",
-                    "[DiagnosticsVariables].Script.DeltaSurfaceOMN",
-                    "[DiagnosticsVariables].Script.DeltaSoilMineralN",
-                    "[Mungbean].Root.NSupply",
-                    "[Soil].SoilWater.Eo",
-                    "[Soil].SoilWater.Es",
-                    "[DiagnosticsVariables].Script.SWC",
-                    "[DiagnosticsVariables].Script.DUL",
-                    "[Soil].SoilWater.Drainage",
-                    "[Soil].SoilWater.Runoff",
-                    "[DiagnosticsVariables].Script.OutFlowLat",
-                    "[Soil].SoilWater.pond",
-                    "[DiagnosticsVariables].Script.AccumEO",
-                    "[DiagnosticsVariables].Script.AccumEP",
-                    "[DiagnosticsVariables].Script.AccumES",
-                    "[DiagnosticsVariables].Script.AccumDrainage",
-                    "[DiagnosticsVariables].Script.AccumRunoff",
-                    "[DiagnosticsVariables].Script.AccumRainfall",
-                    "[DiagnosticsVariables].Script.AccumIrrigation",
-                    "[DiagnosticsVariables].Script.AccumOutflowLat",
-                    "[DiagnosticsVariables].Script.SoilWaterDeficit",
-                    "[Mungbean].Grain.Live.Wt",
-                    "[Mungbean].Shell.Live.Wt",
-                    "[Mungbean].Stem.Live.Wt",
-                    "[Mungbean].Stem.Live.Wt",
-                    "[Mungbean].Grain.Live.N",
-                    "[Mungbean].Shell.Live.N",
-                    "[Mungbean].Leaf.Live.Wt",
-                    "[Mungbean].Root.Live.Wt",
-                    "[Mungbean].Leaf.Live.N",
-                    "[Mungbean].Root.Live.N",
-                    "[Mungbean].Leaf.Live.NConc",
-                    "[Mungbean].Root.Live.NConc",
-                    "[Mungbean].Root.WaterSupply",
-                    "[Mungbean].Root.WaterUptake",
-                    "[Mungbean].Leaf.Transpiration",
-                    "[Mungbean].Leaf.WaterDemand",
-                    "[Mungbean].Root.Depth",
-                    "[Mungbean].Leaf.CoverTotal",
-                    "[Mungbean].Leaf.CoverDead",
-                    "[Mungbean].Leaf.LAI",
-                    "[Mungbean].Leaf.Height",
-                    "[Mungbean].Leaf.PotentialBiomass",
-                    "[Soil].SoilWater.SWmm",
-                    "[Soil].Nutrient.NO3.kgha",
-                    "[DiagnosticsVariables].Script.SoilNitrogenContent",
-                    "[Mungbean].Arbitrator.N.TotalPlantDemand",
-                    "[MicroClimate].net_radn",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr",
-                    "[DiagnosticsVariables].Script.FomN",
-                    "[DiagnosticsVariables].Script.HumN",
-                    "[DiagnosticsVariables].Script.BiomN",
-                    "[DiagnosticsVariables].Script.DltNMinRes",
-                    "[DiagnosticsVariables].Script.DltNMinTot",
-                    "[Mungbean].Leaf.Fw",
-                    "[Mungbean].Leaf.Fn",
-                    "[Mungbean].Phenology.CurrentPhase.Name",
-                    "[Mungbean].Phenology.Stage",
-                    "[Mungbean].Pod.Wt",
-                    "[Mungbean].Pod.N",
-                    "[Mungbean].Structure.LeafTipsAppeared",
-                    "[Mungbean].Structure.MainStemPrimordiaNo",
-                    "[Mungbean].Leaf.CohortArea[1]",
-                    "[Mungbean].Leaf.CohortArea[2]",
-                    "[Mungbean].Leaf.CohortArea[3]",
-                    "[Mungbean].Leaf.CohortArea[4]",
-                    "[Mungbean].Leaf.CohortArea[5]",
-                    "[Mungbean].Leaf.CohortArea[6]",
-                    "[Mungbean].Leaf.CohortArea[7]",
-                    "[Mungbean].Leaf.CohortArea[8]",
-                    "[Mungbean].Leaf.CohortArea[9]",
-                    "[Mungbean].Leaf.CohortArea[10]",
-                    "[Mungbean].Leaf.CohortArea[11]",
-                    "[Mungbean].Leaf.CohortArea[12]",
-                    "[Mungbean].Leaf.CohortArea[13]",
-                    "[Mungbean].Leaf.CohortArea[14]",
-                    "[Mungbean].Leaf.CohortArea[15]",
-                    "[Mungbean].Leaf.AppearedCohortNo",
-                    "[Mungbean].Leaf.DeadCohortNo",
-                    "[Mungbean].AboveGround.Wt",
-                    "[Mungbean].Phenology.Stage",
-                    "[Mungbean].Structure.MainStemPrimordiaNo",
-                    "[Mungbean].Phenology.NFF",
-                    "[MungbeanHarvestRule].Script.FinalTag",
-                    "[Mungbean].Grain.NumberFunction",
-                    "[Mungbean].Shell.PodNumber",
-                    "[Mungbean].Phenology.FN",
-                    "[Mungbean].Phenology.FN.TotalNodes",
-                    "[Mungbean].Phenology.FN.VegetativeNodes"
-                  ],
-                  "EventNames": [
-                    "[Clock].DoReport"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "DailyReport",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {      \n        [Link] private Plant Mungbean;\n        [Link] private Zone zone;\n        [Link(Type = LinkType.Path, Path = \"[Mungbean].Phenology\")]\n        private Phenology phenology;\n                    \n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n        }       \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\n           {\n           Mungbean.Harvest();\n           Mungbean.EndCrop();\n           }\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            \n        }\n    }\n}\n       \n",
-                  "Parameters": [],
-                  "Name": "HarvestRule",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[Mungbean].Phenology.Stage",
-                    "[Mungbean].Phenology.CurrentStageName",
-                    "[Mungbean].AboveGround.Wt",
-                    "[Mungbean].AboveGround.N",
-                    "[Mungbean].Grain.Total.Wt*10 as Yield",
-                    "[Mungbean].Grain.NConc",
-                    "[Mungbean].Grain.Size",
-                    "[Mungbean].Grain.Number",
-                    "[Mungbean].Grain.Total.Wt",
-                    "[Mungbean].Grain.Total.N",
-                    "[Mungbean].Total.Wt"
-                  ],
-                  "EventNames": [
-                    "[Soybean].Harvesting"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "HarvestReport",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Plant, Models",
-                  "ResourceName": "Mungbean",
-                  "Name": "Mungbean",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "Operation": [],
-                  "Name": "Operations",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.MicroClimate, Models",
-                  "a_interception": 0.0,
-                  "b_interception": 1.0,
-                  "c_interception": 0.0,
-                  "d_interception": 0.0,
-                  "SoilHeatFluxFraction": 0.4,
-                  "MinimumHeightDiffForNewLayer": 0.0,
-                  "NightInterceptionFraction": 0.5,
-                  "ReferenceHeight": 2.0,
-                  "Name": "MicroClimate",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Soil, Models",
-                  "RecordNumber": 0,
-                  "ASCOrder": null,
-                  "ASCSubOrder": null,
-                  "SoilType": "APS6Soil",
-                  "LocalName": "APS6Site",
-                  "Site": "APS6Site",
-                  "NearestTown": "Unknown",
-                  "Region": "Lawes",
-                  "State": null,
-                  "Country": null,
-                  "NaturalVegetation": "Unknown",
-                  "ApsoilNumber": null,
-                  "Latitude": 0.0,
-                  "Longitude": 0.0,
-                  "LocationAccuracy": null,
-                  "YearOfSampling": null,
-                  "DataSource": null,
-                  "Comments": null,
-                  "Name": "Soil",
-                  "Children": [
-                    {
-                      "$type": "Models.WaterModel.WaterBalance, Models",
-                      "SummerDate": "1-Nov",
-                      "SummerU": 6.0,
-                      "SummerCona": 3.5,
-                      "WinterDate": "1-Apr",
-                      "WinterU": 6.0,
-                      "WinterCona": 3.5,
-                      "DiffusConst": 88.0,
-                      "DiffusSlope": 35.4,
-                      "Salb": 0.13,
-                      "CN2Bare": 60.0,
-                      "CNRed": 20.0,
-                      "CNCov": 0.8,
-                      "DischargeWidth": 0.0,
-                      "CatchmentArea": 0.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "SWCON": [
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3,
-                        0.3
-                      ],
-                      "KLAT": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "ResourceName": "WaterBalance",
-                      "Name": "SoilWater",
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Organic, Models",
-                      "FOMCNRatio": 60.0,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "Carbon": [
-                        2.08,
-                        1.21,
-                        1.21,
-                        1.15,
-                        1.0,
-                        1.0,
-                        0.8,
-                        0.45,
-                        0.45
-                      ],
-                      "SoilCNRatio": [
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5,
-                        14.5
-                      ],
-                      "FBiom": [
-                        0.03,
-                        0.02,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01
-                      ],
-                      "FInert": [
-                        0.45,
-                        0.6,
-                        0.78,
-                        0.78,
-                        0.9,
-                        0.9,
-                        0.99,
-                        0.99,
-                        0.99
-                      ],
-                      "FOM": [
-                        34.71290323127565,
-                        27.03443621919937,
-                        16.397214434990104,
-                        16.397,
-                        9.945,
-                        9.945,
-                        6.032,
-                        3.659,
-                        2.219
-                      ],
-                      "CarbonMetadata": null,
-                      "FOMMetadata": null,
-                      "Name": "Organic",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Chemical, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "NO3N": [
-                        10.0,
-                        5.0,
-                        3.0,
-                        3.0,
-                        2.0,
-                        2.0,
-                        1.0,
-                        0.1,
-                        0.1
-                      ],
-                      "NH4N": [
-                        3.0,
-                        2.0,
-                        1.0,
-                        1.0,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.5,
-                        0.5
-                      ],
-                      "PH": [
-                        7.5,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0
-                      ],
-                      "CL": null,
-                      "EC": null,
-                      "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
-                      "ECMetadata": null,
-                      "CLMetadata": null,
-                      "ESPMetadata": null,
-                      "PHMetadata": null,
-                      "Name": "Chemical",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "Temperature",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "ResourceName": "Nutrient",
-                      "Name": "Nutrient",
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Physical, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "ParticleSizeClay": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSilt": null,
-                      "Rocks": null,
-                      "Texture": null,
-                      "BD": [
-                        1.38,
-                        1.34,
-                        1.35,
-                        1.35,
-                        1.5,
-                        1.5,
-                        1.49,
-                        1.46,
-                        1.46
-                      ],
-                      "AirDry": [
-                        0.2,
-                        0.273,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286
-                      ],
-                      "LL15": [
-                        0.208,
-                        0.2731,
-                        0.2857,
-                        0.286,
-                        0.2863,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286
-                      ],
-                      "DUL": [
-                        0.42,
-                        0.42,
-                        0.42,
-                        0.42,
-                        0.4,
-                        0.4,
-                        0.36,
-                        0.36,
-                        0.36
-                      ],
-                      "SAT": [
-                        0.45,
-                        0.45,
-                        0.45,
-                        0.45,
-                        0.43,
-                        0.43,
-                        0.4,
-                        0.4,
-                        0.4
-                      ],
-                      "KS": null,
-                      "BDMetadata": null,
-                      "AirDryMetadata": null,
-                      "LL15Metadata": null,
-                      "DULMetadata": null,
-                      "SATMetadata": null,
-                      "KSMetadata": null,
-                      "RocksMetadata": null,
-                      "TextureMetadata": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClayMetadata": null,
-                      "Name": "Physical",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.258,
-                            0.273,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286,
-                            0.286
-                          ],
-                          "KL": [
-                            0.08,
-                            0.08,
-                            0.06,
-                            0.06,
-                            0.06,
-                            0.04,
-                            0.02,
-                            0.02,
-                            0.01
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "MungbeanSoil",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Sample, Models",
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
-                      "NO3": [
-                        20.0,
-                        5.0,
-                        4.0,
-                        1.0,
-                        0.5,
-                        0.5,
-                        0.5,
-                        0.1,
-                        0.1
-                      ],
-                      "NH4": [
-                        7.0,
-                        6.0,
-                        8.0,
-                        5.0,
-                        0.5,
-                        0.5,
-                        0.5,
-                        0.1,
-                        0.1
-                      ],
-                      "LabileP": null,
-                      "UnavailableP": null,
-                      "SW": [
-                        0.258,
-                        0.273,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286,
-                        0.286
-                      ],
-                      "OC": null,
-                      "EC": null,
-                      "CL": null,
-                      "ESP": null,
-                      "PH": [
-                        7.5,
-                        7.9,
-                        8.2,
-                        8.2,
-                        8.9,
-                        8.0,
-                        8.0,
-                        8.0,
-                        8.0
-                      ],
-                      "SWUnits": 0,
-                      "OCUnits": 0,
-                      "PHUnits": 0,
-                      "Name": "Initial Water",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.Interfaces;\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPhysical soilPhysical;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n\n\n        [Description(\"Crop to irrigate\")]\n        public IPlant Crop { get; set; }\n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [Description(\"Minimum weeks between irrigations\")]\n        public double weeks { get; set; }\n\n        [Description(\"Minimum days after sowing for first irrigation\")]\n        public int afterSowing { get; set; }\n\n        private double irrigationGap = 0;    // gap between irrigations\n\n        /// <summary>Called at start of simulation. Performs some basic error checking. </summary>\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void ErrorChecking(object sender, EventArgs args)\n        {\n            if (Crop == null)\n                throw new Exception(\"No crop was specified in script \" + Parent.Name);\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (AutoIrrigationOn && Crop.IsAlive)\n            {\n                   irrigationGap += 1;                // increment gap between irrigations\n                CalculateFASW();                // calc FASW and WaterDeficit\n                if ((FASW < FASWThreshold) && (irrigationGap >= weeks * 7))\n                {\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                    irrigationGap = 0;            // reset\n                }\n            }\n            else\n            {\n                irrigationGap = weeks * 7 - afterSowing - 1;    // allow irrigation a number of days after it becomes alive/sown\n            }\n        }\n\n        // Calculate the fraction of the potential available sw\n        // Calculate the deficit amount from DUL\n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex(FASWDepth);\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);    // tricky function that sums up to before nlayr\n\n            double part_layer = MathUtilities.Divide((FASWDepth - cumdep), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0) + part_layer * waterBalance.SWmm[nlayr])\n                            - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0) + part_layer * DUL[nlayr])\n                                - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\n            \n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        // Get index of the layer that has this depth in it \n        private int GetLayerIndex(double pointDepth)\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            int layerIdx = 0;\n            while ((layerIdx < cumThickness.Length) && (pointDepth > cumThickness[layerIdx]))\n            {\n                layerIdx += 1;\n            }\n\n            return layerIdx;\n        }\n    }\n}\n",
-                  "Parameters": [
-                    {
-                      "Key": "AutoIrrigationOn",
-                      "Value": "False"
-                    },
-                    {
-                      "Key": "Crop",
-                      "Value": "[Mungbean]"
-                    },
-                    {
-                      "Key": "FASWThreshold",
-                      "Value": "0.9"
-                    },
-                    {
-                      "Key": "FASWDepth",
-                      "Value": "600"
-                    },
-                    {
-                      "Key": "weeks",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "afterSowing",
-                      "Value": "0"
-                    }
-                  ],
-                  "Name": "AutoIrr",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}\r\n",
-                  "Parameters": [
-                    {
-                      "Key": "Crop",
-                      "Value": "[Mungbean]"
-                    },
-                    {
-                      "Key": "SowDate",
-                      "Value": "24-Oct"
-                    },
-                    {
-                      "Key": "CultivarName",
-                      "Value": "Jade"
-                    },
-                    {
-                      "Key": "SowingDepth",
-                      "Value": "50"
-                    },
-                    {
-                      "Key": "RowSpacing",
-                      "Value": "250"
-                    },
-                    {
-                      "Key": "Population",
-                      "Value": "30"
-                    }
-                  ],
-                  "Name": "Sow on a fixed date",
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Key": "Crop",
+                  "Value": "[Mungbean]"
                 }
               ],
+              "Name": "Harvesting",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "Name": "Mungbean",
+              "ResourceName": "Mungbean",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -2533,7 +645,7 @@
           "Axis": [
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
+              "Title": "Date",
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -2557,32 +669,34 @@
           "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Biomass",
+          "Name": "Yield Time Series",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "SimulationName",
+              "ColourArgb": -1663232,
+              "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
-              "Marker": 11,
+              "Marker": 0,
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "TableName": "DailyReport",
+              "TableName": "HarvestReport",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Mungbean.AboveGround.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
+              "YFieldName": "Mungbean.Grain.Wt",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Predicted",
+              "Name": "Series",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
