@@ -277,10 +277,12 @@ namespace Models.PMF.Organs
             var rootfrontvelocity2 = rootFrontVelocity.Value(NextLayer);
 
             double wf = 0; // weighting factor
-            if (RootLayer > 0)
-                wf = (Depth - Physical.ThicknessCumulative[RootLayer-1])/Physical.Thickness[RootLayer];
-            else
-                wf = Depth / Physical.Thickness[0];
+            //if (RootLayer > 0)
+            //    wf = (Depth - Physical.ThicknessCumulative[RootLayer-1])/Physical.Thickness[RootLayer];
+            //else
+            //    wf = Depth / Physical.Thickness[0];
+
+            
 
             var rootfrontvelocity = wf * rootfrontvelocity2 + (1 - wf) * rootfrontvelocity1;
 
