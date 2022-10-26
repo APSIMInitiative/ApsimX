@@ -271,7 +271,7 @@ namespace Models.PMF.Organs
         public void GrowRootDepth()
         {
             // Do Root Front Advance
-            int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
+                int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity1 = rootFrontVelocity.Value(RootLayer);
             int NextLayer = Math.Min(RootLayer + 1, Physical.Thickness.Length-1);
             var rootfrontvelocity2 = rootFrontVelocity.Value(NextLayer);
@@ -282,7 +282,7 @@ namespace Models.PMF.Organs
             else
                 wf = Depth / Physical.Thickness[0];
 
-            var rootfrontvelocity = wf * rootfrontvelocity1 + (1 - wf) * rootfrontvelocity2;
+            var rootfrontvelocity = wf * rootfrontvelocity2 + (1 - wf) * rootfrontvelocity1;
 
             double MaxDepth;
             double[] xf = null;
