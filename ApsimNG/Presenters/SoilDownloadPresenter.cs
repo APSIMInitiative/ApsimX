@@ -71,6 +71,8 @@ namespace UserInterface.Presenters
         /// <summary>All found soils.</summary>
         private IEnumerable<SoilFromDataSource> allSoils;
 
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
         /// <summary>
         /// Attach the view to this presenter.
         /// </summary>
@@ -137,7 +139,7 @@ namespace UserInterface.Presenters
         /// <summary>User has clicked the search button.</summary>
         /// <param name="sender">Sender of the event.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnSearchClicked(object sender, EventArgs e)
+        private async void OnSearchClicked(object sender, EventArgs e)
         {
             try
             {
@@ -145,7 +147,7 @@ namespace UserInterface.Presenters
 
                 if (!string.IsNullOrEmpty(placeNameEditBox.Text) && !string.IsNullOrEmpty(countryDropDown.SelectedValue))
                 {
-                    if (!GetLatLongFromPlaceName())
+                    if (await GetLatLongFromPlaceName() == false)
                         throw new Exception("Cannot find a latitude/longitude from the specified place name.");
                 }
 
@@ -153,7 +155,7 @@ namespace UserInterface.Presenters
                     throw new Exception("Must specifiy either a place name or a latitude/longitude.");
 
                 var apsoilTask = Task.Run(() => GetApsoilSoils());
-                var gridTask = Task.Run(() => GetGridSoils());
+                var gridTask = Task.Run(() => GetASRISSoils());
                 //var isricTask = Task.Run(() => GetISRICSoils()); // Web API no longer operational?
                 var worldModellersTask = Task.Run(() => GetWorldModellersSoils());
                 var placeNameTask = Task.Run(() => GetPlacenameFromLatLong());
@@ -235,7 +237,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Return zero or more APSOIL soils.</summary>
-        private IEnumerable<SoilFromDataSource> GetApsoilSoils()
+        private async Task<IEnumerable<SoilFromDataSource>> GetApsoilSoils()
         {
             var soils = new List<SoilFromDataSource>();
             try
@@ -245,7 +247,7 @@ namespace UserInterface.Presenters
                 double longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
                 double radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
-                using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result)
+                using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
                     stream.Position = 0;
                     XmlDocument doc = new XmlDocument();
@@ -288,7 +290,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.</summary>
-        private IEnumerable<SoilFromDataSource> GetGridSoils()
+        private IEnumerable<SoilFromDataSource> GetASRISSoils()
         {
             var soils = new List<SoilFromDataSource>();
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
@@ -873,11 +875,11 @@ namespace UserInterface.Presenters
         /// (there are a lot of "Black Mountain"s in Australia, for example, it would be better
         /// to present the user with the list of matches when there is more than one.
         /// </summary>
-        private bool GetLatLongFromPlaceName()
+        private async Task<bool> GetLatLongFromPlaceName()
         {
             var country = countries.First(c => c.Name == countryDropDown.SelectedValue);
             string url = $"{googleGeocodingApi}components=country:{country.TwoLetterCode}|locality:{placeNameEditBox.Text}";
-            using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url).Result)
+            using (MemoryStream stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
             {
                 stream.Position = 0;
                 using (JsonTextReader reader = new JsonTextReader(new StreamReader(stream)))
