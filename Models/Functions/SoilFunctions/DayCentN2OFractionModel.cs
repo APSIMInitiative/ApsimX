@@ -8,10 +8,12 @@ using Models.Interfaces;
 namespace Models.Functions
 {
     /// <summary>Fraction of N denitrified which is N2O</summary>
-    /// \pre All children have to contain a public function "Value"
-    /// \retval Fraction of N denitrified which is N2O.
+    /// <remarks>
+    /// Denitrification N2O fraction model from DayCent
+    /// </remarks>
     [Serializable]
-    [Description("Denitrification N2O fraction model from DayCent")]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class DayCentN2OFractionModel : Model, IFunction
     {
         [Link]
@@ -27,6 +29,10 @@ namespace Models.Functions
         [Link]
         Nutrient Nutrient = null;
 
+        /// <summary>Gas diffusivity in soil at field capacity.</summary>
+        [Description("Gas diffusivity in soil at field capacity")]
+        public double N2ODiffusionCoefficient { get; set; } = 25.1;
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -39,7 +45,7 @@ namespace Models.Functions
             if (WFPS > 21.3)
                 WF = 1.18 * (WFPS - 21.3) / (100 - 21.3);
             double CO2Factor = Math.Max(0.16, Math.Exp(-0.8 * MathUtilities.Divide(NO3.kgha[arrayIndex], Nutrient.Catm[arrayIndex], 0)));
-            double N2N2ORatio = Math.Max(0,25.1 * WF * CO2Factor);
+            double N2N2ORatio = Math.Max(0, N2ODiffusionCoefficient * WF * CO2Factor);
             double N2OFraction = 1 / (N2N2ORatio + 1);
 
             return N2OFraction;
