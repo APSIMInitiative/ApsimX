@@ -68,11 +68,13 @@ namespace UserInterface.Presenters
         /// <summary>List of all countries.</summary>
         private Country[] countries;
 
+        /// <summary>The label for soil count found</summary>
         private LabelView labelCount;
 
         /// <summary>All found soils.</summary>
-        private IEnumerable<SoilFromDataSource> allSoils;
+        private List<SoilFromDataSource> allSoils= new List<SoilFromDataSource>();
 
+        /// <summary>The token used for cancelling the download</summary>
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
@@ -192,10 +194,13 @@ namespace UserInterface.Presenters
                         double[] pawcmappingLayerStructure = { 300, 300, 900 };
 
                         var results = await Task.WhenAll(tasks);
+
+                        allSoils.Clear();
                         foreach (var item in results)
                         {
                             foreach (var soilInfo in item)
                             {
+                                allSoils.Add(soilInfo);
                                 var soilPhysical = soilInfo.Soil.FindChild<Physical>();
                                 var row = soilData.NewRow();
                                 row["Name"] = soilInfo.Soil.Name;
