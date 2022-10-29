@@ -192,11 +192,11 @@ namespace UserInterface.Presenters
                         soilData.Columns.Add("Name", typeof(string));
                         soilData.Columns.Add("Data source", typeof(string));
                         soilData.Columns.Add("Soil type", typeof(string));
-                        soilData.Columns.Add("Distance (km)", typeof(string));
-                        soilData.Columns.Add("PAWC for profile", typeof(string));
-                        soilData.Columns.Add("PAWC to 300mm", typeof(string));
-                        soilData.Columns.Add("PAWC to 600mm", typeof(string));
-                        soilData.Columns.Add("PAWC to 1500mm", typeof(string));
+                        soilData.Columns.Add("Distance (km)", typeof(double));
+                        soilData.Columns.Add("PAWC for profile", typeof(double));
+                        soilData.Columns.Add("PAWC to 300mm", typeof(double));
+                        soilData.Columns.Add("PAWC to 600mm", typeof(double));
+                        soilData.Columns.Add("PAWC to 1500mm", typeof(double));
                         dataView.ClearRows();
 
                         double[] pawcmappingLayerStructure = { 300, 300, 900 };
@@ -251,17 +251,17 @@ namespace UserInterface.Presenters
             row["Distance (km)"] = MetUtilities.Distance(Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
                                                          Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
                                                          soilInfo.Soil.Latitude,
-                                                         soilInfo.Soil.Longitude).ToString("F1");
+                                                         soilInfo.Soil.Longitude);
 
             var pawc = soilPhysical.PAWCmm;
-            row["PAWC for profile"] = pawc.Sum().ToString("F1");
+            row["PAWC for profile"] = pawc.Sum();
 
             var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
             var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
             var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
-            row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
-            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
-            row["PAWC to 1500mm"] = mappedPawc.Sum().ToString("F1");
+            row["PAWC to 300mm"] = mappedPawc[0]; 
+            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]); 
+            row["PAWC to 1500mm"] = mappedPawc.Sum();
 
             return row;
         }
