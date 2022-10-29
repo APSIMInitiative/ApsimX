@@ -22,6 +22,7 @@ using UserInterface.Views;
 using Utility;
 using System.Web;
 using System.Text;
+using Gtk;
 
 namespace UserInterface.Presenters
 {
@@ -174,10 +175,17 @@ namespace UserInterface.Presenters
                         // Update the place name edit box.
                         placeNameEditBox.Text = await GetPlacenameFromLatLongAsync();
 
+                        // Use this to monitor task progress
+                        Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
+                        progress.ProgressChanged += ReportProgress;
+                        // create a report object here because I will use the same one for all parallel tasks
+                        ProgressReportModel report = new ProgressReportModel();
+                        report.Count = 0;
+
                         List<Task<IEnumerable<SoilFromDataSource>>> tasks = new List<Task<IEnumerable<SoilFromDataSource>>>();
-                        tasks.Add(GetApsoilSoilsAsync());
-                        tasks.Add(GetASRISSoilsAsync());
-                        tasks.Add(GetWorldModellersSoilsAsync());
+                        tasks.Add(GetApsoilSoilsAsync(progress, report));
+                        tasks.Add(GetASRISSoilsAsync(progress, report));
+                        tasks.Add(GetWorldModellersSoilsAsync(progress, report));
                         //tasks.Add(GetISRICSoilsAsync()); // Web API no longer operational?
 
                         DataTable soilData = new DataTable();
@@ -201,27 +209,7 @@ namespace UserInterface.Presenters
                             foreach (var soilInfo in item)
                             {
                                 allSoils.Add(soilInfo);
-                                var soilPhysical = soilInfo.Soil.FindChild<Physical>();
-                                var row = soilData.NewRow();
-                                row["Name"] = soilInfo.Soil.Name;
-                                row["Data source"] = soilInfo.DataSource;
-                                row["Soil type"] = soilInfo.Soil.SoilType;
-                                row["Distance (km)"] = MetUtilities.Distance(Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
-                                                                             Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
-                                                                             soilInfo.Soil.Latitude,
-                                                                             soilInfo.Soil.Longitude).ToString("F1");
-
-                                var pawc = soilPhysical.PAWCmm;
-                                row["PAWC for profile"] = pawc.Sum().ToString("F1");
-
-                                var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
-                                var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
-                                var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
-                                row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
-                                row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
-                                row["PAWC to 1500mm"] = mappedPawc.Sum().ToString("F1");
-
-                                soilData.Rows.Add(row);
+                                soilData.Rows.Add(MakeDataRow(soilData, soilInfo));
                             }
                         }
                         dataView.DataSource = soilData;
@@ -246,6 +234,58 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Make a new DataTable row and populate it with the soil information
+        /// </summary>
+        /// <param name="soilData">The DataTable</param>
+        /// <param name="soilInfo">The soil found from the services</param>
+        /// <returns>The new DataRow in the DataTable</returns>
+        private DataRow MakeDataRow(DataTable soilData, SoilFromDataSource soilInfo)
+        {
+            double[] pawcmappingLayerStructure = { 300, 300, 900 };
+
+            var soilPhysical = soilInfo.Soil.FindChild<Physical>();
+            var row = soilData.NewRow();
+            row["Name"] = soilInfo.Soil.Name;
+            row["Data source"] = soilInfo.DataSource;
+            row["Soil type"] = soilInfo.Soil.SoilType;
+            row["Distance (km)"] = MetUtilities.Distance(Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
+                                                         Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
+                                                         soilInfo.Soil.Latitude,
+                                                         soilInfo.Soil.Longitude).ToString("F1");
+
+            var pawc = soilPhysical.PAWCmm;
+            row["PAWC for profile"] = pawc.Sum().ToString("F1");
+
+            var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
+            var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
+            var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
+            row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
+            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
+            row["PAWC to 1500mm"] = mappedPawc.Sum().ToString("F1");
+
+            return row;
+        }
+
+        /// <summary>
+        /// Used to lock the download count update of the gui
+        /// </summary>
+        private readonly object countLock = new object();
+
+        /// <summary>
+        /// The event handler for the updating of the report object
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The report model object</param>
+        private void ReportProgress(object sender, ProgressReportModel e)
+        {
+            lock (countLock)
+            {
+                e.Count++;
+                labelCount.Text = e.Count.ToString() + " soils found";
+            }
+        }
+
+        /// <summary>
         /// User has clicked the add soil button.
         /// </summary>
         /// <param name="sender">The event sender.</param>
@@ -266,8 +306,13 @@ namespace UserInterface.Presenters
             explorerPresenter.Populate();
         }
 
-        /// <summary>Return zero or more APSOIL soils.</summary>
-        private async Task<IEnumerable<SoilFromDataSource>> GetApsoilSoilsAsync()
+        /// <summary>
+        /// Return zero or more APSOIL soils.
+        /// </summary>
+        /// <param name="progress">The system progress object</param>
+        /// <param name="report">The reporting object used for this task</param>
+        /// <returns>List of soils</returns>
+        private async Task<IEnumerable<SoilFromDataSource>> GetApsoilSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
             try
@@ -306,6 +351,7 @@ namespace UserInterface.Presenters
                                     Soil = soil,
                                     DataSource = "APSOIL"
                                 });
+                                progress.Report(report);
                             }
                         }
                     }
@@ -324,8 +370,13 @@ namespace UserInterface.Presenters
             return soils;
         }
 
-        /// <summary>Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.</summary>
-        private async Task<IEnumerable<SoilFromDataSource>> GetASRISSoilsAsync()
+        /// <summary>
+        /// Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.
+        /// </summary>
+        /// <param name="progress">The system progress object</param>
+        /// <param name="report">The reporting object used for this task</param>
+        /// <returns></returns>
+        private async Task<IEnumerable<SoilFromDataSource>> GetASRISSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
@@ -349,6 +400,7 @@ namespace UserInterface.Presenters
                         Soil = soil,
                         DataSource = "SLGA"
                     });
+                    progress.Report(report);
                 }
             }
             catch (OperationCanceledException)
@@ -366,8 +418,10 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>
+        /// <param name="progress">The system progress object</param>
+        /// <param name="report">The reporting object used for this task</param>
         /// <returns>True if successful</returns>
-        private async Task<IEnumerable<SoilFromDataSource>> GetWorldModellersSoilsAsync()
+        private async Task<IEnumerable<SoilFromDataSource>> GetWorldModellersSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
             string url = "https://worldmodel.csiro.au/apsimsoil?lon=" +
@@ -392,6 +446,7 @@ namespace UserInterface.Presenters
                         Soil = soil,
                         DataSource = "ISRIC"
                     });
+                    progress.Report(report);
                 }
             }
             catch (OperationCanceledException)
@@ -449,7 +504,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Gets and ISRIC soil description directly from SoilGrids
         /// </summary>
-        /// <returns>True if successful</returns>
+        /// <returns>A list of downloaded soils</returns>
         private async Task<IEnumerable<SoilFromDataSource>> GetISRICSoilsAsync()
         {
             var soils = new List<SoilFromDataSource>();
@@ -933,13 +988,14 @@ namespace UserInterface.Presenters
         /// (there are a lot of "Black Mountain"s in Australia, for example, it would be better
         /// to present the user with the list of matches when there is more than one.
         /// </summary>
+        /// <returns>True if successful</returns>
         private async Task<bool> GetLatLongFromPlaceNameAsync()
         {
             try
             {
                 var country = countries.First(c => c.Name == countryDropDown.SelectedValue);
                 string url = $"{googleGeocodingApi}components=country:{country.TwoLetterCode}|locality:{placeNameEditBox.Text}";
-                using (MemoryStream stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
+                using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
                     stream.Position = 0;
                     using (JsonTextReader reader = new JsonTextReader(new StreamReader(stream)))
@@ -992,6 +1048,15 @@ namespace UserInterface.Presenters
             public string DataSource { get; set; }
             public Soil Soil { get; set; }
             
+        }
+
+        /// <summary>
+        /// The object used to report progress to the gui from each download task
+        /// </summary>
+        private class ProgressReportModel
+        {
+            public int Count { get; set; } = 0;
+            //public List<SoilFromDataSource> Soils { get; set; } = new List<SoilFromDataSource>();
         }
 
     }
