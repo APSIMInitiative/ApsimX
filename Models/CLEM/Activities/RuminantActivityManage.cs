@@ -1435,7 +1435,7 @@ namespace Models.CLEM.Activities
                             // remove pre breeders maturing in the next 12 months from sales.
                             if (numberOfReplacements < femaleBreedersRequired)
                             {
-                                foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersFromSales"))
+                                foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungFemalesFromSales"))
                                     foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.ReadyForSale && (a.Age - a.BreedParams.MinimumAge1stMating > -11))).Take(femaleBreedersRequired - numberOfReplacements).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut"); // in case grow out

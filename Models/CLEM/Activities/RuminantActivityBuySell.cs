@@ -30,15 +30,15 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Allows for recording transactions by groups of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
-    public class RuminantActivityBuySell : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
+    public class RuminantActivityBuySell : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         private FinanceType bankAccount = null;
         private IEnumerable<RuminantTrucking> truckingBuy;
         private IEnumerable<RuminantTrucking> truckingSell;
         private int numberToDo;
         private int numberToSkip;
-        private double numberTrucks;
-        private double numberTrucksToSkip;
+        //private double numberTrucks;
+        //private double numberTrucksToSkip;
         private int numberTrucksToSkipIndividuals;
         private int fundsNeededPurchaseSkipIndividuals;
         private double herdValue = 0;
@@ -47,6 +47,26 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantGroup> filterGroupsBuy;
         private IEnumerable<RuminantGroup> filterGroups;
         private string task = "";
+        private (bool buy, bool sell) truckingWithImplications = (false, false);
+        private (Guid buy, Guid sell) taskIds;
+        private ActivityStatus previousTaskStatus;
+
+        /// <summary>
+        /// Activity style
+        /// </summary>
+        [Description("Activity style")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ActivityStyleList")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "The style (arrange purchases or sales) is required")]
+        public string ActivityStyle { get; set; }
+
+        /// <summary>
+        /// Get the styles available for this activity
+        /// </summary>
+        /// <returns>An Ienumerable of strings</returns>
+        public IEnumerable<string> ActivityStyleList()
+        {
+            return new string[] { "Arrange sales", "Arrange purchases" };
+        }
 
         /// <summary>
         /// Bank account to use
@@ -76,19 +96,21 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Purchases",
-                            "Sales"
-                        },
+                        identifiers: new List<string>(),
+                        //{
+                        //    "Purchases",
+                        //    "Sales"
+                        //},
                         measures: new List<string>()
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Purchases",
-                            "Sales"
-                        },
+                        identifiers: new List<string>(),
+                        //{
+                        //    "Purchases",
+                        //    "Sales"
+                        //},
                         measures: new List<string>() {
                             "fixed",
                             "per head",
@@ -97,10 +119,11 @@ namespace Models.CLEM.Activities
                         );
                 case "RuminantTrucking":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Purchases",
-                            "Sales"
-                        },
+                        identifiers: new List<string>(),
+                        //{
+                        //    "Purchases",
+                        //    "Sales"
+                        //},
                         measures: new List<string>());
                 default:
                     return new LabelsForCompanionModels();
@@ -130,7 +153,12 @@ namespace Models.CLEM.Activities
 
             // get trucking settings
             truckingBuy = GetCompanionModelsByIdentifier<RuminantTrucking>(false, false, "Purchases");
+            truckingWithImplications.buy = truckingBuy?.Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).Any()??false;
             truckingSell = GetCompanionModelsByIdentifier<RuminantTrucking>(false, false, "Sales");
+            truckingWithImplications.sell = truckingSell?.Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).Any()??false;
+
+            var sellId = ActivitiesHolder.AddToGuID(this.UniqueID, 1);
+            taskIds = (ActivitiesHolder.AddToGuID(sellId, 1), sellId);
 
             // check if pricing is present
             if (bankAccount != null)
@@ -149,6 +177,9 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalBuy")]
         private void OnCLEMAnimalBuyPerformActivity(object sender, EventArgs e)
         {
+            previousTaskStatus = Status;
+            Status = ActivityStatus.NotNeeded;
+
             task = "Buy";
             ResourceRequestList.Clear();
             ManageActivityResourcesAndTasks("Purchases");
@@ -169,8 +200,8 @@ namespace Models.CLEM.Activities
         {
             numberToDo = 0;
             numberToSkip = 0;
-            numberTrucks = 0;
-            numberTrucksToSkip = 0;
+            //numberTrucks = 0;
+            //numberTrucksToSkip = 0;
             numberTrucksToSkipIndividuals = 0;
             fundsNeededPurchaseSkipIndividuals = 0;
 
@@ -184,10 +215,17 @@ namespace Models.CLEM.Activities
                     IndividualsToBeTrucked = uniqueIndividuals;
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    if(truckingBuy != null)
+                    if (truckingBuy != null)
+                    {
                         foreach (var trucking in truckingBuy)
                             trucking.ManuallyGetResourcesPerformActivity();
 
+                        if (!truckingWithImplications.buy)
+                        {
+                            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+                            IndividualsToBeTrucked = uniqueIndividuals;
+                        }
+                    }
                     break;
                 case "Sell":
                     herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.MarkedForSale);
@@ -197,9 +235,16 @@ namespace Models.CLEM.Activities
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
                     if (truckingSell != null)
+                    {
                         foreach (var trucking in truckingSell)
                             trucking.ManuallyGetResourcesPerformActivity();
 
+                        if (!truckingWithImplications.sell)
+                        {
+                            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+                            IndividualsToBeTrucked = uniqueIndividuals;
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -331,6 +376,50 @@ namespace Models.CLEM.Activities
                 default:
                     break;
             }
+
+
+            if (numberTrucked < numberToDo)
+            {
+                // Report trucks shortfall for task
+                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = new ResourceRequest()
+                {
+                    Resource = null,
+                    ResourceType = null,
+                    ResourceTypeName = "Head trucked",
+                    AllowTransmutation = false,
+                    Required = numberToDo,
+                    Provided = numberTrucked,
+                    Category = task,
+                    AdditionalDetails = null,
+                    RelatesToResource = null,
+                    ActivityModel = this,
+                }};
+
+
+                if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                {
+                    string warn = $"Insufficient [r=Trucks] for [{task}] in [a={NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
+                    Status = ActivityStatus.Critical;
+                    ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
+                    throw new ApsimXException(this, warn);
+                }
+                else if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+                {
+                    Status = ActivityStatus.Skipped;
+                }
+                else
+                {
+                    Status = ActivityStatus.Partial;
+                    if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableResources)
+                        rrEventArgs.Request.ShortfallStatus = "No implication";
+                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
+                        rrEventArgs.Request.ShortfallStatus = "Affected outcome";
+                }
+                ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
+            }
+            if (task == "Sell")
+                ReportActivityStatus();
+
             return requestResources;
         }
 
@@ -352,8 +441,9 @@ namespace Models.CLEM.Activities
                 buySellShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == task && a.CompanionModelDetails.unit == "per truck").FirstOrDefault();
                 if (buySellShort != null)
                 {
-                    numberTrucksToSkip = Convert.ToInt32(numberTrucks * buySellShort.Required / buySellShort.Provided);
-                    this.Status = ActivityStatus.Partial;
+                    throw new Exception($"Unable to limit [{task}] by units [per km trucked] in [a={NameWithParent}]{Environment.NewLine}This resource cost does not support [ShortfallAffectsActivity] in [a=RuminantHerdBuySell]");
+                    //numberTrucksToSkip = Convert.ToInt32(numberTrucks * buySellShort.Required / buySellShort.Provided);
+                    //this.Status = ActivityStatus.Partial;
                 }
 
                 buySellShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == task && a.CompanionModelDetails.unit == "per km trucked").FirstOrDefault();
@@ -492,6 +582,40 @@ namespace Models.CLEM.Activities
             if (numberToDo - numberToSkip > 0)
                 ProcessAnimals();
         }
+
+        /// <inheritdoc/>
+        public override void TriggerOnActivityPerformed()
+        {
+            ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
+            {
+                Name = $"{this.Name}.{task}",
+                Status = this.Status,
+                Id = ((task == "Sell")?taskIds.sell:taskIds.buy).ToString(),
+                ModelType = 0
+            });
+        }
+
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // check that all or none of children are ShortfallsWithImplications
+            for (int i = 0; i < 2; i++)
+            {
+                string stl = ((i == 0) ? "Buy" : "Sell");
+                var truckingComponents = FindAllChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications && a.Identifier == stl);
+                if (truckingComponents.Any() && (truckingComponents.Count() != FindAllChildren<RuminantTrucking>().Count()))
+                {
+                    string[] memberNames = new string[] { "RuminantTrucking" };
+                    results.Add(new ValidationResult($"All [r=RuminantTrucking] components for [{stl}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", memberNames));
+                }
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 
