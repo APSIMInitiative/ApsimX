@@ -126,7 +126,7 @@ namespace UserInterface.Presenters
             var weatherModel = model.FindInScope<IWeather>();
             latitudeEditBox.Text = weatherModel.Latitude.ToString();
             longitudeEditBox.Text = weatherModel.Longitude.ToString();
-            radiusEditBox.Text = "100";
+            radiusEditBox.Text = "10";
 
             dataView.SortColumn = "Distance (km)";
             dataView.SortAscending = true;
@@ -158,6 +158,7 @@ namespace UserInterface.Presenters
             {
                 searchButton.Text = "Stop";
                 labelCount.Text = "";
+                enableControls(false);
                 try
                 {
                     explorerPresenter.MainPresenter.ShowWaitCursor(true);
@@ -219,6 +220,7 @@ namespace UserInterface.Presenters
                     {
                         cancellationTokenSource.Dispose();
                         cancellationTokenSource = new CancellationTokenSource();
+                        enableControls(true);
                     }
                 }
                 catch (Exception err)
@@ -229,8 +231,21 @@ namespace UserInterface.Presenters
                 {
                     explorerPresenter.MainPresenter.ShowWaitCursor(false);
                     searchButton.Text = "Search for soils";
+                    enableControls(true);
                 }
             }
+        }
+
+        /// <summary>
+        /// Switch the editable state of some controls. Used while searching.
+        /// </summary>
+        /// <param name="enable">State of editable flag</param>
+        private void enableControls(bool enable)
+        {
+            latitudeEditBox.Editable = enable;
+            longitudeEditBox.Editable = enable;
+            radiusEditBox.Editable = enable;
+            placeNameEditBox.Editable = enable;
         }
 
         /// <summary>
