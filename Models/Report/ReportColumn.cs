@@ -180,6 +180,14 @@
             if (groupNumber >= groups.Count)
                 groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
 
+            if (possibleRecursion)
+            {
+                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                if (var == null)
+                    return null;
+                else
+                    possibleRecursion = false;
+            }
             if (string.IsNullOrEmpty(aggregationFunction) && string.IsNullOrEmpty(groupByName))
             {
                 // This instance is NOT a temporarily aggregated variable and so hasn't 
@@ -213,6 +221,11 @@
             }
             group.StoreValue();
         }
+
+        /// <summary>
+        /// Test
+        /// </summary>
+        public bool possibleRecursion { get; private set; } = false;
 
         /// <summary>
         /// Parse a report variable line.
@@ -306,13 +319,15 @@
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObjectProperties(variableName);
+                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars);
                 if (var != null)
                 {
                     Units = var.UnitsLabel;
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }
+                else
+                    possibleRecursion = true;
             }
             catch (Exception)
             {
