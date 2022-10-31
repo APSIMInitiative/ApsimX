@@ -378,14 +378,14 @@
 
                     bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
 
-                    //if (relativeToObject is IFunction && namePathBits[j] == "Value()")
-                    //{
-                    //    MethodInfo method = relativeTo.GetType().GetMethod("Value");
-                    //    properties.Add(new VariableMethod(relativeTo, method));
-                    //}
-                    //                    else if (propertyInfo == null && methodInfo == null && relativeToObject is Model)
+                    if (relativeToObject is Models.Functions.IFunction && namePathBits[j] == "Value()")
+                    {
+                        MethodInfo method = relativeTo.GetType().GetMethod("Value");
+                        properties.Add(new VariableMethod(relativeTo, method));
+                    }
+                    else if (propertyInfo == null && methodInfo == null && relativeToObject is IModel model)
 
-                    if (propertyInfo == null && methodInfo == null && relativeToObject is IModel model)
+                    // if (propertyInfo == null && methodInfo == null && relativeToObject is IModel model)
                     {
                         // Not a property, may be an unchecked method or a child model.
                         localModel = model.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
