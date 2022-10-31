@@ -93,9 +93,6 @@ namespace UnitTests.Core
         [Link]
         public IDataStore storage = null;
 
-//        [Link]
-//        public ILocator locator = null;
-
         [Link]
         public IEvent events = null;
     }
@@ -391,7 +388,7 @@ namespace UnitTests.Core
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.IsNotNull(modelWithServices.storage);
-//            Assert.IsNotNull(modelWithServices.locator);
+            Assert.IsNotNull(modelWithServices.Locator);
             Assert.IsNotNull(modelWithServices.events);
         }
 

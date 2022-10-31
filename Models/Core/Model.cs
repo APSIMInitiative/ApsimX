@@ -569,22 +569,6 @@
             }
         }
 
-//        /// <summary>
-//        /// Gets the locater model.
-//        /// </summary>
-//        /// <remarks>
-//        /// This is overriden in class Simulation.
-//        /// </remarks>
-//        protected virtual Locater Locator()
-//       {
-//            Simulation sim = FindAncestor<Simulation>();
-//            if (sim != null)
-//                return sim.Locater;
-//
-//            // Simulation can be null if this model is not under a simulation e.g. DataStore.
-//            return new Locater();
-//        }
-
         /// <summary>A Locator object for finding models and variables.</summary>
         [NonSerialized]
         private Locator locator;
