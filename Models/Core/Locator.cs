@@ -233,6 +233,16 @@
                         IReportColumn column = report.Columns?.Find(c => c.Name == namePath);
                         if (column != null && !((column is ReportColumn) && (column as ReportColumn).possibleRecursion))
                         {
+                            // Things can get nasty here. The call below to column.GetValue(0) has the
+                            // potential to call this routine recursively. Consider as an example
+                            // a Report column with the contents "n + 1 as n". This is hard to catch
+                            // and handle, since it leads to a StackOverflowException which cannot be
+                            // caught. One way to prevent this problem is to check whether the
+                            // stack has grown unreasonably large, then throw our own Exception.
+                            //
+                            // This possiblity of recursion is also one reason why the "throwOnError" option
+                            // is not handled by exclosing the whole routine in a try block, then deciding
+                            // in the catch section whether to rethrow the exception or return null.
                             int nFrames = new System.Diagnostics.StackTrace().FrameCount;
                             if (nFrames > 1000)
                             {
