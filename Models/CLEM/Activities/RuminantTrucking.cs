@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
-    [Version(1, 0, 1, "")]
+    [Version(1, 1, 1, "Release of trucking")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
     public class RuminantTrucking : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
     {
@@ -478,22 +478,30 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">It is {CLEMModel.DisplaySummaryValueSnippet(DistanceToMarket.ToString("0.##"))} km to market</div>");
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Each load unit (pod/deck) holds {CLEMModel.DisplaySummaryValueSnippet(NumberPerLoadUnit, warnZero:true)} head (of specified individuals)");
+                htmlWriter.Write("</div>");
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
                 if (MinimumLoadUnitsPerTruck > 0)
                     htmlWriter.Write($" requires a minimum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
-                 htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
+                htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
                 if (MinimumLoadUnitsBeforeTransporting > 0)
                     htmlWriter.Write($" and requires at least {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
-                htmlWriter.Write(".</div>");
+                htmlWriter.Write("</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each trailer holds {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero: true)} load units");
+                if(LoadUnitsPerTrailer.Count() > 1)
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Trailers from first to last hold ");
+                else
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">The trailer holds ");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet<double>(LoadUnitsPerTrailer, warnZero: true)} load units");
+
                 if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
-                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding the trailer");
+                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer");
                 htmlWriter.Write(".</div>");
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {CLEMModel.DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
-                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg) of each trailer.");
+                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg)");
+                if (AggregateTrailerMass.Count() > 1)
+                    htmlWriter.Write($" from first to last trailer");
                 htmlWriter.Write("</div>");
 
                 return htmlWriter.ToString(); 
