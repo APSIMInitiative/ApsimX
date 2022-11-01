@@ -1128,7 +1128,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to trigger an Activity Performed event 
         /// </summary>
-        public virtual void TriggerOnActivityPerformed()
+        public void TriggerOnActivityPerformed()
         {
             int type = 0;
             if (GetType().Name.Contains("ActivityTimer"))
