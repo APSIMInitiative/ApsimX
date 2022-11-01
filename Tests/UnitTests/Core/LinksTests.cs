@@ -83,7 +83,7 @@ namespace UnitTests.Core
         [Link(Type = LinkType.Path, Path = "[zone2].irrig1")]
         public IIrrigation irrigation1 = null;
 
-        [Link(Type = LinkType.Path, Path = ".Simulations.Simulation.zone2.irrig2")]
+        [Link(Type = LinkType.Path, Path = ".Simulation.zone2.irrig2")]
         public IIrrigation irrigation2 = null;
     }
 
@@ -92,9 +92,6 @@ namespace UnitTests.Core
     {
         [Link]
         public IDataStore storage = null;
-
-        [Link]
-        public ILocator locator = null;
 
         [Link]
         public IEvent events = null;
@@ -391,7 +388,7 @@ namespace UnitTests.Core
 
             var modelWithServices = simulations.Children[1].Children[2] as ModelWithServices;
             Assert.IsNotNull(modelWithServices.storage);
-            Assert.IsNotNull(modelWithServices.locator);
+            Assert.IsNotNull(modelWithServices.Locator);
             Assert.IsNotNull(modelWithServices.events);
         }
 

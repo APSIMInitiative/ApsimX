@@ -97,7 +97,7 @@ namespace UnitTests
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
-            Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock")?.Value as Clock;
+            Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock", LocatorFlags.PropertiesOnly | LocatorFlags.IncludeDisabled)?.Value as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.
             Assert.That(sims.Children.Count > 2);
