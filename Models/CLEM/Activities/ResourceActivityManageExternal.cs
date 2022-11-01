@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manage the input and output of external resources specified in a file")]
     [HelpUri(@"Content/Features/Activities/All resources/ManageExternalResource.htm")]
-    [Version(1, 0, 1, "")]
+    [Version(1, 1, 1, "Implements filtering of resources used and multiplier component")]
     public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         /// Names of resource columns to consider, blank for all
         /// </summary>
         [Description("Resource types considered")]
-        [Tooltip("(comma delimited, blank all)")]
+        [Tooltip("A comma delimited of resource type names. Blank entry will include all resources")]
         public string ResourceColumnsToUse { get; set; }
 
         /// <inheritdoc/>
@@ -414,9 +414,44 @@ namespace Models.CLEM.Activities
                 else
                     htmlWriter.Write("Pricing and packet sizes associated with each resource will be used with <span class=\"resourcelink\">" + AccountName + "</span>");
                 htmlWriter.Write("</div>");
+
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The following resources will be included if present in the Resource File");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                var resourceFilter = ((ResourceColumnsToUse ?? "").Length > 0) ? ResourceColumnsToUse:"All resources";
+                foreach (var res in resourceFilter.Split(",").Select(x => x.Trim()))
+                    htmlWriter.Write($"<div class=\"filter\">{res}</div>");
+
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("</div>");
+
                 return htmlWriter.ToString(); 
             }
-        } 
+        }
+
+        /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            var childList = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
+
+            childList.Add((FindAllChildren<ResourceActivityExternalMultiplier>(), true, "childgroupfilterborder", "The following multipliers will be applied:", ""));
+            return childList;
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
+        {
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
+        {
+            return "";
+        }
+
+
+
         #endregion
 
     }
