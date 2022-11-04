@@ -233,6 +233,7 @@
             "[Plantain].Leaf.Photosynthesis.FW",
             "[Plantain].Leaf.Photosynthesis.FVPD",
             "[Plantain].Leaf.FRGR",
+            "[Plantain].Leaf.LAI",
             "",
             "[Plantain].Stem.Live.Wt",
             "[Plantain].Stem.Live.N",
