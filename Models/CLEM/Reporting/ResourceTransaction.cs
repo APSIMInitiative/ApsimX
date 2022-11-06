@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -14,38 +16,144 @@ namespace Models.CLEM
     public class ResourceTransaction
     {
         /// <summary>
-        /// Type of resource in transaction
+        /// Resource type in transaction
         /// </summary>
-        public string ResourceType { get; set; }
+        public CLEMResourceTypeBase ResourceType { get; set; }
         /// <summary>
-        /// Name of sender or activity
+        /// Sender activity
         /// </summary>
-        public string Activity { get; set; }
+        public CLEMModel Activity { get; set; }
         /// <summary>
-        /// Reason or cateogry
+        /// Category for data analysis and summary
         /// </summary>
-        public string Reason { get; set; }
+        public string Category { get; set; }
         /// <summary>
-        /// Amount removed
+        /// Resource this transaction relates to for data analysis and summary
         /// </summary>
-        public double Debit { get; set; }
+        public string RelatesToResource { get; set; }
+
         /// <summary>
         /// Amount added
         /// </summary>
-        public double Credit { get; set; }
+        public double Gain
+        {
+            get
+            {
+                return (TransactionType == TransactionType.Gain) ? Amount : 0;
+            }
+        }
+            
         /// <summary>
-        /// Standardised amount removed
+        /// Amount removed
         /// </summary>
-        public double DebitStandardised { get; set; }
+        public double Loss
+        {
+            get
+            {
+                return (TransactionType == TransactionType.Loss) ? Amount * -1 : 0;
+            }
+        }
+
         /// <summary>
-        /// Standardised amount added
+        /// Transaction type
         /// </summary>
-        public double CreditStandardised { get; set; }
+        public TransactionType TransactionType { get; set; }
+
+        /// <summary>
+        /// The amount of the transaction
+        /// </summary>
+        public double Amount { get; set; }
+
+        /// <summary>
+        /// Method to return the specified substring of the category based on "." delimited levels
+        /// </summary>
+        /// <param name="level">The index of the level to return</param>
+        /// <returns>The sub string</returns>
+        public string CategoryByLevel(int level)
+        {
+            if (level == 0)
+                return Category;
+            else
+            {
+                string[] parts = Category.Split('.');
+                if (parts.Length >= level)
+                {
+                    if (parts[level - 1].Contains("@RelatesTo"))
+                        return parts[level - 1].Replace("@RelatesTo", RelatesToResource);
+                    return parts[level - 1];
+                }
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Allows inclusion of -ve in losses
+        /// </summary>
+        /// <param name="lossesAsNegative">convert losses to negative</param>
+        /// <returns>The modified amount</returns>
+        public double AmountModifiedForLoss(bool lossesAsNegative)
+        {
+            double amount = Amount;
+            if (lossesAsNegative && TransactionType == TransactionType.Loss)
+            {
+                amount *= -1;
+            }
+            return amount;
+        }
 
         /// <summary>
         /// Object to sotre specific extra information such as cohort details
         /// </summary>
         public object ExtraInformation { get; set; }
+
+        /// <summary>
+        /// Convert transaction to another value using ResourceType supplied converter
+        /// </summary>
+        /// <param name="converterName">Name of converter to use</param>
+        /// <param name="transactionType">Indicates if it is a Gain or Loss to convert</param>
+        /// <param name="reportLossesAsNegative">report losses as negative values</param>
+        /// <returns>Value to report</returns>
+        public object ConvertTo(string converterName, string transactionType, bool reportLossesAsNegative)
+        {
+            if(ResourceType!=null)
+            {
+                double amount = 0;
+                switch (transactionType.ToLower())
+                {
+                    case "gain":
+                        amount = this.Gain;
+                        break;
+                    case "loss":
+                        amount = this.Loss;
+                        if (!reportLossesAsNegative)
+                        {
+                            amount *= -1;
+                        }
+                        break;
+                    default:
+
+                        break;
+                }
+                return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert transaction to another value using ResourceType supplied converter and using the TransactionType
+        /// </summary>
+        /// <param name="converterName">Name of converter to use</param>
+        /// <param name="reportLossesAsNegative">Report losses as negative</param>
+        /// <returns>Value to report</returns>
+        public object ConvertTo(string converterName, bool reportLossesAsNegative)
+        {
+            if (ResourceType != null)
+            {
+                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?1:-1);
+                return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
+            }
+            return null;
+        }
     }
 
     /// <summary>

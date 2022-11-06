@@ -5,84 +5,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Models.Core.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>manage enterprise activity</summary>
-    /// <summary>This activity undertakes the overheads of running the enterprise.</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <summary>A folder to manage activity grouping</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity folder can ve used to arrange and group activities.")]
+    [Description("This activity folder helps arrange activities and apply timers to the group")]
+    [HelpUri(@"Content/Features/Activities/ActivitiesFolder.htm")]
+    [Version(1, 0, 1, "")]
     public class ActivityFolder : CLEMActivityBase
     {
-        /// <summary>
-        /// Perform Activity with partial resources available
-        /// </summary>
-        [XmlIgnore]
+        /// <inheritdoc/>
+        [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
         {
-            return null;
+            Status = ActivityStatus.NoTask;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            return;
+            return "\r\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return null;
+            return "\r\n</div>";
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
-        }
+            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">";
+        } 
+        #endregion
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
-        }
 
     }
 }

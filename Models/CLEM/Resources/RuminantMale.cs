@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core;
 
 namespace Models.CLEM.Resources
 {
@@ -11,22 +12,74 @@ namespace Models.CLEM.Resources
     public class RuminantMale: Ruminant
     {
         /// <summary>
-        /// Indicates if individual is breeding sire
+        /// Sex of individual
         /// </summary>
-        public bool BreedingSire { get; set; }
+        public override Sex Sex { get { return Sex.Male; } }
 
         /// <summary>
-        /// Indicates if individual is draught animal
+        /// Indicates if individual is breeding sire
+        /// Represents any uncastrated male of breeding age
         /// </summary>
-        public bool Draught { get; set; }
+        [FilterByProperty]
+        public bool IsSire 
+        {
+            get
+            {
+                if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
+                    if (Age >= BreedParams.MinimumAge1stMating)
+                    {
+                        ReplacementBreeder = false;
+                        return true;
+                    }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Indicates if individual is breeding sire
+        /// Represents any uncastrated male of breeding age that is assigned sire and therefroe may have improved genetics/price
+        /// </summary>
+        [FilterByProperty]
+        public bool IsWildBreeder
+        {
+            get
+            {
+                if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
+                    if (Age >= BreedParams.MinimumAge1stMating)
+                        return true;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Indicates if individual is castrated
+        /// </summary>
+        [FilterByProperty]
+        public bool IsCastrated 
+        { 
+            get
+            {
+                return Attributes.Exists("Castrated");
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return this.IsSire | this.IsWildBreeder;
+            }
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantMale()
+        public RuminantMale(RuminantType setParams, double setAge, double setWeight)
+            : base(setParams, setAge, setWeight)
         {
-            BreedingSire = false;
-            Draught = false;
         }
 
     }

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DescriptionAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Runtime.CompilerServices;
@@ -12,7 +7,7 @@ namespace Models.Core
     /// Specifies that the related class should use the user interface view
     /// that has the specified name.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
     public class DescriptionAttribute : System.Attribute
     {
         /// <summary>

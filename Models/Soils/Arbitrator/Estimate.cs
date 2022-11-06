@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Estimate.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Soils.Arbitrator
+﻿namespace Models.Soils.Arbitrator
 {
     using System;
     using System.Collections.Generic;
@@ -43,7 +38,7 @@ namespace Models.Soils.Arbitrator
         /// <param name="Type">The type of estimate</param>
         /// <param name="soilstate">The state of the soil</param>
         /// <param name="uptakeModels">A list of models that do uptake.</param>
-        public Estimate(IModel parent, CalcType Type, SoilState soilstate, List<IModel> uptakeModels)
+        public Estimate(IModel parent, CalcType Type, SoilState soilstate, IEnumerable<IUptake> uptakeModels)
         {
             Values = new List<CropUptakes>();
 
@@ -52,9 +47,9 @@ namespace Models.Soils.Arbitrator
             {
                 List<ZoneWaterAndN> uptake;
                 if (Type == CalcType.Water)
-                    uptake = crop.GetSWUptakes(soilstate);
+                    uptake = crop.GetWaterUptakeEstimates(soilstate);
                 else
-                    uptake = crop.GetNUptakes(soilstate);
+                    uptake = crop.GetNitrogenUptakeEstimates(soilstate);
 
                 if (uptake != null)
                 {

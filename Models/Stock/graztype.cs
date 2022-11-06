@@ -1,16 +1,28 @@
-// -----------------------------------------------------------------------
-// <copyright file="graztype.cs" company="CSIRO">
-//      CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using System;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
+
+    /// <summary>
+    /// This is nearly the same information as "GrazType.ReproType" (below), but is intended for
+    /// use in the GUI with Buy events, where we don't really want to include the
+    /// pregnancy state of females. I'm placing it outside the GrazType namespace
+    /// for simplicity when entering values in the GUI.
+    /// </summary>
+    public enum ReproductiveType
+    {
+        /// <summary>
+        /// female
+        /// </summary>
+        Female,
+        /// <summary>
+        /// male
+        /// </summary>
+        Male,
+        /// <summary>
+        /// castrated male
+        /// </summary>
+        Castrate
+    }
 
     /// <summary>
     /// Container for many GrazPlan constants
@@ -58,14 +70,55 @@ namespace Models.GrazPlan
         public const int MaxPlantSpp = 80;
 
         /// <summary>
-        /// Maximum soil layers
+        /// The ungrazeable amount of green in a paddock
         /// </summary>
-        public const int MaxSoilLayers = 50;
+        public const double Ungrazeable = 0.0;  // g/m^2 - setting this to zero because the forages have already removed the ungrazable portion.
+
+    /// <summary>
+    /// Maximum soil layers
+    /// </summary>
+    public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
-        public const int stSEEDL = 1; public const int ptLEAF = 1; public const int SOFT = 1; public const int EFFR = 1;
-        public const int stESTAB = 2; public const int ptSTEM = 2; public const int HARD = 2; public const int OLDR = 2;
-        public const int stSENC = 3; public const int ptROOT = 3; public const int UNRIPE = 1;
-        public const int stDEAD = 4; public const int ptSEED = 4; public const int RIPE = 2;
+        
+        /// <summary>
+        /// Plant part leaf
+        /// </summary>
+        public const int ptLEAF = 1;
+
+        /// <summary>
+        /// Plant part stem
+        /// </summary>
+        public const int ptSTEM = 2;
+
+        /// <summary>
+        /// Plant part root
+        /// </summary>
+        public const int ptROOT = 3;
+
+        /// <summary>
+        /// Plant part seed
+        /// </summary>
+        public const int ptSEED = 4;
+
+        /// <summary>
+        /// Seed maturity
+        /// </summary>
+        public const int SOFT = 1;
+        public const int HARD = 2;
+
+        /// <summary>
+        /// Seed ripeness
+        /// </summary>
+        public const int UNRIPE = 1;
+        public const int RIPE = 2;
+
+        public const int EFFR = 1;
+        public const int OLDR = 2;
+
+        public const int stSEEDL = 1;   
+        public const int stESTAB = 2;   
+        public const int stSENC = 3;  
+        public const int stDEAD = 4;  
         public const int stLITT1 = 5;
         public const int stLITT2 = 6;
 
@@ -82,26 +135,51 @@ namespace Models.GrazPlan
         public enum TOMElement
         {
             /// <summary>
-            /// Carbon
+            /// Carbon element
             /// </summary>
             c,
+
             /// <summary>
-            /// Nitrogen
+            /// Nitrogen value
             /// </summary>
             n,
+
             /// <summary>
-            /// Phosphorous
+            /// Phosphorous element
             /// </summary>
             p,
+
             /// <summary>
-            /// Sulphur
+            /// Sulphur element
             /// </summary>
             s
-        };
+        }
+
         /// <summary>
         /// Plant nutrients
         /// </summary>
-        public enum TPlantNutrient { pnNO3, pnNH4, pnPOx, pnSO4 };
+        public enum TPlantNutrient
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            pnNO3,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            pnNH4,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            pnPOx,
+
+            /// <summary>
+            /// 
+            /// </summary>
+            pnSO4
+        }
 
         // SoilArray         = packed array[SURFACE..MaxSoilLayers] of Float;
         // LayerArray        = packed array[1..MaxSoilLayers]       of Float;
@@ -119,34 +197,49 @@ namespace Models.GrazPlan
             /// Dry matter in kg/ha
             /// </summary>
             public double DM;
+
             /// <summary>
             /// Nutrients in kg element/ha
             /// </summary>
             public double[] Nu = new double[4];
+
             /// <summary>
             /// Ash alkalinity in mol/ha
             /// </summary>
             public double AshAlk;
         }
+
         /// <summary>
         /// Zero the DM pool
         /// </summary>
-        /// <param name="Pool">Pool to zero</param>
-        public static void ZeroDMPool(ref DM_Pool Pool)
+        /// <param name="pool">Pool to zero</param>
+        public static void ZeroDMPool(ref DM_Pool pool)
         {
             int pe;
 
-            Pool.DM = 0;
+            pool.DM = 0;
             for (pe = (int)TOMElement.n; pe <= (int)TOMElement.s; pe++)
-                Pool.Nu[pe] = 0;
-            Pool.AshAlk = 0;
+                pool.Nu[pe] = 0;
+            pool.AshAlk = 0;
         }
 
         // RootDMArray       = packed array[1..MaxSoilLayers] of DM_Pool;
+
         /// <summary>
         /// Sheep or Cattle animal type
         /// </summary>
-        public enum AnimalType { Sheep, Cattle };
+        public enum AnimalType
+        {
+            /// <summary>
+            /// Is sheep
+            /// </summary>
+            Sheep,
+
+            /// <summary>
+            /// Is Cattle
+            /// </summary>
+            Cattle
+        }
 
         /// <summary>
         /// Age type of the animal
@@ -177,27 +270,69 @@ namespace Models.GrazPlan
             /// A mature animal
             /// </summary>
             Mature
-        };
+        }
 
         /// <summary>
         /// Text for the age types
         /// </summary>
-        static public string[] AgeText = { "Young", "Weaner", "Yearling", "2-3yo", "Mature" };
+        public static string[] AgeText = { "Young", "Weaner", "Yearling", "2-3yo", "Mature" };
 
         /// <summary>
         /// Reproduction type
         /// </summary>
-        public enum ReproType { Castrated, Male, Empty, EarlyPreg, LatePreg };
+        public enum ReproType
+        {
+            /// <summary>
+            /// Castrated animal
+            /// </summary>
+            Castrated,
+
+            /// <summary>
+            /// Is a male
+            /// </summary>
+            Male,
+
+            /// <summary>
+            /// Is empty
+            /// </summary>
+            Empty,
+
+            /// <summary>
+            /// Early pregnancy
+            /// </summary>
+            EarlyPreg,
+
+            /// <summary>
+            /// Late pregnancy
+            /// </summary>
+            LatePreg
+        }
 
         /// <summary>
         /// Lactation type
         /// </summary>
-        public enum LactType { Dry, Lactating, Suckling };
+        public enum LactType
+        {
+            /// <summary>
+            /// Is dry, not lactating
+            /// </summary>
+            Dry,
+
+            /// <summary>
+            /// Is lactating
+            /// </summary>
+            Lactating,
+
+            /// <summary>
+            /// Has suckling
+            /// </summary>
+            Suckling
+        }
 
         /// <summary>
         /// Sheep or cattle text
         /// </summary>
-        static public string[] AnimalText = { "Sheep", "Cattle" };
+        public static string[] AnimalText = { "Sheep", "Cattle" };
 
         // Records for transferring information between pasture and animal model, & vice versa                                                                
         public const int hbGREEN = 0;
@@ -213,30 +348,37 @@ namespace Models.GrazPlan
             /// Biomass
             /// </summary>
             public double Biomass;
+
             /// <summary>
-            /// 
+            /// Digestibility value
             /// </summary>
             public double Digestibility;
+
             /// <summary>
-            /// 
+            /// Crude protein
             /// </summary>
             public double CrudeProtein;
+
             /// <summary>
-            /// 
+            /// Degradability value
             /// </summary>
             public double Degradability;
+
             /// <summary>
-            /// 
+            /// Phosphorous content
             /// </summary>
             public double PhosContent;
+
             /// <summary>
-            /// 
+            /// Sulphur content
             /// </summary>
             public double SulfContent;
+
             /// <summary>
             /// Average pasture height:default height
             /// </summary>
             public double HeightRatio;
+
             /// <summary>
             /// Units are moles/kg DM
             /// </summary>
@@ -247,54 +389,60 @@ namespace Models.GrazPlan
         /// Grazing inputs
         /// </summary>
         [Serializable]
-        public class TGrazingInputs
+        public class GrazingInputs
         {
             /// <summary>
             /// Available herbage
             /// </summary>
-            public IntakeRecord[] Herbage = new IntakeRecord[DigClassNo + 1];       // [1..DigClassNo];                         
+            public IntakeRecord[] Herbage = new IntakeRecord[DigClassNo + 1];       // [1..DigClassNo];        
+            
             /// <summary>
             /// Total live + senescing pasture (kg/ha)
             /// </summary>
             public double TotalGreen;
+
             /// <summary>
             /// Total dead pasture + litter (kg/ha)      
             /// </summary>
             public double TotalDead;
+
             /// <summary>
             /// Proportion of legume
             /// </summary>
             public double LegumePropn;
+
             /// <summary>
             /// Seeds of various type
             /// </summary>
             public IntakeRecord[,] Seeds = new IntakeRecord[MaxPlantSpp + 1, 3];    // [1..MaxPlantSpp,UNRIPE..RIPE] 
+
             /// <summary>
             /// 
             /// </summary>
             public int[,] SeedClass = new int[MaxPlantSpp + 1, RIPE + 1];
+
             /// <summary>
-            /// 
+            /// The selection factor
             /// </summary>
             public double SelectFactor;
+
             /// <summary>
             /// "Tropicality" of legumes 0 => temperate; 1 => tropical 
             /// </summary>
             public double LegumeTrop;
 
             /// <summary>
-            /// Construct a TGrazingInputs object
+            /// Construct a GrazingInputs object
             /// </summary>
-            public TGrazingInputs()
+            public GrazingInputs()
             {
-
             }
 
             /// <summary>
             /// Copy the whole object
             /// </summary>
-            /// <param name="src"></param>
-            public void CopyFrom(TGrazingInputs src)
+            /// <param name="src">The source grazing inputs</param>
+            public void CopyFrom(GrazingInputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 this.TotalGreen = src.TotalGreen;
@@ -309,41 +457,43 @@ namespace Models.GrazPlan
             /// <summary>
             /// Copy constructor
             /// </summary>
-            /// <param name="src"></param>
-            public TGrazingInputs(TGrazingInputs src)
+            /// <param name="src">The grazing inputs source object</param>
+            public GrazingInputs(GrazingInputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
-                TotalGreen = src.TotalGreen;
-                TotalDead = src.TotalDead;
+                this.TotalGreen = src.TotalGreen;
+                this.TotalDead = src.TotalDead;
                 this.LegumePropn = src.LegumePropn;
-                Array.Copy(src.Seeds, Seeds, src.Seeds.Length);
-                Array.Copy(src.SeedClass, SeedClass, src.SeedClass.Length);
-                SelectFactor = src.SelectFactor;
-                LegumeTrop = src.LegumeTrop;
+                Array.Copy(src.Seeds, this.Seeds, src.Seeds.Length);
+                Array.Copy(src.SeedClass, this.SeedClass, src.SeedClass.Length);
+                this.SelectFactor = src.SelectFactor;
+                this.LegumeTrop = src.LegumeTrop;
             }
         }
+
         /// <summary>
         /// Zero the grazing inputs
         /// </summary>
-        /// <param name="Inputs"></param>
-        static public void zeroGrazingInputs(ref TGrazingInputs Inputs)
+        /// <param name="inputs">The grazing inputs to clear</param>
+        public static void zeroGrazingInputs(ref GrazingInputs inputs)
         {
-            Inputs.Herbage = new IntakeRecord[DigClassNo + 1];
-            Inputs.TotalGreen = 0;
-            Inputs.TotalDead = 0;
-            Inputs.LegumePropn = 0;
-            Inputs.Seeds = new IntakeRecord[MaxPlantSpp + 1, RIPE + 1];
-            Inputs.SeedClass = new int[MaxPlantSpp + 1, RIPE + 1];
-            Inputs.SelectFactor = 0;
-            Inputs.LegumeTrop = 0;
+            inputs.Herbage = new IntakeRecord[DigClassNo + 1];
+            inputs.TotalGreen = 0;
+            inputs.TotalDead = 0;
+            inputs.LegumePropn = 0;
+            inputs.Seeds = new IntakeRecord[MaxPlantSpp + 1, RIPE + 1];
+            inputs.SeedClass = new int[MaxPlantSpp + 1, RIPE + 1];
+            inputs.SelectFactor = 0;
+            inputs.LegumeTrop = 0;
         }
+
         /// <summary>
         /// Add grazing inputs to total inputs
         /// </summary>
-        /// <param name="iPopn"></param>
-        /// <param name="partInputs"></param>
-        /// <param name="totalInputs"></param>
-        static public void addGrazingInputs(int iPopn, TGrazingInputs partInputs, ref TGrazingInputs totalInputs)
+        /// <param name="iPopn">The seed population</param>
+        /// <param name="partInputs">Partial inputs</param>
+        /// <param name="totalInputs">Total inputs</param>
+        public static void addGrazingInputs(int iPopn, GrazingInputs partInputs, ref GrazingInputs totalInputs)
         {
             int iClass;
             // IntakeRecord intakeRec;
@@ -352,46 +502,54 @@ namespace Models.GrazPlan
                 {
                     IntakeRecord intake = totalInputs.Herbage[iClass];
 
-                    intake.HeightRatio = fWeightAverage(intake.HeightRatio,
+                    intake.HeightRatio = WeightAverage(
+                                                     intake.HeightRatio,
                                                      intake.Biomass,
                                                      partInputs.Herbage[iClass].HeightRatio,
                                                      partInputs.Herbage[iClass].Biomass);
-                    intake.Degradability = fWeightAverage(intake.Degradability,
+                    intake.Degradability = WeightAverage(
+                                                     intake.Degradability,
                                                      intake.Biomass * intake.CrudeProtein,
                                                      partInputs.Herbage[iClass].Degradability,
-                                                     partInputs.Herbage[iClass].Biomass
-                                                     * partInputs.Herbage[iClass].CrudeProtein);
-                    intake.Digestibility = fWeightAverage(intake.Digestibility,
+                                                     partInputs.Herbage[iClass].Biomass * partInputs.Herbage[iClass].CrudeProtein);
+                    intake.Digestibility = WeightAverage(
+                                                     intake.Digestibility,
                                                      intake.Biomass,
                                                      partInputs.Herbage[iClass].Digestibility,
                                                      partInputs.Herbage[iClass].Biomass);
-                    intake.CrudeProtein = fWeightAverage(intake.CrudeProtein,
+                    intake.CrudeProtein = WeightAverage(
+                                                     intake.CrudeProtein,
                                                      intake.Biomass,
                                                      partInputs.Herbage[iClass].CrudeProtein,
                                                      partInputs.Herbage[iClass].Biomass);
-                    intake.PhosContent = fWeightAverage(intake.PhosContent,
+                    intake.PhosContent = WeightAverage(
+                                                     intake.PhosContent,
                                                      intake.Biomass,
                                                      partInputs.Herbage[iClass].PhosContent,
                                                      partInputs.Herbage[iClass].Biomass);
-                    intake.SulfContent = fWeightAverage(intake.SulfContent,
+                    intake.SulfContent = WeightAverage(
+                                                     intake.SulfContent,
                                                      intake.Biomass,
                                                      partInputs.Herbage[iClass].SulfContent,
                                                      partInputs.Herbage[iClass].Biomass);
-                    intake.AshAlkalinity = fWeightAverage(intake.AshAlkalinity,
+                    intake.AshAlkalinity = WeightAverage(
+                                                     intake.AshAlkalinity,
                                                      intake.Biomass,
                                                      partInputs.Herbage[iClass].AshAlkalinity,
                                                      partInputs.Herbage[iClass].Biomass);
                     intake.Biomass = intake.Biomass + partInputs.Herbage[iClass].Biomass;
                     totalInputs.Herbage[iClass] = intake;
                 }
-                totalInputs.LegumePropn = fWeightAverage(totalInputs.LegumePropn,
-                                                                totalInputs.TotalGreen + totalInputs.TotalDead,
-                                                                partInputs.LegumePropn,
-                                                                partInputs.TotalGreen + partInputs.TotalDead);
-                totalInputs.SelectFactor = fWeightAverage(totalInputs.SelectFactor,
-                                                                totalInputs.TotalGreen + totalInputs.TotalDead,
-                                                                partInputs.SelectFactor,
-                                                                partInputs.TotalGreen + partInputs.TotalDead);
+                totalInputs.LegumePropn = WeightAverage(
+                                                        totalInputs.LegumePropn,
+                                                        totalInputs.TotalGreen + totalInputs.TotalDead,
+                                                        partInputs.LegumePropn,
+                                                        partInputs.TotalGreen + partInputs.TotalDead);
+                totalInputs.SelectFactor = WeightAverage(
+                                                            totalInputs.SelectFactor,
+                                                            totalInputs.TotalGreen + totalInputs.TotalDead,
+                                                            partInputs.SelectFactor,
+                                                            partInputs.TotalGreen + partInputs.TotalDead);
                 totalInputs.TotalGreen = totalInputs.TotalGreen + partInputs.TotalGreen;
                 totalInputs.TotalDead = totalInputs.TotalDead + partInputs.TotalDead;
                 for (int i = 0; i <= 2; i++)
@@ -399,307 +557,178 @@ namespace Models.GrazPlan
                     totalInputs.Seeds[iPopn, i] = partInputs.Seeds[1, i];
                     totalInputs.SeedClass[iPopn, i] = partInputs.SeedClass[1, i];
                 }
-                totalInputs.LegumeTrop = fWeightAverage(totalInputs.LegumeTrop,
-                                                                totalInputs.TotalGreen + totalInputs.TotalDead,
-                                                                partInputs.LegumeTrop,
-                                                                partInputs.TotalGreen + partInputs.TotalDead);
+                totalInputs.LegumeTrop = WeightAverage(
+                                                        totalInputs.LegumeTrop,
+                                                        totalInputs.TotalGreen + totalInputs.TotalDead,
+                                                        partInputs.LegumeTrop,
+                                                        partInputs.TotalGreen + partInputs.TotalDead);
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Serializable]
-        public class TPopnHerbageAttr
-        {
-            /// <summary>
-            /// kg/ha
-            /// </summary>
-            public double fMass_DM;
-            /// <summary>
-            /// kg/kg
-            /// </summary>
-            public double fDM_Digestibility;
-            /// <summary>
-            /// kg/kg
-            /// </summary>
-            public double[] fNutrientConc = new double[3]; // TODO: Check this!! [N..S]                                                    
-            /// <summary>
-            /// kg/kg
-            /// </summary>
-            public double fNDegradability;
-            /// <summary>
-            /// mol/kg
-            /// </summary>
-            public double fAshAlkalinity;
-            /// <summary>
-            /// kg/m^3
-            /// </summary>
-            public double fBulkDensity;
-            /// <summary>
-            /// 0-1, bite-size scale
-            /// </summary>
-            public double fGroundAreaFract;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        [Serializable]
-        public class TPopnHerbageData
-        {
-            /// <summary>
-            /// Is a legume
-            /// </summary>
-            public bool bIsLegume;
-            /// <summary>
-            /// 
-            /// </summary>
-            public double fSelectFactor;
-            /// <summary>
-            /// 
-            /// </summary>
-            public TPopnHerbageAttr[,] Herbage = new TPopnHerbageAttr[2, HerbClassNo + 1];
-            /// <summary>
-            /// 
-            /// </summary>
-            public TPopnHerbageAttr[] Seeds = new TPopnHerbageAttr[RIPE + 1];
-            /// <summary>
-            /// 
-            /// </summary>
-            public int[] iSeedClass = new int[RIPE + 1];
-        }
-        /* TSppSeedArray => double[MaxPlantSpp + 1, 3]  //1..50(1..MaxPlantSpp), 1..2(UNRIPE..RIPE)     */
 
         /// <summary>
         /// 
         /// </summary>
         [Serializable]
-        public class TGrazingOutputs // Quantities grazed from a pasture         
+        public class GrazingOutputs // Quantities grazed from a pasture         
         {
             /// <summary>
-            /// 
+            /// Herbage classes
             /// </summary>
             public double[] Herbage = new double[DigClassNo + 1];   // kg/ha [1..
+
             /// <summary>
-            /// 
+            /// The seed pools
             /// </summary>
             public double[,] Seed = new double[MaxPlantSpp + 1, 3]; // kg/ha  TODO: Fix this [1.., ripe..unripe]
 
             /// <summary>
             /// Copy from grazing outputs
             /// </summary>
-            public void CopyFrom(TGrazingOutputs src)
+            public void CopyFrom(GrazingOutputs src)
             {
                 Array.Copy(src.Herbage, this.Herbage, src.Herbage.Length);
                 Array.Copy(src.Seed, this.Seed, src.Seed.Length);
             }
         }
-
-
-        // Various constants with biological meanings      
-        /// <summary>
-        /// Default class digestibilities
-        /// </summary>
-        static public readonly double[] ClassDig = { 0.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3 };
+        
         /// <summary>
         /// Carbon content of dry matter
         /// </summary>
         public const double DM2Carbon = 0.4;
+
         /// <summary>
         /// Conversion from N content to protein     
         /// </summary>
         public const double N2Protein = 6.25;
+
         /// <summary>
         /// Default conversion:  kg/ha -> cm height  
         /// </summary>
         public const double DM2Height = 0.003;
+
         /// <summary>
         /// Herbage bulk density for HR=1 (kg/m^3)   
         /// </summary>
         public const double REF_HERBAGE_BD = 0.01 / DM2Height;
+
         /// <summary>
         /// Energy content of herbage (MJ/kg DM)     
         /// </summary>
         public const double HerbageE2DM = 17.0;
+
         /// <summary>
-        /// 
+        /// Conversion factor
         /// </summary>
         public const double FatE2DM = 36.0;
+
         /// <summary>
-        /// 
+        /// Conversion factor
         /// </summary>
         public const double ProteinE2DM = 14.0;
 
-        /// <summary>
-        /// Height below which herbage is unavailable for grazing, GH (metres). From GRAZGRZE.PAS
-        /// </summary>
-        /// <param name="fHeight">Height of herbage, H                  (metres)</param>
-        /// <param name="fMaxGH">Maximum value of GH                    (metres)</param>
-        /// <param name="fCurvature">Curvature                          (0-1)</param>
-        /// <param name="fSlope">Initial slope of the GH-H relationship (0-1)</param>
-        /// <returns></returns>
-        static public double fGrazingHeight(double fHeight, double fMaxGH, double fCurvature, double fSlope)
-        {
-            double result;
+        // Various constants with biological meanings      
 
-            if (fSlope <= 0.0)                                                    // fSlope=0 => all herbage available        
-                result = 0.0;
-            else if (fCurvature <= 0.0)                                           // fCurvature=0 => rectangular hyperbola    
-                result = fMaxGH * fHeight / (fHeight + fMaxGH / fSlope);
-            else if (fCurvature >= 1.0)                                           // fCurvature=1 => piecewise linear         
-                result = Math.Min(fSlope * fHeight, fMaxGH);
-            else                                                                      // Otherwise, a non-rectangular hyperbola   
-                result = (fSlope * fHeight + fMaxGH
-                           - Math.Sqrt(Math.Pow(fSlope * fHeight + fMaxGH, 2) - 4.0 * fCurvature * fMaxGH * fSlope * fHeight))
-                          / (2.0 * fCurvature);
-            return result;
-        }
+        /// <summary>
+        /// Default class digestibilities
+        /// </summary>
+        static public readonly double[] ClassDig = { 0.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3 };
 
         /// <summary>
         /// Get a weighted average
         /// </summary>
-        /// <param name="X1"></param>
-        /// <param name="Y1"></param>
-        /// <param name="X2"></param>
-        /// <param name="Y2"></param>
-        /// <returns></returns>
-        static public double fWeightAverage(double X1, double Y1, double X2, double Y2)
+        /// <param name="x1">The x1 value</param>
+        /// <param name="y1">The y1 value</param>
+        /// <param name="x2">The x2 value</param>
+        /// <param name="y2">The y2 value</param>
+        /// <returns>The weighted average</returns>
+        public static double WeightAverage(double x1, double y1, double x2, double y2)
         {
             double result;
-            if ((Y1 != 0.0) && (Y2 != 0.0))
-                result = (X1 * Y1 + X2 * Y2) / (Y1 + Y2);
-            else if (Y1 != 0.0)
-                result = X1;
+            if ((y1 != 0.0) && (y2 != 0.0))
+                result = (x1 * y1 + x2 * y2) / (y1 + y2);
+            else if (y1 != 0.0)
+                result = x1;
             else
-                result = X2;
+                result = x2;
+
             return result;
         }
 
         /// <summary>
         /// Scale the grazing inputs
         /// </summary>
-        /// <param name="Inputs"></param>
-        /// <param name="fScale"></param>
-        /// <returns></returns>
-        static public TGrazingInputs scaleGrazingInputs(TGrazingInputs Inputs, double fScale)
+        /// <param name="inputs">The grazing inputs</param>
+        /// <param name="scale">The scale value</param>
+        /// <returns>The scaled grazing input</returns>
+        public static GrazingInputs ScaleGrazingInputs(GrazingInputs inputs, double scale)
         {
             int iClass;
             int iSpecies;
             int iRipe;
 
-            TGrazingInputs Result = new TGrazingInputs(Inputs);
+            GrazingInputs Result = new GrazingInputs(inputs);
 
-            if (fScale != 1.0)
+            if (scale != 1.0)
             {
                 for (iClass = 1; iClass <= DigClassNo; iClass++)
-                    Result.Herbage[iClass].Biomass = fScale * Inputs.Herbage[iClass].Biomass;
+                    Result.Herbage[iClass].Biomass = scale * inputs.Herbage[iClass].Biomass;
 
-                Result.TotalGreen = fScale * Inputs.TotalGreen;
-                Result.TotalDead = fScale * Inputs.TotalDead;
+                Result.TotalGreen = scale * inputs.TotalGreen;
+                Result.TotalDead = scale * inputs.TotalDead;
 
                 for (iSpecies = 1; iSpecies <= MaxPlantSpp; iSpecies++)
                     for (iRipe = UNRIPE; iRipe <= RIPE; iRipe++)
-                        Result.Seeds[iSpecies, iRipe].Biomass = fScale * Inputs.Seeds[iSpecies, iRipe].Biomass;
+                        Result.Seeds[iSpecies, iRipe].Biomass = scale * inputs.Seeds[iSpecies, iRipe].Biomass;
             }
+
             return Result;
         }
+
         /// <summary>
         /// Rescale the DM pool
         /// </summary>
-        /// <param name="aPool"></param>
-        /// <param name="fPropn"></param>
+        /// <param name="aPool">The pool to scale</param>
+        /// <param name="proportion">The proportion amount</param>
         /// <returns></returns>
-        static public DM_Pool PoolFraction(DM_Pool aPool, double fPropn)
+        public static DM_Pool PoolFraction(DM_Pool aPool, double proportion)
         {
-            return MultiplyDMPool(aPool, fPropn);
+            return MultiplyDMPool(aPool, proportion);
         }
+
         /// <summary>
         /// Multiply the DM pool
         /// </summary>
-        /// <param name="aPool"></param>
-        /// <param name="fScale"></param>
-        /// <returns></returns>
-        static public DM_Pool MultiplyDMPool(DM_Pool aPool, double fScale)
+        /// <param name="pool">Dry matter pool</param>
+        /// <param name="scale">Scale value</param>
+        /// <returns>The scaled dry matter pool</returns>
+        public static DM_Pool MultiplyDMPool(DM_Pool pool, double scale)
         {
-            DM_Pool Result = new DM_Pool();
-            Result.DM = fScale * aPool.DM;
-            for (int Elem = (int)TOMElement.n; Elem <= (int)TOMElement.s; Elem++)
-                Result.Nu[Elem] = fScale * aPool.Nu[Elem];
-            Result.AshAlk = fScale * aPool.AshAlk;
-            return Result;
+            DM_Pool result = new DM_Pool();
+
+            result.DM = scale * pool.DM;
+            for (int elem = (int)TOMElement.n; elem <= (int)TOMElement.s; elem++)
+                result.Nu[elem] = scale * pool.Nu[elem];
+            result.AshAlk = scale * pool.AshAlk;
+
+            return result;
         }
+
         /// <summary>
         /// Add dry matter pool to the total pool
         /// </summary>
-        /// <param name="PartPool"></param>
-        /// <param name="TotPool"></param>
-        static public void AddDMPool(DM_Pool PartPool, DM_Pool TotPool)
+        /// <param name="partPool">Part pool to add</param>
+        /// <param name="totPool">Total pool</param>
+        public static void AddDMPool(DM_Pool partPool, DM_Pool totPool)
         {
-            int N = (int)GrazType.TOMElement.n;
-            int P = (int)GrazType.TOMElement.p;
-            int S = (int)GrazType.TOMElement.s;
+            int n = (int)GrazType.TOMElement.n;
+            int p = (int)GrazType.TOMElement.p;
+            int s = (int)GrazType.TOMElement.s;
 
-            TotPool.DM = TotPool.DM + PartPool.DM;
-            TotPool.Nu[N] = TotPool.Nu[N] + PartPool.Nu[N];
-            TotPool.Nu[P] = TotPool.Nu[P] + PartPool.Nu[P];
-            TotPool.Nu[S] = TotPool.Nu[S] + PartPool.Nu[S];
-            TotPool.AshAlk = TotPool.AshAlk + PartPool.AshAlk;
-        }
-
-    }
-
-    sealed class PreMergeToMergedDeserializationBinder : SerializationBinder
-    {
-        public override Type BindToType(string assemblyName, string typeName)
-        {
-            Type typeToDeserialize = null;
-
-            // For each assemblyName/typeName that you want to deserialize to
-            // a different type, set typeToDeserialize to the desired type.
-            String exeAssembly = Assembly.GetExecutingAssembly().FullName;
-
-            // The following line of code returns the type.
-            typeToDeserialize = Type.GetType(String.Format("{0}, {1}", typeName, exeAssembly));
-
-            return typeToDeserialize;
-        }
-    }
-
-    /// <summary>
-    /// Reference Article http://www.codeproject.com/KB/tips/SerializedObjectCloner.aspx
-    /// Provides a method for performing a deep copy of an object.
-    /// Binary Serialization is used to perform the copy.
-    /// </summary>
-    public static class ObjectCopier
-    {
-        /// <summary>
-        /// Perform a deep Copy of the object.
-        /// </summary>
-        /// <typeparam name="T">The type of object being copied.</typeparam>
-        /// <param name="source">The object instance to copy.</param>
-        /// <returns>The copied object.</returns>
-        public static T Clone<T>(T source)
-        {
-            if (!typeof(T).IsSerializable)
-            {
-                throw new ArgumentException(typeof(T).Name + " type must be serializable.", "source");
-            }
-
-            // Don't serialize a null object, simply return the default for that object
-            if (Object.ReferenceEquals(source, null))
-            {
-                return default(T);
-            }
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
-            {
-                formatter.Serialize(stream, source);
-                stream.Seek(0, SeekOrigin.Begin);
-                formatter.Binder = new PreMergeToMergedDeserializationBinder();
-                return (T)formatter.Deserialize(stream);
-            }
+            totPool.DM = totPool.DM + partPool.DM;
+            totPool.Nu[n] = totPool.Nu[n] + partPool.Nu[n];
+            totPool.Nu[p] = totPool.Nu[p] + partPool.Nu[p];
+            totPool.Nu[s] = totPool.Nu[s] + partPool.Nu[s];
+            totPool.AshAlk = totPool.AshAlk + partPool.AshAlk;
         }
     }
 }
-

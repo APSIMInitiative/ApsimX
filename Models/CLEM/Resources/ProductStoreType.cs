@@ -1,11 +1,9 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -13,12 +11,20 @@ namespace Models.CLEM.Resources
     /// Store for emission type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
-    [Description("This resource represents a prodcut store type (e.g. Cotton).")]
-    public class ProductStoreType : CLEMModel, IResourceWithTransactionType, IResourceType
+    [Description("This resource represents a product store (e.g. cotton)")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
+    public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -26,11 +32,13 @@ namespace Models.CLEM.Resources
         [Required]
         public double StartingAmount { get; set; }
 
-        private double amount;
         /// <summary>
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
+        double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        [NonSerialized]
+        private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -38,65 +46,80 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            Initialise();
+            this.amount = 0;
+            if (StartingAmount > 0)
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         /// <summary>
-        /// Initialise resource type
+        /// Total value of resource
         /// </summary>
-        public void Initialise()
+        public double? Value
         {
-            this.amount = 0;
-            if (StartingAmount > 0)
+            get
             {
-                Add(StartingAmount, this.Name, "Starting value");
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
             }
         }
 
         #region transactions
 
         /// <summary>
-        /// Back account transaction occured
+        /// Resource transaction occured
         /// </summary>
         public event EventHandler TransactionOccurred;
 
         /// <summary>
         /// Transcation occurred 
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name = "e" >args</param>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
-            var h = TransactionOccurred; if (h != null) h(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
-        /// Add money to account
+        /// Add product to store
         /// </summary>
-        /// <param name="ResourceAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            if (ResourceAmount.GetType().ToString() != "System.Double")
+            double addAmount;
+            switch (resourceAmount)
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+                case FoodResourcePacket _:
+                    addAmount = (resourceAmount as FoodResourcePacket).Amount;
+                    break;
+                case double _:
+                    addAmount = (double)resourceAmount;
+                    break;
+                default:
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
-            double addAmount = (double)ResourceAmount;
+
             if (addAmount > 0)
             {
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Credit = addAmount;
-                details.Activity = ActivityName;
-                details.Reason = Reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
+                    Activity = activity,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
+                    ResourceType = this
+                };
+                base.LastGain = addAmount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -104,44 +127,68 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove money (object) from account
-        /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public new void Remove(ResourceRequest request)
         {
-            if (Request.Required == 0) return;
+            if (request.Required == 0)
+                return;
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+                FindEquivalentMarketStore();
+
             // avoid taking too much
-            double amountRemoved = Request.Required;
+            double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
 
-            Request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Debit = amountRemoved * -1;
-            details.Activity = Request.ActivityModel.Name;
-            details.Reason = Request.Reason;
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+                (EquivalentMarketStore as ProductStoreType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+
+            request.Provided = amountRemoved;
+            if (amountRemoved > 0)
+            {
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    ResourceType = this,
+                    TransactionType = TransactionType.Loss,
+                    Amount = amountRemoved,
+                    Activity = request.ActivityModel,
+                    Category = request.Category,
+                    RelatesToResource = request.RelatesToResource
+                };
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+            }
         }
 
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
-            amount = NewAmount;
+            amount = newAmount;
+        }
+
+        #endregion
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            string html = base.ModelSummary();
+
+            html += "\r\n<div class=\"activityentry\">";
+            if (StartingAmount > 0)
+                html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
+            html += "\r\n</div>";
+            return html;
         }
 
         #endregion

@@ -1,8 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IVariable.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.Core
 {
     using System;
@@ -68,5 +63,18 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public abstract bool Writable { get; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public abstract string Summary { get; }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public abstract string Remarks { get; }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public abstract Attribute GetAttribute(Type attributeType);
     }
 } 

@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "ApsimX.sln",
+    "projects": [
+      "ApsimNG\\ApsimNG.csproj",
+      "Models\\Models.csproj",
+      "Tests\\UnitTests\\UnitTests.csproj"
+    ]
+  }
+}

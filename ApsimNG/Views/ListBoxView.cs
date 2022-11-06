@@ -1,8 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ListBoxView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿# if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+using UserInterface.Presenters;
+
 namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
@@ -14,6 +14,8 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using Gtk;
     using Interfaces;
+    using Extensions;
+    using Utility;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -55,11 +57,7 @@ namespace UserInterface.Views
     {
         public IkonView(TreeModel model) : base(model) { }
 
-        public int ItemPadding
-        {
-            get { return (int)GetProperty("item-padding"); }
-            set { SetProperty("item-padding", new GLib.Value(value)); }
-        }
+
     }
 
     /// <summary>A list view.</summary>
@@ -71,7 +69,8 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user double clicks the selection</summary>
         public event EventHandler DoubleClicked;
 
-        public IkonView listview;
+        public IkonView Listview { get; set; }
+
         private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
 
         /// <summary>
@@ -81,41 +80,60 @@ namespace UserInterface.Views
 
         private const string modelMime = "application/x-model-component";
         private GCHandle dragSourceHandle;
-        private bool _isModels = false;
-        private Menu Popup = new Menu();
+        private bool isModels = false;
+        private Menu popup = new Menu();
         private AccelGroup accel = new AccelGroup();
 
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
         {
-            listview = new IkonView(listmodel);
-            //listview = new TreeView(listmodel);
-            _mainWidget = listview;
-            listview.MarkupColumn = 0;
-            listview.PixbufColumn = 1;
-            listview.TooltipColumn = 2;
-            listview.SelectionMode = SelectionMode.Browse;
-            listview.Orientation = Gtk.Orientation.Horizontal;
-            listview.RowSpacing = 0;
-            listview.ColumnSpacing = 0;
-            listview.ItemPadding = 0;
+            Listview = new IkonView(listmodel);
+            mainWidget = Listview;
 
-            listview.SelectionChanged += OnSelectionChanged;
-            listview.ButtonPressEvent += OnDoubleClick;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            // It appears that the gtkiconview has changed considerably
+            // between gtk2 and gtk3. In the gtk3 world, use of the 
+            // set_text_column API is not recommended and in fact it appears
+            // to behave differently to the way it did in gtk2 anyway.
+            // https://bugzilla.gnome.org/show_bug.cgi?id=680953
+            CellRendererPixbuf imageCell = new CellRendererPixbuf();
+            Listview.PackStart(imageCell, false);
+            Listview.AddAttribute(imageCell, "pixbuf", 1);
+            CellRenderer cell = new CellRendererText(){ WrapMode = Pango.WrapMode.Word };
+            Listview.PackStart(cell, true);
+            Listview.AddAttribute(cell, "markup", 0);
+
+            Listview.TooltipColumn = 2;
+            Listview.SelectionMode = SelectionMode.Browse;
+
+            Listview.ItemOrientation = Gtk.Orientation.Horizontal;
+
+            Listview.RowSpacing = 0;
+            Listview.ColumnSpacing = 0;
+            Listview.ItemPadding = 0;
+
+            Listview.SelectionChanged += OnSelectionChanged;
+            Listview.ButtonPressEvent += OnDoubleClick;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            //listview.CursorChanged -= OnSelectionChanged;
-            listview.SelectionChanged -= OnSelectionChanged;
-            listview.ButtonPressEvent -= OnDoubleClick;
-            ClearPopup();
-            Popup.Destroy();
-            listmodel.Dispose();
-            accel.Dispose();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                //listview.CursorChanged -= OnSelectionChanged;
+                Listview.SelectionChanged -= OnSelectionChanged;
+                Listview.ButtonPressEvent -= OnDoubleClick;
+                popup.Clear();
+                popup.Dispose();
+                listmodel.Dispose();
+                accel.Dispose();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Get or sets the list of valid values.</summary>
@@ -146,22 +164,22 @@ namespace UserInterface.Views
                     int posLastSlash = text.LastIndexOfAny("\\/".ToCharArray());
                     if (posLastSlash != -1)
                     {
-                        text = AddFileNameListItem(val, ref image);
+                        text = AddFileNameListItem(StringUtilities.PangoString(val), ref image);
                     }
-                    else if (_isModels)
+                    else if (isModels)
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
-                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
-                        if (!hasResource(resourceNameForImage))
-                        {
-                            resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
-                        }
-                        if (hasResource(resourceNameForImage))
-                            image = new Gdk.Pixbuf(null, resourceNameForImage);
-                        else
-                            image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+                        (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists($"{addedModelDetails}{text}");
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists(text);
+                        
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists("Simulations");
+
+                        image = new Gdk.Pixbuf(null, resourceName);
                     }
-                    listmodel.AppendValues(text, image, val);
+                    string tooltip = isModels ? val : StringUtilities.PangoString(val);
+                    listmodel.AppendValues(text, image, tooltip);
                 }
             }
         }
@@ -170,28 +188,39 @@ namespace UserInterface.Views
         /// Add a list item based on a file name
         /// </summary>
         /// <param name="fileName">The filename.</param>
+        /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
-            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
-            List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
-
-            string result = "<span font_weight='normal'>" + Path.GetFileName(fileName) + "</span>\n<span font_weight='light' size='smaller' style='italic'>" + Path.GetDirectoryName(fileName) + "</span>";
-
-            listview.ItemPadding = 6; // Restore padding if we have images to display
-
             image = null;
-            // Add an image index.
-            foreach (string largeImageName in largeImageNames)
+            Listview.ItemPadding = 6; // Restore padding if we have images to display
+
+            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+
+            List<string> images = resourceNames.FindAll(r => r.EndsWith(".svg"));
+            images.AddRange(resourceNames.FindAll(r => r.Contains(".LargeImages.")));
+
+            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            string searchName = Path.GetFileNameWithoutExtension(fileName);
+            (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists(searchName);
+            if (exists)
+                image = new Gdk.Pixbuf(null, resourceName);
+            else
             {
-                string shortImageName = StringUtilities.GetAfter(largeImageName, ".LargeImages.").Replace(".png", "").ToLower();
-                if (result.ToLower().Contains(shortImageName))
+                // Add an image index.
+                foreach (string imageName in images)
                 {
-                    image = new Gdk.Pixbuf(null, largeImageName);
-                    break;
+                    string[] parts = imageName.Split('.');
+                    string shortImageName = parts.Length > 1 ? parts[parts.Length - 2] : StringUtilities.GetAfter(imageName, ".LargeImages.").Replace(".png", "");
+                    if (result.ToLower().Contains(shortImageName.ToLower()))
+                    {
+                        image = new Gdk.Pixbuf(null, imageName);
+                        break;
+                    }
                 }
             }
             if (image == null)
                 image = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+
             return result;
         }
 
@@ -200,7 +229,7 @@ namespace UserInterface.Views
         {
             get
             {
-                TreePath[] selPath = listview.SelectedItems;
+                TreePath[] selPath = Listview.SelectedItems;
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
@@ -210,15 +239,17 @@ namespace UserInterface.Views
                 {
                     TreeIter iter;
                     listmodel.GetIter(out iter, selPath[0]);
+                    string result;
                     if (listmodel.GetValue(iter, 1) != null)
-                        return (string)listmodel.GetValue(iter, 2);
+                        result = (string)listmodel.GetValue(iter, 2);
                     else
-                        return (string)listmodel.GetValue(iter, 0);
+                        result = (string)listmodel.GetValue(iter, 0);
+                    return isModels ? result : result.Replace("&amp;", "&");
                 }
             }
             set
             {
-                TreePath[] selPath = listview.SelectedItems;
+                TreePath[] selPath = Listview.SelectedItems;
                 //TreePath selPath;
                 //TreeViewColumn selCol;
                 //listview.GetCursor(out selPath, out selCol);
@@ -235,8 +266,8 @@ namespace UserInterface.Views
         /// <summary>Return true if the listview is visible.</summary>
         public bool IsVisible
         {
-            get { return listview.Visible; }
-            set { listview.Visible = value; }
+            get { return Listview.Visible; }
+            set { Listview.Visible = value; }
         }
 
 
@@ -245,26 +276,26 @@ namespace UserInterface.Views
         /// </summary>
         public bool IsModelList
         {
-            get { return _isModels; }
+            get { return isModels; }
             set
             {
-                bool wasModels = _isModels;
-                _isModels = value;
+                bool wasModels = isModels;
+                isModels = value;
                 if (value)
                 {
                     TargetEntry[] target_table = new TargetEntry[] { new TargetEntry(modelMime, TargetFlags.App, 0) };
 
-                    Drag.SourceSet(listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
-                    listview.DragBegin += OnDragBegin;
-                    listview.DragDataGet += OnDragDataGet;
-                    listview.DragEnd += OnDragEnd;
+                    Drag.SourceSet(Listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
+                    Listview.DragBegin += OnDragBegin;
+                    Listview.DragDataGet += OnDragDataGet;
+                    Listview.DragEnd += OnDragEnd;
                 }
                 else if (wasModels)
                 {
-                    Drag.SourceUnset(listview);
-                    listview.DragBegin -= OnDragBegin;
-                    listview.DragDataGet -= OnDragDataGet;
-                    listview.DragEnd -= OnDragEnd;
+                    Drag.SourceUnset(Listview);
+                    Listview.DragBegin -= OnDragBegin;
+                    Listview.DragDataGet -= OnDragDataGet;
+                    Listview.DragEnd -= OnDragEnd;
                 }
             }
         }
@@ -275,8 +306,15 @@ namespace UserInterface.Views
 
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>User has double clicked the list box.</summary>
@@ -285,18 +323,25 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnDoubleClick(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
-                DoubleClicked.Invoke(sender, e);
-            if (e.Event.Button == 3)
+            try
             {
-                TreePath path = listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
-                if (path != null)
+                if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
+                    DoubleClicked.Invoke(sender, e);
+                if (e.Event.Button == 3)
                 {
-                    listview.SelectPath(path);
-                    if (Popup.Children.Count() > 0)
-                        Popup.Popup();
+                    TreePath path = Listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
+                    if (path != null)
+                    {
+                        Listview.SelectPath(path);
+                        if (popup.Children.Count() > 0)
+                            popup.Popup();
+                    }
+                    e.RetVal = true;
                 }
-                e.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -305,15 +350,22 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
-            DragStartArgs args = new DragStartArgs();
-            args.NodePath = SelectedValue;
-            if (DragStarted != null)
+            try
             {
-                DragStarted(this, args);
-                if (args.DragObject != null)
+                DragStartArgs args = new DragStartArgs();
+                args.NodePath = SelectedValue;
+                if (DragStarted != null)
                 {
-                    dragSourceHandle = GCHandle.Alloc(args.DragObject);
+                    DragStarted(this, args);
+                    if (args.DragObject != null)
+                    {
+                        dragSourceHandle = GCHandle.Alloc(args.DragObject);
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -322,17 +374,31 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragDataGet(object sender, DragDataGetArgs e)
         {
-            IntPtr data = (IntPtr)dragSourceHandle;
-            Int64 ptrInt = data.ToInt64();
-            Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
-            e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
+            try
+            {
+                IntPtr data = (IntPtr)dragSourceHandle;
+                Int64 ptrInt = data.ToInt64();
+                Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
+                e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void OnDragEnd(object sender, DragEndArgs e)
         {
-            if (dragSourceHandle.IsAllocated)
+            try
             {
-                dragSourceHandle.Free();
+                if (dragSourceHandle.IsAllocated)
+                {
+                    dragSourceHandle.Free();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -351,31 +417,29 @@ namespace UserInterface.Views
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
-            ClearPopup();
-            foreach (MenuDescriptionArgs Description in menuDescriptions)
+            popup.Clear();
+            foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
-                if (Description.ShowCheckbox)
+                if (description.ShowCheckbox)
                 {
-                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
-                    checkItem.Active = Description.Checked;
+                    CheckMenuItem checkItem = new CheckMenuItem(description.Name);
+                    checkItem.Active = description.Checked;
                     item = checkItem;
                 }
-                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
-                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
-                    item = imageItem;
+                    item = WidgetExtensions.CreateImageMenuItem(description.Name, new Image(null, description.ResourceNameForImage));
                 }
                 else
                 {
-                    item = new MenuItem(Description.Name);
+                    item = new MenuItem(description.Name);
                 }
-                if (!String.IsNullOrEmpty(Description.ShortcutKey))
+                if (!String.IsNullOrEmpty(description.ShortcutKey))
                 {
                     string keyName = String.Empty;
                     Gdk.ModifierType modifier = Gdk.ModifierType.None;
-                    string[] keyNames = Description.ShortcutKey.Split(new Char[] { '+' });
+                    string[] keyNames = description.ShortcutKey.Split(new Char[] { '+' });
                     foreach (string name in keyNames)
                     {
                         if (name == "Ctrl")
@@ -398,35 +462,14 @@ namespace UserInterface.Views
                     {
                     }
                 }
-                item.Activated += Description.OnClick;
-                Popup.Append(item);
+                item.Activated += description.OnClick;
+                popup.Append(item);
 
             }
-            if (Popup.AttachWidget == null)
-                Popup.AttachToWidget(listview, null);
-            Popup.ShowAll();
+            if (popup.AttachWidget == null)
+                popup.AttachToWidget(Listview, null);
+            popup.ShowAll();
         }
 
-        private void ClearPopup()
-        {
-            foreach (Widget w in Popup)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-                Popup.Remove(w);
-                w.Destroy();
-            }
-        }
     }
 }

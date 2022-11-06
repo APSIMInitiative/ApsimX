@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtk;
-using Mono.TextEditor;
+
+using GtkSource;
+
 using Cairo;
-using UserInterface;
+using UserInterface.Views;
+using UserInterface.Extensions;
 
 namespace Utility
 {
@@ -41,12 +44,12 @@ namespace Utility
             btnFindNext = (Button)builder.GetObject("btnFindNext");
             lblReplaceWith = (Label)builder.GetObject("lblReplaceWith");
 
-            btnFindNext.Clicked += btnFindNext_Click;
-            btnFindPrevious.Clicked += btnFindPrevious_Click;
-            btnCancel.Clicked += btnCancel_Click;
-            btnReplace.Clicked += btnReplace_Click;
-            btnReplaceAll.Clicked += btnReplaceAll_Click;
-            btnHighlightAll.Clicked += btnHighlightAll_Click;
+            btnFindNext.Clicked += BtnFindNext_Click;
+            btnFindPrevious.Clicked += BtnFindPrevious_Click;
+            btnCancel.Clicked += BtnCancel_Click;
+            btnReplace.Clicked += BtnReplace_Click;
+            btnReplaceAll.Clicked += BtnReplaceAll_Click;
+            btnHighlightAll.Clicked += BtnHighlightAll_Click;
             window1.DeleteEvent += Window1_DeleteEvent;
             window1.Destroyed += Window1_Destroyed;
             AccelGroup agr = new AccelGroup();
@@ -57,35 +60,46 @@ namespace Utility
 
         private void Window1_Destroyed(object sender, EventArgs e)
         {
-            btnFindNext.Clicked -= btnFindNext_Click;
-            btnFindPrevious.Clicked -= btnFindPrevious_Click;
-            btnCancel.Clicked -= btnCancel_Click;
-            btnReplace.Clicked -= btnReplace_Click;
-            btnReplaceAll.Clicked -= btnReplaceAll_Click;
+            btnFindNext.Clicked -= BtnFindNext_Click;
+            btnFindPrevious.Clicked -= BtnFindPrevious_Click;
+            btnCancel.Clicked -= BtnCancel_Click;
+            btnReplace.Clicked -= BtnReplace_Click;
+            btnReplaceAll.Clicked -= BtnReplaceAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
+            Utility.GtkUtil.DetachAllHandlers(window1);
         }
 
         public void Destroy()
         {
+            Utility.GtkUtil.DetachAllHandlers(window1);
             window1.Destroy();
+            window1.Dispose();
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
         {
+
+            context.Highlight = false;
+
             window1.Hide();
             args.RetVal = true;
         }
 
-        TextEditor _editor;
-        TextEditor Editor
+
+        private SearchContext context;
+
+        private SourceView editor;
+        public SourceView Editor
+
         {
-            get { return _editor; }
+            get { return editor; }
             set
             {
-                _editor = value;
+                editor = value;
             }
         }
+
 
         /// <summary>
         /// Show an error message to caller.
@@ -94,59 +108,59 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(Editor.Toplevel as Window, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
-            md.Destroy();
+            md.Dispose();
         }
 
         private void UpdateTitleBar()
         {
             string text = ReplaceMode ? "Find & replace" : "Find";
-            if (_editor != null && _editor.FileName != null)
-                text += " - " + System.IO.Path.GetFileName(_editor.FileName);
+
             if (this.selectionOnly)
                 text += " (selection only)";
             window1.Title = text;
         }
 
-        public void ShowFor(TextEditor editor, bool replaceMode)
+
+        public void ShowFor(SourceView sourceView, SearchContext theContext, bool replaceMode)
         {
-            Editor = editor;
+            Editor = sourceView;
+            this.context = theContext;
             this.selectionOnly = false;
             window1.TransientFor = Editor.Toplevel as Window;
-            Mono.TextEditor.Selection selected = Editor.MainSelection;
-            if (Editor.SelectedText != null)
+
+            TextIter start;
+            TextIter end;
+            if (context.Buffer.GetSelectionBounds(out start, out end))
             {
-                if (selected.MaxLine == selected.MinLine)
-                    txtLookFor.Text = Editor.SelectedText;
+                if (start.Offset != end.Offset && start.LineIndex == end.LineIndex)
+                    txtLookFor.Text = context.Buffer.GetText(start, end, true);
                 else
                 {
-                    Editor.SearchEngine.SearchRequest.SearchRegion = Editor.SelectionRange;
-                    this.selectionOnly = true;
+                    // Get the current word that the caret is on
+                    if (!start.StartsWord())
+                        start.BackwardWordStart();
+                    if (!end.EndsWord())
+                        end.ForwardWordEnd();
+                    txtLookFor.Text = context.Buffer.GetText(start, end, true);
                 }
             }
-            else
-            {
-                // Get the current word that the caret is on
-                Caret caret = Editor.Caret;
-                int start = Editor.GetTextEditorData().FindCurrentWordStart(caret.Offset);
-                int end = Editor.GetTextEditorData().FindCurrentWordEnd(caret.Offset);
-                txtLookFor.Text = Editor.GetTextBetween(start, end);
-            }
             ReplaceMode = replaceMode;
-            editor.HighlightSearchPattern = true;
+            context.Highlight = true;
 
             window1.Parent = editor.Toplevel;
             UpdateTitleBar();
+            window1.WindowPosition = WindowPosition.CenterOnParent;
             window1.Show();
             txtLookFor.GrabFocus();
         }
+
 
         public bool ReplaceMode
         {
             get { return txtReplaceWith.Visible; }
             set
             {
-                window1.AllowGrow = value;
-                window1.AllowShrink = !value;
+                window1.Resizable = value;
                 btnReplace.Visible = btnReplaceAll.Visible = value;
                 lblReplaceWith.Visible = txtReplaceWith.Visible = value;
                 btnHighlightAll.Visible = false;  // !value;
@@ -154,73 +168,105 @@ namespace Utility
             }
         }
 
-        private void btnFindPrevious_Click(object sender, EventArgs e)
+        private void BtnFindPrevious_Click(object sender, EventArgs e)
         {
             FindNext(false, false, "Text not found");
         }
-        private void btnFindNext_Click(object sender, EventArgs e)
+        private void BtnFindNext_Click(object sender, EventArgs e)
         {
             FindNext(false, true, "Text not found");
         }
 
 
-        public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
+        public bool FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
+            context.Settings.SearchText = txtLookFor.Text;
+            context.Settings.CaseSensitive = chkMatchCase.Active;
+            context.Settings.AtWordBoundaries = chkMatchWholeWord.Active;
+
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
                 ShowMsg("No string specified to look for!");
-                return null;
+                return false;
             }
-
-            SearchResult range = null;
+            TextIter iter = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            TextIter start, end;
+            context.Buffer.GetSelectionBounds(out start, out end);
+            // If we're already on a match, move the search iterator forward
+            // Otherwise we will just re-find our current position
+            if (searchForward && String.Equals(context.Buffer.GetText(start, end, true), txtLookFor.Text, 
+                    chkMatchCase.Active ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase))
+                iter.ForwardChar();
+            bool wrapped;
+            bool result = false;
             if (searchForward)
-                range = Editor.FindNext(true);
+                result = context.Forward(iter, ref start, ref end, out wrapped);
             else
-                range = Editor.FindPrevious(true);
-            if (range == null && messageIfNotFound != null)
+                result = context.Backward(iter, ref start, ref end, out wrapped);
+            if (!result && messageIfNotFound != null)
                 ShowMsg(messageIfNotFound);
             else
-                Editor.ScrollTo(range.Offset);
-            return range;
+            {
+                context.Buffer.SelectRange(start, end);
+                editor.ScrollToIter(start, 0.0, false, 0.0, 0.0);
+            }
+            return true;
         }
 
-        private void btnHighlightAll_Click(object sender, EventArgs e)
+        private void BtnHighlightAll_Click(object sender, EventArgs e)
         {
-            _editor.HighlightSearchPattern = true;
-            btnFindNext_Click(sender, e);
+
+            context.Highlight = true;
+
+            BtnFindNext_Click(sender, e);
         }
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
+
+            context.Highlight = false;
+
             window1.Hide();
         }
 
-        private void btnReplace_Click(object sender, EventArgs e)
+
+        private void BtnReplace_Click(object sender, EventArgs e)
         {
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-            if (!Editor.Replace(txtReplaceWith.Text))
+            context.Settings.SearchText = txtLookFor.Text;
+            context.Settings.CaseSensitive = chkMatchCase.Active;
+            context.Settings.AtWordBoundaries = chkMatchWholeWord.Active;
+            TextIter iter = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            TextIter start = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            TextIter end = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            bool wrapped;
+            bool result = false;
+            bool searchForward = true;
+            if (searchForward)
+                result = context.Forward(iter, ref start, ref end, out wrapped);
+            else
+                result = context.Backward(iter, ref start, ref end, out wrapped);
+            if (result)
+            {
+                editor.ScrollToIter(start, 0.0, false, 0.0, 0.0);
+                context.Replace(start, end, txtReplaceWith.Text);
+            }
+            else
                 ShowMsg("Search text not found.");
         }
 
-        private void btnReplaceAll_Click(object sender, EventArgs e)
+        private void BtnReplaceAll_Click(object sender, EventArgs e)
         {
-            Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
-            Editor.SearchEngine.SearchRequest.CaseSensitive = chkMatchCase.Active;
-            Editor.SearchEngine.SearchRequest.WholeWordOnly = chkMatchWholeWord.Active;
-            int count = Editor.ReplaceAll(txtReplaceWith.Text);
+            context.Settings.SearchText = txtLookFor.Text;
+            context.Settings.CaseSensitive = chkMatchCase.Active;
+            context.Settings.AtWordBoundaries = chkMatchWholeWord.Active;
+            uint count = context.ReplaceAll(txtReplaceWith.Text);
             if (count == 0)
                 ShowMsg("No occurrences found.");
             else
                 ShowMsg(string.Format("Replaced {0} occurrences.", count));
         }
 
+
         public string LookFor { get { return txtLookFor.Text; } }
     }
 
 }
-
-    

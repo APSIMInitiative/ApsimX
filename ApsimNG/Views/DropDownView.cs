@@ -1,13 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DropDownView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
     using Gtk;
 
     /// <summary>An interface for a drop down</summary>
@@ -23,10 +16,13 @@ namespace UserInterface.Views
         string SelectedValue { get; set; }
 
         /// <summary>Gets or sets a value indicating if the dropdown is visible.</summary>
-        bool IsVisible { get; set; }
+        bool Visible { get; set; }
 
         /// <summary>Gets or sets whether the control should be editable.</summary>
         bool IsEditable { get; set; }
+
+        /// <summary>Controls whether the user can change the selected item.</summary>
+        bool IsSensitive { get; set; }
     }
 
     /// <summary>A drop down view.</summary>
@@ -48,9 +44,26 @@ namespace UserInterface.Views
         private CellRendererText comboRender = new CellRendererText();
 
         /// <summary>Constructor which also creates a ComboBox</summary>
+        public DropDownView() : base()
+        {
+        }
+
+        /// <summary>Constructor which also creates a ComboBox</summary>
         public DropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
+            SetupCombo();
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            combobox1 = (ComboBox)gtkControl;
             SetupCombo();
         }
 
@@ -74,11 +87,12 @@ namespace UserInterface.Views
         /// </summary>
         private void SetupCombo()
         {
-            _mainWidget = combobox1;
+            mainWidget = combobox1;
+            combobox1.Model = comboModel;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnSelectionChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -88,11 +102,18 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnSelectionChanged;
-            comboModel.Dispose();
-            comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                combobox1.Changed -= OnSelectionChanged;
+                comboModel.Dispose();
+                comboRender.Dispose();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets the list of valid values.</summary>
@@ -104,7 +125,7 @@ namespace UserInterface.Views
                 string[] result = new string[numNames];
                 TreeIter iter;
                 int i = 0;
-                if (combobox1.GetActiveIter(out iter))
+                if (comboModel.GetIterFirst(out iter))
                     do
                         result[i++] = (string)comboModel.GetValue(iter, 0);
                     while (comboModel.IterNext(ref iter) && i < numNames);
@@ -118,13 +139,16 @@ namespace UserInterface.Views
                 try
                 {
                     comboModel.Clear();
-                    foreach (string text in value)
-                        comboModel.AppendValues(text);
+                    if (value != null)
+                    {
+                        foreach (string text in value)
+                            comboModel.AppendValues(text);
 
-                    // if (comboModel.IterNChildren() > 0)
-                    //     combobox1.Active = 0;
-                    // else
-                    combobox1.Active = -1;
+                        // if (comboModel.IterNChildren() > 0)
+                        //     combobox1.Active = 0;
+                        // else
+                        combobox1.Active = 1;
+                    }
                 }
                 finally
                 {
@@ -167,7 +191,7 @@ namespace UserInterface.Views
                 if (comboModel.GetIterFirst(out iter))
                 {
                     string entry = (string)comboModel.GetValue(iter, 0);
-                    while (!entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
+                    while (entry != null && !entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
                         entry = (string)comboModel.GetValue(iter, 0);
                     if (entry == value)
                         combobox1.SetActiveIter(iter);
@@ -180,13 +204,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Gets or sets a value indicating whether the combobox is visible.
         /// </summary>
-        public bool IsVisible
+        public bool Visible
         {
             get
             {
                 return combobox1.Visible;
             }
-
             set
             {
                 combobox1.Visible = value;
@@ -207,13 +230,33 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Controls whether the user can change the selected item.</summary>
+        public bool IsSensitive
+        {
+            get
+            {
+                return combobox1.Sensitive;
+            }
+            set
+            {
+                combobox1.Sensitive = value;
+            }
+        }
+
         /// <summary>User has changed the selection.</summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

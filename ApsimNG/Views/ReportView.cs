@@ -1,14 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
+    using GLib;
+    using Extensions;
     using Gtk;
-    using EventArguments;
+    using Interfaces;
 
     interface IReportView
     {
@@ -19,14 +15,38 @@ namespace UserInterface.Views
         IEditorView EventList { get; }
 
         /// <summary>Provides access to the DataGrid.</summary>
-        IDataStoreView DataStoreView { get; }
+        ViewBase DataStoreView { get; }
+
+        /// <summary>Provides access to the group by edit.</summary>
+        IEditView GroupByEdit { get; }
+
+        /// <summary>
+        /// Invoked when the user moves the vertical splitter
+        /// between the two text editors.
+        /// </summary>
+        event EventHandler SplitterChanged;
+
+        /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        event EventHandler TabChanged;
 
         /// <summary>
         /// Indicates the index of the currently active tab
         /// </summary>
         int TabIndex { get; set; }
+
+        /// <summary>
+        /// Position of the splitter between the variable and
+        /// frequency text editors. Larger number means further
+        /// down.
+        /// </summary>
+        int SplitterPosition { get; set; }
     }
 
+    /// <summary>
+    /// View for a report component.
+    /// </summary>
     public class ReportView : ViewBase, IReportView
     {
         private Notebook notebook1 = null;
@@ -34,9 +54,22 @@ namespace UserInterface.Views
         private VBox vbox2 = null;
         private Alignment alignment1 = null;
 
-        private EditorView VariableEditor;
-        private EditorView FrequencyEditor;
-        private DataStoreView dataStoreView1;
+        private IEditorView variableEditor;
+        private IEditorView frequencyEditor;
+        private ViewBase dataStoreView1;
+        private VPaned panel;
+        private EditView groupByEdit;
+
+        /// <summary>
+        /// Invoked when the user moves the vertical splitter
+        /// between the two text editors.
+        /// </summary>
+        public event EventHandler SplitterChanged;
+
+        /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        public event EventHandler TabChanged;
 
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
@@ -46,39 +79,131 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             alignment1 = (Alignment)builder.GetObject("alignment1");
-            _mainWidget = notebook1;
+            
+            panel = (VPaned)builder.GetObject("vpaned1");
+            panel.Events |= Gdk.EventMask.PropertyChangeMask;
+            panel.AddNotification(OnPropertyNotified);
 
-            VariableEditor = new EditorView(this);
-            vbox1.PackStart(VariableEditor.MainWidget, true, true, 0);
+            groupByEdit = new EditView(owner,
+                                      (Entry)builder.GetObject("groupByEdit")); 
 
-            FrequencyEditor = new EditorView(this);
-            vbox2.PackStart(FrequencyEditor.MainWidget, true, true, 0);
+            mainWidget = notebook1;
+            notebook1.SwitchPage += OnSwitchPage;
 
-            dataStoreView1 = new DataStoreView(this);
+            variableEditor = new EditorView(this);
+            variableEditor.StyleChanged += OnStyleChanged;
+            vbox1.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
+
+            frequencyEditor = new EditorView(this);
+            frequencyEditor.StyleChanged += OnStyleChanged;
+            vbox2.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
+
+            dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>
+        /// Note that there is no [ConnectBefore] attribute,
+        /// so at the time this is called, this.TabIndex
+        /// will return the correct (updated) value.
+        /// </remarks>
+        private void OnSwitchPage(object sender, SwitchPageArgs args)
+        {
+            try
+            {
+                TabChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called whenever a property of vpaned1 is modified.
+        /// We use this to trap when the user moves the handle
+        /// which separates the two text editors. Unfortunately,
+        /// this is called many times per second as long as the
+        /// user is dragging the handle. I couldn't find a better
+        /// event to trap - the MoveHandle event only fires when
+        /// the handle is moved via keypresses.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnPropertyNotified(object sender, NotifyArgs args)
+        {
+            try
+            {
+                if (args.Property == "position")
+                    SplitterChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the colour scheme (style) of one of
+        /// the text editors. Refreshes both text editors, so that the new
+        /// both use the new style.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnStyleChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                variableEditor?.Refresh();
+                frequencyEditor?.Refresh();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            VariableEditor.MainWidget.Destroy();
-            VariableEditor = null;
-            FrequencyEditor.MainWidget.Destroy();
-            FrequencyEditor = null;
-            dataStoreView1.MainWidget.Destroy();
-            dataStoreView1 = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                panel.RemoveNotification(OnPropertyNotified);
+                variableEditor.StyleChanged -= OnStyleChanged;
+                notebook1.SwitchPage -= OnSwitchPage;
+                frequencyEditor.StyleChanged -= OnStyleChanged;
+                groupByEdit.Dispose();
+                (variableEditor as ViewBase).Dispose();
+                variableEditor = null;
+                (frequencyEditor as ViewBase).Dispose();
+                frequencyEditor = null;
+                dataStoreView1.Dispose();
+                dataStoreView1 = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Provides access to the variable list.</summary>
-        public IEditorView VariableList { get { return VariableEditor; } }
+        public IEditorView VariableList { get { return variableEditor; } }
 
         /// <summary>Provides access to the variable list.</summary>
-        public IEditorView EventList { get { return FrequencyEditor; } }
+        public IEditorView EventList { get { return frequencyEditor; } }
+
+        /// <summary>Provides access to the group by edit.</summary>
+        public IEditView GroupByEdit {  get { return groupByEdit; } }
 
         /// <summary>Provides access to the DataGrid.</summary>
-        public IDataStoreView DataStoreView { get { return dataStoreView1; } }
+        public ViewBase DataStoreView { get { return dataStoreView1; } }
 
         /// <summary>
         /// Indicates the index of the currently active tab
@@ -89,5 +214,21 @@ namespace UserInterface.Views
             set { notebook1.CurrentPage = value; }
         }
 
+        /// <summary>
+        /// Position of the splitter between the variable and
+        /// frequency text editors. Larger number means further
+        /// down.
+        /// </summary>
+        public int SplitterPosition
+        {
+            get
+            {
+                return panel.Position;
+            }
+            set
+            {
+                panel.Position = value;
+            }
+        }
     }
 }

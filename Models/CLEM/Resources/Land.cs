@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
-using System.Xml.Serialization;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -14,22 +13,20 @@ namespace Models.CLEM.Resources
     /// Parent model of Land Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all land types for the simulation.")]
+    [Description("Resource group for all land types in the simulation")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
     public class Land: ResourceBaseWithTransactions
     {
-        ///// <summary>
-        ///// Current state of this resource.
-        ///// </summary>
-//        [XmlIgnore]
-//        public List<LandType> Items;
+        private bool changeOccurred = false;
 
         /// <summary>
         /// Unit of area to be used in this simulation
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute("Hectares")]
+        [System.ComponentModel.DefaultValueAttribute("hectares")]
         [Description("Unit of area to be used in this simulation")]
         [Required]
         public string UnitsOfArea { get; set; }
@@ -43,67 +40,102 @@ namespace Models.CLEM.Resources
         public double UnitsOfAreaToHaConversion { get; set; }
 
         /// <summary>
+        /// A method with argument to test
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <param name="intarg"></param>
+        /// <param name="doublearg"></param>
+        /// <returns></returns>
+        public string TestMethod(string txt, int intarg, double doublearg)
+        {
+            return "string:" + txt + "_int:"+intarg.ToString()+"_double:"+doublearg.ToString();
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public Land()
         {
+            ReportedLandAllocation = new LandActivityAllocation();
             this.SetDefaults();
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>
+        /// Land allocation details for reporting
+        /// </summary>
+        [JsonIgnore]
+        public LandActivityAllocation ReportedLandAllocation { get; set; }
+        
+        /// <summary>
+        /// Report allocatios at start of timestep
+        /// </summary>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            foreach (var child in Children)
+            foreach (LandType childModel in this.FindAllChildren<LandType>())
             {
-                if (child is IResourceWithTransactionType)
+                double total = 0;
+                if (childModel.AllocatedActivitiesList != null)
                 {
-                    (child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
+                    foreach (LandActivityAllocation item in childModel.AllocatedActivitiesList)
+                    {
+                        ReportedLandAllocation = item;
+                        if (changeOccurred)
+                            OnAllocationReported(new EventArgs());
+                    }
+                    total = childModel.AllocatedActivitiesList.Sum(a => a.LandAllocated);
+                }
+                if (changeOccurred && childModel.LandArea - total > 0)
+                {
+                    ReportedLandAllocation = new LandActivityAllocation()
+                    {
+                        ActivityName = "Unallocated",
+                        LandName = childModel.Name,
+                        LandAllocated = childModel.LandArea - total
+                    };
+                    OnAllocationReported(new EventArgs());
                 }
             }
+            changeOccurred = false;
         }
 
         /// <summary>
-        /// Overrides the base class method to allow for clean up
+        /// Override base event
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        protected void OnAllocationReported(EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            AllocationReported?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Override base event
+        /// </summary>
+        public event EventHandler AllocationReported;
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Reported in ");
+                if (UnitsOfArea == null || UnitsOfArea == "")
+                    htmlWriter.Write("<span class=\"errorlink\">Unspecified units of area</span>");
+                else
+                    htmlWriter.Write("<span class=\"setvalue\">" + UnitsOfArea + "</span>");
+                htmlWriter.Write("</span>");
+
+
+                if (UnitsOfAreaToHaConversion != 1)
+                    htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
+
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-        }
-
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
         }
 
         #endregion
     }
-
-
 }

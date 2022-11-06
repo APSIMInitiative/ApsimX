@@ -1,136 +1,131 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SoilCrop.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Soils
+﻿namespace Models.Soils
 {
-    using System;
-    using System.Xml.Serialization;
-    using Models.Core;
     using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Interfaces;
+    using System;
+    using System.Linq;
 
-    /// <summary>
-    /// A soil crop parameterization class.
-    /// </summary>
+    /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType = typeof(Water))]
-    public class SoilCrop : Model, ISoilCrop
+    [ValidParent(ParentType = typeof(Physical))]
+    public class SoilCrop : Model, ITabularData
     {
-        /// <summary>
-        /// Gets the parent soil
-        /// </summary>
-        [XmlIgnore]
-        private Soil Soil
-        {
-            get
-            {
-                return Apsim.Parent(this, typeof(Soil)) as Soil;
-            }
-        }
-
-        /// <summary>
-        /// Gets the associated depths
-        /// </summary>
+        /// <summary>Depth strings (mm/mm)</summary>
         [Summary]
-        [XmlIgnore]
-        [Units("cm")]
-        [Description("Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                if (Soil != null)
-                    return Soil.ToDepthStrings(Soil.WaterNodeThickness);
-                else
-                    return new string[0];
-            }
-        }
+        [Units("mm")]
+        public string[] Depth => (Parent as Physical).Depth;
 
-        /// <summary>
-        /// Gets the associated thickness of layers
-        /// </summary>
-        public double[] Thickness
-        {
-            get
-            {
-                if (Soil != null)
-                    return Soil.WaterNodeThickness;
-                else
-                    return new double[0];
-            }
-        }
-
-/// <summary>
-/// Gets or sets the crop lower limit
-/// </summary>
-[Summary]
-        [Description("LL")]
+        /// <summary>Crop lower limit (mm/mm)</summary>
+        [Summary]
         [Units("mm/mm")]
         public double[] LL { get; set; }
-        
-        /// <summary>
-        /// Gets the plant available water by layer
-        /// </summary>
-        [Summary]
-        [Description("PAWC")]
-        [Display(Format = "N1", ShowTotal = true)]
+
+        /// <summary>Crop lower limit (mm)</summary>
         [Units("mm")]
+        public double[] LLmm
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+                return MathUtilities.Multiply(LL, soilPhysical.Thickness);
+            }
+        }
+
+        /// <summary>The KL value.</summary>
+        [Summary]
+        [Units("/day")]
+        [Display(Format = "N2")]
+        public double[] KL { get; set; }
+
+        /// <summary>The exploration factor</summary>
+        [Summary]
+        [Units("0-1")]
+        [Display(Format = "N1")]
+        public double[] XF { get; set; }
+
+        /// <summary>The metadata for crop lower limit</summary>
+        public string[] LLMetadata { get; set; }
+
+        /// <summary>The metadata for KL</summary>
+        public string[] KLMetadata { get; set; }
+
+        /// <summary>The meta data for the exploration factor</summary>
+        public string[] XFMetadata { get; set; }
+
+        /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
+        [Units("mm/mm")]
+        [Display(Format = "N2")]
         public double[] PAWC
         {
             get
             {
-                try
-                {
-                    Soil parentSoil = Soil;
-                    if (parentSoil != null)
-                    {
-                        double[] PAWCALLlayers = MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
-                        return Soil.Map(PAWCALLlayers, Soil.Thickness, Thickness, Soil.MapType.Mass);
-                    }
-                    else
-                        return new double[0];
-                }
-                catch (Exception)
-                {
-                    return new double[0];
-                }
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+                return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
             }
         }
 
-        /// <summary>
-        /// Gets or sets the KL value.
-        /// </summary>
-        [Summary]
-        [Description("KL")]
+        /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
+        [Units("mm")]
+        public double[] PAWCmm
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+                return  MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
+            }
+        }
+
+        /// <summary>Return the plant available water (SW-CLL).</summary>
+        [Units("mm/mm")]
         [Display(Format = "N2")]
-        [Units("/day")]
-        public double[] KL { get; set; }
+        public double[] PAW
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+                var water = FindInScope<Water>();
+                if (water == null)
+                    return null;
+                return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, water.Volumetric, XF);
+            }
+        }
 
-        /// <summary>
-        /// Gets or sets the exploration factor
-        /// </summary>
-        [Summary]
-        [Description("XF")]
-        [Display(Format = "N1")]
-        [Units("0-1")]
-        public double[] XF { get; set; }
+        /// <summary>Return the plant available water (SW-CLL) (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
 
-        /// <summary>
-        /// Gets or sets the metadata for crop lower limit
-        /// </summary>
-        public string[] LLMetadata { get; set; }
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
 
-        /// <summary>
-        /// Gets or sets the metadata for KL
-        /// </summary>
-        public string[] KLMetadata { get; set; }
-
-        /// <summary>
-        /// Gets or sets the meta data for the exploration factor
-        /// </summary>
-        public string[] XFMetadata { get; set; }
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:true),
+                new TabularData.Column("LL", new VariableProperty(this, GetType().GetProperty("LL"))),
+                new TabularData.Column("KL", new VariableProperty(this, GetType().GetProperty("KL"))),
+                new TabularData.Column("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
+                new TabularData.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
+            });
+        }
     }
 }

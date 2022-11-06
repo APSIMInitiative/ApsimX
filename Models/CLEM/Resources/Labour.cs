@@ -1,12 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
-using System.Xml.Serialization;
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
+using System.IO;
+using System.Reflection;
 
 namespace Models.CLEM.Resources
 {
@@ -14,23 +16,35 @@ namespace Models.CLEM.Resources
     /// Parent model of Labour Person models.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all labour types (people) for the simulation.")]
-    public class Labour: ResourceBaseWithTransactions
+    [Description("Resource group for all labour types (people) in the simulation")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
+    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
-        /// <summary>
-        /// Get the Clock.
-        /// </summary>
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
+
+        private List<string> warningsMultipleEntry = new List<string>();
+        private List<string> warningsNotFound = new List<string>();
+        private Relationship adultEquivalentRelationship = null;
+        private LabourAvailabilityList availabilityList;
 
         /// <summary>
         /// Labour types currently available.
         /// </summary>
-        [XmlIgnore]
-        public List<LabourType> Items;
+        [JsonIgnore]
+        public List<LabourType> Items { get; set; }
+
+        /// <summary>
+        /// Use cohorts for all analysis or use individuals
+        /// </summary>
+        [Description("Maintain cohorts")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Required]
+        public bool UseCohorts { get; set; }
 
         /// <summary>
         /// Allows indiviuals to age each month
@@ -39,60 +53,17 @@ namespace Models.CLEM.Resources
         [Required]
         public bool AllowAging { get; set; }
 
-        ///// <summary>
-        ///// Total resources currently available
-        ///// </summary>
-        //public double Available
-        //{
-        //    get
-        //    {
-        //        return this.Children.Where(a => a.GetType() == typeof(IResourceType)).Cast<IResourceType>().Sum(a => a.Amount);
-        //    }
-        //} 
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in Apsim.Children(this, typeof(IModel)).Cast<LabourType>().ToList())
-            {
-                for (int i = 0; i < Math.Max(labourChildModel.Individuals, 1); i++)
-                {
-                    LabourType labour = new LabourType()
-                    {
-                        Gender = labourChildModel.Gender,
-                        Individuals = 1,
-                        InitialAge = labourChildModel.InitialAge,
-                        AgeInMonths = labourChildModel.InitialAge*12,
-                        MaxLabourSupply = labourChildModel.MaxLabourSupply,
-                        Parent = this,
-                        Name = labourChildModel.Name // + ((labourChildModel.Individuals>1)?i.ToString():"")
-                    };
-                    labour.TransactionOccurred += Resource_TransactionOccurred;
-                    Items.Add(labour);
-                }
-            }
-        }
+        /// <summary>
+        /// Current pay rate value of individuals
+        /// </summary>
+        [JsonIgnore]
+        public LabourPricing PayList;
 
         /// <summary>
-        /// Overrides the base class method to allow for clean up
+        /// Determine if a price schedule has been provided for this individual
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            foreach (LabourType childModel in Apsim.Children(this, typeof(LabourType)))
-            {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
-            }
-            if (Items != null)
-            {
-                Items.Clear();
-            }
-            Items = null;
-        }
+        /// <returns>boolean</returns>
+        public bool PricingAvailable { get { return (PayList != null); } }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -100,23 +71,215 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            if (Clock.Today.Day != 1)
-            {
+            // locate resources
+            availabilityList = this.FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
+
+            if (clock.Today.Day != 1)
                 OnStartOfMonth(this, null);
+        }
+
+        /// <summary>
+        /// A method to calculate the total dietary intake by metric
+        /// </summary>
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten</returns>
+        public double GetDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
+        {
+            double value = 0;
+            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
+                value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
+            return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
+        }
+
+        /// <summary>
+        /// A method to calculate the total dietary intake by metric
+        /// </summary>
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten per day</returns>
+        public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
+        {
+            int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
+            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
+        }
+
+        /// <inheritdoc/>
+        public LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() { "Adult equivalent" },
+                        measures: new List<string>()
+                        );
+                default:
+                    return new LabelsForCompanionModels();
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        #region validation
+
+        /// <summary>
+        /// Validation of this resource
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // Add warning if no individuals defined
+            if (FindAllChildren<LabourType>().Count() > 0 && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
+            {
+                string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
+                if (!warningsNotFound.Contains(warningString))
+                {
+                    warningsNotFound.Add(warningString);
+                    Summary.WriteMessage(this, warningString, MessageType.Warning);
+                }
+            }
+            return results;
+        }
+
+        #endregion
+
+        /// <summary>An event handler to allow us to create labour list when simualtion commences</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private new void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            // locate AE relationship
+            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Adult equivalent");
+
+            Items = new List<LabourType>();
+            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
+            {
+                IndividualAttribute att = new IndividualAttribute() { StoredValue = labourChildModel.Name };
+                if (UseCohorts)
+                {
+                    LabourType labour = new LabourType()
+                    {
+                        Sex = labourChildModel.Sex,
+                        Individuals = labourChildModel.Individuals,
+                        Parent = this,
+                        InitialAge = labourChildModel.InitialAge,
+                        AgeInMonths = labourChildModel.InitialAge * 12,
+                        LabourAvailability = labourChildModel.LabourAvailability,
+                        Name = labourChildModel.Name,
+                        Hired = labourChildModel.Hired
+                    };
+                    labour.Attributes.Add("Group", att);
+                    labour.TransactionOccurred += Resource_TransactionOccurred;
+                    Items.Add(labour);
+                }
+                else
+                {
+                    for (int i = 0; i < labourChildModel.Individuals; i++)
+                    {
+                        // get the availability from provided list
+                        LabourType labour = new LabourType()
+                        {
+                            Sex = labourChildModel.Sex,
+                            Individuals = 1,
+                            Parent = this,
+                            InitialAge = labourChildModel.InitialAge,
+                            AgeInMonths = labourChildModel.InitialAge * 12,
+                            LabourAvailability = labourChildModel.LabourAvailability,
+                            Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
+                            Hired = labourChildModel.Hired
+                        };
+                        labour.Attributes.Add("Group", att);
+                        labour.TransactionOccurred += Resource_TransactionOccurred;
+                        Items.Add(labour);
+                    }
+                }
+            }
+            // clone pricelist so model can modify if needed and not affect initial parameterisation
+            if (this.FindAllChildren<LabourPricing>().Count() > 0)
+                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private new void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (LabourType childModel in this.FindAllChildren<LabourType>())
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+
+            if (Items != null)
+                Items.Clear();
+
+            Items = null;
+        }
+
+        /// <summary>An event handler to allow us to check if labour availability is available.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            int currentmonth = Clock.Today.Month;
-            foreach (var item in Items)
+            foreach (LabourType item in Items)
             {
-                item.SetAvailableDays(currentmonth);
+                item.AvailabilityLimiter = 1.0;
+                CheckAssignLabourAvailability(item);
+                if (item.DietaryComponentList != null)
+                    item.DietaryComponentList.Clear();
             }
+
+            // A LabourActivityPayHired may take place after this in CLEMStartOfTimeStep to limit availability
+        }
+
+        /// <summary>An event handler to update availability for the timestep.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMUpdateLabourAvailability")]
+        private void OnCLEMUpdateLabourAvailability(object sender, EventArgs e)
+        {
+            int currentmonth = clock.Today.Month;
+            foreach (LabourType item in Items)
+                // set available days from availabilityitem
+                item.SetAvailableDays(currentmonth);
+        }
+
+        private void CheckAssignLabourAvailability(LabourType labour)
+        {
+            List<LabourType> checkList = new List<LabourType>() { labour };
+            if (labour.LabourAvailability != null)
+            {                
+                // check labour availability still ok
+                if (!(labour.LabourAvailability as IFilterGroup).Filter(checkList).Any())
+                    labour.LabourAvailability = null;
+            }
+
+            // if not assign new value
+            if (labour.LabourAvailability == null)
+            {
+                foreach (var availItem in availabilityList.FindAllChildren<ILabourSpecificationItem>())
+                {
+                    if (availItem is IFilterGroup group && group.Filter(checkList).Any())
+                    {
+                        labour.LabourAvailability = availItem;
+                        break;
+                    }
+                }
+                // if still null report error
+                if (labour.LabourAvailability == null)
+                {
+                    string msg = $"Unable to find labour availability suitable for labour type" +
+                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Sex}] [f=Age:{labour.Age}]" +
+                        $"\r\nAdd additional labour availability item to " +
+                        $"[r={availabilityList.Name}] under [r={Name}]";
+
+                    throw new ApsimXException(this, msg);
+                }
+            }            
         }
 
         /// <summary>Age individuals</summary>
@@ -127,39 +290,191 @@ namespace Models.CLEM.Resources
         {
             if(AllowAging)
             {
-                foreach (var item in Items)
+                foreach (LabourType item in Items)
                 {
-                    item.AgeInMonths++;
+                    if (!item.Hired)
+                        item.AgeInMonths++;
+
+                    //Update labour available if needed.
+                    CheckAssignLabourAvailability(item);
+
                 }
             }
         }
 
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
         /// <summary>
-        /// Override base event
+        /// Calculate the AE of an individual based on provided relationship
         /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
+        /// <returns>value</returns>
+        public double? CalculateAE(double ageInMonths)
         {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            if (adultEquivalentRelationship != null)
+                return adultEquivalentRelationship.SolveY(ageInMonths);
+            else
+                // no AE relationship provided.
+                return null;
         }
 
         /// <summary>
-        /// Override base event
+        /// Calculate the number of Adult Equivalents on the farm
         /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        /// <param name="includeHired">Include hired labour in the calculation</param>
+        /// <returns></returns>
+        public double AdultEquivalents(bool includeHired)
         {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
+            double ae = 0;
+            foreach (LabourType person in Items)
+                if (!person.Hired | (includeHired))
+                    ae += (CalculateAE(person.AgeInMonths)??1)*Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
+            return ae;
         }
 
+        /// <summary>
+        /// Get value of a specific individual
+        /// </summary>
+        /// <returns>value</returns>
+        public double PayRate(LabourType ind)
+        {
+            if (PricingAvailable)
+            {
+                // search through RuminantPriceGroups for first match with desired purchase or sale flag
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
+                    if (item.Filter(ind))                    
+                        return item.Value;
+
+                // no price match found.
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=sex: {ind.Sex}]";
+                if (!warningsNotFound.Contains(warningString))
+                {
+                    warningsNotFound.Add(warningString);
+                    Summary.WriteMessage(this, warningString, MessageType.Warning);
+                }
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
+        /// </summary>
+        /// <returns>value</returns>
+        public double PayRate(LabourType ind, PropertyInfo property, string value)
+        {
+            double price = 0;
+            if (PricingAvailable)
+            {
+                string criteria = property.Name.ToUpper() + ":" + value.ToUpper();
+
+                //find first pricing entry matching specific criteria
+                LabourPriceGroup matchIndividual = null;
+                LabourPriceGroup matchCriteria = null;
+                foreach (LabourPriceGroup priceGroup in PayList.FindAllChildren<LabourPriceGroup>())
+                {
+                    if (priceGroup.Filter(ind) && matchIndividual == null)                    
+                        matchIndividual = priceGroup;
+
+                    // check that pricing item meets the specified criteria.
+                    var items = priceGroup.FindAllChildren<FilterByProperty>()
+                        .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual) == property)
+                        .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
+
+                    var suitableFilters = priceGroup.FindAllChildren<FilterByProperty>()
+                        .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual) == property) &
+                        (
+                            (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.ToUpper() == "TRUE") |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.ToUpper() == "FALSE")
+                        )
+                        ).Any();
+
+                    if (suitableFilters)
+                    {
+                        if (matchCriteria == null)
+                            matchCriteria = priceGroup;
+                        else
+                        {
+                            // multiple price entries were found. using first. value = xxx.
+                            if (!warningsMultipleEntry.Contains(criteria))
+                            {
+                                warningsMultipleEntry.Add(criteria);
+                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].", MessageType.Warning);
+                            }
+                        }
+                    }
+                }
+
+                if (matchCriteria == null)
+                {
+                    // report specific criteria not found in price list
+                    string warningString = $"No [Pay] rate entry was found meeting the required criteria [{property.Name}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}";
+
+                    if (matchIndividual != null)
+                    {
+                        // add using the best pricing available for [][] purchases of xx per head
+                        warningString += $"\r\nThe best available pay rate [{matchIndividual.Value:#,##0.##}] will be used.";
+                        price = matchIndividual.Value;
+                    }
+                    else
+                        Summary.WriteMessage(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]", MessageType.Warning);
+
+                    if (!warningsNotFound.Contains(criteria))
+                    {
+                        warningsNotFound.Add(criteria);
+                        Summary.WriteMessage(this, warningString, MessageType.Warning);
+                    }
+                }
+                else
+                    price = matchCriteria.Value;
+            }
+            return price;
+        }
+
+        /// <summary>
+        /// Return the availability for individual in labour list
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public double GetAvailabilityForEntry(int index)
+        {
+            if (index < Items.Count)
+                return Items[index].AvailableDays;
+            else
+                return 0;
+        }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                if (AllowAging)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Individuals age with time");
+                    htmlWriter.Write("</div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
+                htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
+                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
+                foreach (LabourType labourType in this.FindAllChildren<LabourType>())
+                {
+                    htmlWriter.Write("<tr>");
+                    htmlWriter.Write($"<td>{labourType.Name}</td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
+                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                    htmlWriter.Write("</tr>");
+                }
+                htmlWriter.Write("</table>");
+                htmlWriter.Write("</div></div>");
+                return htmlWriter.ToString(); 
+            }
+        }
 
         #endregion
-
     }
 }

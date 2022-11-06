@@ -56,7 +56,7 @@
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public override Type DataType { get { return null; } }
+        public override Type DataType { get { return Value?.GetType(); } }
 
         /// <summary>
         /// Returns a description of the property or null if not found.
@@ -133,6 +133,19 @@
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 
     /// <summary>
@@ -335,5 +348,21 @@
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType)
+        {
+            return ReflectionUtilities.GetAttribute(FieldInfo, attributeType, false);
+        }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 }

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SoilArbitrator.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Soils.Arbitrator
+﻿namespace Models.Soils.Arbitrator
 {
     using System;
     using System.Collections.Generic;
@@ -17,29 +12,29 @@ namespace Models.Soils.Arbitrator
     /// 
     /// Traditionally, below ground competition has been arbitrated using two approaches.  Firstly, the early approaches [Adiku1995Intercrop; Carberry1996Ley] used an alternating order of uptake calculation each day to ensure that different crops within a simulation did not benefit from precedence in daily orders of calculations.  Soil water simulations using the SWIM3 model [Huth2012SWIM3] arbitrate individual crop uptakes as part of the simulataneous solutions of various soil water fluxes as part of its solution of the Richards' equation [richards1931capillary].
     /// 
-    /// The soil arbitrator operates via a simple integration of daily fluxes into crop root systems via a <a href="https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Runge-Kutta</a> calculation. 
+    /// The soil arbitrator operates via a simple integration of daily fluxes into crop root systems via a [Runge-Kutta](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods) calculation. 
     /// 
     /// If Y is any soil resource, such as water or N, and U is the uptake of that resource by one or more plant root systems,  
     /// then
     /// 
-    /// Y<sub>t+1</sub> = Y<sub>t</sub> - U
+    /// Y~t+1~ = Y~t~ - U
     /// 
     /// Because U will change through the time period in complex manners depending on the number and nature of demands for that resource, we use Runge-Kutta to integrate through that time period using
     /// 
-    /// Y<sub>t+1</sub>= Y<sub>t</sub> + 1/6 x (U<sub>1</sub>+ 2xU<sub>2</sub> + 2xU<sub>3</sub> + U<sub>4</sub>) 
+    /// Y~t+1~= Y~t~ + 1/6 x (U~1~+ 2xU~2~ + 2xU~3~ + U~4~) 
     /// 
-    /// Where U<sub>1</sub>,U<sub>2</sub>,U<sub>3</sub> and U<sub>4</sub> are 4 estimates of the Uptake rates calculated by the crop models given a range of soil resource conditions, as follows:
+    /// Where U~1~,U~2~,U~3~ and U~4~ are 4 estimates of the Uptake rates calculated by the crop models given a range of soil resource conditions, as follows:
     /// 
-    /// U<sub>1</sub> = f(Y<sub>t</sub>),
+    /// U~1~ = f(Y~t~),
     /// 
-    /// U<sub>2</sub> = f(Y<sub>t</sub> - 0.5xU<sub>1</sub>),
+    /// U~2~ = f(Y~t~ - 0.5xU~1~),
     /// 
-    /// U<sub>3</sub> = f(Y<sub>t</sub> - 0.5xU<sub>2</sub>),
+    /// U~3~ = f(Y~t~ - 0.5xU~2~),
     /// 
-    /// U<sub>4</sub> = f(Y<sub>t</sub> - U<sub>3</sub>).
+    /// U~4~ = f(Y~t~ - U~3~).
     /// 
-    /// So U<sub>1</sub> is the estimate based on the uptake rates at the beginning of the time interval, similar to a simple Euler method.
-    /// U<sub>2</sub> and U<sub>3</sub> are estimates based on the rates somewhere near the midpoint of the time interval.  U<sub>4</sub> is the estimate based on the rates toward the end of the time interval.
+    /// So U~1~ is the estimate based on the uptake rates at the beginning of the time interval, similar to a simple Euler method.
+    /// U~2~ and U~3~ are estimates based on the rates somewhere near the midpoint of the time interval.  U~4~ is the estimate based on the rates toward the end of the time interval.
     /// 
     /// The iterative procedure allows crops to influence the uptake of other crops via various feedback mechanisms.  For example,  crops rapidly extracting water from near the surface will dry the soil in those layers, which will force deeper rooted crops to potentially extract water from lower layers. Uptakes can notionally be of either sign, and so trees providing hydraulic lift of water from water tables could potentially make this water available for uptake by mutplie understory species within the timestep.  Crops are responsible for meeting resource demand by whatever means they prefer.  And so, leguminous crops may start by taking up mineral N at the start of the day but rely on fixation later in a time period if N becomes limiting.  This will reduce competition from others and change the balance dynamically throughout the integration period. 
     /// 
@@ -56,14 +51,12 @@ namespace Models.Soils.Arbitrator
     /// 5) The approach will automatically arbitrate supply of N between zones, layers, and types (nitrate vs ammonium) with the preferences of all derived by the plant model code.
     /// </summary>
     [Serializable]
-    //[ViewName("UserInterface.Views.GridView")]
-    //[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [ValidParent(ParentType = typeof(Zone))]
     public class SoilArbitrator : Model
     {
-        private List<IModel> uptakeModels = null;
-        private List<IModel> zones = null;
+        private IEnumerable<IUptake> uptakeModels = null;
+        private IEnumerable<Zone> zones = null;
+        private SoilState InitialSoilState;
 
 
         /// <summary>Called at the start of the simulation.</summary>
@@ -72,8 +65,11 @@ namespace Models.Soils.Arbitrator
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
-            zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
+            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            zones = Parent.FindAllDescendants<Zone>().ToList();
+            InitialSoilState = new SoilState(zones);
+            if (!(this.Parent is Simulation))
+                throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
         }
 
         /// <summary>Called by clock to do water arbitration</summary>
@@ -100,41 +96,40 @@ namespace Models.Soils.Arbitrator
         /// <param name="arbitrationType">Water or Nitrogen</param>
         private void DoArbitration(Estimate.CalcType arbitrationType)
         {
-            SoilState InitialSoilState = new SoilState(this.Parent);
-            InitialSoilState.Initialise(zones);
+            InitialSoilState.Initialise();
 
             Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
             Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);
             Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
             Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
 
-            List<ZoneWaterAndN> listOfZoneWaterAndNs = new List<ZoneWaterAndN>();
-            List <CropUptakes> UptakesFinal = new List<CropUptakes>();
+            List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
+            List <CropUptakes> ActualUptakes = new List<CropUptakes>();
             foreach (CropUptakes U in UptakeEstimate1.Values)
             {
-                CropUptakes CWU = new CropUptakes();
-                CWU.Crop = U.Crop;
-                foreach (ZoneWaterAndN ZW1 in U.Zones)
+                CropUptakes CU = new CropUptakes();
+                CU.Crop = U.Crop;
+                foreach (ZoneWaterAndN ZU in U.Zones)
                 {
-                    ZoneWaterAndN NewZ = UptakeEstimate1.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0)
-                                       + UptakeEstimate2.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate3.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
-                                       + UptakeEstimate4.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0);
-                    CWU.Zones.Add(NewZ);
-                    listOfZoneWaterAndNs.Add(NewZ);
+                    ZoneWaterAndN NewZone = UptakeEstimate1.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0)
+                                        + UptakeEstimate2.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate3.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate4.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0);
+                    CU.Zones.Add(NewZone);
+                    listOfZoneUptakes.Add(NewZone);
                 }
 
-                UptakesFinal.Add(CWU);
+                ActualUptakes.Add(CU);
             }
 
-            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneWaterAndNs);
+            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneUptakes);
 
-            foreach (CropUptakes Uptake in UptakesFinal)
+            foreach (CropUptakes Uptake in ActualUptakes)
             {
                 if (arbitrationType == Estimate.CalcType.Water)
-                    Uptake.Crop.SetSWUptake(Uptake.Zones);
+                    Uptake.Crop.SetActualWaterUptake(Uptake.Zones);
                 else
-                    Uptake.Crop.SetNUptake(Uptake.Zones);
+                    Uptake.Crop.SetActualNitrogenUptakes(Uptake.Zones);
             }
         }
 

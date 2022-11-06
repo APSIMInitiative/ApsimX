@@ -1,122 +1,119 @@
 ﻿namespace UserInterface.Commands
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.Runners;
+    using Models.Core.Run;
     using Presenters;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
+    using System.Globalization;
+    using System.IO;
     using System.Media;
     using System.Timers;
+    using Utility;
 
-    class RunCommand : ICommand
+    public sealed class RunCommand : IDisposable
     {
         /// <summary>The name of the job</summary>
         private string jobName;
 
         /// <summary>The collection of jobs to run</summary>
-        private RunOrganiser jobManager;
-
-        /// <summary>The runner to use to run the jobs</summary>
-        private IJobRunner jobRunner;
+        private IRunner jobRunner;
 
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>The stop watch we can use to time the runs.</summary>
+        /// <summary>The timer we use to update the progress bar.</summary>
         private Timer timer = null;
-
-        /// <summary>The stop watch we can use to time the runs.</summary>
-        private Stopwatch stopwatch = new Stopwatch();
 
         /// <summary>List of all errors encountered</summary>
         private List<Exception> errors = new List<Exception>();
 
-        /// <summary>Number of simulations that have run</summary>
-        private int numSimulationsRun = 0;
-
-        /// <summary>Retuns true if simulations are running.</summary>
-        public bool IsRunning { get; set; }
-
-
         /// <summary>Constructor</summary>
-        /// <param name="model">The model the user has selected to run</param>
+        /// <param name="name">Name of the job to be displayed in the UI..</param>
+        /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
-        /// <param name="multiProcess">Use the multi-process runner?</param>
-        /// <param name="storage">A storage writer where all data should be stored</param>
-        public RunCommand(IModel model, ExplorerPresenter presenter, bool multiProcess, IStorageWriter storage)
+        public RunCommand(string name, IRunner runner, ExplorerPresenter presenter)
         {
-            this.jobName = model.Name;
+            this.jobName = name;
+            this.jobRunner = runner;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
-            jobManager = Runner.ForSimulations(explorerPresenter.ApsimXFile, model, false);
 
-            if (multiProcess)
-                jobRunner = new JobRunnerMultiProcess(storage);
-            else
-                jobRunner = new JobRunnerAsync();
-            jobRunner.JobCompleted += OnJobCompleded;
-            jobRunner.AllJobsCompleted += OnAllJobsCompleted;
+            // Ensure that errors are displayed in GUI live as they occur.
+            object errorMutex = new object();
+            runner.ErrorHandler = e =>
+            {
+                lock (errorMutex)
+                    explorerPresenter.MainPresenter.ShowError(e, false);
+            };
+
+            jobRunner.AllSimulationsCompleted += OnAllJobsCompleted;
         }
+
+        /// <summary>Is this instance currently running APSIM.</summary>
+        public bool IsRunning { get; private set; } = false;
 
         /// <summary>Perform the command</summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do()
         {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
             IsRunning = true;
+            jobRunner.Run();
 
-            stopwatch.Start();
-                
-            jobRunner.Run(jobManager, wait: false);
-
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.AutoReset = true;
-            timer.Elapsed += OnTimerTick;
-            timer.Start();
-        }
-
-        /// <summary>Undo the command</summary>
-        public void Undo(CommandHistory CommandHistory)
-        {
-        }
-
-        /// <summary>Job has completed</summary>
-        private void OnJobCompleded(object sender, JobCompleteArgs e)
-        {
-            lock (this)
+            if (IsRunning)
             {
-                numSimulationsRun++;
-                if (e.exceptionThrowByJob != null)
-                    errors.Add(e.exceptionThrowByJob);
+                timer = new Timer();
+                timer.Interval = 1000;
+                timer.AutoReset = true;
+                timer.Elapsed += OnTimerTick;
+                timer.Start();
             }
+            // Manually fire of an OnTimerTick event.
+            OnTimerTick(this, null);
         }
 
         /// <summary>All jobs have completed</summary>
-        private void OnAllJobsCompleted(object sender, AllCompletedArgs e)
+        private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
-            if (e.exceptionThrown != null)
-                errors.Add(e.exceptionThrown);
+            IsRunning = false;
+            if (timer != null)
+                timer.Elapsed -= OnTimerTick;
 
-            Stop();
-            if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                        + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.MessageType.Information);
-            else
+            if (e.AllExceptionsThrown != null)
+                errors.AddRange(e.AllExceptionsThrown);
+            try
             {
-                string errorMessage = null;
-                errors.ForEach(error => errorMessage += error.ToString() + Environment.NewLine
-                                                     +  "----------------------------------------------" + Environment.NewLine);
-                explorerPresenter.MainPresenter.ShowError(errors);
+                Stop();
             }
+            catch
+            {
+                // We could display the error message, but we're about to display output to the user anyway.
+            }
+            if (errors.Count == 0)
+                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information, false);
+            // We don't need to display error messages now - they are displayed as they occur.
 
-            SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
-            else
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
-            player.Play();
+            if (!Configuration.Settings.Muted)
+            {
+                // Play a completion sound.
+                SoundPlayer player = new SoundPlayer();
+                if (errors.Count > 0)
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWithErrorWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Fail.wav");
+                }
+                else
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
+                }
+
+                player.Play();
+            }
         }
 
         /// <summary>
@@ -127,13 +124,9 @@
         private void OnStopSimulation(object sender, EventArgs e)
         {
             Stop();
-            string msg = jobName + " aborted";
-            if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.MessageType.Information);
-            else
-            {
-                explorerPresenter.MainPresenter.ShowError(errors);
-            }
+            // Any error messages will already be onscreen, as they are
+            // rendered as they occur.
+            explorerPresenter.MainPresenter.ShowMessage($"{jobName} aborted", Simulation.MessageType.Information, false);
         }
 
         /// <summary>
@@ -141,14 +134,16 @@
         /// </summary>
         private void Stop()
         {
+            explorerPresenter.MainPresenter.HideProgressBar();
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
-            timer.Stop();
-            stopwatch.Stop();
-            jobRunner.Stop();
-
-            IsRunning = false;
-            jobManager = null;
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Elapsed -= OnTimerTick;
+            }
+            jobRunner?.Stop();
             jobRunner = null;
+            IsRunning = false;
         }
 
         /// <summary>
@@ -158,19 +153,25 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            int numSimulations = 0;
-            if (jobManager.SimulationNamesBeingRun != null)
-                numSimulations = jobManager.SimulationNamesBeingRun.Count;
-            double percentComplete = (numSimulationsRun * 1.0 / numSimulations) * 100.0;
-
-            if (numSimulations > 0)
+            if (jobRunner == null)
             {
-                explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         numSimulationsRun + " of " +
-                         (numSimulations) + " completed)", Simulation.MessageType.Information);
-
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
+                timer?.Stop();
+                timer.Elapsed -= OnTimerTick;
             }
+            else //if (jobRunner?.TotalNumberOfSimulations > 0)
+            {
+                double progress = jobRunner?.Progress ?? 0;
+                explorerPresenter.MainPresenter.ShowProgressMessage($"{jobName} running ({jobRunner.Status})");
+                explorerPresenter.MainPresenter.ShowProgress(progress);
+            }
+            //else if (jobRunner != null)
+            //    explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));
+        }
+
+        public void Dispose()
+        {
+            if (timer != null)
+                timer.Dispose();
         }
     }
 }

@@ -1,11 +1,15 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Models.CLEM.Groupings;
+using Models.Core.Attributes;
+using System.IO;
+using Models.Core.ApsimFile;
 
 namespace Models.CLEM.Activities
 {
@@ -15,16 +19,18 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
-    public class RuminantActivityGrazeAll : CLEMActivityBase
+    [Description("Perform grazing of all herds and pastures (paddocks)")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
+    public class RuminantActivityGrazeAll : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -32,7 +38,7 @@ namespace Models.CLEM.Activities
         /// Could be modified to account for rain/heat walking to water etc.
         /// </summary>
         [Description("Number of hours grazed")]
-        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day")]
+        [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
         public double HoursGrazed { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -41,141 +47,122 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // create activity for each pasture type and breed at startup
-            foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children)
-            {
-                RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
-                ragp.GrazeFoodStoreModel = pastureType;
-                ragp.Clock = Clock;
-                ragp.Parent = this;
-                ragp.Name = "Graze_" + pastureType.Name;
-                ragp.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
-                ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
+            bool buildTransactionFromTree = FindAncestor<ZoneCLEM>().BuildTransactionCategoryFromTree;
 
-                foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+            GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
+            if (grazeFoodStore != null)
+            {
+                this.InitialiseHerd(true, true);
+                // create activity for each pasture type (and common land) and breed at startup
+                // do not include common land pasture..
+                Guid currentUid = UniqueID;
+                foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
-                    RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
+                    string transCat = "";
+                    if (!buildTransactionFromTree)
+                        transCat = TransactionCategory;
+
+                    RuminantActivityGrazePasture grazePasture = new RuminantActivityGrazePasture
                     {
-                        GrazeFoodStoreModel = pastureType,
-                        RuminantTypeModel = herdType,
+                        ActivitiesHolder = ActivitiesHolder,
+                        CLEMParentName = CLEMParentName,
+                        GrazeFoodStoreTypeName = pastureType.NameWithParent,
                         HoursGrazed = HoursGrazed,
-                        Parent = ragp,
-                        Name = ragp.Name+"_"+herdType.Name,
-                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
+                        TransactionCategory = transCat,
+                        GrazeFoodStoreModel = pastureType,
+                        Clock = clock,
+                        Parent = this,
+                        Name = "Graze_" + (pastureType as Model).Name,
+                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                        Status = ActivityStatus.NoTask
                     };
-                    if (ragpb.Resources == null)
-                    {
-                        ragpb.Resources = this.Resources;
-                    }
-                    if (ragpb.Clock == null)
-                    {
-                        ragpb.Clock = this.Clock;
-                    }
-                    ragpb.InitialiseHerd(true, true);
-                    if (ragp.ActivityList == null)
-                    {
-                        ragp.ActivityList = new List<CLEMActivityBase>();
-                    }
-                    ragp.ActivityList.Add(ragpb);
-                    ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
-                    ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
-                }
-                if (ActivityList == null)
-                {
-                    ActivityList = new List<CLEMActivityBase>();
-                }
-                ActivityList.Add(ragp);
+                    currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
+                    grazePasture.UniqueID = currentUid;
+                    grazePasture.SetLinkedModels(Resources);
+                    grazePasture.InitialiseHerd(true, true);
 
+                    Guid currentHerdUid = currentUid;
+                    foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
+                    {
+                        RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
+                        {
+                            GrazeFoodStoreTypeName = pastureType.NameWithParent,
+                            RuminantTypeName = herdType.NameWithParent,
+                            GrazeFoodStoreModel = pastureType,
+                            RuminantTypeModel = herdType,
+                            HoursGrazed = HoursGrazed,
+                            Parent = grazePasture,
+                            Name = grazePasture.Name + "_" + herdType.Name,
+                            OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                            ActivitiesHolder = ActivitiesHolder,
+                            TransactionCategory = transCat,
+                            Status = ActivityStatus.NoTask
+                        };
+                        currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
+                        grazePastureHerd.UniqueID = currentHerdUid;
+                        grazePastureHerd.SetLinkedModels(Resources);
+
+                        if (grazePastureHerd.Clock == null)
+                            grazePastureHerd.Clock = this.clock;
+
+                        grazePastureHerd.InitialiseHerd(true, true);
+                        grazePasture.Children.Add(grazePastureHerd);
+                    }
+                    Structure.Add(grazePasture, this);
+                }
+                this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
             }
+            else
+                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (ActivityList != null)
-            {
-                foreach (RuminantActivityGrazePasture pastureGraze in ActivityList)
-                {
-                    foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
-                    {
-                        pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
-                        pastureHerd.ActivityPerformed -= BubblePaddock_ActivityPerformed;
-                    }
-                }
-            }
-        }
-
-        private void GrazeAll_ResourceShortfallOccurred(object sender, EventArgs e)
-        {
-            // bubble shortfall to Activity base for reporting
-            OnShortfallOccurred(e);
-        }
-
-        private void BubblePaddock_ActivityPerformed(object sender, EventArgs e)
-        {
-            if (ActivityPerformed != null)
-                ActivityPerformed(sender, e);
-        }
-
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
+            if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+                Status = ActivityStatus.NoTask;
             return;
         }
 
+        #region validation
         /// <summary>
-        /// Method to determine resources required for initialisation of this activity
+        /// Validate model
         /// </summary>
+        /// <param name="validationContext"></param>
         /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return null;
+            var results = new List<ValidationResult>();
+
+            // single grazeall
+            if(ActivitiesHolder.FindAllDescendants<RuminantActivityGrazeAll>().Count() > 1)
+            {
+                string[] memberNames = new string[] { "Ruminant graze all activity" };
+                results.Add(new ValidationResult($"Only one [a=RuminantActivityGrazeAll] is permitted per [CLEM] component{Environment.NewLine}The GrazeAll activity will manage all possible grazing on the farm", memberNames));
+            }
+            return results;
         }
+        #endregion
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
+        #region descriptive summary
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
-        }
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
+                if (HoursGrazed <= 0)
+                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+                else
+                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
-        }
-
+                htmlWriter.Write("the maximum 8 hours each day</span>");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

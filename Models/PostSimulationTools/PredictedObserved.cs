@@ -2,7 +2,9 @@
 
 namespace Models.PostSimulationTools
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Factorial;
     using Models.Storage;
     using System;
@@ -10,9 +12,9 @@ namespace Models.PostSimulationTools
     using System.Data;
     using System.Linq;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
@@ -20,12 +22,17 @@ namespace Models.PostSimulationTools
     /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>Gets or sets the name of the predicted table.</summary>
         [Description("Predicted table")]
         [Display(Type = DisplayType.TableName)]
@@ -38,107 +45,203 @@ namespace Models.PostSimulationTools
 
         /// <summary>Gets or sets the field name used for match.</summary>
         [Description("Field name to use for matching predicted with observed data")]
-        [Display(Type = DisplayType.FieldName)]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldNameUsedForMatch { get; set; }
 
         /// <summary>Gets or sets the second field name used for match.</summary>
         [Description("Second field name to use for matching predicted with observed data (optional)")]
-        [Display(Type = DisplayType.FieldName)]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldName2UsedForMatch { get; set; }
 
         /// <summary>Gets or sets the third field name used for match.</summary>
         [Description("Third field name to use for matching predicted with observed data (optional)")]
-        [Display(Type = DisplayType.FieldName)]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldName3UsedForMatch { get; set; }
 
-        /// <summary>Main run method for performing our calculations and storing data.</summary>
-        /// <param name="dataStore">The data store.</param>
-        /// <exception cref="ApsimXException">
-        /// Could not find model data table:  + ObservedTableName
-        /// or
-        /// Could not find observed data table:  + ObservedTableName
-        /// </exception>
-        public void Run(IStorageReader dataStore)
-        {
-            if (PredictedTableName != null && ObservedTableName != null)
-            {
-                dataStore.DeleteDataInTable(this.Name);
+        /// <summary>Gets or sets the third field name used for match.</summary>
+        [Description("Fourth field name to use for matching predicted with observed data (optional)")]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
+        public string FieldName4UsedForMatch { get; set; }
 
-                DataTable predictedDataNames = dataStore.RunQuery("PRAGMA table_info(" + PredictedTableName + ")");
-                DataTable observedDataNames = dataStore.RunQuery("PRAGMA table_info(" + ObservedTableName + ")");
+        /// <summary>
+        /// Normally, the only columns added to the PredictedObserved table are
+        /// those which exist in both predicted and observed tables. If this is
+        /// checked, all columns from both tables will be added to the
+        /// PredictedObserved table.
+        /// </summary>
+        [Tooltip("Normally, the only columns added to the PredictedObserved table are those which exist in both predicted and observed tables. If this is checked, all columns from both tables will be added to the PredictedObserved table.")]
+        [Description("Include all columns in PredictedObserved table")]
+        public bool AllColumns { get; set; }
+
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
+        {
+            try
+            {
+                if (PredictedTableName == null || ObservedTableName == null)
+                    return;
+
+                // If neither the predicted nor obseved tables have been modified during
+                // the most recent simulations run, don't do anything.
+                if (dataStore?.Writer != null &&
+                !(dataStore.Writer.TablesModified.Contains(PredictedTableName) || dataStore.Writer.TablesModified.Contains(ObservedTableName)))
+                    return;
+
+                IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
+                IEnumerable<string> observedDataNames = dataStore.Reader.ColumnNames(ObservedTableName);
 
                 if (predictedDataNames == null)
-                    throw new ApsimXException(this, "Could not find model data table: " + ObservedTableName);
+                    throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
+
+                if (!predictedDataNames.Any())
+                    throw new Exception($"Predicted table '{PredictedTableName}' contains no data");
+
+                if (!observedDataNames.Any())
+                    throw new Exception($"Observed table '{ObservedTableName}' contains no data");
 
                 if (observedDataNames == null)
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
-                IEnumerable<string> commonCols = from p in predictedDataNames.AsEnumerable()
-                                                 join o in observedDataNames.AsEnumerable() on p["name"] equals o["name"]
-                                                 select p["name"] as string;
+                // get the common columns between these lists of columns
+                List<string> commonCols = predictedDataNames.Intersect(observedDataNames).ToList();
+                if (commonCols.Count == 0)
+                    throw new Exception($"Predicted table '{PredictedTableName}' and observed table '{ObservedTableName}' do not have any columns with the same name.");
+                // This should be all columns which exist in one table but not both.
+                IEnumerable<string> uncommonCols = predictedDataNames.Except(observedDataNames).Union(observedDataNames.Except(predictedDataNames));
+
+                IEnumerable<string> fieldNamesToMatch = new string[] { FieldNameUsedForMatch, FieldName2UsedForMatch, FieldName3UsedForMatch, FieldName4UsedForMatch }
+                                                        .Where(f => !string.IsNullOrEmpty(f))
+                                                        .Select(f => f == "SimulationName" ? "SimulationID" : f);
+
+                IEnumerable<string> shortObservedFieldNamesToMatch = fieldNamesToMatch.Select(f => dataStore.Reader.BriefColumnName(ObservedTableName, f));
+
+                bool useSimulationNameForMatch = fieldNamesToMatch.Contains("SimulationID");
 
                 StringBuilder query = new StringBuilder("SELECT ");
-                foreach (string s in commonCols)
+                for (int i = 0; i < commonCols.Count; i++)
                 {
-                    if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
-                        query.Append("I.'@field', ");
-                    else
-                        query.Append("I.'@field' AS 'Observed.@field', R.'@field' AS 'Predicted.@field', ");
+                    string s = commonCols[i];
+                    string obsColShort = dataStore.Reader.BriefColumnName(ObservedTableName, s);
+                    string predColShort = dataStore.Reader.BriefColumnName(PredictedTableName, s);
+                    if (i != 0)
+                        query.Append(", ");
 
-                    query.Replace("@field", s);
+                    if (fieldNamesToMatch.Contains(s))
+                        query.Append($"O.\"{obsColShort}\"");
+                    else
+                        query.Append($"O.\"{obsColShort}\" AS \"Observed.{obsColShort}\", P.\"{predColShort}\" AS \"Predicted.{predColShort}\"");
                 }
 
+                // Add columns which exist in one table but not both.
+                foreach (string uncommonCol in uncommonCols)
+                {
+                    // Basically this hack is here to allow error data to be added to the p/o graphs.
+                    // This is kind of terrible, but I really don't want to duplicate every
+                    // column from both predicted and observed tables if we don't have to.
+                    // This does raise the question of whether we should be creating a "PredictedObserved"
+                    // table at all, since we're actually duplicating data in the DB by doing so.
+                    if (AllColumns || uncommonCol.EndsWith("Error"))
+                    {
+                        if (predictedDataNames.Contains(uncommonCol))
+                            query.Append($", P.\"{uncommonCol}\" as \"Predicted.{uncommonCol}\"");
+                        else if (observedDataNames.Contains(uncommonCol))
+                            query.Append($", O.\"{uncommonCol}\" as \"Observed.{uncommonCol}\"");
+                    }
+                }
 
-                query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
-                if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
-                    query.Append(" AND I.'@match2' = R.'@match2'");
-                if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
-                    query.Append(" AND I.'@match3' = R.'@match3'");
+                query.AppendLine();
+                query.AppendLine($"FROM [{ObservedTableName}] O");
+                query.AppendLine($"INNER JOIN [{PredictedTableName}] P");
+                query.Append($"USING ([CheckpointID]");
 
-                int checkpointID = dataStore.GetCheckpointID("Current");
-                query.Append(" AND R.CheckpointID = " + checkpointID);
+                foreach (var fieldName in fieldNamesToMatch)
+                    query.Append($", \"{fieldName}\"");
+                query.AppendLine(")");
 
-                query.Replace(", FROM", " FROM"); // get rid of the last comma
-                query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");
-
-                query = query.Replace("@match1", FieldNameUsedForMatch);
-                query = query.Replace("@match2", FieldName2UsedForMatch);
-                query = query.Replace("@match3", FieldName3UsedForMatch);
+                int checkpointID = dataStore.Writer.GetCheckpointID("Current");
+                query.AppendLine("WHERE [CheckpointID] = " + checkpointID);
+                query.Replace("O.\"SimulationID\" AS \"Observed.SimulationID\", P.\"SimulationID\" AS \"Predicted.SimulationID\"", "O.\"SimulationID\" AS \"SimulationID\"");
+                query.Replace("O.\"CheckpointID\" AS \"Observed.CheckpointID\", P.\"CheckpointID\" AS \"Predicted.CheckpointID\"", "O.\"CheckpointID\" AS \"CheckpointID\"");
 
                 if (Parent is Folder)
                 {
                     // Limit it to particular simulations in scope.
                     List<string> simulationNames = new List<string>();
-                    foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
-                        simulationNames.AddRange(experiment.GetSimulationNames());
-                    foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
+                    foreach (Experiment experiment in this.FindAllInScope<Experiment>())
+                    {
+                        var names = experiment.GenerateSimulationDescriptions().Select(s => s.Name);
+                        simulationNames.AddRange(names);
+                    }
+
+                    foreach (Simulation simulation in this.FindAllInScope<Simulation>())
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
-                    query.Append(" AND I.SimulationID in (");
-                    foreach (string simulationName in simulationNames)
+                    if (useSimulationNameForMatch)
                     {
-                        if (simulationName != simulationNames[0])
-                            query.Append(',');
-                        query.Append(dataStore.GetSimulationID(simulationName));
+                        query.Append(" AND O.[SimulationID] in (");
+                        foreach (string simulationName in simulationNames)
+                        {
+                            if (simulationName != simulationNames[0])
+                                query.Append(',');
+                            query.Append(dataStore.Writer.GetSimulationID(simulationName, null));
+                        }
+                        query.Append(")");
                     }
-                    query.Append(")");
                 }
 
-                DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
+                DataTable predictedObservedData = dataStore.Reader.GetDataUsingSql(query.ToString());
 
                 if (predictedObservedData != null)
                 {
+                    foreach (DataColumn column in predictedObservedData.Columns)
+                    {
+                        if (column.ColumnName.StartsWith("Predicted."))
+                        {
+                            string shortName = column.ColumnName.Substring("Predicted.".Length);
+                            column.ColumnName = "Predicted." + dataStore.Reader.FullColumnName(PredictedTableName, shortName);
+                        }
+                        else if (column.ColumnName.StartsWith("Observed."))
+                        {
+                            string shortName = column.ColumnName.Substring("Observed.".Length);
+                            column.ColumnName = "Observed." + dataStore.Reader.FullColumnName(ObservedTableName, shortName);
+                        }
+                        else if (shortObservedFieldNamesToMatch.Contains(column.ColumnName))
+                        {
+                            column.ColumnName = dataStore.Reader.FullColumnName(ObservedTableName, column.ColumnName);
+                        }
+                    }
+
+                    // Add in error columns for each data column.
+                    foreach (string columnName in commonCols)
+                    {
+                        if (predictedObservedData.Columns.Contains("Predicted." + columnName) &&
+                            predictedObservedData.Columns["Predicted." + columnName].DataType == typeof(double))
+                        {
+                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName);
+                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName);
+                            if (predicted.Length > 0 && predicted.Length == observed.Length)
+                            {
+                                var errorData = MathUtilities.Subtract(predicted, observed);
+                                var errorColumnName = "Pred-Obs." + columnName;
+                                var errorColumn = predictedObservedData.Columns.Add(errorColumnName, typeof(double));
+                                DataTableUtilities.AddColumn(predictedObservedData, errorColumnName, errorData);
+                                predictedObservedData.Columns[errorColumnName].SetOrdinal(predictedObservedData.Columns["Predicted." + columnName].Ordinal + 1);
+                            }
+                        }
+
+                    }
+
+                    // Write table to datastore.
                     predictedObservedData.TableName = this.Name;
-                    dataStore.WriteTable(predictedObservedData);
+                    dataStore.Writer.WriteTable(predictedObservedData);
 
                     List<string> unitFieldNames = new List<string>();
                     List<string> unitNames = new List<string>();
 
-                    // write units to table.
                     foreach (string fieldName in commonCols)
                     {
-                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
+                        string units = dataStore.Reader.Units(PredictedTableName, fieldName);
                         if (units != null && units != "()")
                         {
                             string unitsMinusBrackets = units.Replace("(", "").Replace(")", "");
@@ -148,15 +251,35 @@ namespace Models.PostSimulationTools
                             unitNames.Add(unitsMinusBrackets);
                         }
                     }
-                    if (unitNames.Count > 0)
-                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
-                }
 
+                    if (unitNames.Count > 0)
+                    {
+                        // The Writer replaces tables, rather than appends to them,
+                        // so we actually need to re-write the existing units table values
+                        // Is there a better way to do this?
+                        DataView allUnits = new DataView(dataStore.Reader.GetData("_Units"));
+                        allUnits.Sort = "TableName";
+                        DataTable tableNames = allUnits.ToTable(true, "TableName");
+                        foreach (DataRow row in tableNames.Rows)
+                        {
+                            string tableName = row["TableName"] as string;
+                            List<string> colNames = new List<string>();
+                            List<string> unitz = new List<string>();
+                            foreach (DataRowView rowView in allUnits.FindRows(tableName))
+                            {
+                                colNames.Add(rowView["ColumnHeading"].ToString());
+                                unitz.Add(rowView["Units"].ToString());
+                            }
+                            dataStore.Writer.AddUnits(tableName, colNames, unitz);
+                        }
+                        dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
+                    }
+                }
                 else
                 {
                     // Determine what went wrong.
-                    DataTable predictedData = dataStore.RunQuery("SELECT * FROM " + PredictedTableName);
-                    DataTable observedData = dataStore.RunQuery("SELECT * FROM " + ObservedTableName);
+                    DataTable predictedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
+                    DataTable observedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
                     if (predictedData == null || predictedData.Rows.Count == 0)
                         throw new Exception(Name + ": Cannot find any predicted data.");
                     else if (observedData == null || observedData.Rows.Count == 0)
@@ -164,8 +287,29 @@ namespace Models.PostSimulationTools
                     else
                         throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
                 }
-
             }
+            catch (Exception err)
+            {
+                throw new Exception($"Error in PredictedObserved tool {Name}", err);
+            }
+        }
+
+        /// <summary>
+        /// Returns all columns which exist in both predicted and observed tables.
+        /// </summary>
+        public string[] CommonColumns()
+        {
+            if (string.IsNullOrEmpty(PredictedTableName) || string.IsNullOrEmpty(ObservedTableName))
+                return new string[0];
+
+            IDataStore storage = FindInScope<IDataStore>();
+            if (!storage.Reader.TableNames.Contains(PredictedTableName) || !storage.Reader.TableNames.Contains(ObservedTableName))
+                return new string[0];
+
+            IEnumerable<string> predictedColumns = storage.Reader.GetColumns(PredictedTableName).Select(c => c.Item1);
+            IEnumerable<string> observedColumns = storage.Reader.GetColumns(ObservedTableName).Select(c => c.Item1);
+
+            return predictedColumns.Intersect(observedColumns).ToArray();
         }
     }
 }

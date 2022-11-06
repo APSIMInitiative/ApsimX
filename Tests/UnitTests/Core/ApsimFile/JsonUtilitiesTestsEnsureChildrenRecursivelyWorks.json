@@ -1,0 +1,28 @@
+{
+	"Name": "Simulations",
+	"Children": [
+        {
+          "Name": "Clock",
+		  "Children": []
+        },
+        {
+          "Name": "Folder1"
+        },
+        {
+			"Name": "Clock2",
+			"Children": [
+				{
+					"A": "a"
+				}
+			]
+        },
+        {
+			"Name": "Clock3",
+			"Children": [
+				{
+					"A": "a"
+				}
+			]
+        }
+	]
+}

@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models;
+using Models.Climate;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
@@ -18,7 +19,7 @@ namespace Models.Aqua
     /// Maintains a water balance in the Pond.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PondWater : Model
         {
@@ -111,7 +112,7 @@ namespace Models.Aqua
         /// Evaporation from the Pond (mm)
         /// </summary>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PondEvap
             {
             get { return pondEvap; }
@@ -121,7 +122,7 @@ namespace Models.Aqua
         /// Current Depth Water in the Pond (m)
         /// </summary>
         [Units("(m)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PondDepth 
             {
             get { return pondVolume / SurfaceArea; } //TODO: watch out for a divide by zero exception. 
@@ -132,7 +133,7 @@ namespace Models.Aqua
         /// Current Properties of any given volume/amount of water in the Pond.
         /// Used when mixing water together or evaporating water.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public WaterProperties PondProps
             {
             get 
@@ -148,7 +149,7 @@ namespace Models.Aqua
         /// Temperature of the water in the Pond (oC)
         /// </summary>
         [Units("(oC)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PondTemp 
             { 
             get { return pondProps.Temperature; } 
@@ -158,7 +159,7 @@ namespace Models.Aqua
         /// Salinity of the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Salinity
             {
             get { return pondProps.Salinity; }
@@ -169,7 +170,7 @@ namespace Models.Aqua
         /// PH of the water in the Pond 
         /// </summary>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PH
             {
             get { return pondProps.PH; }
@@ -180,7 +181,7 @@ namespace Models.Aqua
         /// Nitrogen in the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double N
             {
             get { return pondProps.N; }
@@ -190,7 +191,7 @@ namespace Models.Aqua
         /// Phosphorus in the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double P
             {
             get { return pondProps.P; }
@@ -200,7 +201,7 @@ namespace Models.Aqua
         /// Total Suspended Soild in the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double TSS
             {
             get { return pondProps.TSS; }
@@ -254,7 +255,7 @@ namespace Models.Aqua
             if (pondVolume + Volume > maxPondVolume)
                 {
                 Volume = maxPondVolume - pondVolume;
-                Summary.WriteWarning(this, "You have overfilled the pond. Reduced the volume added to volume the pond could accept");
+                Summary.WriteMessage(this, "You have overfilled the pond. Reduced the volume added to volume the pond could accept", MessageType.Warning);
                 }
 
             AddWater_TempChange(Volume, addedProps.Temperature);
@@ -337,7 +338,7 @@ namespace Models.Aqua
             if (pondVolume - Volume < 0)
                 {
                 Volume = pondVolume;
-                Summary.WriteWarning(this, "You have tried to remove more water than the pond contained. Reduced the volume removed to current volume of the pond. The pond is now empty.");
+                Summary.WriteMessage(this, "You have tried to remove more water than the pond contained. Reduced the volume removed to current volume of the pond. The pond is now empty.", MessageType.Warning);
                 pondProps.ZeroProperties();   //when you empty the pond by removing water (eg. via pumping) the properties are removed with the water. (unlike emptying via evaporation)
                 }
 
@@ -361,8 +362,8 @@ namespace Models.Aqua
 
             if (pondVolume - evapVolume <= 0.001)
                 {
-                Summary.WriteWarning(this, "You have evaporated all the water left in the pond. The pond is now empty."
-                + Environment.NewLine + "We left 0.001 of a cubic meter of water in entire pond to store concentrated Pond Properties in.");
+                Summary.WriteMessage(this, "You have evaporated all the water left in the pond. The pond is now empty."
+                + Environment.NewLine + "We left 0.001 of a cubic meter of water in entire pond to store concentrated Pond Properties in.", MessageType.Warning);
                 evapVolume = (pondVolume - 0.001);  //don't evaporate all the water. Leave a small amount so you don't get divide by zero.
                 }
 

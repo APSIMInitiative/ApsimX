@@ -1,14 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="FolderPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
+    using Models.Storage;
+    using System.Linq;
 
     /// <summary>
     /// This presenter connects an instance of a folder model with a 
@@ -33,19 +30,27 @@ namespace UserInterface.Presenters
 
             List<GraphView> views = new List<GraphView>();
 
-            foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
-            {
-                GraphView graphView = new GraphView();
-                GraphPresenter presenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                presenter.Attach(graph, graphView, explorerPresenter);
-                presenters.Add(presenter);
-                views.Add(graphView);
-            }
+            var storage = folder.FindInScope<IDataStore>();
+            var graphPage = new GraphPage();
+            graphPage.Graphs.AddRange(folder.FindAllChildren<Graph>().Where(g => g.Enabled));
 
-            if (views.Count > 0)
+            if (storage != null && graphPage.Graphs.Any())
             {
-                (view as IFolderView).SetContols(views);
+                foreach (var graphSeries in graphPage.GetAllSeriesDefinitions(folder, storage.Reader))
+                {
+                    GraphView graphView = new GraphView(null);
+                    graphView.DisableScrolling();
+                    GraphPresenter presenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                    presenter.Attach(graphSeries.Graph, graphView, explorerPresenter, graphSeries.SeriesDefinitions);
+                    presenters.Add(presenter);
+                    views.Add(graphView);
+                }
+
+                if (views.Count > 0)
+                {
+                    (view as IFolderView).SetContols(views);
+                }
             }
         }
 

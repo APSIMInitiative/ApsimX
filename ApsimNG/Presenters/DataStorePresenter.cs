@@ -1,29 +1,58 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DataStorePresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
-    using System.Data;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
+    using EventArguments;
     using Models.Core;
     using Models.Factorial;
+    using Models.Storage;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
     using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
 
-        /// <summary>The data store view to work with.</summary>
-        private IDataStoreView view;
+        /// <summary>The sheet widget.</summary>
+        private SheetWidget grid;
+
+        ///// <summary>The sheet scrollbars</summary>
+        //SheetScrollBars scrollbars;
+
+        /// <summary>The data provider for the sheet</summary>
+        PagedDataProvider dataProvider;
+
+        /// <summary>The container that houses the sheet.</summary>
+        private ContainerView sheetContainer;
+
+        /// <summary>The intellisense.</summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>Checkpoint name drop down.</summary>
+        private DropDownView checkpointDropDown;
+
+        /// <summary>Only allow these tables to be selected/displayed.</summary>
+        private string[] tablesFilter = new string[0];
+
+        /// <summary>table name drop down.</summary>
+        public DropDownView tableDropDown { get; private set; }
+
+        /// <summary>Column filter edit box.</summary>
+        private EditView columnFilterEditBox;
+
+        /// <summary>Row filter edit box.</summary>
+        private EditView rowFilterEditBox;
+
+        /// <summary>Row filter edit box.</summary>
+        private LabelView statusLabel;
+
+        private ViewBase view = null;
 
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
@@ -31,157 +60,165 @@ namespace UserInterface.Presenters
         /// <summary>Gets or sets the simulation filter. When specified, will only show simulation data.</summary>
         public Simulation SimulationFilter { get; set; }
 
+        /// <summary>When specified will only show data from a given zone.</summary>
+        public Zone ZoneFilter { get; set; }
+
+        /// <summary>Default constructor</summary>
+        public DataStorePresenter()
+        {
+        }
+
+        /// <summary>
+        /// Constructor. Used to restrict which tables can be selected.
+        /// </summary>
+        /// <param name="tables">Tables which may be displayed to the user.</param>
+        public DataStorePresenter(string[] tables)
+        {
+            if (tables == null)
+                throw new ArgumentNullException(nameof(tables));
+            tablesFilter = tables;
+        }
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
-        /// <param name="view">Data store view to work with.</param>
+        /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
-            dataStore = model as IStorageReader;
-            this.view = view as IDataStoreView;
+            dataStore = model as IDataStore;
+            view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            this.view.TableList.IsEditable = false;
-            this.view.Grid.ReadOnly = true;
-            this.view.Grid.NumericFormat = "N3";
+            intellisense = new IntellisensePresenter(view as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
+
+            checkpointDropDown = view.GetControl<DropDownView>("checkpointDropDown");
+            tableDropDown = view.GetControl<DropDownView>("tableDropDown");
+            columnFilterEditBox = view.GetControl<EditView>("columnFilterEditBox");
+            rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
+            sheetContainer = view.GetControl<ContainerView>("grid");
+            statusLabel = view.GetControl<LabelView>("statusLabel");
+
+            tableDropDown.IsEditable = false;
             if (dataStore != null)
             {
-                this.view.TableList.Values = dataStore.TableNames.ToArray();
+                tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
+                if (tablesFilter != null && tablesFilter.Length > 0)
+                    tableDropDown.Values = tableDropDown.Values.Intersect(tablesFilter).ToArray();
+                checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
+                if (checkpointDropDown.Values.Length > 0)
+                    checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
-                    this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                    statusLabel.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                tableDropDown.SelectedIndex = 0;
             }
 
-            this.view.Grid.ResizeControls();
-            this.view.TableList.Changed += this.OnTableSelected;
-            this.view.ColumnFilter.Changed += OnColumnFilterChanged;
-            this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
+            tableDropDown.Changed += this.OnTableSelected;
+            columnFilterEditBox.Leave += OnColumnFilterChanged;
+            columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
+            rowFilterEditBox.Leave += OnColumnFilterChanged;
+            checkpointDropDown.Changed += OnCheckpointDropDownChanged;
             PopulateGrid();
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            (view.MaximumNumberRecords as EditView).EndEdit();
-            view.TableList.Changed -= OnTableSelected;
-            view.ColumnFilter.Changed -= OnColumnFilterChanged;
-            view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            //base.Detach();
+            tableDropDown.Changed -= OnTableSelected;
+            columnFilterEditBox.Leave -= OnColumnFilterChanged;
+            rowFilterEditBox.Leave -= OnColumnFilterChanged;
+            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            intellisense.Cleanup();
+            view.Dispose();
+            CleanupSheet();
         }
 
         /// <summary>Populate the grid control with data.</summary>
         public void PopulateGrid()
         {
-            using (DataTable data = GetData())
+            if (!string.IsNullOrEmpty(tableDropDown.SelectedValue))
             {
-                // Strip out unwanted columns.
-                if (data != null)
+                // Note that the filter contains the zone filter and experiment filter but not simulation filter.
+                IEnumerable<string> simulationNames = null;
+                if (ExperimentFilter != null)
                 {
-                    int numFrozenColumns = 1;
-                    for (int i = 0; i < data.Columns.Count; i++)
+                    // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
+                    simulationNames = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                }
+                else if (SimulationFilter == null)
+                    simulationNames = null;
+                else
+                    simulationNames = new string[] { SimulationFilter.Name };
+
+                string filter = rowFilterEditBox.Text;
+                if (ZoneFilter != null)
+                {
+                    // More assumptions about column names
+                    filter = AppendToFilter(filter, $"[Zone] = '{ZoneFilter.Name}'");
+                }
+
+                // Create sheet control
+                if (tableDropDown.SelectedValue != null)
+                {
+                    try
                     {
-                        if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
-                        {
-                            numFrozenColumns = i;
-                            break;
-                        }
+                        // Cleanup existing sheet instances before creating new ones.
+                        CleanupSheet();
+
+                        dataProvider = new PagedDataProvider(dataStore.Reader,
+                                                             checkpointDropDown.SelectedValue,
+                                                             tableDropDown.SelectedValue,
+                                                             simulationNames,
+                                                             columnFilterEditBox.Text,
+                                                             filter);
+                        dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                        dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
+
+                        grid = new SheetWidget();
+                        grid.Sheet = new Sheet();
+                        grid.Sheet.DataProvider = dataProvider;
+                        grid.Sheet.CellSelector = new SingleCellSelect(grid.Sheet, grid);
+                        grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+                        grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+                        grid.Sheet.NumberFrozenRows = dataProvider.NumHeadingRows;
+                        grid.Sheet.NumberFrozenColumns = dataProvider.NumPriorityColumns;
+
+                        sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
+                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
                     }
-
-                    int simulationId = 0;
-
-                    for (int i = 0; i < data.Columns.Count; i++)
+                    catch (Exception err)
                     {
-                        if (data.Columns[i].ColumnName == "SimulationID")
-                        {
-                            if (simulationId == 0 && data.Rows.Count > 0)
-                            {
-                                simulationId = (int)data.Rows[0][i];
-                            }
-
-                            data.Columns.RemoveAt(i);
-                            i--;
-                        }
-                        else if (i >= numFrozenColumns &&
-                                 this.view.ColumnFilter.Value != string.Empty &&
-                                 !data.Columns[i].ColumnName.Contains(this.view.ColumnFilter.Value))
-                        {
-                            data.Columns.RemoveAt(i);
-                            i--;
-                        }
+                        explorerPresenter.MainPresenter.ShowError(err.ToString());
                     }
-
-                    // Convert the last dot to a CRLF so that the columns in the grid are narrower.
-                    foreach (DataColumn column in data.Columns)
-                    {
-                        string units = null;
-
-                        // Try to obtain units
-                        if (dataStore != null && simulationId != 0)
-                        {
-                            units = dataStore.GetUnits(view.TableList.SelectedValue, column.ColumnName);
-                        }
-
-                        int posLastDot = column.ColumnName.LastIndexOf('.');
-                        if (posLastDot != -1)
-                        {
-                            column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
-                        }
-
-                        // Add the units, if they're available
-                        if (units != null)
-                        {
-                            column.ColumnName = column.ColumnName + " " + units;
-                        }
-                    }
-
-                    this.view.Grid.DataSource = data;
-                    this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
                 }
             }
         }
 
-        /// <summary>Get data to show in grid.</summary>
-        /// <returns>A data table of all data.</returns>
-        private DataTable GetData()
+        /// <summary>Clean up the sheet components.</summary>
+        private void CleanupSheet()
         {
-            DataTable data = null;
-            if (dataStore != null)
+            if (grid != null && grid.Sheet.CellSelector != null)
             {
-                try
-                {
-                    int start = 0;
-                    int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-                    if (ExperimentFilter != null)
-                    {
-                        string filter = "S.NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.GetSimulationNames(), delimiter: ",", prefix: "'", suffix: "'") + ")";
-                        data = dataStore.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
-                    }
-                    else if (SimulationFilter != null)
-                    {
-                        data = dataStore.GetData(
-                                                 simulationName: SimulationFilter.Name,
-                                                 tableName: view.TableList.SelectedValue,
-                                                 from: start, 
-                                                 count: count);
-                    }
-                    else
-                    {
-                        data = dataStore.GetData(
-                                                tableName: view.TableList.SelectedValue,
-                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
-                    }
-                }
-                catch (Exception e)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(new Exception("Error reading data tables.", e));
-                }
+                dataProvider.Cleanup();
+                (grid.Sheet.CellSelector as SingleCellSelect).Cleanup();
+                grid.Sheet.ScrollBars.Cleanup();
             }
-            else
-            {
-                data = new DataTable();
-            }
+        }
 
-            return data;
+        /// <summary>
+        /// Appends a clause to the filter.
+        /// </summary>
+        /// <param name="filter">Existing filter to append to.</param>
+        /// <param name="value">Value to append to the filter.</param>
+        private string AppendToFilter(string filter, string value)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+                return value;
+
+            return $"{filter} AND {value}";
         }
 
         /// <summary>The selected table has changed.</summary>
@@ -200,27 +237,49 @@ namespace UserInterface.Presenters
             PopulateGrid();
         }
 
-        /// <summary>The maximum number of records has changed.</summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The view is asking for items for the intellisense.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseNeeded(object sender, NeedContextItemsArgs args)
         {
-            if (view.MaximumNumberRecords.Value == string.Empty)
+            try
             {
-                Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, tableDropDown.SelectedValue, dataStore.Reader))
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
-            else
+            catch (Exception err)
             {
-                try
-                {
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
-                }
-                catch (Exception)
-                {  // If there are any errors, return 0
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
-                }
+                explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
 
+        /// <summary>
+        /// Invoked when an intellisense item is selected by user.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            try
+            {
+                columnFilterEditBox.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                PopulateGrid();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Checkpoint name has changed by user.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCheckpointDropDownChanged(object sender, EventArgs e)
+        {
             PopulateGrid();
         }
     }

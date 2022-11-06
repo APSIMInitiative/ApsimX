@@ -1,72 +1,94 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AddModelCommand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
-    using System;
-    using System.Xml;
-    using Importer;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
+    using Presenters;
     using Interfaces;
+    using Models.Core;
+    using Models.Core.ApsimFile;
+    using System;
 
-    /// <summary>This command changes the 'CurrentNode' in the ExplorerView.</summary>
+    /// <summary>This command adds a model as a child of another model.</summary>
     public class AddModelCommand : ICommand
     {
         /// <summary>The parent model to add the model to.</summary>
         private IModel parent;
 
-        /// <summary>The child model to add.</summary>
-        private XmlNode child;
+        /// <summary>A string representation of the child model to add.</summary>
+        private IModel child;
+        private Func<IModel, TreeViewNode> describeModel;
 
-        /// <summary>The node description</summary>
-        NodeDescriptionArgs nodeDescription;
+        /// <summary>A string representation of the child model to add.</summary>
+        private string xmlOrJson;
 
-        /// <summary>The explorer view</summary>
-        IExplorerView explorerView;
-
-        /// <summary>The model we're to add</summary>
+        /// <summary>The model we're to add.</summary>
         private IModel modelToAdd;
 
-        /// <summary>True if model was added</summary>
+        /// <summary>True if model was added.</summary>
         private bool modelAdded;
 
-        /// <summary>Initializes a new instance of the <see cref="AddModelCommand"/> class.</summary>
-        /// <param name="xmlOfModelToAdd">The XML of the model to add</param>
-        /// <param name="toParent">The parent model to add the child to</param>
-        public AddModelCommand(IModel parent, XmlNode child, NodeDescriptionArgs nodeDescription, IExplorerView explorerView)
+        /// <summary>Constructor.</summary>
+        /// <param name="describeModel"></param>
+        /// <param name="parent">The path of the parent model to add the child to.</param>
+        /// <param name="child">The model to add.</param>
+        public AddModelCommand(IModel parent, IModel child, Func<IModel, TreeViewNode> describeModel)
         {
+            if (parent == null)
+                throw new ArgumentNullException(nameof(parent), "Cannot add a child to a null parent");
+            if (child == null)
+                throw new ArgumentNullException(nameof(child), "Cannot add a null child");
+            if (describeModel == null)
+                throw new ArgumentNullException(nameof(describeModel));
+
             this.parent = parent;
             this.child = child;
-            this.nodeDescription = nodeDescription;
-            this.explorerView = explorerView;
+            this.describeModel = describeModel;
         }
 
-        /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <summary>Constructor - allows for adding a serialized model.</summary>
+        /// <param name="parent">The model to which the child will be added.</param>
+        /// <param name="textToAdd">The text string (xml/json) representation of the model to add.</param>
+        /// <param name="describeModel"></param>
+        public AddModelCommand(IModel parent, string textToAdd, Func<IModel, TreeViewNode> describeModel)
         {
-            this.modelToAdd = Apsim.Add(parent, child);
+            if (parent == null)
+                throw new ArgumentNullException("Cannot add a child to a null parent");
+            if (describeModel == null)
+                throw new ArgumentNullException(nameof(describeModel));
 
-            // The add method above may have renamed the model to avoid a clash with the
-            // name of an existing model so just in case, reset the name for the tree.
-            nodeDescription.Name = this.modelToAdd.Name;
+            this.parent = parent;
+            this.describeModel = describeModel;
+            xmlOrJson = textToAdd;
+        }
 
-            this.explorerView.AddChild(Apsim.FullPath(parent), nodeDescription);
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => modelToAdd;
 
-            this.modelAdded = true;
+        /// <summary>Perform the command</summary>
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
+        {
+            if (xmlOrJson != null)
+                modelToAdd = Structure.Add(xmlOrJson, parent);
+            else
+                modelToAdd = Structure.Add(child, parent);
+            modelAdded = true;
+            tree.AddChild(parent.FullPath, describeModel(modelToAdd));
+            tree.SelectedNode = modelToAdd.FullPath;
         }
 
         /// <summary>Undoes the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
-            if (this.modelAdded && this.modelToAdd != null)
+            if (modelAdded && modelToAdd != null)
             {
-                parent.Children.Remove(this.modelToAdd as Model);
-                this.explorerView.Delete(Apsim.FullPath(this.modelToAdd));
+                string path = modelToAdd.FullPath;
+                Structure.Delete(modelToAdd);
+                tree.Delete(modelToAdd.FullPath);
             }
         }
     }
