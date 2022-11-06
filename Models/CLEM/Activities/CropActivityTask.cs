@@ -1,5 +1,5 @@
 using Models.Core;
-using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -22,10 +22,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
-    public class CropActivityTask: CLEMActivityBase, IValidatableObject
+    public class CropActivityTask: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private string relatesToResourceName = "";
         private bool timingIssueReported = false;
+        private CropActivityManageCrop parentManagementActivity;
+        double amountToSkip = 0;
 
         /// <summary>
         /// Constructor
@@ -33,13 +35,27 @@ namespace Models.CLEM.Activities
         protected CropActivityTask()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Crop.[Task]";
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            return null;
+            switch (type)
+            {
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() {
+                            "fixed",
+                            "per unit of land",
+                            //"per ha",
+                            //"per tree",
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -49,14 +65,13 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
         }
 
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        private void OnGetResourcesRequired(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
+            amountToSkip = 0;
             if (TimingOK)
             {
                 if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
@@ -75,74 +90,46 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per unit of land":
+                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity?.Area??0;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
+        }
+
+
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForTimestep()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
+                //if (tagsShort != null)
+                amountToSkip = (1 - tagsShort.Available / tagsShort.Required);
+            }
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
-            double numberUnits;
-            double daysNeeded;
-            switch (requirement.UnitType)
+            if(ResourceRequestList.Any())
             {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnitOfLand:
-                    CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
-                    numberUnits = cropParent.Area;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHa:
-                    cropParent = FindAncestor<CropActivityManageCrop>();
-                    CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
-                    numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perTree:
-                    cropParent = FindAncestor<CropActivityManageCrop>();
-                    productParent = FindAncestor<CropActivityManageProduct>();
-                    numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perKg:
-                    productParent = FindAncestor<CropActivityManageProduct>();
-                    numberUnits = productParent.AmountHarvested;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnit:
-                    productParent = FindAncestor<CropActivityManageProduct>();
-                    numberUnits = productParent.AmountHarvested / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                SetStatusSuccessOrPartial(amountToSkip > 0);
             }
-
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, relatesToResourceName);
         }
 
         #region validation
@@ -180,14 +167,8 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
+                if (this.FindAllChildren<ActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
                     htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not Set"));
-                    htmlWriter.Write(" for all transactions</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         } 

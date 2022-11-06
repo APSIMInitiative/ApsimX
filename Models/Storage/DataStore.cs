@@ -279,11 +279,7 @@
             }
         }
 
-        /// <summary>
-        /// Add a select based view to the SQLite datastore
-        /// </summary>
-        /// <param name="name">name of the view</param>
-        /// <param name="selectSQL">select SQL statement</param>
+        /// <inheritdoc/>
         public void AddView(string name, string selectSQL)
         {
             if (connection is SQLite)
@@ -292,13 +288,31 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                dbReader.ExecuteSql(selectSQL);
                 connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
             }
             else
             {
                 throw new NotImplementedException();
             }
+        }
+
+        /// <inheritdoc/>
+        public string GetViewSQL(string name)
+        {
+            if (connection is SQLite)
+            {
+                if (connection.ViewExists(name))
+                {
+                    var resultSql = dbReader.GetDataUsingSql($"SELECT sql FROM sqlite_master WHERE type='view' and name='{name}'");
+                    if(resultSql.Rows.Count > 0)
+                        return resultSql.Rows[0].ItemArray[0].ToString();
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            return "";
         }
 
         /// <summary>

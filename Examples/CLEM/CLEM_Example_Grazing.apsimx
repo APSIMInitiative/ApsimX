@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 148,
+  "ExplorerWidth": 300,
+  "Version": 152,
   "Name": "Simulations",
   "Children": [
     {
@@ -74,6 +74,8 @@
               "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
+              "BuildTransactionCategoryFromTree": false,
+              "UseModelNameAsTransactionCategory": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
@@ -94,7 +96,6 @@
                   "HarvestTypeColumnName": null,
                   "Notes": null,
                   "SelectedTab": "Properties",
-                  "CurrentAncestorList": [],
                   "Name": "FileForage",
                   "Children": [],
                   "Enabled": true,
@@ -104,7 +105,6 @@
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [],
                   "Name": "Resources",
                   "Children": [
                     {
@@ -113,7 +113,6 @@
                       "UnitsOfAreaToHaConversion": 1.0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "Land",
                       "Children": [
                         {
@@ -124,7 +123,6 @@
                           "SoilType": "2",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Paddock1",
                           "Children": [],
                           "Enabled": true,
@@ -140,9 +138,6 @@
                       "FirstMonthOfFinancialYear": 7,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "Finance"
-                      ],
                       "Name": "Finances",
                       "Children": [
                         {
@@ -154,10 +149,6 @@
                           "InterestRatePaid": 2.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "Finance",
-                            "FinanceType"
-                          ],
                           "Name": "General account",
                           "Children": [],
                           "Enabled": true,
@@ -172,7 +163,6 @@
                       "TransactionStyle": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "Ruminants",
                       "Children": [
                         {
@@ -249,7 +239,6 @@
                           "MethaneProductionCoefficient": 20.7,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Bos indicus",
                           "Children": [
                             {
@@ -257,7 +246,6 @@
                               "WeightWarningOccurred": false,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "Initial cohorts",
                               "Children": [
                                 {
@@ -271,7 +259,6 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "WeanerF",
                                   "Children": [],
                                   "Enabled": true,
@@ -288,7 +275,6 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "WeanerM",
                                   "Children": [],
                                   "Enabled": true,
@@ -305,7 +291,6 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Female3_4",
                                   "Children": [],
                                   "Enabled": true,
@@ -322,7 +307,6 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Male2_3",
                                   "Children": [],
                                   "Enabled": true,
@@ -339,7 +323,6 @@
                                   "Sire": true,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Male3_4",
                                   "Children": [],
                                   "Enabled": true,
@@ -353,7 +336,6 @@
                               "$type": "Models.CLEM.Resources.AnimalPricing, Models",
                               "Notes": null,
                               "SelectedTab": "Summary",
-                              "CurrentAncestorList": [],
                               "Name": "Prices",
                               "Children": [
                                 {
@@ -361,9 +343,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
@@ -374,7 +358,6 @@
                                       "Value": "12",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "LT_12m",
                                       "Children": [],
                                       "Enabled": true,
@@ -389,9 +372,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.3,
                                   "PurchaseOrSale": 1,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
@@ -402,7 +387,6 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [],
                                       "Enabled": true,
@@ -416,7 +400,6 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "less36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -431,9 +414,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 2,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
@@ -444,7 +429,6 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [],
                                       "Enabled": true,
@@ -458,7 +442,6 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "less36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -473,9 +456,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
@@ -486,7 +471,6 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [],
                                       "Enabled": true,
@@ -500,7 +484,6 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -515,9 +498,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Breeding Sires",
                                   "Children": [
                                     {
@@ -528,7 +513,6 @@
                                       "Value": null,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "isSire",
                                       "Children": [],
                                       "Enabled": true,
@@ -543,9 +527,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
@@ -556,7 +542,6 @@
                                       "Value": "Male",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "Male",
                                       "Children": [],
                                       "Enabled": true,
@@ -570,7 +555,6 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "less36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -585,9 +569,11 @@
                                   "PricingStyle": 1,
                                   "Value": 2.4,
                                   "PurchaseOrSale": 0,
+                                  "RandomiseBeforeSorting": false,
+                                  "Identifier": null,
+                                  "Measure": "",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
@@ -598,7 +584,6 @@
                                       "Value": "Male",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "Male",
                                       "Children": [],
                                       "Enabled": true,
@@ -612,7 +597,6 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
                                       "Name": "36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -633,7 +617,6 @@
                               "ConceptionRateAsymptote": 90.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "RuminantConceptionCurve",
                               "Children": [],
                               "Enabled": true,
@@ -651,7 +634,6 @@
                       "$type": "Models.CLEM.Resources.GrazeFoodStore, Models",
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "GrazeFoodStore",
                       "Children": [
                         {
@@ -674,7 +656,6 @@
                           "NumberMonthsForInitialBiomass": 5,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "NativePasture",
                           "Children": [],
                           "Enabled": true,
@@ -688,7 +669,6 @@
                       "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "AnimalFoodStore",
                       "Children": [
                         {
@@ -699,7 +679,6 @@
                           "StartingAmount": 100.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Hay",
                           "Children": [
                             {
@@ -710,7 +689,6 @@
                               "TransactionCategory": "Transmutation",
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "Purchase",
                               "Children": [
                                 {
@@ -722,7 +700,6 @@
                                   "FinanceTypeForTransactionsName": "No transactions",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Transmute",
                                   "Children": [],
                                   "Enabled": true,
@@ -748,7 +725,6 @@
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [],
                   "Name": "Activities",
                   "Children": [
                     {
@@ -760,7 +736,6 @@
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "Native Pasture on farm",
                       "Children": [
                         {
@@ -782,7 +757,6 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Native Pasture to GrazeFoodStore",
                           "Children": [],
                           "Enabled": true,
@@ -794,11 +768,10 @@
                     },
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                      "TransactionCategory": null,
                       "OnPartialResourcesAvailableAction": 0,
+                      "TransactionCategory": null,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "Manage herd",
                       "Children": [
                         {
@@ -809,7 +782,6 @@
                           "TransactionCategory": "Livestock.Manage",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Grow all ruminants",
                           "Children": [],
                           "Enabled": true,
@@ -824,15 +796,15 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Move to pasture",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                              "RandomiseBeforeSorting": false,
                               "Identifier": "",
+                              "Measure": "",
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "All",
                               "Children": [],
                               "Enabled": true,
@@ -849,7 +821,6 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Graze all",
                           "Children": [],
                           "Enabled": true,
@@ -865,15 +836,17 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Feed hay",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                               "Value": 1.0,
+                              "Measure": "Feed provided",
+                              "TransactionCategory": "Feed.[Product].[Ruminants]",
+                              "RandomiseBeforeSorting": false,
+                              "Identifier": null,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "Feed all",
                               "Children": [],
                               "Enabled": true,
@@ -891,7 +864,6 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Breed",
                           "Children": [
                             {
@@ -902,16 +874,14 @@
                               "OnPartialResourcesAvailableAction": 0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "ControlledMating",
                               "Children": [
                                 {
-                                  "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                                  "$type": "Models.CLEM.Timers.ActivityTimerInterval, Models",
                                   "Interval": 12,
                                   "MonthDue": 3,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "Controlled mating",
                                   "Children": [],
                                   "Enabled": true,
@@ -935,21 +905,14 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "RuminantActivityWean"
-                          ],
                           "Name": "Wean",
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                              "$type": "Models.CLEM.Timers.ActivityTimerInterval, Models",
                               "Interval": 12,
                               "MonthDue": 4,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "RuminantActivityWean",
-                                "ActivityTimerInterval"
-                              ],
                               "Name": "Weaning",
                               "Children": [],
                               "Enabled": true,
@@ -957,13 +920,11 @@
                             },
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                              "RandomiseBeforeSorting": false,
                               "Identifier": "",
+                              "Measure": "",
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "RuminantActivityWean",
-                                "RuminantGroup"
-                              ],
                               "Name": "All",
                               "Children": [],
                               "Enabled": true,
@@ -976,6 +937,10 @@
                         {
                           "$type": "Models.CLEM.Activities.RuminantActivityManage, Models",
                           "ManageFemaleBreederNumbers": true,
+                          "PerformFemaleDestocking": true,
+                          "PerformFemaleStocking": true,
+                          "PerformMaleDestocking": true,
+                          "PerformMaleStocking": true,
                           "MaximumBreedersKept": 10,
                           "MinimumBreedersKept": 2,
                           "MaxBreedersMultiplierToStop": 2.0,
@@ -992,7 +957,7 @@
                           "RestockSiresRelativeToBreeders": false,
                           "MaximumSiresPerPurchase": 1,
                           "RetainMaleReplacementBreedersFromSaleHerd": true,
-                          "GrowOutYoungMales": false,
+                          "GrowOutYoungMales": true,
                           "ContinuousGrowOutSales": false,
                           "MarkAgeWeightMalesForSale": true,
                           "CastrateMales": true,
@@ -1001,7 +966,7 @@
                           "GrowOutYoungFemales": false,
                           "FemaleSellingAge": 24.0,
                           "FemaleSellingWeight": 300.0,
-                          "MarkAgeWeightFemalesForSale": true,
+                          "MarkAgeWeightFemalesForSale": false,
                           "GrazeFoodStoreNameSires": "GrazeFoodStore.NativePasture",
                           "GrazeFoodStoreNameBreeders": "GrazeFoodStore.NativePasture",
                           "GrazeFoodStoreNameGrowOutFemales": "GrazeFoodStore.NativePasture",
@@ -1013,16 +978,14 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Manage numbers",
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                              "$type": "Models.CLEM.Timers.ActivityTimerInterval, Models",
                               "Interval": 12,
                               "MonthDue": 8,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "every August",
                               "Children": [],
                               "Enabled": true,
@@ -1034,7 +997,6 @@
                               "Proportion": 1.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "Breeders",
                               "Children": [
                                 {
@@ -1048,7 +1010,6 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "24mth breeder",
                                   "Children": [],
                                   "Enabled": true,
@@ -1064,7 +1025,6 @@
                               "Proportion": 1.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
                               "Name": "Sires",
                               "Children": [
                                 {
@@ -1078,7 +1038,6 @@
                                   "Sire": true,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
                                   "Name": "36mth sire",
                                   "Children": [],
                                   "Enabled": true,
@@ -1099,7 +1058,6 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "Buy and sell",
                           "Children": [],
                           "Enabled": true,
@@ -1112,10 +1070,10 @@
                     {
                       "$type": "Models.CLEM.SummariseRuminantHerd, Models",
                       "GroupStyle": 0,
+                      "IncludeTotalColumn": false,
                       "HerdFilters": null,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
                       "Name": "SummariseHerd",
                       "Children": [],
                       "Enabled": true,
@@ -1126,15 +1084,15 @@
                       "ReportAtStart": true,
                       "Notes": null,
                       "SelectedTab": "Summary",
-                      "CurrentAncestorList": [],
                       "Name": "ReportHerd",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                          "RandomiseBeforeSorting": false,
                           "Identifier": "",
+                          "Measure": "",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
                           "Name": "RuminantGroup",
                           "Children": [],
                           "Enabled": true,
@@ -1225,6 +1183,9 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
+                      "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
                         "GrazeFoodStore"
@@ -1244,6 +1205,9 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
+                      "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
                         "AnimalFoodStore"
@@ -1263,6 +1227,9 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
+                      "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
                         "Finances"
@@ -1282,6 +1249,9 @@
                       "IncludePrice": false,
                       "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "TransactionCategoryLevels": 0,
+                      "TransactionCategoryLevelColumnNames": null,
+                      "CustomVariableNames": null,
                       "SelectedTab": null,
                       "VariableNames": [
                         "Ruminants"

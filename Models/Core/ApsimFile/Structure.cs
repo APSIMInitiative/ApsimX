@@ -168,5 +168,39 @@
             Apsim.ClearCaches(model);
             return model.Parent.Children.Remove(model as Model);
         }
+
+        /// <summary>Replace one model with another.</summary>
+        /// <param name="modelToReplace">The old model to replace.</param>
+        /// <param name="replacement">The new model.</param>
+        public static void Replace(IModel modelToReplace, IModel replacement)
+        {
+            IModel newModel = Apsim.Clone(replacement);
+            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
+            modelToReplace.Parent.Children[index] = newModel;
+            newModel.Parent = modelToReplace.Parent;
+            newModel.Name = modelToReplace.Name;
+            newModel.Enabled = modelToReplace.Enabled;
+
+            // Remove existing model from parent.
+            modelToReplace.Parent = null;
+
+            // If a resource model (e.g. maize) is copied into replacements, and its
+            // property values changed, these changed values will be overriden with the
+            // 'accepted' values from the official maize model when the simulation is
+            // run, because the model's resource name is not null. This can be manually
+            // rectified by editing the json, but such an intervention shouldn't be
+            // necessary.
+            newModel.ResourceName = null;
+
+            Apsim.ClearCaches(modelToReplace);
+
+            // Don't call newModel.Parent.OnCreated(), because if we're replacing
+            // a child of a resource model, the resource model's OnCreated event
+            // will make it reread the resource string and replace this child with
+            // the 'official' child from the resource.
+            newModel.OnCreated();
+            foreach (var model in newModel.FindAllDescendants().ToList())
+                model.OnCreated();
+        }
     }
 }

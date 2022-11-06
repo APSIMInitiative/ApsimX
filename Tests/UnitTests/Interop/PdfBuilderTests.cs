@@ -751,7 +751,7 @@ namespace UnitTests.Interop
             Axis xAxis = new Axis("x", AxisPosition.Bottom, false, false);
             Axis yAxis = new Axis("Y", AxisPosition.Left, false, false);
             LegendConfiguration legend = new LegendConfiguration(LegendOrientation.Horizontal, LegendPosition.BottomCenter, true);
-            GraphTag graph = new GraphTag("title", series, xAxis, yAxis, legend);
+            GraphTag graph = new GraphTag("title", string.Empty, series, xAxis, yAxis, legend);
             return graph;
         }
 

@@ -19,6 +19,10 @@ namespace Models.PMF
         [Units("/m2")]
         public double Population { get; set; } = 100;
 
+        /// <summary>The number of seeds sown.</summary>
+        [Units("")]
+        public double Seeds { get; set; } = 0;
+
         /// <summary>The depth</summary>
         [Units("mm")]
         public double Depth { get; set; } = 100;
@@ -44,5 +48,12 @@ namespace Models.PMF
 
         /// <summary>The skip plant seed density adjustment</summary>
         public double SkipDensityScale { get; set; } = 1;
+
+        /// <summary>Tillering Method to set Fixed or dynamic tillering</summary>
+        /// <summary>Tillering Method: -1 = Rule of Thumb, 0 = FixedTillering - uses FTN, 1 = DynamicTillering</summary>
+        public int TilleringMethod { get; set; } = 0;
+
+        /// <summary>Fertile Tiller Number</summary>
+        public double FTN { get; set; } = 0.0;
     }
 }

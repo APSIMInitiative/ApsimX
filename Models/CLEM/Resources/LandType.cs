@@ -118,7 +118,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             if (UsableArea > 0)
-                Add(UsableArea, this, this.NameWithParent, "Initialise");
+                Add(UsableArea, null, null, "Starting value");
 
             // take away buildings (allows building to change over time. 
             if (PortionBuildings > 0)
@@ -205,12 +205,14 @@ namespace Models.CLEM.Resources
             if (request.Category != "Assign unallocated")
                 this.areaAvailable -= amountRemoved;
             else
+            {
                 // activitiy requesting all unallocated land.
                 if (ActivityRequestingRemainingLand == null)
                     ActivityRequestingRemainingLand = request.ActivityModel;
                 else if (ActivityRequestingRemainingLand != request.ActivityModel)
                     // error! more than one activity is requesting all unallocated land.
                     throw new ApsimXException(this, "More than one activity [" + ActivityRequestingRemainingLand.Name + "] and [" + request.ActivityModel.Name + "] is requesting to use all unallocated land from land type [" + this.Name + "]");
+            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
@@ -256,8 +258,10 @@ namespace Models.CLEM.Resources
                     AllocatedActivitiesList.Remove(allocation);
             }
             else
+            {
                 // if resource was removed by activity it is added to the activty 
                 if (!added && amountChanged > 0)
+                {
                     AllocatedActivitiesList.Add(new LandActivityAllocation()
                     {
                         LandName = this.Name,
@@ -265,6 +269,8 @@ namespace Models.CLEM.Resources
                         LandAllocated = amountChanged,
                         ActivityName = (activity.Name == this.Name) ? "Buildings" : activity.Name
                     });
+                }
+            }
         }
 
         /// <summary>
@@ -299,16 +305,23 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (LandArea == 0)
                     htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
-                else if (ProportionOfTotalArea == 0)
-                    htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
                 else
-                    htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
-                    string units = (this as IResourceType).Units;
-                    if (units != "NA")
-                        if (units == null || units == "")
-                            htmlWriter.Write("");
-                        else
-                            htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
+                {
+                    if (ProportionOfTotalArea == 0)
+                        htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
+                    else
+                    {
+                        htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
+                        string units = (this as IResourceType).Units;
+                        if (units != "NA")
+                        {
+                            if (units == null || units == "")
+                                htmlWriter.Write("");
+                            else
+                                htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
+                        }
+                    }
+                }
 
                 if (PortionBuildings > 0)
                     htmlWriter.Write(" of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings");

@@ -57,7 +57,8 @@
         /// <summary>Populate the view object</summary>
         private void PopulateView()
         {
-            view.DirectedGraph = model.DirectedGraphInfo;
+            if (model.DirectedGraphInfo != null)
+                view.DirectedGraph = model.DirectedGraphInfo;
         }
 
     }

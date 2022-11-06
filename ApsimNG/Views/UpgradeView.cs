@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Views
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -199,8 +200,6 @@
             organisationBox.Text = Utility.Configuration.Settings.Organisation;
             countryBox.Active = Constants.Countries.ToList().IndexOf(Utility.Configuration.Settings.Country);
 
-            WebClient web = new WebClient();
-
             string tempLicenseFileName = Path.Combine(Path.GetTempPath(), "APSIM_NonCommercial_RD_licence.htm");
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
@@ -221,15 +220,14 @@
         /// </summary>
         private void PopulateUpgradeList()
         {
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            // version = new Version(0, 0, 0, 652);  
-            int minRevision;
             if (oldVersions.Active && allUpgrades.Length < 1)
-                minRevision = -1;
+                allUpgrades = GetUpgrades(-1).ToArray();
             else if (!oldVersions.Active && upgrades.Length < 1)
-                minRevision = version.Revision;
+            {
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                upgrades = GetUpgrades(version.Build).ToArray();
+            }
 
-            upgrades = WebUtilities.PostRestService<Upgrade[]>($"https://builds.apsim.info/api/nextgen/list?min={version.Revision}");
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
                 string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.Revision}";
@@ -237,6 +235,19 @@
             }
             if (listmodel.IterNChildren() > 0)
                 listview1.SetCursor(new TreePath("0"), null, false);
+        }
+
+        /// <summary>
+        /// Retrieve list of available upgrades from the upgrade server which
+        /// are more recent than the specified revision number.
+        /// </summary>
+        /// <param name="minRevision">
+        /// Retrieve all upgrades which are more recent than this revision
+        /// number. Set to -1 for all upgrades.
+        /// </param>
+        private IReadOnlyList<Upgrade> GetUpgrades(int minRevision)
+        {
+            return WebUtilities.PostRestService<List<Upgrade>>($"https://builds.apsim.info/api/nextgen/list?min={minRevision}");
         }
 
         private int GetSelIndex()
@@ -307,7 +318,7 @@
                     Upgrade upgrade = upgradeList[selIndex];
                     versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.Issue;
 
-                    if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
+                    if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog($"Are you sure you want to upgrade to version {upgrade.Version}?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
                     {
                         // Write to the registration database.
@@ -322,8 +333,6 @@
                         }
 
                         window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-
-                        WebClient web = new WebClient();
 
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
@@ -350,11 +359,15 @@
                             waitDlg = new Gtk.MessageDialog(window1, Gtk.DialogFlags.Modal,
                                 Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
                             waitDlg.Title = "APSIM Upgrade";
-                            web.DownloadFileCompleted += Web_DownloadFileCompleted;
-                            web.DownloadProgressChanged += OnDownloadProgressChanged;
-                            web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
+                            var progress = new Progress<double>();
+                            progress.ProgressChanged += Download_ProgressChanged;
+
+                            var cancellationToken = new System.Threading.CancellationTokenSource();
+                            FileStream file = new FileStream(tempSetupFileName, FileMode.Create, System.IO.FileAccess.Write);
+                            WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*");
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
-                                web.CancelAsync();
+                                cancellationToken.Cancel();
+
                         }
                         catch (Exception err)
                         {
@@ -364,14 +377,12 @@
                         {
                             if (waitDlg != null)
                             {
-                                web.DownloadProgressChanged -= OnDownloadProgressChanged;
                                 waitDlg.Dispose();
                                 waitDlg = null;
                             }
                             if (window1 != null && window1.Window != null)
                                 window1.Window.Cursor = null;
                         }
-
                     }
                 }
             }
@@ -379,6 +390,41 @@
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Invoked when the download progress changes.
+        /// Updates the progress bar.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Fraction (0-1) of download which has completed</param>
+        private void Download_ProgressChanged(object sender, double e)
+        {
+            try
+            {
+                Gtk.Application.Invoke(delegate
+                {
+                    try
+                    {
+                        double progress = 100.0 * e;
+                        waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
+                    }
+                    catch (Exception err)
+                    {
+                        ShowError(err);
+                    }
+                });
+            }
+            catch (Exception err)
+            {
+                err = new Exception("Error updating download progress", err);
+                ShowError(err);
+            }
+            if (e == 1.0) // Should be true only iff the file has been completely downloaded
+            {
+                Web_DownloadFileCompleted();
+            }
+
         }
 
         /// <summary>
@@ -393,37 +439,7 @@
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
 
-        /// <summary>
-        /// Invoked when the download progress changes.
-        /// Updates the progress bar.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            try
-            {
-                Gtk.Application.Invoke(delegate
-                {
-                    try
-                    {
-                        double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
-                        waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
-                    }
-                    catch (Exception err)
-                    {
-                        ShowError(err);
-                    }
-                });
-            }
-            catch (Exception err)
-            {
-                err = new Exception("Error updating download progress", err);
-                ShowError(err);
-            }
-        }
-
-        private void Web_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void Web_DownloadFileCompleted()
         {
             try
             {
@@ -435,13 +451,10 @@
                         waitDlg = null;
                     }
                 });
-                if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
+                if (!string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
                     try
                     {
-                        if (e.Error != null) // On Linux, we get to this point even when errors have occurred
-                            throw e.Error;
-
                         if (File.Exists(tempSetupFileName))
                         {
 
@@ -450,7 +463,13 @@
                                 // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
                                 // and will handle the removal of the previous version.
                                 string oldVersion = Models.Core.Simulations.ApsimVersion;
-                                Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
+                                var startInfo = new ProcessStartInfo()
+                                {
+                                    FileName = tempSetupFileName,
+                                    Arguments = $"/upgradefrom={oldVersion}",
+                                    WorkingDirectory = Path.GetTempPath()
+                                };
+                                Process.Start(startInfo);
                             }
                             else if (ProcessUtilities.CurrentOS.IsMac)
                             {

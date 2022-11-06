@@ -11,6 +11,8 @@ using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
+using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -40,8 +42,6 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
-        private Dictionary<string, IIndividualAttribute> randomHerdAttributes = new Dictionary<string, IIndividualAttribute>();
-
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
@@ -60,14 +60,6 @@ namespace Models.CLEM.Activities
         [Description("Infer pregnancy status at startup")]
         [Required]
         public bool InferStartupPregnancy { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityBreed()
-        {
-            TransactionCategory = "Livestock.Manage";
-        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -126,7 +118,7 @@ namespace Models.CLEM.Activities
 
                         // must be breeders to bother checking any further
                         // must be either uncontrolled mating or the timing of controlled mating
-                        if (breeders.Count() > 0 & (!useControlledMating || this.TimingCheck(previousDate)))
+                        if (breeders.Count() > 0 & (!useControlledMating || controlledMating.TimingCheck(previousDate)))
                         {
                             int numberPossible = 0;
                             int numberServiced = 1;
@@ -166,7 +158,7 @@ namespace Models.CLEM.Activities
                                             // calculate conception
                                             Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                                             double conceptionRate = ConceptionRate(female, out status);
-                                            if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                            if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
                                             {
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                 female.LastMatingStyle = MatingStyle.PreSimulation;
@@ -187,7 +179,7 @@ namespace Models.CLEM.Activities
 
                                                     for (int k = 0; k < female.CarryingCount; i++)
                                                     {
-                                                        if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                         {
                                                             female.OneOffspringDies();
                                                             if (female.NumberOfOffspring == 0)
@@ -197,6 +189,8 @@ namespace Models.CLEM.Activities
                                                     }
                                                 }
                                             }
+                                            else
+                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, conceiveDate));
                                         }
                                     }
                                 }
@@ -206,14 +200,14 @@ namespace Models.CLEM.Activities
                                     numberPossible = Convert.ToInt32(limiter * location.OfType<RuminantFemale>().Count(), CultureInfo.InvariantCulture);
                                     foreach (RuminantFemale female in location.OfType<RuminantFemale>())
                                     {
-                                        if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                        if (!female.IsPregnant && MathUtilities.IsGreaterThanOrEqual((female.Age - female.AgeAtLastBirth) * 30.4, female.BreedParams.MinimumDaysBirthToConception))
                                         {
                                             // calculate conception
                                             Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                                             double conceptionRate = ConceptionRate(female, out status);
                                             if (numberServiced <= numberPossible) // labour/finance limited number
                                             {
-                                                if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                                if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
                                                 {
                                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                     female.LastMatingStyle = MatingStyle.Controlled;
@@ -234,7 +228,7 @@ namespace Models.CLEM.Activities
 
                                                         for (int k = 0; k < female.CarryingCount; k++)
                                                         {
-                                                            if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                                                            if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                             {
                                                                 female.OneOffspringDies();
                                                                 if (female.NumberOfOffspring == 0)
@@ -256,6 +250,17 @@ namespace Models.CLEM.Activities
                 }
             }
 
+        }
+
+        /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // Reset all activity determined conception rates
+            if(useControlledMating)
+                GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsBreeder).Select(a => a.ActivityDeterminedConceptionRate == null);
         }
 
         /// <summary>An event handler to perform herd breeding </summary>
@@ -281,7 +286,7 @@ namespace Models.CLEM.Activities
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
                     var rnd = RandomNumberGenerator.Generator.NextDouble();
-                    if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                    if (MathUtilities.IsLessThan(rnd, female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                     {
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
@@ -306,7 +311,6 @@ namespace Models.CLEM.Activities
                         newSucklingRuminant.Location = female.Location;
                         newSucklingRuminant.Mother = female;
                         newSucklingRuminant.Number = 1;
-                        newSucklingRuminant.SetUnweaned();
                         // suckling/calf weight from Freer
                         newSucklingRuminant.PreviousWeight = newSucklingRuminant.Weight;
                         newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
@@ -389,25 +393,24 @@ namespace Models.CLEM.Activities
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                         if (numberServiced < numberPossible)
                         {
-                            // calculate conception
-                            double conceptionRate = ConceptionRate(female, out status);
+                            double conceptionRate = 0;
+
+                            if (female.ActivityDeterminedConceptionRate != null)
+                                // If an activity controlled mating has previously determined conception rate and saved it (it will not be null if mated)
+                                // This conception rate can be used instead of determining conception here. 
+                                conceptionRate = female.ActivityDeterminedConceptionRate ?? 0;
+                            else
+                                // calculate conception
+                                conceptionRate = ConceptionRate(female, out status);
 
                             // if mandatory attributes are present in the herd, save male value with female details.
                             // update male for both successful and failed matings (next if statement
                             if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
                             {
                                 object male = null;
-
                                 if (useControlledMating)
                                 {
                                     bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
-                                    if (!controlledMating.SireAttributes.Any() & (newJoining | !randomHerdAttributes.Any()))
-                                    {
-                                        // select random attributes from breeders
-                                        IEnumerable<RuminantFemale> onlyBreedersList = location.OfType<RuminantFemale>();
-                                        randomHerdAttributes = onlyBreedersList.ElementAt(RandomNumberGenerator.Generator.Next(onlyBreedersList.Count())).Attributes.Items;
-                                    }
-
                                     // save all male attributes
                                     AddMalesAttributeDetails(female, controlledMating.SireAttributes, newJoining);
                                 }
@@ -421,9 +424,12 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            if (conceptionRate > 0)
+                            // conception rate will be -ve for unsuccessful matings from controlled mating. a value of 0 still represents not mated
+                            if (Math.Abs(conceptionRate) > 0)
                             {
-                                if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                // if controlled mating (ActiDetConcepRate not null and rate > 0 then successful mating), otherwise compare with random and conception rate for natural mating.
+                                //ActivitydeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
+                                if ((female.ActivityDeterminedConceptionRate != null)?conceptionRate > 0:RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
 
@@ -481,44 +487,12 @@ namespace Models.CLEM.Activities
         /// <param name="female">The female breeder successfully mated</param>
         /// <param name="maleAttributes">a list of available male attributes setters</param>
         /// <param name="newMale">Create new instance (T) or use last created (F)</param>
-        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes, bool newMale = true)
+        private void AddMalesAttributeDetails(RuminantFemale female, List<ISetAttribute> maleAttributes, bool newMale = true)
         {
             foreach (var attribute in female.Attributes.Items)
             {
-                var maleAttribute = maleAttributes.Where(a => a.AttributeName == attribute.Key).FirstOrDefault();
-                if(maleAttribute != null)
-                {
-                    var calculatedAttribute = maleAttribute.GetAttribute(newMale);
-                    if(attribute.Value != null && attribute.Value.InheritanceStyle != calculatedAttribute.InheritanceStyle)
-                        throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and attributes supplied by controlled mating in [a={this.Name}]");
-
-                    if (attribute.Value != null)
-                        attribute.Value.StoredMateValue = calculatedAttribute.StoredValue;
-                }
-                else
-                {
-                    // if there are random herd attributes available
-                    if (randomHerdAttributes.Any())
-                    {
-                        if (!randomHerdAttributes.TryGetValue(attribute.Key, out IIndividualAttribute randomAttribute))
-                            throw new ApsimXException(this, $"Unable to assign mandatory attribute from random herd selection for [a={this.Name}] and madatory attribute [{attribute.Key}]");
-                        else
-                        {
-                            if (attribute.Value != null && attribute.Value.InheritanceStyle != randomAttribute.InheritanceStyle)
-                                throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and attributes supplied by random herd selection in [a={this.Name}]");
-
-                            if (attribute.Value != null)
-                                attribute.Value.StoredMateValue = randomAttribute.StoredValue;
-                        }
-                    }
-                    else
-                    {
-                        if (attribute.Value != null)
-                            attribute.Value.StoredMateValue = null;
-                        if (female.BreedParams.IsMandatoryAttribute(attribute.Key))
-                            throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
-                    }
-                }
+                var maleAttribute = maleAttributes.FirstOrDefault(a => a.AttributeName == attribute.Key);
+                SetFemaleMateAttributes(female, attribute, maleAttribute?.GetAttribute(newMale));
             }
         }
 
@@ -529,27 +503,45 @@ namespace Models.CLEM.Activities
         /// <param name="male">The mated male</param>
         private void AddMalesAttributeDetails(RuminantFemale female, Ruminant male)
         {
-            if (male != null)
-            {
-                foreach (var attribute in female.Attributes.Items)
-                {
-                    var maleAttribute = male.Attributes.GetValue(attribute.Key);
-                    if (maleAttribute != null)
-                    {
-                        if (attribute.Value != null && attribute.Value.InheritanceStyle != maleAttribute.InheritanceStyle)
-                            throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and breeding male from the herd in [a={this.Name}]");
+            if (male is null) return;
 
-                        if (attribute.Value != null)
-                            attribute.Value.StoredMateValue = maleAttribute.StoredValue;
-                    }
+            foreach (var attribute in female.Attributes.Items)
+            {
+                var maleAttribute = male.Attributes.GetValue(attribute.Key);
+                SetFemaleMateAttributes(female, attribute, maleAttribute);
+            } 
+        }
+
+        private void SetFemaleMateAttributes(RuminantFemale female, KeyValuePair<string, IIndividualAttribute> femaleAttribute, IIndividualAttribute maleAttribute)
+        {
+            if (maleAttribute != null)
+            {
+                if (femaleAttribute.Value != null && femaleAttribute.Value.InheritanceStyle != maleAttribute.InheritanceStyle)
+                {
+                    string errorMsg;
+                    if (useControlledMating)
+                        errorMsg = $"provided from [a={controlledMating.NameWithParent}]";
                     else
-                    {
-                        if (attribute.Value != null)
-                            attribute.Value.StoredMateValue = null;
-                        if (female.BreedParams.IsMandatoryAttribute(attribute.Key))
-                            throw new ApsimXException(this, $"The attributes provided with the breeding male from the herd does not include the madatory attribute [{attribute.Key}] in [a={this.Name}]");
-                    }
-                } 
+                        errorMsg = $"from the herd in [a={NameWithParent}]";
+                    throw new ApsimXException(this, $"The inheritance style for attribute [{femaleAttribute.Key}] differs between the breeder [{femaleAttribute.Value.InheritanceStyle}] and breeding male [{maleAttribute.InheritanceStyle}] {errorMsg}");
+                }
+
+                if (femaleAttribute.Value != null)
+                    femaleAttribute.Value.StoredMateValue = maleAttribute.StoredValue;
+            }
+            else
+            {
+                if (femaleAttribute.Value != null)
+                    femaleAttribute.Value.StoredMateValue = null;
+                if (female.BreedParams.IsMandatoryAttribute(femaleAttribute.Key))
+                {
+                    string errorMsg;
+                    if (useControlledMating)
+                        errorMsg = $"Cannot locate the madatory attribute [{femaleAttribute.Key}] in [a={controlledMating.NameWithParent}]{Environment.NewLine}Add a [SetAttribute] component below the [a=RuminantnActivityControlledMating]";
+                    else
+                        errorMsg = $"Cannot locate the madatory attribute [{femaleAttribute.Key}] in from the breeding male selected from the herd in [a={NameWithParent}]{Environment.NewLine}Ensure all sires in initial herd or purchased provide the appropriate [SetAttribute] component";
+                    throw new ApsimXException(this, errorMsg);
+                }
             }
         }
 
@@ -566,12 +558,12 @@ namespace Models.CLEM.Activities
             if (!female.IsPregnant)
             {
                 status = Reporting.ConceptionStatus.NotReady;
-                if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
+                if (MathUtilities.IsGreaterThanOrEqual(female.Age, female.BreedParams.MinimumAge1stMating) && female.NumberOfBirths == 0)
                     isConceptionReady = true;
                 else
                 {
                     // add one to age to ensure that conception is due this timestep
-                    if ((female.Age + 1 - female.AgeAtLastBirth) * 30.4 > female.BreedParams.MinimumDaysBirthToConception)
+                    if (MathUtilities.IsGreaterThan((female.Age + 1 - female.AgeAtLastBirth) * 30.4, female.BreedParams.MinimumDaysBirthToConception))
                     {
                         // only based upon period since birth
                         isConceptionReady = true;

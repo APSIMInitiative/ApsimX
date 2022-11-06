@@ -36,6 +36,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when a mouse button is clicked.</summary>
         public event EventHandler<SheetEventButton> MouseClick;
 
+        /// <summary>Invoked when a mouse button is clicked.</summary>
+        public event EventHandler<SheetEventButton> ContextMenuClick;
+
         /// <summary>Invoked when the sheet has been initialised.</summary>
         public event EventHandler Initialised;
 
@@ -53,6 +56,15 @@ namespace UserInterface.Views
 
         /// <summary>The painter to use to get style a cell.</summary>
         public ISheetCellPainter CellPainter { get; set; }
+
+        /// <summary>The cell selector instance.</summary>
+        public ISheetSelection CellSelector { get; set; }
+
+        /// <summary>The cell editor instance.</summary>
+        public ISheetEditor CellEditor { get; set; }
+
+        /// <summary>The scroll bars instance.</summary>
+        public SheetScrollBars ScrollBars { get; set; }
 
         /// <summary>The widths (in pixels) of each column in the sheet. Can be null to auto-calculate.</summary>
         public int[] ColumnWidths { get; set; }
@@ -120,7 +132,10 @@ namespace UserInterface.Views
 
         public void InvokeButtonPress(SheetEventButton button)
         {
-            MouseClick.Invoke(this, button);
+            if (button.LeftButton)
+                MouseClick?.Invoke(this, button);
+            else
+                ContextMenuClick?.Invoke(this, button);
         }
 
         public void InvokeScroll(int delta)
@@ -152,6 +167,9 @@ namespace UserInterface.Views
         /// <summary>The padding (in pixels) to go on the left and right size of a column.</summary>
         public int ColumnPadding { get; set; } = 20;
 
+        /// <summary>The number of rows to paint in the grid. If zero, then the data provider will determine the number of rows in the grid.</summary>
+        public int RowCount { get; set; } = 0;
+
         /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
         public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
 
@@ -163,6 +181,14 @@ namespace UserInterface.Views
 
         /// <summary>A collection of row indexes that are currently fully visible.</summary>        
         public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
+
+        /// <summary>
+        /// The number of rows that might potentially be currently visible, whether they hold data or not, including those partially visible
+        /// </summary>
+        private int VisibleRowCount
+        {
+            get { return (Height + RowHeight - 1) / RowHeight; }
+        }
 
         /// <summary>Calculates the bounds of a cell if it is visible (wholly or partially) to the user.</summary>
         /// <param name="columnIndex">The cell column index.</param>
@@ -292,6 +318,13 @@ namespace UserInterface.Views
                 foreach (var columnIndex in VisibleColumnIndexes)
                     foreach (var rowIndex in VisibleRowIndexes)
                         DrawCell(cr, columnIndex, rowIndex);
+
+                // Optionally add in blank rows at bottom of grid.
+                int numRowsOfData = VisibleRowIndexes.Count();
+                int numBlankRowsToAdd = Math.Max(0, VisibleRowCount - numRowsOfData);
+                foreach (var columnIndex in VisibleColumnIndexes)
+                    for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
+                        DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
             }
             catch (Exception err)
             {
@@ -308,9 +341,12 @@ namespace UserInterface.Views
             if (cr != null)
                 CalculateColumnWidths(cr);
 
+            if (RowCount == 0)
+                RowCount = DataProvider.RowCount;
+
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
-                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.LastOrDefault();
+                MaximumNumberHiddenRows = DataProvider.RowCount - Height/RowHeight; 
 
             Initialised?.Invoke(this, new EventArgs());
         }
@@ -397,7 +433,7 @@ namespace UserInterface.Views
         {
             int top = 0;
             int rowIndex = 0;
-            while (rowIndex < DataProvider.RowCount && top < Height)
+            while (rowIndex < RowCount && top < Height)
             {
                 var firstScrollableRowIndex = NumberHiddenRows + NumberFrozenRows;
 
@@ -443,18 +479,34 @@ namespace UserInterface.Views
             for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
             {
                 int columnWidth = 0;
-                for (int rowIndex = 0; rowIndex < NumberFrozenRows + 1; rowIndex++)
-                {
-                    var text = DataProvider.GetCellContents(columnIndex, rowIndex);
-                    if (text == null)
-                        text = string.Empty;
+                for (int rowIndex = 0; rowIndex < Math.Min(NumberFrozenRows + 1, DataProvider.RowCount); rowIndex++)
+                    columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
-                    var rectangle = cr.GetPixelExtents(text, true, false);
+                // Look at middle row.
+                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount / 2));
 
-                    columnWidth = Math.Max(columnWidth, rectangle.Width);
-                }
+                // Look at last row.
+                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount-1));
+
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }
+        }
+
+        /// <summary>
+        /// Get the width of a cell.
+        /// </summary>
+        /// <param name="cr"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="rowIndex"></param>
+        /// <returns></returns>
+        private int GetWidthOfCell(IDrawContext cr, int columnIndex, int rowIndex)
+        {
+            var text = DataProvider.GetCellContents(columnIndex, rowIndex);
+            if (text == null)
+                text = string.Empty;
+
+            var rectangle = cr.GetPixelExtents(text, true, false);
+            return rectangle.Width;
         }
 
         /// <summary>Draw a single cell to the context.</summary>
@@ -465,7 +517,9 @@ namespace UserInterface.Views
         {
             try
             {
-                var text = DataProvider.GetCellContents(columnIndex, rowIndex);
+                string text = null;
+                if (rowIndex < DataProvider.RowCount)
+                    text = DataProvider.GetCellContents(columnIndex, rowIndex);
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
                 if (cellBounds != null)
                 {

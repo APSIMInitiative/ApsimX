@@ -24,7 +24,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel
+    public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
         private Clock clock = null;
@@ -39,10 +39,25 @@ namespace Models.CLEM
         public MonthsOfYear StartSeasonMonth { get; set; }
 
         /// <summary>
+        /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute(-1)]
+        [Description("Iteration number where shuffle is ignored")]
+        public int DoNotShuffleIteration { get; set; }
+
+        /// <summary>
         /// List of shuffled years
         /// </summary>
         [JsonIgnore]
         public List<ShuffleYear> ShuffledYears { get; set; }
+
+        /// <summary>
+        /// List of shuffled years
+        /// </summary>
+        [JsonIgnore]
+        public DateTime[] ShuffledYearsArray { get; set; }
+
 
         /// <summary>
         /// Constructor
@@ -59,23 +74,51 @@ namespace Models.CLEM
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            ShuffledYears = new List<ShuffleYear>();
-
             // shuffle years for proxy stochastic rainfall simulation
-            int startYear = clock.StartDate.Year;
-            int endYear = clock.EndDate.Year;
 
-            for (int i = startYear; i <= endYear; i++)
-                ShuffledYears.Add(new ShuffleYear() { Year = i, RandomYear = i });
-
-            for (int i = 0; i < ShuffledYears.Count(); i++)
+            // create year month list
+            List<(int year, int month, int rndyear, int mthoffset)> storeYears = new List<(int, int, int, int)>();
+            DateTime currentDate = new DateTime(clock.StartDate.Year, clock.StartDate.Month, 1);
+            int startYear = (currentDate.Month >= (int)StartSeasonMonth)? clock.StartDate.Year - 1: clock.StartDate.Year;
+            int currentYear = 0;
+            List<int> yearOffset = new List<int>() { 0 };
+            List<int> monthOffset = new List<int>();
+            while (currentDate <= clock.EndDate)
             {
-                int randIndex = RandomNumberGenerator.Generator.Next(ShuffledYears.Count());
-                int keepValue = ShuffledYears[i].RandomYear;
-                ShuffledYears[i].RandomYear = ShuffledYears[randIndex].RandomYear;
-                ShuffledYears[randIndex].RandomYear = keepValue;
+                if (currentDate.Month == (int)StartSeasonMonth)
+                {
+                    currentYear++;
+                    yearOffset.Add(currentYear);
+                }
+                storeYears.Add( (currentDate.Year, currentDate.Month, currentYear, currentDate.Year - (startYear + currentYear)));
+                currentDate = currentDate.AddMonths(1);
             }
+
+            // shuffle years
+            yearOffset = yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble()).ToList();
+            // create shuffled month/date
+            ShuffledYears = storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset } ).ToList();
+            ShuffledYearsArray = ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1)).ToArray<DateTime>();
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (FindInScope<RandomNumberGenerator>() is null)
+            {
+                string[] memberNames = new string[] { "Missing random number generator" };
+                results.Add(new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 
@@ -116,6 +159,10 @@ namespace Models.CLEM
         /// Actual year
         /// </summary>
         public int Year;
+        /// <summary>
+        /// Month
+        /// </summary>
+        public int Month;
         /// <summary>
         /// Shuffled year
         /// </summary>

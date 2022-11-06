@@ -102,18 +102,21 @@
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
         private Expander expander1 = null;
-        private VBox vbox2 = null;
+        private Box vbox2 = null;
         private Label captionLabel = null;
         private EventBox captionEventBox = null;
         private Label label2 = null;
         private Menu popup = new Menu();
 
+        /// <summary>Default constructor.</summary>
+        public GraphView() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
-        public GraphView(ViewBase owner = null) : base(owner)
+        public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
@@ -122,18 +125,30 @@
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
+            Initialise(owner, vbox1);
+        }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            vbox1 = gtkControl as Box;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
-            plot1.SetSizeRequest(-1, 100);
+            if (vbox1.Window != null)
+                plot1.SetSizeRequest(vbox1.Window.Width, vbox1.Window.Height);
+            if (vbox2 == null)
+                vbox2 = vbox1;
             vbox2.PackStart(plot1, true, true, 0);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
             this.LeftRightPadding = 40;
-            expander1.Visible = false;
-            captionEventBox.Visible = true;
+            if (expander1 != null)
+            {
+                expander1.Visible = false;
+                captionEventBox.Visible = true;
+            }
 #pragma warning disable CS0618
             // todo : need to refacto this to use PlotController,
             // as the "old" way of doing things is now considered obsolete.
@@ -143,16 +158,16 @@
 #pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
-            captionLabel.Text = null;
-            captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
+            if (captionLabel != null)
+            {
+                captionLabel.Text = null;
+                captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
+            }
             Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
             ForegroundColour = Utility.Colour.ToOxy(foreground);
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
             mainWidget.Destroyed += _mainWidget_Destroyed;
-
-            
-
 
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
             // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
@@ -161,7 +176,6 @@
             // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
             var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
-
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -173,7 +187,8 @@
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
 #pragma warning restore CS0618
-                captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
+                if (captionEventBox != null)
+                    captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
                 popup.Clear();
                 popup.Dispose();
                 Clear();
@@ -304,6 +319,13 @@
             }
         }
 
+        /// <summary>Set the preferred width as a fraction of the parent window.</summary>
+        /// <param name="fraction">Fraction of the parent window for the graph to occupy.</param>
+        public void SetPreferredWidth(double fraction)
+        {
+            plot1?.SetSizeRequest(Convert.ToInt32(vbox1.Window.Width * fraction), 100);
+        }
+
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
         public bool IsLegendVisible
         {
@@ -380,6 +402,7 @@
             }
 
             this.plot1.Model.InvalidatePlot(true);
+            plot1.ShowAll();
         }
 
         /// <summary>
@@ -1504,6 +1527,8 @@
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
+                smallestDate = DateTime.MaxValue;
+                largestDate = DateTime.MinValue;
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);

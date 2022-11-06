@@ -9,6 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Functions.RootShape;
 
 namespace Models.PMF.Arbitrator
 {
@@ -51,8 +52,12 @@ namespace Models.PMF.Arbitrator
         public double WAllocated { get; protected set; }
 
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
+		[JsonIgnore]
         public double SDRatio { get; set; }
 
+        /// <summary>Total available SW.</summary>
+		[JsonIgnore]
+        public double SWAvail { get; private set; }
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -66,7 +71,8 @@ namespace Models.PMF.Arbitrator
                 Waterdemands.Add(Can as IHasWaterDemand);
 
             WaterDemands = Waterdemands;
-            SDRatio = 0;
+            SDRatio = 0.0;
+            SWAvail = 0.0;
         }
 
         /// <summary>The method used to arbitrate N allocations</summary>
@@ -173,9 +179,6 @@ namespace Models.PMF.Arbitrator
 
                 double[] llDep = MathUtilities.Multiply(soilCrop.LL, soilPhysical.Thickness);
 
-                if (root.Depth != myZone.Depth)
-                    myZone.Depth += 0; // wtf??
-
                 var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
@@ -184,10 +187,9 @@ namespace Models.PMF.Arbitrator
                     myZone.AvailableSW[layer] = Math.Max(waterBalance.SWmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
                     myZone.PotentialAvailableSW[layer] = Math.Max(soilPhysical.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
 
-                    var proportion = myZone.RootProportions[layer];
-                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
+                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * myZone.RootProportionVolume[layer], 0.0);
                 }
-                var totalAvail = myZone.AvailableSW.Sum();
+                var totalAvail = SWAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
                 WatSupply = totalSupply;

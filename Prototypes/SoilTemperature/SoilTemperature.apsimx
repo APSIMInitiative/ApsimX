@@ -1,14 +1,16 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 148,
+  "Version": 154,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
@@ -19,6 +21,7 @@
             "PLOT5"
           ],
           "Name": "Observed",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -32,6 +35,7 @@
           "FieldName3UsedForMatch": null,
           "AllColumns": false,
           "Name": "PredictedObserved",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -45,6 +49,7 @@
             "AnalyticalDataForAPSIM"
           ],
           "Name": "Analytical",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -55,14 +60,15 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "Wagga",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
           "Text": "This simulation is a duplicate of the Eucalyptus validation Wagga simulation. The only change is the addition of the soil temperature model.",
           "Name": "Memo",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -73,6 +79,7 @@
           "FileName": "%root%\\Tests\\Validation\\Eucalyptus\\wwepp.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -82,6 +89,7 @@
           "Start": "1991-07-01T00:00:00",
           "End": "1995-06-30T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -90,6 +98,7 @@
           "$type": "Models.Summary, Models",
           "Verbosity": 100,
           "Name": "Summary",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -97,6 +106,7 @@
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -108,6 +118,7 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Plantation",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Soils.Soil, Models",
@@ -130,14 +141,34 @@
               "DataSource": null,
               "Comments": null,
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 1,
-                  "FractionFull": 0.8,
-                  "DepthWetSoil": "NaN",
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.16,
+                    0.15,
+                    0.14,
+                    0.13,
+                    0.12,
+                    0.12,
+                    0.09900000000000003,
+                    0.05
+                  ],
                   "RelativeTo": null,
-                  "Name": "Initial water",
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -231,6 +262,7 @@
                   "ParticleSizeSiltMetadata": null,
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -268,6 +300,7 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "EucalyptusSoil",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -308,6 +341,7 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "SCRUMSoil",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -332,6 +366,7 @@
                   "CNCov": 0.8,
                   "DischargeWidth": 0.0,
                   "CatchmentArea": 0.0,
+                  "PSIDul": -100.0,
                   "Thickness": [
                     100.0,
                     300.0,
@@ -362,8 +397,9 @@
                     0.0,
                     0.0
                   ],
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -390,6 +426,7 @@
                     0.1,
                     0.1
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     14.5,
                     14.5,
@@ -433,6 +470,7 @@
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -449,26 +487,6 @@
                     1000.0,
                     1000.0
                   ],
-                  "NO3N": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01
-                  ],
-                  "NH4N": [
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01
-                  ],
                   "PH": [
                     5.8,
                     5.7,
@@ -479,16 +497,15 @@
                     5.7,
                     5.7
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "LabileP": null,
-                  "UnavailableP": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -496,20 +513,23 @@
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "ResourceName": "Nutrient",
                   "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Name": "SoilTemperature",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -517,17 +537,17 @@
                 {
                   "$type": "Models.Soils.LayerStructure, Models",
                   "Depth": [
-                    "0-0.2",
-                    "0.2-0.4",
-                    "0.4-1",
-                    "1-2",
-                    "2-5",
-                    "5-10",
+                    "0-2",
+                    "2-4",
+                    "4-10",
                     "10-20",
-                    "20-30",
-                    "30-40",
-                    "40-50",
-                    "50-60"
+                    "20-50",
+                    "50-100",
+                    "100-200",
+                    "200-300",
+                    "300-400",
+                    "400-500",
+                    "500-600"
                   ],
                   "Thickness": [
                     2.0,
@@ -543,6 +563,106 @@
                     100.0
                   ],
                   "Name": "LayerStructure",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "Name": "Urea",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -554,27 +674,32 @@
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "Wheat",
               "InitialResidueType": "Wheat",
               "InitialResidueMass": 2000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -589,27 +714,30 @@
               "NightInterceptionFraction": 0.0,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "Eucalyptus",
               "Name": "Eucalyptus",
+              "ResourceName": "Eucalyptus",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "SCRUM",
               "Name": "SCRUM",
+              "ResourceName": "SCRUM",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n\r\n            if (Clock.Today.Date == SowingDate)\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: 150);\r\n            //Plant.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "RowSpace",
@@ -629,6 +757,8 @@
                 }
               ],
               "Name": "TreeTransplantRule",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -643,6 +773,7 @@
                 }
               ],
               "Name": "WeedSowing",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -706,6 +837,7 @@
                 }
               ],
               "Name": "FertiliserOperations",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -748,6 +880,7 @@
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -782,6 +915,8 @@
                 }
               ],
               "Name": "AutoFertigate",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -795,6 +930,8 @@
                 }
               ],
               "Name": "Harvesting",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -807,6 +944,7 @@
           "ShowInDocs": false,
           "GraphsPerPage": 6,
           "Name": "Folder",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
@@ -839,6 +977,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 10 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -864,6 +1003,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -892,6 +1032,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -931,6 +1072,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 25 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -956,6 +1098,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -984,6 +1127,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1023,6 +1167,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 75 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1048,6 +1193,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1076,6 +1222,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1115,6 +1262,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 150 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1140,6 +1288,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1168,6 +1317,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1207,6 +1357,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 250 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1232,6 +1383,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1260,6 +1412,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1299,6 +1452,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 10 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1324,6 +1478,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
@@ -1331,6 +1486,7 @@
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1374,6 +1530,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 25 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1399,6 +1556,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
@@ -1406,6 +1564,7 @@
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1449,6 +1608,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 75 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1474,6 +1634,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
@@ -1481,6 +1642,7 @@
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1524,6 +1686,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 150 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1549,6 +1712,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
@@ -1556,6 +1720,7 @@
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1599,6 +1764,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 250 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1624,6 +1790,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
@@ -1631,6 +1798,7 @@
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1655,15 +1823,18 @@
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
       "Name": "Analytical",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Factorial.Factors, Models",
           "Name": "Factors",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
               "Specification": "[Weather].ExcelWorkSheetName=Dalby,Lincoln",
               "Name": "Site",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -1674,14 +1845,15 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "IsRunning": false,
           "Descriptors": null,
           "Name": "ComparisonWithAnalytical",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "The intention for the analytical solution is to test the numerics and also if the soil layering that most people use (many centimetres even at the surface) with SoilWater are causing any issues with the quality of the solution. This would be under highly idealised conditions but is a necessary step - the advantage is that it is only testing the soil temperature solution (not the water, crop, ...).\n\n* set up the soil water model such that the profile is uniform (all the same water content, bulk density, texture, carbon) with no crop and there are no changes in water content with time. I can't exactly remember how I did this last time but I would try setting it up with the soil at LL15 (are going to need a few different levels of this for testing) and if that didn't work then at SAT with Ksat and swcon = 0\n\n* need a couple of artificial weather files at latitude = 0 degrees, no rainfall, no radiation, and with air temperature of varying amplitude and average as from the spreadsheet\n\nNeed to start with soil layers of about 1 cm each (where are pretty confident that the solution will work) but be set up to expand these out to more normal layering (can probably use the layering component for these).\n\nWith the above, use the spreadsheet outputs as validation/testing data for the idealised setting for various depths in the soil. Would also like to understand how well the model copes with initial soil temperatures.\n\nAfter that, test things that should affect damping depth (bulk density, carbon, water content, texture ...)\n\nNotes:\n\n* The simulation reads dummy weather data from AnalyticalWeather.xlsx.\n\n* The soil physical node has a uniform profile specified.\n\n* The water balance component has been replaced by a manager script (DummyWaterBalance) that ensures water content (a user specified parameter) does not change during the simulation.\n\n* A 'LayerStructure' component can be added to the soil to get 1cm layers. There is a 'LayerStructure' component in the Wagga simulation that can be copied/pasted.\n",
               "Name": "Memo",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -1691,6 +1863,7 @@
               "Start": "2000-01-01T00:00:00",
               "End": "2000-12-31T00:00:00",
               "Name": "Clock",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -1701,6 +1874,7 @@
               "FileName": "AnalyticalWeather.xlsx",
               "ExcelWorkSheetName": "Sheet1",
               "Name": "Weather",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -1709,6 +1883,7 @@
               "$type": "Models.Summary, Models",
               "Verbosity": 100,
               "Name": "Summary",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -1720,6 +1895,7 @@
               "AspectAngle": 0.0,
               "Altitude": 50.0,
               "Name": "Field",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.MicroClimate, Models",
@@ -1732,13 +1908,14 @@
                   "NightInterceptionFraction": 0.0,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\n        /// <summary>Amount of Cl leaching  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachCl { get { return 0; } }\n        \r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\n        \n        /// <summary>Pond depth (mm)</summary>\r\n        public double Pond { get; set; }\r\n\n        /// <summary>Pond depth (mm)</summary>\r\n        public double SubsurfaceDrain { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] PSI { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\n        /// <summary>Amount of Cl leaching  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachCl { get { return 0; } }\n        \r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\n        \n        /// <summary>Pond depth (mm)</summary>\r\n        public double Pond { get; set; }\r\n\n        /// <summary>Pond depth (mm)</summary>\r\n        public double SubsurfaceDrain { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\n        public void Standardise(double[] targetThickness)\n        {\n        \n        \n        }\n        \r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "SW",
@@ -1762,6 +1939,8 @@
                     }
                   ],
                   "Name": "DummyWaterBalance",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1786,14 +1965,34 @@
                   "DataSource": null,
                   "Comments": null,
                   "Name": "Soil",
+                  "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 1,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        100.0,
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0,
+                        300.0
+                      ],
+                      "InitialValues": [
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16,
+                        0.16
+                      ],
                       "RelativeTo": null,
-                      "Name": "Initial water",
+                      "FilledFromTop": true,
+                      "Name": "Water",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1887,6 +2086,7 @@
                       "ParticleSizeSiltMetadata": null,
                       "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1914,6 +2114,7 @@
                         2.0,
                         2.0
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         14.5,
                         14.5,
@@ -1957,6 +2158,7 @@
                       "CarbonMetadata": null,
                       "FOMMetadata": null,
                       "Name": "Organic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1973,26 +2175,6 @@
                         1000.0,
                         1000.0
                       ],
-                      "NO3N": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01
-                      ],
-                      "NH4N": [
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01,
-                        0.01
-                      ],
                       "PH": [
                         6.5,
                         6.5,
@@ -2003,16 +2185,15 @@
                         6.5,
                         6.5
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2020,6 +2201,106 @@
                     {
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Name": "SoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        100.0,
+                        300.0,
+                        600.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0
+                      ],
+                      "InitialValues": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NO3",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        100.0,
+                        300.0,
+                        600.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0
+                      ],
+                      "InitialValues": [
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "NH4",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
+                      "Thickness": [
+                        100.0,
+                        300.0,
+                        600.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0,
+                        1000.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "Name": "Urea",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2042,6 +2323,7 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "AnalyticalReport",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2059,6 +2341,7 @@
           "ShowInDocs": true,
           "GraphsPerPage": 6,
           "Name": "Folder",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
@@ -2091,6 +2374,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 10 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -2116,6 +2400,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2144,6 +2429,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2183,6 +2469,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 25 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -2208,6 +2495,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2236,6 +2524,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2275,6 +2564,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 150 mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -2300,6 +2590,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2328,6 +2619,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false

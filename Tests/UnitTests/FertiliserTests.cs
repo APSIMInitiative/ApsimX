@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Interfaces;
     using Models.Soils;
     using Models.Soils.Nutrients;
@@ -39,6 +40,15 @@
             }
 
             public double[] ppm => throw new NotImplementedException();
+
+            public double AmountLostInRunoff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public double DepthConstant { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public double MaxDepthSoluteAccessible { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public double RunoffEffectivenessAtMovingSolute { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public double MaxEffectiveRunoff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public double[] AmountInSolution { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public double[] ConcAdsorpSolute { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            double[] ISolute.AmountLostInRunoff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
             public void SetKgHa(SoluteSetterType callingModelType, double[] value)
             {
@@ -92,7 +102,8 @@
                     }
                 }
             };
-
+            Resource.Instance.Replace(simulation);
+            FileFormat.InitialiseModel(simulation, (e) => throw e);
             simulation.Prepare();
             simulation.Run();
 

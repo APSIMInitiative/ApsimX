@@ -180,6 +180,14 @@
             if (groupNumber >= groups.Count)
                 groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
 
+            if (possibleRecursion)
+            {
+                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                if (var == null)
+                    return null;
+                else
+                    possibleRecursion = false;
+            }
             if (string.IsNullOrEmpty(aggregationFunction) && string.IsNullOrEmpty(groupByName))
             {
                 // This instance is NOT a temporarily aggregated variable and so hasn't 
@@ -213,6 +221,11 @@
             }
             group.StoreValue();
         }
+
+        /// <summary>
+        /// Test
+        /// </summary>
+        public bool possibleRecursion { get; private set; } = false;
 
         /// <summary>
         /// Parse a report variable line.
@@ -306,13 +319,15 @@
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObjectProperties(variableName);
+                IVariable var = locator.GetObjectProperties(variableName, LocatorFlags.IncludeReportVars);
                 if (var != null)
                 {
                     Units = var.UnitsLabel;
                     if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
                         Units = Units.Substring(1, Units.Length - 2);
                 }
+                else
+                    possibleRecursion = true;
             }
             catch (Exception)
             {
@@ -331,7 +346,7 @@
 
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
-                events.Subscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
+                events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
                 fromVariable = (clock as IModel).FindByPath(fromString);
                 toVariable = (clock as IModel).FindByPath(toString);
                 if (fromVariable != null)
@@ -380,7 +395,7 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event data.</param>
-        private void OnEndOfSimulation(object sender, EventArgs e)
+        private void OnUnsubscribeFromEvents(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(collectionEventName))
                 events.Unsubscribe(collectionEventName, OnDoReportCalculations);
@@ -389,7 +404,7 @@
             if (!string.IsNullOrEmpty(fromString) && fromVariable == null)
                 events.Unsubscribe(fromString, OnFromEvent);
             events.Unsubscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
-            events.Unsubscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
+            events.Unsubscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
         }
 
         /// <summary>

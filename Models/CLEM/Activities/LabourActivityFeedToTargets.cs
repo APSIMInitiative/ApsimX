@@ -85,14 +85,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public Market Market { get; private set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityFeedToTargets()
-        {
-            TransactionCategory = "Labour.Feed";
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -154,7 +146,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             if (people is null | food is null)
             {
@@ -490,64 +482,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            var group = people?.Items.Where(a => a.Hired != true);
-            decimal head = 0;
-            double adultEquivalents = 0;
-            foreach (var child in FindAllChildren<LabourFeedGroup>())
-            {
-                var subgroup = child.Filter(group);
-                head += subgroup.Sum(a => a.Individuals);
-                adultEquivalents += subgroup.Sum(a => a.TotalAdultEquivalents);
-            }
-
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    numberUnits = Convert.ToDouble(head, System.Globalization.CultureInfo.InvariantCulture) / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    numberUnits = adultEquivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            // reduce by the smallest of finance and labour limits 
-            // The other resource will not be retuned but is lost in transactions
-            var financeLimit = LimitProportion(typeof(Finance));
-            if (LabourLimitProportion < 1 || financeLimit < 1)
-            {
-                double limiter = Math.Min(LabourLimitProportion, financeLimit);
-                if (limiter < 1)
-                    foreach (ResourceRequest item in ResourceRequestList)
-                        if (item.ResourceType != typeof(HumanFoodStoreType))
-                            item.Provided *= limiter;
-            }
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             // add all provided requests to the individuals intake pools.
 
@@ -744,28 +679,29 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<LabourActivityFeedTarget>(), true, "childgroupactivityborder", "The following targets are applied:", "No LabourActivityFeedTarget was provided"),
+                (FindAllChildren<LabourActivityFeedTargetPurchase>(), true, "childgroupactivityborder", "The following purchases will be used to supply food:", "")
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Each Adult Equivalent is able to consume ");
-                if (DailyIntakeLimit > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(DailyIntakeLimit.ToString("#,##0.##"));
-                }
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET");
-
-                htmlWriter.Write("</span> kg per day");
+                htmlWriter.Write($"Each Adult Equivalent is able to consume {CLEMModel.DisplaySummaryValueSnippet(DailyIntakeLimit, warnZero:true)} kg per day");
                 if (DailyIntakeOtherSources > 0)
                 {
                     htmlWriter.Write("with <span class=\"setvalue\">");
                     htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
                     htmlWriter.Write("</span> provided from non-modelled sources");
                 }
-                htmlWriter.Write("</div>");
+                htmlWriter.Write(".</div>");
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included");
                 htmlWriter.Write("</div>");
@@ -786,37 +722,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
-                htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
-
-                if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
-                    htmlWriter.Write("</div>");
-                }
-
-                if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
-                    htmlWriter.Write("</div>");
-                }
-
-                return htmlWriter.ToString(); 
-            }
-        } 
         #endregion
     }
 }

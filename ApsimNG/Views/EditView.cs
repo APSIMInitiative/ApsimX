@@ -60,10 +60,10 @@ namespace UserInterface.Views
     {
         /// <summary>Invoked when the edit box loses focus.</summary>
         public event EventHandler Leave;
-        
+
         /// <summary>Invoked when the user changes the text in the edit box.</summary>
         public event EventHandler Changed;
-        
+
         /// <summary>
         /// Invoked when the user needs intellisense items.
         /// Currently this is only triggered by pressing control-space.
@@ -333,6 +333,19 @@ namespace UserInterface.Views
         {
             if (textentry1.IsFocus)
                 OnLeave(this, (EventArgs)null);
+        }
+
+        /// <summary>
+        /// Set the IsEditable flag of the control.
+        /// </summary>
+        public bool Editable 
+        { 
+            get {
+                return textentry1.IsEditable;
+            }
+            set { 
+                textentry1.IsEditable = value;
+            }
         }
     }
 }

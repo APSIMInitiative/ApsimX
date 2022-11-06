@@ -2,7 +2,6 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Soils.Standardiser;
 using Models.Storage;
 using Newtonsoft.Json;
 using System;
@@ -88,25 +87,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>A locater object for finding models and variables.</summary>
-        [NonSerialized]
-        private Locater locater;
-
-        /// <summary>Cache to speed up scope lookups.</summary>
-        /// <value>The locater.</value>
-        public Locater Locater
-        {
-            get
-            {
-                if (locater == null)
-                {
-                    locater = new Locater();
-                }
-
-                return locater;
-            }
-        }
-
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
@@ -125,6 +105,14 @@ namespace Models.Core
         /// <summary>Is the simulation running?</summary>
         public bool IsRunning { get; private set; } = false;
 
+        /// <summary>
+        /// Is this Simulation in the process of being initialised?
+        /// Use with caution! Leaving this set to "true" will block its
+        /// execution thread.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsInitialising { get; set; } = false;
+
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
@@ -133,7 +121,7 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public object Get(string namePath)
         {
-            return Locater.Get(namePath, this);
+            return Locator.Get(namePath);
         }
 
         /// <summary>Get the underlying variable object for the given path.</summary>
@@ -141,7 +129,7 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public IVariable GetVariableObject(string namePath)
         {
-            return Locater.GetInternal(namePath, this);
+            return Locator.GetObject(namePath);
         }
 
         /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
@@ -149,7 +137,7 @@ namespace Models.Core
         /// <param name="value">The value to set the property to</param>
         public void Set(string namePath, object value)
         {
-            Locater.Set(namePath, this, value);
+            Locator.Set(namePath, value);
         }
 
         /// <summary>Return the filename that this simulation sits in.</summary>
@@ -163,6 +151,12 @@ namespace Models.Core
 
         /// <summary>Status message.</summary>
         public string Status => FindAllDescendants<IReportsStatus>().FirstOrDefault(s => !string.IsNullOrEmpty(s.Status))?.Status;
+
+        /// <summary>
+        /// Called when models should disconnect from events to which they've
+        /// dynamically subscribed.
+        /// </summary>
+        public event EventHandler UnsubscribeFromEvents;
 
         /// <summary>
         /// Simulation has completed. Clear scope and locator
@@ -181,7 +175,7 @@ namespace Models.Core
         public void ClearCaches()
         {
             Scope.Clear();
-            Locater.Clear();
+            Locator.Clear();
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -207,59 +201,60 @@ namespace Models.Core
         /// </summary>
         public void Prepare()
         {
-
-            // Remove disabled models.
-            RemoveDisabledModels(this);
-
-            // Standardise the soil.
-            var soils = FindAllDescendants<Soils.Soil>();
-            foreach (Soils.Soil soil in soils)
-                SoilStandardiser.Standardise(soil);
-
-            // If this simulation was not created from deserialisation then we need
-            // to parent all child models correctly and call OnCreated for each model.
-            bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
-            if (!hasBeenDeserialised)
-            {
-                // Parent all models.
-                this.ParentAllDescendants();
-
-                // Call OnCreated in all models.
-                foreach (IModel model in FindAllDescendants().ToList())
-                    model.OnCreated();
-            }
-
-            // Call OnPreLink in all models.
-            // Note the ToList(). This is important because some models can
-            // add/remove models from the simulations tree in their OnPreLink()
-            // method, and FindAllDescendants() is lazy.
-            FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
-
-            if (Services == null || Services.Count < 1)
-            {
-                var simulations = FindAncestor<Simulations>();
-                if (simulations != null)
-                    Services = simulations.GetServices();
-                else
-                {
-                    Services = new List<object>();
-                    IDataStore storage = this.FindInScope<IDataStore>();
-                    if (storage != null)
-                        Services.Add(this.FindInScope<IDataStore>());
-                    Services.Add(new ScriptCompiler());
-                }
-            }
-
-            var links = new Links(Services);
-            var events = new Events(this);
-
             try
             {
+                // Remove disabled models.
+                RemoveDisabledModels(this);
+
+                // Standardise the soil.
+                var soils = FindAllDescendants<Soils.Soil>();
+                foreach (Soils.Soil soil in soils)
+                    soil.Standardise();
+
+                // If this simulation was not created from deserialisation then we need
+                // to parent all child models correctly and call OnCreated for each model.
+                bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
+                if (!hasBeenDeserialised)
+                {
+                    // Parent all models.
+                    this.ParentAllDescendants();
+
+                    // Call OnCreated in all models.
+                    foreach (IModel model in FindAllDescendants().ToList())
+                        model.OnCreated();
+                }
+
+                // Call OnPreLink in all models.
+                // Note the ToList(). This is important because some models can
+                // add/remove models from the simulations tree in their OnPreLink()
+                // method, and FindAllDescendants() is lazy.
+                FindAllDescendants().ToList().ForEach(model => model.OnPreLink());
+
+                if (Services == null || Services.Count < 1)
+                {
+                    var simulations = FindAncestor<Simulations>();
+                    if (simulations != null)
+                        Services = simulations.GetServices();
+                    else
+                    {
+                        Services = new List<object>();
+                        IDataStore storage = this.FindInScope<IDataStore>();
+                        if (storage != null)
+                            Services.Add(this.FindInScope<IDataStore>());
+                    }
+                }
+
+                if (!Services.OfType<ScriptCompiler>().Any())
+                    Services.Add(new ScriptCompiler());
+
+                var links = new Links(Services);
+                var events = new Events(this);
+
                 // Connect all events.
                 events.ConnectEvents();
 
                 // Resolve all links
-                links.Resolve(this, true);
+                links.Resolve(this, true, throwOnFail: true);
 
                 events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
@@ -323,6 +318,14 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Cleanup the simulation after the run.
+        /// </summary>
+        public void Cleanup()
+        {
+            UnsubscribeFromEvents?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// Remove all disabled child models from the specified model.
         /// </summary>
         /// <param name="model"></param>
@@ -330,14 +333,6 @@ namespace Models.Core
         {
             model.Children.RemoveAll(child => !child.Enabled);
             model.Children.ForEach(child => RemoveDisabledModels(child));
-        }
-
-        /// <summary>
-        /// Gets the locater model.
-        /// </summary>
-        protected override Locater Locator()
-        {
-            return Locater;
         }
 
         /// <summary>

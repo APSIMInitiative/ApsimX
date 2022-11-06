@@ -209,8 +209,10 @@
             }
         }
 
-        private IModel FindRunnable(IModel currentNode)
+        public static IModel FindRunnable(IModel currentNode)
         {
+            if (currentNode is Folder && currentNode.FindDescendant<ISimulationDescriptionGenerator>() != null)
+                return currentNode;
             IEnumerable<ISimulationDescriptionGenerator> runnableModels = currentNode.FindAllAncestors<ISimulationDescriptionGenerator>();
             if (currentNode is ISimulationDescriptionGenerator runnable)
                 runnableModels = runnableModels.Prepend(runnable);

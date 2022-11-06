@@ -7,6 +7,7 @@
     using Models.Interfaces;
     using Models.PMF;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using Models.Storage;
     using Models.Surface;
     using NUnit.Framework;
@@ -123,9 +124,9 @@
             Soil s = sims.Children[0].Children[0] as Soil;
             Assert.AreEqual(s.Name, "Soil");
 
-            InitialWater initWater = s.Children[0] as InitialWater;
-            Assert.AreEqual(initWater.FractionFull, 0.5);
-            Assert.AreEqual(initWater.PercentMethod, InitialWater.PercentMethodEnum.FilledFromTop);
+            Water initWater = s.Children[0] as Water;
+            Assert.AreEqual(initWater.FractionFull, 0.5, 0.000000001);
+            Assert.IsTrue(initWater.FilledFromTop);
 
             Physical w = s.Children[1] as Physical;
             Assert.AreEqual(w.Thickness, new double[] { 150, 150, 300, 300 });
@@ -135,17 +136,18 @@
             ISoilWater sw = s.Children[2] as ISoilWater;
             Assert.AreEqual(sw.Thickness, new double[] { 150, 150, 300, 300 });
 
-            Assert.IsTrue(s.Children[3] is SoilNitrogen);
-            Assert.IsTrue(s.Children[4] is CERESSoilTemperature);
-            Organic som = s.Children[5] as Organic;
+            Assert.IsTrue(s.Children[9] is Nutrient);
+            Assert.IsTrue(s.Children[3] is CERESSoilTemperature);
+            Assert.IsTrue(s.Children[4] is Solute);
+            Assert.IsTrue(s.Children[5] is Solute);
+            Assert.IsTrue(s.Children[6] is Solute);
+            Organic som = s.Children[7] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
-            Chemical a = s.Children[6] as Chemical;
+            Chemical a = s.Children[8] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(a.NO3N, new double[] { 6.5, 2.1, 2.1, 1.0 });
-            Assert.AreEqual(a.NH4N, new double[] { 0.5, 0.1, 0.1, 0.2 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
 

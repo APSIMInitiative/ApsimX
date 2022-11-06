@@ -9,14 +9,21 @@ namespace UserInterface.Views
     /// </summary>
     public class DataTableProvider : ISheetDataProvider
     {
-        /// <summary>The wrapped data table.</summary>
-        private readonly DataTable data;
-
         /// <summary>The optional units for each column in the data table. Can be null.</summary>
         private readonly IList<string> units;
 
         /// <summary>Number of heading rows.</summary>
         private int numHeadingRows;
+
+
+        /// <summary>Delegate for a CellChanged event.</summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="colIndex">The index of the column that was changed.</param>
+        /// <param name="rowIndex">The index of the row that was changed.</param>
+        public delegate void CellChangedDelegate(ISheetDataProvider sender, int colIndex, int rowIndex);
+
+        /// <summary>An event invoked when a cell changes.</summary>
+        public event CellChangedDelegate CellChanged;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
@@ -24,9 +31,9 @@ namespace UserInterface.Views
         public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null)
         {
             if (dataSource == null)
-                data = new DataTable();
+                Data = new DataTable();
             else
-                data = dataSource;
+                Data = dataSource;
             units = columnUnits;
             if (units == null)
                 numHeadingRows = 1;
@@ -34,22 +41,28 @@ namespace UserInterface.Views
                 numHeadingRows = 2;
         }
 
+        /// <summary>The wrapped data table.</summary>
+        public DataTable Data { get; }
+
         /// <summary>Gets the number of columns of data.</summary>
-        public int ColumnCount => data.Columns.Count;
+        public int ColumnCount => Data.Columns.Count;
 
         /// <summary>Gets the number of rows of data.</summary>
-        public int RowCount => data.Rows.Count + numHeadingRows;
+        public int RowCount => Data.Rows.Count + numHeadingRows;
 
         /// <summary>Get the contents of a cell.</summary>
         /// <param name="colIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
         public string GetCellContents(int colIndex, int rowIndex)
         {
+            if (colIndex >= Data.Columns.Count || rowIndex - numHeadingRows >= Data.Rows.Count)
+                return null;
+
             if (rowIndex == 0)
-                return data.Columns[colIndex].ColumnName;
+                return Data.Columns[colIndex].ColumnName;
             else if (numHeadingRows == 2 && rowIndex == 1)
                 return units[colIndex];
-            var value = data.Rows[rowIndex - numHeadingRows][colIndex];
+            var value = Data.Rows[rowIndex - numHeadingRows][colIndex];
             if (value is double)
                 return ((double)value).ToString("F3");  // 3 decimal places.
             else if (value is DateTime)
@@ -63,7 +76,28 @@ namespace UserInterface.Views
         /// <param name="value">The value.</param>
         public void SetCellContents(int colIndex, int rowIndex, string value)
         {
-            data.Rows[rowIndex - numHeadingRows][colIndex] = value;
+            if (!IsColumnReadonly(colIndex))
+            {
+                int i = rowIndex - numHeadingRows;
+                while (i >= Data.Rows.Count)
+                    Data.Rows.Add(Data.NewRow());
+
+                var existingValue = Data.Rows[i][colIndex];
+                if (existingValue != null && value == null ||
+                    existingValue == null && value != null ||
+                    existingValue.ToString() != value.ToString())
+                {
+                    Data.Rows[i][colIndex] = value;
+                    CellChanged?.Invoke(this, colIndex, rowIndex);
+                }
+            }
+        }
+
+        /// <summary>Is the column readonly?</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public bool IsColumnReadonly(int colIndex)
+        {
+            return Data.Columns[colIndex].ReadOnly;
         }
     }
 }

@@ -20,6 +20,9 @@
         ///<summary>Gets soil water content (mm)</summary>
         double[] SWmm { get; }
 
+        ///<summary>Gets soil water potential (cm)</summary>
+        double[] PSI { get; }
+
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         double[] ESW { get; }
 
@@ -110,5 +113,9 @@
 
         ///<summary>Perform tillage</summary>
         void Tillage(string tillageType);
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        void Standardise(double[] targetThickness);
     }
 }

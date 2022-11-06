@@ -25,21 +25,23 @@ namespace APSIM.Documentation.Models
         /// <param name="output">Name of the file which will be generated.</param>
         /// <param name="options">Pdf generation options.</param>
         /// <param name="path">(Optional) path to model to be documented.</param>
-        public ParamsDocsFromFile(string input, string output, PdfOptions options, string path = null) : base(input, output, options)
+        public ParamsDocsFromFile(string input, string output, PdfOptions options, string path = null) : base("Interface", input, output, options)
         {
             this.path = path;
         }
 
         protected override IEnumerable<ITag> DocumentModel(IModel model)
         {
-            if (model is Simulations && model.Children.Any())
-                model = model.Children[0];
             if (!string.IsNullOrEmpty(path))
             {
                 IVariable variable = model.FindByPath(path);
                 if (variable != null && variable.Value is IModel value)
                     model = value;
+                else
+                    model = model.FindDescendant(path);
             }
+            else if (model is Simulations && model.Children.Any())
+                model = model.Children[0];
 
             ParamsInputsOutputs doco = new ParamsInputsOutputs(model);
             return doco.Document();

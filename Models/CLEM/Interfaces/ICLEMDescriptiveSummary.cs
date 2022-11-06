@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Interfaces
 {
@@ -33,12 +34,18 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// List of parent model types before this 
         /// </summary>
+        [JsonIgnore]
         List<string> CurrentAncestorList { get; set; }
 
         /// <summary>
         /// Determines if this discription is below a parent model
         /// </summary>
         bool FormatForParentControl { get; }
+
+        /// <summary>
+        /// Determines if this model reports memos in place
+        /// </summary>
+        DescriptiveSummaryMemoReportingType ReportMemosType { get; set; }
 
         /// <summary>
         /// Provides the closing html tags for object

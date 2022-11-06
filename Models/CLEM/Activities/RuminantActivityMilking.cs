@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Groupings;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -18,11 +20,18 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Perform milking of lactating breeders")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
-    public class RuminantActivityMilking: CLEMRuminantActivityBase
+    public class RuminantActivityMilking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
+        private int numberToDo;
+        private int numberToSkip;
+        private double amountToDo;
+        private double amountToSkip;
         private object milkStore;
+        private IEnumerable<RuminantFemale> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Resource type to store milk in
@@ -32,12 +41,32 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
         public string ResourceTypeName { get; set; }
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantActivityMilking()
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            TransactionCategory = "Livestock.Milking";
+            switch (type)
+            {
+                case "RuminantGroup":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>()
+                        );
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "Number milked",
+                            "Litres milked",
+                        },
+                        measures: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per L milked"
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -47,6 +76,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( false, true);
 
             // find milk store
             milkStore = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -64,54 +94,110 @@ namespace Models.CLEM.Activities
                 item.MilkingPerformed = true;
         }
 
-        /// <summary>An event handler to call for all herd management activities</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalMilking")]
-        private void OnCLEMMilking(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // take all milk
-            IEnumerable<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating);
-            double milkTotal = herd.Sum(a => a.MilkCurrentlyAvailable);
-            if (milkTotal > 0)
-            {
-                double labourLimit = this.LabourLimitProportion;
-                // only provide what labour would allow
-                (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName, TransactionCategory);
+            amountToDo = 0;
+            amountToSkip = 0;
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<RuminantFemale> herd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsLactating);
+            uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                // record milk taken with female for accounting
-                foreach (RuminantFemale female in herd)
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.identifier)
                 {
-                    female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
-                    this.Status = (labourLimit < 1)?ActivityStatus.Partial:ActivityStatus.Success;
+                    case "Number milked":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per head":
+                                valuesForCompanionModels[valueToSupply.Key] = number;
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                        }
+                        break;
+                    case "Litres milked":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per L milked":
+                                amountToDo = uniqueIndividuals.Sum(a => a.MilkCurrentlyAvailable);
+                                valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                 }
             }
-            else
-                this.Status = ActivityStatus.NotNeeded;
+            return null;
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override void AdjustResourcesForTimestep()
         {
-            IEnumerable<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0);
-            double daysNeeded = 0;
-            switch (requirement.UnitType)
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    int head = herd.Count();
-                    double numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+                // find shortfall by identifiers as these may have different influence on outcome
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number milked").FirstOrDefault();
+                if (numberShort != null)
+                {
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
+                    if (numberToSkip == numberToDo)
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Litres milked").FirstOrDefault();
+                if (amountShort != null)
+                {
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
+                    if (MathUtilities.FloatsAreEqual(amountToSkip, amountToDo))
+                    {
+                        Status = ActivityStatus.Warning;
+                        AddStatusMessage("Resource shortfall prevented any action");
+                    }
+                }
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            if (numberToDo - numberToSkip > 0)
+            {
+                amountToDo -= amountToSkip;
+                double amountDone = 0;
+                int number = 0;
+                foreach (RuminantFemale ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
+                {
+                    amountDone += ruminant.MilkCurrentlyAvailable;
+                    amountToDo -= ruminant.MilkCurrentlyAvailable;
+                    ruminant.TakeMilk(ruminant.MilkCurrentlyAvailable, MilkUseReason.Milked);
+                    number++;
+                    if (amountToDo <= 0)
+                        break;
+                }
+                // add clip to stores
+                (milkStore as IResourceType).Add(amountDone, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+
+                SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
+            }
         }
 
         #region descriptive summary

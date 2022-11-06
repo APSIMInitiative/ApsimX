@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
         private double age;
         private double normalisedWeight;
         private double adultEquivalent;
+        private int weaned = 0;
 
         /// <summary>
         /// Get the value to use for the transaction style requested
@@ -99,6 +100,11 @@ namespace Models.CLEM.Resources
         public int MotherID { get; private set; }
 
         /// <summary>
+        /// Individual is suckling, still with mother and not weaned
+        /// </summary>
+        public bool IsSucklingWithMother { get { return weaned < 0 && mother != null;  } }
+
+        /// <summary>
         /// Sex of individual
         /// </summary>
         [FilterByProperty]
@@ -161,6 +167,18 @@ namespace Models.CLEM.Resources
         /// <units>Months</units>
         [FilterByProperty]
         public double PurchaseAge { get; set; }
+
+        /// <summary>
+        /// Number of months since purchased
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSincePurchase
+        {
+            get
+            {
+                return Convert.ToInt32(Math.Round(Age - PurchaseAge, 4));
+            }
+        }
 
         /// <summary>
         /// Weight (kg)
@@ -282,7 +300,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Determine the category of this individual
         /// </summary>
@@ -291,25 +308,28 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(this.IsSuckling)
+                if (this.IsSuckling)
                     return "Suckling";
-                else if(this.IsWeaner)
+                else if (this.IsWeaner)
                     return "Weaner";
                 else
                 {
-                    if(this is RuminantFemale)
+                    if (this is RuminantFemale)
+                    {
                         if ((this as RuminantFemale).IsPreBreeder)
                             return "PreBreeder";
                         else
                             return "Breeder";
+                    }
                     else
-                        if((this as RuminantMale).IsSire)
+                    {
+                        if ((this as RuminantMale).IsSire)
                             return "Sire";
-                        else if((this as RuminantMale).IsCastrated)
+                        else if ((this as RuminantMale).IsCastrated)
                             return "Castrate";
                         else
                         {
-                            if((this as RuminantMale).IsWildBreeder)
+                            if ((this as RuminantMale).IsWildBreeder)
                             {
                                 return "Breeder";
                             }
@@ -318,6 +338,7 @@ namespace Models.CLEM.Resources
                                 return "PreBreeder";
                             }
                         }
+                    }
                 }
             }
         }
@@ -348,7 +369,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && Age<12);
+                return (Weaned && Age< 12);
             }
         }
 
@@ -360,20 +381,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (!Weaned);
-            }
-        }
-
-
-        /// <summary>
-        /// Determine if unweaned calf - replaced by IsSuckling
-        /// </summary>
-        [FilterByProperty]
-        public bool IsCalf
-        {
-            get
-            {
-                throw new NotImplementedException("The IsCalf property is deprecated. Please use new IsSuckling property");
+                return !Weaned;
             }
         }
 
@@ -470,6 +478,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
+                    case HerdChangeReason.WeanerSale:
                         return -1;
                     case HerdChangeReason.Born:
                     case HerdChangeReason.TradePurchase:
@@ -577,45 +586,71 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Method called on offspring when mother is lost (e.g. dies or sold)
+        /// </summary>
+        public void MotherLost()
+        {
+            if (Mother != null)
+            {
+                Mother.SucklingOffspringList.Remove(this);
+                Mother = null;
+            }
+        }
+
+        /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean(bool report, string reason)
+        public void Wean(bool report, string reason, bool atNaturalWeaningAge = false)
         {
-            weaned = true;
-            if (this.Mother != null)
+            weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
+            if (weaned > Math.Ceiling(BreedParams.GestationLength))
+                weaned = Convert.ToInt32(Math.Ceiling(BreedParams.GestationLength));
+
+            if (Mother != null)
             {
-                this.Mother.SucklingOffspringList.Remove(this);
-                this.Mother.NumberOfWeaned++;
+                Mother.SucklingOffspringList.Remove(this);
+                Mother.NumberOfWeaned++;
             }
             if (report)
             {
+                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
-                    RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
-                    {
-                        RumObj = this,
-                        Category = reason
-                    };
-                    (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
-                }
+                    RumObj = this,
+                    Category = reason
+                };
+                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
             }
 
         }
-
-        private bool weaned = true;
 
         /// <summary>
         /// Method to set the weaned status to unweaned for new born individuals.
         /// </summary>
         public void SetUnweaned()
         {
-            weaned = false;
+            weaned = 0;
         }
 
         /// <summary>
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool Weaned { get { return weaned; } }
+        public bool Weaned { get { return weaned > 0; } }
+
+        /// <summary>
+        /// Number of months since weaned
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSinceWeaned 
+        { 
+            get
+            {
+                if(weaned > 0)
+                    return Convert.ToInt32(Math.Round(Age - weaned, 4));
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>
         /// Milk production currently available from mother
@@ -696,7 +731,10 @@ namespace Models.CLEM.Resources
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;
-            this.weaned = true;
+            int ageInt = Convert.ToInt32(Math.Round(Age, 4));
+            int weanage = Convert.ToInt32(Math.Round((BreedParams.NaturalWeaningAge == 0) ? BreedParams.GestationLength : BreedParams.NaturalWeaningAge, 4));//   Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
+            //this.weaned = (ageInt <= weanage)?ageInt:weanage;
+            this.weaned = (ageInt < weanage) ? 0 : weanage;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
         }

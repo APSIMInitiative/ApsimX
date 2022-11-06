@@ -555,7 +555,8 @@ namespace Models.Core.ApsimFile
                         if (childXmlName != string.Empty || GetTypeFromName(childXmlNode.Name) != null)
                         {
                             int i = 1;
-                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == GetSoilCropName(childXmlName))))
+                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString().Equals(childXmlName, StringComparison.InvariantCultureIgnoreCase) || 
+                                                                               (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString().Equals(GetSoilCropName(childXmlName), StringComparison.InvariantCultureIgnoreCase))))
                             {
                                 bool alreadyAdded = newArray.FirstOrDefault(c => c["Name"].ToString() == childXmlName) != null;
 

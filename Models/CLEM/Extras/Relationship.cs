@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -9,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM
 {
@@ -18,17 +22,33 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
+    [ValidParent(ParentType = typeof(Labour))]
     [Description("Specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Relationships/Relationship.htm")]
-    public class Relationship : CLEMModel, IValidatableObject
+    public class Relationship : CLEMModel, IValidatableObject, IActivityCompanionModel
     {
+        /// <summary>
+        /// An identifier for this Relationship based on parent requirements
+        /// </summary>
+        [Description("Relationship identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
+        public string Identifier { get; set; }
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public string Measure
+        {
+            get { return ""; }
+            set {; }
+        }
+
         /// <summary>
         /// X values of relationship
         /// </summary>
@@ -64,6 +84,10 @@ namespace Models.CLEM
         [Description("Label for y variable")]
         public string NameOfYVariable { get; set; }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public string TransactionCategory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -79,15 +103,15 @@ namespace Models.CLEM
         /// <returns>y value for given x</returns>
         public double SolveY(double xValue)
         {
-            if (xValue <= XValues[0])
+            if (MathUtilities.IsLessThanOrEqual(xValue, XValues[0]))
                 return YValues[0];
 
-            if (xValue >= XValues[XValues.Length - 1])
+            if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[XValues.Length - 1]))
                 return YValues[YValues.Length - 1];
 
             int k = 0;
             for (int i = 0; i < XValues.Length; i++)
-                if (xValue <= XValues[i + 1])
+                if (MathUtilities.IsLessThanOrEqual(xValue, XValues[i + 1]))
                 {
                     k = i;
                     break;
@@ -149,41 +173,43 @@ namespace Models.CLEM
 
                 if (XValues is null || XValues.Length == 0)
                     htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
-                else if (YValues is null || XValues.Length != YValues.Length)
-                    htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
                 else
                 {
-                    htmlWriter.Write(@"
-                <canvas id=""myChart_" + this.Name + @"""><p>Unable to display graph in browser</p></canvas>
-                <script>
-                var ctx = document.getElementById('myChart_" + this.Name + @"').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    responsive:false,
-                    maintainAspectRatio: true,
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            data: [");
-                    string data = "";
-                    for (int i = 0; i < XValues.Length; i++)
-                        if (YValues.Length > i)
-                            data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
+                    if (YValues is null || XValues.Length != YValues.Length)
+                        htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
+                    else
+                    {
+                        htmlWriter.Write(@"
+                        <canvas id=""myChart_" + this.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
+                        <script>
+                        var ctx = document.getElementById('myChart_" + this.FullPath + @"').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                        responsive:false,
+                        maintainAspectRatio: true,
+                        type: 'scatter',
+                        data: {
+                            datasets: [{
+                                data: [");
+                        string data = "";
+                        for (int i = 0; i < XValues.Length; i++)
+                            if (YValues.Length > i)
+                                data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
 
-                    data = data.TrimEnd(',');
-                    htmlWriter.Write(data);
-                    htmlWriter.Write(@"],
-                     pointBackgroundColor: '[GraphPointColour]',
-                     pointBorderColor: '[GraphPointColour]',
-                     borderColor: '[GraphLineColour]', 
-                     pointRadius: 5,
-                     pointHoverRadius: 5,
-                     fill: false,
-                     tension: 0,
-                     showLine: true,
-                     steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
+                        data = data.TrimEnd(',');
+                        htmlWriter.Write(data);
+                        htmlWriter.Write(@"],
+                        pointBackgroundColor: '[GraphPointColour]',
+                        pointBorderColor: '[GraphPointColour]',
+                        borderColor: '[GraphLineColour]', 
+                        pointRadius: 5,
+                        pointHoverRadius: 5,
+                        fill: false,
+                        tension: 0,
+                        showLine: true,
+                        steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
                         }]
-                    },
-                    options: {
+                        },
+                        options: {
                             legend: {
                                 display: false
                             },
@@ -201,45 +227,64 @@ namespace Models.CLEM
                                        color: '[GraphGridLineColour]',
                                        drawOnChartArea: true
                                     }");
-                    if (this.NameOfXVariable != null && this.NameOfXVariable != "")
-                    {
-                        htmlWriter.Write(@", 
-                                      scaleLabel: {
-                                       display: true,
-                                       labelString: '" + this.NameOfXVariable + @"'
-                                      }");
-                    }
-                    htmlWriter.Write(@"}],
-                                yAxes: [{
-                                    type: 'linear',
-                                    gridLines: {
-                                       zeroLineColor: '[GraphGridZeroLineColour]',
-                                       zeroLineWidth: 1,
-                                       zeroLineBorderDash: [3, 3],
-                                       color: '[GraphGridLineColour]',
-                                       drawOnChartArea: true
-                                    },
-                                    ticks: {
-                                      fontColor: '[GraphLabelColour]',
-                                      fontSize: 13,
-                                      padding: 3
-                                    }");
-                    if (this.NameOfYVariable != null && this.NameOfYVariable != "")
-                    {
-                        htmlWriter.Write(@", scaleLabel: {
-                                      display: true,
-                                      labelString: '" + this.NameOfYVariable + @"'
-                                    }");
-                    }
-                    htmlWriter.Write(@"}],
+                        if (this.NameOfXVariable != null && this.NameOfXVariable != "")
+                        {
+                            htmlWriter.Write(@", 
+                            scaleLabel: {
+                            display: true,
+                            labelString: '" + this.NameOfXVariable + @"'
+                            }");
+                        }
+                        htmlWriter.Write(@"}],
+                        yAxes: [{
+                            type: 'linear',
+                            gridLines: {
+                                zeroLineColor: '[GraphGridZeroLineColour]',
+                                zeroLineWidth: 1,
+                                zeroLineBorderDash: [3, 3],
+                                color: '[GraphGridLineColour]',
+                                drawOnChartArea: true
+                            },
+                            ticks: {
+                                fontColor: '[GraphLabelColour]',
+                                fontSize: 13,
+                                padding: 3
+                            }");
+                        if (this.NameOfYVariable != null && this.NameOfYVariable != "")
+                        {
+                            htmlWriter.Write(@", scaleLabel: {
+                            display: true,
+                            labelString: '" + this.NameOfYVariable + @"'
+                        }");
+                        }
+                        htmlWriter.Write(@"}],
                             }
                            }
                         });
-                </script>");
+                        </script>");
+                    }
                 }
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
+        }
+
+        /// <inheritdoc/>
+        public void PrepareForTimestep()
+        {
+            return;
+        }
+
+        /// <inheritdoc/>
+        public List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public void PerformTasksForTimestep(double argument = 0)
+        {
+            return;
         }
 
         #endregion

@@ -49,8 +49,7 @@ namespace Models.Functions
             yield return new Paragraph($"*{Name}* is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.");
             yield return new Paragraph($"*MaximumTemperatureWeighting = {MaximumTemperatureWeighting}*");
             // fixme - the graph and table should be next to each other.
-            foreach (var tag in XYPairs.Document())
-                yield return tag;
+
             yield return CreateGraph();
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }
@@ -59,7 +58,7 @@ namespace Models.Functions
         {
             // fixme - this is basically identical to what we've got in the linear interp code.
             var series = new APSIM.Shared.Graphing.Series[1];
-            string xName = "Average Temperature (°C)";
+            string xName = "Weighted air temperature (oC)";
             string yName = Name;
 
             series[0] = new APSIM.Shared.Graphing.LineSeries("Weighted temperature value",
@@ -75,7 +74,7 @@ namespace Models.Functions
             var xAxis = new APSIM.Shared.Graphing.Axis(xName, APSIM.Shared.Graphing.AxisPosition.Bottom, false, false);
             var yAxis = new APSIM.Shared.Graphing.Axis(yName, APSIM.Shared.Graphing.AxisPosition.Left, false, false);
             var legend = new APSIM.Shared.Graphing.LegendConfiguration(APSIM.Shared.Graphing.LegendOrientation.Vertical, APSIM.Shared.Graphing.LegendPosition.TopLeft, true);
-            return new APSIM.Shared.Documentation.Graph(Name, series, xAxis, yAxis, legend);
+            return new APSIM.Shared.Documentation.Graph(Name, FullPath, series, xAxis, yAxis, legend);
         }
     }
 }

@@ -9,6 +9,7 @@ using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -36,6 +37,13 @@ namespace Models.CLEM
         /// </summary>
         [Description("Grouping style")]
         public SummarizeRuminantHerdStyle GroupStyle { get; set; }
+
+        /// <summary>
+        /// Include total population column
+        /// </summary>
+        [Description("Include total population column")]
+        public bool IncludeTotalColumn { get; set; }
+
 
         /// <summary>
         /// Report item was generated event handler
@@ -151,7 +159,7 @@ namespace Models.CLEM
                         Breed = group.Key.Item1,
                         Herd = group.Key.Item2,
                         Sex = group.Key.Item3.ToString(),
-                        Group = group.Key.Item4,
+                        Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass) ? $"{group.Key.Item3}.{group.Key.Item4}" : group.Key.Item4,
                         Number = group.Count(),
                         Age = group.Average(a => a.Age),
                         AverageWeight = group.Average(a => a.Weight),
@@ -170,6 +178,37 @@ namespace Models.CLEM
                 foreach (var item in result)
                 {
                     ReportDetails = item.Info;
+                    ReportItemGenerated(ReportDetails);
+                }
+
+                if(IncludeTotalColumn)
+                {
+                    var herdGroups = herd.GroupBy(a => a.HerdName);
+                    var herdResult = herdGroups.Select(group => new
+                    {
+                        Group = group.Key,
+                        Info = new HerdReportItemGeneratedEventArgs
+                        {
+                            TimeStep = timestep,
+                            Breed = "All",
+                            Herd = group.Key,
+                            Sex = "All",
+                            Group = group.Key,
+                            Number = group.Count(),
+                            Age = group.Average(a => a.Age),
+                            AverageWeight = group.Average(a => a.Weight),
+                            AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
+                            AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
+                            AverageIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageProportionPotentialIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageWeightGain = group.Average(a => a.WeightGain),
+                            AdultEquivalents = group.Sum(a => a.AdultEquivalent),
+                            NumberPregnant = group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count(),
+                            NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
+                            NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
+                        }
+                    });
+                    ReportDetails = herdResult.FirstOrDefault().Info;
                     ReportItemGenerated(ReportDetails);
                 }
             }
@@ -230,10 +269,33 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
-            return html;
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
+                switch (GroupStyle)
+                {
+                    case SummarizeRuminantHerdStyle.Classic:
+                        htmlWriter.Write("with age in years and a column for sex");
+                        break;
+                    case SummarizeRuminantHerdStyle.ByClass:
+                        htmlWriter.Write("grouped by class");
+                        break;
+                    case SummarizeRuminantHerdStyle.BySexClass:
+                        htmlWriter.Write("grouped by a combination of sex and class");
+                        break;
+                    case SummarizeRuminantHerdStyle.ByAgeYears:
+                        htmlWriter.Write("grouped by age (in years)");
+                        break;
+                    case SummarizeRuminantHerdStyle.ByAgeMonths:
+                        htmlWriter.Write("grouped by age (in months)");
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString();
+            }
         }
-
     }
 
 
@@ -250,6 +312,10 @@ namespace Models.CLEM
         /// Group by class
         /// </summary>
         ByClass,
+        /// <summary>
+        /// Group by sex and class
+        /// </summary>
+        BySexClass,
         /// <summary>
         /// Group by age in years
         /// </summary>

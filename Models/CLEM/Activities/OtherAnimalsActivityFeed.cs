@@ -54,7 +54,6 @@ namespace Models.CLEM.Activities
         public OtherAnimalsActivityFeed()
         {
             this.SetDefaults();
-            TransactionCategory = "OtherAnimal.Feed";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -71,7 +70,7 @@ namespace Models.CLEM.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
 
@@ -118,35 +117,6 @@ namespace Models.CLEM.Activities
                 }
             }
             return resourcesNeeded;
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double allIndividuals = 0;
-            foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())
-            {
-                double total = 0;
-                foreach (OtherAnimalsTypeCohort item in group.Filter(group.SelectedOtherAnimalsType.Cohorts))
-                {
-                    total += item.Number * ((item.Age < group.SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
-                }
-                allIndividuals += total;
-            }
-
-            double daysNeeded;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    daysNeeded = Math.Ceiling(allIndividuals / requirement.UnitSize) * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(string.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, "Other animals");
         }
 
     }

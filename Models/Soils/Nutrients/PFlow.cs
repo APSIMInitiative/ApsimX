@@ -10,7 +10,7 @@
     [Serializable]
     [ValidParent(ParentType = typeof(Solute))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     public class PFlow : Model
     {
         [Link(Type = LinkType.Child, ByName = true)]
@@ -48,33 +48,33 @@
         {
             if (sourceSolute == null)
             {
-                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                sourceSolute = FindInScope<ISolute>(sourceName);
                 destinationSolute = FindInScope<ISolute>(destinationName);
             }
-
-            double[] source = sourceSolute.kgha;
-            int numLayers = source.Length;
-            if (Value == null)
-                Value = new double[source.Length];
-
-            double[] destination = null;
-            if (destinationName !=null)
-                destination = destinationSolute.kgha;
-
-            for (int i= 0; i < numLayers; i++)
+            if (sourceSolute != null)
             {
-                double phosphorusFlow = 0;
-                if (source[i]>0)
-                    phosphorusFlow = rate.Value(i) * source[i];
+                double[] source = sourceSolute.kgha;
+                int numLayers = source.Length;
+                if (Value == null)
+                    Value = new double[source.Length];
 
-                source[i] -= phosphorusFlow;
-                Value[i] = phosphorusFlow; 
-                destination[i] += phosphorusFlow;
+                double[] destination = null;
+                if (destinationName != null)
+                    destination = destinationSolute.kgha;
+
+                for (int i = 0; i < numLayers; i++)
+                {
+                    double phosphorusFlow = 0;
+                    if (source[i] > 0)
+                        phosphorusFlow = rate.Value(i) * source[i];
+
+                    source[i] -= phosphorusFlow;
+                    Value[i] = phosphorusFlow;
+                    destination[i] += phosphorusFlow;
+                }
+                sourceSolute.SetKgHa(SoluteSetterType.Soil, source);
+                destinationSolute.SetKgHa(SoluteSetterType.Soil, destination);
             }
-            sourceSolute.SetKgHa(SoluteSetterType.Soil, source);
-            destinationSolute.SetKgHa(SoluteSetterType.Soil, destination);
         }
-
-
     }
 }

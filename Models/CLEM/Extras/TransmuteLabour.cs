@@ -9,6 +9,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using System.Linq;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM
 {
@@ -39,6 +40,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         [Description("Days labour (B) per shortfall packet (A)")]
         [Required, GreaterThanEqualValue(0)]
+        [Core.Display(EnabledCallback = "AmountPerPacketEnabled")]
         public double AmountPerPacket { get; set; }
 
         /// <inheritdoc/>
@@ -56,6 +58,11 @@ namespace Models.CLEM
         ///<inheritdoc/>
         [JsonIgnore]
         public string FinanceTypeForTransactionsName { get; set; }
+
+        /// <summary>
+        /// Method to determine if direct transmute style will enable the amount property
+        /// </summary>
+        public bool AmountPerPacketEnabled() { return TransmuteStyle != TransmuteStyle.Direct; }
 
         /// <summary>
         /// Constructor
@@ -82,10 +89,10 @@ namespace Models.CLEM
         {
             request.Required = shortfall / shortfallPacketSize * AmountPerPacket;
 
-            if (request.Required > 0)
+            if (MathUtilities.IsPositive(request.Required))
             {
                 request.FilterDetails = groupings;
-                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, (request.ActivityModel is CLEMActivityBase)?(request.ActivityModel as CLEMActivityBase).AllowsPartialResourcesAvailable:false);
             }
             return (request.Provided >= request.Required);
         }

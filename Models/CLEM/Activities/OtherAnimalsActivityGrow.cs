@@ -44,14 +44,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public OtherAnimalsActivityGrow()
-        {
-            TransactionCategory = "OtherAnimal.Manage";
-        }
-
-        /// <summary>
         /// Method to age other animals
         /// This needs to be undertaken prior to herd management
         /// </summary>

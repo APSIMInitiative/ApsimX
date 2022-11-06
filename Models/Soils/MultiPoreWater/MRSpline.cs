@@ -1,9 +1,5 @@
 ﻿using Models.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace Models.Soils
 {
@@ -11,8 +7,6 @@ namespace Models.Soils
     /// Fits a 5 point hermite spline to moisture release data and returns theta for any specified psi.  Gets its parameters from the soil Water node and a couple of parameters it owns
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ProfileView")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class MRSpline : Model
     {

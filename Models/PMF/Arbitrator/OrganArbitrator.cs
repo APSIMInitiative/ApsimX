@@ -88,9 +88,12 @@ namespace Models.PMF
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler SetNDemand;
 
-        
+
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
+        /// <summary>The list of organ names to expose order without exposng the list itself</summary>
+        [JsonIgnore]
+        public List<string> OrganNames => Organs.Select(o => (o as IOrgan).Name).ToList();
 
         /// <summary>The variables for DM</summary>
         [JsonIgnore]
@@ -128,7 +131,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
         
-        /// <summary>Called when crop is ending</summary>
+        /// <summary>Called when crop is sown</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]

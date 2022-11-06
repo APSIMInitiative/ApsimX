@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 148,
+  "Version": 156,
   "Name": "Simulations",
   "Children": [
     {
@@ -373,8 +373,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 120.0,
-              "ShootRate": 0.7,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -395,6 +393,48 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 120.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.7,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4465,16 +4505,6 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
-              "Name": "RootDepthStressFactor",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -8582,11 +8612,21 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Australian cvv",
               "Children": [
                 {
@@ -8603,7 +8643,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 500",
                     "[Phenology].FloralInitiation.Target.FixedValue = 100",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 13.17, 17",
@@ -8659,7 +8699,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 15.62, 17",
@@ -8687,7 +8727,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 14.31, 17",
@@ -8718,7 +8758,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 13.45, 17",
@@ -8749,7 +8789,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 13.45, 17",
@@ -8824,7 +8864,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 600",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 15.62, 17",
@@ -8844,13 +8884,13 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "ICRISAT cvv",
               "Children": [
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].Vegetative.Target.FixedValue = 550",
                     "[Phenology].FloralInitiation.Target.FixedValue = 0",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 15.62, 17",
@@ -8878,7 +8918,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].FloralInitiation.Target.FixedValue = 100",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 12.51, 17",
                     "[Phenology].Budding.Target.XYPairs.Y = 466, 50, 50",
@@ -8930,7 +8970,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].Emerging.ShootLag = 140",
+                    "[Phenology].Emerging.Target.ShootLag.FixedValue = 140",
                     "[Phenology].FloralInitiation.Target.FixedValue = 100",
                     "[Phenology].Budding.Target.XYPairs.X = 10, 12.51, 17",
                     "[Phenology].Budding.Target.XYPairs.Y = 466, 50, 50",
@@ -8963,7 +9003,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
+              "$type": "Models.Core.Folder, Models",
               "Name": "Other cvv",
               "Children": [
                 {
@@ -9018,7 +9058,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Archived Cultivars",
           "Children": [
             {

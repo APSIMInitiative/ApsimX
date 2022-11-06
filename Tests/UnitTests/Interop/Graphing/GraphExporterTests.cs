@@ -66,7 +66,7 @@ namespace UnitTests.Interop.Graphing
         public void TestNoXAxis()
         {
             xAxis = null;
-            Assert.Throws<NullReferenceException>(() => exporter.ToPlotModel(graph));
+            Assert.Throws<Exception>(() => exporter.ToPlotModel(graph));
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace UnitTests.Interop.Graphing
         public void TestNoYAxis()
         {
             yAxis = null;
-            Assert.Throws<NullReferenceException>(() => exporter.ToPlotModel(graph));
+            Assert.Throws<Exception>(() => exporter.ToPlotModel(graph));
         }
 
         /// <summary>
