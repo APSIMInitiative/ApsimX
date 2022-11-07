@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 156; } }
+        public static int LatestVersion { get { return 157; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4622,6 +4622,63 @@ namespace Models.Core.ApsimFile
                     predictedObserved["FieldName2UsedForMatch"] = fieldName1.Value<string>();
                 predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
 
+            }
+        }
+
+        /// <summary>
+        /// Rename 'Plantain' model to 'PlantainForage'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion157(JObject root, string fileName)
+        {
+            // change all references to the model in the soil-plant params table
+            foreach (JObject soilCrop in JsonUtilities.ChildrenRecursively(root, "SoilCrop"))
+            {
+                if (soilCrop["Name"].ToString().Equals("PlantainSoil", StringComparison.InvariantCultureIgnoreCase))
+                    JsonUtilities.RenameModel(soilCrop, "PlantainForageSoil");
+            }
+
+            // change all references to the model in any report table
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Plantain]", "[PlantainForage]");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Plantain.", ".PlantainForage.");
+            }
+
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, "[Plantain]", "[PlantainForage]");
+                JsonUtilities.ReplaceManagerCode(manager, ".Plantain.", ".PlantainForage.");
+            }
+
+            // change all references to the model in any experiment.factor
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace("[Plantain]", "[PlantainForage]");
+                    specificationString = specificationString.Replace(".Plantain.", ".PlantainForage.");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            // change all references to the model in any experiment.compositefactor
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    for (int i = 0; i < specifications.Count(); i++)
+                    {
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace("[Plantain]", "[PlantainForage]");
+                        specificationString = specificationString.Replace(".Plantain.", ".PlantainForage.");
+                        specifications[i] = specificationString;
+                    }
+                }
             }
         }
 
