@@ -705,7 +705,7 @@ namespace Models.CLEM.Activities
                     if (test | test2)
                     {
                         string warn = $"Invalid parameter value in {(iChild as CLEMModel).FullPath}{Environment.NewLine}PARAMETER: Units of measure";
-                        warn += $"{Environment.NewLine}DESCRIPTION: Unknown units of measure [{(((iChild.Identifier ?? "") == "") ? "BLANK" : iChild.Identifier)}]";
+                        warn += $"{Environment.NewLine}DESCRIPTION: Unknown units of measure [{(((iChild.Measure ?? "") == "") ? "BLANK" : iChild.Measure)}]";
                         warn += $"{Environment.NewLine}PROBLEM: The specified units are not valid for the parent activity [a={NameWithParent}]{Environment.NewLine}Select units of measure from the list. If only the invalid value is displayed, edit the simulation file (change value to null) or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }

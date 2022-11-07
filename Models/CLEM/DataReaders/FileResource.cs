@@ -254,13 +254,13 @@ namespace Models.CLEM
         /// </returns>
         public DataView GetCurrentResourceData(int month, int year, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
         {
-            string filter = "";
+            string filter = "(";
             switch (StyleOfDateEntry)
             {
                 case DateStyle.DateStamp:
                     throw new NotImplementedException();
                 case DateStyle.YearAndMonth:
-                    filter = $"({YearColumnName} = {year} AND {MonthColumnName} = {month})";
+                    filter = $"{filter}({YearColumnName} = {year} AND {MonthColumnName} = {month})";
                     break;
             }
             DataView dataView = new DataView(resourceFileAsTable);
@@ -271,14 +271,15 @@ namespace Models.CLEM
                 {
                     if(!filter.EndsWith("("))
                         filter = $"{filter} OR ";
-                    filter = $"{filter} {ResourceNameColumnName} = {resourceName}";
+                    filter = $"{filter} {ResourceNameColumnName} = '{resourceName.Trim()}'";
                 }
                 filter = $"{filter} )";
             }
             if(!includeZeroAmounts)
             {
-                filter = $" AND {AmountColumnName} != 0";
+                filter = $"{filter} AND ({AmountColumnName} <> 0)";
             }
+            filter = $"{filter})";
 
             dataView.RowFilter = filter;
             dataView.Sort = $" {AmountColumnName} ASC";

@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Description("Manage the input and output of external resources specified in a file")]
     [HelpUri(@"Content/Features/Activities/All resources/ManageExternalResource.htm")]
     [Version(1, 1, 1, "Implements filtering of resources used and multiplier component")]
-    public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels
+    public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
         private readonly Clock clock = null;
@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         private DataView currentEntries;
         [JsonIgnore]
         [NonSerialized]
-        private List<(IResourceType resource, double amount)> resourcesForMonth = new List<(IResourceType res, double amount)>();
+        private List<(IResourceType resource, double amount)> resourcesForMonth;
         IEnumerable<string> resourceTypesToInclude = null;
         Dictionary<string, (IResourceType, double)> allResources = new Dictionary<string, (IResourceType, double)>();
 
@@ -103,58 +103,63 @@ namespace Models.CLEM.Activities
             // get reader
             Model parentZone = this.FindAllAncestors<Zone>().FirstOrDefault();
             if(parentZone != null)
-                fileResource = parentZone.FindAllChildren<FileResource>(ResourceDataReader).FirstOrDefault() as FileResource;
+                fileResource = parentZone.FindDescendant<FileResource>(ResourceDataReader);
 
-            if((ResourceColumnsToUse??"") != "")
+            resourcesForMonth = new List<(IResourceType resource, double amount)>();
+
+            if ((ResourceColumnsToUse??"") != "")
                 resourceTypesToInclude = ResourceColumnsToUse.Split(",").Select(x => x.Trim());
 
             // find all resources and check if related multiplier is available
             // place in dictionary for easy access during simulation
-            foreach (var resourceName in fileResource.GetUniqueResourceTypes())
+            if (fileResource != null)
             {
-                string warn = "";
-                if (!resourceTypesToInclude.Any() || resourceTypesToInclude.Contains(resourceName))
+                foreach (var resourceName in fileResource.GetUniqueResourceTypes())
                 {
-                    IResourceType resource;
-                    if (resourceName.Contains("."))
-                        resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-                    else
-                        resource = Resources.FindAllDescendants<IResourceType>(resourceName).FirstOrDefault();
-
-                    switch (resource.GetType().ToString())
+                    string warn = "";
+                    if (!resourceTypesToInclude.Any() || resourceTypesToInclude.Contains(resourceName))
                     {
-                        case "Models.CLEM.Resources.LandType":
-                        case "Models.CLEM.Resources.RuminantType":
-                        case "Models.CLEM.Resources.LabourType":
-                        case "Models.CLEM.Resources.GrazeFoodStoreType":
-                        case "Models.CLEM.Resources.OtherAnimalsType":
-                            warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
-                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
-                            resource = null;
-                            break;
-                        default:
-                            break;
-                    }
+                        IResourceType resource;
+                        if (resourceName.Contains("."))
+                            resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                        else
+                            resource = Resources.FindAllDescendants<IResourceType>(resourceName).FirstOrDefault();
 
-                    double resourceMultiplier = 1;
-
-                    if (resource != null)
-                    {
-                        var matchingResources = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as ResourceBaseWithTransactions).NameWithParent);
-                        if(matchingResources.Count() > 1)
+                        switch (resource.GetType().ToString())
                         {
-                            warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+                            case "Models.CLEM.Resources.LandType":
+                            case "Models.CLEM.Resources.RuminantType":
+                            case "Models.CLEM.Resources.LabourType":
+                            case "Models.CLEM.Resources.GrazeFoodStoreType":
+                            case "Models.CLEM.Resources.OtherAnimalsType":
+                                warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                                resource = null;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        double resourceMultiplier = 1;
+
+                        if (resource != null)
+                        {
+                            var matchingResources = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent);
+                            if (matchingResources.Count() > 1)
+                            {
+                                warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                            }
+                            resourceMultiplier = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent).FirstOrDefault()?.Multiplier ?? 1;
+                        }
+                        else
+                        {
+                            warn = $"[a={this.Name}] could not find the resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                         }
-                        resourceMultiplier = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as ResourceBaseWithTransactions).NameWithParent).FirstOrDefault()?.Multiplier ?? 1;
-                    }
-                    else
-                    {
-                        warn = $"[a={this.Name}] could not find the resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
-                    }
 
-                    allResources.Add(resourceName, (resource, resourceMultiplier));
+                        allResources.Add(resourceName, (resource, resourceMultiplier));
+                    }
                 }
             }
         }
@@ -175,7 +180,7 @@ namespace Models.CLEM.Activities
             {
                 foreach (DataRowView item in currentEntries)
                 {
-                    var resource = allResources[fileResource.ResourceNameColumnName];
+                    var resource = allResources[item[fileResource.ResourceNameColumnName].ToString()];
                     if(resource.Item1 != null)
                     { 
                         // amount provided x any multiplier
