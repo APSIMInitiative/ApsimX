@@ -4636,14 +4636,19 @@ namespace Models.Core.ApsimFile
             foreach (JObject crop in JsonUtilities.ChildrenRecursively(root, "Plant"))
             {
                 if (crop["Name"].ToString().Equals("Plantain", StringComparison.InvariantCultureIgnoreCase))
-                    JsonUtilities.RenameModel(crop, "PlantainForage");
+                {
+                    crop["Name"] = "PlantainForage";
+                    crop["ResourceName"] = "PlantainForage";
+                }
             }
 
             // change all references to the model in the soil-plant params table
             foreach (JObject soilCrop in JsonUtilities.ChildrenRecursively(root, "SoilCrop"))
             {
                 if (soilCrop["Name"].ToString().Equals("PlantainSoil", StringComparison.InvariantCultureIgnoreCase))
+                {
                     JsonUtilities.RenameModel(soilCrop, "PlantainForageSoil");
+                }
             }
 
             // change all references to the model in any report table

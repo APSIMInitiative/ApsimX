@@ -43484,11 +43484,8 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "PlantType": null,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "Name": "PlantainForage",
-                          "ResourceName": "Plantain",
+                          "ResourceName": "PlantainForage",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
