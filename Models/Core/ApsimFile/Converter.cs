@@ -4632,6 +4632,13 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion157(JObject root, string fileName)
         {
+            // change the name of any Plantain plant
+            foreach (JObject crop in JsonUtilities.ChildrenRecursively(root, "Plant"))
+            {
+                if (crop["Name"].ToString().Equals("Plantain", StringComparison.InvariantCultureIgnoreCase))
+                    JsonUtilities.RenameModel(crop, "PlantainForage");
+            }
+
             // change all references to the model in the soil-plant params table
             foreach (JObject soilCrop in JsonUtilities.ChildrenRecursively(root, "SoilCrop"))
             {
@@ -4650,6 +4657,24 @@ namespace Models.Core.ApsimFile
             {
                 JsonUtilities.ReplaceManagerCode(manager, "[Plantain]", "[PlantainForage]");
                 JsonUtilities.ReplaceManagerCode(manager, ".Plantain.", ".PlantainForage.");
+                JsonUtilities.ReplaceManagerCode(manager, "Plantain.", "PlantainForage.");
+            }
+
+            // change all references to the model in any operations table
+            foreach (var operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        var specification = operation[i]["Action"];
+                        var specificationString = specification.ToString();
+                        specificationString = specificationString.Replace("[Plantain]", "[PlantainForage]");
+                        specificationString = specificationString.Replace(".Plantain.", ".PlantainForage.");
+                        operation[i]["Action"] = specificationString;
+                    }
+                }
             }
 
             // change all references to the model in any experiment.factor
