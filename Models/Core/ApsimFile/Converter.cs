@@ -4616,7 +4616,7 @@ namespace Models.Core.ApsimFile
                     var key = "FieldName" + i + "UsedForMatch";
                     var field = predictedObserved[key];
 
-                    if (predictedObserved.ContainsKey(key) && !field.Value<string>().Equals(""))
+                    if (!String.IsNullOrEmpty(field?.Value<string>()))
                         field["FieldName" + (i + 1) + "UsedForMatch"] = field.Value<string>();
                 }
 
