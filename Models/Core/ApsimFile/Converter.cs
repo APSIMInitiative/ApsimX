@@ -4611,17 +4611,16 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
             {
-                var fieldName3 = predictedObserved["FieldName3UsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName3.Value<string>()))
-                    predictedObserved["FieldName4UsedForMatch"] = fieldName3.Value<string>();
-                var fieldName2 = predictedObserved["FieldName2UsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName2.Value<string>()))
-                    predictedObserved["FieldName3UsedForMatch"] = fieldName2.Value<string>();
-                var fieldName1 = predictedObserved["FieldNameUsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName1.Value<string>()))
-                    predictedObserved["FieldName2UsedForMatch"] = fieldName1.Value<string>();
-                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
+                for (int i = 3; i >= 1; --i)
+                {
+                    var key = "FieldName" + i + "UsedForMatch";
+                    var field = predictedObserved[key];
 
+                    if (predictedObserved.ContainsKey(key) && !field.Value<string>().Equals(""))
+                        field["FieldName" + (i + 1) + "UsedForMatch"] = field.Value<string>();
+                }
+
+                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
             }
         }
 
