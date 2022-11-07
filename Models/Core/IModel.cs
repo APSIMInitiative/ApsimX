@@ -281,8 +281,8 @@ namespace Models.Core
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
-        IVariable FindByPath(string path, bool ignoreCase = false);
+        /// <param name="flags">LocatorFlags controlling the search</param>
+        IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.None);
 
         /// <summary>
         /// Find and return multiple matches (e.g. a soil in multiple zones) for a given path.
@@ -290,8 +290,7 @@ namespace Models.Core
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
-        IEnumerable<IVariable> FindAllByPath(string path, bool ignoreCase = false);
+        IEnumerable<IVariable> FindAllByPath(string path);
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 

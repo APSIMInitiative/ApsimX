@@ -403,6 +403,7 @@ namespace Models.PMF
             SowingData.SkipDensityScale = 1.0 + SowingData.SkipRow / SowingData.SkipPlant;
 
             IsAlive = true;
+            DaysAfterEnding = 0;
 
             if (population > 0)
                 this.Population = population;

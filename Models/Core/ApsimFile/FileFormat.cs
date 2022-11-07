@@ -132,16 +132,27 @@
         /// <param name="errorHandler"></param>
         public static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
         {
-            foreach (var model in newModel.FindAllDescendants().ToList())
+            List<Simulation> simulationList = newModel.FindAllDescendants<Simulation>().ToList();
+            foreach (Simulation simulation in simulationList)
+                simulation.IsInitialising = true;
+            try
             {
-                try
+                foreach (var model in newModel.FindAllDescendants().ToList())
                 {
-                    model.OnCreated();
+                    try
+                    {
+                        model.OnCreated();
+                    }
+                    catch (Exception err)
+                    {
+                        errorHandler(err);
+                    }
                 }
-                catch (Exception err)
-                {
-                    errorHandler(err);
-                }
+            }
+            finally
+            {
+                foreach (Simulation simulation in simulationList)
+                    simulation.IsInitialising = false;
             }
         }
 

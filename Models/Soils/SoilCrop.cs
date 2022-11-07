@@ -84,6 +84,37 @@
             }
         }
 
+        /// <summary>Return the plant available water (SW-CLL).</summary>
+        [Units("mm/mm")]
+        [Display(Format = "N2")]
+        public double[] PAW
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+                var water = FindInScope<Water>();
+                if (water == null)
+                    return null;
+                return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, water.Volumetric, XF);
+            }
+        }
+
+        /// <summary>Return the plant available water (SW-CLL) (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
+                    return null;
+
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
+
         /// <summary>Tabular data. Called by GUI.</summary>
         public TabularData GetTabularData()
         {

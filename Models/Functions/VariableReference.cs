@@ -17,8 +17,6 @@ namespace Models.Functions
     [Description("Returns the value of a nominated internal Plant numerical variable")]
     public class VariableReference : Model, IFunction
     {
-        [Link]
-        ILocator locator = null;
 
         /// <summary>The variable name</summary>
         [Description("Specify an internal Plant variable")]
@@ -40,7 +38,7 @@ namespace Models.Functions
             object o;
             try
             {
-                o = locator.Get(trimmedVariableName);
+                o = Locator.Get(trimmedVariableName, LocatorFlags.ThrowOnError);
             }
             catch (Exception err)
             {
