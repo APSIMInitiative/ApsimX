@@ -72,6 +72,16 @@
                 propertiesLabel.Visible = false;
                 layeredLabel.Visible = false;
             }
+            else
+            {
+                // Position the splitter to give the "Properties" section as much space as it needs, and no more
+                if (view.MainWidget is Gtk.Paned)
+                {
+                    Gtk.Paned paned = view.MainWidget as Gtk.Paned;
+                    paned.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
+                    paned.Position = natHeight;
+                }
+            }
 
             Refresh();
             ConnectEvents();
