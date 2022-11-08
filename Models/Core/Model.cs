@@ -506,7 +506,7 @@
         /// <remarks>
         /// See <see cref="Locator"/> for more info about paths.
         /// </remarks>
-        public IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.CaseSensitive)
+        public IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled)
         {
             return Locator.GetObject(path, flags);
         }
