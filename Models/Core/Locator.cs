@@ -130,7 +130,7 @@
         //        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
         //        /// <param name="propertiesOnly">If true, fetch only property information, but not the value</param>
         //        /// <param name="includeDisabled">If true, include disabled models in the search</param>
-        private IVariable GetInternal(string namePath, LocatorFlags flags = LocatorFlags.None) // bool ignoreCase = true, bool propertiesOnly = false, bool includeDisabled = false)
+        private IVariable GetInternal(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
             IModel relativeTo = relativeToModel;
             string cacheKey = namePath;
