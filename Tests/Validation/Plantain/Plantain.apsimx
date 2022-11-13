@@ -6252,7 +6252,9 @@
               "Children": [
                 {
                   "$type": "Models.PMF.Cultivar, Models",
-                  "Command": null,
+                  "Command": [
+                    ""
+                  ],
                   "Name": "Tonic",
                   "Children": [
                     {
@@ -11537,7 +11539,7 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "LiveBiomassAG",
                           "Children": [
@@ -11657,7 +11659,7 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "DeadBiomassAG",
                           "Children": [
@@ -11869,7 +11871,7 @@
                           "LegendPosition": 0,
                           "LegendOrientation": 0,
                           "AnnotationLocation": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "LegendOutsideGraph": false,
                           "Name": "DeadBiomassBG",
                           "Children": [
