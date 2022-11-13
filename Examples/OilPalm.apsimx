@@ -1,2031 +1,2802 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="24">
-  <Name>Simulations</Name>
-  <Simulation>
-    <Name>OilPalm</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>%root%\Examples\WeatherFiles\Popondetta.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>Clock</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <StartDate>1996-03-01T00:00:00</StartDate>
-      <EndDate>2010-09-29T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>Summary</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Summary>
-    <Zone>
-      <Name>Block</Name>
-      <Fertiliser>
-        <Name>Fertiliser</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Fertiliser>
-      <SurfaceOrganicMatter>
-        <Name>SurfaceOM</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ResidueTypes>
-          <Name>ResidueTypes</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <LoadFromResource>ResidueTypes</LoadFromResource>
-        </ResidueTypes>
-        <TillageTypes>
-          <Name>TillageTypesList</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <TillageType />
-        </TillageTypes>
-        <Pools>
-          <Pool>
-            <PoolName>oilpalm</PoolName>
-            <ResidueType>oilpalm</ResidueType>
-            <Mass>24000</Mass>
-            <CNRatio>39</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-          <Pool>
-            <PoolName>oilpalmstem</PoolName>
-            <ResidueType>oilpalmstem</ResidueType>
-            <Mass>63000</Mass>
-            <CNRatio>145</CNRatio>
-            <CPRatio>NaN</CPRatio>
-            <StandingFraction>0</StandingFraction>
-          </Pool>
-        </Pools>
-        <PoolName>oilpalm oilpalmstem</PoolName>
-        <type>oilpalm oilpalmstem</type>
-        <mass>24000 63000</mass>
-        <standing_fraction>0 0</standing_fraction>
-        <cpr />
-        <cnr>39 145</cnr>
-        <CriticalResidueWeight>2000</CriticalResidueWeight>
-        <OptimumDecompTemp>20</OptimumDecompTemp>
-        <MaxCumulativeEOS>20</MaxCumulativeEOS>
-        <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-        <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-        <TotalLeachRain>25</TotalLeachRain>
-        <MinRainToLeach>10</MinRainToLeach>
-        <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-        <DefaultCPRatio>0</DefaultCPRatio>
-        <DefaultStandingFraction>0</DefaultStandingFraction>
-        <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-        <FractionFaecesAdded>0.5</FractionFaecesAdded>
-      </SurfaceOrganicMatter>
-      <Soil>
-        <Name>Soil</Name>
-        <Water>
-          <Name>Water</Name>
-          <SoilCropOilPalm>
-            <Name>OilPalmSoil</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <KL>
-              <double>0.06</double>
-              <double>0.04</double>
-              <double>0.03</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.02</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </KL>
-            <XF>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </XF>
-          </SoilCropOilPalm>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>1000</double>
-          </Thickness>
-          <BD>
-            <double>1.22</double>
-            <double>1.22</double>
-            <double>1.43</double>
-            <double>1.14</double>
-            <double>1.15</double>
-            <double>1.15</double>
-            <double>1.43</double>
-            <double>1.43</double>
-            <double>1.43</double>
-            <double>1.43</double>
-            <double>1.43</double>
-            <double>1.43</double>
-          </BD>
-          <AirDry>
-            <double>0.127</double>
-            <double>0.127</double>
-            <double>0.1</double>
-            <double>0.137</double>
-            <double>0.135</double>
-            <double>0.135</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.1</double>
-          </AirDry>
-          <LL15>
-            <double>0.38</double>
-            <double>0.38</double>
-            <double>0.3</double>
-            <double>0.41</double>
-            <double>0.406</double>
-            <double>0.406</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-            <double>0.3</double>
-          </LL15>
-          <DUL>
-            <double>0.48</double>
-            <double>0.48</double>
-            <double>0.4</double>
-            <double>0.51</double>
-            <double>0.506</double>
-            <double>0.506</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-          </DUL>
-          <SAT>
-            <double>0.53</double>
-            <double>0.53</double>
-            <double>0.45</double>
-            <double>0.56</double>
-            <double>0.556</double>
-            <double>0.556</double>
-            <double>0.45</double>
-            <double>0.45</double>
-            <double>0.45</double>
-            <double>0.45</double>
-            <double>0.45</double>
-            <double>0.45</double>
-          </SAT>
-        </Water>
-        <SoilWater>
-          <Name>SoilWater</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <SummerDate>1-Nov</SummerDate>
-          <SummerU>5</SummerU>
-          <SummerCona>5</SummerCona>
-          <WinterDate>1-Apr</WinterDate>
-          <WinterU>5</WinterU>
-          <WinterCona>5</WinterCona>
-          <DiffusConst>88</DiffusConst>
-          <DiffusSlope>35.4</DiffusSlope>
-          <Salb>0.18</Salb>
-          <CN2Bare>68</CN2Bare>
-          <CNRed>20</CNRed>
-          <CNCov>0.8</CNCov>
-          <slope>0</slope>
-          <discharge_width>0</discharge_width>
-          <catchment_area>0</catchment_area>
-          <max_pond>0</max_pond>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>1000</double>
-          </Thickness>
-          <SWCON>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.7</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-            <double>0.5</double>
-          </SWCON>
-          <KLAT>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KLAT>
-          <residueinterception>0</residueinterception>
-        </SoilWater>
-        <SoilNitrogen>
-          <Name>SoilNitrogen</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <fom_type>
-            <string>default</string>
-            <string>manure</string>
-            <string>mucuna</string>
-            <string>lablab</string>
-            <string>shemp</string>
-            <string>stable</string>
-          </fom_type>
-          <fract_carb>
-            <double>0.2</double>
-            <double>0.3</double>
-            <double>0.54</double>
-            <double>0.57</double>
-            <double>0.45</double>
-            <double>0</double>
-          </fract_carb>
-          <fract_cell>
-            <double>0.7</double>
-            <double>0.3</double>
-            <double>0.37</double>
-            <double>0.37</double>
-            <double>0.47</double>
-            <double>0.1</double>
-          </fract_cell>
-          <fract_lign>
-            <double>0.1</double>
-            <double>0.4</double>
-            <double>0.09</double>
-            <double>0.06</double>
-            <double>0.08</double>
-            <double>0.9</double>
-          </fract_lign>
-        </SoilNitrogen>
-        <SoilOrganicMatter>
-          <Name>SoilOrganicMatter</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <RootCN>30</RootCN>
-          <RootWt>3000</RootWt>
-          <SoilCN>12</SoilCN>
-          <EnrACoeff>7.4</EnrACoeff>
-          <EnrBCoeff>0.2</EnrBCoeff>
-          <Thickness>
-            <double>100</double>
-            <double>100</double>
-            <double>100</double>
-            <double>300</double>
-            <double>300</double>
-            <double>600</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>1000</double>
-          </Thickness>
-          <Depth>
-            <string>0-10</string>
-            <string>10-20</string>
-            <string>20-30</string>
-            <string>30-60</string>
-            <string>60-90</string>
-            <string>90-150</string>
-            <string>150-200</string>
-            <string>200-250</string>
-            <string>250-300</string>
-            <string>300-350</string>
-            <string>350-400</string>
-            <string>400-500</string>
-          </Depth>
-          <OC>
-            <double>2.1</double>
-            <double>1.06</double>
-            <double>0.65</double>
-            <double>0.5</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-            <double>0.4</double>
-          </OC>
-          <FBiom>
-            <double>0.04</double>
-            <double>0.03</double>
-            <double>0.015</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-          </FBiom>
-          <FInert>
-            <double>0.24</double>
-            <double>0.47</double>
-            <double>0.77</double>
-            <double>0.95</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-            <double>0.99</double>
-          </FInert>
-          <OCUnits>Total</OCUnits>
-        </SoilOrganicMatter>
-        <Analysis>
-          <Name>Analysis</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>1000</double>
-          </Thickness>
-          <PH>
-            <double>6.3</double>
-            <double>6.4</double>
-            <double>6.7</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-            <double>6.8</double>
-          </PH>
-          <PHUnits>Water</PHUnits>
-          <BoronUnits>HotWater</BoronUnits>
-        </Analysis>
-        <InitialWater>
-          <Name>InitialWater</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <PercentMethod>EvenlyDistributed</PercentMethod>
-          <FractionFull>1</FractionFull>
-          <DepthWetSoil>NaN</DepthWetSoil>
-        </InitialWater>
-        <Sample>
-          <Name>InitialNitrogen</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Thickness>
-            <double>100</double>
-            <double>200</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>300</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>500</double>
-            <double>1000</double>
-          </Thickness>
-          <NO3>
-            <double>5</double>
-            <double>5</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </NO3>
-          <NH4>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </NH4>
-          <NO3Units>ppm</NO3Units>
-          <NH4Units>ppm</NH4Units>
-          <SWUnits>Volumetric</SWUnits>
-          <OCUnits>Total</OCUnits>
-          <PHUnits>Water</PHUnits>
-        </Sample>
-        <CERESSoilTemperature>
-          <Name>CERESSoilTemperature</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </CERESSoilTemperature>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <RecordNumber>0</RecordNumber>
-        <SoilType>Higaturu Series </SoilType>
-        <LocalName />
-        <Site>Sangara Estate</Site>
-        <NearestTown>Popondetta</NearestTown>
-        <Region>Oro Province</Region>
-        <Country>PNG</Country>
-        <NaturalVegetation />
-        <Latitude>0</Latitude>
-        <Longitude>0</Longitude>
-      </Soil>
-      <Report>
-        <Name>AnnualOutput</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Clock].Today.Year</string>
-          <string>[OilPalm].Age</string>
-          <string>[OilPalm].LAI</string>
-          <string>sum of [Weather].Rain from 1-Jan to 31-Dec as AnnualRain</string>
-          <string>sum of [Soil].SoilWater.Eo from 1-Jan to 31-Dec as AnnualPotentialEvaporation</string>
-          <string>sum of [Irrigation].IrrigationApplied from 1-Jan to 31-Dec as AnnualIrrigation</string>
-          <string>sum of [Fertiliser].NitrogenApplied from 1-Jan to 31-Dec as AnnualFertiliserNAdded</string>
-          <string>sum of [Soil].SoilWater.LeachNO3 from 1-Jan to 31-Dec as AnnualNLeaching</string>
-          <string>sum of sum([Soil].SoilNitrogen.Denitrification) from 1-Jan to 31-Dec as AnnualDenitrification</string>
-          <string>sum of sum([Soil].SoilNitrogen.n2o_atm) from 1-Jan to 31-Dec as AnnualN2O</string>
-          <string>sum of ([OilPalm].UnderstoryNFixation+[Fertiliser].NitrogenApplied) from 1-Jan to 31-Dec as AnnualTotalNInput</string>
-          <string>[Calculations].Script.AnnualFronds</string>
-          <string>[Calculations].Script.AnnualBunches</string>
-          <string>[Calculations].Script.AnnualYield</string>
-          <string>[Calculations].Script.AnnualBunchSize</string>
-          <string>sum of [OilPalm].UnderstoryDltDM*10 from 1-Jan to 31-Dec as AnnualUnderstoryNPP</string>
-          <string>sum of [OilPalm].UnderstoryNFixation from 1-Jan to 31-Dec as AnnualUnderstoryNFixation</string>
-          <string>sum of sum([OilPalm].UnderstoryNUptake) from 1-Jan to 31-Dec as AnnualUnderstoryNUptake</string>
-          <string>sum of sum([OilPalm].NUptake) from 1-Jan to 31-Dec as AnnualPalmNUptake</string>
-          <string>sum of [OilPalm].RootGrowth*10 from 1-Jan to 31-Dec as AnnualRootNPP</string>
-          <string>sum of [OilPalm].StemGrowth*10 from 1-Jan to 31-Dec as AnnualStemNPP</string>
-          <string>sum of [OilPalm].FrondGrowth*10 from 1-Jan to 31-Dec as AnnualFrondNPP</string>
-          <string>sum of [OilPalm].BunchGrowth*10 from 1-Jan to 31-Dec as AnnualBunchNPP</string>
-          <string>sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth+[OilPalm].UnderstoryDltDM)*10) from 1-Jan to 31-Dec as AnnualTotalVegetativeNPP</string>
-          <string>sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth)*10) from 1-Jan to 31-Dec as AnnualPalmVegetativeNPP</string>
-          <string>sum of ([Soil].SoilWater.Es + [OilPalm].EP + [OilPalm].UnderstoryEP) from 1-Jan to 31-Dec as AnnualET</string>
-          <string>[Calculations].Script.AnnualNRemoved</string>
-          <string>avg of sum([Soil].SoilNitrogen.NO3) from 1-Jan to 31-Dec as AnnualAverageNO3</string>
-          <string>avg of [SurfaceOM].Wt from 1-Jan to 31-Dec as AnnualLitterMass</string>
-          <string>avg of [SurfaceOM].N from 1-Jan to 31-Dec as AnnualLitterN</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].EndOfYear</string>
-        </EventNames>
-      </Report>
-      <Report>
-        <Name>MonthlyOutput</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ExperimentFactorNames />
-        <ExperimentFactorValues />
-        <VariableNames>
-          <string>[Clock].Today.Year</string>
-          <string>[Clock].Today</string>
-          <string>[Clock].Today.Month</string>
-          <string>[OilPalm].Age</string>
-          <string>[SurfaceOM].N</string>
-          <string>[SurfaceOM].Wt</string>
-          <string>[OilPalm].LAI</string>
-          <string>[OilPalm].StemMass</string>
-          <string>[OilPalm].UnderstoryCoverGreen</string>
-          <string>[Calculations].Script.surfaceom_wt_oilpalmstem</string>
-          <string>[Calculations].Script.surfaceom_wt_oilpalmunderstory</string>
-          <string>sum([Soil].SoilNitrogen.TotalC)/1000 as SoilCtpha</string>
-          <string>sum([Soil].SoilNitrogen.TotalN) as SoilNkgpha</string>
-          <string>sum([Soil].NO3N) as TotalNO3</string>
-          <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
-          <string>sum([Soil].DULmm) as DUL</string>
-          <string>sum([Soil].SATmm) as SAT</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].StartOfMonth</string>
-        </EventNames>
-      </Report>
-      <OilPalm>
-        <Name>OilPalm</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ResourceName>OilPalm</ResourceName>
-        <interception>0</interception>
-        <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
-        <UnderstoryLegumeFraction>1</UnderstoryLegumeFraction>
-        <InterceptionFraction>0</InterceptionFraction>
-        <MaximumRootDepth>5000</MaximumRootDepth>
-        <RootDepth>3030</RootDepth>
-        <DltDM>19.871097229371863</DltDM>
-        <ReproductiveGrowthFraction>0.54002291016689741</ReproductiveGrowthFraction>
-        <UnderstoryCoverGreen>0.04694817445569064</UnderstoryCoverGreen>
-        <UnderstoryPotNUptake>
-          <double>9.0366045056470252</double>
-          <double>16.949560255832868</double>
-          <double>10.550676027297538</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-          <double>0</double>
-        </UnderstoryPotNUptake>
-      </OilPalm>
-      <Irrigation>
-        <Name>Irrigation</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </Irrigation>
-      <Manager>
-        <Name>Palm Management</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Script>
-          <sowing_date>1996-03-01</sowing_date>
-          <population>135</population>
-          <cultivar>Dami</cultivar>
-          <sowing_depth>200</sowing_depth>
-          <year1N>0.14</year1N>
-          <year2N>0.3</year2N>
-          <year3N>0.6</year3N>
-          <year4N>0.9</year4N>
-          <MatureN>1.05</MatureN>
-          <Irrigated>True</Irrigated>
-          <WaterRequirementYoung>20</WaterRequirementYoung>
-          <WaterRequirementMature>40</WaterRequirementMature>
-          <Plant_population>0</Plant_population>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-namespace Models
 {
-    [Serializable]
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 296,
+  "Version": 85,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
     {
-        [Link] Clock Clock; 
-        [Link] OilPalm oilPalm;
-        [Link] Summary Summary;
-        [Link] Fertiliser Fertiliser;
-        [Link] Weather Weather;
-        [Link] Irrigation Irrigation;
-        
-        [Description("Sowing date")]
-        public DateTime sowing_date {get; set;}
-        
-        [Description("Plant population (/ha)")]
-        public double population {get; set;}
-
-        [Description("Cultivar")]
-        [Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]
-        public string cultivar {get; set;}
-
-        [Description("Sowing depth (mm)")]
-        public double sowing_depth {get; set;}
-        
-        [Description("N applied in year 1 (kg/palm)")]
-        public double year1N {get;set;}
-        [Description("N applied in year 2 (kg/palm)")]
-        public double year2N {get;set;}
-        [Description("N applied in year 3 (kg/palm)")]
-        public double year3N {get;set;}
-        [Description("N applied in year 4 (kg/palm)")]
-        public double year4N {get;set;}
-        [Description("N applied to mature palms (kg/palm)")]
-        public double MatureN {get;set;}
-        [Description ("Are the palms irrigated? (True/False)")]
-        public bool Irrigated {get; set;}
-        [Description ("Weekly water requirement young palms (mm)")]
-        public double WaterRequirementYoung {get; set;}
-        [Description ("Weekly water requirement mature palms (mm)")]
-        public double WaterRequirementMature {get; set;}        
-        
-        private double WeeklyRain = 0;
-        private double DayCounter = 0;
-        
-        
-        public double Plant_population {get;set;}
-        
-        [EventSubscribe("Commencing")]
-        public void OnSimulationCommencing(object Sender, EventArgs e)
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Simulation",
+      "Children": [
         {
-            Plant_population = 0;
-        }
-        
-        [EventSubscribe("DoManagement")]
-        private void OnDoManagement(object sender, EventArgs e)
-        {    
-            if (Clock.Today.Date == sowing_date)
+          "$type": "Models.Weather, Models",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Popondetta.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1996-03-01T00:00:00",
+          "End": "2010-09-29T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "soil_albedo": 0.23,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Block",
+          "Children": [
             {
-                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);
-            }
-            if (Clock.Today.Day == 1 && (Clock.Today.Month == 3 || Clock.Today.Month == 6 || Clock.Today.Month == 9))
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
             {
-               double Nrate = 0;
-               if (oilPalm.Age <= 1)
-                  Nrate = year1N * population / 3;
-               else if (oilPalm.Age <= 2)
-                  Nrate = year2N * population / 3;
-               else if (oilPalm.Age <= 3)
-                  Nrate = year3N * population / 3;
-               else if (oilPalm.Age <= 4)
-                  Nrate = year4N * population / 3;
-               else
-                  Nrate = MatureN * population / 3;
-
-               Fertiliser.Apply(Nrate, Fertiliser.Types.NH4NO3N, 10);            
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
+              "InitialResidueName": "oilpalm",
+              "InitialResidueType": "oilpalm",
+              "InitialResidueMass": 0.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 0.0,
+              "FractionFaecesAdded": 1.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOM",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "Higaturu Series ",
+              "LocalName": null,
+              "Site": "Sangara Estate",
+              "NearestTown": "Popondetta",
+              "Region": "Oro Province",
+              "State": null,
+              "Country": "PNG",
+              "NaturalVegetation": null,
+              "ApsoilNumber": null,
+              "Latitude": 0.0,
+              "Longitude": 0.0,
+              "LocationAccuracy": null,
+              "DataSource": null,
+              "Comments": null,
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "BD": [
+                    1.22,
+                    1.22,
+                    1.43,
+                    1.14,
+                    1.15,
+                    1.15,
+                    1.43,
+                    1.43,
+                    1.43,
+                    1.43,
+                    1.43,
+                    1.43
+                  ],
+                  "AirDry": [
+                    0.127,
+                    0.127,
+                    0.1,
+                    0.137,
+                    0.135,
+                    0.135,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "LL15": [
+                    0.38,
+                    0.38,
+                    0.3,
+                    0.41,
+                    0.406,
+                    0.406,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "DUL": [
+                    0.48,
+                    0.48,
+                    0.4,
+                    0.51,
+                    0.506,
+                    0.506,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4
+                  ],
+                  "SAT": [
+                    0.53,
+                    0.53,
+                    0.45,
+                    0.56,
+                    0.556,
+                    0.556,
+                    0.45,
+                    0.45,
+                    0.45,
+                    0.45,
+                    0.45,
+                    0.45
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.38,
+                        0.38,
+                        0.3,
+                        0.41,
+                        0.406,
+                        0.406,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3
+                      ],
+                      "KL": [
+                        0.06,
+                        0.04,
+                        0.03,
+                        0.02,
+                        0.02,
+                        0.02,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "OilPalmSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilWater, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 5.0,
+                  "SummerCona": 5.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 5.0,
+                  "WinterCona": 5.0,
+                  "DiffusConst": 88.0,
+                  "DiffusSlope": 35.4,
+                  "Salb": 0.18,
+                  "CN2Bare": 68.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "slope": 0.0,
+                  "discharge_width": 0.0,
+                  "catchment_area": 0.0,
+                  "max_pond": 0.0,
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
+                  "SWCON": [
+                    0.7,
+                    0.7,
+                    0.7,
+                    0.7,
+                    0.7,
+                    0.7,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5
+                  ],
+                  "KLAT": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "PrecipitationInterception": 0.0,
+                  "Name": "SoilWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
+                  "FOMCNRatio": 30.0,
+                  "Thickness": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    300.0,
+                    300.0,
+                    600.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "Carbon": [
+                    2.1,
+                    1.06,
+                    0.65,
+                    0.5,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4
+                  ],
+                  "SoilCNRatio": [
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0
+                  ],
+                  "FBiom": [
+                    0.04,
+                    0.03,
+                    0.015,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.24,
+                    0.47,
+                    0.77,
+                    0.95,
+                    0.99,
+                    0.99,
+                    0.99,
+                    0.99,
+                    0.99,
+                    0.99,
+                    0.99,
+                    0.99
+                  ],
+                  "FOM": [
+                    532.71903818301416,
+                    501.69589652587581,
+                    472.47940199282294,
+                    394.64796999001658,
+                    329.63769332659047,
+                    229.98041481462491,
+                    170.37368169461377,
+                    126.21592772399717,
+                    93.5030589981839,
+                    69.26876979533229,
+                    51.315566788589557,
+                    28.162580166338131
+                  ],
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "NO3N": [
+                    5.0,
+                    5.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "NH4N": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "PH": [
+                    6.3,
+                    6.4,
+                    6.7,
+                    6.8,
+                    6.8,
+                    6.8,
+                    6.8,
+                    6.8,
+                    6.8,
+                    6.8,
+                    6.8,
+                    6.8
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 1,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "InitialWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    500.0,
+                    1000.0
+                  ],
+                  "NO3N": null,
+                  "NH4N": null,
+                  "SW": null,
+                  "OC": null,
+                  "EC": null,
+                  "CL": null,
+                  "ESP": null,
+                  "PH": null,
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "InitialNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "Models.Graph.DirectedGraph, Models",
+                    "Nodes": [
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Inert",
+                        "Location": "656, 254",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "SurfaceResidue",
+                        "Location": "566, 69",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMLignin",
+                        "Location": "261, 69",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCellulose",
+                        "Location": "397, 70",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "123, 70",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Urea",
+                        "Location": "529, 419",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NO3",
+                        "Location": "185, 435",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NH4",
+                        "Location": "357, 422",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Atmosphere",
+                        "Location": "48, 338",
+                        "Colour": "White",
+                        "OutlineColour": "White",
+                        "Transparent": true
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "415, 173",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "499, 172",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "255, 105",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "141, 131",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "335, 301",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "319, 278",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "334, 340",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "433, 416",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "1, 319",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "243, 409",
+                        "Colour": "Black",
+                        "Text": null
+                      }
+                    ]
+                  },
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Clock].Today.Year",
+                "[OilPalm].Age",
+                "[OilPalm].LAI",
+                "sum of [Weather].Rain from 1-Jan to 31-Dec as AnnualRain",
+                "sum of [Soil].SoilWater.Eo from 1-Jan to 31-Dec as AnnualPotentialEvaporation",
+                "sum of [Irrigation].IrrigationApplied from 1-Jan to 31-Dec as AnnualIrrigation",
+                "sum of [Fertiliser].NitrogenApplied from 1-Jan to 31-Dec as AnnualFertiliserNAdded",
+                "sum of [Soil].SoilWater.LeachNO3 from 1-Jan to 31-Dec as AnnualNLeaching",
+                "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
+                "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
+                "sum of ([OilPalm].UnderstoryNFixation+[Fertiliser].NitrogenApplied) from 1-Jan to 31-Dec as AnnualTotalNInput",
+                "[Calculations].Script.AnnualFronds",
+                "[Calculations].Script.AnnualBunches",
+                "[Calculations].Script.AnnualYield",
+                "[Calculations].Script.AnnualBunchSize",
+                "sum of [OilPalm].UnderstoryDltDM*10 from 1-Jan to 31-Dec as AnnualUnderstoryNPP",
+                "sum of [OilPalm].UnderstoryNFixation from 1-Jan to 31-Dec as AnnualUnderstoryNFixation",
+                "sum of sum([OilPalm].UnderstoryNUptake) from 1-Jan to 31-Dec as AnnualUnderstoryNUptake",
+                "sum of sum([OilPalm].NUptake) from 1-Jan to 31-Dec as AnnualPalmNUptake",
+                "sum of [OilPalm].RootGrowth*10 from 1-Jan to 31-Dec as AnnualRootNPP",
+                "sum of [OilPalm].StemGrowth*10 from 1-Jan to 31-Dec as AnnualStemNPP",
+                "sum of [OilPalm].FrondGrowth*10 from 1-Jan to 31-Dec as AnnualFrondNPP",
+                "sum of [OilPalm].BunchGrowth*10 from 1-Jan to 31-Dec as AnnualBunchNPP",
+                "sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth+[OilPalm].UnderstoryDltDM)*10) from 1-Jan to 31-Dec as AnnualTotalVegetativeNPP",
+                "sum of (([OilPalm].RootGrowth+[OilPalm].StemGrowth+[OilPalm].FrondGrowth)*10) from 1-Jan to 31-Dec as AnnualPalmVegetativeNPP",
+                "sum of ([Soil].SoilWater.Es + [OilPalm].EP + [OilPalm].UnderstoryEP) from 1-Jan to 31-Dec as AnnualET",
+                "[Calculations].Script.AnnualNRemoved",
+                "avg of sum([Soil].Nutrient.NO3.kgha) from 1-Jan to 31-Dec as AnnualAverageNO3",
+                "avg of [SurfaceOM].Wt from 1-Jan to 31-Dec as AnnualLitterMass",
+                "avg of [SurfaceOM].N from 1-Jan to 31-Dec as AnnualLitterN"
+              ],
+              "EventNames": [
+                "[Clock].EndOfYear"
+              ],
+              "Name": "AnnualOutput",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today.Year",
+                "[Clock].Today",
+                "[Clock].Today.Month",
+                "[OilPalm].Age",
+                "[SurfaceOM].N",
+                "[SurfaceOM].Wt",
+                "[OilPalm].LAI",
+                "[OilPalm].StemMass",
+                "[OilPalm].UnderstoryCoverGreen",
+                "[Calculations].Script.surfaceom_wt_oilpalmstem",
+                "[Calculations].Script.surfaceom_wt_oilpalmunderstory",
+                "sum([Soil].Nutrient.TotalC)/1000 as SoilCtpha",
+                "sum([Soil].Nutrient.TotalN) as SoilNkgpha",
+                "sum([Soil].Nutrient.NO3.kgha) as TotalNO3",
+                "sum([Soil].SoilWater.SWmm) as TotalSW",
+                "sum([Soil].DULmm) as DUL",
+                "sum([Soil].SATmm) as SAT"
+              ],
+              "EventNames": [
+                "[Clock].StartOfMonth"
+              ],
+              "Name": "MonthlyOutput",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.OilPalm.OilPalm, Models",
+              "LAI": 0.0,
+              "UnderstoryCoverMax": 0.4,
+              "UnderstoryLegumeFraction": 1.0,
+              "MaximumRootDepth": 5000.0,
+              "RootDepth": 3030.0,
+              "DltDM": 19.871097229371863,
+              "ReproductiveGrowthFraction": 0.54002291016689741,
+              "UnderstoryCoverGreen": 0.04694817445569064,
+              "UnderstoryPotNUptake": [
+                9.0366045056470252,
+                16.949560255832868,
+                10.550676027297538,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "ResourceName": "OilPalm",
+              "Name": "OilPalm",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.OilPalm;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock; \r\n        [Link] OilPalm oilPalm;\r\n        [Link] Summary Summary;\r\n        [Link] SurfaceOrganicMatter surface;\r\n        \r\n        [Description(\"Sowing date\")]\r\n        public DateTime sowing_date {get; set;}\r\n        \r\n        [Description(\"Plant population /ha\")]\r\n        public double population {get; set;}\r\n\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"OilPalm\")]\r\n        public string cultivar {get; set;}\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double sowing_depth {get; set;}\r\n        \r\n        public double Plant_population {get;set;}\r\n        \r\n        private byte HarvestCounter = 1;\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Plant_population = 0;\r\n            surface.Add(24000, 270.769, 0, \"oilpalm\", \"oilpalm\");\r\n            surface.Add(63000, 191.172, 0, \"oilpalmstem\", \"oilpalmstem\");\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {    \r\n            if (Clock.Today.Date == sowing_date)\r\n            {\r\n                oilPalm.Sow(population: population / 10000, cultivar:cultivar, depth:sowing_depth, rowSpacing:150);\r\n            }\r\n            \r\n            if (HarvestCounter == 14)\r\n            {\r\n                oilPalm.Harvest();\r\n                HarvestCounter = 1;\r\n            }\r\n            \r\n            HarvestCounter++;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "sowing_date",
+                  "Value": "1996-03-01"
+                },
+                {
+                  "Key": "population",
+                  "Value": "135"
+                },
+                {
+                  "Key": "cultivar",
+                  "Value": "Dami"
+                },
+                {
+                  "Key": "sowing_depth",
+                  "Value": "200"
+                },
+                {
+                  "Key": "Plant_population",
+                  "Value": "0"
+                }
+              ],
+              "Name": "Palm Management",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.OilPalm;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{ \r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] OilPalm OilPalm;\r\n        [Link] Soil Soil;\r\n        [Link] SurfaceOrganicMatter SurfaceOM;\r\n        [Link] Summary Summary;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Weather Weather;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        public double Offset {get; set;}\r\n        public double AnnualFronds {get; set;}\r\n        public double AnnualBunches {get; set;}\r\n        public double AnnualYield {get; set;}\r\n        public double AnnualBunchSize {get; set;}\r\n        public double surfaceom_wt_oilpalmstem {get; set;}\r\n        public double surfaceom_wt_oilpalmunderstory {get; set;}\r\n        public double OilPalmYield {get; set;}\r\n        public double AnnualNRemoved {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Offset = 0;\r\n            OilPalmYield = 0;\r\n            AnnualFronds = 0;\r\n            AnnualBunches = 0;\r\n            AnnualBunchSize = 0;\r\n            AnnualYield = 0;\r\n            surfaceom_wt_oilpalmstem = 0;\r\n            surfaceom_wt_oilpalmunderstory = 0;    \r\n            AnnualNRemoved = 0;\r\n\r\n        }\r\n        \r\n\r\n       [EventSubscribe(\"StartOfYear\")]\r\n       private void OnStartOfYear(object sender, EventArgs e)\r\n       {\r\n               Offset = OilPalm.CumulativeFrondNumber;\r\n            AnnualYield = 0;\r\n            AnnualBunches = 0;\r\n            AnnualBunchSize = 0;\r\n            AnnualNRemoved = 0;\r\n        }\r\n        \r\n       [EventSubscribe(\"DoManagementCalculations\")]\r\n       private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool(\"oilpalmstem\");\r\n            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;  \r\n        }\r\n        \r\n        [EventSubscribe(\"Harvesting\")]\r\n        private void OnHarvesting(object sender, EventArgs e)\r\n        {\r\n            AnnualYield += OilPalm.HarvestFFB;\r\n            AnnualBunches += OilPalm.HarvestBunches;\r\n            if (AnnualBunches > 0)\r\n                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);\r\n            AnnualNRemoved += OilPalm.HarvestNRemoved;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "Offset",
+                  "Value": "6"
+                },
+                {
+                  "Key": "AnnualFronds",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AnnualBunches",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AnnualYield",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AnnualBunchSize",
+                  "Value": "0"
+                },
+                {
+                  "Key": "surfaceom_wt_oilpalmstem",
+                  "Value": "NaN"
+                },
+                {
+                  "Key": "surfaceom_wt_oilpalmunderstory",
+                  "Value": "0"
+                },
+                {
+                  "Key": "OilPalmYield",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AnnualNRemoved",
+                  "Value": "0"
+                }
+              ],
+              "Name": "Calculations",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
-           DayCounter +=1;
-           WeeklyRain += Weather.Rain;
-           if (DayCounter == 7)
-           {
-              double Deficit = 0;
-              if (oilPalm.Age<=3)
-                 Deficit = Math.Max(WaterRequirementYoung - WeeklyRain,0);
-              else
-                 Deficit = Math.Max(WaterRequirementMature - WeeklyRain,0);
-              if (Irrigated)
-                 Irrigation.Apply(amount:Deficit);
-              DayCounter = 0;
-              WeeklyRain = 0;
-           }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "FFB (t/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Annual Rainfall (mm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "AnnualFFB",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 0,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualRain",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Rainfall",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8388544,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "Calculations.Script.AnnualYield",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "FFB",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Bunch Production (/palm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Annual Rainfall (mm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "AnnualBunchProduction",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 0,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualRain",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Rainfall",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8388544,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "Calculations.Script.AnnualBunches",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Bunches per palm",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Average Bunch Size (kg)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Annual Rainfall (mm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "AnnualBunchSizes",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 0,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualRain",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Rainfall",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8388544,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "Calculations.Script.AnnualBunchSize",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Bunch Size",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Vegetative NPP (kg DM/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 3,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Vegetative NPP",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualUnderstoryNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Understory NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualPalmVegetativeNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Palm Vegetative NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualTotalVegetativeNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Total Vegetative NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Palm NPP Breakdown (kg DM/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Palm NPP Breakdown",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -12550016,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualFrondNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Frond NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8355840,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualStemNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Stem NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualRootNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Root NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8388544,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualBunchNPP",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Bunch NPP",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Palm LAI (m2/m2)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 3,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "LAI",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "OilPalm.LAI",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "LAI",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Annual Rainfall and Potential Evaporation (mm) ",
+              "Inverted": false,
+              "Minimum": 0.0,
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 3,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "AnnualClimate",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 0,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualRain",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Rainfall",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualPotentialEvaporation",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Potential Evaporation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Annual Fertiliser Input (kg N /ha)",
+              "Inverted": false,
+              "Minimum": 0.0,
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Annual Irrigation Input (mm)",
+              "Inverted": false,
+              "Minimum": 0.0,
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "AnnualInputs",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 0,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualIrrigation",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Irrigation Addition",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualFertiliserNAdded",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Addition",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Annual N Inputs (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 3,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Annual N Inputs",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualUnderstoryNFixation",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Fixation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16711936,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualFertiliserNAdded",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Addition",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualTotalNInput",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Total N Input",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Annual N Losses (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Annual N Losses",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualNLeaching",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Leaching",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16711936,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualDenitrification",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Denitrified",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "Calculations.Script.AnnualNRemoved",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Removed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Annual N Addition and Removal (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 3,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Annual N Additions and Removal",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualTotalNInput",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Addition",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "Calculations.Script.AnnualNRemoved",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N Removed",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Total Soil Carbon (t C/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Total Soil Nitrogen (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Soil Organic Matter",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -32768,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SoilCtpha",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Total Soil Carbon",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -16744320,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SoilNkgpha",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Total Soil Nitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Litter Layer Mass (kg/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Litter Layer Nitrogen (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Litter Layer",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -32704,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SurfaceOM.Wt",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Litter Mass",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -16744320,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SurfaceOM.N",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Litter N",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Profile Nitrate (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Litter Layer Nitrogen (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Profile Nitrate N",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744320,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "TotalNO3",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Profile Nitrate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Profile Water (mm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Litter Layer Nitrogen (kg N/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Profile Water",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "TotalSW",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Soil Water",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 1,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "DUL",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "DUL",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777056,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 1,
+              "LineThickness": 0,
+              "TableName": "MonthlyOutput",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SAT",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "SAT",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Year",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "N2O Emission (kg N/ha)",
+              "Inverted": false,
+              "Minimum": 0.0,
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Annual Rainfall (mm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "N2O Emissions",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 0,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -8355585,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualRain",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual Rainfall",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "AnnualOutput",
+              "XFieldName": "Clock.Today.Year",
+              "YFieldName": "AnnualN2O",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Annual N2O Emission",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
         }
-    }
-}
-]]></Code>
-      </Manager>
-      <Manager>
-        <Name>Calculations</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Script>
-          <Offset>6</Offset>
-          <AnnualFronds>0</AnnualFronds>
-          <AnnualBunches>0</AnnualBunches>
-          <AnnualYield>0</AnnualYield>
-          <AnnualBunchSize>0</AnnualBunchSize>
-          <surfaceom_wt_oilpalmstem>NaN</surfaceom_wt_oilpalmstem>
-          <surfaceom_wt_oilpalmunderstory>0</surfaceom_wt_oilpalmunderstory>
-          <OilPalmYield>0</OilPalmYield>
-          <AnnualNRemoved>0</AnnualNRemoved>
-        </Script>
-        <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.OilPalm;
-using Models.Soils;
-using Models.SurfaceOM;
-
-namespace Models
-{ 
-    [Serializable]
-    [System.Xml.Serialization.XmlInclude(typeof(Model))]
-    public class Script : Model
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
     {
-        [Link] Clock Clock;
-        [Link] OilPalm OilPalm;
-        [Link] Soil Soil;
-        [Link] SurfaceOrganicMatter SurfaceOM;
-        [Link] Summary Summary;
-        [Link] Fertiliser Fertiliser;
-        [Link] Weather Weather;
-        [Link] Irrigation Irrigation;
-        
-        public double Offset {get; set;}
-        public double AnnualFronds {get; set;}
-        public double AnnualBunches {get; set;}
-        public double AnnualYield {get; set;}
-        public double AnnualBunchSize {get; set;}
-        public double surfaceom_wt_oilpalmstem {get; set;}
-        public double surfaceom_wt_oilpalmunderstory {get; set;}
-        public double OilPalmYield {get; set;}
-        public double AnnualNRemoved {get; set;}
-
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Offset = 0;
-            OilPalmYield = 0;
-            AnnualFronds = 0;
-            AnnualBunches = 0;
-            AnnualBunchSize = 0;
-            AnnualYield = 0;
-            surfaceom_wt_oilpalmstem = 0;
-            surfaceom_wt_oilpalmunderstory = 0;    
-            AnnualNRemoved = 0;
-
-        }
-        
-
-       [EventSubscribe("StartOfYear")]
-       private void OnStartOfYear(object sender, EventArgs e)
-       {
-               Offset = OilPalm.CumulativeFrondNumber;
-            AnnualYield = 0;
-            AnnualBunches = 0;
-            AnnualBunchSize = 0;
-            AnnualNRemoved = 0;
-        }
-        
-       [EventSubscribe("DoManagementCalculations")]
-       private void OnDoManagement(object sender, EventArgs e)
-        {
-            surfaceom_wt_oilpalmstem = SurfaceOM.GetWeightFromPool("oilpalmstem");
-            AnnualFronds = OilPalm.CumulativeFrondNumber - Offset;  
-        }
-        
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            AnnualYield += OilPalm.HarvestFFB;
-            AnnualBunches += OilPalm.HarvestBunches;
-            if (AnnualBunches > 0)
-                AnnualBunchSize = AnnualYield * 1000 / AnnualBunches / (OilPalm.Population * 10000);
-            AnnualNRemoved += OilPalm.HarvestNRemoved;
-        }
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
     }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
 }
-]]></Code>
-      </Manager>
-      <SoluteManager>
-        <Name>SoluteManager</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </SoluteManager>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Graph>
-      <Name>AnnualFFB</Name>
-      <Series>
-        <Name>Annual Rainfall</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Bar</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualRain</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>FFB</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Calculations.Script.AnnualYield</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>FFB (t/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Annual Rainfall (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualBunchProduction</Name>
-      <Series>
-        <Name>Annual Rainfall</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Bar</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualRain</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Bunches per palm</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Calculations.Script.AnnualBunches</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Bunch Production (/palm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Annual Rainfall (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualBunchSizes</Name>
-      <Series>
-        <Name>Annual Rainfall</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Bar</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualRain</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Bunch Size</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Calculations.Script.AnnualBunchSize</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Average Bunch Size (kg)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Annual Rainfall (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Vegetative NPP</Name>
-      <Series>
-        <Name>Annual Understory NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualUnderstoryNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Palm Vegetative NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualPalmVegetativeNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Total Vegetative NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualTotalVegetativeNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Vegetative NPP (kg DM/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Palm NPP Breakdown</Name>
-      <Series>
-        <Name>Annual Frond NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-12550016</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualFrondNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Stem NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8355840</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualStemNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Root NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualRootNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Bunch NPP</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8388544</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualBunchNPP</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Palm NPP Breakdown (kg DM/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>LAI</Name>
-      <Series>
-        <Name>LAI</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>OilPalm.LAI</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Palm LAI (m2/m2)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualClimate</Name>
-      <Series>
-        <Name>Annual Rainfall</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Bar</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualRain</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Potential Evaporation</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualPotentialEvaporation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Annual Rainfall and Potential Evaporation (mm) </Title>
-        <Inverted>false</Inverted>
-        <Minimum>0</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>AnnualInputs</Name>
-      <Series>
-        <Name>Annual Irrigation Addition</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Bar</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualIrrigation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual N Addition</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualFertiliserNAdded</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Annual Fertiliser Input (kg N /ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>0</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Annual Irrigation Input (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>0</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Annual N Inputs</Name>
-      <Series>
-        <Name>Annual N Fixation</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualUnderstoryNFixation</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual N Addition</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualFertiliserNAdded</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual Total N Input</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualTotalNInput</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Annual N Inputs (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Annual N Losses</Name>
-      <Series>
-        <Name>Annual N Leaching</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualNLeaching</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual N Denitrified</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16711936</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualDenitrification</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual N Removed</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Calculations.Script.AnnualNRemoved</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Annual N Losses (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Annual N Additions and Removal</Name>
-      <Series>
-        <Name>Annual N Addition</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualTotalNInput</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual N Removed</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Calculations.Script.AnnualNRemoved</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Annual N Addition and Removal (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Soil Organic Matter</Name>
-      <Series>
-        <Name>Total Soil Carbon</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SoilCtpha</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Total Soil Nitrogen</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-16744320</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SoilNkgpha</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Total Soil Carbon (t C/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Total Soil Nitrogen (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Litter Layer</Name>
-      <Series>
-        <Name>Litter Mass</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-32704</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SurfaceOM.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Litter N</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-16744320</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SurfaceOM.N</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Litter Layer Mass (kg/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Litter Layer Nitrogen (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Profile Nitrate N</Name>
-      <Series>
-        <Name>Profile Nitrate</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744320</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>TotalNO3</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Profile Nitrate (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Litter Layer Nitrogen (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>Profile Water</Name>
-      <Series>
-        <Name>Soil Water</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>TotalSW</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>DUL</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Dash</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>DUL</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>SAT</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777056</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Dash</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>MonthlyOutput</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SAT</YFieldName>
-        <ShowInLegend>false</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Profile Water (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Litter Layer Nitrogen (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <Graph>
-      <Name>N2O Emissions</Name>
-      <Series>
-        <Name>Annual Rainfall</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Bar</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-8355585</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualRain</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Annual N2O Emission</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>FilledCircle</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>AnnualOutput</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>AnnualN2O</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Year</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>N2O Emission (kg N/ha)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>0</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Title>Annual Rainfall (mm)</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-    </Graph>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </DataStore>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>296</ExplorerWidth>
-</Simulations>

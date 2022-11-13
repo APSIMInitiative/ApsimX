@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SoilState.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Soils.Arbitrator
+﻿namespace Models.Soils.Arbitrator
 {
     using System;
     using System.Collections.Generic;
@@ -13,34 +8,39 @@ namespace Models.Soils.Arbitrator
     /// <summary>
     /// Encapsulates the state of water and N in multiple zones.
     /// </summary>
+    [Serializable]
     public class SoilState
     {
-        /// <summary>The parent model.</summary>
-        private IModel Parent;
+        private IEnumerable<Zone> allZones;
 
         /// <summary>Initializes a new instance of the <see cref="SoilState"/> class.</summary>
-        /// <param name="parent">The parent model.</param>
-        public SoilState(IModel parent)
+        public SoilState(IEnumerable<Zone> allZones)
         {
-            Parent = parent;
+            this.allZones = allZones;
             Zones = new List<ZoneWaterAndN>();
+            foreach (Zone Z in allZones)
+            {
+                Soil soil = Z.FindChild<Soil>();
+                if (soil != null)
+                    Zones.Add(new ZoneWaterAndN(Z, soil));
+            }
+        }
+
+        /// <summary>Constructor to copy state from another instance.</summary>
+        /// <param name="from">The instance to copy from.</param>
+        public SoilState(SoilState from)
+        {
+            allZones = from.allZones;
+            Zones = new List<ZoneWaterAndN>();
+            foreach (var Z in from.Zones)
+                Zones.Add(new ZoneWaterAndN(Z));
         }
 
         /// <summary>Initialises this instance.</summary>
-        public void Initialise(List<IModel> zones)
+        public void Initialise()
         {
-            foreach (Zone Z in zones)
-            {
-                Soil soil = Apsim.Child(Z, typeof(Soil)) as Soil;
-                if (soil != null)
-                {
-                    ZoneWaterAndN NewZ = new ZoneWaterAndN(Z);
-                    NewZ.Water = soil.Water;
-                    NewZ.NO3N = soil.NO3N;
-                    NewZ.NH4N = soil.NH4N;
-                    Zones.Add(NewZ);
-                }
-            }
+            foreach (ZoneWaterAndN zone in Zones)
+                zone.InitialiseToSoilState();
         }
 
         /// <summary>Gets all zones in this soil state.</summary>
@@ -52,15 +52,7 @@ namespace Models.Soils.Arbitrator
         /// <returns>The result of the operator.</returns>
         public static SoilState operator -(SoilState state, Estimate estimate)
         {
-            SoilState NewState = new SoilState(state.Parent);
-            foreach (ZoneWaterAndN Z in state.Zones)
-            {
-                ZoneWaterAndN NewZ = new ZoneWaterAndN(Z.Zone);
-                NewZ.Water = Z.Water;
-                NewZ.NO3N = Z.NO3N;
-                NewZ.NH4N = Z.NH4N;
-                NewState.Zones.Add(NewZ);
-            }
+            SoilState NewState = new SoilState(state);
 
             foreach (CropUptakes C in estimate.Values)
                 foreach (ZoneWaterAndN Z in C.Zones)

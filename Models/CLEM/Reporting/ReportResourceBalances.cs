@@ -1,199 +1,228 @@
-﻿using Models.Core;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.Report;
 using APSIM.Shared.Utilities;
 using System.Data;
-using System.IO;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core.Attributes;
+using Models.Storage;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {
     /// <summary>
-    /// A report class for writing output to the data store.
+    /// A report class for writing resource balances to the data store.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
-    [PresenterName("UserInterface.Presenters.ReportPresenter")]
-    [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Zones.CircularZone))]
-    [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
-    public class ReportResourceBalances: Models.Report.Report
+    [PresenterName("UserInterface.Presenters.CLEMReportResultsPresenter")]
+    [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
+    [ValidParent(ParentType = typeof(Folder))]
+    [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Version(1, 0, 3, "Respects herd transaction style in reporting herd breakdown columns")]
+    [Version(1, 0, 2, "Includes value as reportable columns")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
+    public class ReportResourceBalances: Models.Report, ICLEMUI
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
         [Link]
-        ISummary Summary = null;
+        private Summary summary = null;
 
-        /// <summary>The columns to write to the data store.</summary>
-        private List<IReportColumn> columns = null;
+        private IEnumerable<IActivityTimer> timers;
 
-        /// <summary>An array of column names to write to storage.</summary>
-        private IEnumerable<string> columnNames = null;
+        /// <summary>
+        /// Gets or sets report groups for outputting
+        /// </summary>
+        [Description("Resource groups")]
+        [Category("General", "Resources")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "At least one Resource group must be provided for the Balances Report")]
+        public string[] ResourceGroupsToReport { get; set; }
 
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IEnumerable<string> columnUnits = null;
+        /// <summary>
+        /// Report balances of amount
+        /// </summary>
+        [Category("Report", "General")]
+        [Description("Report physical amount")]
+        public bool ReportAmount { get; set; }
 
-        /// <summary>Link to a simulation</summary>
-        [Link]
-        private Simulation simulation = null;
+        /// <summary>
+        /// Report balances of value
+        /// </summary>
+        [Category("Report", "Economics")]
+        [Description("Report dollar value")]
+        public bool ReportValue { get; set; }
 
-        /// <summary>Link to a clock model.</summary>
-        [Link]
-        private IClock clock = null;
+        /// <summary>
+        /// Report balances of animal equivalents
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Report ruminant Adult Equivalents")]
+        public bool ReportAnimalEquivalents { get; set; }
 
-        /// <summary>Link to a storage service.</summary>
-        [Link]
-        private IStorageWriter storage = null;
+        /// <summary>
+        /// Report balances of animal weight
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Report Ruminant total weight")]
+        public bool ReportAnimalWeight { get; set; }
 
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
+        /// <summary>
+        /// Report combined values for herd when using categories
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Include herd totals")]
+        public bool ReportHerdTotals { get; set; }
 
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        private IEvent events = null;
+        /// <summary>
+        /// Report available land as balance
+        /// </summary>
+        [Category("Report", "Land")]
+        [Description("Report Land as area present")]
+        public bool ReportLandEntire { get; set; }
+
+        /// <summary>
+        /// Report available labour in individuals
+        /// </summary>
+        [Category("Report", "Land")]
+        [Description("Report Labour as individuals")]
+        public bool ReportLabourIndividuals { get; set; }
+
+        /// <inheritdoc/>
+        public string SelectedTab { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ReportResourceBalances()
+        {
+            ReportAmount = true;
+        }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            // sanitise the variable names and remove duplicates
+            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any() )
+                return; 
+            
+            timers = FindAllChildren<IActivityTimer>();
+
             List<string> variableNames = new List<string>();
-            if (VariableNames != null)
+            if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
+                variableNames.Add("[Clock].Today as Date");
+
+            if (ResourceGroupsToReport != null)
             {
-                for (int i = 0; i < this.VariableNames.Length; i++)
+                for (int i = 0; i < this.ResourceGroupsToReport.Length; i++)
                 {
                     // each variable name is now a ResourceGroup
-                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
-                    if (!isDuplicate && this.VariableNames[i] != string.Empty)
+                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.ResourceGroupsToReport[i].Trim()) != -1;
+                    if (!isDuplicate && this.ResourceGroupsToReport[i] != string.Empty)
                     {
-                        if (this.VariableNames[i].StartsWith("["))
-                        {
-                            variableNames.Add(this.VariableNames[i]);
-                        }
+                        if (this.ResourceGroupsToReport[i].StartsWith("["))
+                            variableNames.Add(this.ResourceGroupsToReport[i]);
                         else
                         {
                             // check it is a ResourceGroup
-                            CLEMModel model = Resources.GetResourceByName(this.VariableNames[i]) as CLEMModel;
+                            CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(this.ResourceGroupsToReport[i]);
                             if (model == null)
+                                summary.WriteMessage(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored", MessageType.Warning);
+                            else
                             {
-                                Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
-                            }
-                            // get all children
-                            foreach (CLEMModel item in model.Children)
-                            {
-                                string amountStr = "Amount";
-                                if (item.GetType() == typeof(FinanceType))
+                                if (model is Labour)
                                 {
-                                    amountStr = "Balance";
+                                    string amountStr = "Amount";
+                                    if (ReportLabourIndividuals)
+                                        amountStr = "Individuals";
+
+                                    for (int j = 0; j < (model as Labour).Items.Count; j++)
+                                    {
+                                        if (ReportAmount)
+                                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
+
+                                        //TODO: what economic metric is needed for labour
+                                        //TODO: add ability to report labour value if required
+                                    }
                                 }
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
+                                else
+                                {
+                                    foreach (CLEMModel item in model.FindAllChildren<CLEMModel>())
+                                    {
+                                        string amountStr = "Amount";
+                                        switch (item)
+                                        {
+                                            case FinanceType ftype:
+                                                amountStr = "Balance";
+                                                break;
+                                            case LandType ltype:
+                                                if (ReportLandEntire)
+                                                    amountStr = "LandArea";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (item is RuminantType)
+                                        {
+                                            // add each variable needed
+                                            foreach (var category in (model as RuminantHerd).GetReportingGroups(item as RuminantType))
+                                            {
+                                                if (ReportAmount)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").Count as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Count");
+                                                if (ReportAnimalEquivalents)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalAdultEquivalent as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalAdultEquivalent");
+                                                if (ReportAnimalWeight)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalWeight");
+                                                if (ReportValue)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalPrice as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
+                                            }
+                                            if(ReportHerdTotals & ((item as RuminantType).Parent as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined)
+                                            {
+                                                if (ReportAmount)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").Count as {item.Name.Replace(" ", "_")}.All.Count");
+                                                if (ReportAnimalEquivalents)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalAdultEquivalent as {item.Name.Replace(" ", "_")}.All.TotalAdultEquivalent");
+                                                if (ReportAnimalWeight)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalWeight as {item.Name.Replace(" ", "_")}.All.TotalWeight");
+                                                if (ReportValue)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalPrice as {item.Name.Replace(" ", "_")}.All.TotalPrice");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (ReportAmount)
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
+                                            if (ReportValue & item.GetType() != typeof(FinanceType))
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.Value as { item.Name.Replace(" ", "_") }_DollarValue");
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-            base.VariableNames = variableNames.ToArray();
-            this.FindVariableMembers();
-
+            VariableNames = variableNames.ToArray();
             // Subscribe to events.
-            foreach (string eventName in EventNames)
-            {
-                if (eventName != string.Empty)
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
-            }
+            if (EventNames == null || !EventNames.Where(a => a.Trim() != "").Any())
+                EventNames = new string[] { "[Clock].CLEMFinalizeTimeStep" };
+
+            SubscribeToEvents();
         }
 
-        /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public new void DoOutput()
+        /// <inheritdoc/>
+        public override void DoOutputEvent(object sender, EventArgs e)
         {
-            object[] valuesToWrite = new object[columns.Count];
-            for (int i = 0; i < columns.Count; i++)
-                valuesToWrite[i] = columns[i].GetValue();
-            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+            //  support timers
+            if (timers is null || !timers.Any() || timers.Sum(a => (a.ActivityDue ? 1 : 0)) > 0)
+                DoOutput();
         }
-
-        /// <summary>Create a text report from tables in this data store.</summary>
-        /// <param name="storage">The data store.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IStorageReader storage, string fileName)
-        {
-            // Write out each table for this simulation.
-            foreach (string tableName in storage.TableNames)
-            {
-                DataTable data = storage.GetData(tableName);
-                if (data != null && data.Rows.Count > 0)
-                {
-                    SortColumnsOfDataTable(data);
-                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
-                    report.Close();
-                }
-            }
-        }
-
-        /// <summary>Sort the columns alphabetically</summary>
-        /// <param name="table">The table to sort</param>
-        private static void SortColumnsOfDataTable(DataTable table)
-        {
-            var columnArray = new DataColumn[table.Columns.Count];
-            table.Columns.CopyTo(columnArray, 0);
-            var ordinal = -1;
-            foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
-                orderedColumn.SetOrdinal(++ordinal);
-
-            ordinal = -1;
-            int i = table.Columns.IndexOf("SimulationName");
-            if (i != -1)
-                table.Columns[i].SetOrdinal(++ordinal);
-
-            i = table.Columns.IndexOf("SimulationID");
-            if (i != -1)
-                table.Columns[i].SetOrdinal(++ordinal);
-        }
-
-
-        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public new void DoOutputEvent(object sender, EventArgs e)
-        {
-            DoOutput();
-        }
-
-        /// <summary>
-        /// Fill the Members list with VariableMember objects for each variable.
-        /// </summary>
-        private void FindVariableMembers()
-        {
-            this.columns = new List<IReportColumn>();
-
-            AddExperimentFactorLevels();
-
-            foreach (string fullVariableName in this.VariableNames)
-            {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
-            }
-            columnNames = columns.Select(c => c.Name);
-            columnUnits = columns.Select(c => c.Units);
-        }
-
-        /// <summary>Add the experiment factor levels as columns.</summary>
-        private void AddExperimentFactorLevels()
-        {
-            if (ExperimentFactorValues != null)
-            {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
-            }
-        }
-
     }
 }

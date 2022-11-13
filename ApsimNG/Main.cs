@@ -1,9 +1,13 @@
 ﻿namespace UserInterface
 {
+    using APSIM.Shared.Utilities;
     using Models;
     using Presenters;
     using System;
     using System.IO;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Utility;
     using Views;
 
     static class UserInterface
@@ -14,33 +18,21 @@
         [STAThread]
         public static int Main(string[] args)
         {
-
-            Gtk.Application.Init();
-            Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
-            MainView mainForm = new MainView();
-            MainPresenter mainPresenter = new MainPresenter();
-
-            // Clean up temporary files.
-            string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
-            if (Directory.Exists(tempFolder))
-                // This may fail if another ApsimX instance is running. If so,
-                // we just ignore the exception and leave the cleanup for another day.
-                try
-                {
-                    Directory.Delete(tempFolder, true);
-                }
-                catch (Exception)
-                {
-                }
-            // Ensure the system has time to complete the deletion before we go ahead and recreate the folder
-            while (Gtk.Application.EventsPending())
-                Gtk.Application.RunIteration();
-            Directory.CreateDirectory(tempFolder);
-            Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
-
             try
             {
+                LoadTheme();
+
+                Task.Run(() => Intellisense.CodeCompletionService.Init());
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                Gtk.Application.Init();
+
+                Gtk.Settings.Default.SetProperty("gtk-overlay-scrolling", new GLib.Value(0));
+
+                IntellisensePresenter.Init();
+                MainView mainForm = new MainView();
+                MainPresenter mainPresenter = new MainPresenter();
+
                 mainPresenter.Attach(mainForm, args);
                 mainForm.MainWidget.ShowAll();
                 if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
@@ -52,6 +44,24 @@
                 return 1;
             }
             return 0;
+        }
+
+        private static void LoadTheme()
+        {
+
+            if (!ProcessUtilities.CurrentOS.IsLinux && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GTK_THEME")))
+            {
+                string themeName;
+                if (Configuration.Settings.DarkTheme)
+                    themeName = "Adwaita:dark";
+                else
+                    themeName = "Adwaita";
+
+                //themeName = "Windows10";
+                //themeName = "Windows10Dark";
+                Environment.SetEnvironmentVariable("GTK_THEME", themeName);
+            }
+
         }
     }
 }

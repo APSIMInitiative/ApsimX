@@ -1,15 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using System;
-    //using System.Windows.Forms;
-    using Interfaces;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -27,24 +19,31 @@ namespace UserInterface.Views
         private GraphView graphView;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InitialWaterView" /> class.
+        /// Constructor
         /// </summary>
         public XYPairsView(ViewBase owner) : base(owner)
         {
             vpaned = new VPaned();
-            _mainWidget = vpaned;
+            mainWidget = vpaned;
             gridView = new GridView(this);
             graphView = new GraphView(this);
             vpaned.Pack1(gridView.MainWidget, true, false);
             vpaned.Pack2(graphView.MainWidget, true, false);
             gridView.NumericFormat = null;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -68,6 +67,5 @@ namespace UserInterface.Views
                 return gridView;
             }
         }
-
     }
 }

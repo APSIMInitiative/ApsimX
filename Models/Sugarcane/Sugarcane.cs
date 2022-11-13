@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models;
 using Models.Core;
@@ -11,345 +11,337 @@ using Models.PMF;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-
+using Models.Soils.Nutrients;
 
 namespace Models
     {
-
     /// <summary>
-    /// # [Name]
-    ///##Model Components Overview
-    ///
-    ///Crop dry weight accumulation is driven by the conversion of intercepted radiation to biomass, via a radiation-use efficiency (RUE). 
-    ///
-    ///RUE is reduced whenever extremes of temperature, soil water shortage or excess, or plant nitrogen deficit limit photosynthesis. 
-    ///
-    ///The crop leaf canopy, which intercepts radiation, expands its area as a function of temperature, and can also be limited by extremes of temperature, soil water shortage or excess, or plant nitrogen deficit.
-    ///
-    ///Biomass is partitioned among the various plant components (leaf, cabbage, structural stem, roots and sucrose) as determined by crop phenological stage.
-    ///
-    ///Nitrogen uptake is simulated, as is the return of carbon and nitrogen to the soil in trash and roots. 
-    ///
-    ///In many sugarcane production systems, commercial yield is measured as the fresh weight of sugarcane stems and their sucrose concentration. Hence, the water content in addition to the dry weight of the stem is simulated. 
-    ///
-    ///Since sugarcane is grown both as a plant and ratoon crop, the model also needs to be able to simulate differences between crop classes based on any known physiological differences between these classes.
-    ///
-    /// 
-    ///##Crop growth in the absence of nitrogen or water limitation
-    ///
-    ///###Thermal time
-    ///
-    ///Thermal time is used in the model to drive phenological development and canopy expansion. 
-    ///
-    ///In APSIM-Sugarcane, thermal time is calculated using a base temperature of 9 oC, optimum temperature of 32 oC, and maximum temperature of 45 oC.
-    ///
-    ///The optimum and maximum temperatures were taken from those used for maize [jones_ceres-maize:_1986]. 
-    ///
-    ///Base temperatures for sugarcane have been variously reported between 8 oC and 15 oC [inman-bamber_temperature_1994][robertson_simulating_1998]. 
-    ///The base of 9 oC used in APSIM sugarcane was chosen to be consistent with those studies which sampled the greatest temperature range, namely [inman-bamber_temperature_1994][robertson_simulating_1998] who identified base temperatures of 10 oC and 8 oC respectively. 
-    ///
-    ///For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by [jones_ceres-maize:_1986]. 
-    ///
-    ///###Phenology
-    ///
-    ///The sugar model uses six different stages to define crop growth and status. 
-    ///
-    /// 
-    ///|Stage     |Description                                   |
-    ///|----------|:---------------------------------------------|
-    ///|sowing    |From sowing to sprouting                      |
-    ///|sprouting |From sprouting to emergence                   |
-    ///|emergence |From emergence to the beginning of cane growth|
-    ///|begin_cane|From the beginning of cane growth to flowering|
-    ///|flowering |From flowering to the end of the crop         |
-    ///|end_crop  |Crop is not currently in the simulated system.|
-    /// 
-    ///Sprouting occurs after a lag period, set to 350 oCdays for plant crops and 100 oCdays for ratoon crops. 
-    ///
-    ///Provided the soil water content of the layer is adequate, shoots will elongate towards the soil surface at a rate of 0.8 mm per oCday. 
-    ///
-    ///The thermal duration between emergence and beginning of stalk growth is a genotype coefficient in the range 1200 to 1800 oCdays. 
-    ///
-    ///Although, sugarcane does produce flowers, the number of stalks producing flowers in a field is highly variable, and its physiological basis is not fully understood.
-    ///
-    ///While the model structure has been developed to include flowering as a phenological stage, it has been deactivated until a better physiological basis for prediction is available. 
-    ///
-    ///
-    ///###Canopy expansion
-    ///
-    ///The experimental basis for the canopy expansion model is described by [robertson_simulation_2016].
-    ///
-    ///Briefly, green leaf area index is the product of ***green leaf area per stalk*** and the ***number of stalks per unit ground area***. 
-    ///
-    ///***Green leaf area per stalk*** is simulated by summing the fully-expanded area of successive leaves that appear on each stalk, and adding a correction factor for the area of expanding leaves (set to 1.6 leaves per stalk).
-    ///Profiles of leaf area per leaf are input as genotype coefficients. 
-    ///[robertson_simulation_2016] found leaf appearance rates declined as a continuous function of cumulative thermal time, so that at emergence leaves took 80 oCd to appear while leaf 40 required 150 oCd.
-    ///These responses are reproduced in the model (via a series of linear interpolations) in both plant and ratoon crops.
-    ///
-    ///***Stalk number*** rises rapidly to a peak during the first 1400 oCdays from emergence, thereafter declining to reach a stable stalk number (e.g. [inman-bamber_temperature_1994]). 
-    ///Ratoon crops commonly reach an earlier peak stalk number than plant crops, with consequently faster early canopy expansion in ratoons [robertson_growth_1996].
-    ///In the model, the complexity of simulating the dynamics of tillering in order to predict LAI during early growth is avoided. 
-    ///Instead, the crop is conceived to have a notional constant stalk number throughout growth, usually set at 10 stalks m-2 , although this value can be varied as an input. 
-    ///The additional leaf area associated with tillers that appear and subsequently die, is captured via a calibrated tillering factor, that effectively increases the area of the leaves that are produced over the early tillering period.
-    ///
-    ///The known faster early expansion of LAI in ratoon crops is simulated via two effects. 
-    ///* Firstly, the lag time for regrowth of shoots after harvest is shorter in a ratoon crop than is the equivalent thermal time for a plant crop to initiate stalk elongation.
-    ///* Secondly, tillering is recognised in the model coefficients as making a larger contribution to leaf area development in a ratoon crop than a plant crop.
-    ///
-    ///The daily rate of senescence of green leaf area is calculated as the maximum of four rates determined by the factors of ageing, light competition, water stress and frost.
-    ///
-    ///
-    ///In the model, ageing causes senescence by not allowing at any time more than 13 fully-expanded green leaves per stalk.
-    ///
-    ///Light competition is simulated to induce senescence once fractional radiation interception reaches 0.85.
-    ///
-    ///Water stress induces senescence once the soil water deficit factor for photosynthesis declines below 1.0.
-    ///
-    ///Frosting removes 10% of the LAI per day if the minimum temperature reaches 0 oC, and 100% if it reaches -5 oC. 
-    ///
-    ///
-    ///###Root growth and development
-    ///
-    ///Root biomass is produced independently from the shoot, so that a proportion of daily above-ground biomass production is added to the root system. 
-    ///The proportion decreases from a maximum of 0.30 at emergence and asymptotes to 0.20 at flowering. 
-    ///
-    ///Root biomass is converted to root length via a specific root length of 18000 mm g-1 . 
-    ///The depth of the root front in plant crops increases by 1.5 cm day-1 [_glover_proceedings_nodate] from emergence, with the maximum depth of rooting set by the user.
-    ///
-    ///At harvest, 17% of roots in all the occupied soil layer die [ball-coelho_root_1992]. 
-    ///
-    ///
-    ///
-    ///###Biomass accumulation and partitioning
-    ///
-    ///The sugar model partitions dry matter to **five different plant pools**. These are as follows: 
-    ///
-    ///|Plant Part |Description                              |
-    ///|-----------|:----------------------------------------|
-    ///|Root       |Below-ground biomass                     |
-    ///|Leaf       |Leaf                                     |
-    ///|Sstem      |Structural component of millable stalk   |
-    ///|Cabbage    |Leaf sheath and tip of growing stalks etc|
-    ///|Sucrose    |Sucrose content of millable stalk        |
-    ///
-    ///In addition to the five live biomass pools outlined above, senescent leaf and cabbage is maintained as trash on the plant or progressively detached to become residues on the soil surface. 
-    ///In APSIM, the RESIDUE module [probert_apsim_1996] takes on the role of decomposition of crop residues. 
-    ///
-    ///LAI is used in the model to intercept incident solar radiation following Beer's Law, using a radiation extinction coefficient of 0.38, determined by [muchow_radiation_1994][robertson_growth_1996].
-    ///Intercepted radiation is used to produce daily biomass production using a radiation-use efficiency (RUE) of 1.80 g MJ-1 for plant crops and 1.65 g MJ-1 for ratoon crops. 
-    ///The values of RUE used in the model are those adjusted upwards from field-measured values [muchow_radiation_1994][robertson_growth_1996] due to the underestimate of biomass production caused by incomplete recovery of senesced leaf material [robertson_growth_1996]. 
-    ///In the model, RUE is reduced if the mean daily temperature falls below 15 oC or exceeds 35 oC, and becomes zero if the mean temperature reaches 5 or 50 oC, respectively. 
-    ///These effects are similar to those used in other models of C4 crop species [hammer_assessing_1994]. 
-    ///
-    ///
-    ///
-    ///Four above-ground biomass pools are modelled: **leaf**, **cabbage**, **structural stem**, **stem sucrose**, 
-    ///(and an additional pool for **roots** that is simulated separately from above-ground production). 
-    ///
-    ///Between emergence and the beginning of stalk growth, above-ground biomass is partitioned between leaf and cabbage in the ratio 1.7:1 [robertson_growth_1996].
-    ///
-    ///After the beginning of stem growth 0.7 of above-ground biomass is partitioned to the stem robertson_growth_1996, with the remainder partitioned between leaf and cabbage in the ratio 1.7:1. 
-    ///After a minimum amount of stem biomass has accumulated, the daily biomass partitioned to stem is divided between structural and sucrose pools, following the framework developed by [muchow_effect_1996] and [robertson_growth_1996]. Thereafter, the stem biomass is equal to the sum of structural and sucrose pools.
-    ///
-    ///If biomass partitioned to leaf is insufficient for growth of the leaf area, as determined by a maximum specific leaf area, then daily leaf area expansion is reduced. 
-    ///If biomass partitioned to leaf is in excess of that required to grow the leaf area on that day, then specific leaf area is permitted to decrease to a lower limit, beyond which the “excess” biomass is partitioned to sucrose and structural stem. 
-    ///
-    ///A stalk growth stress factor is calculated as the most limiting of the water, nitrogen and temperature limitations on photosynthesis. 
-    ///This stress factor influences both the onset and rate of assimilate partitioning to sucrose at the expense of structural stem. 
-    ///
-    ///
-    ///###Stem water content
-    ///
-    ///A stem water pool is simulated for the purposes of calculating cane fresh weight and CCS%. 
-    ///
-    ///For every gram of structural stem grown, a weight of water is considered to have been accumulated by the cane stems. 
-    ///
-    ///This relationship varies with thermal time, ranging from 9 g g-1 initially, to 5 g g-1 late in the crop life cycle. 
-    ///
-    ///The former represents the water content of young stem (eg. cabbage) while the latter represents a combination of young stem growth and thickening of older stem. 
-    ///
-    ///Sucrose deposition in the stem removes water content at the rate of 1 g water g-1 sucrose. 
-    ///
-    ///###Varietal effects
-    ///
-    ///Currently varieties differ in only two respects in the model. 
-    ///
-    ///* Firstly, Inman-Bamber (1991) found that varieties in South Africa differed in the fully-expanded area of individual leaves. 
-    ///The distributions for NCo376 and N14 were taken from Inman-Bamber and Thompson (1989), while that for Q117 and Q96 was those assigned values that gave best fit to the time-course of LAI during the model calibration stage. 
-    ///* Secondly, [robertson_growth_1996] found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
-    ///There is scope for incorporating other varietal differences as new knowledge becomes available.
-    ///
-    ///
-    ///
-    ///
-    ///##Water deficit limitation
-    ///
-    ///Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework [probert_apsim_1996] and (Verburg et al, 1997). 
-    ///
-    ///Water stress in the model reduces the rate of leaf area expansion and radiation-use efficiency, via two soil water deficit factors, which vary from zero to 1.0, following the concepts embodied in the CERES models (Ritchie, 1986). 
-    ///Soil water deficit factor 1 (SWDEF1), which is less sensitive to soil drying, reduces the radiation-use efficiency (i.e. net photosynthesis) and hence transpiration, below its maximum. 
-    ///Soil water deficit factor 2 (SWDEF2), which is more sensitive to soil drying, reduces the rate of processes governed primarily by cell expansion, i.e. daily leaf expansion rate. 
-    ///
-    ///SWDEF1 and 2 are calculated as a function of the ratio of (potential soil water supply from the root system) and the (transpiration demand). 
-    ///Following [sinclair_water_1986 and Monteith (1986), transpiration demand is modelled as a function of the (current day's crop growth rate), divided by the transpiration-use efficiency.
-    ///When soil water supply exceeds transpiration demand, assimilate fixation is a function of radiation interception and radiation use efficiency. 
-    ///When soil water supply is less than transpiration demand, assimilate fixation is a function of water supply and transpiration efficiency and the vapour pressure deficit (VPD). 
-    ///
-    ///Transpiration-use efficiency has not been directly measured for sugarcane, but calibration of the current model on datasets exhibiting water deficits (Robertson et al, unpubl. data) resulted in the use of a transpiration-use efficiency of 8 g kg-1 at a VPD of 1 kPa.
-    ///This efficiency declines linearly as a function of VPD (Tanner and Sinclair, 1983). 
-    ///This compares with reported values of 9 g kg-1 kPa-1 for other C 4 species (Tanner and Sinclair 1983), a value that has been used in the models of sorghum (Hammer and Muchow, 1994) and maize [muchow_tailoring_1991]. 
-    ///
-    ///Potential soil water uptake is calculated using the approach first advocated by Monteith (1986) and subsequently tested for sunflower [meinke_sunflower_1993] and grain sorghum (Robertson et al., 1994). 
-    ///It is the sum of root water uptake from each profile layer occupied by roots. 
-    ///The potential rate of extraction in a layer is calculated using a rate constant, which defines the fraction of available water able to be extracted per day. 
-    ///The actual rate of water extraction is the lesser of the potential extraction rate and the transpiration demand. 
-    ///If the computed potential extraction rate from the profile exceeds demand, then the extracted water is removed from the occupied layers in proportion to the values of potential root water uptake in each layer.
-    ///If the computed potential extraction from the profile is less than the demand then SWDEF2 declines in proportion, and the actual root water uptake from a layer is equal to the computed potential uptake. 
-    ///
-    ///In addition to the effects on canopy expansion and biomass accumulation, water stress influence biomass partitioning in the stem in two ways.
-    ///Firstly, the minimum amount of stem biomass required to initiate sucrose accumulation declines with accumulated stress.
-    ///Secondly, the daily dry weight increment between structural stem and sucrose shifts in favour of sucrose as water deficits develop. 
-    ///
-    ///
-    ///##Water excess limitation
-    ///The proportion of the root system exposed to saturated or near saturated soil water conditions is calculated and used to calculate a water logging stress factor. 
-    ///This factor reduces photosynthetic activity via an effect on RUE.
-    ///
-    ///
-    ///##Nitrogen limitation
-    ///N supply from the soil is simulated in other modules in the APSIM framework [probert_apsim_1996]. 
-    ///
-    ///Crop nitrogen demand is simulated using an approach similar to that used in the CERES models [godwin_simulation_1985]. 
-    ///Crop N demand is calculated as the product of maximum tissue N concentration and the increment in tissue weight. 
-    ///
-    ///Separate N pools are described for green leaf, cabbage, millable stalk and dead leaf. The sucrose pool is assumed to have no nitrogen associated with it. 
-    ///Only the leaf N concentrations influence crop growth processes. Growth is unaffected until leaf N concentrations fall below a critical concentration. 
-    ///Sugarcane has been shown to exhibit luxury N uptake [muchow_radiation_1994](Catchpoole and Keating 1995) and the difference between the maximum and critical N concentrations is intended to simulate this phenomenon. 
-    ///Nitrogen stress is proportional to the extent to which leaf N falls between the critical and the minimum N concentration. 
-    ///
-    ///Senescing leaves (and the associated leaf sheaths contained in the cabbage pool) are assumed to die at their minimum N concentrations and the balance of the N in these tissues is retranslocated to the green leaf and cabbage pools. 
-    ///
-    ///Maximum, critical and minimum N concentrations are all functions of thermal time, and were chosen on the basis of the findings of Catchpoole and Keating (1995) and [muchow_radiation_1994] and subsequently refined during the model calibration.
-    ///Critical green leaf concentrations used in the model differ between photosynthetic, leaf expansion and stem growth processes. 
-    ///For photosynthesis they begin at 1.2% N at emergence or ratooning and asymptote towards 0.5%N at flowering. 
-    ///For leaf area expansion they are 1.3 and 0.5% N 
-    ///and stem growth, 1.5 and 0.5%N. 
-    ///
-    ///N uptake cannot exceed N demand by the crop and is simulated to take place by mass flow in the water that is used for transpiration. 
-    ///Should mass flow not meet crop demand and nitrate be available in soil layers, the approach of [van_keulen_simulation_1987] is used to simulate the uptake of nitrate over and above that which can be accounted for by mass flow. 
-    ///While van Keulen and Seligman (1987) referred to this approach as “diffusion”, the routine more realistically serves as a surrogate for a number of sources of uncertainty in nitrate uptake. 
-    ///
-    ///Nitrogen stress also influences biomass partitioning in the stem, in a similar fashion to that described above for water stress.
-    ///
-    ///
-    ///##Other features of the sugar module
-    ///APSIM-Sugarcane includes a number of features relevant to sugarcane production systems.
-    ///
-    ///Either plant or ratoon crops can be simulated at the outset or a plant crop will regenerate as a ratoon crop if a crop cycle is being simulated. 
-    ///Production systems of plant - multiple ratoon - fallow can be simulated or alternatively other APSIM crop or pasture modules can be included in rotation with sugarcane. 
-    ///
-    ///Trash can be burnt or retained at harvest time. 
-    ///
-    ///Insect or other biological or mechanical damage to the canopy can be simulated via “graze” actions. 
-    ///
-    ///Many sugarcane crops are “hilled-up” early in canopy development, an operation that involves the movement of soil from the interrow to the crop row. 
-    ///This operation facilitates irrigation operations and improves the crop's ability to stand upright. 
-    ///APSIM-Sugarcane responds to a management event of hilling-up by removal of lower leaf area and stem from the biomass pools. 
-    ///
-    ///Lodging is a widespread phenomenon in high-yielding sugarcane crops. 
-    ///The APSIM-MANAGER [mccown_apsim:_1996] can initiate a lodging event in response to any aspect of the system state (eg crop size, time of year and weather). 
-    ///APSIM SUGARCANE responds to lodging via four effects:
-    ///
-    ///A low rate of stalk death which has been widely observed in heavily lodged crops (Muchow et al., 1995; Robertson et al., 1996)[singh_lodging_2002];
-    ///
-    ///A reduction in radiation use efficiency (Singh et al., 1999)[singh_lodging_2002]
-    ///
-    ///A reduction in the proportion of daily biomass that is partitioned as sucrose [singh_lodging_2002]; and
-    ///
-    ///A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence [singh_lodging_2002]
-    ///
-    /// 
-    ///##Parameterisation
-    ///
-    ///**(Structure of the xml in the .apsimx file)**
-    ///
-    ///There are **4** separate categories of variables in the Sugarcane modules xml. 
-    ///
-    ///They are listed below with some examples of the type of parameters included in each.
-    ///    
-    ///1. **Constants**
-    ///    * Upper and lower bounds for met and soil variables
-    ///2. **Plant_crop**
-    ///    * Growth and partitioning parameters
-    ///    * Water Use Parameters and Water and temperature Stress Factors
-    ///    * Frosting Factors
-    ///    * Nitrogen Contents and Nitrogen Stress Factors
-    ///3. **Ratoon_crop**
-    ///    * Same as Plant crop section but there is the ability to change the parameters between plant and ratoon crops.
-    ///4. **Cultivar (Plant Crop and Ratoon Crop)**
-    ///     * **Plant Crop Cultivar**
-    ///        * Leaf Development Parameters
-    ///        * Phenology
-    ///        * Sucrose and Cane Stalk  (Partitioning Parameters)
-    ///     * **Ratoon Crop Cultivar**
-    ///        * Same as for the Plant Crop Cultivar
-    ///        * ***By creating a completely new cultivar with the same name as the plant crop cultivar but appending "_ratoon" to the end of the name, 
-    ///     the Sugarcane module will then automatically use this ratoon crop cultivar rather then the plant crop cultivar 
-    ///     when the crop changes from a Plant Crop to a Ratoon Crop.***
-    /// 
-    /// 
-    /// 
-    ///**Sugar Module Outputs**
-    ///
-    ///
-    /// |Variable Name  | Units      | Description                                                               |
-    /// |---------------|:-----------|:--------------------------------------------------------------------------| 
-    /// |Stage_name     |            | Name of the current crop growth stage                                     |
-    /// |Stage          |            | Current growth stage number                                               |
-    /// |Crop_status    |            | Status of the current crop (alive,dead,out)                               |
-    /// |ratoon_no      |            | Ratoon number (0 for plant crop, 1 for 1st ratoon, 2 for 2nd ratoon, …etc)|
-    /// |das            | Days       | Days after sowing (ie. crop duration)                                     |
-    /// |Ep             | mm         | Crop evapotranspiration (extraction) for each soil layer                  |
-    /// |cep            | mm         | Cumulative plant evapotranspiration                                       |
-    /// |rlv            | mm/mm^3    | root length per volume of soil in each soil layer                         |
-    /// |esw            | mm         | Extractable Soil water in each soil layer                                 |
-    /// |root_depth     | mm         | Root depth                                                                |
-    /// |sw_demand      | mm         | Daily demand for soil water                                               |
-    /// |biomass        | g/m^2      | Total crop above-ground biomass (Green + Trash)                           |
-    /// |green_biomass  | g/m^2      | Total green crop above-ground biomass                                     |
-    /// |biomass_n      | g/m^2      | Total Nitrogen in above-ground biomass (Green + Trash)                    |
-    /// |green_biomass_n| g/m^2      | Amount of Nitrogen in green above-ground biomass                          |
-    /// |dlt_dm         | g/m^2      | Daily increase in plant dry matter (photosynthesis)                       |
-    /// |dm_senesced    | g/m^2      | Senesced dry matter in each plant pool                                    |
-    /// |n_senesced     | g/m^2      | Amount of Nitrogen in senesced material for each plant pool               |
-    /// |Canefw         | t/ha       | Fresh Cane weight                                                         |
-    /// |ccs            | %          | Commercial Cane Sugar                                                     |
-    /// |Cane_wt        | g/m^2      | Weight of cane dry matter                                                 |
-    /// |leaf_wt        | g/m^2      | Weight of plant green leaf                                                |
-    /// |root_wt        | g/m^2      | Weight of plant roots                                                     |
-    /// |sstem_wt       | g/m^2      | Weight of plant structural stem                                           |
-    /// |sucrose_wt     | g/m^2      | Weight of plant sucrose                                                   |
-    /// |cabbage_wt     | g/m^2      | Weight of plant cabbage                                                   |
-    /// |n_conc_cane    | g/g        | Nitrogen concentration in cane                                            |
-    /// |n_conc_leaf    | g/g        | Nitrogen concentration in green leaf                                      |
-    /// |n_conc_cabbage | g/g        | Nitrogen concentration in green cabbage                                   |
-    /// |n_demand       | g/m^2      | Daily demand for Nitrogen                                                 |
-    /// |cover_green    | 0-1        | Fractional cover by green plant material                                  |
-    /// |cover_tot      | 0-1        | Fractional cover by total plant material (Green + Trash)                  |
-    /// |lai            | mm^2/mm^2  | Leaf area index of green leaves                                           |
-    /// |tlai           | mm^2/mm^2  | Total plant leaf area index (green + senesced)                            |
-    /// |slai           | mm^2/mm^2  | Senesced leaf area index                                                  |
-    /// |n_leaf_crit    | g/m^2      | Critical Nitrogen level for the current crop                              |
-    /// |n_leaf_min     | g/m^2      | Minimum Nitrogen level for the current crop                               |
-    /// |nfact_photo    | 0-1        | Nitrogen stress factor for photosynthesis                                 |
-    /// |nfact_expan    | 0-1        | Nitrogen stress factor for cell expansion                                 |
-    /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               |
-    /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               |
-    /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    |
-    ///
+    /// # The APSIM Sugarcane Model
     /// </summary>
+    /// <remarks>
+    ///## Model Components Overview
+    ///
+    /// Crop dry weight accumulation is driven by the conversion of intercepted radiation to biomass, via a radiation-use efficiency (RUE). 
+    ///
+    /// RUE is reduced whenever extremes of temperature, soil water shortage or excess, or plant nitrogen deficit limit photosynthesis. 
+    ///
+    /// The crop leaf canopy, which intercepts radiation, expands its area as a function of temperature, and can also be limited by extremes of temperature, soil water shortage or excess, or plant nitrogen deficit.
+    ///
+    /// Biomass is partitioned among the various plant components (leaf, cabbage, structural stem, roots and sucrose) as determined by crop phenological stage.
+    ///
+    /// Nitrogen uptake is simulated, as is the return of carbon and nitrogen to the soil in trash and roots. 
+    ///
+    /// In many sugarcane production systems, commercial yield is measured as the fresh weight of sugarcane stems and their sucrose concentration. Hence, the water content in addition to the dry weight of the stem is simulated. 
+    ///
+    /// Since sugarcane is grown both as a plant and ratoon crop, the model also needs to be able to simulate differences between crop classes based on any known physiological differences between these classes.
+    ///
+    /// 
+    /// ## Crop growth in the absence of nitrogen or water limitation
+    ///
+    /// ### Thermal time
+    ///
+    /// Thermal time is used in the model to drive phenological development and canopy expansion. 
+    ///
+    /// In APSIM-Sugarcane, thermal time is calculated using a base temperature of 9 oC, optimum temperature of 32 oC, and maximum temperature of 45 oC.
+    ///
+    /// The optimum and maximum temperatures were taken from those used for maize [jones_ceres-maize:_1986]. 
+    ///
+    /// Base temperatures for sugarcane have been variously reported between 8 oC and 15 oC [inman-bamber_temperature_1994][robertson_simulating_1998]. 
+    /// The base of 9 oC used in APSIM sugarcane was chosen to be consistent with those studies which sampled the greatest temperature range, namely [inman-bamber_temperature_1994][robertson_simulating_1998] who identified base temperatures of 10 oC and 8 oC respectively. 
+    ///
+    /// For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by [jones_ceres-maize:_1986]. 
+    ///
+    /// ### Phenology
+    ///
+    /// The sugar model uses six different stages to define crop growth and status. 
+    ///
+    /// 
+    /// |Stage     |Description                                   
+    /// |----------|:---------------------------------------------
+    /// |sowing    |From sowing to sprouting                      
+    /// |sprouting |From sprouting to emergence                   
+    /// |emergence |From emergence to the beginning of cane growth
+    /// |begin_cane|From the beginning of cane growth to flowering
+    /// |flowering |From flowering to the end of the crop         
+    /// |end_crop  |Crop is not currently in the simulated system.
+    /// 
+    /// Sprouting occurs after a lag period, set to 350 oCdays for plant crops and 100 oCdays for ratoon crops. 
+    ///
+    /// Provided the soil water content of the layer is adequate, shoots will elongate towards the soil surface at a rate of 0.8 mm per oCday. 
+    ///
+    /// The thermal duration between emergence and beginning of stalk growth is a genotype coefficient in the range 1200 to 1800 oCdays. 
+    ///
+    /// Although, sugarcane does produce flowers, the number of stalks producing flowers in a field is highly variable, and its physiological basis is not fully understood.
+    ///
+    /// While the model structure has been developed to include flowering as a phenological stage, it has been deactivated until a better physiological basis for prediction is available. 
+    ///
+    ///
+    /// ### Canopy expansion
+    ///
+    /// The experimental basis for the canopy expansion model is described by [robertson_simulation_2016].
+    ///
+    /// Briefly, green leaf area index is the product of ***green leaf area per stalk*** and the ***number of stalks per unit ground area***. 
+    ///
+    /// ***Green leaf area per stalk*** is simulated by summing the fully-expanded area of successive leaves that appear on each stalk, and adding a correction factor for the area of expanding leaves (set to 1.6 leaves per stalk).
+    /// Profiles of leaf area per leaf are input as genotype coefficients. 
+    /// [robertson_simulation_2016] found leaf appearance rates declined as a continuous function of cumulative thermal time, so that at emergence leaves took 80 oCd to appear while leaf 40 required 150 oCd.
+    /// These responses are reproduced in the model (via a series of linear interpolations) in both plant and ratoon crops.
+    ///
+    /// ***Stalk number*** rises rapidly to a peak during the first 1400 oCdays from emergence, thereafter declining to reach a stable stalk number (e.g. [inman-bamber_temperature_1994]). 
+    /// Ratoon crops commonly reach an earlier peak stalk number than plant crops, with consequently faster early canopy expansion in ratoons [robertson_growth_1996].
+    /// In the model, the complexity of simulating the dynamics of tillering in order to predict LAI during early growth is avoided. 
+    /// Instead, the crop is conceived to have a notional constant stalk number throughout growth, usually set at 10 stalks m-2 , although this value can be varied as an input. 
+    /// The additional leaf area associated with tillers that appear and subsequently die, is captured via a calibrated tillering factor, that effectively increases the area of the leaves that are produced over the early tillering period.
+    ///
+    /// The known faster early expansion of LAI in ratoon crops is simulated via two effects. 
+    /// * Firstly, the lag time for regrowth of shoots after harvest is shorter in a ratoon crop than is the equivalent thermal time for a plant crop to initiate stalk elongation.
+    /// * Secondly, tillering is recognised in the model coefficients as making a larger contribution to leaf area development in a ratoon crop than a plant crop.
+    ///
+    /// The daily rate of senescence of green leaf area is calculated as the maximum of four rates determined by the factors of ageing, light competition, water stress and frost.
+    ///
+    /// In the model, ageing causes senescence by not allowing at any time more than 13 fully-expanded green leaves per stalk.
+    ///
+    /// Light competition is simulated to induce senescence once fractional radiation interception reaches 0.85.
+    ///
+    /// Water stress induces senescence once the soil water deficit factor for photosynthesis declines below 1.0.
+    ///
+    /// Frosting removes 10% of the LAI per day if the minimum temperature reaches 0 oC, and 100% if it reaches -5 oC. 
+    ///
+    ///
+    /// ### Root growth and development
+    ///
+    /// Root biomass is produced independently from the shoot, so that a proportion of daily above-ground biomass production is added to the root system. 
+    /// The proportion decreases from a maximum of 0.30 at emergence and asymptotes to 0.20 at flowering. 
+    ///
+    /// Root biomass is converted to root length via a specific root length of 18000 mm g-1 . 
+    /// The depth of the root front in plant crops increases by 1.5 cm day-1 [_glover_proceedings_nodate] from emergence, with the maximum depth of rooting set by the user.
+    ///
+    /// At harvest, 17% of roots in all the occupied soil layer die [ball-coelho_root_1992]. 
+    ///
+    ///
+    ///
+    /// ### Biomass accumulation and partitioning
+    ///
+    /// The sugar model partitions dry matter to **five different plant pools**. These are as follows: 
+    ///
+    /// |Plant Part |Description                              
+    /// |-----------|:----------------------------------------
+    /// |Root       |Below-ground biomass                     
+    /// |Leaf       |Leaf                                     
+    /// |Sstem      |Structural component of millable stalk   
+    /// |Cabbage    |Leaf sheath and tip of growing stalks etc
+    /// |Sucrose    |Sucrose content of millable stalk        
+    ///
+    /// In addition to the five live biomass pools outlined above, senescent leaf and cabbage is maintained as trash on the plant or progressively detached to become residues on the soil surface. 
+    /// In APSIM, the RESIDUE module [probert_apsim_1996] takes on the role of decomposition of crop residues. 
+    ///
+    /// LAI is used in the model to intercept incident solar radiation following Beer's Law, using a radiation extinction coefficient of 0.38, determined by [muchow_radiation_1994][robertson_growth_1996].
+    /// Intercepted radiation is used to produce daily biomass production using a radiation-use efficiency (RUE) of 1.80 g MJ-1 for plant crops and 1.65 g MJ-1 for ratoon crops. 
+    /// The values of RUE used in the model are those adjusted upwards from field-measured values [muchow_radiation_1994][robertson_growth_1996] due to the underestimate of biomass production caused by incomplete recovery of senesced leaf material [robertson_growth_1996]. 
+    /// In the model, RUE is reduced if the mean daily temperature falls below 15 oC or exceeds 35 oC, and becomes zero if the mean temperature reaches 5 or 50 oC, respectively. 
+    /// These effects are similar to those used in other models of C4 crop species [hammer_assessing_1994]. 
+    ///
+    /// Four above-ground biomass pools are modelled: **leaf**, **cabbage**, **structural stem**, **stem sucrose**, 
+    /// (and an additional pool for **roots** that is simulated separately from above-ground production). 
+    ///
+    /// Between emergence and the beginning of stalk growth, above-ground biomass is partitioned between leaf and cabbage in the ratio 1.7:1 [robertson_growth_1996].
+    ///
+    /// After the beginning of stem growth 0.7 of above-ground biomass is partitioned to the stem robertson_growth_1996, with the remainder partitioned between leaf and cabbage in the ratio 1.7:1. 
+    /// After a minimum amount of stem biomass has accumulated, the daily biomass partitioned to stem is divided between structural and sucrose pools, following the framework developed by [muchow_effect_1996] and [robertson_growth_1996]. Thereafter, the stem biomass is equal to the sum of structural and sucrose pools.
+    ///
+    /// If biomass partitioned to leaf is insufficient for growth of the leaf area, as determined by a maximum specific leaf area, then daily leaf area expansion is reduced. 
+    /// If biomass partitioned to leaf is in excess of that required to grow the leaf area on that day, then specific leaf area is permitted to decrease to a lower limit, beyond which the “excess” biomass is partitioned to sucrose and structural stem. 
+    ///
+    /// A stalk growth stress factor is calculated as the most limiting of the water, nitrogen and temperature limitations on photosynthesis. 
+    /// This stress factor influences both the onset and rate of assimilate partitioning to sucrose at the expense of structural stem. 
+    ///
+    /// ### Stem water content
+    ///
+    /// A stem water pool is simulated for the purposes of calculating cane fresh weight and CCS%. 
+    ///
+    /// For every gram of structural stem grown, a weight of water is considered to have been accumulated by the cane stems. 
+    ///
+    /// This relationship varies with thermal time, ranging from 9 g g-1 initially, to 5 g g-1 late in the crop life cycle. 
+    ///
+    /// The former represents the water content of young stem (eg. cabbage) while the latter represents a combination of young stem growth and thickening of older stem. 
+    ///
+    /// Sucrose deposition in the stem removes water content at the rate of 1 g water g-1 sucrose. 
+    ///
+    /// ### Varietal effects
+    ///
+    /// Currently varieties differ in only two respects in the model. 
+    ///
+    /// * Firstly, Inman-Bamber (1991) found that varieties in South Africa differed in the fully-expanded area of individual leaves. 
+    /// The distributions for NCo376 and N14 were taken from Inman-Bamber and Thompson (1989), while that for Q117 and Q96 was those assigned values that gave best fit to the time-course of LAI during the model calibration stage. 
+    /// * Secondly, [robertson_growth_1996] found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
+    /// There is scope for incorporating other varietal differences as new knowledge becomes available.
+    ///
+    /// ## Water deficit limitation
+    ///
+    /// Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework [probert_apsim_1996] and (Verburg et al, 1997). 
+    ///
+    /// Water stress in the model reduces the rate of leaf area expansion and radiation-use efficiency, via two soil water deficit factors, which vary from zero to 1.0, following the concepts embodied in the CERES models (Ritchie, 1986). 
+    /// Soil water deficit factor 1 (SWDEF1), which is less sensitive to soil drying, reduces the radiation-use efficiency (i.e. net photosynthesis) and hence transpiration, below its maximum. 
+    /// Soil water deficit factor 2 (SWDEF2), which is more sensitive to soil drying, reduces the rate of processes governed primarily by cell expansion, i.e. daily leaf expansion rate. 
+    ///
+    /// SWDEF1 and 2 are calculated as a function of the ratio of (potential soil water supply from the root system) and the (transpiration demand). 
+    /// Following [sinclair_water_1986 and Monteith (1986), transpiration demand is modelled as a function of the (current day's crop growth rate), divided by the transpiration-use efficiency.
+    /// When soil water supply exceeds transpiration demand, assimilate fixation is a function of radiation interception and radiation use efficiency. 
+    /// When soil water supply is less than transpiration demand, assimilate fixation is a function of water supply and transpiration efficiency and the vapour pressure deficit (VPD). 
+    ///
+    /// Transpiration-use efficiency has not been directly measured for sugarcane, but calibration of the current model on datasets exhibiting water deficits (Robertson et al, unpubl. data) resulted in the use of a transpiration-use efficiency of 8 g kg-1 at a VPD of 1 kPa.
+    /// This efficiency declines linearly as a function of VPD (Tanner and Sinclair, 1983). 
+    /// This compares with reported values of 9 g kg-1 kPa-1 for other C 4 species (Tanner and Sinclair 1983), a value that has been used in the models of sorghum (Hammer and Muchow, 1994) and maize [muchow_tailoring_1991]. 
+    ///
+    /// Potential soil water uptake is calculated using the approach first advocated by Monteith (1986) and subsequently tested for sunflower [meinke_sunflower_1993] and grain sorghum (Robertson et al., 1994). 
+    /// It is the sum of root water uptake from each profile layer occupied by roots. 
+    /// The potential rate of extraction in a layer is calculated using a rate constant, which defines the fraction of available water able to be extracted per day. 
+    /// The actual rate of water extraction is the lesser of the potential extraction rate and the transpiration demand. 
+    /// If the computed potential extraction rate from the profile exceeds demand, then the extracted water is removed from the occupied layers in proportion to the values of potential root water uptake in each layer.
+    /// If the computed potential extraction from the profile is less than the demand then SWDEF2 declines in proportion, and the actual root water uptake from a layer is equal to the computed potential uptake. 
+    ///
+    /// In addition to the effects on canopy expansion and biomass accumulation, water stress influence biomass partitioning in the stem in two ways.
+    /// Firstly, the minimum amount of stem biomass required to initiate sucrose accumulation declines with accumulated stress.
+    /// Secondly, the daily dry weight increment between structural stem and sucrose shifts in favour of sucrose as water deficits develop. 
+    ///
+    /// ## Water excess limitation
+    /// The proportion of the root system exposed to saturated or near saturated soil water conditions is calculated and used to calculate a water logging stress factor. 
+    /// This factor reduces photosynthetic activity via an effect on RUE.
+    ///
+    /// ## Nitrogen limitation
+    /// N supply from the soil is simulated in other modules in the APSIM framework [probert_apsim_1996]. 
+    ///
+    /// Crop nitrogen demand is simulated using an approach similar to that used in the CERES models [godwin_simulation_1985]. 
+    /// Crop N demand is calculated as the product of maximum tissue N concentration and the increment in tissue weight. 
+    ///
+    /// Separate N pools are described for green leaf, cabbage, millable stalk and dead leaf. The sucrose pool is assumed to have no nitrogen associated with it. 
+    /// Only the leaf N concentrations influence crop growth processes. Growth is unaffected until leaf N concentrations fall below a critical concentration. 
+    /// Sugarcane has been shown to exhibit luxury N uptake [muchow_radiation_1994](Catchpoole and Keating 1995) and the difference between the maximum and critical N concentrations is intended to simulate this phenomenon. 
+    /// Nitrogen stress is proportional to the extent to which leaf N falls between the critical and the minimum N concentration. 
+    ///
+    /// Senescing leaves (and the associated leaf sheaths contained in the cabbage pool) are assumed to die at their minimum N concentrations and the balance of the N in these tissues is retranslocated to the green leaf and cabbage pools. 
+    ///
+    /// Maximum, critical and minimum N concentrations are all functions of thermal time, and were chosen on the basis of the findings of Catchpoole and Keating (1995) and [muchow_radiation_1994] and subsequently refined during the model calibration.
+    /// Critical green leaf concentrations used in the model differ between photosynthetic, leaf expansion and stem growth processes. 
+    /// For photosynthesis they begin at 1.2% N at emergence or ratooning and asymptote towards 0.5%N at flowering. 
+    /// For leaf area expansion they are 1.3 and 0.5% N 
+    /// and stem growth, 1.5 and 0.5%N. 
+    ///
+    /// N uptake cannot exceed N demand by the crop and is simulated to take place by mass flow in the water that is used for transpiration. 
+    /// Should mass flow not meet crop demand and nitrate be available in soil layers, the approach of [van_keulen_simulation_1987] is used to simulate the uptake of nitrate over and above that which can be accounted for by mass flow. 
+    /// While van Keulen and Seligman (1987) referred to this approach as “diffusion”, the routine more realistically serves as a surrogate for a number of sources of uncertainty in nitrate uptake. 
+    ///
+    /// Nitrogen stress also influences biomass partitioning in the stem, in a similar fashion to that described above for water stress.
+    ///
+    ///
+    /// ## Other features of the sugar module
+    /// APSIM-Sugarcane includes a number of features relevant to sugarcane production systems.
+    ///
+    /// Either plant or ratoon crops can be simulated at the outset or a plant crop will regenerate as a ratoon crop if a crop cycle is being simulated. 
+    /// Production systems of plant - multiple ratoon - fallow can be simulated or alternatively other APSIM crop or pasture modules can be included in rotation with sugarcane. 
+    ///
+    /// Trash can be burnt or retained at harvest time. 
+    ///
+    /// Insect or other biological or mechanical damage to the canopy can be simulated via “graze” actions. 
+    ///
+    /// Many sugarcane crops are “hilled-up” early in canopy development, an operation that involves the movement of soil from the interrow to the crop row. 
+    /// This operation facilitates irrigation operations and improves the crop's ability to stand upright. 
+    /// APSIM-Sugarcane responds to a management event of hilling-up by removal of lower leaf area and stem from the biomass pools. 
+    ///
+    /// Lodging is a widespread phenomenon in high-yielding sugarcane crops. 
+    /// The APSIM-MANAGER [mccown_apsim:_1996] can initiate a lodging event in response to any aspect of the system state (eg crop size, time of year and weather). 
+    /// APSIM SUGARCANE responds to lodging via four effects:
+    ///
+    /// A low rate of stalk death which has been widely observed in heavily lodged crops (Muchow et al., 1995; Robertson et al., 1996)[singh_lodging_2002];
+    ///
+    /// A reduction in radiation use efficiency (Singh et al., 1999)[singh_lodging_2002]
+    ///
+    /// A reduction in the proportion of daily biomass that is partitioned as sucrose [singh_lodging_2002]; and
+    ///
+    /// A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence [singh_lodging_2002]
+    ///
+    /// 
+    /// ##Parameterisation
+    ///
+    /// **(Structure of the xml in the .apsimx file)**
+    ///
+    /// There are **4** separate categories of variables in the Sugarcane modules xml. 
+    ///
+    /// They are listed below with some examples of the type of parameters included in each.
+    ///    
+    /// 1. **Constants**
+    ///     * Upper and lower bounds for met and soil variables
+    /// 2. **Plant_crop**
+    ///     * Growth and partitioning parameters
+    ///     * Water Use Parameters and Water and temperature Stress Factors
+    ///     * Frosting Factors
+    ///     * Nitrogen Contents and Nitrogen Stress Factors
+    /// 3. **Ratoon_crop**
+    ///     * Same as Plant crop section but there is the ability to change the parameters between plant and ratoon crops.
+    /// 4. **Cultivar (Plant Crop and Ratoon Crop)**
+    ///      * **Plant Crop Cultivar**
+    ///         * Leaf Development Parameters
+    ///         * Phenology
+    ///         * Sucrose and Cane Stalk  (Partitioning Parameters)
+    ///      * **Ratoon Crop Cultivar**
+    ///         * Same as for the Plant Crop Cultivar
+    ///         * ***By creating a completely new cultivar with the same name as the plant crop cultivar but appending "_ratoon" to the end of the name, 
+    ///      the Sugarcane module will then automatically use this ratoon crop cultivar rather then the plant crop cultivar 
+    ///      when the crop changes from a Plant Crop to a Ratoon Crop.***
+    /// 
+    /// 
+    /// 
+    /// **Sugar Module Outputs**
+    ///
+    ///
+    /// |Variable Name  | Units      | Description                                                               
+    /// |---------------|:-----------|:-------------------------------------------------------------------------- 
+    /// |Stage_name     |            | Name of the current crop growth stage                                     
+    /// |Stage          |            | Current growth stage number                                               
+    /// |Crop_status    |            | Status of the current crop (alive,dead,out)                               
+    /// |ratoon_no      |            | Ratoon number (0 for plant crop, 1 for 1st ratoon, 2 for 2nd ratoon, …etc)
+    /// |das            | Days       | Days after sowing (ie. crop duration)                                     
+    /// |Ep             | mm         | Crop evapotranspiration (extraction) for each soil layer                  
+    /// |cep            | mm         | Cumulative plant evapotranspiration                                       
+    /// |rlv            | mm/mm^3    | root length per volume of soil in each soil layer                         
+    /// |esw            | mm         | Extractable Soil water in each soil layer                                 
+    /// |root_depth     | mm         | Root depth                                                                
+    /// |sw_demand      | mm         | Daily demand for soil water                                               
+    /// |biomass        | g/m^2      | Total crop above-ground biomass (Green + Trash)                           
+    /// |green_biomass  | g/m^2      | Total green crop above-ground biomass                                     
+    /// |biomass_n      | g/m^2      | Total Nitrogen in above-ground biomass (Green + Trash)                    
+    /// |green_biomass_n| g/m^2      | Amount of Nitrogen in green above-ground biomass                          
+    /// |dlt_dm         | g/m^2      | Daily increase in plant dry matter (photosynthesis)                       
+    /// |dm_senesced    | g/m^2      | Senesced dry matter in each plant pool                                    
+    /// |n_senesced     | g/m^2      | Amount of Nitrogen in senesced material for each plant pool               
+    /// |Canefw         | t/ha       | Fresh Cane weight                                                         
+    /// |ccs            | %          | Commercial Cane Sugar                                                     
+    /// |Cane_wt        | g/m^2      | Weight of cane dry matter                                                 
+    /// |leaf_wt        | g/m^2      | Weight of plant green leaf                                                
+    /// |root_wt        | g/m^2      | Weight of plant roots                                                     
+    /// |sstem_wt       | g/m^2      | Weight of plant structural stem                                           
+    /// |sucrose_wt     | g/m^2      | Weight of plant sucrose                                                   
+    /// |cabbage_wt     | g/m^2      | Weight of plant cabbage                                                   
+    /// |n_conc_cane    | g/g        | Nitrogen concentration in cane                                            
+    /// |n_conc_leaf    | g/g        | Nitrogen concentration in green leaf                                      
+    /// |n_conc_cabbage | g/g        | Nitrogen concentration in green cabbage                                   
+    /// |n_demand       | g/m^2      | Daily demand for Nitrogen                                                 
+    /// |cover_green    | 0-1        | Fractional cover by green plant material                                  
+    /// |cover_tot      | 0-1        | Fractional cover by total plant material (Green + Trash)                  
+    /// |lai            | mm^2/mm^2  | Leaf area index of green leaves                                           
+    /// |tlai           | mm^2/mm^2  | Total plant leaf area index (green + senesced)                            
+    /// |slai           | mm^2/mm^2  | Senesced leaf area index                                                  
+    /// |n_leaf_crit    | g/m^2      | Critical Nitrogen level for the current crop                              
+    /// |n_leaf_min     | g/m^2      | Minimum Nitrogen level for the current crop                               
+    /// |nfact_photo    | 0-1        | Nitrogen stress factor for photosynthesis                                 
+    /// |nfact_expan    | 0-1        | Nitrogen stress factor for cell expansion                                 
+    /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               
+    /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               
+    /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    
+    ///
+    /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
     public class Sugarcane : Model, IPlant, ICanopy, IUptake
@@ -374,7 +366,19 @@ namespace Models
         /// <summary>
         /// Gets the LAI (m^2/m^2)
         /// </summary>
-        public double LAI { get { return lai; } }
+        public double LAI 
+        { 
+            get 
+            { 
+                return lai; 
+            } 
+            set 
+            {
+                var delta = g_lai - value;
+                g_lai -= delta;
+                g_slai += delta; 
+            } 
+        }
 
         /// <summary>
         /// Gets the maximum LAI (m^2/m^2)
@@ -401,23 +405,31 @@ namespace Models
         /// </summary>
         public double Depth { get { return height; } }
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
+
         /// <summary>
         /// Gets  FRGR.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in Sugarcane. So just return 1.
 
         /// <summary>
         /// Sets the potential evapotranspiration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
+
+        /// <summary>Sets the actual water demand.</summary>
+        [Units("mm")]
+        public double WaterDemand { get; set; }
 
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in Sugarcane
 
         #endregion
@@ -450,6 +462,13 @@ namespace Models
         [Link]
         private Soil Soil = null;
 
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>
         /// The summary
@@ -457,17 +476,24 @@ namespace Models
         [Link]
         private ISummary Summary = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
+        /// <summary>Link to NO3 solute.</summary>
+        [Link(ByName = true)]
+        private ISolute NO3 = null;
+        
+        /// <summary>Link to NH4 solute.</summary>
+        [Link(ByName = true)]
+        private ISolute NH4 = null;
 
         #endregion
 
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        public double Legumosity { get { return 0; } }
+        /// <summary>The plant type.</summary>
+        public string PlantType { get => "Sugarcane"; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
         public bool IsC4 { get { return true; } }
+
+        /// <summary>Aboveground mass</summary>
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         //CONSTANTS
 
@@ -710,7 +736,7 @@ namespace Models
 
         //if (n_uptake_option == 1) then
 
-        //! time constant for uptake by  diffusion (days). H van Keulen & NG Seligman. Purdoe 1987. 
+        //! time constant for uptake by  diffusion (days). H van Keulen && NG Seligman. Purdoe 1987. 
         //! This is the time it would take to take up by diffusion the current amount of N if it wasn't depleted between time steps
         //[Param(IsOptional = true, MinVal = 0.0, MaxVal = 100.0, Name = "no3_diffn_const")]
         /// <summary>
@@ -1122,7 +1148,7 @@ namespace Models
         /// <summary>
         /// The crop
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private CropConstants crop;
 
         #endregion
@@ -1143,7 +1169,7 @@ namespace Models
         /// <summary>
         /// The cult
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private CultivarConstants cult;
 
         #endregion
@@ -1190,7 +1216,7 @@ namespace Models
         /// <summary>
         /// The xf
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] xf;
             //{
             //get
@@ -1231,7 +1257,7 @@ namespace Models
         /// <summary>
         /// The kl
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] kl;
             //{
             //get
@@ -1331,7 +1357,7 @@ namespace Models
         /// <summary>
         /// The swim3
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double swim3 = Double.NaN;  //swim is not in ApsimX yet.
 
 
@@ -1360,7 +1386,7 @@ namespace Models
         /// <summary>
         /// The dlayer
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlayer = new double[max_layer];
 
 
@@ -1370,8 +1396,8 @@ namespace Models
         /// <value>
         /// The num_layers.
         /// </value>
-        [XmlIgnore]
-        public int num_layers { get { return Soil.Thickness.Length; } }
+        [JsonIgnore]
+        public int num_layers { get { return soilPhysical.Thickness.Length; } }
 
 
         ////[ MinVal=0.0, MaxVal=2.65]
@@ -1380,7 +1406,7 @@ namespace Models
         /// <summary>
         /// The bd
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] bd = new double[max_layer];
 
 
@@ -1391,7 +1417,7 @@ namespace Models
         /// <summary>
         /// The dul_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dul_dep = new double[max_layer];
 
 
@@ -1401,7 +1427,7 @@ namespace Models
         /// <summary>
         /// The sw_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] sw_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
@@ -1410,7 +1436,7 @@ namespace Models
         /// <summary>
         /// The sat_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] sat_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
@@ -1419,7 +1445,7 @@ namespace Models
         /// <summary>
         /// The ll15_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ll15_dep = new double[max_layer];
 
 
@@ -1469,7 +1495,7 @@ namespace Models
         /// The plants.
         /// </value>
         [Units("(/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double plants
             {
             get
@@ -1482,7 +1508,7 @@ namespace Models
 
                 if (g_current_stage > emerg)
                     {
-                    Summary.WriteWarning(this, "You have updated plant number after emergence");
+                    Summary.WriteMessage(this, "You have updated plant number after emergence", MessageType.Warning);
                     }
 
                 bound_check_real_var(value, 0.0, 1000.0, "plants");
@@ -1498,7 +1524,7 @@ namespace Models
         /// The lodge_redn_photo.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lodge_redn_photo
             {
             get
@@ -1521,7 +1547,7 @@ namespace Models
         /// The lodge_redn_sucrose.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lodge_redn_sucrose
             {
             get
@@ -1544,7 +1570,7 @@ namespace Models
         /// The lodge_redn_green_leaf.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lodge_redn_green_leaf
             {
             get
@@ -1817,6 +1843,12 @@ namespace Models
         /// The g_dlt_sw_dep
         /// </summary>
         double[] g_dlt_sw_dep = new double[max_layer]; 				//! water uptake in each layer (mm water)
+
+        /// <summary>
+        /// Soil water uptake - positive values.
+        /// </summary>
+        public IReadOnlyList<double> WaterUptake => MathUtilities.Multiply_Value(g_dlt_sw_dep, -1);
+
         //double[]      sat_dep  = new double[max_layer]; 				//!
         //double[]      dul_dep  = new double[max_layer]; 				//! drained upper limit soil water content for soil layer L (mm water)
         //double[]      ll15_dep  = new double[max_layer]; 				//!
@@ -2276,13 +2308,13 @@ namespace Models
             //    //*     ===========================================================
 
             //    //*+  Purpose
-            //    //*       Zero crop daily variables & arrays
+            //    //*       Zero crop daily variables && arrays
 
 
 
             //            //! zero pools etc.
 
-            //Summary.WriteMessage(this, "ZERO DAILY VARIABLES");
+            //Summary.WriteMessage(this, "ZERO DAILY VARIABLES", MessageType.Diagnostic);
 
             ZeroArray(ref g_dlt_dm_green);
             ZeroArray(ref g_dlt_dm_green_retrans);
@@ -2321,6 +2353,7 @@ namespace Models
             g_dlt_tt = 0.0;
 
             g_sw_demand = 0.0;
+            WaterDemand = 0;
             //      dm_graze = 0.0;
             //      n_graze = 0.0;
 
@@ -2387,7 +2420,7 @@ namespace Models
             //*     ===========================================================
 
             //*+  Purpose
-            //*       Zero crop variables & arrays
+            //*       Zero crop variables && arrays
 
 
             //! zero pools etc.
@@ -2412,7 +2445,7 @@ namespace Models
         //    //*     ===========================================================
 
         //    //*+  Purpose
-        //    //*       Zero soil variables & arrays
+        //    //*       Zero soil variables && arrays
 
         //    //sv- from [INPUTS]
 
@@ -2506,26 +2539,6 @@ namespace Models
 
 
         #region Science.f90 (FortranInfrastructure)
-
-        /// <summary>
-        /// Finds the layer no_ob.
-        /// </summary>
-        /// <param name="Depth">The depth.</param>
-        /// <returns></returns>
-        private int FindLayerNo_ob(double Depth)
-            {
-            // Find the soil layer in which the indicated depth is located
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < dlayer.Length; i++)
-                {
-                depth_cum = depth_cum + dlayer[i];
-                if (depth_cum >= Depth)
-                    return i + 1;    //convert to one based  
-                }
-            return dlayer.Length;   //one based
-            }
-
 
         /// <summary>
         /// Root_proportions the specified layer_ob.
@@ -3279,8 +3292,8 @@ namespace Models
             //force A to stay between the MinVal and the MaxVal. Set A to the MaxVal or MinVal if it exceeds them.
             if (MinVal > MaxVal)
                 {
-                Summary.WriteWarning(this, "Lower bound " + MinVal + " is > upper bound " + MaxVal + Environment.NewLine
-                                   + "        Variable is not constrained");
+                Summary.WriteMessage(this, "Lower bound " + MinVal + " is > upper bound " + MaxVal + Environment.NewLine
+                                   + "        Variable is not constrained", MessageType.Warning);
                 return A;
                 }
 
@@ -3449,12 +3462,12 @@ namespace Models
             if (Variable > UpperBound)
                 {
                 warningMsg = "The variable: \'" + VariableName + "\' is above the expected upper bound of: " + UpperBound;
-                Summary.WriteWarning(this, warningMsg);
+                Summary.WriteMessage(this, warningMsg, MessageType.Warning);
                 }
             if (Variable < LowerBound)
                 {
                 warningMsg = "The variable: \'" + VariableName + "\' is below the expected lower bound of: " + LowerBound;
-                Summary.WriteWarning(this, warningMsg);
+                Summary.WriteMessage(this, warningMsg, MessageType.Warning);
                 }
 
             }
@@ -3505,7 +3518,7 @@ namespace Models
         //        {
         //        Console.Write(" , " + A[i]);
         //        }
-        //    //Summary.WriteMessage(this, );
+        //    //Summary.WriteMessage(this, , MessageType.Diagnostic);
         //    }
 
 
@@ -3749,7 +3762,7 @@ namespace Models
 
 
             //!     ===========================================================
-            //      subroutine cproc_transp_eff1(svp_fract, transp_eff_cf,          &
+            //      subroutine cproc_transp_eff1(svp_fract, transp_eff_cf,          &&
             //                 current_stage,maxt, mint, transp_eff)
             //!     ===========================================================
 
@@ -3776,7 +3789,7 @@ namespace Models
             //!       Average saturation vapour pressure for ambient temperature
             //!       during transpiration is calculated as part-way between that
             //!       for minimum temperature and that for the maximum temperature.
-            //!       Tanner & Sinclair (1983) used .75 and .67 of the distance as
+            //!       Tanner && Sinclair (1983) used .75 and .67 of the distance as
             //!       representative of the positive net radiation (rn).  Daily SVP
             //!       should be integrated from about 0900 hours to evening when Radn
             //!       becomes negative.
@@ -3837,7 +3850,7 @@ namespace Models
             //!       Average saturation vapour pressure for ambient temperature
             //!       during transpiration is calculated as part-way between that
             //!       for minimum temperature and that for the maximum temperature.
-            //!       Tanner & Sinclair (1983) used .75 and .67 of the distance as
+            //!       Tanner && Sinclair (1983) used .75 and .67 of the distance as
             //!       representative of the positive net radiation (rn).  Daily SVP
             //!       should be integrated from about 0900 hours to evening when Radn
             //!       becomes negative.
@@ -4197,7 +4210,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_sw_avail_fac_deepest_layer_ob = crop_sw_avail_fac(c_x_sw_ratio, c_y_sw_fac_root, i_dul_dep, i_sw_dep, i_ll_dep, l_deepest_layer_ob);
 
@@ -4333,7 +4346,7 @@ namespace Models
 
 
 
-            l_current_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_current_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_current_phase = (int)i_current_stage;
 
             //! this equation allows soil water in the deepest
@@ -4547,19 +4560,19 @@ namespace Models
                 if (l_ll + error_margin(l_ll) < c_minsw)
                     {
                     l_err_messg = " lower limit of " + l_ll + " in layer " + ob(layer) + Environment.NewLine + "         is below acceptable value of " + c_minsw;
-                    Summary.WriteMessage(this, l_err_messg);
+                    Summary.WriteMessage(this, l_err_messg, MessageType.Diagnostic);
                     }
 
                 if (l_dul + error_margin(l_dul) < l_ll)
                     {
                     l_err_messg = " Drained upper limit of " + l_dul + " in layer " + ob(layer) + Environment.NewLine + "         is below lower limit of " + ll;
-                    Summary.WriteMessage(this, l_err_messg);
+                    Summary.WriteMessage(this, l_err_messg, MessageType.Diagnostic);
                     }
 
                 if (l_sw + error_margin(l_sw) < c_minsw)
                     {
                     l_err_messg = " Soil water of " + l_sw + " in layer " + ob(layer) + Environment.NewLine + "         is below acceptable value of " + c_minsw;
-                    Summary.WriteMessage(this, l_err_messg);
+                    Summary.WriteMessage(this, l_err_messg, MessageType.Diagnostic);
                     }
                 }
 
@@ -4609,7 +4622,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail_pot, 0.0, o_sw_avail_pot.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail_pot[layer] = i_dul_dep[layer] - i_ll_dep[layer];
@@ -4664,7 +4677,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail, 0.0, o_sw_avail.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail[layer] = i_sw_dep[layer] - i_ll_dep[layer];
@@ -4725,7 +4738,7 @@ namespace Models
 
             fill_real_array(ref o_sw_supply, 0.0, o_sw_supply.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail = (i_sw_dep[layer] - i_ll_dep[layer]);
@@ -4804,7 +4817,7 @@ namespace Models
 
             //! find total root water potential uptake as sum of all layers
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
 
             if ((l_sw_supply_sum <= 0.0) || (i_sw_demand <= 0.0))
@@ -4889,7 +4902,7 @@ namespace Models
             double l_sw_supply_sum;       //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! get potential water that can be taken up when profile is full
 
@@ -4938,7 +4951,7 @@ namespace Models
             double l_sw_supply_sum;         //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
 
             //! get potential water that can be taken up when profile is full
@@ -4993,7 +5006,7 @@ namespace Models
             double sw_avail_sum;        //! actual extractable soil water (mm)
             bool didInterpolate;
 
-            deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             sw_avail_pot_sum = SumArray(i_sw_avail_pot, deepest_layer_ob);
             sw_avail_sum = SumArray(i_sw_avail, deepest_layer_ob);
             sw_avail_ratio = MathUtilities.Divide(sw_avail_sum, sw_avail_pot_sum, 1.0); //!???
@@ -5037,7 +5050,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             //! get potential water that can be taken up when profile is full
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 1.0);
@@ -5439,7 +5452,7 @@ namespace Models
 
             if (stage_is_between(i_sowing_stage, i_germ_stage, i_current_stage))
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_pesw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dlayer[zb(l_layer_no_seed)], 0.0);
 
                 //! can't germinate on same day as sowing, because miss out on day of sowing else_where
@@ -5519,7 +5532,7 @@ namespace Models
 
             if (l_current_phase == i_germ_phase)
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_fasw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dul_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], 0.0);
                 l_fasw_seed = bound(l_fasw_seed, 0.0, 1.0);
 
@@ -6084,7 +6097,7 @@ namespace Models
 
 
             //!     ===========================================================
-            //      subroutine cproc_bio_water1(num_layer, dlayer, root_depth,          &
+            //      subroutine cproc_bio_water1(num_layer, dlayer, root_depth,          &&
             //                          sw_supply, transp_eff, dlt_dm_pot_te)
             //!     ===========================================================
 
@@ -6116,7 +6129,7 @@ namespace Models
 
             //! potential (supply) by transpiration
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             return l_sw_supply_sum * i_transp_eff;
 
@@ -6257,7 +6270,7 @@ namespace Models
 
             fill_real_array(ref o_root_array, 0.0, i_dlayer.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_root_length_sum = SumArray(i_root_length, l_deepest_layer_ob);
 
@@ -6569,8 +6582,8 @@ namespace Models
         //!   Calculate biomass non-limiting leaf area development
 
 
-        //g_dlt_lai_stressed = g_dlt_lai_pot          &
-        //             * min(g_swdef_expansion          &
+        //g_dlt_lai_stressed = g_dlt_lai_pot          &&
+        //             * min(g_swdef_expansion          &&
         //                  ,g_nfact_expansion)
 
 
@@ -7063,7 +7076,7 @@ namespace Models
                 {
                 fill_real_array(ref o_dlt_root_length, 0.0, i_max_layer);
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth + i_dlt_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth + i_dlt_root_depth) + 1;
                 l_rlv_factor_tot = 0.0;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
@@ -7914,7 +7927,7 @@ namespace Models
 
             fill_real_array(ref o_no3gsm_mflow_pot, 0.0, i_num_layer);
             //! only take the layers in which roots occur
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 //! get  NO3 concentration
@@ -7978,7 +7991,7 @@ namespace Models
             //! only take the layers in which roots occur
             fill_real_array(ref o_no3gsm_diffn_pot, 0.0, i_num_layer);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail_fract = MathUtilities.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
@@ -8106,7 +8119,7 @@ namespace Models
             double l_total_n_uptake_pot;
             double l_scalef;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (i_current_stage >= c_n_stress_start_stage)
                 {
@@ -8349,13 +8362,13 @@ namespace Models
         //        uptake_name = "uptake_" + i_uptake_type + "_" + i_crop_type;
 
 
-        //         call get_real_array (unknown_module          &
-        //                       ,uptake_name          &
-        //                       ,i_max_layer          &
-        //                       ,'()")]          &
-        //                       ,uptake_array          &
-        //                       ,num_uptakes          &
-        //                       ,i_uptake_lbound          &
+        //         call get_real_array (unknown_module          &&
+        //                       ,uptake_name          &&
+        //                       ,i_max_layer          &&
+        //                       ,'()")]          &&
+        //                       ,uptake_array          &&
+        //                       ,num_uptakes          &&
+        //                       ,i_uptake_lbound          &&
         //                       ,i_uptake_ubound)
 
         //         do 100 layer = 1, num_uptakes
@@ -8431,7 +8444,7 @@ namespace Models
             //! get potential N uptake (supply) from the root profile.
             //! get totals for diffusion and mass flow.
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_NO3gsm_diffn_avail[layer] = i_no3gsm_diffn_pot[layer] - i_no3gsm_mflow_avail[layer];
@@ -8547,7 +8560,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_Ngsm_supply = SumArray(i_no3gsm_uptake_pot, l_deepest_layer_ob) + SumArray(i_nh4gsm_uptake_pot, l_deepest_layer_ob);
 
@@ -8633,7 +8646,7 @@ namespace Models
 
 
             fill_real_array(ref o_dlt_N_green, 0.0, max_part);
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! find proportion of uptake to be
             //! distributed to each plant part and distribute it.
@@ -8816,7 +8829,7 @@ namespace Models
             if (stage_is_between(sowing, sprouting, i_current_stage) && (sum_between_zb(zb(sowing), zb(now), i_days_tot) >= c_days_germ_limit))
                 {
                 o_dlt_plants = -i_plants;
-                Summary.WriteWarning(this, " crop failure because of lack of" + "/n" + "         germination within" + c_days_germ_limit + " days of sowing");
+                Summary.WriteMessage(this, " crop failure because of lack of" + "/n" + "         germination within" + c_days_germ_limit + " days of sowing", MessageType.Warning);
                 }
 
             else
@@ -8854,7 +8867,7 @@ namespace Models
             if (stage_is_between(sprouting, emerg, i_current_stage) && (sum_between_zb(zb(sprouting), zb(now), i_tt_tot) > c_tt_emerg_limit))
                 {
                 o_dlt_plants = -i_plants;
-                Summary.WriteWarning(this, " failed emergence due to deep planting");
+                Summary.WriteMessage(this, " failed emergence due to deep planting", MessageType.Warning);
                 }
             else
                 {
@@ -8891,7 +8904,7 @@ namespace Models
                 o_dlt_plants = -i_plants;
                 i_lai = 0.0;
 
-                Summary.WriteWarning(this, " crop failure because of total leaf senescence.");
+                Summary.WriteMessage(this, " crop failure because of total leaf senescence.", MessageType.Warning);
                 }
             else
                 {
@@ -8945,7 +8958,7 @@ namespace Models
                 l_killfr = bound(l_killfr, 0.0, 1.0);
                 o_dlt_plants = -i_plants * l_killfr;
 
-                Summary.WriteWarning(this,"plant_kill." + Math.Truncate(l_killfr * 100.0) + "% failure because of water stress.");
+                Summary.WriteMessage(this,"plant_kill." + Math.Truncate(l_killfr * 100.0) + "% failure because of water stress.", MessageType.Warning);
                 }
 
             else
@@ -9947,7 +9960,7 @@ namespace Models
                 l_x_stage_code = 0.0;
 
                 l_warn_message = "Invalid lookup table - number of values =" + i_numvals;
-                Summary.WriteWarning(this, l_warn_message);
+                Summary.WriteMessage(this, l_warn_message, MessageType.Warning);
                 }
 
             return l_x_stage_code;
@@ -10008,7 +10021,7 @@ namespace Models
                 l_returnValue_ob = 0;
 
                 l_warn_message = "Stage code not found in code list." + " Code number =" + i_stage_code;
-                Summary.WriteWarning(this, l_warn_message);
+                Summary.WriteMessage(this, l_warn_message, MessageType.Warning);
 
                 }
 
@@ -10142,7 +10155,7 @@ namespace Models
             //c      N_conc_stover_crit = (g_N_conc_crit(leaf) + g_N_conc_crit(stem)) * 0.5
             l_N_green_demand = SumArray(i_n_demand, max_part);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (on_day_of(sowing, i_current_stage))
                 {
@@ -10237,14 +10250,14 @@ namespace Models
             ////sv- I added this to mimic what the fortran infrastructure does.
             ////"13 July 1991(Day of year=194), sugar: ");
             ////http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), Sugarcane: "));
+            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), Sugarcane: "), MessageType.Diagnostic);
 
 
             l_stage_no = (int)i_current_stage;
             if (on_day_of(l_stage_no, i_current_stage))
                 {
                 //! new phase has begun.
-                Summary.WriteMessage(this, string.Format("{0}{1,6:F1} {2}", " stage ", c_stage_code_list[zb(l_stage_no)], c_stage_names[zb(l_stage_no)]));
+                Summary.WriteMessage(this, string.Format("{0}{1,6:F1} {2}", " stage ", c_stage_code_list[zb(l_stage_no)], c_stage_names[zb(l_stage_no)]), MessageType.Diagnostic);
 
                 //write (string, '(a, f6.1, 1x, a)') ' stage ', c_stage_code_list(stage_no), c_stage_names(stage_no)
 
@@ -10259,7 +10272,7 @@ namespace Models
 
                 l_N_green_conc_percent = MathUtilities.Divide(l_N_green, l_dm_green, 0.0) * fract2pcnt;
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
@@ -10270,8 +10283,8 @@ namespace Models
 
                 if (stage_is_between(emerg, crop_end, i_current_stage))
                     {
-                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     biomass =       ", l_biomass, "   lai = ", i_lai));
-                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     stover N conc = ", l_N_green_conc_percent, "   extractable sw =", l_pesw_tot));
+                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     biomass =       ", l_biomass, "   lai = ", i_lai), MessageType.Diagnostic);
+                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     stover N conc = ", l_N_green_conc_percent, "   extractable sw =", l_pesw_tot), MessageType.Diagnostic);
 
                     //       write (string, '(2(a, g16.7e2), a, 2(a, g16.7e2))')
                     //:              '                     biomass =       '
@@ -10330,7 +10343,7 @@ namespace Models
             double asw_pot;
             int deepest_layer_ob;
 
-            deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
             asw_pot = 0.0;
             asw = 0.0;
             for (int layer = 0; layer < deepest_layer_ob; layer++)
@@ -10420,7 +10433,7 @@ namespace Models
         /// The days after sowing.
         /// </value>
         [Units("(days)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public int DaysAfterSowing
             {
             get
@@ -10440,7 +10453,7 @@ namespace Models
         /// The crop_status.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string crop_status
         { get { return g_crop_status; } }
 
@@ -10453,7 +10466,7 @@ namespace Models
         /// The stage.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double stage
         { get { return g_current_stage; } }
 
@@ -10466,7 +10479,7 @@ namespace Models
         /// The stage_code.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double stage_code
             {
             get
@@ -10491,7 +10504,7 @@ namespace Models
         /// The stagename.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string stagename
             {
             get
@@ -10529,7 +10542,7 @@ namespace Models
         /// The ratoon_no.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public int ratoon_no
         { get { return g_ratoon_no; } }
 
@@ -10542,7 +10555,7 @@ namespace Models
         /// The phase_tt.
         /// </value>
         [Units("(oC)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] phase_tt
         { get { return g_phase_tt; } }
 
@@ -10555,7 +10568,7 @@ namespace Models
         /// The tt_tot.
         /// </value>
         [Units("(oC)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] tt_tot
         { get { return g_tt_tot; } }
 
@@ -10574,7 +10587,7 @@ namespace Models
         /// The leaf_no.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] leaf_no
         { get { return g_leaf_no_zb; } }
 
@@ -10587,7 +10600,7 @@ namespace Models
         /// The node_no_dead.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] node_no_dead
         { get { return g_node_no_dead_zb; } }
 
@@ -10619,7 +10632,7 @@ namespace Models
         /// The leaves.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double leaves
         { get { return SumArray(g_leaf_no_zb, max_stage) - g_node_no_detached_ob; } }
 
@@ -10631,7 +10644,7 @@ namespace Models
         /// The green_leaves.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double green_leaves
         { get { return SumArray(g_leaf_no_zb, max_stage) - SumArray(g_node_no_dead_zb, max_stage); } }
 
@@ -10643,7 +10656,7 @@ namespace Models
         /// The dead_leaves.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dead_leaves
         { get { return leaves - green_leaves; } }
 
@@ -10658,7 +10671,7 @@ namespace Models
         /// The leaf_area.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] leaf_area
         { get { return g_leaf_area_zb; } }
 
@@ -10671,7 +10684,7 @@ namespace Models
         /// The leaf_dm.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] leaf_dm
         { get { return g_leaf_dm_zb; } }
 
@@ -10684,7 +10697,7 @@ namespace Models
         /// The height.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double height
         { get { return g_canopy_height; } }
 
@@ -10697,7 +10710,7 @@ namespace Models
         /// The root_depth.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double root_depth
         { get { return g_root_depth; } }
 
@@ -10710,7 +10723,7 @@ namespace Models
         /// The cover_green.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cover_green
             {
             get
@@ -10731,7 +10744,7 @@ namespace Models
         /// The radn_int.
         /// </value>
         [Units("(mj/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double radn_int
             {
             get
@@ -10751,7 +10764,7 @@ namespace Models
         /// The cover_tot.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cover_tot
             {
             get
@@ -10777,7 +10790,7 @@ namespace Models
         /// The lai_sum.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lai_sum
             {
             get
@@ -10796,7 +10809,7 @@ namespace Models
         /// The tlai.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double tlai
         { get { return g_lai + g_slai; } }
 
@@ -10809,7 +10822,7 @@ namespace Models
         /// The tla.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double tla
             {
             get
@@ -10828,7 +10841,7 @@ namespace Models
         /// The slai.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double slai
         { get { return g_slai; } }
 
@@ -10841,7 +10854,7 @@ namespace Models
         /// The lai.
         /// </value>
         [Units("(m^2/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lai
         { get { return g_lai; } }
 
@@ -10854,8 +10867,8 @@ namespace Models
         /// The RLV.
         /// </value>
         [Units("(mm/mm3)")]
-        [XmlIgnore]
-        public double[] rlv
+        [JsonIgnore]
+        public IReadOnlyList<double> RootLengthDensity
             {
             get
                 {
@@ -10878,7 +10891,7 @@ namespace Models
         /// The rlv_tot.
         /// </value>
         [Units("(mm/mm3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] rlv_tot
             {
             get
@@ -10902,7 +10915,7 @@ namespace Models
         /// The ll_dep.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ll_dep
             {
             get
@@ -10936,7 +10949,7 @@ namespace Models
         /// The lai2.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lai2
             {
             get
@@ -10956,7 +10969,7 @@ namespace Models
         /// The leaf_wt2.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double leaf_wt2
             {
             get
@@ -10983,7 +10996,7 @@ namespace Models
         /// The rootgreenwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double rootgreenwt
         { get { return Math.Round(g_dm_green[root],2); } }
 
@@ -10996,7 +11009,7 @@ namespace Models
         /// The leafgreenwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double leafgreenwt
         { get { return Math.Round(g_dm_green[leaf],2); } }
 
@@ -11011,7 +11024,7 @@ namespace Models
         /// The sstem_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sstem_wt
         { get { return Math.Round(g_dm_green[sstem] + g_dm_dead[sstem],2); } }  //! Add dead pool for lodged crops
 
@@ -11029,7 +11042,7 @@ namespace Models
         /// The cane_dmf.
         /// </value>
         [Units("(0-1)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cane_dmf
             {
             get
@@ -11054,7 +11067,7 @@ namespace Models
         /// The canefw.
         /// </value>
         [Units("(t/ha)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double canefw
             {
             get
@@ -11077,7 +11090,7 @@ namespace Models
         /// The CCS.
         /// </value>
         [Units("(%)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ccs
             {
             get
@@ -11104,7 +11117,7 @@ namespace Models
         /// The SCMSTF.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double scmstf
             {
             get
@@ -11126,7 +11139,7 @@ namespace Models
         /// The SCMST.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double scmst
             {
             get
@@ -11147,7 +11160,7 @@ namespace Models
         /// The sucrose_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sucrose_wt
         { get { return Math.Round(g_dm_green[sucrose] + g_dm_dead[sucrose],2); } }  //! Add dead pool to allow for lodged stalks
 
@@ -11160,7 +11173,7 @@ namespace Models
         /// The cabbage_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cabbage_wt
         { get { return Math.Round(g_dm_green[cabbage],2); } }
 
@@ -11174,7 +11187,7 @@ namespace Models
         /// The cane_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cane_wt
             {
             get
@@ -11193,7 +11206,7 @@ namespace Models
         /// The biomass.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double biomass
             {
             get
@@ -11214,7 +11227,7 @@ namespace Models
         /// The green_biomass.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double green_biomass
             {
             get
@@ -11234,7 +11247,7 @@ namespace Models
         /// The greenwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double greenwt
         { get { return Math.Round(SumArray(g_dm_green, max_part),2); } }
 
@@ -11247,7 +11260,7 @@ namespace Models
         /// The senescedwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double senescedwt
         { get { return Math.Round(SumArray(g_dm_senesced, max_part),2); } }
 
@@ -11260,7 +11273,7 @@ namespace Models
         /// The dm_dead.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dm_dead
         { get { return Math.Round(SumArray(g_dm_dead, max_part),2); } }
 
@@ -11275,7 +11288,7 @@ namespace Models
         /// The DLT_DM.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dlt_dm
         { get { return Math.Round(g_dlt_dm,2); } }
 
@@ -11290,7 +11303,7 @@ namespace Models
         /// The partition_xs.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double partition_xs
         { get { return Math.Round(g_partition_xs,2); } }
 
@@ -11305,7 +11318,7 @@ namespace Models
         /// The dlt_dm_green.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dlt_dm_green
         { get { return Math.Round(SumArray(g_dlt_dm_green, max_part),2); } }
 
@@ -11326,7 +11339,7 @@ namespace Models
         /// The dlt_dm_detached.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlt_dm_detached
         { get { return mu.RoundArray(g_dlt_dm_detached,2); } }
 
@@ -11345,7 +11358,7 @@ namespace Models
         /// The n_critical.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] n_critical
         { get { return g_n_conc_crit; } }
 
@@ -11357,7 +11370,7 @@ namespace Models
         /// The n_minimum.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] n_minimum
         { get { return g_n_conc_min; } }
 
@@ -11370,7 +11383,7 @@ namespace Models
         /// The n_conc_leaf.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_conc_leaf
             {
             get
@@ -11388,7 +11401,7 @@ namespace Models
         /// The n_conc_cab.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_conc_cab
             {
             get
@@ -11406,7 +11419,7 @@ namespace Models
         /// The n_conc_cane.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_conc_cane
             {
             get
@@ -11426,7 +11439,7 @@ namespace Models
         /// The n_leaf_crit.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_leaf_crit
             {
             get
@@ -11444,7 +11457,7 @@ namespace Models
         /// The n_leaf_min.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_leaf_min
             {
             get
@@ -11463,7 +11476,7 @@ namespace Models
         /// The biomass_n.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double biomass_n
             {
             get
@@ -11484,7 +11497,7 @@ namespace Models
         /// The plant_n_tot.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double plant_n_tot
             {
             get
@@ -11505,7 +11518,7 @@ namespace Models
         /// The green_biomass_n.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double green_biomass_n
             {
             get
@@ -11524,7 +11537,7 @@ namespace Models
         /// The n_green.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] n_green
         { get { return mu.RoundArray(g_n_green,2); } }
 
@@ -11537,7 +11550,7 @@ namespace Models
         /// The greenn.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double greenn
         { get { return Math.Round(SumArray(g_n_green, max_part),2); } }
 
@@ -11550,7 +11563,7 @@ namespace Models
         /// The senescedn.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double senescedn
         { get { return Math.Round(SumArray(g_n_senesced, max_part),2); } }
 
@@ -11565,7 +11578,7 @@ namespace Models
         /// The dlt_n_green.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlt_n_green
         { get { return mu.RoundArray(g_dlt_n_green,2); } }
 
@@ -11584,7 +11597,7 @@ namespace Models
         /// The swdef_pheno.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_pheno
         { get { return g_swdef_pheno; } }
 
@@ -11597,7 +11610,7 @@ namespace Models
         /// The swdef_photo.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_photo
         { get { return g_swdef_photo; } }
 
@@ -11610,7 +11623,7 @@ namespace Models
         /// The swdef_expan.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_expan
         { get { return g_swdef_expansion; } }
 
@@ -11623,7 +11636,7 @@ namespace Models
         /// The swdef_stalk.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_stalk
         { get { return g_swdef_stalk; } }
 
@@ -11636,7 +11649,7 @@ namespace Models
         /// The nfact_photo.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double nfact_photo
         { get { return g_nfact_photo; } }
 
@@ -11649,7 +11662,7 @@ namespace Models
         /// The nfact_expan.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double nfact_expan
         { get { return g_nfact_expansion; } }
 
@@ -11675,7 +11688,7 @@ namespace Models
         /// The oxdef_photo.
         /// </value>
         [Units("(0-1)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double oxdef_photo
         { get { return g_oxdef_photo; } }
 
@@ -11693,7 +11706,7 @@ namespace Models
         /// The ep.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ep
             {
             get
@@ -11713,7 +11726,7 @@ namespace Models
         /// The cep.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cep
         { get { return -g_transpiration_tot; } }
 
@@ -11726,7 +11739,7 @@ namespace Models
         /// The sw_uptake.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] sw_uptake
             {
             get
@@ -11750,7 +11763,7 @@ namespace Models
         /// The sw_demand.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sw_demand
         { get { return g_sw_demand; } }
 
@@ -11763,7 +11776,7 @@ namespace Models
         /// The sw_demand_te.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sw_demand_te
         { get { return g_sw_demand_te; } }
 
@@ -11776,7 +11789,7 @@ namespace Models
         /// The fasw.
         /// </value>
         [Units("(0-1)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double fasw
             {
             get
@@ -11794,7 +11807,7 @@ namespace Models
         /// The esw_layr.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] esw_layr
             {
             get
@@ -11848,12 +11861,12 @@ namespace Models
         /// The no3_tot.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double no3_tot
             {
             get
                 {
-                int deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+                int deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
                 double l_NO3gsm_tot = SumArray(g_no3gsm, deepest_layer_ob);
                 return Math.Round(l_NO3gsm_tot,2);
                 }
@@ -11868,7 +11881,7 @@ namespace Models
         /// The n_demand.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_demand
             {
             get
@@ -11887,7 +11900,7 @@ namespace Models
         /// The no3_demand.
         /// </value>
         [Units("(kg/ha)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double no3_demand
             {
             get
@@ -11906,7 +11919,7 @@ namespace Models
         /// The n_supply.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_supply
             {
             get
@@ -11925,8 +11938,8 @@ namespace Models
         /// The no3_uptake.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
-        public double[] no3_uptake
+        [JsonIgnore]
+        public IReadOnlyList<double> NitrogenUptake
             {
             get
                 {
@@ -11949,7 +11962,7 @@ namespace Models
         /// The nh4_uptake.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] nh4_uptake
             {
             get
@@ -11974,7 +11987,7 @@ namespace Models
         /// The no3_uptake_pot.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] no3_uptake_pot
             {
             get
@@ -11995,7 +12008,7 @@ namespace Models
         /// The nh4_uptake_pot.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] nh4_uptake_pot
             {
             get
@@ -12024,13 +12037,13 @@ namespace Models
         /// <value>
         /// The type of the crop.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string CropType { get { return crop_type; } }
 
         /// <summary>
         /// Is the plant alive?
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsAlive 
             {
             get
@@ -12052,7 +12065,7 @@ namespace Models
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string[] CultivarNames 
             {
             get
@@ -12073,7 +12086,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)  
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)  
             {
                 throw new NotImplementedException();
             }
@@ -12083,7 +12096,7 @@ namespace Models
         /// <param name="soilstate"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
+        public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
             throw new NotImplementedException();
         }
@@ -12093,13 +12106,13 @@ namespace Models
         /// Set the sw uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetSWUptake(List<ZoneWaterAndN> info)
+        public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         { }
         /// <summary>
         /// Set the n uptake for today
         /// </summary>
         /// <param name="info"></param>
-        public void SetNUptake(List<ZoneWaterAndN> info)
+        public void SetActualNitrogenUptakes(List<ZoneWaterAndN> info)
         { }
 
 
@@ -12112,7 +12125,11 @@ namespace Models
         /// <param name="rowSpacing">The row spacing.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1)
+        /// <param name="rowConfig">The row configuration.</param>
+        /// <param name="seeds">The number of seeds sown.</param>
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
             {
             SowNewPlant(population, depth, cultivar);
             }
@@ -12257,14 +12274,14 @@ namespace Models
             //:                                    , g%ll15_dep, numvals
             //:                                    , c%sw_dep_lb, c%sw_dep_ub)
 
-            dlayer = Soil.Thickness;
+            dlayer = soilPhysical.Thickness;
             //num_layers = dlayer.Length;
 
-            bd = Soil.BD;           //Soil.BDMapped;
-            dul_dep = Soil.DULmm;
-            sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
-            sat_dep = Soil.SATmm;
-            ll15_dep = Soil.LL15mm;
+            bd = soilPhysical.BD;           //Soil.BDMapped;
+            dul_dep = soilPhysical.DULmm;
+            sw_dep = waterBalance.SWmm;     //Soil.Water;
+            sat_dep = soilPhysical.SATmm;
+            ll15_dep = soilPhysical.LL15mm;
 
 
 
@@ -12279,7 +12296,7 @@ namespace Models
             //todays value of NO3, NO3_min, NH4, NH4_min should have been read in from the SoilN module before the Prepare Event is fired.
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_no3gsm[layer] = Soil.NO3N[layer] * kg2gm / ha2sm;
+                o_no3gsm[layer] = NO3.kgha[layer] * kg2gm / ha2sm;
                 }
 
             for (int layer = 0; layer < num_layers; layer++)
@@ -12289,7 +12306,7 @@ namespace Models
 
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_nh4gsm[layer] = Soil.NH4N[layer] * kg2gm / ha2sm; ;
+                o_nh4gsm[layer] = NH4.kgha[layer] * kg2gm / ha2sm; ;
                 }
 
             for (int layer = 0; layer < num_layers; layer++)
@@ -12335,7 +12352,7 @@ namespace Models
             sugar_zero_variables();
             //sugar_zero_soil_globals();
 
-            Summary.WriteMessage(this, " Initialising");
+            Summary.WriteMessage(this, " Initialising", MessageType.Diagnostic);
 
             //! initialize crop variables
 
@@ -12385,7 +12402,7 @@ namespace Models
             g_year = Clock.Today.Year;
             sugar_zero_daily_variables();
 
-            //Summary.WriteMessage(this, "day of year: " + g_day_of_year);
+            //Summary.WriteMessage(this, "day of year: " + g_day_of_year, MessageType.Diagnostic);
 
 
 
@@ -12488,7 +12505,7 @@ namespace Models
                 //SW DEMAND (Atomospheric Potential)
 
                 //sugar_water_demand(1);
-                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, Soil.SoilWater.Eo);
+                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, waterBalance.Eo);
  
 
 
@@ -12648,9 +12665,9 @@ namespace Models
                     accumulate_ob(g_dlt_tt, ref g_tt_tot, g_previous_stage, g_dlt_stage);
 
                     accumulate_ob(1.0, ref g_days_tot, g_previous_stage, g_dlt_stage);
-                    //Summary.WriteMessage(this, "das: " + sum_between_zb(zb(sowing), zb(now), g_days_tot));
+                    //Summary.WriteMessage(this, "das: " + sum_between_zb(zb(sowing), zb(now), g_days_tot), MessageType.Diagnostic);
                     //PrintArray("days_tot: ", g_days_tot);
-                    //Summary.WriteMessage(this, "dlt_stage: " + g_dlt_stage);
+                    //Summary.WriteMessage(this, "dlt_stage: " + g_dlt_stage, MessageType.Diagnostic);
 
                     //End - cproc_phenology1 ()
 
@@ -13067,7 +13084,7 @@ namespace Models
                     //call sugar_get_met_variables ()
                     sugar_get_soil_variables(ref g_no3gsm, ref g_no3gsm_min, ref g_nh4gsm, ref g_nh4gsm_min);
 
-                    Summary.WriteMessage(this, "Sowing initiate");
+                    Summary.WriteMessage(this, "Sowing initiate", MessageType.Diagnostic);
 
 
                     if (Sowing != null)
@@ -13089,27 +13106,27 @@ namespace Models
 
                     //! report
 
-                    Summary.WriteMessage(this, Environment.NewLine + Environment.NewLine);
+                    Summary.WriteMessage(this, Environment.NewLine + Environment.NewLine, MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "                 Crop Sowing Data");
+                    Summary.WriteMessage(this, "                 Crop Sowing Data", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    ------------------------------------------------");
+                    Summary.WriteMessage(this, "    ------------------------------------------------", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    Sowing  Depth Plants Cultivar");
+                    Summary.WriteMessage(this, "    Sowing  Depth Plants Cultivar", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    Day no   mm     m^2    Name   ");
+                    Summary.WriteMessage(this, "    Day no   mm     m^2    Name   ", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    ------------------------------------------------");
+                    Summary.WriteMessage(this, "    ------------------------------------------------", MessageType.Diagnostic);
 
                     //http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx
 
-                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", l_cultivar));  //parameters are zero based.
+                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", l_cultivar), MessageType.Diagnostic);  //parameters are zero based.
                     //    write (string, '(3x, i7, 2f7.1, 1x, a10)')
                     //:                   g%day_of_year, g%sowing_depth
                     //:                 , g%Population, cultivar
 
 
-                    Summary.WriteMessage(this, "    ------------------------------------------------");
+                    Summary.WriteMessage(this, "    ------------------------------------------------", MessageType.Diagnostic);
 
 
                     //! get cultivar parameters
@@ -13169,12 +13186,12 @@ namespace Models
 
             if (CropType == "plant_crop")
                 {
-                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "plant_crop");
+                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "plant_crop", MessageType.Diagnostic);
                 l_crop = plant;
                 }
             else
                 {
-                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "ratoon_crop");
+                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "ratoon_crop", MessageType.Diagnostic);
                 l_crop = ratoon;
                 }
 
@@ -13191,7 +13208,7 @@ namespace Models
         /// <exception cref="ApsimXException">Could not find in the Sugarcane ini file a cultivar called:  + Name</exception>
         CultivarConstants sugar_read_cultivar_params(string Name)
             {
-            Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name);
+            Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name, MessageType.Diagnostic);
 
             foreach (CultivarConstants c in cultivars)
                 {
@@ -13229,8 +13246,9 @@ namespace Models
 
             //!       sugar_sw_supply
 
-            ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
-            SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            var Sugarcane = Soil.FindDescendant<SoilCrop>("SugarcaneSoil");
+            if (Sugarcane == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called SugarcaneSoil");
 
             xf = Sugarcane.XF;
             ll = Sugarcane.LL;
@@ -13261,7 +13279,7 @@ namespace Models
                 //        g_ll_dep[layer] = Soil.SoilWater.LL15[layer] * dlayer[layer];
                 //        }
                 //    Array.Resize(ref g_ll_dep, num_layers);
-                    Summary.WriteMessage(this, "Using externally supplied Lower Limit (ll15)");
+                    Summary.WriteMessage(this, "Using externally supplied Lower Limit (ll15)", MessageType.Diagnostic);
                     }
                 else
                     {
@@ -13290,29 +13308,29 @@ namespace Models
             //write out to the summary file what optional values you have read in.
             //--------------------------------------------------------------------
 
-            Summary.WriteMessage(this, "\n" + "   - Reading root profile parameters");
+            Summary.WriteMessage(this, "\n" + "   - Reading root profile parameters", MessageType.Diagnostic);
 
 
             if (uptake_source == "calc")
                 {
                 //! report
-                //Summary.WriteMessage(this, "\n" + "\n");
-                Summary.WriteMessage(this, "Sugar module is calculating its own soil uptakes");
-                //Summary.WriteMessage(this, "\n" + "\n");
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
+                Summary.WriteMessage(this, "Sugar module is calculating its own soil uptakes", MessageType.Diagnostic);
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
                 }
             else if (uptake_source == "apsim")
                 {
                 //! report
-                //Summary.WriteMessage(this, "\n" + "\n");
-                Summary.WriteMessage(this, "Sugar module is using uptakes" + " provided from another module");
-                //Summary.WriteMessage(this, "\n" + "\n");
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
+                Summary.WriteMessage(this, "Sugar module is using uptakes" + " provided from another module", MessageType.Diagnostic);
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
                 }
             else if (uptake_source == "swim3")
                 {
                 //! report
-                //Summary.WriteMessage(this, "\n" + "\n");
-                Summary.WriteMessage(this, "Sugar module is using water uptake" + " provided from Swim3");
-                //Summary.WriteMessage(this, "\n" + "\n");
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
+                Summary.WriteMessage(this, "Sugar module is using water uptake" + " provided from Swim3", MessageType.Diagnostic);
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
                 }
             else
                 {
@@ -13325,19 +13343,19 @@ namespace Models
             string line;
 
             line = "                    Root Profile";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "  -----------------------------------------------------------------------";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "    Layer depth   rlv_init  root_length Lower limit       KL         XF    ";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "         (mm)      (mm/mm)     (mm)       (mm/mm)         ()       (0-1)";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "  -----------------------------------------------------------------------";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             //create an rlv_init with a value for every layer in the soil rather than just the layers the user entered.
             //do this so the loop below here does not crash when it gets past rlv_int[more layers then were user entered]
@@ -13348,17 +13366,17 @@ namespace Models
             for (int layer = 0; layer < num_layers; layer++)
                 {
                 Summary.WriteMessage(this, string.Format(" {0,12:F0}{1,12:0.000}{2,12:0.000}{3,12:0.000}{4,12:0.000}{5,12:0.000}",
-                    dlayer[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]));
+                    dlayer[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]), MessageType.Diagnostic);
                 }
 
             line = "   ----------------------------------------------------------------------";
-            Summary.WriteMessage(this, line);
-            Summary.WriteMessage(this, "           nb. Initial root_length = rlv_init x Layer depth");
-            //Summary.WriteMessage(this, "\n");
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
+            Summary.WriteMessage(this, "           nb. Initial root_length = rlv_init x Layer depth", MessageType.Diagnostic);
+            //Summary.WriteMessage(this, "\n", MessageType.Diagnostic);
 
 
-            Summary.WriteMessage(this, string.Format("  {0}{1,5:0.0}{2}", "  Crop factor for bounding water use is set to ", eo_crop_factor, " times Eo"));
-            //Summary.WriteMessage(this, "\n" + "\n");
+            Summary.WriteMessage(this, string.Format("  {0}{1,5:0.0}{2}", "  Crop factor for bounding water use is set to ", eo_crop_factor, " times Eo"), MessageType.Diagnostic);
+            //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
 
             }
 
@@ -13443,39 +13461,39 @@ namespace Models
 
             l_N_total = l_N_green + l_N_senesced + l_N_dead;
 
-            //Summary.WriteMessage(this, );
-            //Summary.WriteMessage(this, );
+            //Summary.WriteMessage(this, , MessageType.Diagnostic);
+            //Summary.WriteMessage(this, , MessageType.Diagnostic);
 
-            Summary.WriteMessage(this, string.Format("{0}{1,4}", " flowering day  = ", g_isdate));
+            Summary.WriteMessage(this, string.Format("{0}{1,4}", " flowering day  = ", g_isdate), MessageType.Diagnostic);
             //write (string, '(a,i4)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,6:F3}", " maximum lai =", g_lai_max));
+            Summary.WriteMessage(this, string.Format("{0}{1,6:F3}", " maximum lai =", g_lai_max), MessageType.Diagnostic);
             //write (string, '(a,f6.3)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " total above ground biomass (kg/ha) =", l_dm));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " total above ground biomass (kg/ha) =", l_dm), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " (green + senesced) above ground biomass (kg/ha) =", l_biomass_green + l_biomass_senesced));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " (green + senesced) above ground biomass (kg/ha) =", l_biomass_green + l_biomass_senesced), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " green above ground biomass (kg/ha) =", l_biomass_green));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " green above ground biomass (kg/ha) =", l_biomass_green), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this,string.Format( "{0}{1,10:F1}", " senesced above ground biomass (kg/ha) =", l_biomass_senesced));
+            Summary.WriteMessage(this,string.Format( "{0}{1,10:F1}", " senesced above ground biomass (kg/ha) =", l_biomass_senesced), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " dead above ground biomass (kg/ha) =", l_biomass_dead));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " dead above ground biomass (kg/ha) =", l_biomass_dead), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,6:F1}", " number of leaves =", l_leaf_no));
+            Summary.WriteMessage(this, string.Format("{0}{1,6:F1}", " number of leaves =", l_leaf_no), MessageType.Diagnostic);
             //write (string, '(a,f6.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " total N content (kg/ha) =", l_N_total, "    ", " senesced N content (kg/ha) =", l_N_senesced));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " total N content (kg/ha) =", l_N_total, "    ", " senesced N content (kg/ha) =", l_N_senesced), MessageType.Diagnostic);
             //write (string, '(a,f10.2,t40,a,f10.2)')
             //sv- to compensate for t40 (tab to column 40) I just added four spaces. (26 + 10 = 36) + 4 = 40
 
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " green N content (kg/ha) =", l_N_green, "    ", " dead N content (kg/ha) =", l_N_dead));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " green N content (kg/ha) =", l_N_green, "    ", " dead N content (kg/ha) =", l_N_dead), MessageType.Diagnostic);
             //write (string, '(a,f10.2,t40,a,f10.2)')
             //sv- to compensate for t40 (tab to column 40) I just added two spaces. (26 + 10 = 36) + 4 = 40
 
@@ -13487,15 +13505,15 @@ namespace Models
                 l_si2 = MathUtilities.Divide(g_cswd_expansion[l_phase], g_days_tot[l_phase], 0.0);
                 l_si4 = MathUtilities.Divide(g_cnd_photo[l_phase], g_days_tot[l_phase], 0.0);
 
-                //Summary.WriteMessage(this, );
-                //Summary.WriteMessage(this, );
+                //Summary.WriteMessage(this, , MessageType.Diagnostic);
+                //Summary.WriteMessage(this, , MessageType.Diagnostic);
 
-                Summary.WriteMessage(this, " stress indices for " + crop.stage_names[l_phase]);
+                Summary.WriteMessage(this, " stress indices for " + crop.stage_names[l_phase], MessageType.Diagnostic);
 
-                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}{2}{3,16:E2}", " water stress 1 =", l_si1, "   nitrogen stress 1 =", l_si4));
+                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}{2}{3,16:E2}", " water stress 1 =", l_si1, "   nitrogen stress 1 =", l_si4), MessageType.Diagnostic);
                 //write (string,'(2(a, g16.7e2))')
 
-                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}", " water stress 2 =", l_si2));
+                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}", " water stress 2 =", l_si2), MessageType.Diagnostic);
                 //write (string,'(a, g16.7e2)')
                 }
 
@@ -13543,21 +13561,21 @@ namespace Models
                 l_dlt_dm_N[root] = l_N_root * gm2kg / sm2ha;
 
                 //TODO: put this back in. Better then below where you refer to "straw".
-                //Console.WriteLine(                         "          Organic matter from crop:-      Leaves&Cabbage to surface residue      Roots to soil FOM");
+                //Console.WriteLine(                         "          Organic matter from crop:-      Leaves&&Cabbage to surface residue      Roots to soil FOM");
                 //Console.WriteLine("{0}{1,22:F1}{2,44:F3}", "                          DM (kg/ha) =", (l_dm_residue * gm2kg / sm2ha), (l_dm_root * gm2kg / sm2ha));
                 //Console.WriteLine("{0}{1,22:F1}{2,44:F3}", "                          N  (kg/ha) =", (l_N_residue * gm2kg / sm2ha), (l_N_root * gm2kg / sm2ha));
 
-                //Console.WriteLine(                         "Organic matter removed from system:-            Stem&Sucrose to mill");
+                //Console.WriteLine(                         "Organic matter removed from system:-            Stem&&Sucrose to mill");
                 //Console.WriteLine("{0}{1,22:F1}",          "                         DM (kg/ha) =", (g_dm_green[sstem] + g_dm_green[sucrose]) * gm2kg / sm2ha );
                 //Console.WriteLine("{0}{1,22:F1}",          "                         N  (kg/ha) =", (g_n_green[sstem] + g_n_green[sucrose]) * gm2kg / sm2ha);
 
 
                 string l_40spaces = "                                        ";
 
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"));
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
 
                 //    write (string, '(40x, a, f7.1, a, 3(a, 40x, a, f6.1, a))')
                 //:                  '  straw residue ='
@@ -13703,7 +13721,7 @@ namespace Models
 
                 //! report
 
-                Summary.WriteMessage(this, " crop_kill. Standing above-ground dm = " + l_biomass + " (kg/ha)");
+                Summary.WriteMessage(this, " crop_kill. Standing above-ground dm = " + l_biomass + " (kg/ha)", MessageType.Diagnostic);
 
                 }
 
@@ -13804,10 +13822,10 @@ namespace Models
 
                 string l_40spaces = "                                        ";
 
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"));
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
 
 
                 //    write (string, '(40x, a, f7.1, a, 3(a, 40x, a, f6.1, a))')
@@ -13927,7 +13945,7 @@ namespace Models
         public void LodgeTheCane()
             {
             g_lodge_flag = true;
-            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane crop is lodging");
+            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane crop is lodging", MessageType.Diagnostic);
             }
 
 
@@ -13941,8 +13959,8 @@ namespace Models
         /// <param name="TopsFr">Fraction of Leaves and Cabbage that is buried</param>
         public void HillUpTheSoil(double CaneFr, double TopsFr)
             {
-            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane module is doing Hill Up");
-            Summary.WriteMessage(this, "CaneFr = " + CaneFr + " , TopsFr = " + TopsFr);
+            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane module is doing Hill Up", MessageType.Diagnostic);
+            Summary.WriteMessage(this, "CaneFr = " + CaneFr + " , TopsFr = " + TopsFr, MessageType.Diagnostic);
             sugar_hill_up(CaneFr, TopsFr);    //see "Events sent to Change Other Modules" section because hill_up manager event sends an IncorpFOM event to surfaceOM module.
             }
 
@@ -14126,11 +14144,6 @@ namespace Models
 
         //these Delegates are declared in Models.PMF Namespace.
 
-        /// <summary>
-        /// Occurs when [water changed].
-        /// </summary>
-        public event WaterChangedDelegate WaterChanged;
-
         //public event CropChoppedDelegate CropChopped;
         /// <summary>
         /// Occurs when [biomass removed].
@@ -14210,16 +14223,10 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
+                NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
 
-
-
-                WaterChangedType WaterChanges = new WaterChangedType();
-                WaterChanges.DeltaWater = i_dlt_sw_dep;
-
-                WaterChanged.Invoke(WaterChanges);      //trigger/invoke the Water Changed Event
-
+                waterBalance.RemoveWater(MathUtilities.Multiply_Value(i_dlt_sw_dep, -1));
                 }
             else if (uptake_source == "swim3")
                 {
@@ -14237,8 +14244,8 @@ namespace Models
                     }
 
 
-                solutes.Add("NO3", SoluteManager.SoluteSetterType.Plant, l_dlt_NO3);
-                solutes.Add("NH4", SoluteManager.SoluteSetterType.Plant, l_dlt_NH4);
+                NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
+                NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
             }
             else
                 {

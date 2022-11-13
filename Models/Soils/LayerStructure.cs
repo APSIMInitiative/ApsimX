@@ -1,40 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
+﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
 
 namespace Models.Soils
 {
-    /// <summary>
-    /// A model for holding layer structure information
-    /// </summary>
+    /// <summary>A model for holding layer structure information</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class LayerStructure : Model
+    public class LayerStructure : Model, ITabularData
     {
-        /// <summary>The depth boundaries of each layer</summary>
-        /// <value>The thickness.</value>
-        [XmlIgnore]
-        [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer depth positions")]
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Summary]
+        [Units("mm")]
+        [JsonIgnore]
         public string[] Depth
         {
-            get
-            {
-                return Soil.ToDepthStrings(Thickness);
-            }
+            get => SoilUtilities.ToDepthStrings(Thickness);
+            set => Thickness = SoilUtilities.ToThickness(value);
         }
+
         /// <summary>Gets or sets the thickness.</summary>
-        /// <value>The thickness.</value>
-        [Units("mm")]
-        [Caption("Thickness")]
-        [Description("Soil layer thickness for each layer")]
-        public double[] Thickness { get; set; }       
+        public double[] Thickness { get; set; }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly:false)
+            });
+        }
     }
 }

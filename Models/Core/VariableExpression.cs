@@ -1,17 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableExpression.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Collections;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// TODO: Update summary.
@@ -141,13 +132,13 @@ namespace Models.Core
         /// </summary>
         private void FillVariableNames()
         {
-            ArrayList variablesToFill = fn.Variables;
+            List<Symbol> variablesToFill = fn.Variables;
             for (int i = 0; i < variablesToFill.Count; i++)
             {
                 Symbol sym = (Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = Apsim.Get(Object as Model, sym.m_name.Trim());
+                object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim(), LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError)?.Value;
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)
@@ -204,5 +195,18 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return false; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 }

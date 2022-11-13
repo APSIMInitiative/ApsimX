@@ -4,11 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Zones;
+using APSIM.Shared.Documentation;
 
 namespace Models.Agroforestry
 {
@@ -19,25 +20,25 @@ namespace Models.Agroforestry
     /// 
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class AgroforestrySystem : Zone, ICustomDocumentation
+    public class AgroforestrySystem : Zone
     {
 
         /// <summary>
         /// The reduction in wind as a fraction.
         /// </summary>
         [Units("0-1")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Urel { get; set; }
 
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
-        [XmlIgnore]
-        public List<IModel> ZoneList;
+        [JsonIgnore]
+        public IEnumerable<IModel> ZoneList;
 
         /// <summary>
         /// Fraction of rainfall intercepted by canopy
@@ -46,21 +47,21 @@ namespace Models.Agroforestry
         public double RainfallInterceptionFraction { get; set; }
 
         /// <summary>
-        /// Width of the tree rain shaddow in terms of tree heights
+        /// Width of the tree rain shadow in terms of tree heights
         /// </summary>
-        [Description("Width of tree rainfall shaddow (H)")]
+        [Description("Width of tree rainfall shadow (H)")]
         public double RainShaddowWidth { get; set; }
 
         /// <summary>
         /// Return the area of the zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public override double Area
         {
             get
             {
                 double A = 0;
-                foreach (Zone Z in Apsim.Children(this, typeof(Zone)))
+                foreach (Zone Z in this.FindAllChildren<Zone>())
                     A += Z.Area;
                 return A;
             }
@@ -72,7 +73,7 @@ namespace Models.Agroforestry
         /// <summary>
         /// A pointer to the tree model.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public TreeProxy tree = null;
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -81,8 +82,8 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
-            ZoneList = Apsim.Children(this, typeof(Zone));
+            tree = FindChild<TreeProxy>();
+            ZoneList = FindAllChildren<Zone>().ToList();
         }
 
         /// <summary>
@@ -142,19 +143,9 @@ namespace Models.Agroforestry
         }
 
         /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                tree = Apsim.Child(this, typeof(TreeProxy)) as TreeProxy;
-                AutoDocumentation.DocumentModel(tree, tags, headingLevel, indent);
-            }
+            throw new NotImplementedException("tbi");
         }
     }
 }

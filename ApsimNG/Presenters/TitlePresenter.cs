@@ -1,14 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TitlePresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using Models.Graph;
+    using Models;
     using Views;
 
     /// <summary>
@@ -78,16 +72,14 @@ namespace UserInterface.Presenters
         /// <param name="newText">The new title</param>
         public void OnTitleChanged(string newText)
         {
-            if (this.ShowCaption)
+            try
             {
-                if (newText != "Double click to add a caption")
-                {
-                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Caption", newText));
-                }
+                if (ShowCaption && newText != "Double click to add a caption")
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graph, "Caption", newText));
             }
-            else
+            catch (Exception err)
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "Title", newText));
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -96,17 +88,11 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            if (this.ShowCaption)
-            {
-                if (this.graph.Caption != "Double click to add a caption")
-                {
-                    this.view.Populate(this.graph.Caption);
-                }
-            }
+            if (ShowCaption)
+                if (graph.Caption != "Double click to add a caption")
+                    view.Populate(graph.Caption);
             else
-            {
-                this.view.Populate(this.graph.Name);
-            }
+                view.Populate(graph.Name);
         }
 
         /// <summary>
@@ -115,10 +101,8 @@ namespace UserInterface.Presenters
         /// <param name="model">The model object</param>
         private void OnModelChanged(object model)
         {
-            if (model == this.graph)
-            {
-                this.PopulateView();
-            }
+            if (model == graph)
+                PopulateView();
         }
     }
 }

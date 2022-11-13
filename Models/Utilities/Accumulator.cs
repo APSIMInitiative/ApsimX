@@ -36,12 +36,18 @@ namespace Models.Utilities
         /// </summary>
         public void Update()
         {
-            if (values.Count > numberOfDays)
+            if (values.Count > 0 && values.Count >= numberOfDays)
                 values.RemoveAt(0);
 
-            double value = (double) Apsim.Get(parentModel, variableName);
-
-            values.Add(value);
+            try
+            {
+                double value = (double) parentModel.FindByPath(variableName)?.Value;
+                values.Add(value);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Accumulator is unable to update variable '{variableName}'", err);
+            }
         }
 
         /// <summary>

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DirectedGraphPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using Models.Interfaces;
     using System.Drawing;
@@ -62,7 +57,8 @@ namespace UserInterface.Presenters
         /// <summary>Populate the view object</summary>
         private void PopulateView()
         {
-            view.DirectedGraph = model.DirectedGraphInfo;
+            if (model.DirectedGraphInfo != null)
+                view.DirectedGraph = model.DirectedGraphInfo;
         }
 
     }

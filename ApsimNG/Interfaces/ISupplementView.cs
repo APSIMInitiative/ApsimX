@@ -1,28 +1,22 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ISupplementView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     using System;
     using Models.GrazPlan;
 
     public class TSuppAttrArgs : EventArgs
     {
-        public int attr;
-        public double attrVal;
+        public int Attr { get; set; }
+        public double AttrVal { get; set; }
     }
 
     public class TStringArgs : EventArgs
     {
-        public string name;
+        public string Name { get; set; }
     }
 
     public class TIntArgs : EventArgs
     {
-        public int value;
+        public int Value { get; set; }
     }
 
     /// <summary>
@@ -63,7 +57,7 @@ namespace UserInterface.Interfaces
 
         string[] DefaultSuppNames { set; }
 
-        TSupplementItem SelectedSupplementValues { set; }
+        SupplementItem SelectedSupplementValues { set; }
 
         string SelectedSupplementName { get; set; }
 

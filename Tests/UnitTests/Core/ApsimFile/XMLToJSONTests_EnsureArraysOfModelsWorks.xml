@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <Simulation>
+    <Name>Wheat</Name>
+    <Clock>
+      <Name>Clock</Name>
+      <A>a</A>
+    </Clock>
+    <Folder>
+      <Name>Folder1</Name>
+    </Folder>
+    <Clock>
+      <Name>Clock2</Name>
+      <A>b</A>
+    </Clock>
+    <Clock>
+      <Name>Clock3</Name>
+      <A>c</A>
+    </Clock>
+  </Simulation>
+</Simulations>

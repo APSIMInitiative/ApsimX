@@ -1,108 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-    using EventArguments;
-
-    /// <summary>A structure for holding info about an item in the treeview.</summary>
-    public class NodeDescriptionArgs : EventArgs
-    {
-        /// <summary>The name</summary>
-        public string Name;
-        /// <summary>The type(name) displayed on hover</summary>
-        public string ToolTip = null;
-        /// <summary>
-        /// The resource name for image
-        /// </summary>
-        public string ResourceNameForImage;
-        /// <summary>The children</summary>
-        public List<NodeDescriptionArgs> Children = new List<NodeDescriptionArgs>();
-        /// <summary>Whether this node will be included in auto-docs.</summary>
-        public bool IncludeInDocumentation { get; set; }
-    }
-
-    /// <summary>A class for holding info about a collection of menu items.</summary>
-    public class MenuDescriptionArgs : EventArgs
-    {
-        /// <summary>The name</summary>
-        public string Name;
-        /// <summary>
-        /// The resource name for image
-        /// </summary>
-        public string ResourceNameForImage;
-        /// <summary>The on click</summary>
-        public EventHandler OnClick;
-        /// <summary>Flags whether this item should show a checkbox</summary>
-        public bool ShowCheckbox;
-        /// <summary>The checked</summary>
-        public bool Checked;
-        /// <summary>The shortcut key</summary>
-        public string ShortcutKey;
-        /// <summary>The enabled</summary>
-        public bool Enabled;
-    }
-
-    /// <summary>A class for holding info about a node selection event.</summary>
-    public class NodeSelectedArgs : EventArgs
-    {
-        /// <summary>The old node path</summary>
-        public string OldNodePath;
-        /// <summary>The new node path</summary>
-        public string NewNodePath;
-    }
-
-    /// <summary>A clas for holding info about a node rename event.</summary>
-    public class NodeRenameArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The new name</summary>
-        public string NewName;
-        /// <summary>The cancel edit</summary>
-        public bool CancelEdit;
-    }
-
-    /// <summary>A class for holding info about a begin drag event.</summary>
-    public class DragStartArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The drag object</summary>
-        public ISerializable DragObject;
-    }
-
-    /// <summary>A class for holding info about a begin drag event.</summary>
-    public class AllowDropArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The drag object</summary>
-        public ISerializable DragObject;
-        /// <summary>The allow</summary>
-        public bool Allow;
-    }
-
-    /// <summary>A class for holding info about a begin drag event.</summary>
-    public class DropArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The copied</summary>
-        public bool Copied;
-        /// <summary>The moved</summary>
-        public bool Moved;
-        /// <summary>The linked</summary>
-        public bool Linked;
-        /// <summary>The drag object</summary>
-        public ISerializable DragObject;
-    }
-
     /// <summary>
     /// The interface for an explorer view.
     /// NB: All node paths are compatible with XmlHelper node paths.
@@ -110,115 +7,24 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface IExplorerView
     {
-        /// <summary>
-        /// This event will be invoked when a node is selected not by the user
-        /// but by an Undo command.
-        /// </summary>
-        event EventHandler<NodeSelectedArgs> SelectedNodeChanged;
+        /// <summary>The tree on the left side of the explorer view</summary>
+        ITreeView Tree { get; }
 
-        /// <summary>
-        /// Invoked when a drag operation has commenced. Need to create a DragObject.
-        /// </summary>
-        event EventHandler<DragStartArgs> DragStarted;
+        /// <summary>The toolstrip at the top of the explorer view</summary>
+        IToolStripView ToolStrip { get; }
 
-        /// <summary>
-        /// Invoked when the view wants to know if a drop is allowed on the specified Node.
-        /// </summary>
-        event EventHandler<AllowDropArgs> AllowDrop;
-
-        /// <summary>Invoked when a drop has occurred.</summary>
-        event EventHandler<DropArgs> Droped;
-
-        /// <summary>Invoked then a node is renamed.</summary>
-        event EventHandler<NodeRenameArgs> Renamed;
-
-        /// <summary>Refreshes the entire tree from the specified descriptions.</summary>
-        /// <param name="nodeDescriptions">The nodes descriptions.</param>
-        void Refresh(NodeDescriptionArgs nodeDescriptions);
-
-        /// <summary>Moves the specified node up 1 position.</summary>
-        /// <param name="nodePath">The path of the node to move.</param>
-        void MoveUp(string nodePath);
-
-        /// <summary>Moves the specified node down 1 position.</summary>
-        /// <param name="nodePath">The path of the node to move.</param>
-        void MoveDown(string nodePath);
-
-        /// <summary>Renames the specified node path.</summary>
-        /// <param name="nodePath">The node path.</param>
-        /// <param name="newName">The new name for the node.</param>
-        void Rename(string nodePath, string newName);
-
-        /// <summary>Puts the current node into edit mode so user can rename it.</summary>
-        void BeginRenamingCurrentNode();
-
-        /// <summary>Deletes the specified node.</summary>
-        /// <param name="nodePath">The node path.</param>
-        void Delete(string nodePath);
-
-        /// <summary>Adds a child node.</summary>
-        /// <param name="parentNodePath">The parent node path.</param>
-        /// <param name="nodeDescription">The node description.</param>
-        /// <param name="position">The position.</param>
-        void AddChild(string parentNodePath, NodeDescriptionArgs nodeDescription, int position = -1);
-
-        /// <summary>Gets or sets the currently selected node.</summary>
-        /// <value>The selected node.</value>
-        string SelectedNode { get; set; }
-
-        /// <summary>Gets or sets the shortcut keys.</summary>
-        /// <value>The shortcut keys.</value>
-        string[] ShortcutKeys { get; set; }
-
-        /// <summary>
-        /// If true, a small tick will be displayed beside nodes which are to be included in auto-docs.
-        /// </summary>
-        bool ShowIncludeInDocumentation { get; set; }
-
-        /// <summary>Populate the main menu tool strip.</summary>
-        /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
-        void PopulateMainToolStrip(List<MenuDescriptionArgs> menuDescriptions);
-
-        /// <summary>Populates the label.</summary>
-        /// <param name="labelText">The label text.</param>
-        /// <param name="labelToolTip">The label tool tip.</param>
-        void PopulateLabel(string labelText, string labelToolTip);
-
-        /// <summary>
-        /// Populate the context menu from the descriptions passed in.
-        /// </summary>
-        /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
-        void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions);
-        
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>
-        void AddRightHandView(object Control);
+        void AddRightHandView(object control);
+
+        /// <summary>
+        /// Add a description to the right hand view.
+        /// </summary>
+        /// <param name="description">The description to show.</param>
+        void AddDescriptionToRightHandView(string description);
 
         /// <summary>Get a screen shot of the right hand panel.</summary>
         System.Drawing.Image GetScreenshotOfRightHandPanel();
-
-        /// <summary>
-        /// Get whatever text is currently on the clipboard
-        /// </summary>
-        /// <returns></returns>
-        string GetClipboardText(string clipboardName);
-
-        /// <summary>
-        /// Place text on the clipboard
-        /// </summary>
-        /// <param name="text"></param>
-        void SetClipboardText(string text, string clipboardName);
-
-        /// <summary>
-        /// Gets or sets the width of the tree view.
-        /// </summary>
-        Int32 TreeWidth { get; set; }
-
-        /// <summary>Show the wait cursor</summary>
-        /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
-        void ShowWaitCursor(bool wait);
     }
-
-
 }

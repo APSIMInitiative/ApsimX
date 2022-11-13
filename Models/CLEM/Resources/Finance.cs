@@ -1,9 +1,9 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -11,62 +11,64 @@ namespace Models.CLEM.Resources
     /// Parent model of finance models.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all finance types (bank accounts) for the simulation.")]
+    [Description("Resource group for all finance types (bank accounts) in the simulation.")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Finance/Finance.htm")]
     public class Finance : ResourceBaseWithTransactions
     {
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        [Link]
+        Clock Clock = null;
+
+        /// <summary>
+        /// Currency used
+        /// </summary>
+        [Description("Name of currency")]
+        public string CurrencyName { get; set; }
+
+        /// <summary>
+        /// Start of financial year
+        /// </summary>
+        [Description("Start of financial year")]
+        [System.ComponentModel.DefaultValueAttribute(7)]
+        [Required, Month]
+        public MonthsOfYear FirstMonthOfFinancialYear { get; set; }
+
+        /// <summary>
+        /// Method to determine the financial year from a given date
+        /// </summary>
+        /// <returns>The financial year</returns>
+        public int FinancialYear
         {
-            foreach (var child in Children)
+            get
             {
-                if (child is IResourceWithTransactionType)
-                {
-                    (child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
-                }
+                if (Clock.Today.Month < (int)FirstMonthOfFinancialYear)
+                    return Clock.Today.Year - 1;
+                else
+                    return Clock.Today.Year;
             }
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write($"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>");
+            htmlWriter.Write($"<div class=\"activityentry\">The financial year starts in ");
+            if (FirstMonthOfFinancialYear == 0)
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+            else
             {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(FirstMonthOfFinancialYear.ToString() + "</span>");
             }
-        }
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
-        }
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
+        } 
 
         #endregion
 

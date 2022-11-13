@@ -1,10 +1,8 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -12,16 +10,22 @@ namespace Models.CLEM.Resources
     /// Base resource model to implement transaction tracking
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Base Class and should not be used directly.")]
+    [Version(1, 0, 1, "")]
     public class ResourceBaseWithTransactions: CLEMModel
     {
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
+
+        /// <summary>
+        /// Provide full name of resource StoreName.TypeName
+        /// </summary>
+        public string FullName => $"{CLEMParentName}.{Name}";
 
         /// <summary>
         /// Resource transaction occured Event handler
@@ -34,32 +38,47 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected void OnTransactionOccurred(EventArgs e)
         {
-            EventHandler handler = TransactionOccurred;
-            if (handler != null)
-                handler(this, e);
+            TransactionOccurred?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Get resource by name
+        /// Add all events when a new child is added to this resource in run time
         /// </summary>
-        /// <param name="Name"></param>
-        /// <returns></returns>
-        public object GetByName(string Name)
+        /// <param name="child"></param>
+        public virtual void AddNewResourceType(IResourceWithTransactionType child)
         {
-            return this.Children.Where(a => a.Name == Name).FirstOrDefault();
+            throw new NotImplementedException();
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
+                childModel.TransactionOccurred += Resource_TransactionOccurred;
         }
 
         /// <summary>
-        /// Get main/first account
+        /// Overrides the base class method to allow for clean up
         /// </summary>
-        /// <returns></returns>
-        public object GetFirst()
+        [EventSubscribe("Completed")]
+        protected void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.Children.Count() > 0)
-            {
-                return this.Children.FirstOrDefault();
-            }
-            return null;
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
         }
 
     }

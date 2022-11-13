@@ -1,0 +1,278 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 130,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "A (not very useful by itself) test of the rotation manager's features.\n\n- Many arcs from one node\n- Many arcs to one node\n- Loopback arcs\n- Boolean conditions\n- Integer conditions (returning -1, 1, 2)",
+      "Name": "Memo",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Name": "rotation",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1910-01-01T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "SummaryFile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Management.RotationManager, Models",
+          "Nodes": [
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A",
+              "Location": "417, 206",
+              "Colour": "Red",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "initial",
+              "Location": "70, 200",
+              "Colour": "Lime",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A1",
+              "Location": "702, 95",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A2",
+              "Location": "698, 264",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A3",
+              "Location": "689, 443",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "B",
+              "Location": "938, 364",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            }
+          ],
+          "Arcs": [
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoToA"
+              ],
+              "Actions": [
+                ""
+              ],
+              "SourceName": "initial",
+              "DestinationName": "A",
+              "Location": "266, 205",
+              "Colour": "Yellow",
+              "Name": "Arc 4"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoToA1"
+              ],
+              "Actions": [],
+              "SourceName": "A",
+              "DestinationName": "A1",
+              "Location": "534, 161",
+              "Colour": "Yellow",
+              "Name": "Arc 1"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromAToA2"
+              ],
+              "Actions": [],
+              "SourceName": "A",
+              "DestinationName": "A2",
+              "Location": "549, 252",
+              "Colour": "Yellow",
+              "Name": "Arc 2"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromAToA3"
+              ],
+              "Actions": [],
+              "SourceName": "A",
+              "DestinationName": "A3",
+              "Location": "565, 346",
+              "Colour": "Yellow",
+              "Name": "Arc 3"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.A1CanLoopback"
+              ],
+              "Actions": [
+                "[RotationScript].Script.A1Loopback()"
+              ],
+              "SourceName": "A1",
+              "DestinationName": "A1",
+              "Location": "844, 97",
+              "Colour": "Yellow",
+              "Name": "Arc 5"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromA1ToA2"
+              ],
+              "Actions": [],
+              "SourceName": "A1",
+              "DestinationName": "A2",
+              "Location": "703, 176",
+              "Colour": "Yellow",
+              "Name": "Arc 6"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromA2ToB"
+              ],
+              "Actions": [],
+              "SourceName": "A2",
+              "DestinationName": "B",
+              "Location": "804, 308",
+              "Colour": "Yellow",
+              "Name": "Arc 7"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromA3ToB"
+              ],
+              "Actions": [],
+              "SourceName": "A3",
+              "DestinationName": "B",
+              "Location": "834, 408",
+              "Colour": "Yellow",
+              "Name": "Arc 8"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromBToA"
+              ],
+              "Actions": [],
+              "SourceName": "B",
+              "DestinationName": "A",
+              "Location": "682, 661",
+              "Colour": "Yellow",
+              "Name": "Arc 9"
+            }
+          ],
+          "InitialState": "initial",
+          "Verbose": false,
+          "Name": "RotationManager",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Clock].Today.DayOfYear as doy",
+            "[RotationManager].CurrentState as state"
+          ],
+          "EventNames": [
+            "[RotationManager].Transition"
+          ],
+          "GroupByVariableName": null,
+          "Name": "TransitionReport",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\nusing Models.Core;\nusing Models.Storage;\nusing System.Data;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n    \t[Link] private Clock clock;\n    \tprivate int a1LoopbackCounter;\n\n    \t[EventSubscribe(\"StartOfSimulation\")]\n    \tprivate void StartOfSim(object sender, EventArgs args)\n    \t{\n    \t\ta1LoopbackCounter = 0;\n    \t}\n\n    \t// Can go to A only on even-numbered days.\n    \tpublic bool CanGoToA\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.DayOfYear % 2 == 0;\n    \t\t}\n    \t}\n\n    \t// Can go to A1 only in even years.\n    \tpublic bool CanGoToA1\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.Year % 2 == 0;\n    \t\t}\n    \t}\n\n    \t// A1 can always loopback.\n    \tpublic bool A1CanLoopback\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn true;\n    \t\t}\n    \t}\n\n    \t// Count the number of times we've looped back inside A1\n    \tpublic void A1Loopback()\n    \t{\n    \t\ta1LoopbackCounter++;\n    \t}\n\n    \t// Can go from A1 to A2 only after looping back 5 times.\n    \tpublic int CanGoFromA1ToA2\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\tif (a1LoopbackCounter < 5)\n    \t\t\t\treturn 0;\n    \t\t\tif (a1LoopbackCounter == 5)\n    \t\t\t\treturn 1;\n    \t\t\treturn 2;\n    \t\t}\n    \t}\n\n    \t// Can go to A2 with normal priority if year >= 1901.\n    \t// Can go to A2 with high priority if year == 1901.\n    \tpublic int CanGoFromAToA2\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\tif (clock.Today.Year == 1901)\n    \t\t\t\treturn 2;\n    \t\t\tif (clock.Today.Year > 1901)\n    \t\t\t\treturn 1;\n    \t\t\treturn 0;\n    \t\t}\n    \t}\n\n    \t// Can never go to A3 before 1905.\n    \t// Can go to A3 with normal priority in even years.\n    \t// Gan go to A3 with high priority in odd years.\n    \tpublic int CanGoFromAToA3\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\tif (clock.Today.Year < 1905)\n    \t\t\t\treturn -1;\n    \t\t\tif (clock.Today.Year % 2 == 0)\n    \t\t\t\treturn 1;\n    \t\t\treturn 2;\n    \t\t}\n    \t}\n\n    \t// Can go from A2 to B in December only.\n    \tpublic bool CanGoFromA2ToB\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.Month == 12;\n    \t\t}\n    \t}\n\n    \t// Can go from A3 to B in July.\n    \tpublic bool CanGoFromA3ToB\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.Month == 7;\n    \t\t}\n    \t}\n\n    \t// Can go from B to A only on January 1.\n    \tpublic bool CanGoFromBToA\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.DayOfYear == 1;\n    \t\t}\n    \t}\n    }\n}\n",
+          "Parameters": [],
+          "Name": "RotationScript",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\nusing Models.Core;\nusing Models.Storage;\nusing System.Data;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model, ITest\n    {\n        public void Run()\n        {\n            IStorageReader storage = this.FindInScope<IDataStore>().Reader;\n            DataTable data = storage.GetData(\"TransitionReport\", \"Current\", new string[] { \"rotation\" }, new[] { \"doy\", \"state\" });\n            int[] dates = DataTableUtilities.GetColumnAsIntegers(data, \"doy\");\n            string[] states = DataTableUtilities.GetColumnAsStrings(data, \"state\");\n\n            if (dates.Length != expectedDates.Length)\n            \tthrow new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedDates.Length, dates.Length));\n            for (int i = 0; i < dates.Length; i++)\n            \tif (dates[i] != expectedDates[i])\n            \t\tthrow new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedDates[i], dates[i]));\n            for (int i = 0; i < states.Length; i++)\n            \tif (states[i] != expectedStates[i])\n            \t\tthrow new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedStates[i], states[i]));\n        \tif (states.Length != expectedStates.Length)\n            \tthrow new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedStates.Length, states.Length));\n        }\n\n        private static readonly int[] expectedDates = new int[]\n        {\n            2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t336,\n\t\t\t1,\n\t\t\t1,\n\t\t\t182,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t182,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t336,\n\t\t\t1,\n\t\t\t1,\n\t\t\t182,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1\n        };\n\n        private static readonly string[] expectedStates = new string[]\n        {\n        \t\"initial\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A3\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A3\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A3\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\"\n        };\n    }\n}\n",
+          "Parameters": [],
+          "Name": "ResultsValidator",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

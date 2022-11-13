@@ -1,80 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
-
-namespace Models.Lifecycle
+﻿namespace Models.LifeCycle
 {
+    using System;
+    using static Models.LifeCycle.LifeCyclePhase;
+
     /// <summary>
-    /// # [Name]
-    /// A generic cohort item that exists in a Lifestage within a Lifecycle
+    /// A class that holds the status of a group of individules (cohort) of the same developmental stage
     /// </summary>
+
     [Serializable]
     public class Cohort
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Ident;
+        /// <summary>Number of individules in this cohort.</summary>
+        public double Population { get; set; }
 
-        /// <summary>
-        /// Developmental level (within a lifestage). In timesteps.
-        /// </summary>
-        public double PhenoAge { get; set; }
+        /// <summary>Days since this cohort was initiated</summary>
+        public double ChronologicalAge { get; set; }
 
-        /// <summary>
-        /// Period of existence since start of egg(?) stage. In timesteps.
-        /// </summary>
-        public double ChronoAge { get; set; }
-
-        /// <summary>
-        /// The fraction of maturity for the cohort. 0-1
-        /// </summary>
+        /// <summary>The maturity of the cohort (0-1)</summary>
         public double PhysiologicalAge { get; set; }
+                
+        /// <summary>Number of Mortalities from this cohort today.</summary>
+        public double Mortalities { get; set; }
 
-        /// <summary>
-        /// Count of creatures/spores in this cohort.
-        /// </summary>
-        public double Count { get; set; }
+        /// <summary>Number of progeny created by this cohort</summary>
+        public double Progeny { get; set; }
 
-        /// <summary>
-        /// The fecundity for the timestep.
-        /// </summary>
-        public double Fecundity = -1.0;
+        /// <summary>Number of migrants leaving this cohort</summary>
+        public double Emigrants { get; set; }
 
-        /// <summary>
-        /// Mortality for the timestep.
-        /// </summary>
-        public double Mortality { get; set; }
+        /// <summary>Information about where this cohort came from</summary>
+        public SourceInfo sourceInfo { get; set; }
 
-        /// <summary>
-        /// The Lifestage that owns this cohort.
-        /// </summary>
-        public Lifestage OwningStage;
+        /// <summary>The LifeCyclePhase this cohort belongs to.</summary>
+        public LifeCyclePhase BelongsToPhase;
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public Cohort()
+        /// <summary> Construct and store reference to owner.</summary>
+        /// <param name="belongsTo"></param>
+        public Cohort(LifeCyclePhase belongsTo)
         {
-
+            BelongsToPhase = belongsTo;
         }
 
-        /// <summary>
-        /// Construct and store reference to owner.
-        /// </summary>
-        /// <param name="owner"></param>
-        public Cohort(Lifestage owner)
-        {
-            OwningStage = owner;
-        }
-
-        /// <summary>
-        /// Increment the timestep age of this cohort.
-        /// </summary>
-        public void AgeCohort()
-        {
-            PhenoAge++;
-            ChronoAge++;
-        }
     }
 }

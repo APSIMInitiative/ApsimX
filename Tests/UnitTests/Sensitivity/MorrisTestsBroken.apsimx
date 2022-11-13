@@ -1,0 +1,83 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 47,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Morris, Models",
+      "ParameterValues": null,
+      "NumPaths": 25,
+      "NumIntervals": 20,
+      "Jump": 10,
+      "Parameters": [
+        {
+          "$type": "Models.Morris+Parameter, Models",
+          "Name": "DiffusSlope",
+          "Path": "Field.Soil.SoilWater.DiffusSlope",
+          "LowerBound": 10.0,
+          "UpperBound": 20.0
+        }
+      ],
+      "Years": [
+        1981,
+        1982,
+        1983,
+        1984,
+        1985,
+        1986,
+        1987,
+        1988,
+        1989,
+        1990
+      ],
+      "Name": "FallowSensitivity",
+      "Children": [
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "Name": "FallowSensitivityBase",
+          "Children": [
+            {
+              "$type": "Models.Clock, Models",
+              "StartDate": "1980-10-31T00:00:00",
+              "EndDate": "1981-11-01T00:00:00",
+              "Name": "Clock",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "CaptureErrors": true,
+              "CaptureWarnings": true,
+              "CaptureSummaryText": true,
+              "Name": "SummaryFile",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

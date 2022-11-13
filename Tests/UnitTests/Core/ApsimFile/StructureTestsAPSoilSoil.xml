@@ -1,0 +1,519 @@
+<Soil name="Grey deep sandy duplex (Cunderdin No486)">
+  <RecordNumber>737</RecordNumber>
+  <ASCOrder />
+  <ASCSubOrder />
+  <SoilType>Other</SoilType>
+  <LocalName>Deep sandy duplexes</LocalName>
+  <Site>Cunderdin</Site>
+  <NearestTown>Cunderdin</NearestTown>
+  <Region>Central Region</Region>
+  <State>Western Australia</State>
+  <Country>Australia</Country>
+  <NaturalVegetation />
+  <ApsoilNumber>486</ApsoilNumber>
+  <Latitude>-31.457</Latitude>
+  <Longitude>117.244</Longitude>
+  <LocationAccuracy>+/- 20m</LocationAccuracy>
+  <YearOfSampling>2009</YearOfSampling>
+  <DataSource>DAFWA_A. Stuart-Street _ NEAR project Yield Prophet</DataSource>
+  <Comments>Deep sandy duplex - YP11 - reticulite subsoil (coarse with sand seams)-estimated LL.  12/05/2010 Zvi Hochman modified values for kl(wheat), salb, DiffusConst, DiffusSlope, CN2Bare at request of DAFWA</Comments>
+  <Water>
+    <Thickness>
+      <double>100</double>
+      <double>200</double>
+      <double>200</double>
+      <double>300</double>
+      <double>400</double>
+      <double>100</double>
+    </Thickness>
+    <BD>
+      <double>1.64</double>
+      <double>1.78</double>
+      <double>1.92</double>
+      <double>1.84</double>
+      <double>2</double>
+      <double>1.95</double>
+    </BD>
+    <AirDry>
+      <double>0.015</double>
+      <double>0.035</double>
+      <double>0.14</double>
+      <double>0.14</double>
+      <double>0.14</double>
+      <double>0.14</double>
+    </AirDry>
+    <LL15>
+      <double>0.03</double>
+      <double>0.041</double>
+      <double>0.14</double>
+      <double>0.14</double>
+      <double>0.14</double>
+      <double>0.14</double>
+    </LL15>
+    <DUL>
+      <double>0.09</double>
+      <double>0.1</double>
+      <double>0.187</double>
+      <double>0.197</double>
+      <double>0.169</double>
+      <double>0.196</double>
+    </DUL>
+    <SAT>
+      <double>0.354</double>
+      <double>0.305</double>
+      <double>0.262</double>
+      <double>0.29</double>
+      <double>0.233</double>
+      <double>0.251</double>
+    </SAT>
+    <BDMetadata>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+    </BDMetadata>
+    <AirDryMetadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </AirDryMetadata>
+    <LL15Metadata>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+      <string>Estimated based on local knowledge</string>
+    </LL15Metadata>
+    <DULMetadata>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+      <string>Field measured and checked for sensibility</string>
+    </DULMetadata>
+    <SATMetadata>
+      <string>Calculated from measured, estimated or calculated BD</string>
+      <string>Calculated from measured, estimated or calculated BD</string>
+      <string>Calculated from measured, estimated or calculated BD</string>
+      <string>Calculated from measured, estimated or calculated BD</string>
+      <string>Calculated from measured, estimated or calculated BD</string>
+      <string>Calculated from measured, estimated or calculated BD</string>
+    </SATMetadata>
+    <SoilCrop name="wheat">
+      <Thickness>
+        <double>100</double>
+        <double>200</double>
+        <double>200</double>
+        <double>300</double>
+        <double>400</double>
+        <double>100</double>
+      </Thickness>
+      <LL>
+        <double>0.03</double>
+        <double>0.041</double>
+        <double>0.14</double>
+        <double>0.14</double>
+        <double>0.14</double>
+        <double>0.142</double>
+      </LL>
+      <KL>
+        <double>0.06</double>
+        <double>0.06</double>
+        <double>0.06</double>
+        <double>0.04</double>
+        <double>0.04</double>
+        <double>0.02</double>
+      </KL>
+      <XF>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+        <double>1</double>
+      </XF>
+      <LLMetadata>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+        <string>Estimated based on local knowledge</string>
+      </LLMetadata>
+    </SoilCrop>
+  </Water>
+  <SoilWater>
+    <SummerCona>3.5</SummerCona>
+    <SummerU>6</SummerU>
+    <SummerDate>1-Nov</SummerDate>
+    <WinterCona>2</WinterCona>
+    <WinterU>2</WinterU>
+    <WinterDate>1-Apr</WinterDate>
+    <DiffusConst>40</DiffusConst>
+    <DiffusSlope>16</DiffusSlope>
+    <Salb>0.14</Salb>
+    <CN2Bare>60</CN2Bare>
+    <CNRed>20</CNRed>
+    <CNCov>0.8</CNCov>
+    <Slope>NaN</Slope>
+    <DischargeWidth>NaN</DischargeWidth>
+    <CatchmentArea>NaN</CatchmentArea>
+    <MaxPond>NaN</MaxPond>
+    <Thickness>
+      <double>100</double>
+      <double>200</double>
+      <double>200</double>
+      <double>300</double>
+      <double>400</double>
+      <double>100</double>
+    </Thickness>
+    <SWCON>
+      <double>0.7</double>
+      <double>0.7</double>
+      <double>0.5</double>
+      <double>0.5</double>
+      <double>0.5</double>
+      <double>0.5</double>
+    </SWCON>
+    <MWCON>
+      <double>1</double>
+      <double>1</double>
+      <double>1</double>
+      <double>1</double>
+      <double>1</double>
+      <double>1</double>
+    </MWCON>
+  </SoilWater>
+  <SoilOrganicMatter>
+    <RootCN>40</RootCN>
+    <RootWt>1000</RootWt>
+    <SoilCN>12</SoilCN>
+    <EnrACoeff>7.4</EnrACoeff>
+    <EnrBCoeff>0.2</EnrBCoeff>
+    <Thickness>
+      <double>100</double>
+      <double>200</double>
+      <double>200</double>
+      <double>300</double>
+      <double>400</double>
+      <double>100</double>
+    </Thickness>
+    <OC>
+      <double>0.0593</double>
+      <double>0.1731</double>
+      <double>0.103</double>
+      <double>0.0409</double>
+      <double>0.0275</double>
+      <double>0.0648</double>
+    </OC>
+    <OCMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </OCMetadata>
+    <FBiom>
+      <double>0.035</double>
+      <double>0.02</double>
+      <double>0.015</double>
+      <double>0.015</double>
+      <double>0.01</double>
+      <double>0.01</double>
+    </FBiom>
+    <FInert>
+      <double>0.4</double>
+      <double>0.5</double>
+      <double>0.7</double>
+      <double>0.95</double>
+      <double>0.95</double>
+      <double>0.95</double>
+    </FInert>
+    <OCUnits>WalkleyBlack</OCUnits>
+  </SoilOrganicMatter>
+  <Analysis>
+    <Thickness>
+      <double>100</double>
+      <double>200</double>
+      <double>200</double>
+      <double>300</double>
+      <double>400</double>
+      <double>100</double>
+    </Thickness>
+    <Rocks>
+      <double>0</double>
+      <double>0</double>
+      <double>5</double>
+      <double>0</double>
+      <double>0</double>
+      <double>0</double>
+    </Rocks>
+    <Texture>
+      <string>sand</string>
+      <string>sand</string>
+      <string>sandy clay loam</string>
+      <string>sandy clay loam</string>
+      <string>sandy clay loam</string>
+      <string>sandy clay loam</string>
+    </Texture>
+    <TextureMetadata>
+      <string>From PSA using layers in column 'Thickness' </string>
+      <string>From PSA using layers in column 'Thickness' </string>
+      <string>From PSA using layers in column 'Thickness' </string>
+      <string>From PSA using layers in column 'Thickness' </string>
+      <string>From PSA using layers in column 'Thickness' </string>
+      <string>From PSA using layers in column 'Thickness' </string>
+    </TextureMetadata>
+    <EC>
+      <double>0.108</double>
+      <double>0.022</double>
+      <double>0.053</double>
+      <double>0.07</double>
+      <double>0.072</double>
+      <double>0.086</double>
+    </EC>
+    <ECMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </ECMetadata>
+    <PH>
+      <double>6.4</double>
+      <double>5.8</double>
+      <double>6</double>
+      <double>6.2</double>
+      <double>6.2</double>
+      <double>5.9</double>
+    </PH>
+    <PHMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </PHMetadata>
+    <CL>
+      <double>31</double>
+      <double>5</double>
+      <double>27</double>
+      <double>51</double>
+      <double>59</double>
+      <double>79</double>
+    </CL>
+    <CLMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </CLMetadata>
+    <Boron>
+      <double>0.5</double>
+      <double>0.3</double>
+      <double>0.7</double>
+      <double>0.7</double>
+      <double>0.7</double>
+      <double>1.2</double>
+    </Boron>
+    <BoronMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </BoronMetadata>
+    <CEC>
+      <double>2.9</double>
+      <double>0.8</double>
+      <double>2.7</double>
+      <double>3.8</double>
+      <double>2.9</double>
+      <double>4.2</double>
+    </CEC>
+    <CECMetadata>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+      <string>Unknown source or quality of data</string>
+    </CECMetadata>
+    <Ca>
+      <double>2.3</double>
+      <double>0.6</double>
+      <double>1.5</double>
+      <double>1.5</double>
+      <double>0.9</double>
+      <double>0.8</double>
+    </Ca>
+    <CaMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </CaMetadata>
+    <Mg>
+      <double>0.4</double>
+      <double>0.1</double>
+      <double>0.9</double>
+      <double>1.7</double>
+      <double>1.4</double>
+      <double>1.9</double>
+    </Mg>
+    <MgMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </MgMetadata>
+    <Na>
+      <double>0.1</double>
+      <double>0</double>
+      <double>0.2</double>
+      <double>0.5</double>
+      <double>0.5</double>
+      <double>1.3</double>
+    </Na>
+    <NaMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </NaMetadata>
+    <K>
+      <double>0.1</double>
+      <double>0.1</double>
+      <double>0.1</double>
+      <double>0.1</double>
+      <double>0.1</double>
+      <double>0.2</double>
+    </K>
+    <KMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </KMetadata>
+    <ESP>
+      <double>4.2</double>
+      <double>3.4</double>
+      <double>8.8</double>
+      <double>12.1</double>
+      <double>16.8</double>
+      <double>30.3</double>
+    </ESP>
+    <ESPMetadata>
+      <string>C</string>
+      <string>C</string>
+      <string>C</string>
+      <string>C</string>
+      <string>C</string>
+      <string>C</string>
+    </ESPMetadata>
+    <Mn>
+      <double>1.7</double>
+      <double>0.2</double>
+      <double>0.2</double>
+      <double>0.1</double>
+      <double>0.2</double>
+      <double>0.2</double>
+    </Mn>
+    <MnMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </MnMetadata>
+    <Al>
+      <double>0</double>
+      <double>0</double>
+      <double>0</double>
+      <double>0</double>
+      <double>0</double>
+      <double>0</double>
+    </Al>
+    <AlMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </AlMetadata>
+    <ParticleSizeSand>
+      <double>94.1</double>
+      <double>92.6</double>
+      <double>72.5</double>
+      <double>71.5</double>
+      <double>72.2</double>
+      <double>76.7</double>
+    </ParticleSizeSand>
+    <ParticleSizeSandMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </ParticleSizeSandMetadata>
+    <ParticleSizeSilt>
+      <double>2</double>
+      <double>3.2</double>
+      <double>5.1</double>
+      <double>4.2</double>
+      <double>3.1</double>
+      <double>0</double>
+    </ParticleSizeSilt>
+    <ParticleSizeSiltMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </ParticleSizeSiltMetadata>
+    <ParticleSizeClay>
+      <double>3.9</double>
+      <double>4.2</double>
+      <double>22.4</double>
+      <double>24.3</double>
+      <double>24.7</double>
+      <double>23.3</double>
+    </ParticleSizeClay>
+    <ParticleSizeClayMetadata>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+      <string>Measured</string>
+    </ParticleSizeClayMetadata>
+    <PHUnits>CaCl2</PHUnits>
+    <BoronUnits>HotWater</BoronUnits>
+  </Analysis>
+  <CERESSoilTemperature />
+</Soil>

@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
@@ -11,12 +12,12 @@ namespace UserInterface.Views
         /// <summary>
         /// This button closes the view.
         /// </summary>
-        private Button BtnClose;
+        private Button closeButton;
 
         /// <summary>
         /// This button copies the contents of the error message to the clipboard.
         /// </summary>
-        private Button BtnCopy;
+        private Button copyButton;
 
         /// <summary>
         /// Text area which the error information is written to.
@@ -64,18 +65,18 @@ namespace UserInterface.Views
             scroll.Add(textArea);
             Error = information;
 
-            BtnClose = new Button("Close");
-            BtnClose.Clicked += Close;
+            closeButton = new Button("Close");
+            closeButton.Clicked += Close;
             Alignment alignCloseButton = new Alignment(1, 1, 0, 0)
             {
-                BtnClose
+                closeButton
             };
             
-            BtnCopy = new Button("Copy");
-            BtnCopy.Clicked += Copy;
+            copyButton = new Button("Copy");
+            copyButton.Clicked += Copy;
             Alignment alignCopyButton = new Alignment(0, 1, 0, 0)
             {
-                BtnCopy
+                copyButton
             };
 
             HBox buttonContainer = new HBox();
@@ -122,10 +123,10 @@ namespace UserInterface.Views
         /// </summary>
         public void Destroy()
         {
-            BtnCopy.Clicked -= Copy;
-            BtnClose.Clicked -= Close;
+            copyButton.Clicked -= Copy;
+            closeButton.Clicked -= Close;
             if (errorWindow != null)
-                errorWindow.Destroy();
+                errorWindow.Dispose();
         }
 
         /// <summary>
@@ -135,7 +136,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Close(object sender, EventArgs e)
         {
-            errorWindow.Destroy();
+            try
+            {
+                errorWindow.Dispose();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -145,16 +153,30 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Copy(object sender, EventArgs e)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("CLIPBOARD", false);
-            Clipboard cb = Clipboard.Get(modelClipboard);
-            cb.Text = Error;
+            try
+            {
+                Gdk.Atom modelClipboard = Gdk.Atom.Intern("CLIPBOARD", false);
+                Clipboard cb = Clipboard.Get(modelClipboard);
+                cb.Text = Error;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.Event.Key == Gdk.Key.Escape)
-                Destroy();
+            try
+            {
+                if (e.Event.Key == Gdk.Key.Escape)
+                    Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

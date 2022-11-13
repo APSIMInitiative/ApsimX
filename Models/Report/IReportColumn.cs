@@ -1,13 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportColumn.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Report
+namespace Models
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>An interface for a column in a report table.</summary>
     public interface IReportColumn
     {
@@ -17,8 +9,11 @@ namespace Models.Report
         /// <summary>Units of measurement</summary>
         string Units { get; }
 
-        /// <summary>Retrieve the current value</summary>
-        object GetValue();
+        /// <summary>Retrieve the current value.</summary>
+        /// <param name="groupNumber">The group number to retrieve the value for.</param>
+        object GetValue(int groupNumber);
 
+        /// <summary>Gets the number of groups.</summary>
+        int NumberOfGroups { get; }
     }
 }

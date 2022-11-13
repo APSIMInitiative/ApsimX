@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models;
 using Models.Core;
@@ -21,7 +21,7 @@ namespace Models.Aqua
     /// Simple prawn growth model.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Prawns : Model
         {
@@ -505,15 +505,15 @@ namespace Models.Aqua
             //Check there is any food in the pond.
             if ((FoodAvailable.TotalDM <= 0.0) && (Prawns.NumberOfPrawns > 0))
                 {
-                Summary.WriteWarning(this, "There is no food in the pond. The prawns are starving");
+                Summary.WriteMessage(this, "There is no food in the pond. The prawns are starving", MessageType.Warning);
                 return 0.0; 
                 }
 
             //Check there is enough food in the pond
             if (potDMConsumed_kg > FoodAvailable.TotalDM)
                 {
-                Summary.WriteWarning(this, "Not enough food in pond for prawns to eat today." +
-                   Environment.NewLine + "Reducing dry matter consumed from " + Math.Round(potDMConsumed_kg,3) + " (kg) to " + Math.Round(FoodAvailable.TotalDM, 3) + " (kg)");
+                Summary.WriteMessage(this, "Not enough food in pond for prawns to eat today." +
+                   Environment.NewLine + "Reducing dry matter consumed from " + Math.Round(potDMConsumed_kg,3) + " (kg) to " + Math.Round(FoodAvailable.TotalDM, 3) + " (kg)", MessageType.Warning);
 
                 //just give them what is there
                 return MathUtilities.Divide(FoodAvailable.TotalDM, Prawns.NumberOfPrawns, 0.0) * kg2g;  //convert kg to grams
@@ -832,7 +832,7 @@ namespace Models.Aqua
         /// <summary>
         /// Number of prawns currently in the pond.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("")]
         public int NumOfPrawns { get { return prawns.NumberOfPrawns; } }
 
@@ -841,7 +841,7 @@ namespace Models.Aqua
         /// Average live weight of a single prawn
         /// (g /prawn)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g")]
         public double LiveWeight { get { return prawns.LiveWeight; } }
 
@@ -850,7 +850,7 @@ namespace Models.Aqua
         /// Average mass of nitrogen in a single prawn
         /// (g N/prawn)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g")]
         public double Nitrogen { get { return prawns.NitrogenMass; } }
 
@@ -861,7 +861,7 @@ namespace Models.Aqua
         /// Stocking Density Feeding Stress
         /// (0-1)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double StressStock { get { return stressStock; } }
 
@@ -870,7 +870,7 @@ namespace Models.Aqua
         /// Temperature Stress
         /// (0-1)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double StressTemp { get { return stressTemp; } }
 
@@ -879,7 +879,7 @@ namespace Models.Aqua
         /// Salinity Stress on energy required for a prawn to maintain it's weight.
         /// (0-1)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double StressSalinity { get { return stressSalinity; } }
 
@@ -890,7 +890,7 @@ namespace Models.Aqua
         /// Dry Matter consumed by the prawns
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double ConsumedDM { get { return consumedFood.TotalDM; } }
 
@@ -898,7 +898,7 @@ namespace Models.Aqua
         /// Nitrogen consumed by the prawns
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double ConsumedN { get { return consumedFood.TotalN; } }
 
@@ -906,7 +906,7 @@ namespace Models.Aqua
         /// Digestible Energy consumed by the prawns
         /// (MJ/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("MJ/d")]
         public double ConsumedDE { get { return consumedFood.TotalDE; } }
 
@@ -917,7 +917,7 @@ namespace Models.Aqua
         /// Dry Matter ingested by the prawns
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double IntakeDM { get { return intakeFood.TotalDM; } }
 
@@ -925,7 +925,7 @@ namespace Models.Aqua
         /// Nitrogen ingested by the prawns
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double IntakeN { get { return intakeFood.TotalN; } }
 
@@ -933,7 +933,7 @@ namespace Models.Aqua
         /// Digestible Energy ingested by the prawns
         /// (MJ/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("MJ/d")]
         public double IntakeDE { get { return intakeFood.TotalDE; } }
 
@@ -944,7 +944,7 @@ namespace Models.Aqua
         /// Dry Matter digested by the prawns
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double DigestedDM { get { return digestedFood.TotalDM; } }
 
@@ -952,7 +952,7 @@ namespace Models.Aqua
         /// Nitrogen digested by the prawns
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double DigestedN { get { return digestedFood.TotalN; } }
 
@@ -960,7 +960,7 @@ namespace Models.Aqua
         /// Digestible Energy digested by the prawns
         /// (MJ/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("MJ/d")]
         public double DigestedDE { get { return digestedFood.TotalDE; } }
 
@@ -972,7 +972,7 @@ namespace Models.Aqua
         /// Dry Matter that was excreted as faeces
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double FaecesDM { get { return faecesDM; } }
 
@@ -981,7 +981,7 @@ namespace Models.Aqua
         /// Mass of Nitrogen that was excreted as faeces
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double FaecesN { get { return faecesN; } }
 
@@ -990,7 +990,7 @@ namespace Models.Aqua
         /// Ammonium-N that was excreted
         /// (kg/d)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/d")]
         public double ExcretedNH4 { get { return excretedAmmonium; } }
 
@@ -1000,7 +1000,7 @@ namespace Models.Aqua
         /// <summary>
         /// Number of prawns that died today.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("")]
         public int Deaths { get { return deaths; } }
 
@@ -1115,6 +1115,19 @@ namespace Models.Aqua
             {
 
             }
+
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            consumedFoodPP = new Food();
+            intakeFoodPP = new Food();
+            digestedFoodPP = new Food();
+
+            consumedFood = new Food();
+            intakeFood = new Food();
+            digestedFood = new Food();
+            wastedFood = new Food();
+        }
 
 
         #endregion

@@ -1,240 +1,180 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Factor.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Factorial
+﻿namespace Models.Factorial
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Models.Core;
-    using System.Xml.Serialization;
-    using System.Xml;
     using System.Globalization;
-    using APSIM.Shared.Utilities;
+    using System.Linq;
 
     /// <summary>
-    /// A class representing a series of factor values.
+    /// A class representing a treatment of an experiment (e.g. fertiliser).
+    /// It produces a series of factor values.
     /// </summary>
+    /// <remarks>
+    /// Specification can be of the form:
+    ///     [SowingRule].Script.SowingDate = 2003-11-01, 2003-12-20
+    /// or
+    ///     [FertiliserRule].Script.ApplicationAmount = 0 to 100 step 20
+    /// or
+    ///     [IrrigationSchedule]
+    ///     to indicate a path to a model that will be replaced by the child
+    ///     nodes.
+    /// or
+    ///     left null to indicate there are child FactorValues. 
+    /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.EditorView")]
+    [ViewName("UserInterface.Views.FactorView")]
     [PresenterName("UserInterface.Presenters.FactorPresenter")]
     [ValidParent(ParentType = typeof(Factors))]
-    [ValidParent(ParentType = typeof(Factor))]
-    public class Factor : Model
+    [ValidParent(ParentType = typeof(CompositeFactor))]
+    [ValidParent(ParentType = typeof(Permutation))]
+    public class Factor : Model, IReferenceExternalFiles
     {
-        /// <summary>A simple type for combining a path with multiple values.</summary>
-        public class PathValuesPair
-        {
-            /// <summary>A path</summary>
-            public string path;
-
-            /// <summary>A value.</summary>
-            public object value;
-        }
-
-        /// <summary>
-        /// A list of factor specifications.
-        /// </summary>
-        public List<string> Specifications { get; set; }
+        /// <summary>A specification for producing a series of factor values.</summary>
+        public string Specification { get; set; }
 
         /// <summary>
         /// Return all possible factor values for this factor.
         /// </summary>
-        public List<FactorValue> CreateValues()
+        public List<CompositeFactor> GetCompositeFactors()
         {
-            List<FactorValue> factorValues = new List<FactorValue>();
-
-            // Example specifications:
-            //    simple specification:
-            //      [SowingRule].Script.SowingDate = 2003-11-01                     
-            //      [SowingRule].Script.SowingDate = 2003-11-01, 2003-12-20
-            //    range specification:
-            //      [FertiliserRule].Script.ApplicationAmount = 0 to 100 step 20
-            //    model replacement specification:
-            //      [FertiliserRule]
-            //    compound specification has multiple other specifications that
-            //    result in a single factor value being returned.
-
-
-            List<List<PathValuesPair>> allValues = new List<List<PathValuesPair>>();
-            List<PathValuesPair> fixedValues = new List<PathValuesPair>();
-
-            foreach (string specification in Specifications)
+            try
             {
-                if (specification.Contains(" to ") &&
-                    specification.Contains(" step "))
-                    allValues.Add(ParseRangeSpecification(specification));
+                var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
+                if (string.IsNullOrEmpty(Specification))
+                {
+                    // Return each child CompositeFactor
+                    return childCompositeFactors.ToList();
+                }
                 else
                 {
-                    List<PathValuesPair> localValues;
-                    if (specification.Contains('='))
-                        localValues = ParseSimpleSpecification(specification);
-                    else
-                        localValues = ParseModelReplacementSpecification(specification);
+                    List<CompositeFactor> factorValues = new List<CompositeFactor>();
 
-                    if (localValues.Count == 1)
-                        fixedValues.Add(localValues[0]);
-                    else if (localValues.Count > 1)
-                        allValues.Add(localValues);
-                }
-            }
-
-            if (allValues.Count > 0 && Specifications.Count == allValues[0].Count)
-            {
-                FactorValue factorValue = new FactorValue(this, Name, Specifications, Children.ToList<object>());
-                factorValues.Add(factorValue);
-            }
-            else
-            {
-                // Look for child Factor models.
-                foreach (Factor childFactor in Apsim.Children(this, typeof(Factor)))
-                {
-                    foreach (FactorValue childFactorValue in childFactor.CreateValues())
+                    if (Specification.Contains(" to ") && Specification.Contains(" step "))
                     {
-                        childFactorValue.Name = Name + childFactorValue.Name;
-                        factorValues.Add(childFactorValue);
+                        if (childCompositeFactors.Any())
+                            throw new InvalidOperationException("Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
+                        factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
                     }
-                }
-
-                if (allValues.Count == 0)
-                {
-                    PathValuesPairToFactorValue(factorValues, fixedValues, null);
-                }
-
-                List<List<PathValuesPair>> allCombinations = MathUtilities.AllCombinationsOf<PathValuesPair>(allValues.ToArray());
-
-                if (allCombinations != null)
-                {
-                    foreach (List<PathValuesPair> combination in allCombinations)
-                        PathValuesPairToFactorValue(factorValues, fixedValues, combination);
-                }
-            }
-            return factorValues;
-        }
-
-        /// <summary>Convert a PathValuesPair to a new FactorValue.</summary>
-        /// <param name="factorValues"></param>
-        /// <param name="fixedValues"></param>
-        /// <param name="combination"></param>
-        private void PathValuesPairToFactorValue(List<FactorValue> factorValues, List<PathValuesPair> fixedValues, List<PathValuesPair> combination)
-        {
-            List<string> pathsForFactor = new List<string>();
-            List<object> valuesForFactor = new List<object>();
-
-            // Add in fixed path/values.
-            foreach (PathValuesPair fixedPathValue in fixedValues)
-            {
-                pathsForFactor.Add(fixedPathValue.path);
-                valuesForFactor.Add(fixedPathValue.value);
-            }
-
-            // Add in rest.
-            string factorName = Name;
-            if (combination != null)
-            {
-                foreach (PathValuesPair pathValue in combination)
-                {
-                    pathsForFactor.Add(pathValue.path);
-                    valuesForFactor.Add(pathValue.value);
-
-                    if (pathValue.value is IModel)
-                        factorName += (pathValue.value as IModel).Name;
+                    else if (Specification.Contains('='))
+                    {
+                        if (childCompositeFactors.Any())
+                            throw new InvalidProgramException($"Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
+                        factorValues.AddRange(SetSpecificationToFactorValues(Specification));
+                    }
                     else
-                        factorName += pathValue.value.ToString();
+                        factorValues.AddRange(ModelReplacementToFactorValues(Specification));
+
+                    return factorValues;
                 }
             }
-
-            if (pathsForFactor.Count > 0)
-                factorValues.Add(new FactorValue(this, factorName, pathsForFactor, valuesForFactor));
+            catch (Exception error)
+            {
+                throw new InvalidOperationException($"Unable to parse factor {Name}", error);
+            }
         }
 
         /// <summary>
         /// Convert a simple specification into factor values.
         /// </summary>
         /// <param name="specification">The specification to examine</param>
-        private List<PathValuesPair> ParseSimpleSpecification(string specification)
+        private List<CompositeFactor> SetSpecificationToFactorValues(string specification)
         {
-            List<PathValuesPair> pairs = new List<PathValuesPair>();
+            List<CompositeFactor> returnValues = new List<CompositeFactor>();
 
             // Can be multiple values on specification line, separated by commas. Return a separate
             // factor value for each value.
-
             string path = specification;
             string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
 
             if (value == null)
-                throw new ApsimXException(this, "Cannot find any values on the specification line: " + Specifications[0]);
-            if (value.StartsWith("{"))
+                throw new Exception("Cannot find any values on the specification line: " + specification);
+
+            string[] values = value.Split(",".ToCharArray());
+            foreach (var val in values)
             {
-                string rawValue = value.Replace("{", "").Replace("}", "");
-                pairs.Add(new PathValuesPair() { path = path.Trim(), value = rawValue });
-            }
-            else
-            {
-                string[] valueStrings = value.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                foreach (string stringValue in valueStrings)
-                    pairs.Add(new PathValuesPair() { path = path.Trim(), value = stringValue.Trim() });
+                var newFactor = new CompositeFactor(this, path.Trim(), val.Trim());
+                newFactor.Children.AddRange(Children);
+                returnValues.Add(newFactor);
             }
 
-            return pairs;
+            return returnValues;
         }
 
         /// <summary>
         /// Convert a range specification into factor values.
         /// </summary>
         /// <param name="specification">The specification to examine</param>
-        private List<PathValuesPair> ParseRangeSpecification(string specification)
+        private List<CompositeFactor> RangeSpecificationToFactorValues(string specification)
         {
-            List<PathValuesPair> pairs = new List<PathValuesPair>();
+            try
+            {
+                List<CompositeFactor> values = new List<CompositeFactor>();
 
-            // Format of a range:
-            //    value1 to value2 step increment.
-            string path = specification;
-            string rangeString = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
-            string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                // Format of a range:
+                //    value1 to value2 step increment.
+                string path = specification;
+                string rangeString = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
+                string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            double from = Convert.ToDouble(rangeBits[0], CultureInfo.InvariantCulture);
-            double to = Convert.ToDouble(rangeBits[2], CultureInfo.InvariantCulture);
-            double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
+                double from = StringUtilities.ParseDouble(rangeBits[0]);
+                double to = StringUtilities.ParseDouble(rangeBits[2]);
+                double step = StringUtilities.ParseDouble(rangeBits[4]);
 
-            for (double value = from; value <= to; value += step)
-                pairs.Add(new PathValuesPair() { path = path.Trim(), value = value.ToString() });
-            return pairs;
+                if ( (from < to && step < 0) ||
+                    (from > to && step > 0) )
+                    throw new InvalidOperationException($"Unbounded factor specification: {specification}");
+
+                for (double value = from; value <= to; value += step)
+                {
+                    var newFactor = new CompositeFactor(this, path.Trim(), value.ToString());
+                    newFactor.Children.AddRange(Children);
+                    values.Add(newFactor);
+                }
+
+                return values;
+            }
+            catch (Exception error)
+            {
+                throw new InvalidOperationException($"Invalid factor range specification: '{specification}'", error);
+            }
         }
 
         /// <summary>
         /// Convert a range specification into factor values.
         /// </summary>
         /// <param name="specification">The specification to examine</param>
-        private List<PathValuesPair> ParseModelReplacementSpecification(string specification)
+        private List<CompositeFactor> ModelReplacementToFactorValues(string specification)
         {
-            List<PathValuesPair> pairs = new List<PathValuesPair>();
+            List<CompositeFactor> values = new List<CompositeFactor>();
 
             // Must be a model replacement.
             // Need to find a child value of the correct type.
 
-            Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
+            Experiment experiment = FindAncestor<Experiment>();
             if (experiment != null)
             {
-                IModel modelToReplace = Apsim.Get(experiment.BaseSimulation, specification) as IModel;
+                var baseSimulation = experiment.FindChild<Simulation>();
+                IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-
-                if (Specifications.Count == 1)
-                {
-                    foreach (IModel newModel in Children)
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
-                else
-                {
-                    foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
-                        pairs.Add(new PathValuesPair() { path = specification, value = newModel });
-                }
+                foreach (IModel newModel in Children.Where(c => c.Enabled))
+                    values.Add(new CompositeFactor(this, specification, newModel));
             }
-            return pairs;
+            return values;
+        }
+
+        /// <summary>Return paths to all files referenced by this model.</summary>
+        public IEnumerable<string> GetReferencedFileNames()
+        {
+            return GetCompositeFactors().SelectMany(factor => factor.GetReferencedFileNames());
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            throw new NotImplementedException();
         }
     }
 }

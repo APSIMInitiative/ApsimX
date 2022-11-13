@@ -6,8 +6,10 @@
     using EventArguments;
     using Intellisense;
     using System.Linq;
+    using Interfaces;
+    using Extensions;
 
-    class IntellisenseView
+    class IntellisenseView : ViewBase
     {
         /// <summary>
         /// The popup window.
@@ -17,7 +19,7 @@
         /// <summary>
         /// The TreeView which displays the data.
         /// </summary>
-        private TreeView completionView;
+        private Gtk.TreeView completionView;
 
         /// <summary>
         /// The ListStore which holds the data (suggested completion options).
@@ -27,22 +29,22 @@
         /// <summary>
         /// Invoked when the user selects an item (via enter or double click).
         /// </summary>
-        private event EventHandler<IntellisenseItemSelectedArgs> onItemSelected;
+        private event EventHandler<NeedContextItemsArgs.ContextItem> OnItemSelected;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-        private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+        private event EventHandler<NeedContextItemsArgs> OnContextItemsNeeded;
 
         /// <summary>
         /// Invoked when the intellisense popup loses focus.
         /// </summary>
-        private event EventHandler onLoseFocus;
+        private event EventHandler OnLoseFocus;
 
         /// <summary>
         /// Default constructor. Initialises intellisense popup, but doesn't display anything.
         /// </summary>
-        public IntellisenseView()
+        public IntellisenseView(ViewBase owner) : base(owner)
         {
             completionForm = new Window(WindowType.Toplevel)
             {
@@ -52,6 +54,7 @@
                 SkipPagerHint = true,
                 SkipTaskbarHint = true,
             };
+            mainWidget = completionForm;
 
             Frame completionFrame = new Frame();
             completionForm.Add(completionFrame);
@@ -59,8 +62,8 @@
             ScrolledWindow completionScroller = new ScrolledWindow();
             completionFrame.Add(completionScroller);
 
-            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
-            completionView = new TreeView(completionModel);
+            completionModel = new ListStore(typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(bool));
+            completionView = new Gtk.TreeView(completionModel);
             completionScroller.Add(completionView);
 
             TreeViewColumn column = new TreeViewColumn()
@@ -127,16 +130,16 @@
         /// <summary>
         /// Invoked when the user selects an item (via enter or double click).
         /// </summary>
-        public event EventHandler<IntellisenseItemSelectedArgs> ItemSelected
+        public event EventHandler<NeedContextItemsArgs.ContextItem> ItemSelected
         {
             add
             {
-                DetachHandlers(ref onItemSelected);
-                onItemSelected += value;
+                DetachHandlers(ref OnItemSelected);
+                OnItemSelected += value;
             }
             remove
             {
-                onItemSelected -= value;
+                OnItemSelected -= value;
             }
         }
 
@@ -147,12 +150,12 @@
         {
             add
             {
-                if (onContextItemsNeeded == null)
-                    onContextItemsNeeded += value;
+                if (OnContextItemsNeeded == null)
+                    OnContextItemsNeeded += value;
             }
             remove
             {
-                onContextItemsNeeded -= value;
+                OnContextItemsNeeded -= value;
             }
         }
 
@@ -163,14 +166,14 @@
         {
             add
             {
-                if (onLoseFocus == null)
+                if (OnLoseFocus == null)
                 {
-                    onLoseFocus += value;
+                    OnLoseFocus += value;
                 }
             }
             remove
             {
-                onLoseFocus -= value;
+                OnLoseFocus -= value;
             }
         }
 
@@ -183,18 +186,45 @@
         /// Editor being used. This is mainly needed to get a reference to the top level window.
         /// </summary>
         public ViewBase Editor { get; set; }
-        
-        /// <summary>
-        /// Main window reference.
-        /// </summary>
-        public Window MainWindow { get; set; }
 
         /// <summary>
         /// Gets the Main/Parent window for the intellisense popup.
         /// </summary>
-        private Window GetMainWindow()
+        public Window MainWindow
         {
-            return MainWindow ?? Editor?.MainWidget.Toplevel as Window;
+            get
+            {
+                return Owner.MainWidget.Toplevel as Window;
+            }
+        }
+
+        /// <summary>
+        /// Gets the currently selected item.
+        /// </summary>
+        public NeedContextItemsArgs.ContextItem SelectedItem
+        {
+            get
+            {
+                TreeViewColumn col;
+                TreePath path;
+                completionView.GetCursor(out path, out col);
+                if (path != null)
+                {
+                    TreeIter iter;
+                    completionModel.GetIter(out iter, path);
+                    NeedContextItemsArgs.ContextItem returnObject = new NeedContextItemsArgs.ContextItem()
+                    {
+                        Name = (string)completionModel.GetValue(iter, 1),
+                        Units = (string)completionModel.GetValue(iter, 2),
+                        TypeName = (string)completionModel.GetValue(iter, 3),
+                        Descr = (string)completionModel.GetValue(iter, 4),
+                        ParamString = (string)completionModel.GetValue(iter, 5),
+                        IsMethod = (bool)completionModel.GetValue(iter, 6)
+                    };
+                    return returnObject;
+                }
+                throw new Exception("Unable to get selected intellisense item: no item is selected.");
+            }
         }
 
         /// <summary>
@@ -204,25 +234,27 @@
         /// </summary>
         /// <param name="x">Horizontal coordinate</param>
         /// <param name="y">Vertical coordinate</param>        
-        private bool showAtCoordinates(int x, int y)
+        private bool ShowAtCoordinates(int x, int y)
         {            
             // only display the list if there are options to display
             if (completionModel.IterNChildren() > 0)
             {
-                completionForm.TransientFor = GetMainWindow();
-                completionForm.ShowAll();
+                completionForm.TransientFor = MainWindow;
                 completionForm.Move(x, y);
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
+                completionForm.ShowAll();
                 completionView.SetCursor(new TreePath("0"), null, false);
-                //if (completionForm.GdkWindow != null)
-                //    completionForm.GdkWindow.Focus(0);
-                completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
-                while (GLib.MainContext.Iteration()) ;
+                if (completionView.WidthRequest > 0)
+                    completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Selects the n-th item in the list of completion options.
+        /// </summary>
+        /// <param name="index">0-based index of the item to select.</param>
         public void SelectItem(int index)
         {
             TreeIter iter;
@@ -232,6 +264,7 @@
                 completionView.SetCursor(new TreePath(index.ToString()), null, false);
             }
         }
+
         /// <summary>
         /// Tries to display the intellisense popup at the specified coordinates. If the coordinates are
         /// too close to the right or bottom of the screen, they will be adjusted appropriately.
@@ -249,19 +282,25 @@
             // the right hand side of the popup instead.
             // If the popup is too close to the bottom of the screen, we use the y-coordinate as
             // the bottom side of the popup instead.
-            int xres = GetMainWindow().Screen.Width;
-            int yres = GetMainWindow().Screen.Height;
+            //
+            // fixme - need to rewrite this using GdkMonitor.
+            // This must have always been broken on multi-monitor setups(?).
 
-            if ((x + completionForm.WidthRequest) > xres)            
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
+
+
+            if ((x + completionForm.WidthRequest) > xres)
                 // We are very close to the right-hand side of the screen
-                x -= completionForm.WidthRequest;            
+                x -= completionForm.WidthRequest;
             
             if ((y + completionForm.HeightRequest) > yres)
                 // We are very close to the bottom of the screen
                 // Move the popup one line higher as well, to room allow for the input box in the popup.
                 y -= completionForm.HeightRequest + lineHeight;
 
-            return showAtCoordinates(Math.Max(0, x), Math.Max(0, y));
+            return ShowAtCoordinates(Math.Max(0, x), Math.Max(0, y));
         }
 
         /// <summary>
@@ -273,7 +312,7 @@
             // generate list of intellisense options
             List<string> items = new List<string>();
             List<NeedContextItemsArgs.ContextItem> allItems = new List<NeedContextItemsArgs.ContextItem>();
-            onContextItemsNeeded?.Invoke(this, new NeedContextItemsArgs() { ObjectName = node, Items = items, AllItems = allItems });
+            OnContextItemsNeeded?.Invoke(this, new NeedContextItemsArgs() { ObjectName = node, Items = items, AllItems = allItems });
 
             if (allItems.Count < 1)
                 return false;
@@ -286,15 +325,17 @@
         /// Populates the completion window with data.
         /// </summary>
         /// <param name="items">List of completion data.</param>
-        public void Populate(List<CompletionData> items)
+        public void Populate(List<ICompletionItem> items)
         {
             completionModel.Clear();
-            int i = 0;
-            foreach (CompletionData item in items)
+
+            // Add empty first row.
+            completionModel.Append();
+            foreach (ICompletionItem item in items)
             {
-                System.Diagnostics.Debug.WriteLine(i);
-                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2).Aggregate((x, y) => x + Environment.NewLine + y), item.CompletionText);
-                i++;
+                IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
+                string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);
+                completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText, item.IsMethod);
             }
         }
 
@@ -306,6 +347,9 @@
         {
             completionModel.Clear();
 
+            // Add empty first row.
+            completionModel.Append();
+
             Gdk.Pixbuf functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
             Gdk.Pixbuf propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
             Gdk.Pixbuf pixbufToBeUsed;
@@ -313,31 +357,21 @@
             foreach (NeedContextItemsArgs.ContextItem item in items)
             {
                 pixbufToBeUsed = item.IsProperty ? propertyPixbuf : functionPixbuf;
-                completionModel.AppendValues(pixbufToBeUsed, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString);
+                completionModel.AppendValues(pixbufToBeUsed, item.Name, item.Units, item.TypeName, item.Descr, item.ParamString, item.IsMethod);
             }
         }
 
         /// <summary>
         /// Safely disposes of several objects.
         /// </summary>
-        public void Cleanup()
+        protected override void Dispose(bool disposing)
         {
             completionForm.FocusOutEvent -= OnLeaveCompletion;
             completionView.ButtonPressEvent -= OnButtonPress;
             completionView.KeyPressEvent -= OnContextListKeyDown;
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
-            if (completionForm.IsRealized)
-                completionForm.Destroy();
-            completionView.Dispose();
-            completionForm.Destroy();
-            completionForm = null;
-
-            // Detach event handlers so that this object may be safely garbage collected.
-            foreach (EventHandler<IntellisenseItemSelectedArgs> handler in onItemSelected?.GetInvocationList())
-            {
-                onItemSelected -= handler;
-            }
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -354,25 +388,6 @@
         }
 
         /// <summary>
-        /// Gets the currently selected item.
-        /// </summary>
-        /// <exception cref="Exception">Exception is thrown if no item is selected.</exception>
-        /// <returns></returns>
-        private string GetSelectedItem()
-        {
-            TreeViewColumn col;
-            TreePath path;
-            completionView.GetCursor(out path, out col);
-            if (path != null)
-            {
-                TreeIter iter;
-                completionModel.GetIter(out iter, path);
-                return (string)completionModel.GetValue(iter, 1);
-            }
-            throw new Exception("Unable to get selected intellisense item: no item is selected.");
-        }
-
-        /// <summary>
         /// Focus out event handler.
         /// </summary>
         /// <param name="sender"></param>
@@ -380,23 +395,34 @@
         [GLib.ConnectBefore]
         private void OnLeaveCompletion(object sender, FocusOutEventArgs e)
         {
-            completionForm.Hide();
-            onLoseFocus?.Invoke(this, new EventArgs());
+            try
+            {
+                completionForm.Hide();
+                OnLoseFocus?.Invoke(this, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// (Mouse) button press event handler. If it is a left mouse double click, consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
+            try
             {
-                completionForm.Hide();
-                onItemSelected?.Invoke(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });                
+                if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
+                    HandleItemSelected();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -409,35 +435,57 @@
         [GLib.ConnectBefore]
         private void OnContextListKeyDown(object sender, KeyPressEventArgs e)
         {
-            // If user clicks ENTER and the context list is visible then insert the currently
-            // selected item from the list into the TextBox and close the list.
-            if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+            try
             {
-                completionForm.Hide();
-                onItemSelected?.Invoke(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
+                // If user clicks ENTER and the context list is visible then insert the currently
+                // selected item from the list into the TextBox and close the list.
+                if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+                {
+                    HandleItemSelected();
+                    e.RetVal = true;
+                }
+                // If the user presses ESC and the context list is visible then close the list.
+                else if (e.Event.Key == Gdk.Key.Escape && completionView.Visible)
+                {
+                    completionForm.Hide();
+                    e.RetVal = true;
+                }
             }
-
-            // If the user presses ESC and the context list is visible then close the list.
-            else if (e.Event.Key == Gdk.Key.Escape && completionView.Visible)
+            catch (Exception err)
             {
-                completionForm.Hide();
+                ShowError(err);
             }
         }
 
         /// <summary>
         /// Key release event handler. If the key is enter, consumes the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="args">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
-        private void OnKeyRelease(object o, KeyReleaseEventArgs e)
+        private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            
-            if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+            try
             {
-                completionForm.Hide();
-                onItemSelected?.Invoke(this, new IntellisenseItemSelectedArgs { ItemSelected = GetSelectedItem() });
-                while (GLib.MainContext.Iteration()) ;
-            }                
+                if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+                {
+                    HandleItemSelected();
+                    e.RetVal = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Handles the item selected event, by invoking the appropriate event handler.
+        /// </summary>
+        private void HandleItemSelected()
+        {
+            completionForm.Hide();
+            OnItemSelected?.Invoke(this, SelectedItem);
         }
     }
 }

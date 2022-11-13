@@ -1,14 +1,19 @@
 ﻿using Gtk;
+using System;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    interface IManagerView
+    public interface IManagerView
     {
         /// <summary>
         /// Provides access to the properties grid.
         /// </summary>
-        IGridView GridView { get; }
+        /// <remarks>
+        /// Change type to IProeprtyView when ready to release new property view.
+        /// </remarks>
+        IPropertyView PropertyEditor { get; }
 
         /// <summary>
         /// Provides access to the editor.
@@ -24,8 +29,8 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private GridView Grid;
-        private EditorView ScriptEditor;
+        private PropertyView propertyEditor;
+        private IEditorView scriptEditor;
         private Notebook notebook;
 
 
@@ -35,22 +40,35 @@ namespace UserInterface.Views
         public ManagerView(ViewBase owner) : base(owner)
         {
             notebook = new Notebook();
-            _mainWidget = notebook;
-            Grid = new GridView(this);
-            ScriptEditor = new EditorView(this);
-            notebook.AppendPage(Grid.MainWidget, new Label("Properties"));
-            notebook.AppendPage(ScriptEditor.MainWidget, new Label("Script"));
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = notebook;
+            propertyEditor = new PropertyView(this);
+            scriptEditor = new EditorView(this)
+            {
+
+                ShowLineNumbers = true,
+                Language = "c-sharp",
+
+            };
+            notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
+            notebook.AppendPage(((ViewBase)scriptEditor).MainWidget, new Label("Script"));
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            Grid.MainWidget.Destroy();
-            Grid = null;
-            ScriptEditor.MainWidget.Destroy();
-            ScriptEditor = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                propertyEditor.Dispose();
+                propertyEditor = null;
+                (scriptEditor as ViewBase)?.Dispose();
+                scriptEditor = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -62,8 +80,7 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public IGridView GridView { get { return Grid; } }
-        public IEditorView Editor { get { return ScriptEditor; } }
-       
+        public IPropertyView PropertyEditor { get { return propertyEditor; } }
+        public IEditorView Editor { get { return scriptEditor; } }
     }
 }

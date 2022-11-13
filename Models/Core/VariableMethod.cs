@@ -1,18 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using Models.Soils;
-    using System.Globalization;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered method of a model. 
@@ -26,6 +15,11 @@ namespace Models.Core
         private MethodInfo method;
 
         /// <summary>
+        /// A list of arguments to pass to the method
+        /// </summary>
+        private object[] arguments = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VariableMethod" /> class.
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
@@ -33,11 +27,32 @@ namespace Models.Core
         public VariableMethod(object model, MethodInfo method)
         {
             if (model == null || method == null)
+            {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableMethod with a null model or methodInfo");
-            
+            }
+
             this.Object = model;
             this.method = method;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VariableMethod" /> class.
+        /// </summary>
+        /// <param name="model">The underlying model for the property</param>
+        /// <param name="method">The PropertyInfo for this property</param>
+        /// <param name="arguments">An array of arguments to pass to the method</param>
+        public VariableMethod(object model, MethodInfo method, object[] arguments)
+        {
+            if (model == null || method == null)
+            {
+                throw new ApsimXException(null, "Cannot create an instance of class VariableMethod with a null model or methodInfo");
+            }
+
+            this.Object = model;
+            this.method = method;
+            this.arguments = arguments;
+        }
+
 
         /// <summary>
         /// Gets or sets the underlying model that this property belongs to.
@@ -92,7 +107,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the method
         /// </summary>
-        public override Type DataType { get { return null; } }
+        public override Type DataType { get { return this.method.ReturnType; } }
 
         /// <summary>
         /// Gets the values of the method
@@ -101,7 +116,14 @@ namespace Models.Core
         {
             get
             {
-                return method.Invoke(Object, new object[] { -1 });
+                if (arguments != null)
+                {
+                    return method.Invoke(Object, arguments);
+                }
+                else
+                {
+                    return method.Invoke(Object, new object[] { -1 });
+                }
             }
 
             set
@@ -129,5 +151,18 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return false; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 }

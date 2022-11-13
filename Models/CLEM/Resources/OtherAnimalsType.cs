@@ -1,11 +1,11 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -13,22 +13,30 @@ namespace Models.CLEM.Resources
     /// Store for bank account
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
-    [Description("This resource represents an other animal group (e.g. Chickens).")]
-    public class OtherAnimalsType : CLEMModel, IResourceWithTransactionType
+    [Description("This resource represents an other animal type (e.g. chickens)")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
+    public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// Current cohorts of this Other Animal Type.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<OtherAnimalsTypeCohort> Cohorts;
 
         /// <summary>
         /// The last group of individuals to be added or removed (for reporting)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public OtherAnimalsTypeCohort LastCohortChanged { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -47,9 +55,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Cohorts != null)
-            {
                 Cohorts.Clear();
-            }
             Cohorts = null;
         }
 
@@ -78,18 +84,36 @@ namespace Models.CLEM.Resources
                 if (child is OtherAnimalsTypeCohort)
                 {
                     ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
-                    Add(child, "Setup", this.Name);
+                    Add(child, null, null, "Initial numbers");
                 }
             }
         }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
 
         #region Transactions
 
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
+
+        /// <summary>
+        /// Amount
+        /// </summary>
+        [JsonIgnore]
+        public double Amount { get; set; }
 
         /// <summary>
         /// Override base event
@@ -97,7 +121,8 @@ namespace Models.CLEM.Resources
         protected void OnTransactionOccurred(EventArgs e)
         {
             EventHandler invoker = TransactionOccurred;
-            if (invoker != null) invoker(this, e);
+            if (invoker != null)
+                invoker(this, e);
         }
 
         /// <summary>
@@ -108,57 +133,52 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add individuals to type based on cohort
         /// </summary>
-        /// <param name="AddIndividuals"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object AddIndividuals, string ActivityName, string Reason)
+        /// <param name="addIndividuals">OtherAnimalsTypeCohort Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
         {
-            OtherAnimalsTypeCohort cohortToAdd = AddIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
 
-            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age & a.Gender == cohortToAdd.Gender).FirstOrDefault();
+            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Sex == cohortToAdd.Sex).FirstOrDefault();
 
             if (cohortexists == null)
-            {
                 // add new
                 Cohorts.Add(cohortToAdd);
-            }
             else
-            {
                 cohortexists.Number += cohortToAdd.Number;
-            }
 
             LastCohortChanged = cohortToAdd;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Credit = cohortToAdd.Number;
-            details.Activity = ActivityName;
-            details.Reason = Reason;
-            details.ResourceType = this.Name;
-            details.ExtraInformation = cohortToAdd;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                TransactionType = TransactionType.Gain,
+                Amount = cohortToAdd.Number,
+                Activity = activity,
+                RelatesToResource = relatesToResource,
+                Category = category,
+                ResourceType = this,
+                ExtraInformation = cohortToAdd
+            };
             LastTransaction = details;
-            TransactionEventArgs eargs = new TransactionEventArgs();
-            eargs.Transaction = LastTransaction;
+            LastGain = cohortToAdd.Number;
+            TransactionEventArgs eargs = new TransactionEventArgs
+            {
+                Transaction = LastTransaction
+            };
             OnTransactionOccurred(eargs);
         }
 
         /// <summary>
         /// Remove individuals from type based on cohort
         /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
+        /// <param name="removeIndividuals"></param>
+        /// <param name="activity"></param>
+        /// <param name="reason"></param>
+        public void Remove(object removeIndividuals, CLEMModel activity, string reason)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Remove individuals from type based on cohort
-        /// </summary>
-        /// <param name="RemoveIndividuals"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Remove(object RemoveIndividuals, string ActivityName, string Reason)
-        {
-            OtherAnimalsTypeCohort cohortToRemove = RemoveIndividuals as OtherAnimalsTypeCohort;
-            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age & a.Gender == cohortToRemove.Gender).First();
+            OtherAnimalsTypeCohort cohortToRemove = removeIndividuals as OtherAnimalsTypeCohort;
+            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age && a.Sex == cohortToRemove.Sex).First();
 
             if (cohortexists == null)
             {
@@ -172,24 +192,30 @@ namespace Models.CLEM.Resources
             }
 
             LastCohortChanged = cohortToRemove;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Debit = cohortToRemove.Number * -1;
-            details.Activity = ActivityName;
-            details.Reason = Reason;
-            details.ResourceType = this.Name;
-            details.ExtraInformation = cohortToRemove;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                TransactionType = TransactionType.Loss,
+                Amount = cohortToRemove.Number,
+                Activity = activity,
+                Category = reason,
+                ResourceType = this,
+                ExtraInformation = cohortToRemove
+            };
             LastTransaction = details;
-            TransactionEventArgs eargs = new TransactionEventArgs();
-            eargs.Transaction = LastTransaction;
+            TransactionEventArgs eargs = new TransactionEventArgs
+            {
+                Transaction = LastTransaction
+            };
             OnTransactionOccurred(eargs);
         }
 
         /// <summary>
         /// Set the amount in an account.
         /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
+        /// <param name="newAmount"></param>
+        public new void Set(double newAmount)
         {
+            throw new NotImplementedException();
         }
 
         #endregion

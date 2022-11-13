@@ -1,0 +1,1612 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 157,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+      "DirectedGraphInfo": {
+        "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+        "Nodes": [
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "Inert",
+            "Location": "656, 254",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "SurfaceResidue",
+            "Location": "566, 69",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "FOMLignin",
+            "Location": "261, 69",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "FOMCellulose",
+            "Location": "397, 70",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "FOMCarbohydrate",
+            "Location": "123, 70",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "Microbial",
+            "Location": "218, 299",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "Humic",
+            "Location": "458, 293",
+            "Colour": "0, 158, 115",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "Urea",
+            "Location": "529, 419",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "NO3",
+            "Location": "185, 435",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "NH4",
+            "Location": "357, 422",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "LabileP",
+            "Location": "183, 605",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "UnavailableP",
+            "Location": "50, 50",
+            "Colour": "86, 180, 233",
+            "OutlineColour": "Black",
+            "Transparent": false
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Name": "Atmosphere",
+            "Location": "50, 50",
+            "Colour": "245, 245, 220",
+            "OutlineColour": "0, 0, 0",
+            "Transparent": true
+          }
+        ],
+        "Arcs": [
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "SurfaceResidue",
+            "DestinationName": "Microbial",
+            "Location": "415, 173",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "SurfaceResidue",
+            "DestinationName": "Humic",
+            "Location": "499, 172",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "FOMLignin",
+            "DestinationName": "Microbial",
+            "Location": "259, 221",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "FOMLignin",
+            "DestinationName": "Humic",
+            "Location": "255, 105",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "FOMCellulose",
+            "DestinationName": "Microbial",
+            "Location": "370, 184",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "FOMCellulose",
+            "DestinationName": "Humic",
+            "Location": "463, 224",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "FOMCarbohydrate",
+            "DestinationName": "Microbial",
+            "Location": "141, 131",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "FOMCarbohydrate",
+            "DestinationName": "Humic",
+            "Location": "204, 215",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "Microbial",
+            "DestinationName": "Microbial",
+            "Location": "335, 301",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "Microbial",
+            "DestinationName": "Humic",
+            "Location": "319, 278",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "Humic",
+            "DestinationName": "Microbial",
+            "Location": "334, 340",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "Urea",
+            "DestinationName": "NH4",
+            "Location": "0, 0",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "NO3",
+            "DestinationName": "Atmosphere",
+            "Location": "0, 0",
+            "Colour": "Black",
+            "Name": null
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceName": "NH4",
+            "DestinationName": "NO3",
+            "Location": "0, 0",
+            "Colour": "Black",
+            "Name": null
+          }
+        ]
+      },
+      "ResourceName": null,
+      "Name": "Nutrient",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "This work builds upon earlier APSIM soil organic matter models such as SoilN ([probert_apsims_1998]).\n\nThe N pools / flows simulate the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).",
+          "Name": "Introduction",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "Inert",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such an approach was also captured in the APSIM SoilN model ([probert_apsims_1998]).",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Soil].Organic.FInert * [Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness",
+              "Name": "InitialCarbon",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial C (kg/ha) is calculated as an assumed inert fraction of the measured bulk soil organic C, bulk density and layer thickness.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Inert].C / [Soil].Organic.CNR",
+              "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Inert].C / [Inert].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 100.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "SurfaceResidue",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This pool is used to provide the information about potential flows of Carbon and nutrients from the surface organic matter model to the soil nutrient model.  The potential daily flows of C and nutrients is provided to this pool at run time. Matter not decomposed is returned to the surface organic matter model.  Such an approach was also captured in the APSIM SoilN model ([probert_apsims_1998]). This implementation is currently used to reproduce original functionality and should be refactored at some time in the future.",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialCarbon",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialNitrogen",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial",
+                "Humic"
+              ],
+              "destinationFraction": [
+                0.9,
+                0.1
+              ],
+              "Name": "Decomposition",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The soil nutrient model will attempt to decompose all potentially decomposable surface organic materials.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Rate",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "N2OFraction",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "FOMLignin",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The FOMLignin pool captures \"lignin-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). This pool has the slowest decomposition rate of the three FOM pools.",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Soil].Organic.FOM * 0.1 * 0.4",
+              "Name": "InitialCarbon",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This C in this pool is initialised as a set fraction of the initial root residue mass at initialisation.  This mass is assumed to be 40% Carbon.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[FOMLignin].C / [Soil].Organic.FOMCNRatio",
+              "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "It is assumed that the C:N ratio of this pool is the same as the C:N of the total root residue material.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial",
+                "Humic"
+              ],
+              "destinationFraction": [
+                0.9,
+                0.1
+              ],
+              "Name": "Decomposition",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0095,
+                      "Units": null,
+                      "Name": "PotentialRate",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                      "Name": "TF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                      "Name": "WF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
+                      "Name": "CNRF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "FOMCellulose",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The FOMCellulose pool captures \"cellulose-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). ",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Soil].Organic.FOM * 0.7 * 0.4",
+              "Name": "InitialCarbon",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This C in this pool is initialised as a set fraction of the initial root residue mass at initialisation.  This mass is assumed to be 40% Carbon.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[FOMCellulose].C / [Soil].Organic.FOMCNRatio",
+              "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "It is assumed that the C:N ratio of this pool is the same as the C:N of the total root residue material.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial",
+                "Humic"
+              ],
+              "destinationFraction": [
+                0.9,
+                0.1
+              ],
+              "Name": "Decomposition",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.05,
+                      "Units": null,
+                      "Name": "PotentialRate",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                      "Name": "TF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                      "Name": "WF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
+                      "Name": "CNRF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "FOMCarbohydrate",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The FOMCarbohydrate pool captures \"carbohydrate-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). This pool has the fastest decomposition rate of the three FOM pools.",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Soil].Organic.FOM * 0.2 * 0.4",
+              "Name": "InitialCarbon",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This C in this pool is initialised as a set fraction of the initial root residue mass at initialisation.  This mass is assumed to be 40% Carbon.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[FOMCarbohydrate].C / [Soil].Organic.FOMCNRatio",
+              "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "It is assumed that the C:N ratio of this pool is the same as the C:N of the total root residue material.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial",
+                "Humic"
+              ],
+              "destinationFraction": [
+                0.9,
+                0.1
+              ],
+              "Name": "Decomposition",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.2,
+                      "Units": null,
+                      "Name": "PotentialRate",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                      "Name": "TF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                      "Name": "WF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
+                      "Name": "CNRF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "Microbial",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The microbial pool (formally Biom pool in APSIM SoilNitrogen) represents the more labile, soil microbial biomass and microbial products.",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "(([Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness -[Inert].C) * [Soil].Organic.FBiom) / (1 + [Soil].Organic.FBiom)",
+              "Name": "InitialCarbon",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial C (kg/ha) is calculated from an assumed biomass fraction of the non-inert soil organic C, bulk density and layer thickness.\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Microbial].C /  [CNRatio]",
+              "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that microbial biomass maintains a constant C:N ratio.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Microbial].C / [Microbial].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 8.0,
+              "Units": null,
+              "Name": "CNRatio",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 60.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial",
+                "Humic"
+              ],
+              "destinationFraction": [
+                0.6,
+                0.4
+              ],
+              "Name": "Decomposition",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Decomposition of this pool is calculated as a first-order process with rate constants modified by factors such as soil temperature and moisture. There is also an internal cycling of carbon and nitrogen (ie microbes feeding on microbial products).",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.CalculateOnceFunction, Models",
+                      "Name": "PotentialRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.StringComparisonFunction, Models",
+                          "PropertyName": "[Soil].SoilType",
+                          "StringValue": "sand",
+                          "Name": "ConstantValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
+                              "Name": "Memo",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0324,
+                              "Units": null,
+                              "Name": "TrueValue",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0081,
+                              "Units": null,
+                              "Name": "FalseValue",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                      "Name": "TF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                      "Name": "CERESMineralisationWaterFactor",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NutrientPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "Humic",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The humic pool represents the largest soil organic matter pool consisting of organic matter with much lower decomposition rate.",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "(1-[Soil].Organic.FInert)*[Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness - [Microbial].C",
+              "Name": "InitialCarbon",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial C (kg/ha) is calculated as that component of the total soil carbon that has not been already attributed to the other soil carbon pools.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Humic].C / [Soil].Organic.CNR",
+              "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Humic].C / [Humic].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Nutrients.CarbonFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial"
+              ],
+              "destinationFraction": [
+                1.0
+              ],
+              "Name": "Decomposition",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Decomposition of this pool is calculated as a first-order process with rate constants modified by factors such as soil temperature and moisture.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Rate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.00015,
+                      "Units": null,
+                      "Name": "PotentialRate",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                      "Name": "TF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                      "Name": "WF",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 100.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.StringComparisonFunction, Models",
+          "PropertyName": "[Soil].SoilType",
+          "StringValue": "Sand",
+          "Name": "WaterFactorForMineralisation",
+          "Children": [
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "TrueValue",
+              "Children": [
+                {
+                  "$type": "Models.Functions.SoilWaterScale, Models",
+                  "Name": "SoilWaterScale",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    0.5,
+                    1.0,
+                    2.0
+                  ],
+                  "Y": [
+                    0.05,
+                    1.0,
+                    1.0,
+                    0.5
+                  ],
+                  "XVariableName": null,
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[SoilWaterScale]",
+                  "Name": "XValue",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "FalseValue",
+              "Children": [
+                {
+                  "$type": "Models.Functions.SoilWaterScale, Models",
+                  "Name": "SoilWaterScale",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    0.5,
+                    1.0,
+                    2.0
+                  ],
+                  "Y": [
+                    0.0,
+                    1.0,
+                    1.0,
+                    0.5
+                  ],
+                  "XVariableName": null,
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[SoilWaterScale]",
+                  "Name": "XValue",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.ExpressionFunction, Models",
+          "Expression": "([Soil].Physical.BD*[Soil].Physical.Thickness)/100",
+          "Name": "ppm2kgha",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+          "Name": "WaterFactorForPAvailabilityLoss",
+          "Children": [
+            {
+              "$type": "Models.Functions.SoilWaterScale, Models",
+              "Name": "SoilWaterScale",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.XYPairs, Models",
+              "X": [
+                0.0,
+                0.5,
+                1.0,
+                2.0
+              ],
+              "Y": [
+                0.6,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "XVariableName": null,
+              "Name": "XYPairs",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[SoilWaterScale]",
+              "Name": "XValue",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.001,
+          "Units": null,
+          "Name": "RateLossAvailableP",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.1,
+          "Units": null,
+          "Name": "AvailablePRatio",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NFlow, Models",
+          "Value": null,
+          "Natm": null,
+          "N2Oatm": null,
+          "sourceName": "Urea",
+          "destinationName": "NH4",
+          "Name": "Hydrolysis",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The nitrogen flow captures the conversion of urea to ammonium by urease enzymes from soil bacteria.",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.CERESUreaHydrolysisModel, Models",
+              "Name": "Rate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.CERESMineralisationWaterFactor, Models",
+                  "Name": "CERESMineralisationWaterFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "NLoss",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "N2OFraction",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NFlow, Models",
+          "Value": null,
+          "Natm": null,
+          "N2Oatm": null,
+          "sourceName": "NO3",
+          "destinationName": null,
+          "Name": "Denitrification",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "NLoss",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.CERESDenitrificationModel, Models",
+              "DenitrificationRateModifier": 0.0006,
+              "IsInertActive": true,
+              "Name": "Rate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.CERESDenitrificationTemperatureFactor, Models",
+                  "Name": "CERESDenitrificationTemperatureFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.CERESDenitrificationWaterFactor, Models",
+                  "Name": "CERESDenitrificationWaterFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DayCentN2OFractionModel, Models",
+              "Name": "N2OFraction",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The emission of N2O during denitrification is calculated from an N2:N2O ratio using the approach from the DayCent model ([PARTON1998]) as previously tested in APSIM ([THORBURN2010]).",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.NFlow, Models",
+          "Value": null,
+          "Natm": null,
+          "N2Oatm": null,
+          "sourceName": "NH4",
+          "destinationName": "NO3",
+          "Name": "Nitrification",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([probert_apsims_1998]).",
+              "Name": "Memo",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.CERESNitrificationModel, Models",
+              "PotentialNitrificationRate": 40.0,
+              "ConcentrationAtHalfMax": 90.0,
+              "Name": "Rate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.CERESNitrificationWaterFactor, Models",
+                  "Name": "CERESNitrificationWaterFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.CERESNitrificationpHFactor, Models",
+                  "Name": "CERESNitrificationpHFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
+                  "Name": "CERESMineralisationTemperatureFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.002,
+              "Units": null,
+              "Name": "NLoss",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "N2OFraction",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Currently, no N2O is assumed to be produced during nitrification processes.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.PFlow, Models",
+          "Value": null,
+          "sourceName": "LabileP",
+          "destinationName": "UnavailableP",
+          "Name": "LabileToUnavailablePFlow",
+          "Children": [
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "Rate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].RateLossAvailableP",
+                  "Name": "LossRate",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].WaterFactorForPAvailabilityLoss",
+                  "Name": "WaterFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PAvailabilityLossTemperatureFactor, Models",
+                  "Name": "PAvailabilityLossTemperatureFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Nutrients.PFlow, Models",
+          "Value": null,
+          "sourceName": "UnavailableP",
+          "destinationName": "LabileP",
+          "Name": "UnavailableToLabilePFlow",
+          "Children": [
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "Rate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].RateLossAvailableP",
+                  "Name": "LossRate",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].WaterFactorForPAvailabilityLoss",
+                  "Name": "WaterFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PAvailabilityLossTemperatureFactor, Models",
+                  "Name": "PAvailabilityLossTemperatureFactor",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Nutrient].AvailablePRatio",
+                  "Name": "AvailablePRatio",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ]
+}

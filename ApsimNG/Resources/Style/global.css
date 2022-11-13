@@ -1,0 +1,22 @@
+/*
+# Global Stylesheet, applied on all operating systems, on all themes
+
+For gtk3 css/styling info, see:
+https://developer.gnome.org/gtk3/stable/chap-css-overview.html
+https://developer.gnome.org/gtk3/stable/chap-css-properties.html
+*/
+
+scrollbar, scrollbar button, scrollbar slider {
+	min-width: 8px;
+	min-height: 8px;
+}
+
+progressbar.fat-progress-bar progress, progressbar.fat-progress-bar trough {
+	min-height: 34px;
+}
+
+.separator {
+	background-color: #B0C4DE;
+	color: #000000;
+	padding: 5px;
+}

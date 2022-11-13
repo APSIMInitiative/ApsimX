@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ICanopy.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Interfaces
+﻿namespace Models.Interfaces
 {
-    using System;
-
     /// <summary>This interface describes interface for leaf interaction with Structure.</summary>
     public interface ILeaf
     {
@@ -42,19 +35,15 @@ namespace Models.Interfaces
         /// <param name="ProportionRemoved"></param>
         void DoThin(double ProportionRemoved);
 
-        /// <summary>Apex number by age</summary>
-        /// <param name="age">Threshold age</param>
-        double ApexNumByAge(double age);
-
         /// <summary>
         /// Method to remove 
         /// </summary>
-       void RemoveHighestLeaf();
+        void RemoveHighestLeaf();
         
         /// <summary>
         /// Method to zero leaf numbembers
         /// </summary>
-       void Reset();
+        void Reset();
 
         /// <summary>
         /// Then number of cohorts on the apex that are yet to expand
