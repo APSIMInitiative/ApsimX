@@ -5037,43 +5037,62 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "Rate",
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinimumFunction",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "TT",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "TTRemaining",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "Potential",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].FlagLeafToFlowering.Target + [Phenology].FloweringToGrainFilling.Target + [Phenology].GrainFilling.Target + [Phenology].Maturing.Target",
-                                  "Name": "TTRequired",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].FlagLeafToFlowering..ProgressThroughPhase + [Phenology].FloweringToGrainFilling..ProgressThroughPhase + [Phenology].GrainFilling..ProgressThroughPhase + [Phenology].Maturing..ProgressThroughPhase",
-                                  "Name": "TTComplete",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Expression": "[Phenology].FlagLeafToFlowering.Target + [Phenology].FloweringToGrainFilling.Target + [Phenology].GrainFilling.Target + [Phenology].Maturing.Target",
+                                      "Name": "TTRequired",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Expression": "[Phenology].FlagLeafToFlowering..ProgressThroughPhase + [Phenology].FloweringToGrainFilling..ProgressThroughPhase + [Phenology].GrainFilling..ProgressThroughPhase + [Phenology].Maturing..ProgressThroughPhase",
+                                      "Name": "TTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "One",
+                              "ResourceName": null,
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -5952,84 +5971,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "Phyllochron",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "FlagLeaf",
-                      "Name": "Vegetative",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "Phyllochron",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                1.0,
-                                3.4,
-                                4.0
-                              ],
-                              "Y": [
-                                30.0,
-                                30.0,
-                                42.0
-                              ],
-                              "XVariableName": null,
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Tips",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "FlagLeaf",
-                      "End": "Maturity",
-                      "Name": "Reproductive",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Constant",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.HoldFunction, Models",
                   "WhenToHold": "FloralInitiation",
                   "Name": "FinalLeafNumber",
@@ -6315,15 +6256,19 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
+                                    1.0,
+                                    2.0,
                                     11.0,
                                     12.0,
-                                    20.0
+                                    30.0
                                   ],
                                   "Y": [
-                                    2.0,
-                                    2.0,
-                                    0.8,
-                                    0.8
+                                    0.0,
+                                    0.0,
+                                    1.66,
+                                    1.66,
+                                    0.5,
+                                    0.5
                                   ],
                                   "XVariableName": null,
                                   "Name": "XYPairs",
@@ -6357,6 +6302,43 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].FinalLeafNumber",
                       "Name": "FinalLeafNumber",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "Phyllochron",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        1.0,
+                        3.4,
+                        4.0
+                      ],
+                      "Y": [
+                        30.0,
+                        30.0,
+                        42.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Tips",
+                      "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9009,8 +8991,8 @@
                     "[Phenology].Juvenile.Target.FixedValue = 100",
                     "[Phenology].GrainFilling.Target.FixedValue = 500",
                     "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
-                    "[Leaf].Phyllochron.Vegetative.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
-                    "[Leaf].Phyllochron.Vegetative.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
+                    "[Leaf].Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
+                    "[Leaf].Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
                     "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18",
                     "[Leaf].Tallness.PotentialHeight.XYPairs.X = 3, 4, 5, 6",
                     "[Leaf].Tallness.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300"
@@ -33804,7 +33786,7 @@
               "LegendPosition": 3,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Grain Number",
               "ResourceName": null,
@@ -33882,7 +33864,7 @@
               "LegendPosition": 3,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Grain Size",
               "ResourceName": null,
@@ -33960,7 +33942,7 @@
               "LegendPosition": 1,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "FloweringDAS",
               "ResourceName": null,
@@ -34038,7 +34020,7 @@
               "LegendPosition": 1,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "MaturityDAS",
               "ResourceName": null,
@@ -34623,8 +34605,8 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.Maize.Structure.FinalLeafNumber",
-                  "YFieldName": "Predicted.Maize.Structure.FinalLeafNumber",
+                  "XFieldName": "Observed.Maize.Leaf.FinalLeafNumber",
+                  "YFieldName": "Predicted.Maize.Leaf.FinalLeafNumber",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -54569,17 +54551,28 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Maize.Leaf.ExpandedCohortNo",
+                          "YFieldName": "Maize.Leaf.Ligules",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": true,
+                          "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Maize.Phenology.CurrentStageName",
+                              "SimulationName": "Lincoln2010NitrogenMed",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -54598,7 +54591,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Maize.Leaf.ExpandedCohortNo",
+                          "YFieldName": "Maize.Leaf.Ligules",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -55848,6 +55841,7 @@
                             "[Maize].Leaf.Live.Wt",
                             "[Maize].Leaf.CoverTotal",
                             "[Maize].Phenology.Stage",
+                            "[Maize].Phenology.CurrentStageName",
                             "[Maize].AboveGroundLive.Wt",
                             "[Maize].Leaf.Ligules",
                             "[Maize].Leaf.Tips"
