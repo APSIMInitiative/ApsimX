@@ -579,7 +579,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NodeNumber",
+                      "VariableName": "[Leaf].Tips",
                       "Name": "CurrentLeafNumber",
                       "ResourceName": null,
                       "Children": [],
@@ -4984,49 +4984,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "Emergence",
-                  "EndStageName": "FlagLeaf",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 1.0,
-                  "FractionRemovedOnHarvest": 1.0,
-                  "FractionRemovedOnGraze": 1.0,
-                  "FractionRemovedOnPrune": 0.0,
-                  "Name": "NodeNumber",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.DivideFunction, Models",
-                      "Name": "DeltaNode",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime",
-                          "Name": "ThermalTime",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Phyllochron",
-                          "Name": "Phyllochron",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
@@ -5240,7 +5197,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NodeNumber",
+                              "VariableName": "[Leaf].Tips",
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
@@ -5983,7 +5940,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NodeNumber",
+                      "VariableName": "[Leaf].Tips",
                       "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
@@ -6032,7 +5989,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NodeNumber",
+                              "VariableName": "[Leaf].Tips",
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
@@ -6258,34 +6215,41 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "Emergence",
+                  "EndStageName": "FlagLeaf",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 1.0,
+                  "FractionRemovedOnHarvest": 1.0,
+                  "FractionRemovedOnGraze": 1.0,
+                  "FractionRemovedOnPrune": 0.0,
                   "Name": "Tips",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NodeNumber",
-                      "Name": "NodeNumber",
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "DeltaNode",
                       "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "Ligules",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NodeNumber",
-                      "Name": "NodeNumber",
-                      "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTime",
+                          "Name": "ThermalTime",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Phyllochron",
+                          "Name": "Phyllochron",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -6300,8 +6264,99 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NodeNumber",
-                      "Name": "NodeNumber",
+                      "VariableName": "[Leaf].Tips",
+                      "Name": "Tips",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "Ligules",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.AccumulateFunction, Models",
+                      "StartStageName": "Emergence",
+                      "EndStageName": "Flowering",
+                      "ResetStageName": null,
+                      "FractionRemovedOnCut": 1.0,
+                      "FractionRemovedOnHarvest": 1.0,
+                      "FractionRemovedOnGraze": 1.0,
+                      "FractionRemovedOnPrune": 0.0,
+                      "Name": "Accumulation",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DeltaLigules",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Tips.DeltaNode",
+                              "Name": "DeltaTips",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "ExpandingLeaves",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    11.0,
+                                    12.0,
+                                    20.0
+                                  ],
+                                  "Y": [
+                                    2.0,
+                                    2.0,
+                                    0.8,
+                                    0.8
+                                  ],
+                                  "XVariableName": null,
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Tips",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].FinalLeafNumber",
+                      "Name": "FinalLeafNumber",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -11223,7 +11278,7 @@
                   "FractionRemovedOnHarvest": 1.0,
                   "FractionRemovedOnGraze": 1.0,
                   "FractionRemovedOnPrune": 0.0,
-                  "Name": "NodeNumber",
+                  "Name": "Tips",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -12039,7 +12094,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].NodeNumber",
+                                          "VariableName": "[Leaf].Tips",
                                           "Name": "XValue",
                                           "ResourceName": null,
                                           "Children": [],
@@ -12118,7 +12173,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
+                                  "VariableName": "[Leaf].Tips",
                                   "Name": "XValue",
                                   "ResourceName": null,
                                   "Children": [],
@@ -53628,6 +53683,8 @@
                             "[Clock].Today",
                             "[Maize].Leaf.LAI",
                             "[Maize].Phenology.Stage",
+                            "[Maize].Phenology.CurrentPhaseName",
+                            "[Maize].Phenology.CurrentStageName",
                             "[Maize].AboveGroundLive.Wt",
                             "[Maize].Leaf.Ligules",
                             "[Maize].Leaf.Tips",
@@ -53763,7 +53820,18 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Maize.Phenology.CurrentStageName",
+                              "SimulationName": "Lincoln2010NitrogenMed",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -53858,7 +53926,18 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Maize.Phenology.CurrentStageName",
+                              "SimulationName": "Lincoln2010NitrogenMed",
+                              "Name": "EventNamesOnGraph",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
