@@ -33,6 +33,11 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
+        /// A phase name selector.
+        /// </summary>
+        CropPhaseName,
+
+        /// <summary>
         /// A LifePhase name editor.
         /// </summary>
         LifeCycleName,

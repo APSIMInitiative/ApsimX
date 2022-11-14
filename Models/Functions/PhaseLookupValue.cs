@@ -32,10 +32,12 @@ namespace Models.Functions
 
         /// <summary>The start</summary>
         [Description("Start")]
+        [Display(Type = DisplayType.CropPhaseName)]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
         [Description("End")]
+        [Display(Type = DisplayType.CropPhaseName)]
         public string End { get; set; }
 
         /// <summary>Gets the value.</summary>
