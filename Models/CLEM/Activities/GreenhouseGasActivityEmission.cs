@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            return $"\r\n<div class=\"activityentry\">Produce emissions at rate of {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)} {CLEMModel.DisplaySummaryValueSnippet(Measure)}";
+            return $"\r\n<div class=\"activityentry\">Produce {DisplaySummaryResourceTypeSnippet(GreenhouseGasStoreName)} at rate of {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)} {CLEMModel.DisplaySummaryValueSnippet(Measure)}</div>";
         }
         #endregion
 

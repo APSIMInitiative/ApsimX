@@ -73,6 +73,13 @@ namespace Models.CLEM.Reporting
         public bool ReportAnimalWeight { get; set; }
 
         /// <summary>
+        /// Report combined values for herd when using categories
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Include herd totals")]
+        public bool ReportHerdTotals { get; set; }
+
+        /// <summary>
         /// Report available land as balance
         /// </summary>
         [Category("Report", "Land")]
@@ -175,6 +182,17 @@ namespace Models.CLEM.Reporting
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalWeight");
                                                 if (ReportValue)
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalPrice as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
+                                            }
+                                            if(ReportHerdTotals & ((item as RuminantType).Parent as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined)
+                                            {
+                                                if (ReportAmount)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").Count as {item.Name.Replace(" ", "_")}.All.Count");
+                                                if (ReportAnimalEquivalents)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalAdultEquivalent as {item.Name.Replace(" ", "_")}.All.TotalAdultEquivalent");
+                                                if (ReportAnimalWeight)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalWeight as {item.Name.Replace(" ", "_")}.All.TotalWeight");
+                                                if (ReportValue)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalPrice as {item.Name.Replace(" ", "_")}.All.TotalPrice");
                                             }
                                         }
                                         else

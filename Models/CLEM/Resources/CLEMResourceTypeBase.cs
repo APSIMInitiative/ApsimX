@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
                     warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
                     if (Summary != null)
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
                 return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
             }

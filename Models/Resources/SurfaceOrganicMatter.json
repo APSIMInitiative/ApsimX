@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 155,
+  "Version": 157,
   "Name": "Simulations",
   "Children": [
     {
@@ -450,7 +450,7 @@
             },
             {
               "$type": "Models.Surface.ResidueType, Models",
-              "fom_type": "plantain",
+              "fom_type": "plantainForage",
               "derived_from": "base_type",
               "fraction_C": 0.0,
               "po4ppm": 0.0,

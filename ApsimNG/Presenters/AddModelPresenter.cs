@@ -161,24 +161,27 @@
                 {
                     this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                    IModel child;
-                    if (!string.IsNullOrEmpty(selectedModelType.ResourceString) &&
-                        selectedModelType.ResourceString.Contains('.'))
+                    IModel child = null;
+                    if (!string.IsNullOrEmpty(selectedModelType.ResourceString))
                     {
-                        var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
-                                                                               selectedModelType.ResourceString);
-                        child = FileFormat.ReadFromString<Model>(contents, e => throw e, false);
-                        if (child.Children.Count == 1)
-                            child = child.Children[0];
-                    }
-                    else
-                    { 
-                        child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
-                        child.Name = selectedModelType.ModelName;
-                        var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
-                                                                               selectedModelType.ResourceString);
-                        if (contents != null)
+                        child = Resource.Instance.GetModel(selectedModelType.ResourceString);
+                        if (child == null)
+                        {
+                            child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
+                            child.Name = selectedModelType.ModelName;
+                        }
+                        else
+                        {
                             child.ResourceName = selectedModelType.ResourceString;
+                            bool isUnderReplacements = model.Name == "Replacements";
+                            // Make all children that area about to be added from resource hidden and readonly.
+                            bool isHidden = !isUnderReplacements;
+                            foreach (Model descendant in child.FindAllDescendants())
+                            {
+                                descendant.IsHidden = isHidden;
+                                descendant.ReadOnly = isHidden;
+                            }
+                        }
                     }
 
                     var command = new AddModelCommand(this.model, child, explorerPresenter.GetNodeDescription);

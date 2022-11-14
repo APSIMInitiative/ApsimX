@@ -420,6 +420,49 @@
             }
         }
 
+        [ContextMenu(MenuName = "Copy manager snippet",
+                     FollowsSeparator = true)]
+        public void CopyManagerSnippet(object sender, EventArgs e)
+        {
+            try
+            {
+                string path = explorerPresenter.CurrentNodePath;
+                string modelType = explorerPresenter.CurrentNode.GetType().Name;
+                string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
+
+                string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
+                                 $"[Link(ByName=true)] private {modelType} {explorerPresenter.CurrentNode.Name};";
+
+                explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        [ContextMenu(MenuName = "Copy manager snippet (full path)",
+                     FollowsSeparator = true)]
+        public void CopyManagerSnippetFullPath(object sender, EventArgs e)
+        {
+            try
+            {
+                string path = explorerPresenter.CurrentNodePath;
+                string modelType = explorerPresenter.CurrentNode.GetType().Name;
+                string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
+
+                string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
+                                 $"[Link(Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
+
+                explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
@@ -464,7 +507,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil), typeof(Zone) })]
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Folder), typeof(Zone) })]
         public void DownloadSoil(object sender, EventArgs e)
         {
             try
@@ -761,8 +804,10 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
+                    hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = !child.IsHidden;
+                        child.IsHidden = hidden; 
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);

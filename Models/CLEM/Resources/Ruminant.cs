@@ -369,7 +369,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && Age<12);
+                return (Weaned && Age< 12);
             }
         }
 
@@ -478,6 +478,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
+                    case HerdChangeReason.WeanerSale:
                         return -1;
                     case HerdChangeReason.Born:
                     case HerdChangeReason.TradePurchase:
@@ -599,9 +600,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean(bool report, string reason)
+        public void Wean(bool report, string reason, bool atNaturalWeaningAge = false)
         {
             weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
+            if (weaned > Math.Ceiling(BreedParams.GestationLength))
+                weaned = Convert.ToInt32(Math.Ceiling(BreedParams.GestationLength));
+
             if (Mother != null)
             {
                 Mother.SucklingOffspringList.Remove(this);

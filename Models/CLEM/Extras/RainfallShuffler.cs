@@ -24,7 +24,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel
+    public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
         private Clock clock = null;
@@ -39,10 +39,25 @@ namespace Models.CLEM
         public MonthsOfYear StartSeasonMonth { get; set; }
 
         /// <summary>
+        /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute(-1)]
+        [Description("Iteration number where shuffle is ignored")]
+        public int DoNotShuffleIteration { get; set; }
+
+        /// <summary>
         /// List of shuffled years
         /// </summary>
         [JsonIgnore]
         public List<ShuffleYear> ShuffledYears { get; set; }
+
+        /// <summary>
+        /// List of shuffled years
+        /// </summary>
+        [JsonIgnore]
+        public DateTime[] ShuffledYearsArray { get; set; }
+
 
         /// <summary>
         /// Constructor
@@ -83,8 +98,27 @@ namespace Models.CLEM
             yearOffset = yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble()).ToList();
             // create shuffled month/date
             ShuffledYears = storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset } ).ToList();
-
+            ShuffledYearsArray = ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1)).ToArray<DateTime>();
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (FindInScope<RandomNumberGenerator>() is null)
+            {
+                string[] memberNames = new string[] { "Missing random number generator" };
+                results.Add(new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

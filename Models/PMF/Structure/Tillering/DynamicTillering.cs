@@ -70,11 +70,14 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		IFunction slaMax = null;
 
-		/// <summary>Number of potential Fertile Tillers at harvest</summary>
-		public double CalculatedTillerNumber { get; private set; }
+        /// <summary>Number of potential Fertile Tillers at harvest</summary>
+        [JsonIgnore]
+        public double CalculatedTillerNumber { get; private set; }
         /// <summary>Current Number of Tillers</summary>
+        [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
         /// <summary>Current Number of Tillers</summary>
+        [JsonIgnore]
         public double DltTillerNumber { get; set; }
 
         /// <summary>Actual Number of Fertile Tillers</summary>
@@ -85,8 +88,9 @@ namespace Models.PMF.Struct
 			set { throw new Exception("Cannot set the FertileTillerNumber for Dynamic Tillering. Make sure you set TilleringMethod before FertileTillerNmber"); }
 		}
 
-		/// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
-		public double SupplyDemandRatio { get; private set; }
+        /// <summary>Supply Demand Ratio used to calculate Tiller No</summary>
+        [JsonIgnore]
+        public double SupplyDemandRatio { get; private set; }
 
 		private int flagStage;
 		private int floweringStage;
@@ -386,13 +390,23 @@ namespace Models.PMF.Struct
 			culms.Culms.ForEach(c => c.DltStressedLAI = c.DltStressedLAI - Math.Max(c.DltStressedLAI / totalDltLeaf * laiReduction, 0.0));
 		}
 
-		/// <summary>Called when crop is sowed</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("PlantSowing")]
+        /// <summary> Reset Culms at start of the simulation </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void StartOfSim(object sender, EventArgs e)
+        {
+            CurrentTillerNumber = 0.0;
+			CalculatedTillerNumber = 0.0;
+			DltTillerNumber = 0.0;
+			SupplyDemandRatio = 0.0;
+        }
+
+        /// <summary>Called when crop is sowed</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
 		protected void OnPlantSowing(object sender, SowingParameters data)
 		{
-			if (data.Plant == plant && leaf.TilleringMethod == 1)
+			if (data.Plant == plant && data.TilleringMethod == 1)
 			{
 				radiationAverages = new List<double>();
 				plantsPerMetre = data.RowSpacing / 1000.0 * data.SkipDensityScale;

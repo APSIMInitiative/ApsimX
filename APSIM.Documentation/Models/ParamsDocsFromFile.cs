@@ -32,14 +32,16 @@ namespace APSIM.Documentation.Models
 
         protected override IEnumerable<ITag> DocumentModel(IModel model)
         {
-            if (model is Simulations && model.Children.Any())
-                model = model.Children[0];
             if (!string.IsNullOrEmpty(path))
             {
                 IVariable variable = model.FindByPath(path);
                 if (variable != null && variable.Value is IModel value)
                     model = value;
+                else
+                    model = model.FindDescendant(path);
             }
+            else if (model is Simulations && model.Children.Any())
+                model = model.Children[0];
 
             ParamsInputsOutputs doco = new ParamsInputsOutputs(model);
             return doco.Document();

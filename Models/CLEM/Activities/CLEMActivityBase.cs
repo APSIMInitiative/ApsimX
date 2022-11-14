@@ -593,6 +593,11 @@ namespace Models.CLEM.Activities
                     // check availability and ok to proceed 
                     CheckResources(ResourceRequestList, Guid.NewGuid());
 
+                    if(Status == ActivityStatus.Skipped)
+                    {
+                        return;
+                    }
+
                     // adjust if needed using method supplied by activity
                     AdjustResourcesForTimestep();
 
@@ -614,7 +619,7 @@ namespace Models.CLEM.Activities
                                     if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                                     {
                                         var unitsProvided = ValueForCompanionModel(companionChild);
-                                        // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
+                                        // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should be reported as an error.
                                         if (MathUtilities.IsNegative(unitsProvided))
                                         {
                                             if (companionChild is CLEMActivityBase)
@@ -683,7 +688,7 @@ namespace Models.CLEM.Activities
                     var identifiers = DefineCompanionModelLabels(iChildType).Identifiers;
 
                     // tests for invalid identifier
-                    bool test = ((iChild.Identifier ?? "") == "") == identifiers.Any();
+                    bool test = ((iChild.Identifier ?? "") == "") && identifiers.Any();
                     bool test2 = identifiers.Any() && ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
 
                     if (test | test2)
@@ -700,7 +705,7 @@ namespace Models.CLEM.Activities
                     if (test | test2)
                     {
                         string warn = $"Invalid parameter value in {(iChild as CLEMModel).FullPath}{Environment.NewLine}PARAMETER: Units of measure";
-                        warn += $"{Environment.NewLine}DESCRIPTION: Unknown units of measure [{(((iChild.Identifier ?? "") == "") ? "BLANK" : iChild.Identifier)}]";
+                        warn += $"{Environment.NewLine}DESCRIPTION: Unknown units of measure [{(((iChild.Measure ?? "") == "") ? "BLANK" : iChild.Measure)}]";
                         warn += $"{Environment.NewLine}PROBLEM: The specified units are not valid for the parent activity [a={NameWithParent}]{Environment.NewLine}Select units of measure from the list. If only the invalid value is displayed, edit the simulation file (change value to null) or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }

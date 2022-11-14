@@ -611,6 +611,9 @@ namespace Models.CLEM
                 case HTMLSummaryStyle.FileReader:
                     overall = "file";
                     break;
+                case HTMLSummaryStyle.Filter:
+                    overall = "filter";
+                    break;
                 default:
                     break;
             }
@@ -781,8 +784,8 @@ namespace Models.CLEM
                 ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".folder {color:#666666; font-style: italic; font-size:1.1em; }" +
                 ".childgrouplabel {color:#666666; font-style: italic; font-size:0.9em; }" +
-                ".childgrouprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; }" +
-                ".childgroupactivityborder {border-color:[LabourGroupBorder]; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px;}" +
+                ".childgrouprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; border-radius:5px; }" +
+                ".childgroupactivityborder {border-color:#009999; background-color:[ActContBackLight] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
                 ".childgroupfilterborder {border-color:#cc33cc; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:5px; margin-bottom:5px; margin-top:5px; border-radius:5px;}" +
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
@@ -830,15 +833,15 @@ namespace Models.CLEM
                 htmlString = htmlString.Replace("[ResFontContent]", "black");
 
                 //activities
-                htmlString = htmlString.Replace("[ActContBack]", "#fdffff");
+                htmlString = htmlString.Replace("[ActContBack]", "#efffff");
                 htmlString = htmlString.Replace("[ActContBackLight]", "#ffffff");
-                htmlString = htmlString.Replace("[ActContBackDark]", "#fdffff");
+                htmlString = htmlString.Replace("[ActContBackDark]", "#efffff");
                 htmlString = htmlString.Replace("[ActContBackGroups]", "#ffffff");
 
-                htmlString = htmlString.Replace("[ContDefaultBack]", "#FAFAFA");
+                htmlString = htmlString.Replace("[ContDefaultBack]", "#e6e6e6");
                 htmlString = htmlString.Replace("[ContDefaultBanner]", "#000");
 
-                htmlString = htmlString.Replace("[ContFileBack]", "#FCFFFC");
+                htmlString = htmlString.Replace("[ContFileBack]", "#deffde");
 
                 htmlString = htmlString.Replace("[CropRotationBack]", "#FFFFFF");
                 htmlString = htmlString.Replace("[LabourGroupBack]", "#FFFFFF");

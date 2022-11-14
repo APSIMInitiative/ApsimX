@@ -13,7 +13,7 @@
         private NewGridPresenter gridPresenter;
 
         ///// <summary>The property presenter.</summary>
-        //private PropertyPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -32,6 +32,9 @@
 
         /// <summary>Graph.</summary>
         private GraphView graph;
+
+        /// <summary>Label showing number of layers.</summary>
+        private LabelView numLayersLabel;
 
         /// <summary>Default constructor</summary>
         public ProfilePresenter()
@@ -54,11 +57,13 @@
             water = this.model.FindInScope<Water>();
 
             var propertyView = view.GetControl<PropertyView>("properties");
-            var propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
+
+            numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
             if (!propertyView.AnyProperties)
             {
@@ -66,6 +71,16 @@
                 var propertiesLabel = view.GetControl<LabelView>("parametersLabel");
                 propertiesLabel.Visible = false;
                 layeredLabel.Visible = false;
+            }
+            else
+            {
+                // Position the splitter to give the "Properties" section as much space as it needs, and no more
+                if (view.MainWidget is Gtk.Paned)
+                {
+                    Gtk.Paned paned = view.MainWidget as Gtk.Paned;
+                    paned.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
+                    paned.Position = natHeight;
+                }
             }
 
             Refresh();
@@ -76,6 +91,8 @@
         public void Detach()
         {
             DisconnectEvents();
+            gridPresenter.Detach();
+            propertyPresenter.Detach();
             view.Dispose();
         }
 
@@ -91,7 +108,8 @@
                                                       water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 else if (model is Organic organic)
                     PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
-                
+
+                numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
                 ConnectEvents();
             }
             catch (Exception err)

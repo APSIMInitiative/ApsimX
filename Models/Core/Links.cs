@@ -156,8 +156,8 @@
                         }
                         else if (link.Type == LinkType.Path)
                         {
-                            var locater = new Locater();
-                            object match = locater.Get(link.Path, obj as Model);
+                            var locator = new Locator(obj as Model);
+                            object match = locator.Get(link.Path);
                             if (match != null)
                                 matches.Add(match);
                         }

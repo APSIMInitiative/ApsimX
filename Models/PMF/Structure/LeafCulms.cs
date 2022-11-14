@@ -1,25 +1,23 @@
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
-using Models.PMF.Organs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Models.PMF.Struct
 {
-	/// <summary>
-	/// The LeafCulms model manages the additional canopy resources produced by tillering. Two main tillering strategies are provided by default, and are managed via 
-	/// the TilleringMethod switch defined in SorghumLeaf, which can be manipulated via script methods. 
-	/// FixedTillering will use the BudNumber property provided as part of the sowing method to determine the total number of fertile tillers.
-	/// Setting the BudNumber to a negative value will calculate the number of fixed tillers using latitude and sowing density to provide a rule of thumb value. 
-	/// These values have been derived using data from the Australian sorghum growing area, and may not be suitable for other locations.
-	/// DynamicTillering will calculate the potential number of tillers - usually determined by the time the 6th leaf has appeared. 
-	/// The number of fertile tillers is then maintained by the addition or removal of active tillers. Further information provided below for each method.
-	/// 
-	/// </summary>	
-	[Serializable]
+    /// <summary>
+    /// The LeafCulms model manages the canopy resources produced by tillering. Two main tillering strategies are provided by default, and are managed via 
+    /// the TilleringMethod switch defined in SorghumLeaf, which can be manipulated via script methods. 
+    /// FixedTillering will use the FTN property provided as part of the sowing method to determine the total number of fertile tillers.
+    /// Setting FTN to a negative value will calculate the number of fixed tillers using latitude and sowing density to provide a rule of thumb value. 
+    /// These values have been derived using data from the Australian sorghum growing area, and may not be suitable for other locations.
+    /// DynamicTillering will calculate the potential number of tillers - usually determined by the time the 6th leaf has appeared. 
+    /// The number of fertile tillers is then maintained by the addition or removal of active tillers. Further information provided below for each method.
+    /// 
+    /// </summary>	
+    [Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
 	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -64,39 +62,51 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
 
-        /// <summary> Set through Sowing Event</summary>
-        public int TilleringMethod { get; set; } 
+		/// <summary> Set through Sowing Event</summary>
+		[JsonIgnore]
+		public int TilleringMethod { get; set; } 
 		
 		private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
 
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
         public double FertileTillerNumber { get => tillering.FertileTillerNumber; }
 
-		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
+        /// <summary> CurrentTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
+        public double CurrentTillerNumber { get => tillering.CurrentTillerNumber; }
+
+        /// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
 		public IFunction VerticalTillerAdjustment = null;
 
 		/// <summary> Maximum values that Subsequent tillers can be adjusted</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		public IFunction MaxVerticalTillerAdjustment = null;
 
-		/// <summary>Final leaf number.</summary>
-		public double FinalLeafNo { get; set; }
+        /// <summary>Final leaf number.</summary>
+        [JsonIgnore]
+        public double FinalLeafNo { get; set; }
 
-		/// <summary>Leaf number.</summary>
-		public double LeafNo { get { return Culms[0].CurrentLeafNo; } }
+        /// <summary>Leaf number.</summary>
+        [JsonIgnore]
+        public double LeafNo { get { return Culms[0].CurrentLeafNo; } }
 
-		/// <summary> Amount of Leaf that appears today</summary>
-		public double dltLeafNo;
+        /// <summary> Amount of Leaf that appears today</summary>
+        [JsonIgnore]
+        public double dltLeafNo;
 
-		/// <summary> Potential leaf growth for today for all culms</summary>
-		public double dltPotentialLAI { get; set; }
+        /// <summary> Potential leaf growth for today for all culms</summary>
+        [JsonIgnore]
+        public double dltPotentialLAI { get; set; }
 
-		/// <summary> Potential leaf growth after stress for today for all culms</summary>
-		public double dltStressedLAI { get; set; }
+        /// <summary> Potential leaf growth after stress for today for all culms</summary>
+        [JsonIgnore]
+        public double dltStressedLAI { get; set; }
 
-		/// <summary> Collection of Culms </summary>
-		public List<Culm> Culms;
+        /// <summary> Collection of Culms </summary>
+        [JsonIgnore]
+        public List<Culm> Culms;
 
 		/// <summary>Total TT required to get from emergence to floral init.</summary>
         [JsonIgnore]
@@ -108,8 +118,9 @@ namespace Models.PMF.Struct
 			Culms = new List<Culm>();
 		}
 
-		/// <summary> Array of Individual leaf sizeson the first culm</summary>
-		public double[] LeafSizes
+        /// <summary> Array of Individual leaf sizeson the first culm</summary>
+        [JsonIgnore]
+        public double[] LeafSizes
 		{
 			get
 			{
@@ -130,7 +141,9 @@ namespace Models.PMF.Struct
 			TTTargetFI = 0;
 			FinalLeafNo = 0;
 			dltLeafNo = 0;
-		}
+			dltPotentialLAI = 0.0;
+			dltStressedLAI = 0.0;
+        }
 
 		/// <summary> Reset Culms at start of the simulation </summary>
 		[EventSubscribe("StartOfSimulation")]

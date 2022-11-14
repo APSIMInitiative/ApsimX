@@ -577,6 +577,11 @@ namespace APSIM.Interop.Markdown.Renderers
             Table table = GetLastSection().GetLastTable();
             List<double> maxWidths = Enumerable.Repeat<double>(0, table.Columns.Count).ToList();
 
+            // The maximum of all minimum widths for the column. The minimum width is the
+            // width of the column with text wrapping - ie the smallest the column can get
+            // without text overflowing the cell boundaries.
+            List<double> maxMinWidths = Enumerable.Repeat<double>(0, table.Columns.Count).ToList();
+
             // fixme: this font size doesn't account for the different text
             // sizes/formats that the contents of the cells can use.
             double fontSize = document.Styles.Normal.Font.Size;
@@ -595,10 +600,14 @@ namespace APSIM.Interop.Markdown.Renderers
                     foreach (string text in paragraphs.Select(p => p.GetRawText()))
                     {
                         // Allow an extra 20pt for column/cell padding.
-                        Unit width = Measure(text, gdiFont);
+                        Unit naturalWidth = Measure(text, gdiFont);
+                        Unit minWidth = Measure(text, gdiFont, preferred: false);
 
-                        if (width > maxWidths[j])
-                            maxWidths[j] = width;
+                        if (naturalWidth > maxWidths[j])
+                            maxWidths[j] = naturalWidth;
+
+                        if (minWidth > maxMinWidths[j])
+                            maxMinWidths[j] = minWidth;
                     }
                 }
             }
@@ -606,10 +615,29 @@ namespace APSIM.Interop.Markdown.Renderers
             double totalWidth = maxWidths.Sum();
             GetPageSize(GetLastSection(), out double pageWidth, out _);
             pageWidth /= pointsToPixels;
-            if (totalWidth > pageWidth)
-                maxWidths = maxWidths.Select(w => pageWidth * w / totalWidth).ToList();
+
+            List<double> widths = Enumerable.Repeat(0d, maxWidths.Count).ToList();
+
+            // Allocate space for all columns which cannot shrink (ie cannot wrap text).
+            double totalRemainingRequestedSpace = 0;
             for (int i = 0; i < maxWidths.Count; i++)
-                table.Columns[i].Width = maxWidths[i];
+            {
+                if (MathUtilities.FloatsAreEqual(maxWidths[i], maxMinWidths[i]))
+                    widths[i] = maxMinWidths[i];
+                else
+                    totalRemainingRequestedSpace += maxWidths[i];
+            }
+            // Now allocate space for the remaining columns proportional to the total remaining
+            // requested and available space.
+            double totalRemainingSpace = pageWidth - widths.Sum();
+            for (int i = 0; i < maxWidths.Count; i++)
+            {
+                if (!MathUtilities.FloatsAreEqual(maxWidths[i], maxMinWidths[i]))
+                    widths[i] = totalRemainingSpace * maxWidths[i] / totalRemainingRequestedSpace;
+            }
+
+            for (int i = 0; i < maxWidths.Count; i++)
+                table.Columns[i].Width = widths[i];
         }
 
         /// <summary>
@@ -617,9 +645,11 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         /// <param name="text">A string to be measured.</param>
         /// <param name="gdiFont">Font used for measuring.</param>
-        private Unit Measure(string text, XFont gdiFont)
+        /// <param name="preferred">True to measure the preferred width (ie with no text wrapping), false to measure the min width (ie with maximal text wrapping).</param>
+        private Unit Measure(string text, XFont gdiFont, bool preferred = true)
         {
-            return Unit.FromPoint(20 + graphics.MeasureString(text, gdiFont).Width);
+            string toMeasure = preferred ? text : text.Split(' ').OrderByDescending(s => s.Length).FirstOrDefault();
+            return Unit.FromPoint(20 + graphics.MeasureString(toMeasure, gdiFont).Width);
         }
 
         /// <summary>

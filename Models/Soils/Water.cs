@@ -37,14 +37,14 @@
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial water values</summary>
         [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
         [Display(Format = "N1")]
@@ -203,11 +203,11 @@
             }
         }
 
-        /// <summary>Finds the 'physical' node.</summary>
-        public IPhysical Physical => FindInScope<IPhysical>();
+        /// <summary>Finds the 'Physical' node.</summary>
+        public IPhysical Physical => FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
 
-        /// <summary>Finds the 'physical' node.</summary>
-        public ISoilWater WaterModel => FindInScope<ISoilWater>();
+        /// <summary>Finds the 'SoilWater' node.</summary>
+        public ISoilWater WaterModel => FindAncestor<Soil>()?.FindDescendant<ISoilWater>() ?? FindInScope<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL
