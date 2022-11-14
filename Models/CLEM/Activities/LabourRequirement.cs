@@ -53,39 +53,46 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Days labour required per unit or fixed (days)
         /// </summary>
-        [Description("Days labour required [per unit or fixed]")]
+        [Description("Labour required (days)")]
+        [Tooltip("Number of days required for the number of units specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Labour", "Rate")]
+        [System.ComponentModel.DefaultValueAttribute(1)]
         public double LabourPerUnit { get; set; }
 
         /// <summary>
         /// Size of unit
         /// </summary>
         [Description("Number of units")]
+        [Tooltip("The number of units per days labour required")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Labour", "Units")]
+        [System.ComponentModel.DefaultValueAttribute(1)]
         public double UnitSize { get; set; }
-
-        /// <summary>
-        /// Whole unit blocks only
-        /// </summary>
-        [Description("Request as whole unit blocks only")]
-        [Category("Labour", "Units")]
-        public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
         /// Labour unit type
         /// </summary>
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
-        [Description("Measure to use")]
+        [Tooltip("The style of units to consider")]
+        [Description("Measure of units")]
         [Category("Labour", "Units")]
         public string Measure { get; set; }
+
+        /// <summary>
+        /// Whole unit blocks only
+        /// </summary>
+        [Description("Use whole units")]
+        [Tooltip("Labour supplied in whole blocks of the number of units only")]
+        [Category("Labour", "Units")]
+        public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
         /// Labour limit style
         /// </summary>
         [Description("Limit style")]
         [System.ComponentModel.DefaultValueAttribute(LabourLimitType.ProportionOfDaysRequired)]
+        [Tooltip("The style of providing limits to the amount of labour provided")]
         [Category("Labour", "Limits")]
         [Required]
         public LabourLimitType LimitStyle { get; set; }
@@ -157,13 +164,13 @@ namespace Models.CLEM.Activities
         {
             switch (LimitStyle)
             {
-                case LabourLimitType.AsDaysRequired:
+                case LabourLimitType.AsRatePerUnit:
                     double units = amountRequested / UnitSize / LabourPerUnit;
                     maximumDaysPerPerson = units * MaximumPerPerson;
                     maximumDaysPerGroup = units * MaximumPerGroup;
                     minimumDaysPerPerson = units * MinimumPerPerson;
                     break;
-                case LabourLimitType.AsTotalAllowed:
+                case LabourLimitType.AsTotalDaysAllowed:
                     maximumDaysPerPerson = MaximumPerPerson;
                     maximumDaysPerGroup = MaximumPerGroup;
                     minimumDaysPerPerson = MinimumPerPerson;
@@ -314,10 +321,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
                 switch (LimitStyle)
                 {
-                    case LabourLimitType.AsDaysRequired:
-                        htmlWriter.Write($"as the days required</div>");
+                    case LabourLimitType.AsRatePerUnit:
+                        htmlWriter.Write($"as the rate per unit in days required</div>");
                         break;
-                    case LabourLimitType.AsTotalAllowed:
+                    case LabourLimitType.AsTotalDaysAllowed:
                         htmlWriter.Write($"as the total days permitted in the month</div>");
                         break;
                     case LabourLimitType.ProportionOfDaysRequired:
