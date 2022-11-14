@@ -182,8 +182,10 @@ namespace Models.CLEM.Activities
                         measures: new List<string>() {
                             "fixed",
                             "per kg harvested",
-                            "per ha",
-                            "per ha harvested",
+                            "per land unit of crop",
+                            "per hectare of crop",
+                            "per land unit harvested",
+                            "per hectare harvested",
                         }
                         );
                 default:
@@ -470,17 +472,26 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "per ha":
+                    case "per kg harvested":
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                        break;
+                    case "per land unit of crop":
                         valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         break;
-                    case "per ha harvested":
+                    case "per hectare of crop":
+                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area * UnitsToHaConverter;
+                        break;
+                    case "per land unit harvested":
                         if (amountToDo > 0)
                             valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         else
                             valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
-                    case "per kg harvested":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                    case "per hectare harvested":
+                        if (amountToDo > 0)
+                            valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area * UnitsToHaConverter;
+                        else
+                            valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));

@@ -55,7 +55,7 @@ namespace UnitTests.Core
         [TestCase("Maize.apsimx")]
         [TestCase("Oats.apsimx")]
         [TestCase("OilPalm.apsimx")]
-        [TestCase("Plantain.apsimx")]
+        [TestCase("PlantainForage.apsimx")]
         [TestCase("Potato.apsimx")]
         [TestCase("RedClover.apsimx")]
         [TestCase("Rotation.apsimx")]
