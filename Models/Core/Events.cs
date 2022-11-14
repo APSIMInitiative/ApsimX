@@ -44,7 +44,27 @@
                             publisher.ConnectSubscriber(subscriber);
         }
 
-        /// <summary>Connect all events in the specified simulation.</summary>
+        /// <inheritdoc/>
+        public void ReconnectEvents(string publisherName = null, string eventName = null)
+        {
+            // disconnect named events
+            List<IModel> allModels = new List<IModel>();
+            allModels.Add(relativeTo);
+            allModels.AddRange(relativeTo.FindAllDescendants());
+            List<Publisher> publishers = Publisher.FindAll(allModels).Where(a => a.Model.GetType().FullName.Contains(publisherName??"") && a.EventInfo.Name.Contains(eventName??"")).ToList();
+            foreach (Events.Publisher publisher in publishers)
+                publisher.DisconnectAll();
+
+            var subscribers = Subscriber.GetAll(allModels);
+
+            foreach (Publisher publisher in publishers)
+                if (subscribers.ContainsKey(publisher.Name))
+                    foreach (var subscriber in subscribers[publisher.Name])
+                        if (scope.InScopeOf(subscriber.Model, publisher.Model))
+                            publisher.ConnectSubscriber(subscriber);
+        }
+
+        /// <summary>Disconnect all events in the specified simulation.</summary>
         public void DisconnectEvents()
         {
             List<IModel> allModels = new List<IModel>();

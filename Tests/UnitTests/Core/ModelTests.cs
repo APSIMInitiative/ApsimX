@@ -1361,8 +1361,7 @@ namespace UnitTests.Core
             {
                 new Folder(),
                 new Factor(),
-                new CompositeFactor(),
-                new Replacements(),
+                new CompositeFactor()
             };
 
             foreach (IModel anyChild in allowAnyChild)
@@ -1416,7 +1415,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests for the <see cref="IModel.FindByPath(string, bool)"/> method.
+        /// Tests for the <see cref="IModel.FindByPath(string, LocatorFlags)"/> method.
         /// </summary>
         [Test]
         public void TestFindInPath()

@@ -1,5 +1,6 @@
 ﻿using System;
 using Models.Core;
+using Models.Soils;
 using Models.Soils.Nutrients;
 
 namespace Models.Functions

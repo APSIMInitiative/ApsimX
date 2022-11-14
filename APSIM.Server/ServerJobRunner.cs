@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Models.Core.Run;
 using System.Linq;
+using static Models.Core.Overrides;
 
 namespace APSIM.Server
 {
@@ -13,7 +14,7 @@ namespace APSIM.Server
     /// </summary>
     public class ServerJobRunner : JobRunner, IDisposable
     {
-        public IEnumerable<IReplacement> Replacements { get; set; } = Enumerable.Empty<IReplacement>();
+        public IEnumerable<Override> Replacements { get; set; } = Enumerable.Empty<Override>();
         private List<(IRunnable, IJobManager)> jobs = new List<(IRunnable, IJobManager)>();
 
         /// <summary>

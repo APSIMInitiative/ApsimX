@@ -9,7 +9,9 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
-using System.Text.Json.Serialization;
+using Models.CLEM.Interfaces;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -19,45 +21,34 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [ValidParent(ParentType = typeof(CropActivityTask))]
-    [ValidParent(ParentType = typeof(RuminantActivityGrazeAll))]
-    [ValidParent(ParentType = typeof(RuminantActivityGrazePasture))]
-    [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
-    [ValidParent(ParentType = typeof(RuminantActivityMilking))]
-    [ValidParent(ParentType = typeof(RuminantActivityWean))]
-    [ValidParent(ParentType = typeof(ManureActivityCollectAll))]
-    [ValidParent(ParentType = typeof(ManureActivityCollectPaddock))]
-    [ValidParent(ParentType = typeof(RuminantActivityMove))]
-    [ValidParent(ParentType = typeof(ResourceActivitySell))]
-    [ValidParent(ParentType = typeof(ResourceActivityBuy))]
-    [ValidParent(ParentType = typeof(ResourceActivityProcess))]
-    [ValidParent(ParentType = typeof(PastureActivityCutAndCarry))]
-    [ValidParent(ParentType = typeof(LabourActivityTask))]
-    [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
+    [ValidParent(ParentType = typeof(IHandlesActivityCompanionModels))]
     [Description("Defines the amount and type of labour required for an activity. This component must have at least one LabourFilterGroup as a child")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
-    public class LabourRequirement: CLEMModel, IValidatableObject
+    public class LabourRequirement: CLEMActivityBase, IValidatableObject, IActivityCompanionModel, IReportPartialResourceAction
     {
-        /// <summary>
-        /// Link to resources
-        /// </summary>
-        [Link]
-        public ResourcesHolder Resources = null;
         private double maximumDaysPerPerson = 0;
         private double maximumDaysPerGroup = 0;
         private double minimumDaysPerPerson = 0;
+        private Labour labourResource;
+        private List<ResourceRequest> resourceList = new List<ResourceRequest>();
 
         /// <summary>
         /// Constructor
         /// </summary>
         public LabourRequirement()
         {
+            AllocationStyle = ResourceAllocationStyle.Manual;
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
             this.SetDefaults();
         }
+
+        /// <summary>
+        /// An identifier for this Labour requirement based on parent requirements
+        /// </summary>
+        [Description("Labour identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Days labour required per unit or fixed (days)
@@ -85,10 +76,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Labour unit type
         /// </summary>
-        [Description("Units to use")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
+        [Description("Measure to use")]
         [Category("Labour", "Units")]
-        [Required]
-        public LabourUnitType UnitType { get; set; }
+        public string Measure { get; set; }
 
         /// <summary>
         /// Labour limit style
@@ -125,15 +116,6 @@ namespace Models.CLEM.Activities
         public double MaximumPerPerson { get; set; }
 
         /// <summary>
-        /// Allow labour shortfall to affect activity
-        /// </summary>
-        [Description("Allow labour shortfall to affect activity")]
-        [Required]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        [Category("Labour", "General")]
-        public bool LabourShortfallAffectsActivity { get; set; }
-
-        /// <summary>
         /// Apply to all matching labour (everyone performs activity)
         /// </summary>
         [Description("Apply to all matching (everyone performs activity)")]
@@ -159,6 +141,14 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public double MinimumDaysPerPerson { get { return minimumDaysPerPerson; } }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            labourResource = Resources.FindResourceGroup<Labour>();
+        }
 
         /// <summary>
         /// Calcuate the limits for people and groups using the style
@@ -189,6 +179,56 @@ namespace Models.CLEM.Activities
             return;            
         }
 
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
+        {
+            resourceList.Clear();
+            IEnumerable<LabourType> labourers = labourResource?.Items.Where(a => a.Hired != true);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+
+            switch (Measure)
+            {
+                case "Fixed":
+                    daysNeeded = LabourPerUnit * activityMetric;
+                    break;
+                default:
+                    numberUnits = activityMetric / UnitSize;
+                    if (WholeUnitBlocks)
+                        numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * LabourPerUnit;
+                    break;
+            }
+
+            if (MathUtilities.IsPositive(daysNeeded))
+            {
+                CLEMActivityBase handlesActivityComponents = this.Parent as CLEMActivityBase;
+
+                foreach (LabourGroup fg in FindAllChildren<LabourGroup>())
+                {
+                    int numberOfPpl = 1;
+                    if (ApplyToAll)
+                        // how many matches
+                        numberOfPpl = fg.Filter(labourResource.Items).Count();
+                    for (int i = 0; i < numberOfPpl; i++)
+                    {
+                        resourceList.Add(new ResourceRequest()
+                        {
+                            AllowTransmutation = true,
+                            Required = daysNeeded,
+                            ResourceType = typeof(Labour),
+                            ResourceTypeName = "",
+                            ActivityModel = this,
+                            FilterDetails = new List<object>() { fg },
+                            Category = this.TransactionCategory,
+                        }
+                        ); ;
+                    }
+                }
+            }
+            return resourceList;
+        }
+
         #region validation
 
         /// <summary>
@@ -202,27 +242,29 @@ namespace Models.CLEM.Activities
             // ensure labour resource added
             Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
-                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.", MessageType.Warning);
-            else
-                if (lab.Children.Count <= 0)
-                    Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.", MessageType.Warning);
+                Summary.WriteMessage(this, "No [r=Labour] resources in simulation. All [LabourRequirement] will be ignored.", MessageType.Warning);
+            else if (lab.Children.Count <= 0)
+                Summary.WriteMessage(this, "No [r=LabourResourceTypes] are provided in the [r=Labour] resource. All [LabourRequirement] will be ignored.", MessageType.Warning);
 
             // check filter groups present
-            if (this.Children.OfType<LabourFilterGroup>().Count() == 0)
-                Summary.WriteMessage(this, "No LabourFilterGroup is supplied with the LabourRequirement for [a=" + this.Parent.Name + "]. No labour will be used for this activity.", MessageType.Warning);
+            if (!FindAllChildren<LabourGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Labour filter group" };
+                results.Add(new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", memberNames));
+            }
 
             // check for individual nesting.
-            foreach (LabourFilterGroup fg in this.FindAllChildren<LabourFilterGroup>())
+            foreach (LabourGroup fg in this.FindAllChildren<LabourGroup>())
             {
-                LabourFilterGroup currentfg = fg;
-                while (currentfg != null && currentfg.FindAllChildren<LabourFilterGroup>().Any())
+                LabourGroup currentfg = fg;
+                while (currentfg != null && currentfg.FindAllChildren<LabourGroup>().Any())
                 {
-                    if (currentfg.FindAllChildren<LabourFilterGroup>().Count() > 1)
+                    if (currentfg.FindAllChildren<LabourGroup>().Count() > 1)
                     {
                         string[] memberNames = new string[] { "Labour requirement" };
                         results.Add(new ValidationResult(String.Format("Invalid nested labour filter groups in [f={0}] for [a={1}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", currentfg.Name, this.Name), memberNames));
                     }
-                    currentfg = currentfg.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
+                    currentfg = currentfg.FindAllChildren<LabourGroup>().FirstOrDefault();
                 }
             }
 
@@ -233,25 +275,42 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<LabourGroup>(), true, "childgroupfilterborder", "The required labour will be taken from the following groups:", "No LabourGroups provided to define labour")
+            };
+        }
+
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
-                // get amount
-                htmlWriter.Write($"{LabourPerUnit}</span> days labour is required");
-                if (UnitType != LabourUnitType.Fixed)
-                {
-                    if (UnitSize == 1)
-                        htmlWriter.Write(" for each ");
-                    else
-                        htmlWriter.Write($" for every <span class=\"setvalue\">{UnitSize:#,##0.##}</span>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(LabourPerUnit, "Rate not set")} day{((LabourPerUnit==1)?"":"s")} is required ");
 
-                    htmlWriter.Write($"<span class=\"setvalue\">{UnitType2HTML()}</span>");
+                if ((Measure??"").ToLower() != "fixed")
+                {
                     if (WholeUnitBlocks)
-                        htmlWriter.Write(" and will be supplied in blocks");
+                    {
+                        if (UnitSize == 1)
+                            htmlWriter.Write($"for each ");
+                        else
+                        {
+                            htmlWriter.Write($"as whole units of ");
+                            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(UnitSize, "Unit not set")} ");
+                        }
+                    }
+
+                    htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")}");
+                    if(ApplyToAll)
+                        htmlWriter.Write($" applied to each person specified");
                 }
-                htmlWriter.Write("</div>");
+                htmlWriter.Write($".</div>");
+
+
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
                 switch (LimitStyle)
                 {
@@ -269,12 +328,12 @@ namespace Models.CLEM.Activities
                 }
 
                 if (MaximumPerGroup > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span> day{((MaximumPerGroup == 1) ? "" : "s")} is required</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span> day{((MaximumPerGroup == 1) ? "" : "s")}</div>");
 
                 if (MinimumPerPerson > 0)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span> day{((MinimumPerPerson == 1) ? "" : "s")} is required</div>");
 
-                if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
+                if (MaximumPerPerson > 0 && MaximumPerPerson < 31)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span> days</div>");
 
                 if (ApplyToAll)
@@ -284,55 +343,25 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
+        ///// <inheritdoc/>
+        //public override string ModelSummaryInnerOpeningTags()
+        //{
+        //    using (StringWriter htmlWriter = new StringWriter())
+        //    {
+        //        //htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
+        //        htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
-                htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
-
-                if (this.FindAllChildren<LabourFilterGroup>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
-                    htmlWriter.Write("</div>");
-                }
-                return htmlWriter.ToString(); 
-            }
-        } 
+        //        if (this.FindAllChildren<LabourGroup>().Count() == 0)
+        //        {
+        //            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+        //            htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
+        //            htmlWriter.Write("</div>");
+        //        }
+        //        return htmlWriter.ToString(); 
+        //    }
+        //} 
         #endregion
 
-        private string UnitType2HTML()
-        {
-            switch (UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    return "";
-                case LabourUnitType.perHa:
-                    return "hectare";
-                case LabourUnitType.perUnitOfLand:
-                    return "land unit";
-                case LabourUnitType.perTree:
-                    return "tree";
-                case LabourUnitType.perHead:
-                    return "head";
-                case LabourUnitType.perAE:
-                    return "AE";
-                case LabourUnitType.perKg:
-                    return "kg";
-                case LabourUnitType.perUnit:
-                    return "unit";
-                default:
-                    return "Unknown";
-            }
-        }
 
     }
 }

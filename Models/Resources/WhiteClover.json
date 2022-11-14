@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 150,
+  "Version": 157,
   "Name": "Simulations",
   "Children": [
     {
@@ -9353,7 +9353,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.CultivarFolder, Models",
+          "$type": "Models.Core.Folder, Models",
           "Name": "Cultivars",
           "Children": [
             {

@@ -1,14 +1,11 @@
+using APSIM.Server.Commands;
+using APSIM.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
-using System.Text;
-using APSIM.Server.Commands;
-using APSIM.Shared.Utilities;
-using Models.Core.Run;
+using static Models.Core.Overrides;
 
 namespace APSIM.Server.IO
 {
@@ -162,9 +159,9 @@ namespace APSIM.Server.IO
             return new ReadCommand(table, parameters);
         }
 
-        public IEnumerable<IReplacement> ReadChanges()
+        public IEnumerable<Override> ReadChanges()
         {
-            List<IReplacement> replacements = new List<IReplacement>();
+            List<Override> replacements = new List<Override>();
 
             // For now, we assume the same parameter changes are applied to all simulations.
             object input;
@@ -179,7 +176,7 @@ namespace APSIM.Server.IO
                 SendMessage(ack);
                 if (paramValue == null)
                     throw new NullReferenceException("paramValue is null");
-                replacements.Add(new PropertyReplacement(path, paramValue));
+                replacements.Add(new Override(path, paramValue, Override.MatchTypeEnum.NameAndType));
             }
             SendMessage(ack);
 

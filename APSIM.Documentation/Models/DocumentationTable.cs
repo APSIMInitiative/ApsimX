@@ -112,30 +112,24 @@ namespace APSIM.Documentation.Models
             // Write rows.
             foreach (IDocumentationRow row in rows)
             {
-                html.AppendLine("<tr>");
-                html.AppendLine($"<td>{row.Name}</td>");
+                html.Append($"<tr><td>{row.Name}</td><td>");
                 uint numCells = 1;
                 foreach (IDocumentationCell cell in row.Cells)
                 {
-                    html.AppendLine("<td>");
-                    IEnumerable<string> files = cell.Files.Select(f => $"<p><a href=\"{f.OutputFileName}\" target=\"blank\">{f.Name}</a></p>");
+                    if (numCells != 1)
+                        html.Append(", ");
+
+                    IEnumerable<string> files = cell.Files.Select(f => $"<a href=\"{f.OutputFileName}\" target=\"blank\">{f.Name}</a>");
                     // fixme - insert actual links with remote path.
-                    string links = string.Join("", files);
-                    html.AppendLine(links);
-                    html.AppendLine("</td>");   
+                    string links = string.Join(", ", files);
+                    html.Append(links);
+
                     numCells++;
                 }
-                while (numCells < numColumns)
-                {
-                    html.AppendLine("<td></td>");
-                    numCells++;
-                }
-                html.AppendLine("</tr>");
+                html.AppendLine("</td></tr>");
             }
             html.AppendLine("</table>");
 
-            html.AppendLine("</body>");
-            html.AppendLine("</html>");
             return html.ToString();
         }
     }

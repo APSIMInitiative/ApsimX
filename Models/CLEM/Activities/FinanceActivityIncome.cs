@@ -48,7 +48,6 @@ namespace Models.CLEM.Activities
         public FinanceActivityIncome()
         {
             this.SetDefaults();
-            TransactionCategory = "Income";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -61,12 +60,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (Amount > 0)
             {
-                bankAccount.Add(Amount, this, "", TransactionCategory);
-                SetStatusSuccess();
+                bankAccount.Add(Amount, this, null, TransactionCategory);
+                SetStatusSuccessOrPartial();
             }
         }
 
@@ -77,13 +76,8 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> into ");
-                if (AccountName == null || AccountName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
-
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Earn {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
+                htmlWriter.Write($" paid into {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

@@ -1,13 +1,13 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities

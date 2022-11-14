@@ -1,15 +1,15 @@
 ﻿using Models.Core;
-using Models.CLEM.Groupings;
+using Models.CLEM.Limiters;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -24,9 +24,15 @@ namespace Models.CLEM.Activities
     [Description("Undertake the collection of manure from a specified paddock in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Manure/CollectManurePaddock.htm")]
-    public class ManureActivityCollectPaddock: CLEMActivityBase
+    public class ManureActivityCollectPaddock: CLEMActivityBase, IHandlesActivityCompanionModels
     {
+        [Link]
+        private Clock clock = null;
+
         private ProductStoreTypeManure manureStore;
+        private ActivityCarryLimiter limiter;
+        private double amountToDo;
+        private double amountToSkip;
 
         /// <summary>
         /// Name of paddock or pasture to collect from (blank is yards)
@@ -35,6 +41,14 @@ namespace Models.CLEM.Activities
         [Required]
         public string GrazeFoodStoreTypeName { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ManureActivityCollectPaddock()
+        {
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -42,66 +56,27 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
-        }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ManureActivityCollectPaddock()
-        {
-            TransactionCategory = "Manure";
+            // locate a cut and carry limiter associated with this event.
+            limiter = ActivityCarryLimiter.Locate(this);
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            double amountAvailable = 0;
-            // determine wet weight to move
-            if (manureStore != null)
+            switch (type)
             {
-                ManureStoreUncollected msu = manureStore.UncollectedStores.Where(a => a.Name.ToLower() == GrazeFoodStoreTypeName.ToLower()).FirstOrDefault();
-                if (msu != null)
-                    amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
-
-            }
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.perUnit:
-                    numberUnits = amountAvailable / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() {
+                            "fixed",
+                            "per kg collected",
+                        }
+                        );
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, manureStore.NameWithParent);
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            Status = ActivityStatus.Critical;
-            // get all shortfalls
-            double labourLimit = this.LabourLimitProportion;
-
-            if (labourLimit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
-            {
-                manureStore.Collect(manureStore.Name, labourLimit, this);
-                if (labourLimit == 1)
-                {
-                    SetStatusSuccess();
-                }
-                else
-                {
-                    this.Status = ActivityStatus.Partial;
-                }
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -111,9 +86,82 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
-            if (manureStore != null)
-                // get resources
-                GetResourcesRequiredForActivity();
+            ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            amountToSkip = 0;
+
+            amountToDo = manureStore?.UncollectedStores.Where(a => a.Name == manureStore.Name).Sum(a => a.Pools.Sum(b => b.WetWeight)) ?? 0;
+
+            // reduce amount by limiter if present.
+            if (limiter != null)
+            {
+                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+                Status = ActivityStatus.Warning;
+                AddStatusMessage("CutCarry limit enforced");
+                amountToDo = Math.Max(amountToDo, canBeCarried);
+            }
+
+            // provide updated measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per kg collected":
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForTimestep()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var tagsShort = shortfalls.FirstOrDefault();
+                amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
+                if (amountToSkip < 0)
+                {
+                    Status = ActivityStatus.Warning;
+                    AddStatusMessage("Resource shortfall prevented any action");
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            double amountTaken = 0;
+            if (amountToDo > 0)
+            {
+                if (manureStore != null)
+                {
+                    foreach (ManureStoreUncollected msu in manureStore.UncollectedStores.Where(a => a.Name == manureStore.Name))
+                    {
+                        double propCollected = 1;
+                        double uncollected = msu.Pools.Sum(a => a.WetWeight);
+                        if (MathUtilities.IsGreaterThanOrEqual(amountTaken + uncollected, amountToDo - amountToSkip))
+                        {
+                            propCollected = Math.Max(0, (amountToDo - amountToSkip) - amountTaken) / uncollected;
+                        }
+                        manureStore.Collect(manureStore.Name, propCollected, this);
+                    }
+                }
+                limiter.AddWeightCarried(amountToDo - amountToSkip);
+            }
+            SetStatusSuccessOrPartial(amountToSkip > 0);
         }
 
         #region descriptive summary

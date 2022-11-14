@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using Models.CLEM.Interfaces;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM
 {
@@ -49,6 +50,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         [Description("Amount (B) per packet (A)")]
         [Category("Direct style", "All")]
+        [Core.Display(EnabledCallback = "AmountPerPacketEnabled")]
         [Required, GreaterThanEqualValue(0)]
         public double AmountPerPacket { get; set; }
 
@@ -66,6 +68,11 @@ namespace Models.CLEM
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No transactions", typeof(Finance) } })]
         [System.ComponentModel.DefaultValueAttribute("No transactions")]
         public string FinanceTypeForTransactionsName { get; set; }
+
+        /// <summary>
+        /// Method to determine if direct transmute style will enable the amount property
+        /// </summary>
+        public bool AmountPerPacketEnabled() { return TransmuteStyle == TransmuteStyle.Direct; }
 
         /// <summary>
         /// Constructor
@@ -137,9 +144,9 @@ namespace Models.CLEM
                     request.Required = shortfallPackets * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
-                    if (shortfallPricing.CurrentPrice > 0)
+                    if (MathUtilities.IsPositive(shortfallPricing.CurrentPrice))
                     {
-                        if (transmutePricing.CurrentPrice == 0)
+                        if (MathUtilities.FloatsAreEqual(transmutePricing.CurrentPrice, 0))
                             // no value of transmute resource
                             request.Required = 0;
                         else

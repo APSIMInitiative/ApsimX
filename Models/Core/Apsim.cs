@@ -64,18 +64,9 @@
             }
             try
             {
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new MemoryStream();
-                using (stream)
-                {
-                    formatter.Serialize(stream, model);
-
-                    stream.Seek(0, SeekOrigin.Begin);
-                    T newModel = (T)formatter.Deserialize(stream);
-
-                    newModel.ParentAllDescendants();
-                    return newModel;
-                }
+                T newModel = (T)ReflectionUtilities.Clone(model);
+                newModel.ParentAllDescendants();
+                return newModel;
             }
             finally
             {
@@ -98,8 +89,7 @@
 
             if (parent.GetType() == typeof(Folder) ||
                 parent.GetType() == typeof(Factor) ||
-                parent.GetType() == typeof(CompositeFactor) ||
-                parent.GetType() == typeof(Replacements))
+                parent.GetType() == typeof(CompositeFactor))
                 return true;
 
             // Functions are currently allowable anywhere

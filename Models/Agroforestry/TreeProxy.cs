@@ -11,6 +11,7 @@ using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Zones;
 using Models.Soils.Nutrients;
+using Models.Soils;
 
 namespace Models.Agroforestry
 {

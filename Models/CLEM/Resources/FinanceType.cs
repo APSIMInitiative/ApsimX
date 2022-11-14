@@ -31,19 +31,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Opening balance")]
         [Required]
+        [Core.Display(Format = "N2")]
         public double OpeningBalance { get; set; }
 
         /// <summary>
         /// Enforce withdrawal limit
         /// </summary>
-        [Description("Enforce withdrawal limit. (false, no limit to spending)")]
+        [Description("Enforce withdrawal limit (false, no limit to spending)")]
         [Required]
         public bool EnforceWithdrawalLimit { get; set; }
 
         /// <summary>
         /// The amount this account can be withdrawn to (-ve)
         /// </summary>
-        [Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
+        [Description("Withdrawal limit (<0 credit, 0 no credit)")]
+        [Core.Display(EnabledCallback = "WithdrawalLimitEnabled")]
         [Required ]
         public double WithdrawalLimit { get; set; }
 
@@ -84,6 +86,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
+        [Core.Display(Format = "N2")]
         public double Amount
         {
             get
@@ -103,6 +106,15 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Determines whether the withdrawal limit has been set for enabling amount property
+        /// </summary>
+        /// <returns></returns>
+        public bool WithdrawalLimitEnabled()
+        {
+            return EnforceWithdrawalLimit;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -111,7 +123,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (OpeningBalance > 0)
-                Add(OpeningBalance, this, "", "Opening balance");
+                Add(OpeningBalance, null, null, "Opening balance");
         }
 
         #region Transactions
@@ -162,7 +174,6 @@ namespace Models.CLEM.Resources
 
             if (addAmount > 0)
             {
-                addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
                 amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction
@@ -208,7 +219,7 @@ namespace Models.CLEM.Resources
             if (request.MarketTransactionMultiplier > 0)
                 FindEquivalentMarketStore();
 
-            double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
+            double amountRemoved = request.Required;
             
             // more than positive balance can be taken if withdrawal limit set to false
             if(this.EnforceWithdrawalLimit)

@@ -395,7 +395,6 @@
             };
             var storage = new MockStorage();
             Utilities.InjectLink(report, "simulation", sim);
-            Utilities.InjectLink(report, "locator", new MockLocator());
             Utilities.InjectLink(report, "storage", storage);
             Utilities.InjectLink(report, "clock", new MockClock());
 

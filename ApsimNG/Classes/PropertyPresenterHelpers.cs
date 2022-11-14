@@ -19,7 +19,7 @@ namespace UserInterface.Classes
         public static string[] GetCultivarNames(IPlant crop)
         {
             Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
-            Replacements replacements = simulations.FindChild<Replacements>();
+            Folder replacements = simulations.FindChild<Folder>("Replacements");
 
             if (replacements == null)
                 return crop.CultivarNames;
@@ -30,7 +30,7 @@ namespace UserInterface.Classes
 
             // Check for cultivar folders under replacements.
             List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (CultivarFolder cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
+            foreach (Folder cultivarFolder in (crop as IModel).FindAllChildren<Folder>())
             {
                 IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
                 if (replacementFolder != null)
@@ -89,7 +89,7 @@ namespace UserInterface.Classes
             if (lifeCycle.LifeCyclePhaseNames.Length == 0)
             {
                 Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
-                Replacements replacements = simulations.FindChild<Replacements>();
+                Folder replacements = simulations.FindChild<Folder>("Replacements");
                 if (replacements != null)
                 {
                     LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;

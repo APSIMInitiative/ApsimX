@@ -26,7 +26,7 @@ namespace Models.PMF.OilPalm
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class OilPalm : ModelCollectionFromResource, IPlant, ICanopy, IUptake
+    public class OilPalm : Model, IPlant, ICanopy, IUptake
     {
         #region Canopy interface
         /// <summary>Canopy type</summary>
@@ -788,8 +788,10 @@ namespace Models.PMF.OilPalm
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">The row configuration.</param>
         /// <param name="seeds">The number of seeds sown.</param>
+        /// <param name="tillering">tillering method (-1, 0, 1).</param>
+        /// <param name="ftn">Fertile Tiller Number.</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
             SowingData = new SowingParameters();
             SowingData.Population = population;

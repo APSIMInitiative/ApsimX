@@ -85,7 +85,7 @@ namespace Models.CLEM.Resources
         /// <param name="tag">Attribute label</param>
         public void Remove(string tag)
         {
-            if (attributes is null || attributes.ContainsKey(tag))
+            if (attributes != null && attributes.ContainsKey(tag))
                 attributes.Remove(tag);
         }
 

@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Models.CLEM.Activities
     [Description("Arrange payment for a task based on the labour specified in the labour requirement")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityTask : CLEMActivityBase
+    public class LabourActivityTask : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         /// <summary>
         /// Constructor
@@ -32,42 +33,31 @@ namespace Models.CLEM.Activities
         public LabourActivityTask()
         {
             this.SetDefaults();
-            TransactionCategory = "Labour.[Task]";
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             List<ResourceRequest> resourcesNeeded = null;
             return resourcesNeeded;
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            // get all days required as fixed only option from requirement
-            switch (requirement.UnitType)
+            switch (type)
             {
-                case LabourUnitType.Fixed:
-                    return new GetDaysLabourRequiredReturnArgs(requirement.LabourPerUnit, TransactionCategory, null);
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() {
+                            "fixed"
+                        }
+                        );
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                    return new LabelsForCompanionModels();
             }
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Account not set"));
-                htmlWriter.Write(" for all transactions</div>");
-                return htmlWriter.ToString();
-            }
-        } 
-        #endregion
     }
 }

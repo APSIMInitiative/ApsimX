@@ -18,21 +18,21 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
-        public object Get(string namePath)
+        public object Get(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
             if (Values.ContainsKey(namePath))
                 return Values[namePath].Value;
             return null;
         }
 
-        public IVariable GetObject(string namePath)
+        public IVariable GetObject(string namePath, LocatorFlags flags)
         {
             if (Values.ContainsKey(namePath))
                 return Values[namePath];
             return null;
         }
 
-        public IVariable GetObjectProperties(string namePath)
+        public IVariable GetObjectProperties(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
             throw new NotImplementedException();
         }

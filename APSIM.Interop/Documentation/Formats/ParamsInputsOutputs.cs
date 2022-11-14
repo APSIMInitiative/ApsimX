@@ -10,6 +10,8 @@
     using System.Reflection;
     using System.Text;
     using APSIM.Shared.Extensions;
+    using Newtonsoft.Json.Linq;
+    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This class documents a model's parameters, inputs, and outputs.
@@ -51,8 +53,13 @@
         /// </summary>
         public IEnumerable<ITag> Document()
         {
-            if (modelToDocument is ModelCollectionFromResource resourceModel)
-                parameterNames = resourceModel.GetModelParameterNames();
+            if (string.IsNullOrEmpty(modelToDocument.ResourceName))
+            {
+                var modelAsJson = FileFormat.WriteToString(modelToDocument);
+                parameterNames = Resource.GetModelParameterNamesFromJSON(modelAsJson);
+            }
+            else
+                parameterNames = Resource.GetModelParameterNames(modelToDocument.ResourceName);
 
             // Get a list of tags for each type.
             List<ITag> tags = new List<ITag>();
