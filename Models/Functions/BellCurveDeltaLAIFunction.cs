@@ -19,8 +19,8 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)] IFunction skewness = null;
         /// <summary>The number of leaf tips</summary>
         [Link(Type = LinkType.Child, ByName = true)] IFunction leafTips = null;
-        /// <summary>The number of leaf collars (ie fully expanded leaves)</summary>
-        [Link(Type = LinkType.Child, ByName = true)] IFunction leafCollars = null;
+        /// <summary>The number of leaf ligules (ie fully expanded leaves)</summary>
+        [Link(Type = LinkType.Child, ByName = true)] IFunction leafLigules = null;
         /// <summary>Leaf Apprearance Rate</summary>
         [Link(Type = LinkType.Child, ByName = true)] IFunction leafAppearanceRate = null;  // (/day)
         /// <summary>Plant Population</summary>
@@ -31,7 +31,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             double tips = leafTips.Value(arrayIndex);
-            double collars = leafCollars.Value(arrayIndex);
+            double collars = leafLigules.Value(arrayIndex);
             
             double deltaLAI = 0;
             int lowestExpandingLeaf = Convert.ToInt32(collars + 1);
