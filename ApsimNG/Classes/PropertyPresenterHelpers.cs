@@ -86,17 +86,23 @@ namespace UserInterface.Classes
         /// <summary>Get a list of life phases for the plant.</summary>
         /// <param name="plant">The the plant.</param>
         /// <returns>A list of phases.</returns>
-        public static string[] GetCropPhaseNames(Plant plant)
+        public static string[] GetCropStageNames(Plant plant)
         {
             List<IPhase> phases = plant.FindAllInScope<IPhase>().ToList();
             if (phases.Count > 0)
             {
-                string[] Namelist = new string[phases.Count];
+                string[] Namelist = new string[phases.Count+1];
                 int i = 0;
-                foreach (IModel p in phases)
+                foreach (IPhase p in phases)
                 {
-                    Namelist[i] = p.Name;
+                    if (i == 0)
+                    {
+                        Namelist[i] = p.Start;
+                        i++;
+                    }
+                    Namelist[i] = p.End;
                     i++;
+                    
                 }
                 return Namelist;
             }

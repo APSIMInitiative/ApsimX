@@ -35,7 +35,7 @@ namespace Models.Core
         /// <summary>
         /// A phase name selector.
         /// </summary>
-        CropPhaseName,
+        CropStageName,
 
         /// <summary>
         /// A LifePhase name editor.
