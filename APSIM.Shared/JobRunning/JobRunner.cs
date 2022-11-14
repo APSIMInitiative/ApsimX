@@ -238,16 +238,20 @@
         /// <param name="error"></param>
         protected void InvokeJobCompleted(IRunnable job, IJobManager jobManager, DateTime startTime, Exception error)
         {
-            if (JobCompleted != null)
+            var finishTime = DateTime.Now;
+            var arguments = new JobCompleteArguments()
             {
-                var finishTime = DateTime.Now;
-                var arguments = new JobCompleteArguments()
-                {
-                    Job = job,
-                    ExceptionThrowByJob = error,
-                    ElapsedTime = finishTime - startTime
-                };
+                Job = job,
+                ExceptionThrowByJob = error,
+                ElapsedTime = finishTime - startTime
+            };
 
+            try
+            {
+                jobManager.JobHasCompleted(arguments);
+            }
+            finally
+            {
                 JobCompleted?.Invoke(this, arguments);
             }
         }

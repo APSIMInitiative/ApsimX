@@ -658,6 +658,10 @@
             }
         }
 
+        void IJobManager.JobHasCompleted(JobCompleteArguments args)
+        {
+        }
+
         /// <summary>
         /// A class for encapsulating column units.
         /// </summary>
