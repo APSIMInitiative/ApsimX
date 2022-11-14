@@ -281,7 +281,7 @@ namespace Models.CLEM.Activities
             transCatsList.Add(model.parentZone.UseModelNameAsTransactionCategory ? ((model.TransactionCategory == "_") ? "" : model.Name) : model.TransactionCategory);
             transCatsList = transCatsList.Where(a => a != "").ToList();
 
-            string transCat = (transCatsList.Any()) ? String.Join(".", transCatsList) : "";
+            string transCat = (transCatsList.Any()) ? String.Join(".", transCatsList.Where(a => a != null)) : "";
 
             if (transCat.Contains("[RelatesTo]"))
                 transCat.Replace("[RelatesTo]", relatesToValue??"");
@@ -980,7 +980,7 @@ namespace Models.CLEM.Activities
                     // coming from Transmutation request
                     lr = new LabourRequirement()
                     {
-                        LimitStyle = LabourLimitType.AsDaysRequired,
+                        LimitStyle = LabourLimitType.AsTotalDaysAllowed,
                         ApplyToAll = false,
                         MaximumPerGroup = 10000,
                         MaximumPerPerson = 1000,
