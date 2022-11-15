@@ -806,8 +806,8 @@
 
             var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
 
-            double[] kl = soilCrop.KL;
-            double[] ll = soilCrop.LL;
+            double[] kl = myZone.SoilCrop.KL;
+            double[] ll = myZone.SoilCrop.LL;
 
             double[] supply = new double[myZone.Physical.Thickness.Length];
             for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
