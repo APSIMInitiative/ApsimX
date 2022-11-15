@@ -5,6 +5,7 @@ using Models.Functions;
 using System.IO;
 using Newtonsoft.Json;
 using APSIM.Shared.Documentation;
+using Models.PMF.Organs;
 
 namespace Models.PMF.Phen
 {
@@ -22,7 +23,7 @@ namespace Models.PMF.Phen
         private IVrn1Expression CAMP = null;
 
         [Link]
-        private Phenology phenology = null;
+        private SimpleLeaf leaf = null;
 
         private double fractionVrn1AtEmergence = 0.0;
 
@@ -62,7 +63,7 @@ namespace Models.PMF.Phen
             Target = Math.Max(CAMP.pVrn2,1.0);
             double RelativeVrn1Expression = Math.Min(1, (CAMP.Vrn1 - fractionVrn1AtEmergence) / (Target - fractionVrn1AtEmergence));
 
-            double HS = phenology.FindChild<IFunction>("HaunStage").Value();
+            double HS = leaf.FindChild<IFunction>("HaunStage").Value();
             double RelativeBasicVegetative = Math.Min(1, HS / 1.1);
 
             FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);

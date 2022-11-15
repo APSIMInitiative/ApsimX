@@ -24,16 +24,16 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor,  ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        [Link(Type = LinkType.Path, Path = "[Leaf].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
         
-        [Link(Type = LinkType.Path, Path = "[Phenology].PhyllochronPpSensitivity")]
+        [Link(Type = LinkType.Path, Path = "[Leaf].PhyllochronPpSensitivity")]
         IFunction phylloPpSens = null;
 
         /// <summary>
         /// The phyllochron leaf stage factor break points
         /// </summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.LeafStageFactor.XYPairs")]
+        [Link(Type = LinkType.Path, Path = "[Leaf].Phyllochron.LeafStageFactor.XYPairs")]
         XYPairs pLS = null;
 
          /// <summary>

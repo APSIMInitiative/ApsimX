@@ -49,7 +49,7 @@ namespace Models.PMF.Phen
         Phenology phenology = null;
 
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
+        [Link(Type = LinkType.Path, Path = "[Leaf].HaunStage")]
         IFunction haunStage = null;
 
         /// <summary>
@@ -219,13 +219,13 @@ namespace Models.PMF.Phen
         [JsonIgnore] public CultivarRateParams Params { get; set; }
 
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        [Link(Type = LinkType.Path, Path = "[Leaf].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
 
         //[Link(Type = LinkType.Path, Path = "[Phenology].PhyllochronPpSensitivity")]
         //IFunction phylloPpSens = null;
 
-        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage.Delta")]
+        [Link(Type = LinkType.Path, Path = "[Leaf].HaunStage.Delta")]
         IFunction DHS = null;
 
 

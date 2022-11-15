@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.PMF.Struct;
 using APSIM.Shared.Documentation;
 using System.Data;
+using Models.Functions;
 
 namespace Models.PMF.Phen
 {
@@ -27,14 +28,16 @@ namespace Models.PMF.Phen
         [Link]
         Phenology Phenology = null;
 
-        /// <summary>
-        /// The Structure class
-        /// </summary>
-        [Link]
-        Structure Structure = null;
-
         [Link]
         private IPlant plant = null;
+
+        /// <summary>The thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction TillerNumber = null;
+
+        /// <summary>The thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction HaunStage = null;
 
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
@@ -54,12 +57,12 @@ namespace Models.PMF.Phen
                 else if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
                     || (!Phenology.InPhase("ReadyForHarvesting") && Phenology.Stage < 5.3))
                 {
-                    if (Structure.BranchNumber <= 0.0)
-                        zadok_stage = 10.0f + Structure.LeafTipsAppeared;
+                    if (TillerNumber.Value() <= 0.0)
+                        zadok_stage = 10.0f + HaunStage.Value();
                     else
-                        zadok_stage = 20.0f + Structure.BranchNumber;
+                        zadok_stage = 20.0f + TillerNumber.Value();
                     // Try using Yield Prophet approach where Zadok stage during vegetative phase is based on leaf number only
-                    zadok_stage = 10.0f + Structure.LeafTipsAppeared;
+                    zadok_stage = 10.0f + HaunStage.Value();
 
                 }
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
