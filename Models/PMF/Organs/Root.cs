@@ -353,11 +353,6 @@
             }
         }
 
-        /// <summary>Gets or sets the mid points of each layer</summary>
-        [JsonIgnore]
-        [Units("mm")]
-        public double[] LayerMidPointDepth { get; private set; }
-
         /// <summary>Gets or sets relative water content for a soil layer (ie fraction between LL15 and DUL)</summary>
         [JsonIgnore]
         [Units("0-1")]
@@ -809,20 +804,15 @@
             if (myZone == null)
                 return null;
 
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
-
-            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (soilCrop == null)
-                throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
 
             double[] kl = soilCrop.KL;
             double[] ll = soilCrop.LL;
 
             double[] supply = new double[myZone.Physical.Thickness.Length];
-            LayerMidPointDepth = myZone.Physical.DepthMidPoints;
             for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
             {
-                if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
+                if (layer <= currentLayer)
                 {
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 

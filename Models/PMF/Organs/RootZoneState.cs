@@ -314,10 +314,11 @@ namespace Models.PMF.Organs
         /// </summary>
         public double[] CalculateRootActivityValues()
         {
+            int currentLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             double[] RAw = new double[Physical.Thickness.Length];
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
-                if (layer <= SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth))
+                if (layer <= currentLayer)
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
