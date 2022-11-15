@@ -101,7 +101,7 @@ namespace Models.Soils.Nutrients
         public ISolute Urea { get; set; }
 
         /// <summary>Child carbon flows.</summary>
-        [Link(Type = LinkType.Child)]
+        [Link]
         private CarbonFlow[] CarbonFlows { get; set; }
 
         /// <summary>Get directed graph from model</summary>

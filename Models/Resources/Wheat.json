@@ -2926,7 +2926,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.SoilWaterScale, Models",
-                      "Name": "SoilWaterScale",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2949,15 +2949,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[SoilWaterScale]",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2975,7 +2966,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
-                  "Name": "SoilWaterScale",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3001,15 +2992,6 @@
                   "$type": "Models.Memo, Models",
                   "Text": "This is modelled in the same way as the old wheat model where potential N uptake is decreased as the soil dries as described by NUptakeSWFactor",
                   "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[SoilWaterScale]",
-                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
