@@ -53,6 +53,9 @@
         /// <summary>Are we stopping writing to the db?</summary>
         private bool stopping;
 
+        /// <summary>The details of tables that have been written to.</summary>
+        private Dictionary<string, DatabaseTableDetails> tables = new Dictionary<string, DatabaseTableDetails>(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>Default constructor.</summary>
         public DataStoreWriter()
         {
@@ -127,7 +130,13 @@
 
             lock (lockObject)
             {
-                commands.Add(new WriteTableCommand(Connection, table, deleteOldData:false));
+                if (!tables.TryGetValue(table.TableName, out var tableDetails))
+                {
+                    tableDetails = new DatabaseTableDetails(Connection, table.TableName);
+                    tables.Add(table.TableName, tableDetails);
+                }
+
+                commands.Add(new WriteTableCommand(Connection, table, tableDetails, deleteOldData:false));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -166,7 +175,12 @@
 
             lock (lockObject)
             {
-                commands.Add(new WriteTableCommand(Connection, table, deleteAllData));
+                if (!tables.TryGetValue(table.TableName, out var tableDetails))
+                {
+                    tableDetails = new DatabaseTableDetails(Connection, table.TableName);
+                    tables.Add(table.TableName, tableDetails);
+                }
+                commands.Add(new WriteTableCommand(Connection, table, tableDetails, deleteAllData));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -518,6 +532,7 @@
                         commandRunner.Add(this);
                         commandRunner.Run();
                         ReadExistingDatabase(Connection);
+                        tables.Clear();
                     }
                 }
             }
