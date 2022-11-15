@@ -105,6 +105,9 @@
         /// </summary>
         public int NumJobs { get { return 0; } }
 
+        /// <summary>Call JobHasCompleted when job is complete?</summary>
+        public bool NotifyWhenJobComplete => false;
+
         /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
