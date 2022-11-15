@@ -4724,7 +4724,7 @@ namespace Models.Core.ApsimFile
             foreach (JObject varref in JsonUtilities.ChildrenOfType(root, "VariableReference"))
             {
                 if (varref["VariableName"].ToString() == "[Root].LayerMidPointDepth")
-                    varref["VariableName"] = "[Physical].LayerMidPointDepth";
+                    varref["VariableName"] = "[Physical].DepthMidPoints";
             }
         }
 
