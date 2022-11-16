@@ -139,9 +139,15 @@ namespace Models.Soils.NutrientPatching
         public double[] MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
-        public double FOMCNR(int i)
+        public double[] FOMCNRFactor
         {
-            return MathUtilities.Sum(patches.Select(patch => patch.Nutrient.FOMCNR(i)));
+            get
+            {
+                var FOMCNR = new double[soilPhysical.Thickness.Length];
+                foreach (var patch in patches)
+                    FOMCNR = MathUtilities.Add(FOMCNR, patch.Nutrient.FOMCNRFactor);
+                return FOMCNR;
+            }
         }
 
         /// <summary>The number of patches.</summary>
