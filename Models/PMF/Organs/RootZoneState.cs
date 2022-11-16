@@ -17,6 +17,9 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
 
+        /// <summary>The soilcrop in this zone</summary>
+        public SoilCrop SoilCrop { get; private set; }
+
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
 

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 156,
+  "ExplorerWidth": 300,
+  "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -6141,9 +6141,6 @@
                   "Command": [
                     ""
                   ],
-                  "Lines": [
-                    ""
-                  ],
                   "Name": "Brigadier",
                   "ResourceName": null,
                   "Children": [],
@@ -6153,9 +6150,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
-                  ],
-                  "Lines": [
                     ""
                   ],
                   "Name": "Rivage",
@@ -6169,9 +6163,6 @@
                   "Command": [
                     "[Fodderbeet].Phenology.Emerging.Target.FixedValue = 1000"
                   ],
-                  "Lines": [
-                    "[Fodderbeet].Phenology.Emerging.Target.FixedValue = 1000"
-                  ],
                   "Name": "Jamon",
                   "ResourceName": null,
                   "Children": [],
@@ -6181,9 +6172,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
-                  ],
-                  "Lines": [
                     ""
                   ],
                   "Name": "Minotaure",
@@ -6242,6 +6230,7 @@
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
           "AllColumns": false,
           "Name": "PredictedObserved",
           "ResourceName": null,
@@ -7593,6 +7582,10 @@
                           "D0": 0.0,
                           "Exco": null,
                           "FIP": null,
+                          "DepthConstant": 0.0,
+                          "MaxDepthSoluteAccessible": 0.0,
+                          "RunoffEffectivenessAtMovingSolute": 0.0,
+                          "MaxEffectiveRunoff": 0.0,
                           "Name": "NO3",
                           "ResourceName": null,
                           "Children": [],
@@ -7622,6 +7615,10 @@
                           "D0": 0.0,
                           "Exco": null,
                           "FIP": null,
+                          "DepthConstant": 0.0,
+                          "MaxDepthSoluteAccessible": 0.0,
+                          "RunoffEffectivenessAtMovingSolute": 0.0,
+                          "MaxEffectiveRunoff": 0.0,
                           "Name": "NH4",
                           "ResourceName": null,
                           "Children": [],
@@ -7651,6 +7648,10 @@
                           "D0": 0.0,
                           "Exco": null,
                           "FIP": null,
+                          "DepthConstant": 0.0,
+                          "MaxDepthSoluteAccessible": 0.0,
+                          "RunoffEffectivenessAtMovingSolute": 0.0,
+                          "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
                           "ResourceName": null,
                           "Children": [],
