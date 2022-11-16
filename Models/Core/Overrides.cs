@@ -53,7 +53,7 @@ namespace Models.Core
             {
                 // Replacements uses this.
                 variables = model.FindAllInScope(path)
-                    .Where(m => m.GetType() == value.GetType())
+                    .Where(m => m.Parent != null)
                     .Select(m => new VariableObject(m));
             }
             else
