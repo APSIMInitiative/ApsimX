@@ -20,7 +20,7 @@ namespace Models.Functions
         Soil soil = null;
 
         [Link]
-        ISoilWater soilwater = null;
+        Water water = null;
 
         [Link]
         IPhysical physical = null;
@@ -56,7 +56,7 @@ namespace Models.Functions
         [EventSubscribe("WaterChanged")]
         public void OnWaterChanged(object sender, EventArgs e)
         {
-            double[] SW = soilwater.SW;
+            double[] SW = water.Volumetric;
             double[] LL15 = physical.LL15;
             double[] DUL = physical.DUL;
             double[] SAT = physical.SAT;

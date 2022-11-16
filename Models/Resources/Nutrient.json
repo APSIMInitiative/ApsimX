@@ -64,54 +64,6 @@
             "Colour": "0, 158, 115",
             "OutlineColour": "Black",
             "Transparent": false
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-            "Name": "Urea",
-            "Location": "529, 419",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-            "Name": "NO3",
-            "Location": "185, 435",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-            "Name": "NH4",
-            "Location": "357, 422",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-            "Name": "LabileP",
-            "Location": "183, 605",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-            "Name": "UnavailableP",
-            "Location": "50, 50",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-            "Name": "Atmosphere",
-            "Location": "50, 50",
-            "Colour": "245, 245, 220",
-            "OutlineColour": "0, 0, 0",
-            "Transparent": true
           }
         ],
         "Arcs": [
@@ -202,35 +154,11 @@
             "Location": "334, 340",
             "Colour": "Black",
             "Name": null
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Urea",
-            "DestinationName": "NH4",
-            "Location": "0, 0",
-            "Colour": "Black",
-            "Name": null
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "NO3",
-            "DestinationName": "Atmosphere",
-            "Location": "0, 0",
-            "Colour": "Black",
-            "Name": null
-          },
-          {
-            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "NH4",
-            "DestinationName": "NO3",
-            "Location": "0, 0",
-            "Colour": "Black",
-            "Name": null
           }
         ]
       },
-      "ResourceName": null,
       "Name": "Nutrient",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
@@ -524,32 +452,13 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.CERESDecomposition, Models",
                   "Name": "Rate",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0095,
-                      "Units": null,
-                      "Name": "PotentialRate",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                       "Name": "TF",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nutrient].WF",
-                      "Name": "WF",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -668,32 +577,13 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.CERESDecomposition, Models",
                   "Name": "Rate",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.05,
-                      "Units": null,
-                      "Name": "PotentialRate",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                       "Name": "TF",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nutrient].WF",
-                      "Name": "WF",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -812,32 +702,13 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.CERESDecomposition, Models",
                   "Name": "Rate",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.2,
-                      "Units": null,
-                      "Name": "PotentialRate",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                       "Name": "TF",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nutrient].WF",
-                      "Name": "WF",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1185,20 +1056,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.CERESDecomposition, Models",
                   "Name": "Rate",
                   "ResourceName": null,
                   "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.00015,
-                      "Units": null,
-                      "Name": "PotentialRate",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
                       "Name": "TF",
@@ -1208,9 +1069,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nutrient].WF",
-                      "Name": "WF",
+                      "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
+                      "Name": "CNRF",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
