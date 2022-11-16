@@ -24,9 +24,10 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-        private string relatesToResourceName = "";
         private bool timingIssueReported = false;
         private CropActivityManageCrop parentManagementActivity;
+        private CropActivityManageProduct parentManageProductActivity;
+
         double amountToSkip = 0;
 
         /// <summary>
@@ -48,9 +49,11 @@ namespace Models.CLEM.Activities
                         identifiers: new List<string>(),
                         measures: new List<string>() {
                             "fixed",
-                            "per unit of land",
-                            //"per ha",
-                            //"per tree",
+                            "per land unit of crop",
+                            "per hectare of crop",
+                            "per kg harvested",
+                            "per land unit harvested",
+                            "per hectare harvested",
                         }
                         );
                 default:
@@ -64,8 +67,9 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            //relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
             parentManagementActivity = FindAncestor<CropActivityManageCrop>();
+            parentManageProductActivity = (Parent as CropActivityManageProduct);
         }
 
         /// <inheritdoc/>
@@ -99,8 +103,26 @@ namespace Models.CLEM.Activities
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "per unit of land":
+                    case "per land unit of crop":
                         valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity?.Area??0;
+                        break;
+                    case "per hectare of crop":
+                        valuesForCompanionModels[valueToSupply.Key] = (parentManagementActivity?.Area ?? 0) * parentManageProductActivity.UnitsToHaConverter;
+                        break;
+                    case "per kg harvested":
+                        valuesForCompanionModels[valueToSupply.Key] = parentManageProductActivity.AmountHarvested;
+                        break;
+                    case "per land unit harvested":
+                        if (parentManageProductActivity.AmountHarvested > 0)
+                            valuesForCompanionModels[valueToSupply.Key] = (parentManagementActivity?.Area ?? 0);
+                        else
+                            valuesForCompanionModels[valueToSupply.Key] = 0;
+                        break;
+                    case "per hectare harvested":
+                        if (parentManageProductActivity.AmountHarvested > 0)
+                            valuesForCompanionModels[valueToSupply.Key] = (parentManagementActivity?.Area ?? 0) * parentManageProductActivity.UnitsToHaConverter;
+                        else
+                            valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));

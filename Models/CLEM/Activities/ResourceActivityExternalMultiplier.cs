@@ -75,8 +75,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"filtername\">");
-                //if (!this.Name.Contains(this.GetType().Name.Split('.')[^1]))
-                    htmlWriter.Write(this.Name);
+                htmlWriter.Write(this.Name);
 
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");

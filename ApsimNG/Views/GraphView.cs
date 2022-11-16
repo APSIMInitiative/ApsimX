@@ -323,7 +323,7 @@
         /// <param name="fraction">Fraction of the parent window for the graph to occupy.</param>
         public void SetPreferredWidth(double fraction)
         {
-            plot1?.SetSizeRequest(Convert.ToInt32(vbox1.Window.Width * fraction), 100);
+            plot1?.SetSizeRequest(Convert.ToInt32(vbox1.Window.EffectiveParent.Width * fraction), 100);
         }
 
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
