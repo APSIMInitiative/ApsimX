@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 157,
+  "Version": 158,
   "Name": "Simulations",
   "Children": [
     {
@@ -2745,7 +2745,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].LayerMidPointDepth",
+                  "VariableName": "[Physical].DepthMidPoints",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,

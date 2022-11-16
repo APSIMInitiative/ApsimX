@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 157; } }
+        public static int LatestVersion { get { return 158; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4709,6 +4709,22 @@ namespace Models.Core.ApsimFile
                         specifications[i] = specificationString;
                     }
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// Change [Root].LayerMidPointDepth to [Physical].LayerMidPointDepth
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion158(JObject root, string fileName)
+        {
+            //Fix variable references
+            foreach (JObject varref in JsonUtilities.ChildrenOfType(root, "VariableReference"))
+            {
+                if (varref["VariableName"].ToString() == "[Root].LayerMidPointDepth")
+                    varref["VariableName"] = "[Physical].DepthMidPoints";
             }
         }
 

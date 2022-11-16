@@ -100,6 +100,10 @@ namespace Models.Soils.Nutrients
         [Link(ByName = true)]
         public ISolute Urea { get; set; }
 
+        /// <summary>Child carbon flows.</summary>
+        [Link]
+        private CarbonFlow[] CarbonFlows { get; set; }
+
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
         {
@@ -168,8 +172,9 @@ namespace Models.Soils.Nutrients
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
 
-                foreach (CarbonFlow f in FindAllDescendants<CarbonFlow>())
-                    values = MathUtilities.Add(values, f.Catm);
+                foreach (CarbonFlow f in CarbonFlows)
+                    for (int i = 0; i < numLayers; i++)
+                        values[i] += f.Catm[i];
                 return values;
             }
         }

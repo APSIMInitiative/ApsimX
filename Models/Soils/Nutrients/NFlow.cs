@@ -59,11 +59,11 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs args)
         {
-            //if (sourceSolute == null)
-            //{
-            //    sourceSolute = FindInScope<ISolute>(sourceName);
-            //    destinationSolute = FindInScope<ISolute>(destinationName);
-            //}
+            if (sourceSolute == null)
+            {
+                sourceSolute = FindInScope<ISolute>(sourceName);
+                destinationSolute = FindInScope<ISolute>(destinationName);
+            }
 
             //double[] source = sourceSolute.kgha;
             //int numLayers = source.Length;
@@ -83,12 +83,6 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            if (sourceSolute == null)
-            {
-                sourceSolute = FindInScope<ISolute>(sourceName);
-                destinationSolute = FindInScope<ISolute>(destinationName);
-            }
-
             double[] source = sourceSolute.kgha;
             int numLayers = source.Length;
             if (Value == null)

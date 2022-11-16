@@ -15,7 +15,10 @@ namespace Models.PMF.Organs
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
-        
+
+        /// <summary>The soilcrop in this zone</summary>
+        public SoilCrop SoilCrop { get; private set; }
+
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
 
@@ -169,6 +172,9 @@ namespace Models.PMF.Organs
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
+            SoilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            if (SoilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
 
             Clear();
             Zone zone = soil.FindAncestor<Zone>();
@@ -314,10 +320,11 @@ namespace Models.PMF.Organs
         /// </summary>
         public double[] CalculateRootActivityValues()
         {
+            int currentLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             double[] RAw = new double[Physical.Thickness.Length];
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
-                if (layer <= SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth))
+                if (layer <= currentLayer)
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
