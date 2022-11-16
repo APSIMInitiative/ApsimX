@@ -59,9 +59,9 @@
             Zone = from.Zone;
             WaterBalance = from.WaterBalance;
 
-            Water = from.Water;
-            NO3N = from.NO3N;
-            NH4N = from.NH4N;
+            Water = (double[])from.Water.Clone();
+            NO3N = (double[])from.NO3N.Clone();
+            NH4N = (double[])from.NH4N.Clone();
         }
 
         /// <summary>
