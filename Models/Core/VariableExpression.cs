@@ -138,7 +138,7 @@
                 Symbol sym = (Symbol) variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim())?.Value;
+                object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim(), LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError)?.Value;
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)

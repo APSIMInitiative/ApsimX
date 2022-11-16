@@ -22,6 +22,7 @@ using UserInterface.Views;
 using Utility;
 using System.Web;
 using System.Text;
+using Gtk;
 
 namespace UserInterface.Presenters
 {
@@ -68,8 +69,14 @@ namespace UserInterface.Presenters
         /// <summary>List of all countries.</summary>
         private Country[] countries;
 
+        /// <summary>The label for soil count found</summary>
+        private LabelView labelCount;
+
         /// <summary>All found soils.</summary>
-        private IEnumerable<SoilFromDataSource> allSoils;
+        private List<SoilFromDataSource> allSoils= new List<SoilFromDataSource>();
+
+        /// <summary>The token used for cancelling the download</summary>
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// Attach the view to this presenter.
@@ -91,6 +98,7 @@ namespace UserInterface.Presenters
             radiusEditBox = view.GetControl<EditView>("radiusEditBox");
             searchButton = view.GetControl<ButtonView>("searchButton");
             addSoilButton = view.GetControl<ButtonView>("addSoilButton");
+            labelCount = view.GetControl<LabelView>("labelCount");
 
             PopulateView();
 
@@ -118,7 +126,7 @@ namespace UserInterface.Presenters
             var weatherModel = model.FindInScope<IWeather>();
             latitudeEditBox.Text = weatherModel.Latitude.ToString();
             longitudeEditBox.Text = weatherModel.Longitude.ToString();
-            radiusEditBox.Text = "100";
+            radiusEditBox.Text = "10";
 
             dataView.SortColumn = "Distance (km)";
             dataView.SortAscending = true;
@@ -137,79 +145,158 @@ namespace UserInterface.Presenters
         /// <summary>User has clicked the search button.</summary>
         /// <param name="sender">Sender of the event.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnSearchClicked(object sender, EventArgs e)
+        private async void OnSearchClicked(object sender, EventArgs e)
         {
-            try
+            if (searchButton.Text == "Stop")
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
-
-                if (!string.IsNullOrEmpty(placeNameEditBox.Text) && !string.IsNullOrEmpty(countryDropDown.SelectedValue))
-                {
-                    if (!GetLatLongFromPlaceName())
-                        throw new Exception("Cannot find a latitude/longitude from the specified place name.");
-                }
-
-                if (string.IsNullOrEmpty(latitudeEditBox.Text) || string.IsNullOrEmpty(longitudeEditBox.Text))
-                    throw new Exception("Must specifiy either a place name or a latitude/longitude.");
-
-                var apsoilTask = Task.Run(() => GetApsoilSoils());
-                var gridTask = Task.Run(() => GetGridSoils());
-                //var isricTask = Task.Run(() => GetISRICSoils()); // Web API no longer operational?
-                var worldModellersTask = Task.Run(() => GetWorldModellersSoils());
-                var placeNameTask = Task.Run(() => GetPlacenameFromLatLong());
-
-                DataTable soilData = new DataTable();
-                soilData.Columns.Add("Name", typeof(string));
-                soilData.Columns.Add("Data source", typeof(string));
-                soilData.Columns.Add("Soil type", typeof(string));
-                soilData.Columns.Add("Distance (km)", typeof(string));
-                soilData.Columns.Add("PAWC for profile", typeof(string));
-                soilData.Columns.Add("PAWC to 300mm", typeof(string));
-                soilData.Columns.Add("PAWC to 600mm", typeof(string));
-                soilData.Columns.Add("PAWC to 1500mm", typeof(string));
-
-                Task.WaitAll(apsoilTask, gridTask, worldModellersTask, placeNameTask /*, isricTask*/);
-
-                // Update the place name edit box.
-                placeNameEditBox.Text = placeNameTask.Result;
-
-                allSoils = apsoilTask.Result.Concat(gridTask.Result).Concat(worldModellersTask.Result);
-
-                double[] pawcmappingLayerStructure = { 300, 300, 900 };
-
-                foreach (var soilInfo in allSoils)
-                {
-                    var soilPhysical = soilInfo.Soil.FindChild<Physical>();
-                    var row = soilData.NewRow();
-                    row["Name"] = soilInfo.Soil.Name;
-                    row["Data source"] = soilInfo.DataSource;
-                    row["Soil type"] = soilInfo.Soil.SoilType;
-                    row["Distance (km)"] = MetUtilities.Distance(Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
-                                                                 Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
-                                                                 soilInfo.Soil.Latitude,
-                                                                 soilInfo.Soil.Longitude).ToString("F1");
-
-                    var pawc = soilPhysical.PAWCmm;
-                    row["PAWC for profile"] = pawc.Sum().ToString("F1");
-
-                    var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
-                    var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
-                    var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
-                    row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
-                    row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
-                    row["PAWC to 1500mm"] = mappedPawc.Sum().ToString("F1");
-
-                    soilData.Rows.Add(row);
-                }
-                dataView.DataSource = soilData;
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err.Message);
-            }
-            finally
-            {
+                cancellationTokenSource.Cancel();
+                searchButton.Text = "Search for soils";
                 explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                await Task.Delay(200);
+            }
+            else
+            {
+                searchButton.Text = "Stop";
+                labelCount.Text = "";
+                enableControls(false);
+                try
+                {
+                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(placeNameEditBox.Text) && !string.IsNullOrEmpty(countryDropDown.SelectedValue))
+                        {
+                            if (await GetLatLongFromPlaceNameAsync() == false)
+                                throw new Exception("Cannot find a latitude/longitude from the specified place name.");
+                        }
+
+                        if (string.IsNullOrEmpty(latitudeEditBox.Text) || string.IsNullOrEmpty(longitudeEditBox.Text))
+                            throw new Exception("Must specifiy either a place name or a latitude/longitude.");
+
+                        // Update the place name edit box.
+                        placeNameEditBox.Text = await GetPlacenameFromLatLongAsync();
+
+                        // Use this to monitor task progress
+                        Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();
+                        progress.ProgressChanged += ReportProgress;
+                        // create a report object here because I will use the same one for all parallel tasks
+                        ProgressReportModel report = new ProgressReportModel();
+                        report.Count = 0;
+
+                        List<Task<IEnumerable<SoilFromDataSource>>> tasks = new List<Task<IEnumerable<SoilFromDataSource>>>();
+                        tasks.Add(GetApsoilSoilsAsync(progress, report));
+                        tasks.Add(GetASRISSoilsAsync(progress, report));
+                        tasks.Add(GetWorldModellersSoilsAsync(progress, report));
+                        //tasks.Add(GetISRICSoilsAsync()); // Web API no longer operational?
+
+                        DataTable soilData = new DataTable();
+                        soilData.Columns.Add("Name", typeof(string));
+                        soilData.Columns.Add("Data source", typeof(string));
+                        soilData.Columns.Add("Soil type", typeof(string));
+                        soilData.Columns.Add("Distance (km)", typeof(double));
+                        soilData.Columns.Add("PAWC for profile", typeof(double));
+                        soilData.Columns.Add("PAWC to 300mm", typeof(double));
+                        soilData.Columns.Add("PAWC to 600mm", typeof(double));
+                        soilData.Columns.Add("PAWC to 1500mm", typeof(double));
+                        dataView.ClearRows();
+
+                        double[] pawcmappingLayerStructure = { 300, 300, 900 };
+
+                        var results = await Task.WhenAll(tasks);
+
+                        allSoils.Clear();
+                        foreach (var item in results)
+                        {
+                            foreach (var soilInfo in item)
+                            {
+                                allSoils.Add(soilInfo);
+                                soilData.Rows.Add(MakeDataRow(soilData, soilInfo));
+                            }
+                        }
+                        dataView.DataSource = soilData;
+                        labelCount.Text = soilData.Rows.Count.ToString() + " soils found";
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        cancellationTokenSource.Dispose();
+                        cancellationTokenSource = new CancellationTokenSource();
+                        enableControls(true);
+                    }
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err.Message);
+                }
+                finally
+                {
+                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    searchButton.Text = "Search for soils";
+                    enableControls(true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Switch the editable state of some controls. Used while searching.
+        /// </summary>
+        /// <param name="enable">State of editable flag</param>
+        private void enableControls(bool enable)
+        {
+            latitudeEditBox.Editable = enable;
+            longitudeEditBox.Editable = enable;
+            radiusEditBox.Editable = enable;
+            placeNameEditBox.Editable = enable;
+        }
+
+        /// <summary>
+        /// Make a new DataTable row and populate it with the soil information
+        /// </summary>
+        /// <param name="soilData">The DataTable</param>
+        /// <param name="soilInfo">The soil found from the services</param>
+        /// <returns>The new DataRow in the DataTable</returns>
+        private DataRow MakeDataRow(DataTable soilData, SoilFromDataSource soilInfo)
+        {
+            double[] pawcmappingLayerStructure = { 300, 300, 900 };
+
+            var soilPhysical = soilInfo.Soil.FindChild<Physical>();
+            var row = soilData.NewRow();
+            row["Name"] = soilInfo.Soil.Name;
+            row["Data source"] = soilInfo.DataSource;
+            row["Soil type"] = soilInfo.Soil.SoilType;
+            row["Distance (km)"] = MetUtilities.Distance(Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
+                                                         Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
+                                                         soilInfo.Soil.Latitude,
+                                                         soilInfo.Soil.Longitude);
+
+            var pawc = soilPhysical.PAWCmm;
+            row["PAWC for profile"] = pawc.Sum();
+
+            var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
+            var mappedPawcConcentration = SoilUtilities.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
+            var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
+            row["PAWC to 300mm"] = mappedPawc[0]; 
+            row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]); 
+            row["PAWC to 1500mm"] = mappedPawc.Sum();
+
+            return row;
+        }
+
+        /// <summary>
+        /// Used to lock the download count update of the gui
+        /// </summary>
+        private readonly object countLock = new object();
+
+        /// <summary>
+        /// The event handler for the updating of the report object
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The report model object</param>
+        private void ReportProgress(object sender, ProgressReportModel e)
+        {
+            lock (countLock)
+            {
+                e.Count++;
+                labelCount.Text = e.Count.ToString() + " soils found";
             }
         }
 
@@ -234,8 +321,13 @@ namespace UserInterface.Presenters
             explorerPresenter.Populate();
         }
 
-        /// <summary>Return zero or more APSOIL soils.</summary>
-        private IEnumerable<SoilFromDataSource> GetApsoilSoils()
+        /// <summary>
+        /// Return zero or more APSOIL soils.
+        /// </summary>
+        /// <param name="progress">The system progress object</param>
+        /// <param name="report">The reporting object used for this task</param>
+        /// <returns>List of soils</returns>
+        private async Task<IEnumerable<SoilFromDataSource>> GetApsoilSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
             try
@@ -245,7 +337,7 @@ namespace UserInterface.Presenters
                 double longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
                 double radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
                 string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
-                using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url))
+                using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
                     stream.Position = 0;
                     XmlDocument doc = new XmlDocument();
@@ -255,7 +347,7 @@ namespace UserInterface.Presenters
                     {
                         string name = node["Name"].InnerText;
                         string infoUrl = $"https://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SoilXML?Name={name}";
-                        using (MemoryStream infoStream = WebUtilities.ExtractDataFromURL(infoUrl))
+                        using (var infoStream = await WebUtilities.ExtractDataFromURL(infoUrl, cancellationTokenSource.Token))
                         {
                             infoStream.Position = 0;
                             string xml = HttpUtility.HtmlDecode(Encoding.UTF8.GetString(infoStream.ToArray()));
@@ -274,10 +366,16 @@ namespace UserInterface.Presenters
                                     Soil = soil,
                                     DataSource = "APSOIL"
                                 });
+                                progress.Report(report);
                             }
                         }
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
             }
             catch (Exception err)
             {
@@ -287,15 +385,20 @@ namespace UserInterface.Presenters
             return soils;
         }
 
-        /// <summary>Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.</summary>
-        private IEnumerable<SoilFromDataSource> GetGridSoils()
+        /// <summary>
+        /// Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.
+        /// </summary>
+        /// <param name="progress">The system progress object</param>
+        /// <param name="report">The reporting object used for this task</param>
+        /// <returns></returns>
+        private async Task<IEnumerable<SoilFromDataSource>> GetASRISSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
                 longitudeEditBox.Text + "&latitude=" + latitudeEditBox.Text;
             try
             {
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
                 stream.Position = 0;
                 XmlDocument doc = new XmlDocument();
                 doc.Load(stream);
@@ -312,7 +415,13 @@ namespace UserInterface.Presenters
                         Soil = soil,
                         DataSource = "SLGA"
                     });
+                    progress.Report(report);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
             }
             catch (Exception error)
             {
@@ -324,15 +433,17 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Gets a soil description from the ISRIC REST API for World Modellers
         /// </summary>
+        /// <param name="progress">The system progress object</param>
+        /// <param name="report">The reporting object used for this task</param>
         /// <returns>True if successful</returns>
-        private IEnumerable<SoilFromDataSource> GetWorldModellersSoils()
+        private async Task<IEnumerable<SoilFromDataSource>> GetWorldModellersSoilsAsync(IProgress<ProgressReportModel> progress, ProgressReportModel report)
         {
             var soils = new List<SoilFromDataSource>();
             string url = "https://worldmodel.csiro.au/apsimsoil?lon=" +
                 longitudeEditBox.Text + "&lat=" + latitudeEditBox.Text;
             try
             {
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
                 stream.Position = 0;
                 XmlDocument doc = new XmlDocument();
                 doc.Load(stream);
@@ -350,7 +461,13 @@ namespace UserInterface.Presenters
                         Soil = soil,
                         DataSource = "ISRIC"
                     });
+                    progress.Report(report);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
             }
             catch (Exception err)
             {
@@ -402,8 +519,8 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Gets and ISRIC soil description directly from SoilGrids
         /// </summary>
-        /// <returns>True if successful</returns>
-        private IEnumerable<SoilFromDataSource> GetISRICSoils()
+        /// <returns>A list of downloaded soils</returns>
+        private async Task<IEnumerable<SoilFromDataSource>> GetISRICSoilsAsync()
         {
             var soils = new List<SoilFromDataSource>();
             string url = "https://rest.soilgrids.org/query?lon=" +
@@ -434,371 +551,379 @@ namespace UserInterface.Presenters
                 double[] textureToAlb = new double[] { 0.12, 0.12, 0.13, 0.13, 0.12, 0.13, 0.13, 0.14, 0.13, 0.13, 0.16, 0.19, 0.13 };
                 double[] textureToCN2 = new double[] { 73.0, 73.0, 73.0, 73.0, 73.0, 73.0, 73.0, 73.0, 68.0, 73.0, 68.0, 68.0, 73.0 };
                 double[] textureToSwcon = new double[] { 0.25, 0.3, 0.3, 0.4, 0.5, 0.5, 0.5, 0.5, 0.6, 0.5, 0.6, 0.75, 0.5 };
-                MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-                stream.Position = 0;
-                JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
-                while (reader.Read())
+                try
                 {
-                    if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("properties") && reader.Depth == 1)
+                    var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
+                    stream.Position = 0;
+                    JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
+                    while (reader.Read())
                     {
-                        reader.Read(); // Read the "start object" token
-                        while (reader.Read())
+                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("properties") && reader.Depth == 1)
                         {
-                            if (reader.TokenType == JsonToken.PropertyName)
+                            reader.Read(); // Read the "start object" token
+                            while (reader.Read())
                             {
-                                string propName = reader.Value.ToString();
-                                double[] dest = null;
-                                double multiplier = 1.0;
-                                if (propName == "TAXNWRBMajor")
+                                if (reader.TokenType == JsonToken.PropertyName)
                                 {
-                                    soilType = reader.ReadAsString();
-                                }
-                                else if (propName == "TMDMOD_2011")
-                                {
-                                    maxTemp = 0.0;
-                                    reader.Read();
-                                    while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                    string propName = reader.Value.ToString();
+                                    double[] dest = null;
+                                    double multiplier = 1.0;
+                                    if (propName == "TAXNWRBMajor")
                                     {
-                                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
-                                        {
-                                            reader.Read(); // Read start of object token
-                                            for (int i = 0; i < 12; i++)
-                                            {
-                                                reader.Read(); // Read a month name
-                                                maxTemp += (double)reader.ReadAsDouble();
-                                            }
-                                            maxTemp /= 12.0;
-                                        }
+                                        soilType = reader.ReadAsString();
                                     }
-                                }
-                                else if (propName == "TMNMOD_2011")
-                                {
-                                    minTemp = 0.0;
-                                    reader.Read();
-                                    while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                    else if (propName == "TMDMOD_2011")
                                     {
-                                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                        maxTemp = 0.0;
+                                        reader.Read();
+                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
                                         {
-                                            reader.Read(); // Read start of object token
-                                            for (int i = 0; i < 12; i++)
+                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
                                             {
-                                                reader.Read(); // Read a month name
-                                                minTemp += (double)reader.ReadAsDouble();
-                                            }
-                                            minTemp /= 12.0;
-                                        }
-                                    }
-                                }
-                                else if (propName == "PREMRG")
-                                {
-                                    ppt = 0.0;
-                                    reader.Read();
-                                    while (reader.Read() && reader.TokenType != JsonToken.EndObject)
-                                    {
-                                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
-                                        {
-                                            reader.Read(); // Read start of object token
-                                            for (int i = 0; i < 12; i++)
-                                            {
-                                                reader.Read(); // Read a month name
-                                                ppt += (double)reader.ReadAsDouble();
-                                            }
-                                        }
-                                    }
-                                }
-                                else if (propName == "BDTICM")  // Is this the best metric to use for find the "bottom" of the soil?
-                                {
-                                    reader.Read();
-                                    while (reader.Read() && reader.TokenType != JsonToken.EndObject)
-                                    {
-                                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
-                                        {
-                                            reader.Read(); // Read start of object token
-                                            reader.Read(); // Read property name (which ought to be BDTICM_M)
-                                            bedrock = 10.0 * (double)reader.ReadAsDouble();
-                                            reader.Skip();
-                                        }
-                                    }
-                                }
-                                else if (propName == "AWCh1")
-                                {
-                                    dest = awc20;
-                                    multiplier = 0.01;
-                                }
-                                else if (propName == "AWCh2")
-                                {
-                                    dest = awc23;
-                                    multiplier = 0.01;
-                                }
-                                else if (propName == "AWCh3")
-                                {
-                                    dest = awc25;
-                                    multiplier = 0.01;
-                                }
-                                else if (propName == "AWCtS")
-                                {
-                                    dest = thetaSat;
-                                    multiplier = 0.01;
-                                }
-                                else if (propName == "BLDFIE")
-                                {
-                                    dest = bd;
-                                    multiplier = 0.001;
-                                }
-                                else if (propName == "CECSOL")
-                                {
-                                    dest = cationEC;
-                                    multiplier = 1.0;
-                                }
-                                else if (propName == "CLYPPT")
-                                {
-                                    dest = clay;
-                                    multiplier = 1.0;
-                                }
-                                else if (propName == "CRFVOL")
-                                {
-                                    dest = coarse;
-                                    multiplier = 1.0;
-                                }
-                                else if (propName == "ORCDRC")
-                                {
-                                    dest = ocdrc;
-                                    multiplier = 0.1;
-                                }
-                                else if (propName == "PHIHOX")
-                                {
-                                    dest = phWater;
-                                    multiplier = 0.1;
-                                }
-                                else if (propName == "SLTPPT")
-                                {
-                                    dest = silt;
-                                    multiplier = 1.0;
-                                }
-                                else if (propName == "SNDPPT")
-                                {
-                                    dest = sand;
-                                    multiplier = 1.0;
-                                }
-                                else if (propName == "TEXMHT")
-                                {
-                                    dest = texture;
-                                    multiplier = 1.0;
-                                }
-                                else if (propName == "WWP")
-                                {
-                                    dest = thetaWwp;
-                                    multiplier = 0.01;
-                                }
-
-                                if (dest != null)
-                                {
-                                    reader.Read();
-                                    while (reader.Read() && reader.TokenType != JsonToken.EndObject)
-                                    {
-                                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
-                                        {
-                                            while (reader.Read() && reader.TokenType != JsonToken.EndObject)
-                                            {
-                                                if (reader.TokenType == JsonToken.PropertyName)
+                                                reader.Read(); // Read start of object token
+                                                for (int i = 0; i < 12; i++)
                                                 {
-                                                    string tokenName = reader.Value.ToString();
-                                                    if (tokenName.StartsWith("sl"))
+                                                    reader.Read(); // Read a month name
+                                                    maxTemp += (double)reader.ReadAsDouble();
+                                                }
+                                                maxTemp /= 12.0;
+                                            }
+                                        }
+                                    }
+                                    else if (propName == "TMNMOD_2011")
+                                    {
+                                        minTemp = 0.0;
+                                        reader.Read();
+                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                        {
+                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                            {
+                                                reader.Read(); // Read start of object token
+                                                for (int i = 0; i < 12; i++)
+                                                {
+                                                    reader.Read(); // Read a month name
+                                                    minTemp += (double)reader.ReadAsDouble();
+                                                }
+                                                minTemp /= 12.0;
+                                            }
+                                        }
+                                    }
+                                    else if (propName == "PREMRG")
+                                    {
+                                        ppt = 0.0;
+                                        reader.Read();
+                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                        {
+                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                            {
+                                                reader.Read(); // Read start of object token
+                                                for (int i = 0; i < 12; i++)
+                                                {
+                                                    reader.Read(); // Read a month name
+                                                    ppt += (double)reader.ReadAsDouble();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (propName == "BDTICM")  // Is this the best metric to use for find the "bottom" of the soil?
+                                    {
+                                        reader.Read();
+                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                        {
+                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                            {
+                                                reader.Read(); // Read start of object token
+                                                reader.Read(); // Read property name (which ought to be BDTICM_M)
+                                                bedrock = 10.0 * (double)reader.ReadAsDouble();
+                                                reader.Skip();
+                                            }
+                                        }
+                                    }
+                                    else if (propName == "AWCh1")
+                                    {
+                                        dest = awc20;
+                                        multiplier = 0.01;
+                                    }
+                                    else if (propName == "AWCh2")
+                                    {
+                                        dest = awc23;
+                                        multiplier = 0.01;
+                                    }
+                                    else if (propName == "AWCh3")
+                                    {
+                                        dest = awc25;
+                                        multiplier = 0.01;
+                                    }
+                                    else if (propName == "AWCtS")
+                                    {
+                                        dest = thetaSat;
+                                        multiplier = 0.01;
+                                    }
+                                    else if (propName == "BLDFIE")
+                                    {
+                                        dest = bd;
+                                        multiplier = 0.001;
+                                    }
+                                    else if (propName == "CECSOL")
+                                    {
+                                        dest = cationEC;
+                                        multiplier = 1.0;
+                                    }
+                                    else if (propName == "CLYPPT")
+                                    {
+                                        dest = clay;
+                                        multiplier = 1.0;
+                                    }
+                                    else if (propName == "CRFVOL")
+                                    {
+                                        dest = coarse;
+                                        multiplier = 1.0;
+                                    }
+                                    else if (propName == "ORCDRC")
+                                    {
+                                        dest = ocdrc;
+                                        multiplier = 0.1;
+                                    }
+                                    else if (propName == "PHIHOX")
+                                    {
+                                        dest = phWater;
+                                        multiplier = 0.1;
+                                    }
+                                    else if (propName == "SLTPPT")
+                                    {
+                                        dest = silt;
+                                        multiplier = 1.0;
+                                    }
+                                    else if (propName == "SNDPPT")
+                                    {
+                                        dest = sand;
+                                        multiplier = 1.0;
+                                    }
+                                    else if (propName == "TEXMHT")
+                                    {
+                                        dest = texture;
+                                        multiplier = 1.0;
+                                    }
+                                    else if (propName == "WWP")
+                                    {
+                                        dest = thetaWwp;
+                                        multiplier = 0.01;
+                                    }
+
+                                    if (dest != null)
+                                    {
+                                        reader.Read();
+                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                        {
+                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                            {
+                                                while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                                {
+                                                    if (reader.TokenType == JsonToken.PropertyName)
                                                     {
-                                                        int index = Int32.Parse(tokenName.Substring(2)) - 1;
-                                                        dest[index] = (double)reader.ReadAsDouble() * multiplier;
+                                                        string tokenName = reader.Value.ToString();
+                                                        if (tokenName.StartsWith("sl"))
+                                                        {
+                                                            int index = Int32.Parse(tokenName.Substring(2)) - 1;
+                                                            dest[index] = (double)reader.ReadAsDouble() * multiplier;
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                    else
+                                        reader.Skip();
                                 }
-                                else
-                                    reader.Skip();
                             }
                         }
                     }
-                }
 
-                var newSoil = new Soil();
-                Chemical analysis = new Chemical();
-                Physical waterNode = new Physical();
-                Organic organicMatter = new Organic();
-                WaterBalance soilWater = new WaterBalance();
-                Water initialWater = new Water();
-                Solute no3 = new Solute();
-                Solute nh4 = new Solute();
-                Nutrient nutrient = new Nutrient();
-                nutrient.ResourceName = "Nutrient";
+                    var newSoil = new Soil();
+                    Chemical analysis = new Chemical();
+                    Physical waterNode = new Physical();
+                    Organic organicMatter = new Organic();
+                    WaterBalance soilWater = new WaterBalance();
+                    Water initialWater = new Water();
+                    Solute no3 = new Solute();
+                    Solute nh4 = new Solute();
+                    Nutrient nutrient = new Nutrient();
+                    nutrient.ResourceName = "Nutrient";
 
-                SoilCrop wheat = new SoilCrop();
-                waterNode.Children.Add(wheat);
-                wheat.Name = "WheatSoil";
-                waterNode.ParentAllDescendants();
+                    SoilCrop wheat = new SoilCrop();
+                    waterNode.Children.Add(wheat);
+                    wheat.Name = "WheatSoil";
+                    waterNode.ParentAllDescendants();
 
-                newSoil.Children.Add(waterNode);
-                newSoil.Children.Add(soilWater);
-                newSoil.Children.Add(nutrient);
-                newSoil.Children.Add(organicMatter);
-                newSoil.Children.Add(analysis);
-                newSoil.Children.Add(initialWater);
-                newSoil.Children.Add(no3);
-                newSoil.Children.Add(nh4);
-                newSoil.Children.Add(new CERESSoilTemperature());
-                newSoil.ParentAllDescendants();
-                newSoil.OnCreated();
+                    newSoil.Children.Add(waterNode);
+                    newSoil.Children.Add(soilWater);
+                    newSoil.Children.Add(nutrient);
+                    newSoil.Children.Add(organicMatter);
+                    newSoil.Children.Add(analysis);
+                    newSoil.Children.Add(initialWater);
+                    newSoil.Children.Add(no3);
+                    newSoil.Children.Add(nh4);
+                    newSoil.Children.Add(new CERESSoilTemperature());
+                    newSoil.ParentAllDescendants();
+                    newSoil.OnCreated();
 
-                newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
-                newSoil.DataSource = "ISRIC SoilGrids";
-                newSoil.SoilType = soilType;
-                newSoil.Latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
-                newSoil.Longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                    newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
+                    newSoil.DataSource = "ISRIC SoilGrids";
+                    newSoil.SoilType = soilType;
+                    newSoil.Latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                    newSoil.Longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                // ISRIC values are for "levels", not "intervals", so we need to convert to layers
-                // Following Andrew Moore's lead on layer thickness and weightings.
+                    // ISRIC values are for "levels", not "intervals", so we need to convert to layers
+                    // Following Andrew Moore's lead on layer thickness and weightings.
 
-                double[] thickness = new double[] { 150.0, 150.0, 150.0, 150.0, 200.0, 200.0, 200.0, 200.0, 300.0, 300.0 };
-                double[] depth = new double[thickness.Length];
-                int layerCount = thickness.Length;
-                for (int i = 0; i < thickness.Length; i++)
-                {
-                    depth[i] = thickness[i] + (i > 0 ? depth[i - 1] : 0.0);
-                    if ((i > 0) && (layerCount == thickness.Length) && (bedrock < depth[i] + 20.0))
+                    double[] thickness = new double[] { 150.0, 150.0, 150.0, 150.0, 200.0, 200.0, 200.0, 200.0, 300.0, 300.0 };
+                    double[] depth = new double[thickness.Length];
+                    int layerCount = thickness.Length;
+                    for (int i = 0; i < thickness.Length; i++)
                     {
-                        layerCount = i + 1;
-                        thickness[i] = Math.Min(thickness[i], Math.Max(0.0, bedrock - (depth[i] - thickness[i])));
-                        if (i == 1)
-                            thickness[i] = Math.Max(50.0, thickness[i]);
-                        Array.Resize(ref thickness, layerCount);
+                        depth[i] = thickness[i] + (i > 0 ? depth[i - 1] : 0.0);
+                        if ((i > 0) && (layerCount == thickness.Length) && (bedrock < depth[i] + 20.0))
+                        {
+                            layerCount = i + 1;
+                            thickness[i] = Math.Min(thickness[i], Math.Max(0.0, bedrock - (depth[i] - thickness[i])));
+                            if (i == 1)
+                                thickness[i] = Math.Max(50.0, thickness[i]);
+                            Array.Resize(ref thickness, layerCount);
+                        }
                     }
-                }
 
-                analysis.Thickness = thickness;
-                waterNode.Thickness = thickness;
-                soilWater.Thickness = thickness;
-                organicMatter.Thickness = thickness;
+                    analysis.Thickness = thickness;
+                    waterNode.Thickness = thickness;
+                    soilWater.Thickness = thickness;
+                    organicMatter.Thickness = thickness;
 
-                initialWater.Name = "Initial water";
-                initialWater.FilledFromTop = true;
-                initialWater.FractionFull = 0.0;
+                    initialWater.Name = "Initial water";
+                    initialWater.FilledFromTop = true;
+                    initialWater.FractionFull = 0.0;
 
-                // Initialise nitrogen to 0.0
-                no3.Name = "NO3";
-                no3.InitialValues = new double[layerCount];
-                nh4.Name = "NH4";
-                nh4.InitialValues = new double[layerCount];
+                    // Initialise nitrogen to 0.0
+                    no3.Name = "NO3";
+                    no3.InitialValues = new double[layerCount];
+                    nh4.Name = "NH4";
+                    nh4.InitialValues = new double[layerCount];
 
-                double tAvg = (maxTemp + minTemp) / 2.0;
-                soilWater.CNCov = 0.0;
-                soilWater.CNRed = 20.0;
-                soilWater.SummerDate = newSoil.Latitude <= 0.0 ? "1-nov" : "1-may";
-                soilWater.WinterDate = newSoil.Latitude <= 0.0 ? "1-apr" : "1-oct";
-                soilWater.SummerCona = 6.0;
-                soilWater.SummerU = 6.0;
-                soilWater.WinterCona = tAvg < 21.0 ? 2.5 : 6.0;
-                soilWater.WinterU = tAvg < 21.0 ? 4.0 : 6.0;
-                soilWater.Salb = textureToAlb[(int)Math.Round(texture[0] - 1)];
-                soilWater.CN2Bare = textureToCN2[(int)Math.Round(texture[0] - 1)];
-                double[] swcon = new double[7];
-                for (int i = 0; i < 7; i++)
-                    swcon[i] = textureToSwcon[(int)Math.Round(texture[i] - 1)];
-                soilWater.SWCON = ConvertLayers(swcon, layerCount);
+                    double tAvg = (maxTemp + minTemp) / 2.0;
+                    soilWater.CNCov = 0.0;
+                    soilWater.CNRed = 20.0;
+                    soilWater.SummerDate = newSoil.Latitude <= 0.0 ? "1-nov" : "1-may";
+                    soilWater.WinterDate = newSoil.Latitude <= 0.0 ? "1-apr" : "1-oct";
+                    soilWater.SummerCona = 6.0;
+                    soilWater.SummerU = 6.0;
+                    soilWater.WinterCona = tAvg < 21.0 ? 2.5 : 6.0;
+                    soilWater.WinterU = tAvg < 21.0 ? 4.0 : 6.0;
+                    soilWater.Salb = textureToAlb[(int)Math.Round(texture[0] - 1)];
+                    soilWater.CN2Bare = textureToCN2[(int)Math.Round(texture[0] - 1)];
+                    double[] swcon = new double[7];
+                    for (int i = 0; i < 7; i++)
+                        swcon[i] = textureToSwcon[(int)Math.Round(texture[i] - 1)];
+                    soilWater.SWCON = ConvertLayers(swcon, layerCount);
 
-                waterNode.BD = ConvertLayers(bd, layerCount);
-                waterNode.LL15 = ConvertLayers(thetaWwp, layerCount);
-                waterNode.SAT = ConvertLayers(thetaSat, layerCount);
-                waterNode.AirDry = ConvertLayers(MathUtilities.Divide_Value(thetaWwp, 3.0), layerCount);
-                double[] dul = new double[7];
-                for (int i = 0; i < 7; i++)
-                    dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
-                waterNode.DUL = ConvertLayers(dul, layerCount);
+                    waterNode.BD = ConvertLayers(bd, layerCount);
+                    waterNode.LL15 = ConvertLayers(thetaWwp, layerCount);
+                    waterNode.SAT = ConvertLayers(thetaSat, layerCount);
+                    waterNode.AirDry = ConvertLayers(MathUtilities.Divide_Value(thetaWwp, 3.0), layerCount);
+                    double[] dul = new double[7];
+                    for (int i = 0; i < 7; i++)
+                        dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
+                    waterNode.DUL = ConvertLayers(dul, layerCount);
 
-                waterNode.ParticleSizeSand = ConvertLayers(sand, layerCount);
-                waterNode.ParticleSizeSilt = ConvertLayers(silt, layerCount);
-                waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
-                // waterNode.Rocks = ConvertLayers(coarse, layerCount);
-                analysis.PH = ConvertLayers(phWater, layerCount);
-                // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
-                double[] classes = ConvertLayers(texture, layerCount);
-                string[] textures = new string[layerCount];
-                for (int i = 0; i < layerCount; i++)
-                    textures[i] = textureClasses[(int)Math.Round(classes[i]) - 1];
+                    waterNode.ParticleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSilt = ConvertLayers(silt, layerCount);
+                    waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
+                    // waterNode.Rocks = ConvertLayers(coarse, layerCount);
+                    analysis.PH = ConvertLayers(phWater, layerCount);
+                    // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
+                    double[] classes = ConvertLayers(texture, layerCount);
+                    string[] textures = new string[layerCount];
+                    for (int i = 0; i < layerCount; i++)
+                        textures[i] = textureClasses[(int)Math.Round(classes[i]) - 1];
 
 
-                double[] xf = new double[layerCount];
-                double[] kl = new double[layerCount];
-                double[] ll = new double[layerCount];
-                double p1 = 1.4;
-                double p2 = 1.60 - p1;
-                double p3 = 1.80 - p1;
-                double topEffDepth = 0.0;
-                double klMax = 0.06;
-                double depthKl = 900.0;
-                double depthRoot = 1900.0;
+                    double[] xf = new double[layerCount];
+                    double[] kl = new double[layerCount];
+                    double[] ll = new double[layerCount];
+                    double p1 = 1.4;
+                    double p2 = 1.60 - p1;
+                    double p3 = 1.80 - p1;
+                    double topEffDepth = 0.0;
+                    double klMax = 0.06;
+                    double depthKl = 900.0;
+                    double depthRoot = 1900.0;
 
-                for (int i = 0; i < layerCount; i++)
-                {
-                    xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * waterNode.ParticleSizeSand[i])) / p3;
-                    xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
-                    double effectiveThickness = thickness[i] * xf[i];
-                    double bottomEffDepth = topEffDepth + effectiveThickness;
-                    double propMaxKl = Math.Max(0.0, Math.Min(bottomEffDepth, depthKl) - topEffDepth) / effectiveThickness;
-                    double propDecrKl = Math.Max(Math.Max(0.0, Math.Min(bottomEffDepth, depthRoot) - topEffDepth) / effectiveThickness - propMaxKl, 0.0);
-                    double propZeroKl = 1.0 - propMaxKl - propDecrKl;
-                    double ratioTopDepth = Math.Max(0.0, Math.Min((depthRoot - topEffDepth) / (depthRoot - depthKl), 1.0));
-                    double ratioBottomDepth = Math.Max(0.0, Math.Min((depthRoot - bottomEffDepth) / (depthRoot - depthKl), 1.0));
-                    double meanDecrRatio = 0.5 * (ratioTopDepth + ratioBottomDepth);
-                    double weightedRatio = propMaxKl * 1.0 + propDecrKl * meanDecrRatio + propZeroKl * 0.0;
-                    kl[i] = klMax * weightedRatio;
-                    ll[i] = waterNode.LL15[i] + (waterNode.DUL[i] - waterNode.LL15[i]) * (1.0 - weightedRatio);
-                    if (kl[i] <= 0.0)
-                        xf[i] = 0.0;
-                    topEffDepth = bottomEffDepth;
-                }
-                wheat.XF = xf;
-                wheat.KL = kl;
-                wheat.LL = ll;
+                    for (int i = 0; i < layerCount; i++)
+                    {
+                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * waterNode.ParticleSizeSand[i])) / p3;
+                        xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
+                        double effectiveThickness = thickness[i] * xf[i];
+                        double bottomEffDepth = topEffDepth + effectiveThickness;
+                        double propMaxKl = Math.Max(0.0, Math.Min(bottomEffDepth, depthKl) - topEffDepth) / effectiveThickness;
+                        double propDecrKl = Math.Max(Math.Max(0.0, Math.Min(bottomEffDepth, depthRoot) - topEffDepth) / effectiveThickness - propMaxKl, 0.0);
+                        double propZeroKl = 1.0 - propMaxKl - propDecrKl;
+                        double ratioTopDepth = Math.Max(0.0, Math.Min((depthRoot - topEffDepth) / (depthRoot - depthKl), 1.0));
+                        double ratioBottomDepth = Math.Max(0.0, Math.Min((depthRoot - bottomEffDepth) / (depthRoot - depthKl), 1.0));
+                        double meanDecrRatio = 0.5 * (ratioTopDepth + ratioBottomDepth);
+                        double weightedRatio = propMaxKl * 1.0 + propDecrKl * meanDecrRatio + propZeroKl * 0.0;
+                        kl[i] = klMax * weightedRatio;
+                        ll[i] = waterNode.LL15[i] + (waterNode.DUL[i] - waterNode.LL15[i]) * (1.0 - weightedRatio);
+                        if (kl[i] <= 0.0)
+                            xf[i] = 0.0;
+                        topEffDepth = bottomEffDepth;
+                    }
+                    wheat.XF = xf;
+                    wheat.KL = kl;
+                    wheat.LL = ll;
 
-                organicMatter.Carbon = ConvertLayers(ocdrc, layerCount);
+                    organicMatter.Carbon = ConvertLayers(ocdrc, layerCount);
 
-                double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));
-                // For AosimX, root wt needs to be distributed across layers. This conversion logic is adapted from that used in UpgradeToVersion52
-                double[] rootWtFraction = new double[layerCount];
-                double profileDepth = depth[layerCount - 1];
-                double cumDepth = 0.0;
-                for (int layer = 0; layer < layerCount; layer++)
-                {
-                    double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
-                    cumDepth += thickness[layer];
-                    rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
-                }
-                // get the actuall FOM distribution through layers (adds up to one)
-                double totFOMfraction = MathUtilities.Sum(rootWtFraction);
-                for (int layer = 0; layer < thickness.Length; layer++)
-                    rootWtFraction[layer] /= totFOMfraction;
-                organicMatter.FOM = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+                    double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));
+                    // For AosimX, root wt needs to be distributed across layers. This conversion logic is adapted from that used in UpgradeToVersion52
+                    double[] rootWtFraction = new double[layerCount];
+                    double profileDepth = depth[layerCount - 1];
+                    double cumDepth = 0.0;
+                    for (int layer = 0; layer < layerCount; layer++)
+                    {
+                        double fracLayer = Math.Min(1.0, MathUtilities.Divide(profileDepth - cumDepth, thickness[layer], 0.0));
+                        cumDepth += thickness[layer];
+                        rootWtFraction[layer] = fracLayer * Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cumDepth, profileDepth, 0.0)));
+                    }
+                    // get the actuall FOM distribution through layers (adds up to one)
+                    double totFOMfraction = MathUtilities.Sum(rootWtFraction);
+                    for (int layer = 0; layer < thickness.Length; layer++)
+                        rootWtFraction[layer] /= totFOMfraction;
+                    organicMatter.FOM = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
 
-                double[] fBiom = { 0.04, 0.04 - 0.03 * (225.0 - 150.0) / (400.0 - 150.0),
+                    double[] fBiom = { 0.04, 0.04 - 0.03 * (225.0 - 150.0) / (400.0 - 150.0),
                         (400.0 - 300.0) / (450.0 - 300.0) * (0.04 - 0.03 * (350.0 - 150.0) / (400.0 - 150.0)) + (450.0 - 400.0) / (450.0 - 300.0) * 0.01,
                         0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01 };
-                Array.Resize(ref fBiom, layerCount);
-                double inert_c = 0.95 * ocdrc[4];
-                double[] fInert = new double[7];
-                for (int layer = 0; layer < 7; layer++)
-                    fInert[layer] = Math.Min(0.99, inert_c / ocdrc[layer]);
-                organicMatter.FInert = ConvertLayers(fInert, layerCount); // Not perfect, but should be good enough
-                organicMatter.FBiom = fBiom;
-                organicMatter.FOMCNRatio = 40.0;
-                organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
+                    Array.Resize(ref fBiom, layerCount);
+                    double inert_c = 0.95 * ocdrc[4];
+                    double[] fInert = new double[7];
+                    for (int layer = 0; layer < 7; layer++)
+                        fInert[layer] = Math.Min(0.99, inert_c / ocdrc[layer]);
+                    organicMatter.FInert = ConvertLayers(fInert, layerCount); // Not perfect, but should be good enough
+                    organicMatter.FBiom = fBiom;
+                    organicMatter.FOMCNRatio = 40.0;
+                    organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
-                newSoil.Children.Add(new CERESSoilTemperature());
-                newSoil.OnCreated();
+                    newSoil.Children.Add(new CERESSoilTemperature());
+                    newSoil.OnCreated();
 
-                soils.Add(new SoilFromDataSource()
+                    soils.Add(new SoilFromDataSource()
+                    {
+                        DataSource = "ISRIC",
+                        Soil = newSoil
+                    });
+                }
+                catch (OperationCanceledException)
                 {
-                    DataSource = "ISRIC",
-                    Soil = newSoil
-                });
+                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource = new CancellationTokenSource();
+                }
             }
             catch (Exception err)
             {
@@ -842,14 +967,14 @@ namespace UserInterface.Presenters
         /// Get place name from a lat/long.
         /// Uses Google's geocoding service to find the placename for the current latitude and longitude.
         /// </summary>
-        private string GetPlacenameFromLatLong()
+        private async Task<string> GetPlacenameFromLatLongAsync()
         {
             if (!string.IsNullOrEmpty(latitudeEditBox.Text) && !string.IsNullOrEmpty(longitudeEditBox.Text))
             {
                 string url = googleGeocodingApi + "latlng=" + latitudeEditBox.Text + ',' + longitudeEditBox.Text;
                 try
                 {
-                    MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                    var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token);
                     stream.Position = 0;
                     JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
                     while (reader.Read())
@@ -860,6 +985,11 @@ namespace UserInterface.Presenters
                             return reader.Value.ToString();
                         }
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource = new CancellationTokenSource();
                 }
                 catch
                 { }
@@ -873,48 +1003,57 @@ namespace UserInterface.Presenters
         /// (there are a lot of "Black Mountain"s in Australia, for example, it would be better
         /// to present the user with the list of matches when there is more than one.
         /// </summary>
-        private bool GetLatLongFromPlaceName()
+        /// <returns>True if successful</returns>
+        private async Task<bool> GetLatLongFromPlaceNameAsync()
         {
-            var country = countries.First(c => c.Name == countryDropDown.SelectedValue);
-            string url = $"{googleGeocodingApi}components=country:{country.TwoLetterCode}|locality:{placeNameEditBox.Text}";
-            using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url))
+            try
             {
-                stream.Position = 0;
-                using (JsonTextReader reader = new JsonTextReader(new StreamReader(stream)))
+                var country = countries.First(c => c.Name == countryDropDown.SelectedValue);
+                string url = $"{googleGeocodingApi}components=country:{country.TwoLetterCode}|locality:{placeNameEditBox.Text}";
+                using (var stream = await WebUtilities.ExtractDataFromURL(url, cancellationTokenSource.Token))
                 {
-                    while (reader.Read())
+                    stream.Position = 0;
+                    using (JsonTextReader reader = new JsonTextReader(new StreamReader(stream)))
                     {
-                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("location"))
+                        while (reader.Read())
                         {
-                            reader.Read(); // Read the "start object" token
-                            while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("location"))
                             {
-                                if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lat"))
+                                reader.Read(); // Read the "start object" token
+                                while (reader.Read() && reader.TokenType != JsonToken.EndObject)
                                 {
-                                    reader.Read();
+                                    if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lat"))
+                                    {
+                                        reader.Read();
 
-                                    // This uses the current culture.
-                                    latitudeEditBox.Text = reader.Value.ToString();
-                                }
-                                else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lng"))
-                                {
-                                    reader.Read();
+                                        // This uses the current culture.
+                                        latitudeEditBox.Text = reader.Value.ToString();
+                                    }
+                                    else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lng"))
+                                    {
+                                        reader.Read();
 
-                                    // This uses the current culture.
-                                    longitudeEditBox.Text = reader.Value.ToString();
+                                        // This uses the current culture.
+                                        longitudeEditBox.Text = reader.Value.ToString();
+                                    }
                                 }
+                                return true;
                             }
-                            return true;
-                        }
-                        else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("status"))
-                        {
-                            reader.Read();
-                            string status = reader.Value.ToString();
-                            if (status == "ZERO_RESULTS")
-                                return false;
+                            else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("status"))
+                            {
+                                reader.Read();
+                                string status = reader.Value.ToString();
+                                if (status == "ZERO_RESULTS")
+                                    return false;
+                            }
                         }
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
             }
             return false;
         }
@@ -924,6 +1063,15 @@ namespace UserInterface.Presenters
             public string DataSource { get; set; }
             public Soil Soil { get; set; }
             
+        }
+
+        /// <summary>
+        /// The object used to report progress to the gui from each download task
+        /// </summary>
+        private class ProgressReportModel
+        {
+            public int Count { get; set; } = 0;
+            //public List<SoilFromDataSource> Soils { get; set; } = new List<SoilFromDataSource>();
         }
 
     }

@@ -231,6 +231,13 @@ namespace Models.CLEM.Resources
                 CheckAssignLabourAvailability(item);
                 if (item.DietaryComponentList != null)
                     item.DietaryComponentList.Clear();
+
+                // reset check and take labour trackers for last activity to avoid between month carryover
+                for (int i = 0; i < 2; i++)
+                {
+                    item.LastActivityLabour[i] = 0;
+                    item.LastActivityRequestID[i] = new Guid();
+                }
             }
 
             // A LabourActivityPayHired may take place after this in CLEMStartOfTimeStep to limit availability

@@ -1,5 +1,4 @@
 ﻿using Gtk;
-using Pango;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,7 +28,8 @@ namespace UserInterface.Views
 
         /// <summary>Add a column to the list view.</summary>
         /// <param name="columnName">The column heading.</param>
-        void AddColumn(string columnName);
+        /// <param name="colType">The System.Type if other than string</param>
+        void AddColumn(string columnName, System.Type colType = null);
 
         /// <summary>Clear all columns and data.</summary>
         void Clear();
@@ -177,9 +177,13 @@ namespace UserInterface.Views
 
         /// <summary>Add a column to the list view.</summary>
         /// <param name="columnName">The column heading.</param>
-        public void AddColumn(string columnName)
+        /// <param name="colType">The System.Type if other than string</param>
+        public void AddColumn(string columnName, System.Type colType = null)
         {
-            columnTypes.Add(typeof(string));
+            if (columnName == null)
+                columnTypes.Add(typeof(string));    // default is string
+            else 
+                columnTypes.Add(colType);
             var cell = new CellRendererText();
             cells.Add(cell);
             var colIndex = -1;
@@ -284,7 +288,10 @@ namespace UserInterface.Views
 
             // initialise column headers            
             for (int i = 0; i < table.Columns.Count; i++)
-                AddColumn(table.Columns[i].ColumnName);
+            {
+                DataColumn col = table.Columns[i];
+                AddColumn(col.ColumnName, col.DataType);
+            }
 
             // Populate with rows.
             foreach (DataRow row in table.Rows)

@@ -369,7 +369,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && Age<12);
+                return (Weaned && Age< 12);
             }
         }
 
@@ -478,6 +478,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
+                    case HerdChangeReason.WeanerSale:
                         return -1;
                     case HerdChangeReason.Born:
                     case HerdChangeReason.TradePurchase:

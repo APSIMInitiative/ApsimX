@@ -476,7 +476,7 @@
                 else if (obj is IModel)
                 {
                     // Process a child or property of a model.
-                    obj = (obj as IModel).FindByPath(word, true)?.Value;
+                    obj = (obj as IModel).FindByPath(word, LocatorFlags.None)?.Value;
                 }
                 else
                 {

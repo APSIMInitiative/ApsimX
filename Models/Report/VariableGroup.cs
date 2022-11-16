@@ -48,7 +48,7 @@
         /// <summary>Stores a value into the values array.</summary>
         public void StoreValue()
         {
-            object value = locator.Get(variableName);
+            object value = locator.Get(variableName, LocatorFlags.IncludeReportVars);
             if (value is IFunction function)
                 value = function.Value();
             else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
