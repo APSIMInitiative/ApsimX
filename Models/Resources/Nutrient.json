@@ -998,7 +998,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Nutrient].WF",
-                      "Name": "WF",
+                      "Name": "WFactor",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
