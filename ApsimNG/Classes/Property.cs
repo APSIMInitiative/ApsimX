@@ -10,6 +10,7 @@ namespace UserInterface.Classes
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.LifeCycle;
+    using Models.PMF;
     using Models.Storage;
     using Models.Surface;
 
@@ -353,6 +354,12 @@ namespace UserInterface.Classes
                     if (zone != null)
                         DropDownOptions = PropertyPresenterHelpers.GetLifeCycleNames(zone);
                     break;
+                case DisplayType.CropStageName:
+                    DisplayMethod = PropertyType.DropDown;
+                    Plant planty = model.FindInScope<Plant>();
+                    if (planty != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
+                    break;
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
                     LifeCycle lifeCycle = null;
@@ -397,6 +404,7 @@ namespace UserInterface.Classes
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
                         Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
                     break;
+
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
                 default:
