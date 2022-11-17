@@ -75,7 +75,7 @@ namespace Models.Core.ApsimFile
             "Models.PMF.Struct.CulmStructure","Models.PMF.Struct.BudNumberFunction",
             "Models.PMF.Struct.ApexBase","Models.PMF.Struct.HeightFunction",
             "Models.PMF.Struct.Structure","Models.PMF.Organs.Culm",
-            "Models.PMF.Organs.EnergyBalance","Models.PMF.Organs.SorghumLeaf",
+            "Models.PMF.EnergyBalance","Models.PMF.Organs.SorghumLeaf",
             "Models.PMF.Organs.PerennialLeaf","Models.PMF.Organs.GenericOrgan",
             "Models.PMF.Organs.HIReproductiveOrgan","Models.PMF.Organs.Leaf",
             "Models.PMF.Organs.LeafCohort","Models.PMF.Organs.Nodule",

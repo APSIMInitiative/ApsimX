@@ -43,6 +43,16 @@
         }
 
         /// <summary>
+        /// Remove a single entry from the cache. 
+        /// Should be called if the old path may become invalid.
+        /// </summary>
+        /// <param name="path"></param>
+        public void ClearEntry(string path)
+        {
+            cache.Remove(path);
+        }
+
+        /// <summary>
         /// Get the value of a variable or model.
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>

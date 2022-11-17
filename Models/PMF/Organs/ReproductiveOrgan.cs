@@ -135,7 +135,7 @@ namespace Models.PMF.Organs
         /// <summary>Factors for assigning priority to DM demands</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemandPriorityFactors = null;
+        private NutrientPoolFunctions dmDemandPriorityFactors = null;
 
         /// <summary>The ripe stage</summary>
         [Description("Stage at which this organ becomes ripe")]

@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 158; } }
+        public static int LatestVersion { get { return 159; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4602,6 +4602,7 @@ namespace Models.Core.ApsimFile
                 cultivarFolder["$type"] = "Models.Core.Folder, Models";
         }
 
+       
         /// <summary>
         /// Change PredictedObserved to make SimulationName an explicit first field to match on.
         /// </summary>
@@ -4712,7 +4713,6 @@ namespace Models.Core.ApsimFile
             }
         }
 
-
         /// <summary>
         /// Change [Root].LayerMidPointDepth to [Physical].LayerMidPointDepth
         /// </summary>
@@ -4729,10 +4729,42 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion159(JObject root, string fileName)
+        {
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemandAndPriority"))
+            {
+                demand["$type"] = "Models.PMF.NutrientDemandFunctions, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemand"))
+            {
+                demand["$type"] = "Models.PMF.NutrientPoolFunctions, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "EnergyBalance"))
+            {
+                demand["$type"] = "Models.PMF.EnergyBalance, Models";
+            }
+
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, "BiomassDemand", "NutrientPoolFunctions");
+                JsonUtilities.ReplaceManagerCode(manager, "BiomassDemandAndPriority", "NutrientDemandFunctions");
+                JsonUtilities.ReplaceManagerCode(manager, "Reallocation", "ReAllocation");
+                JsonUtilities.ReplaceManagerCode(manager, "Retranslocation", "ReTranslocation");
+            }
+
+        }
+
+        /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
+        /// 
+
         private static void UpgradeToVersion889(JObject root, string fileName)
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))

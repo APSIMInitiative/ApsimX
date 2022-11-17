@@ -26,7 +26,7 @@ namespace Models.Functions.RootShape
         private readonly IFunction RootAngleBase = null;
 
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(ZoneState zone)
+        public void CalcRootProportionInLayers(IRootGeometryData zone)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
 
@@ -88,7 +88,7 @@ namespace Models.Functions.RootShape
             return degs * Math.PI / 180.0;
         }
 
-        private double CalcRootAreaSemiEllipse(ZoneState zone, double rootAngle, double top, double bottom, double hDist)
+        private double CalcRootAreaSemiEllipse(IRootGeometryData zone, double rootAngle, double top, double bottom, double hDist)
         {
             if (zone.RootFront == 0.0 || zone.RootFront <= top)
             {

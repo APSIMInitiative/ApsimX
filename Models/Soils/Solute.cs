@@ -241,6 +241,6 @@ namespace Models.Soils
         }
 
         /// <summary>Return bulk density on the same layer structure as this solute.</summary>
-        private double[] SoluteBD => SoilUtilities.MapConcentration(Physical.BD, Physical.Thickness, Thickness, Physical.BD.Last());
+        public double[] SoluteBD => SoilUtilities.MapConcentration(Physical.BD, Physical.Thickness, Thickness, Physical.BD.Last());
     }
 }
