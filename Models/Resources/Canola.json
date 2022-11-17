@@ -2300,7 +2300,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Canola].SowingData.Population",
+                          "VariableName": "[Plant].SowingData.Population",
                           "Name": "Population",
                           "ResourceName": null,
                           "Children": [],
@@ -2876,7 +2876,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Canola].SowingData.Population",
+                      "VariableName": "[Plant].SowingData.Population",
                       "Name": "PlantNumber",
                       "ResourceName": null,
                       "Children": [],
@@ -3569,7 +3569,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Canola].SowingData.Population",
+                                  "VariableName": "[Plant].SowingData.Population",
                                   "Name": "PlantNumber",
                                   "ResourceName": null,
                                   "Children": [],
