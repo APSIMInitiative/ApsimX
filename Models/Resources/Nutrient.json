@@ -1146,14 +1146,6 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.CERESMineralisationFOMCNRFactor, Models",
-                      "Name": "CNRF",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,

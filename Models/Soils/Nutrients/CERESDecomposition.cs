@@ -1,10 +1,15 @@
 ﻿using Models.Core;
+using Models.Soils.Nutrients;
 using System;
 
 namespace Models.Functions
 {
     /// <summary>A class that calculates CERES decomposition.</summary>
     [Serializable]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [ValidParent(ParentType = typeof(CarbonFlow))]
+    [ValidParent(ParentType = typeof(Nutrient))]
     public class CERESDecomposition : Model, IFunction
     {
        [Link(ByName = true, Type = LinkType.Child)]
@@ -13,7 +18,7 @@ namespace Models.Functions
         [Link(ByName = true)]
         private IFunction WF = null;
 
-        [Link(ByName = true, Type = LinkType.Child)]
+        [Link(IsOptional=true, ByName = true, Type = LinkType.Child)]
         private IFunction CNRF = null;
 
         /// <summary>The potential rate of decomposition</summary>
@@ -23,7 +28,10 @@ namespace Models.Functions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            return PotentialRate * TF.Value(arrayIndex) * WF.Value(arrayIndex) * CNRF.Value(arrayIndex);
+            double rate = PotentialRate * TF.Value(arrayIndex) * WF.Value(arrayIndex);
+            if (CNRF != null)
+                rate *= CNRF.Value(arrayIndex);
+            return rate;
         }
     }
 }
