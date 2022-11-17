@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 447,
+  "ExplorerWidth": 352,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -164,25 +164,25 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Canola].SowingDate",
-            "[Canola].SowingData.Cultivar",
-            "[Canola].Phenology.CurrentStageName",
-            "[Canola].Phenology.EmergenceDAS",
-            "[Canola].Phenology.FloralInitiationDAS",
-            "[Canola].Phenology.GreenBudDAS",
-            "[Canola].Phenology.StartFloweringDAS",
-            "[Canola].Phenology.CumulativeVernalTime",
-            "[Canola].Grain.Wt",
-            "[Canola].AboveGroundLive.Wt",
-            "[Canola].AboveGround.Wt",
+            "[ForageBrassica].SowingDate",
+            "[ForageBrassica].SowingData.Cultivar",
+            "[ForageBrassica].Phenology.CurrentStageName",
+            "[ForageBrassica].Phenology.EmergenceDAS",
+            "[ForageBrassica].Phenology.FloralInitiationDAS",
+            "[ForageBrassica].Phenology.GreenBudDAS",
+            "[ForageBrassica].Phenology.StartFloweringDAS",
+            "[ForageBrassica].Phenology.CumulativeVernalTime",
+            "[ForageBrassica].Grain.Wt",
+            "[ForageBrassica].AboveGroundLive.Wt",
+            "[ForageBrassica].AboveGround.Wt",
             "sum([Soil].Water.MM) as ProfileWater",
             "sum([Soil].NO3.kgha) as TotalSoilNitrogen",
-            "[Canola].Phenology.MaturityDAS",
+            "[ForageBrassica].Phenology.MaturityDAS",
             "[Clock].Today.Year ",
-            "[Canola].DaysAfterSowing"
+            "[ForageBrassica].DaysAfterSowing"
           ],
           "EventNames": [
-            "[Canola].Harvesting"
+            "[ForageBrassica].Harvesting"
           ],
           "GroupByVariableName": null,
           "Name": "HarvestReport",
@@ -337,7 +337,7 @@
           "PlantType": "Canola",
           "IsEnding": false,
           "DaysAfterEnding": 0,
-          "Name": "Canola",
+          "Name": "CanolaFull",
           "ResourceName": null,
           "Children": [
             {
@@ -7356,6 +7356,120 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "SeedMortalityRate",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.ModelOverrides, Models",
+              "Overrides": [
+                ""
+              ],
+              "Name": "ForageBrassica",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "CultivarFolder",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Cultivar names include several codes for several traits.\n* RR = Roundup Ready - These cultivars are developed to provide tolerance for Glyphosate herbicide.\n* CL = Clearfield - These cultivars as developed for the Clearfield Canola weed control system.\n* TT = Triazine Tolerant - These cultivars are developed to provide tolerance for triazine herbicide\n* RT = Triazine and Roundup - These cultivars are developed to provide tolerance to both triazine and glyphosate herbicides.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                        "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                        "[Leaf].Phyllochron.Base.FixedValue = 46"
+                      ],
+                      "Name": "Goliath",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                        "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                        "[Leaf].Phyllochron.Base.FixedValue = 46"
+                      ],
+                      "Name": "HTR24",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                        "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                        "[Leaf].Phyllochron.Base.FixedValue = 46"
+                      ],
+                      "Name": "Pallaton",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                        "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                        "[Leaf].Phyllochron.Base.FixedValue = 46"
+                      ],
+                      "Name": "Winfred",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Plant, Models",
+          "Name": "ForageBrassicaold",
+          "ResourceName": "Canola",
+          "Children": [
+            {
+              "$type": "Models.Core.ModelOverrides, Models",
+              "Overrides": [
+                ""
+              ],
+              "Name": "SpeciesParameters",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
               "GraphsPerPage": 6,
@@ -7424,16 +7538,6 @@
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": null,
-              "Name": "SeedMortalityRate",
-              "ResourceName": null,
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -8172,25 +8276,25 @@
                           "Name": "DailyReport",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[canola].SowingDate",
-                            "[canola].SowingData.Cultivar",
-                            "[canola].Phenology.CurrentStageName",
-                            "[canola].Phenology.EmergenceDAS",
-                            "[canola].Phenology.FloralInitiationDAS",
-                            "[canola].Phenology.GreenBudDAS",
-                            "[canola].Phenology.StartFloweringDAS",
-                            "[canola].Phenology.CumulativeVernalTime",
-                            "[canola].Grain.Wt"
+                            "[ForageBrassica].SowingDate",
+                            "[ForageBrassica].SowingData.Cultivar",
+                            "[ForageBrassica].Phenology.CurrentStageName",
+                            "[ForageBrassica].Phenology.EmergenceDAS",
+                            "[ForageBrassica].Phenology.FloralInitiationDAS",
+                            "[ForageBrassica].Phenology.GreenBudDAS",
+                            "[ForageBrassica].Phenology.StartFloweringDAS",
+                            "[ForageBrassica].Phenology.CumulativeVernalTime",
+                            "[ForageBrassica].Grain.Wt"
                           ],
                           "EventNames": [
-                            "[canola].Harvesting"
+                            "[ForageBrassica].Harvesting"
                           ],
                           "GroupByVariableName": null,
                           "Name": "HarvestReport",
@@ -8205,7 +8309,7 @@
                           "Parameters": [
                             {
                               "Key": "Crop",
-                              "Value": "[canola]"
+                              "Value": "[ForageBrassica]"
                             },
                             {
                               "Key": "FertiliserType",
@@ -8224,7 +8328,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Canola;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n      \r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesAreEqual(SowDate, Clock.Today))\r\n            {\r\n                Canola.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant ForageBrassica;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n      \r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesAreEqual(SowDate, Clock.Today))\r\n            {\r\n                ForageBrassica.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "CultivarName",
@@ -8313,7 +8417,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant canola;\r\n        [Link(Type = LinkType.Path, Path = \"[canola].Phenology\")]\r\n        private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                canola.Harvest();\r\n                canola.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] ISummary summary;\r\n        [Link] private Plant ForageBrassica;\r\n        [Link] private Phenology phenology;\r\n                [Link] Clock Clock;\r\n\r\n        private bool Harvestable = false;\r\n\r\n        [Description(\"Harvest Date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }   \r\n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \r\n            if (Harvestable && phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                ForageBrassica.Harvest();\r\n                ForageBrassica.EndCrop();                \r\n            }\r\n            \r\n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\r\n                Harvestable = true;\r\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
                           "Parameters": [
                             {
                               "Key": "HarvestDate",
@@ -8328,9 +8432,93 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Name": "canola",
+                          "Name": "ForageBrassica",
                           "ResourceName": "Canola",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.ModelOverrides, Models",
+                              "Overrides": [
+                                ""
+                              ],
+                              "Name": "ModelOverrides",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarFolder1",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Cultivar names include several codes for several traits.\n* RR = Roundup Ready - These cultivars are developed to provide tolerance for Glyphosate herbicide.\n* CL = Clearfield - These cultivars as developed for the Clearfield Canola weed control system.\n* TT = Triazine Tolerant - These cultivars are developed to provide tolerance for triazine herbicide\n* RT = Triazine and Roundup - These cultivars are developed to provide tolerance to both triazine and glyphosate herbicides.",
+                                  "Name": "Memo",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.PMF.Cultivar, Models",
+                                  "Command": [
+                                    "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                  ],
+                                  "Name": "Goliath",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.PMF.Cultivar, Models",
+                                  "Command": [
+                                    "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                  ],
+                                  "Name": "HTR24",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.PMF.Cultivar, Models",
+                                  "Command": [
+                                    "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                  ],
+                                  "Name": "Pallaton",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.PMF.Cultivar, Models",
+                                  "Command": [
+                                    "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                  ],
+                                  "Name": "Winfred",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
