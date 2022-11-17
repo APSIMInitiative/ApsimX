@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Organs
+﻿namespace Models.PMF
 {
     using Models.Core;
     using Models.Functions;
@@ -8,6 +8,8 @@
     using Newtonsoft.Json;
     using System.Collections.Generic;
     using APSIM.Shared.Documentation;
+    using APSIM.Shared.Utilities;
+    using Models.PMF.Organs;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
@@ -16,6 +18,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GenericOrgan))]
+    [ValidParent(ParentType = typeof(Organ))]
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
         /// <summary>The plant</summary>
@@ -30,10 +33,6 @@
         [Link]
         private Plant parentPlant = null;
 
-        /// <summary>The parent organ</summary>
-        [Link(Type = LinkType.Ancestor)]
-        private GenericOrgan parentOrgan= null;
- 
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRer = null;
@@ -71,7 +70,7 @@
         IFunction DeadAreaIndex = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.PlantType+ "_" + parentOrgan.Name; } }
+        public string CanopyType { get { return Plant.PlantType+ "_" + this.Parent.Name; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
@@ -142,9 +141,18 @@
         [JsonIgnore]
         public double WaterDemand { get; set; }
 
+        private double waterAllocation = 0;
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]
-        public double WaterAllocation { get; set; }
+        public double WaterAllocation {
+            get { return waterAllocation; }
+            set { waterAllocation = value; AllocationMade(); }
+        }
+
+        private void AllocationMade()
+        {
+            Fw = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
+        }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         [JsonIgnore]
@@ -204,6 +212,13 @@
                 return totalRadn;
             }
         }
+
+
+        /// <summary>
+        /// Water stress factor.
+        /// </summary>
+        public double Fw { get; private set; }
+        
 
         /// <summary>Clears this instance.</summary>
         private void Clear()

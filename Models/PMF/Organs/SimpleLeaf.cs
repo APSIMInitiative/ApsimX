@@ -178,14 +178,14 @@
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority dmDemands = null;
+        private NutrientDemandFunctions dmDemands = null;
 
         /// <summary>
         /// The N demand function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority nDemands = null;
+        private NutrientDemandFunctions nDemands = null;
 
         /// <summary>
         /// The initial biomass dry matter weight.
@@ -752,8 +752,8 @@
         [EventSubscribe("SetDMSupply")]
         private void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.Reallocation = AvailableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();
+            DMSupply.ReAllocation = AvailableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = photosynthesis.Value();
         }
@@ -808,12 +808,12 @@
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
-            if (MathUtilities.IsNegative(NSupply.Reallocation))
+            NSupply.ReAllocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
+            if (MathUtilities.IsNegative(NSupply.ReAllocation))
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            if (MathUtilities.IsNegative(NSupply.Retranslocation))
+            NSupply.ReTranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            if (MathUtilities.IsNegative(NSupply.ReTranslocation))
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             NSupply.Fixation = 0;
@@ -998,7 +998,7 @@
         /// </summary>
         public double AvailableDMRetranslocation()
         {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
+            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.ReAllocation) * dmRetranslocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
 

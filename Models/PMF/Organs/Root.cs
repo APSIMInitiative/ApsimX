@@ -46,7 +46,7 @@
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority dmDemands = null;
+        private NutrientDemandFunctions dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -64,7 +64,7 @@
 
         /// <summary>Initial wt</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public BiomassDemand InitialWt = null;
+        public NutrientPoolFunctions InitialWt = null;
 
         /// <summary>Gets or sets the specific root length</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -73,7 +73,7 @@
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private BiomassDemandAndPriority nDemands = null;
+        private NutrientDemandFunctions nDemands = null;
 
         /// <summary>The N reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -188,7 +188,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<BiomassDemand>();
+            ZoneInitialDM = new List<NutrientPoolFunctions>();
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
@@ -204,7 +204,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [JsonIgnore]
-        public List<BiomassDemand> ZoneInitialDM { get; set; }
+        public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
@@ -556,8 +556,8 @@
         private void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = 0.0;
-            DMSupply.Retranslocation = dmRetranslocationSupply;
-            DMSupply.Reallocation = dmMReallocationSupply;
+            DMSupply.ReTranslocation = dmRetranslocationSupply;
+            DMSupply.ReAllocation = dmMReallocationSupply;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -566,8 +566,8 @@
         {
             NSupply.Fixation = 0.0;
             NSupply.Uptake = 0.0;
-            NSupply.Retranslocation = nRetranslocationSupply;
-            NSupply.Reallocation = nReallocationSupply;
+            NSupply.ReTranslocation = nRetranslocationSupply;
+            NSupply.ReAllocation = nReallocationSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>

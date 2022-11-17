@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF;
+using Models.PMF.Organs;
 using APSIM.Shared.Documentation;
 
 namespace Models.Functions.DemandFunctions
@@ -20,6 +22,10 @@ namespace Models.Functions.DemandFunctions
 
         private IArbitration parentOrgan = null;
 
+        private Organ parentSimpleOrgan = null;
+
+        private string parentOrganType = "";
+ 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -34,6 +40,15 @@ namespace Models.Functions.DemandFunctions
                 {
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
+                    parentOrganType = "IArbitration";
+                    if (ParentClass is IPlant)
+                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
+                }
+                if (ParentClass is Organ)
+                {
+                    parentSimpleOrgan = ParentClass as Organ;
+                    ParentOrganIdentified = true;
+                    parentOrganType = "ISubscribeToBiomassArbitration";
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
@@ -44,10 +59,22 @@ namespace Models.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            double structuralWt = parentOrgan.Live.StructuralWt + parentOrgan.DMDemand.Structural;
-            double MaximumDM = MathUtilities.Divide(structuralWt,1-storageFraction.Value(), 0);
-            double AlreadyAllocated = structuralWt + parentOrgan.Live.StorageWt;
-            return MaximumDM - AlreadyAllocated;
+            if (parentOrganType == "IArbitration")
+            {
+                double structuralWt = parentOrgan.Live.StructuralWt + parentOrgan.DMDemand.Structural;
+                double MaximumDM = MathUtilities.Divide(structuralWt, 1 - storageFraction.Value(), 0);
+                double AlreadyAllocated = structuralWt + parentOrgan.Live.StorageWt;
+                return MaximumDM - AlreadyAllocated;
+            }
+            if (parentOrganType == "ISubscribeToBiomassArbitration")
+            {
+                double structuralWt = parentSimpleOrgan.Live.Weight.Structural + parentSimpleOrgan.Carbon.Demands.Structural;
+                double MaximumDM = MathUtilities.Divide(structuralWt, 1 - storageFraction.Value(), 0);
+                double AlreadyAllocated = structuralWt + parentSimpleOrgan.Live.Weight.Storage;
+                return MaximumDM - AlreadyAllocated;
+            }
+            else
+                throw new Exception("Could not locate parent organ");
         }
 
         /// <summary>Document the model.</summary>
