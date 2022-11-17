@@ -687,7 +687,7 @@
                             {
                               "$type": "Models.Core.ModelOverrides, Models",
                               "Overrides": [
-                                ""
+                                "[ForageBrassica].PlantType=ForageBrassica"
                               ],
                               "Name": "ModelOverrides",
                               "ResourceName": null,
@@ -15398,112 +15398,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "Name": "ForageBrassica",
-                      "ResourceName": "Canola",
-                      "Children": [
-                        {
-                          "$type": "Models.Core.ModelOverrides, Models",
-                          "Overrides": [
-                            "[Canola].Name=\"ForageBrassica\""
-                          ],
-                          "Name": "ModelOverrides",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Folder, Models",
-                          "ShowInDocs": false,
-                          "GraphsPerPage": 6,
-                          "Name": "CultivarFolder1",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Cultivar names include several codes for several traits.\n* RR = Roundup Ready - These cultivars are developed to provide tolerance for Glyphosate herbicide.\n* CL = Clearfield - These cultivars as developed for the Clearfield Canola weed control system.\n* TT = Triazine Tolerant - These cultivars are developed to provide tolerance for triazine herbicide\n* RT = Triazine and Roundup - These cultivars are developed to provide tolerance to both triazine and glyphosate herbicides.",
-                              "Name": "Memo",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.Cultivar, Models",
-                              "Command": [
-                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
-                                "[Leaf].Phyllochron.Base.FixedValue = 90",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 "
-                              ],
-                              "Name": "Goliath",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.Cultivar, Models",
-                              "Command": [
-                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
-                                "[Leaf].Phyllochron.Base.FixedValue = 90",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 "
-                              ],
-                              "Name": "HTR24",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.Cultivar, Models",
-                              "Command": [
-                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
-                                "[Leaf].Phyllochron.Base.FixedValue = 110",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 9.9, 10, 20",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.42, 1.53 ",
-                                "[Leaf].AreaLargestLeaf.FixedValue = 0.015",
-                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X = 1,2,3,7,13",
-                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y = 0.01,0.02,0.05,0.1,1"
-                              ],
-                              "Name": "Pallaton",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.Cultivar, Models",
-                              "Command": [
-                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
-                                "[Leaf].Phyllochron.Base.FixedValue = 90",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
-                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 ",
-                                "[Leaf].AreaLargestLeaf.FixedValue = 0.015",
-                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X = 1,2,3,7,13",
-                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y = 0.01,0.02,0.05,0.1,1"
-                              ],
-                              "Name": "Winfred",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Plant, Models",
                       "Name": "Canola",
                       "ResourceName": "Canola",
                       "Children": [],
@@ -16045,6 +15939,112 @@
                       "Name": "Fertilise topup",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Plant, Models",
+                      "Name": "ForageBrassica",
+                      "ResourceName": "Canola",
+                      "Children": [
+                        {
+                          "$type": "Models.Core.ModelOverrides, Models",
+                          "Overrides": [
+                            "[ForageBrassica].PlantType=ForageBrassica"
+                          ],
+                          "Name": "ModelOverrides",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowInDocs": false,
+                          "GraphsPerPage": 6,
+                          "Name": "CultivarFolder1",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "Cultivar names include several codes for several traits.\n* RR = Roundup Ready - These cultivars are developed to provide tolerance for Glyphosate herbicide.\n* CL = Clearfield - These cultivars as developed for the Clearfield Canola weed control system.\n* TT = Triazine Tolerant - These cultivars are developed to provide tolerance for triazine herbicide\n* RT = Triazine and Roundup - These cultivars are developed to provide tolerance to both triazine and glyphosate herbicides.",
+                              "Name": "Memo",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.Cultivar, Models",
+                              "Command": [
+                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                "[Leaf].Phyllochron.Base.FixedValue = 90",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 "
+                              ],
+                              "Name": "Goliath",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.Cultivar, Models",
+                              "Command": [
+                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                "[Leaf].Phyllochron.Base.FixedValue = 90",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 "
+                              ],
+                              "Name": "HTR24",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.Cultivar, Models",
+                              "Command": [
+                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                "[Leaf].Phyllochron.Base.FixedValue = 110",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 9.9, 10, 20",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.42, 1.53 ",
+                                "[Leaf].AreaLargestLeaf.FixedValue = 0.015",
+                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X = 1,2,3,7,13",
+                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y = 0.01,0.02,0.05,0.1,1"
+                              ],
+                              "Name": "Pallaton",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.Cultivar, Models",
+                              "Command": [
+                                "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
+                                "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                "[Leaf].Phyllochron.Base.FixedValue = 90",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
+                                "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 ",
+                                "[Leaf].AreaLargestLeaf.FixedValue = 0.015",
+                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X = 1,2,3,7,13",
+                                "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y = 0.01,0.02,0.05,0.1,1"
+                              ],
+                              "Name": "Winfred",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
