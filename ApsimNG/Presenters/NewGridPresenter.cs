@@ -126,6 +126,7 @@
             {
                 try
                 {
+                    SaveGridToModel();
                     CellChanged.Invoke(sender, colIndex, rowIndex);
                 }
                 catch (Exception err)
@@ -153,7 +154,7 @@
                         {
                             Name = units,
                         };
-                        menuItem.OnClick += (s, e) => { tabularData.SetUnits(columnIndex, menuItem.Name); Refresh(); };
+                        menuItem.OnClick += (s, e) => { tabularData.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
                         menuItems.Add(menuItem);
                     }
                 }
