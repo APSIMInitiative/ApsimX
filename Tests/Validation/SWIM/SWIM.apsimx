@@ -17136,7 +17136,7 @@
                               "PSIDul": -100.0,
                               "VC": true,
                               "DTMin": 0.0,
-                              "DTMax": 60.0,
+                              "DTMax": 30.0,
                               "MaxWaterIncrement": 5.0,
                               "SpaceWeightingFactor": 0.0,
                               "SoluteSpaceWeightingFactor": 1.0,
