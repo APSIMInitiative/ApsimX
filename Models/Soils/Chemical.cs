@@ -104,7 +104,7 @@
 
         /// <summary>Get all solutes with standardised layer structure.</summary>
         /// <returns></returns>
-        private IEnumerable<Solute> GetStandardisedSolutes()
+        public IEnumerable<Solute> GetStandardisedSolutes()
         {
             var solutes = new List<Solute>();
 

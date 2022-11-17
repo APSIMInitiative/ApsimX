@@ -77,20 +77,21 @@ namespace Models.PMF.Phen
                 proceedToNextPhase = true;
             }
             else
-                ProgressionForTimeStep = progression.Value() * propOfDayToUse;
-            ProgressThroughPhase += ProgressionForTimeStep;
-
-            if (ProgressThroughPhase > Target)
             {
-                if (ProgressionForTimeStep > 0.0)
+                ProgressionForTimeStep = progression.Value() * propOfDayToUse;
+                ProgressThroughPhase += ProgressionForTimeStep;
+
+                if (ProgressThroughPhase > Target)
                 {
-                    proceedToNextPhase = true;
-                    propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
-                    ProgressionForTimeStep *= (1 - propOfDayToUse);
+                    if (ProgressionForTimeStep > 0.0)
+                    {
+                        proceedToNextPhase = true;
+                        propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                        ProgressionForTimeStep *= (1 - propOfDayToUse);
+                    }
+                    ProgressThroughPhase = Target;
                 }
-                ProgressThroughPhase = Target;
             }
-            
             return proceedToNextPhase;
         }
 
