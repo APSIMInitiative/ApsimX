@@ -653,7 +653,7 @@
                   "$type": "Models.Functions.CERESDecomposition, Models",
                   "Name": "Rate",
                   "ResourceName": null,
-                  "PotentialRate": 0.95,
+                  "PotentialRate": 0.05,
 
                   "Children": [
                     {
