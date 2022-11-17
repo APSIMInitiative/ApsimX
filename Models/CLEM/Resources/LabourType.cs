@@ -200,19 +200,13 @@ namespace Models.CLEM.Resources
         /// The unique id of the last activity request for this labour type
         /// </summary>
         [JsonIgnore]
-        public Guid LastActivityRequestID { get; set; }
-
-        /// <summary>
-        /// The amount of labour supplied to the last activity for this labour type
-        /// </summary>
-        [JsonIgnore]
-        public double LastActivityRequestAmount { get; set; }
+        public Guid[] LastActivityRequestID { get; set; } = new Guid[2];
 
         /// <summary>
         /// The number of days provided to the current activity
         /// </summary>
         [JsonIgnore]
-        public double LastActivityLabour { get; set; }
+        public double[] LastActivityLabour { get; set; } = new double[2];
 
         /// <summary>
         /// Available Labour (in days) in the current month. 
@@ -246,13 +240,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="activityID">Unique activity ID</param>
         /// <param name="maxLabourAllowed">Max labour allowed</param>
+        /// <param name="takeMode">Logical specifiying whether this is a availability check or resource take request</param>
         /// <returns></returns>
-        public double LabourCurrentlyAvailableForActivity(Guid activityID, double maxLabourAllowed)
+        public double LabourCurrentlyAvailableForActivity(Guid activityID, double maxLabourAllowed, bool takeMode)
         {
-            if(activityID == LastActivityRequestID)
-                return Math.Max(0, maxLabourAllowed - LastActivityLabour);
-            else
-                return Amount;
+            int checkTakeIndex = Convert.ToInt32(takeMode);
+            return Math.Min(Amount, maxLabourAllowed - ((activityID != LastActivityRequestID[checkTakeIndex]) ? 0 : LastActivityLabour[checkTakeIndex]));
         }
 
         /// <summary>
@@ -343,7 +336,6 @@ namespace Models.CLEM.Resources
             amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
             this.AvailableDays -= amountRemoved;
             request.Provided = amountRemoved;
-            LastActivityRequestID = request.ActivityID;
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,

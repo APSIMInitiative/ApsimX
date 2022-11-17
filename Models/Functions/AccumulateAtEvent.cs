@@ -42,10 +42,12 @@ namespace Models.Functions
         /// -----------------------------------------------------------------------------------------------------------
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StartStageName { get; set; }
 
         /// <summary>The end stage name</summary>
         [Description("Stage name to stop accumulation")]
+        [Display(Type = DisplayType.CropStageName)]
         public string EndStageName { get; set; }
 
         /// <summary>The end stage name</summary>

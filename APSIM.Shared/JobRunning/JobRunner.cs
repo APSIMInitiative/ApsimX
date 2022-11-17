@@ -196,7 +196,8 @@
                 if (!(job is JobRunnerSleepJob))
                 {
                     // Signal to JobManager the job has finished.
-                    InvokeJobCompleted(job, jobManager, startTime, error);
+                    if (jobManager.NotifyWhenJobComplete)
+                        InvokeJobCompleted(job, jobManager, startTime, error);
 
                     lock (runningLock)
                     {
