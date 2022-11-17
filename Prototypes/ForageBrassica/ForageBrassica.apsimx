@@ -79,7 +79,7 @@
             "[Clock].Today.Year",
             "[ForageBrassica].DaysAfterSowing",
             "[ForageBrassica].Phenology.CurrentStageName",
-            "[ForageBrassica].Leaf.TrueLeafNumber",
+            "[ForageBrassica].Leaf.NodeNumber",
             "[ForageBrassica].SowingData.Cultivar",
             "[ForageBrassica].Phenology.CurrentStageName",
             "[ForageBrassica].Phenology.Stage",
@@ -15474,8 +15474,10 @@
                                   "$type": "Models.PMF.Cultivar, Models",
                                   "Command": [
                                     "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
-                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 90",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 "
                                   ],
                                   "Name": "Goliath",
                                   "ResourceName": null,
@@ -15487,8 +15489,10 @@
                                   "$type": "Models.PMF.Cultivar, Models",
                                   "Command": [
                                     "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
-                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 90",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 "
                                   ],
                                   "Name": "HTR24",
                                   "ResourceName": null,
@@ -15500,8 +15504,13 @@
                                   "$type": "Models.PMF.Cultivar, Models",
                                   "Command": [
                                     "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
-                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 110",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 9.9, 10, 20",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.42, 1.53 ",
+                                    "[Leaf].AreaLargestLeaf.FixedValue = 0.015",
+                                    "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X = 1,2,3,7,13",
+                                    "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y = 0.01,0.02,0.05,0.1,1"
                                   ],
                                   "Name": "Pallaton",
                                   "ResourceName": null,
@@ -15513,8 +15522,13 @@
                                   "$type": "Models.PMF.Cultivar, Models",
                                   "Command": [
                                     "[Phenology].Vegetative.Target.XYPairs.X = 0,24",
-                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,200",
-                                    "[Leaf].Phyllochron.Base.FixedValue = 46"
+                                    "[Phenology].Vegetative.Target.XYPairs.Y = 400,290",
+                                    "[Leaf].Phyllochron.Base.FixedValue = 90",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 15, 18, 20",
+                                    "[Leaf].Phyllochron.Multiplier.XYPairs.X = 1, 1, 1.36, 1.36 ",
+                                    "[Leaf].AreaLargestLeaf.FixedValue = 0.015",
+                                    "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.X = 1,2,3,7,13",
+                                    "[Leaf].DeltaLAI.Vegetative.Delta.RelativeArea.XYPairs.Y = 0.01,0.02,0.05,0.1,1"
                                   ],
                                   "Name": "Winfred",
                                   "ResourceName": null,
@@ -16083,6 +16097,101 @@
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "NodeNumber",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "ForageBrassica.DaysAfterSowing",
+                          "YFieldName": "ForageBrassica.Leaf.NodeNumber",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": 0,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "ForageBrassica.DaysAfterSowing",
+                          "YFieldName": "ForageBrassica.Leaf.NodeNumber",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "[ForageBrassica.AboveGround.Wt]>0",
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Graph, Models",
                       "Caption": null,
