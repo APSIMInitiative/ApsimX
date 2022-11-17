@@ -78,7 +78,7 @@
         double[] TotalN { get; }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer</summary>
-        double FOMCNR(int layer);
+        double[] FOMCNRFactor { get; }
 
         /// <summary>
         /// Calculate actual decomposition

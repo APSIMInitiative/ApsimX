@@ -18,6 +18,12 @@
     [ValidParent(ParentType = typeof(Soil))]
     public class Water : Model, ITabularData
     {
+        private double[] volumetric;
+
+        /// <summary>Last initialisation event.</summary>
+        public event EventHandler WaterChanged;
+
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
         [Units("mm")]
@@ -57,7 +63,18 @@
         /// <summary>Amount (mm/mm)</summary>
         [JsonIgnore]
         [Units("mm/mm")]
-        public double[] Volumetric { get; set; }
+        public double[] Volumetric
+        {
+            get
+            {
+                return volumetric;
+            }
+            set
+            {
+                volumetric = value;
+                WaterChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         /// <summary>Soil water potential (kPa)</summary>
         [Units("kPa")]
