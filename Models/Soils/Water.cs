@@ -203,11 +203,11 @@
             }
         }
 
-        /// <summary>Finds the 'physical' node.</summary>
-        public IPhysical Physical => FindInScope<IPhysical>();
+        /// <summary>Finds the 'Physical' node.</summary>
+        public IPhysical Physical => FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
 
-        /// <summary>Finds the 'physical' node.</summary>
-        public ISoilWater WaterModel => FindInScope<ISoilWater>();
+        /// <summary>Finds the 'SoilWater' node.</summary>
+        public ISoilWater WaterModel => FindAncestor<Soil>()?.FindDescendant<ISoilWater>() ?? FindInScope<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL

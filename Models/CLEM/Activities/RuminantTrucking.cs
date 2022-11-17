@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
-    [Version(1, 0, 1, "")]
+    [Version(1, 1, 1, "Release of trucking")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
     public class RuminantTrucking : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
     {
@@ -133,7 +133,6 @@ namespace Models.CLEM.Activities
         public RuminantTrucking()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Livestock.[All].Trucking";
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -142,6 +141,14 @@ namespace Models.CLEM.Activities
         {
             switch (type)
             {
+                case "Relationship":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>()
+                        {
+                            "Live weight to load unit size"
+                        },
+                        measures: new List<string>()
+                        );
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
@@ -192,126 +199,10 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
-            weightToNumberPerLoadUnit = this.FindAllChildren<Relationship>().FirstOrDefault();
+
+            weightToNumberPerLoadUnit = GetCompanionModelsByIdentifier<Relationship>(false, false, "Live weight to load unit size")?.FirstOrDefault()??null;
+
             parentBuySellActivity = Parent as RuminantActivityBuySell;
-        }
-
-        private (double trucks, double loadUnits, double vehicleMass, double payload, int individualsTransported) EstimateTrucking()
-        {
-            // start filling trucks with individuals until any limits met.
-
-            bool loadingTruck = false;
-            bool loadingTrailer = false;
-            bool loadingUnit = false;
-
-            double vehicleMass = 0;
-            double totalUnits = 0;
-            double unitLoad = 0;
-            double individualContribution = 0;
-            double payload = 0;
-
-            int trucks = 0;
-            int indCnt = 0;
-            int loadCnt = 0;
-            int trailerCnt = 0;
-            int trailerId = 0;
-
-            double loadsRemaining = individualsToBeTrucked.Count / NumberPerLoadUnit;
-            if (weightToNumberPerLoadUnit != null)
-                loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight));
-
-            if (MathUtilities.IsGreaterThanOrEqual(loadsRemaining, MinimumLoadUnitsBeforeTransporting))
-            {
-                while (indCnt < individualsToBeTrucked.Count)
-                {
-                    if (!loadingTruck)
-                    {
-                        if (MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsPerTruck) && MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsBeforeAddTrailer[0]))
-                        {
-                            trucks++;
-                            loadingTruck = true;
-                            loadingTrailer = false;
-                            loadCnt = 0;
-                            trailerCnt = 0;
-                            trailerId = 0;
-                            vehicleMass += TruckTareMass;
-                        }
-                        else
-                            break;
-                    }
-                    else
-                    {
-                        if (!loadingTrailer)
-                        {
-                            if (MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsBeforeAddTrailer[trailerId]))
-                            {
-                                if (loadCnt == MaximumLoadUnitsPerTruck)
-                                {
-                                    loadingTruck = false;
-                                }
-                                else if (loadCnt <= LoadUnitsPerTrailer[trailerId])
-                                {
-                                    // add trailer
-                                    trailerCnt++;
-                                    trailerId = Math.Min(trailerCnt, LoadUnitsPerTrailer.Length - 1);
-                                    loadingTrailer = true;
-                                    loadingUnit = false;
-                                    vehicleMass += AggregateTrailerMass[trailerId];
-                                }
-                            }
-                            else
-                                break;
-                        }
-                        else
-                        {
-                            if (!loadingUnit)
-                            {
-                                if (MathUtilities.IsLessThan(loadCnt, LoadUnitsPerTrailer[trailerId]))
-                                {
-                                    loadingUnit = true;
-                                    loadCnt++;
-                                    unitLoad = 0;
-                                }
-                                else
-                                {
-                                    loadingTrailer = false;
-                                }
-                            }
-                            else
-                            {
-                                if (weightToNumberPerLoadUnit != null)
-                                    individualContribution = 1 / weightToNumberPerLoadUnit.SolveY(individualsToBeTrucked[indCnt].Weight);
-                                if (MathUtilities.IsLessThanOrEqual(unitLoad + individualContribution, 1.0))
-                                {
-                                    unitLoad += individualContribution;
-                                    totalUnits += individualContribution;
-                                    payload += individualsToBeTrucked[indCnt].Weight;
-
-                                    indCnt++;
-                                }
-                                else
-                                {
-                                    loadingUnit = false;
-                                }
-                            }
-                        }
-                    }
-                }
-                // need to fill to minimum loads on last truck if needed
-                while(loadCnt < MinimumLoadUnitsPerTruck)
-                {
-                    loadCnt++;
-                    if (loadCnt == LoadUnitsPerTrailer[trailerId])
-                    {
-                        // add trailer
-                        trailerCnt++;
-                        trailerId = Math.Min(trailerCnt, LoadUnitsPerTrailer.Length - 1);
-                        vehicleMass += AggregateTrailerMass[trailerId];
-                    }
-                }
-            }
-
-            return (trucks, totalUnits, vehicleMass, payload, indCnt);
         }
 
         /// <inheritdoc/>
@@ -425,24 +316,152 @@ namespace Models.CLEM.Activities
             return ResourceRequestList;
         }
 
+        private (double trucks, double loadUnits, double vehicleMass, double payload, int individualsTransported) EstimateTrucking()
+        {
+            // start filling trucks with individuals until any limits met.
+
+            bool loadingTruck = false;
+            bool loadingTrailer = false;
+            bool loadingUnit = false;
+
+            double vehicleMass = 0;
+            double totalUnits = 0;
+            double unitLoad = 0;
+            double individualContribution = 0;
+            double payload = 0;
+
+            int trucks = 0;
+            int indCnt = 0;
+            int loadCnt = 0;
+            int trailerCnt = 0;
+            int trailerId = 0;
+
+            double loadsRemaining = individualsToBeTrucked.Count / NumberPerLoadUnit;
+            if (weightToNumberPerLoadUnit != null)
+                loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight));
+
+            if (MathUtilities.IsGreaterThanOrEqual(loadsRemaining, MinimumLoadUnitsBeforeTransporting))
+            {
+                while (indCnt < individualsToBeTrucked.Count)
+                {
+                    if (!loadingTruck)
+                    {
+                        if (MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsPerTruck) && MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsBeforeAddTrailer[0]))
+                        {
+                            trucks++;
+                            loadingTruck = true;
+                            loadingTrailer = false;
+                            loadCnt = 0;
+                            trailerCnt = 0;
+                            trailerId = 0;
+                            vehicleMass += TruckTareMass;
+                        }
+                        else
+                            break;
+                    }
+                    else
+                    {
+                        if (!loadingTrailer)
+                        {
+                            if (MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsBeforeAddTrailer[trailerId]))
+                            {
+                                if (loadCnt == MaximumLoadUnitsPerTruck)
+                                {
+                                    loadingTruck = false;
+                                }
+                                else if (loadCnt <= LoadUnitsPerTrailer[trailerId])
+                                {
+                                    // add trailer
+                                    trailerCnt++;
+                                    trailerId = Math.Min(trailerCnt, LoadUnitsPerTrailer.Length - 1);
+                                    loadingTrailer = true;
+                                    loadingUnit = false;
+                                    vehicleMass += AggregateTrailerMass[trailerId];
+                                }
+                            }
+                            else
+                                break;
+                        }
+                        else
+                        {
+                            if (!loadingUnit)
+                            {
+                                if (MathUtilities.IsLessThan(loadCnt, LoadUnitsPerTrailer[trailerId]))
+                                {
+                                    loadingUnit = true;
+                                    loadCnt++;
+                                    unitLoad = 0;
+                                }
+                                else
+                                {
+                                    loadingTrailer = false;
+                                }
+                            }
+                            else
+                            {
+                                if (weightToNumberPerLoadUnit != null)
+                                    individualContribution = 1 / weightToNumberPerLoadUnit.SolveY(individualsToBeTrucked[indCnt].Weight);
+                                if (MathUtilities.IsLessThanOrEqual(unitLoad + individualContribution, 1.0))
+                                {
+                                    unitLoad += individualContribution;
+                                    totalUnits += individualContribution;
+                                    payload += individualsToBeTrucked[indCnt].Weight;
+
+                                    indCnt++;
+                                }
+                                else
+                                {
+                                    loadingUnit = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                // need to fill to minimum loads on last truck if needed
+                //while(loadCnt < MinimumLoadUnitsPerTruck)
+                //{
+                //    loadCnt++;
+                //    if (loadCnt == LoadUnitsPerTrailer[trailerId])
+                //    {
+                //        // add trailer
+                //        trailerCnt++;
+                //        trailerId = Math.Min(trailerCnt, LoadUnitsPerTrailer.Length - 1);
+                //        vehicleMass += AggregateTrailerMass[trailerId];
+                //    }
+                //}
+
+            }
+
+            if (numberToDo > indCnt)
+            {
+                individualsToBeTrucked = individualsToBeTrucked.Take(indCnt).ToList();
+
+                if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                    throw new ApsimXException(this, $"Unable to truck all required individuals [a={NameWithParent}]{Environment.NewLine}Adjust trucking rules or set OnPartialResourcesAvailableAction to [UseResourcesAvailable]");
+                else if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity && individualsToBeTrucked.Count > indCnt)
+                {
+                    Status = ActivityStatus.Skipped;
+                    return (0, 0, 0, 0, 0);
+                }
+            }
+
+            return (trucks, totalUnits, vehicleMass, payload, indCnt);
+        }
+
+
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
             if (parentNumberToDo > 0)
             {
-                if (truckDetails.individualsTransported == 0)
-                    Status = ActivityStatus.Warning;
+                if (numberToDo == truckDetails.individualsTransported)
+                    SetStatusSuccessOrPartial();
                 else
                 {
-                    if (numberToDo == truckDetails.individualsTransported)
-                        SetStatusSuccessOrPartial();
+                    if(truckDetails.individualsTransported == 0)
+                        this.Status = ActivityStatus.Warning;
                     else
-                    {
-                        if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
-                            throw new ApsimXException(this, $"Unable to truck all required individuals [a={NameWithParent}]{Environment.NewLine}Adjust trucking rules or set OnPartialResourcesAvailableAction to [UseResourcesAvailable]");
-                        else
-                            this.Status = ActivityStatus.Partial;
-                    }
+                        this.Status = ActivityStatus.Partial;
                 }
             }
             else 
@@ -459,22 +478,30 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">It is {CLEMModel.DisplaySummaryValueSnippet(DistanceToMarket.ToString("0.##"))} km to market</div>");
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Each load unit (pod/deck) holds {CLEMModel.DisplaySummaryValueSnippet(NumberPerLoadUnit, warnZero:true)} head (of specified individuals)");
+                htmlWriter.Write("</div>");
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
                 if (MinimumLoadUnitsPerTruck > 0)
                     htmlWriter.Write($" requires a minimum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
-                 htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
+                htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
                 if (MinimumLoadUnitsBeforeTransporting > 0)
                     htmlWriter.Write($" and requires at least {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
-                htmlWriter.Write(".</div>");
+                htmlWriter.Write("</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each trailer holds {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero: true)} load units");
+                if(LoadUnitsPerTrailer.Count() > 1)
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Trailers from first to last hold ");
+                else
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">The trailer holds ");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet<double>(LoadUnitsPerTrailer, warnZero: true)} load units");
+
                 if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
-                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding the trailer");
+                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer");
                 htmlWriter.Write(".</div>");
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {CLEMModel.DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
-                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg) of each trailer.");
+                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg)");
+                if (AggregateTrailerMass.Count() > 1)
+                    htmlWriter.Write($" from first to last trailer");
                 htmlWriter.Write("</div>");
 
                 return htmlWriter.ToString(); 

@@ -70,6 +70,18 @@ namespace Models.Functions.SupplyFunctions
         }
 
         /// <summary>
+        /// Combined stress effects on biomass production
+        /// </summary>
+        /// <value>The rue act.</value>
+        public double RueReductionFactor
+        {
+            get
+            {
+                return Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value())) * FW.Value() * FCO2.Value();
+            }
+        }
+        
+        /// <summary>
         /// Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT
         /// </summary>
         /// <value>The rue act.</value>
@@ -78,7 +90,6 @@ namespace Models.Functions.SupplyFunctions
         {
             get
             {
-                double RueReductionFactor = Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value())) * FW.Value() * FCO2.Value();
                 return RUE.Value() * RueReductionFactor;
             }
         }

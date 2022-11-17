@@ -502,13 +502,13 @@
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        /// <param name="flags">LocatorFlags controlling the search</param>
         /// <remarks>
-        /// See <see cref="Locater"/> for more info about paths.
+        /// See <see cref="Locator"/> for more info about paths.
         /// </remarks>
-        public IVariable FindByPath(string path, bool ignoreCase = false)
+        public IVariable FindByPath(string path, LocatorFlags flags = LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled)
         {
-            return Locator().GetInternal(path, this, ignoreCase);
+            return Locator.GetObject(path, flags);
         }
 
         /// <summary>
@@ -517,8 +517,7 @@
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
-        public IEnumerable<IVariable> FindAllByPath(string path, bool ignoreCase = false)
+        public IEnumerable<IVariable> FindAllByPath(string path)
         {
             IEnumerable<IModel> matches = null;
 
@@ -551,7 +550,7 @@
                     yield return new VariableObject(match);
                 else
                 {
-                    var variable = Locator().GetInternal(path, match, ignoreCase);
+                    var variable = match.Locator.GetObject(path, LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
                     if (variable != null)
                         yield return variable;
                 }
@@ -570,20 +569,23 @@
             }
         }
 
-        /// <summary>
-        /// Gets the locater model.
-        /// </summary>
-        /// <remarks>
-        /// This is overriden in class Simulation.
-        /// </remarks>
-        protected virtual Locater Locator()
-        {
-            Simulation sim = FindAncestor<Simulation>();
-            if (sim != null)
-                return sim.Locater;
+        /// <summary>A Locator object for finding models and variables.</summary>
+        [NonSerialized]
+        private Locator locator;
 
-            // Simulation can be null if this model is not under a simulation e.g. DataStore.
-            return new Locater();
+        /// <summary>Cache to speed up scope lookups.</summary>
+        /// <value>The locater.</value>
+        [JsonIgnore]
+        public Locator Locator
+        {
+            get
+            {
+                if (locator == null)
+                {
+                    locator = new Locator(this);
+                }
+                return locator;
+            }
         }
 
         /// <summary>

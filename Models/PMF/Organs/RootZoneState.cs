@@ -6,16 +6,20 @@ using System.Linq;
 using Models.Soils.Nutrients;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class ZoneState
+    public class ZoneState: Model, IRootGeometryData
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
-        
+
+        /// <summary>The soilcrop in this zone</summary>
+        public SoilCrop SoilCrop { get; private set; }
+
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
 
@@ -29,7 +33,7 @@ namespace Models.PMF.Organs
         public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
-        public Plant plant = null;
+        public Plant plant { get; set; }
 
         /// <summary>The root organ</summary>
         public Root root = null;
@@ -45,9 +49,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The cost for remobilisation</summary>
         private IFunction remobilisationCost = null;
-
-        /// <summary>Zone name</summary>
-        public string Name = null;
 
         /// <summary>The water uptake</summary>
         public double[] WaterUptake { get; set; }
@@ -127,10 +128,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
         /// PMF does actual uptake before N uptake</summary>
-        public double[] AvailableSW { get;  set; }
+        public double[] AvailableSW { get; set; }
 
         /// <summary>Gets or sets PotentialAvailableSW during SW Uptake</summary>
-        public double[] PotentialAvailableSW { get;  set; }
+        public double[] PotentialAvailableSW { get; set; }
 
         /// <summary>Record the Water level before </summary>
         public double[] StartWater { get; set; }
@@ -139,10 +140,10 @@ namespace Models.PMF.Organs
         public double[] Supply { get; set; }
 
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
-        public double[] MassFlow { get;  set; }
+        public double[] MassFlow { get; set; }
 
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
-        public double[] Diffusion { get;  set; }
+        public double[] Diffusion { get; set; }
 
 
         /// <summary>Constructor</summary>
@@ -157,7 +158,7 @@ namespace Models.PMF.Organs
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
         public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
-                         BiomassDemand initialDM, double population, double maxNConc,
+                         NutrientPoolFunctions initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost)
         {
             this.Soil = soil;
@@ -169,6 +170,9 @@ namespace Models.PMF.Organs
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
+            SoilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            if (SoilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
 
             Clear();
             Zone zone = soil.FindAncestor<Zone>();
@@ -185,7 +189,7 @@ namespace Models.PMF.Organs
         /// <param name="initialDM">Initial dry matter</param>
         /// <param name="population">plant population</param>
         /// <param name="maxNConc">maximum n concentration</param>
-        public void Initialise(double depth, BiomassDemand initialDM, double population, double maxNConc)
+        public void Initialise(double depth, NutrientPoolFunctions initialDM, double population, double maxNConc)
         {
             Depth = depth;
             RootFront = depth;
@@ -265,6 +269,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+
         /// <summary>
         /// Growth depth of roots in this zone
         /// </summary>
@@ -314,10 +319,11 @@ namespace Models.PMF.Organs
         /// </summary>
         public double[] CalculateRootActivityValues()
         {
+            int currentLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             double[] RAw = new double[Physical.Thickness.Length];
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
-                if (layer <= SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth))
+                if (layer <= currentLayer)
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt

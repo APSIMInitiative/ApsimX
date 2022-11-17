@@ -86,7 +86,7 @@ namespace Models.CLEM.Activities
         /// <param name="guid">GuID to add to</param>
         /// <param name="level">Level to add to</param>
         /// <returns>New GuID</returns>
-        public Guid AddToGuID(Guid guid, int level)
+        public static Guid AddToGuID(Guid guid, int level)
         {
             string guidString = guid.ToString();
             if (level > 0 & level <= 3)

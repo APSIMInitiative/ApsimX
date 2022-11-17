@@ -4,6 +4,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel.Design;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -45,8 +46,9 @@
         /// Get the value of a variable or model.
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>
+        /// <param name="flags"><see cref="LocatorFlags"/> controlling the search</param>
         /// <returns>The found object or null if not found</returns>
-        public object Get(string namePath)
+        public object Get(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
             IVariable variable = GetInternal(namePath);
             if (variable == null)
@@ -67,20 +69,22 @@
         /// 
         /// </summary>
         /// <param name="namePath"></param>
+        /// <param name="flags">LocatorFlags controlling the search</param>
         /// <returns></returns>
-        public IVariable GetObject(string namePath)
+        public IVariable GetObject(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
-            return GetInternal(namePath);
+            return GetInternal(namePath, flags);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="namePath"></param>
+        /// <param name="flags">LocatorFlags controlling the search</param>
         /// <returns>Information about the named variable, but without its current data values</returns>
-        public IVariable GetObjectProperties(string namePath)
+        public IVariable GetObjectProperties(string namePath, LocatorFlags flags = LocatorFlags.PropertiesOnly)
         {
-            return GetInternal(namePath, true, true);
+            return GetInternal(namePath, flags | LocatorFlags.PropertiesOnly);
         }
 
         /// <summary>
@@ -98,17 +102,50 @@
         }
 
         /// <summary>
+        /// Test whether a name appears to represent an Expression
+        /// Probably need a better way of detecting an expression
+        /// </summary>
+        /// <param name="path">The string to be tested</param>
+        /// <returns>True if this appears to be an expression</returns>
+        private bool IsExpression(string path)
+        {
+            //-- Remove all white spaces from the string --
+            path = path.Replace(" ", "").Replace("()", "");
+            if (path.Length == 0 || path[0] == '.')
+                return false;
+            if (path.IndexOfAny("+*/^".ToCharArray()) >= 0) // operators indicate an expression
+                return true;
+            int openingParen = path.IndexOf('(');
+            if (openingParen >= 0 && path.Substring(0, openingParen).IndexOfAny("[.".ToCharArray()) == -1)
+                return true;
+            return false;
+        }
+
+        /// <summary>
         /// Get the value of a variable or model.
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>
-        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
-        /// <param name="propertiesOnly">If true, fetch only property information, but not the value</param>
+        /// <param name="flags"><see cref="LocatorFlags"/> controlling the search</param>
         /// <returns>The found object or null if not found</returns>
-        private IVariable GetInternal(string namePath, bool ignoreCase = true, bool propertiesOnly = false)
+        //        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
+        //        /// <param name="propertiesOnly">If true, fetch only property information, but not the value</param>
+        //        /// <param name="includeDisabled">If true, include disabled models in the search</param>
+        private IVariable GetInternal(string namePath, LocatorFlags flags = LocatorFlags.None)
         {
             IModel relativeTo = relativeToModel;
             string cacheKey = namePath;
+            bool ignoreCase = (flags & LocatorFlags.CaseSensitive) != LocatorFlags.CaseSensitive;
             StringComparison compareType = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            bool throwOnError = (flags & LocatorFlags.ThrowOnError) == LocatorFlags.ThrowOnError;
+
+            IVariable returnVariable = null;
+            if (string.IsNullOrEmpty(namePath))
+            {
+                if (throwOnError)
+                    throw new Exception($"Unable to find variable with null variable name");
+                else
+                    return null;
+            }
 
             // Look in cache first.
             object value = null;
@@ -117,14 +154,8 @@
             if (value != null)
                 return value as IVariable;
 
-            IVariable returnVariable = null;
-            if (string.IsNullOrEmpty(namePath))
-                throw new Exception($"Unable to find variable with null variable name");
-            else if (namePath[0] != '.' &&
-                     (namePath.Replace("()", "").IndexOfAny("+*/^".ToCharArray()) != -1
-                     | (namePath.IndexOfAny("(".ToCharArray()) >= 0 && namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1)))
+            if (IsExpression(namePath))
             {
-                // expression - need a better way of detecting an expression
                 returnVariable = new VariableExpression(namePath, relativeTo as Model);
             }
             else
@@ -136,8 +167,12 @@
                 {
                     int posCloseBracket = namePath.IndexOf(']');
                     if (posCloseBracket == -1)
-                        throw new Exception($"No closing square bracket in variable name '{namePath}'.");
-
+                    {
+                        if (throwOnError)
+                            throw new Exception($"No closing square bracket in variable name '{namePath}'.");
+                        else
+                            return null;
+                    }
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
                     Model foundModel = relativeTo.FindInScope(modelName) as Model;
@@ -145,12 +180,17 @@
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
-                        Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
+                        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelName, Assembly.GetExecutingAssembly());
                         if (modelTypes.Length == 1)
                             foundModel = relativeTo.FindAllInScope().FirstOrDefault(m => modelTypes[0].IsAssignableFrom(m.GetType())) as Model;
                     }
                     if (foundModel == null)
-                        throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
+                    {
+                        if (throwOnError)
+                            throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
+                        else
+                            return null;
+                    }
                     else
                         relativeTo = foundModel;
                 }
@@ -164,16 +204,55 @@
                     }
                     relativeTo = root;
 
-                    int posPeriod = namePath.IndexOf('.', 1);
+                    namePath = namePath.Remove(0, 1);
+                    int posPeriod = namePath.IndexOf('.');
                     if (posPeriod == -1)
                     {
                         posPeriod = namePath.Length;
                     }
-
-                    namePath = namePath.Remove(0, posPeriod);
+                    string rootName = namePath.Substring(0, posPeriod);
+                    if (relativeTo.Name.Equals(rootName, compareType))
+                        namePath = namePath.Remove(0, posPeriod);
+                    else
+                    {
+                        if (throwOnError)
+                            throw new Exception($"Incorrect root name in absolute path '.{namePath}'");
+                        else
+                            return null;
+                    }
                     if (namePath.StartsWith("."))
                     {
-                        namePath.Remove(1);
+                        namePath = namePath.Remove(0, 1);
+                    }
+                }
+                else if ((flags & LocatorFlags.IncludeReportVars) == LocatorFlags.IncludeReportVars)
+                {
+                    // Try a report column.
+                    foreach (Report report in relativeTo.FindAllInScope<Report>())
+                    {
+                        IReportColumn column = report.Columns?.Find(c => c.Name == namePath);
+                        if (column != null && !((column is ReportColumn) && (column as ReportColumn).possibleRecursion))
+                        {
+                            // Things can get nasty here. The call below to column.GetValue(0) has the
+                            // potential to call this routine recursively. Consider as an example
+                            // a Report column with the contents "n + 1 as n". This is hard to catch
+                            // and handle, since it leads to a StackOverflowException which cannot be
+                            // caught. One way to prevent this problem is to check whether the
+                            // stack has grown unreasonably large, then throw our own Exception.
+                            //
+                            // This possiblity of recursion is also one reason why the "throwOnError" option
+                            // is not handled by exclosing the whole routine in a try block, then deciding
+                            // in the catch section whether to rethrow the exception or return null.
+                            int nFrames = new System.Diagnostics.StackTrace().FrameCount;
+                            if (nFrames > 1000)
+                            {
+                                if (throwOnError)
+                                    throw new Exception("Recursion error");
+                                else
+                                    return null;
+                            }
+                            return new VariableObject(column.GetValue(0));
+                        }
                     }
                 }
 
@@ -181,12 +260,17 @@
                 // are child models. Stop when we can't find the child model.
                 string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                 if (namePathBits.Length == 0 && !string.IsNullOrEmpty(namePath))
-                    throw new Exception($"Invalid variable name: '{cacheKey}'");
-
+                {
+                    if (throwOnError)
+                        throw new Exception($"Invalid variable name: '{cacheKey}'");
+                    else
+                        return null;
+                }
                 int i;
+                bool includeDisabled = (flags & LocatorFlags.IncludeDisabled) == LocatorFlags.IncludeDisabled;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType) && m.Enabled);
+                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType) && (includeDisabled || m.Enabled));
                     if (localModel == null)
                     {
                         break;
@@ -218,8 +302,12 @@
                     // Look for either a property or a child model.
                     IModel localModel = null;
                     if (relativeToObject == null)
-                        throw new Exception($"Unable to locate model {namePath}");
-
+                    {
+                        if (throwOnError)
+                            throw new Exception($"Unable to locate model {namePath}");
+                        else
+                            return null;
+                    }
                     // Check property info
                     Type declaringType;
                     if (properties.Any())
@@ -250,7 +338,7 @@
                         {
                             // get arguments and store in VariableMethod
                             string args = namePathBits[j].Substring(namePathBits[j].IndexOf('('));
-                            args = args.Substring(0,args.IndexOf(')'));
+                            args = args.Substring(0, args.IndexOf(')'));
                             args = args.Replace("(", "").Replace(")", "");
                             if (args.Length > 0)
                             {
@@ -278,28 +366,34 @@
                                             argumentsList.Add(Convert.ToBoolean(cleanArg, CultureInfo.InvariantCulture));
                                             break;
                                         default:
-                                            throw new ApsimXException(relativeToModel, "The type of argument (" + Type.GetTypeCode(pars[argid].ParameterType) + ") is not currently supported in Report methods");
+                                            if (throwOnError)
+                                                throw new ApsimXException(relativeToModel, "The type of argument (" + Type.GetTypeCode(pars[argid].ParameterType) + ") is not currently supported in Report methods");
+                                            else
+                                                return null;
                                     }
                                 }
                             }
                         }
                     }
 
-                    //if (relativeToObject is IFunction && namePathBits[j] == "Value()")
-                    //{
-                    //    MethodInfo method = relativeTo.GetType().GetMethod("Value");
-                    //    properties.Add(new VariableMethod(relativeTo, method));
-                    //}
-                    //                    else if (propertyInfo == null && methodInfo == null && relativeToObject is Model)
+                    bool propertiesOnly = (flags & LocatorFlags.PropertiesOnly) == LocatorFlags.PropertiesOnly;
 
-                    if (propertyInfo == null && methodInfo == null && relativeToObject is IModel model)
+                    if (relativeToObject is Models.Functions.IFunction && namePathBits[j] == "Value()")
+                    {
+                        MethodInfo method = relativeTo.GetType().GetMethod("Value");
+                        properties.Add(new VariableMethod(relativeTo, method));
+                    }
+                    else if (propertyInfo == null && methodInfo == null && relativeToObject is IModel model)
                     {
                         // Not a property, may be an unchecked method or a child model.
                         localModel = model.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
                         if (localModel == null)
                         {
                             // Not a model
-                            throw new Exception($"While locating model {namePath}: {namePathBits[j]} is not a child of {model.Name}");
+                            if (throwOnError)
+                                throw new Exception($"While locating model {namePath}: {namePathBits[j]} is not a child of {model.Name}");
+                            else
+                                return null;
                         }
                         else
                         {
@@ -350,7 +444,10 @@
                     }
                     else
                     {
-                        throw new Exception($"While locating model {namePath}: unknown model or property specification {namePathBits[j]}");
+                        if (throwOnError)
+                            throw new Exception($"While locating model {namePath}: unknown model or property specification {namePathBits[j]}");
+                        else
+                            return null;
                     }
                 }
 
@@ -364,249 +461,5 @@
 
             return returnVariable;
         }
-
-        ///// <summary>
-        ///// Get the value of a variable or model.
-        ///// </summary>
-        ///// <param name="namePath">The name of the object to return</param>
-        ///// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
-        ///// <returns>The found object or null if not found</returns>
-        //private IVariable GetInternal(string namePath, bool ignoreCase = true)
-        //{
-        //    IModel relativeTo = relativeToModel;
-        //    string cacheKey = namePath;
-        //    StringComparison compareType = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-        //    // Look in cache first.
-        //    object value = null;
-        //    if (cache.ContainsKey(cacheKey))
-        //        value = cache[cacheKey];
-        //    if (value != null)
-        //        return value as IVariable;
-
-        //    IVariable returnVariable = null;
-        //    if (namePath == null || namePath.Length == 0)
-        //    {
-        //        return null;
-        //    }
-        //    else if (namePath[0] != '.' &&
-        //             namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1)
-        //    {
-        //        // expression - need a better way of detecting an expression
-        //        returnVariable = new VariableExpression(namePath, relativeTo as Model);
-        //    }
-        //    else
-        //    {
-        //        // Remove a square bracketed model name and change our relativeTo model to 
-        //        // the referenced model.
-        //        if (namePath.StartsWith("["))
-        //        {
-        //            int posCloseBracket = namePath.IndexOf(']');
-        //            if (posCloseBracket == -1)
-        //            {
-        //                return null;
-        //            }
-        //            string modelName = namePath.Substring(1, posCloseBracket - 1);
-        //            namePath = namePath.Remove(0, posCloseBracket + 1);
-        //            Model foundModel = relativeTo.FindInScope(modelName) as Model;
-        //            if (foundModel == null)
-        //            {
-        //                // Didn't find a model with a name matching the square bracketed string so
-        //                // now try and look for a model with a type matching the square bracketed string.
-        //                Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
-        //                if (modelTypes.Length == 1)
-        //                    foundModel = relativeTo.FindInScope(modelTypes[0]) as Model;
-        //            }
-        //            if (foundModel == null)
-        //                return null;
-        //            else
-        //                relativeTo = foundModel;
-        //        }
-        //        else if (namePath.StartsWith("."))
-        //        {
-        //            // Absolute path
-        //            IModel root = relativeTo;
-        //            while (root.Parent != null)
-        //            {
-        //                root = root.Parent as Model;
-        //            }
-        //            relativeTo = root;
-
-        //            int posPeriod = namePath.IndexOf('.', 1);
-        //            if (posPeriod == -1)
-        //            {
-        //                posPeriod = namePath.Length;
-        //            }
-
-        //            namePath = namePath.Remove(0, posPeriod);
-        //            if (namePath.StartsWith("."))
-        //            {
-        //                namePath.Remove(1);
-        //            }
-        //        }
-
-        //        // Now walk the series of '.' separated path bits, assuming the path bits
-        //        // are child models. Stop when we can't find the child model.
-        //        string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-        //        int i;
-        //        for (i = 0; i < namePathBits.Length; i++)
-        //        {
-        //            IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
-        //            if (localModel == null)
-        //            {
-        //                break;
-        //            }
-        //            else
-        //            {
-        //                relativeTo = localModel as Model;
-        //            }
-        //        }
-
-        //        // At this point there are only 2 possibilities. We have encountered a 
-        //        // PropertyInfo/MethodInfo or the path is invalid.
-        //        // We now need to loop through the remaining path bits and keep track of each
-        //        // section of the path as each section will have to be evaulated everytime a
-        //        // a get is done for this path. 
-        //        // The variable 'i' will point to the name path that cannot be found as a model.
-        //        object relativeToObject = relativeTo;
-        //        List<IVariable> properties = new List<IVariable>();
-        //        properties.Add(new VariableObject(relativeTo));
-        //        for (int j = i; j < namePathBits.Length; j++)
-        //        {
-        //            // look for an array specifier e.g. sw[2]
-        //            string arraySpecifier = null;
-        //            if (namePathBits[j].Contains("["))
-        //            {
-        //                arraySpecifier = StringUtilities.SplitOffBracketedValue(ref namePathBits[j], '[', ']');
-        //            }
-
-        //            // Look for either a property or a child model.
-        //            IModel localModel = null;
-        //            if (relativeToObject == null)
-        //                return null;
-        //            PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
-        //            if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
-        //                propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
-        //            if (relativeToObject is IFunction && namePathBits[j] == "Value()")
-        //            {
-        //                MethodInfo method = relativeTo.GetType().GetMethod("Value");
-        //                properties.Add(new VariableMethod(relativeTo, method));
-        //            }
-        //            else if (propertyInfo == null && relativeToObject is Model)
-        //            {
-        //                // Not a property, may be an unchecked method or a child model.
-        //                localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
-        //                if (localModel == null)
-        //                {
-        //                    // not a child model so check that it still isn't an unchecked method with arguments
-        //                    MethodInfo methodInfo = null;
-        //                    if(namePathBits[j].IndexOf('(')>0)
-        //                    { 
-        //                        relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')));
-        //                        if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
-        //                        {
-        //                            methodInfo = relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')), BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
-        //                        }
-        //                    }
-        //                    if (methodInfo != null)
-        //                    {
-        //                        // get arguments and store in VariableMethod
-        //                        List<object> argumentsList = new List<object>();
-        //                        string args = namePathBits[j].Substring(namePathBits[j].IndexOf('('));
-        //                        if (args.Length > 0)
-        //                        {
-        //                            args = args.Trim('(').Trim(')');
-        //                            var argList = args.Split(',');
-        //                            // get arguments
-        //                            ParameterInfo[] pars = methodInfo.GetParameters();
-
-        //                            for (int argid = 0; argid < argList.Length; argid++)
-        //                            {
-        //                                var cleanArg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ').Trim('"');
-        //                                switch (Type.GetTypeCode(pars[argid].ParameterType))
-        //                                {
-        //                                    case TypeCode.Double:
-        //                                        argumentsList.Add(Convert.ToDouble(cleanArg, CultureInfo.InvariantCulture));
-        //                                        break;
-        //                                    case TypeCode.Int32:
-        //                                        argumentsList.Add(Convert.ToInt32(cleanArg));
-        //                                        break;
-        //                                    case TypeCode.String:
-        //                                        argumentsList.Add(cleanArg);
-        //                                        break;
-        //                                    default:
-        //                                        break;
-        //                                }
-        //                            }
-        //                            properties.Add(new VariableMethod(relativeTo, methodInfo, argumentsList.ToArray<object>()));
-        //                        }
-        //                        else
-        //                        {
-        //                            properties.Add(new VariableMethod(relativeTo, methodInfo, null));
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        // Not a model or method
-        //                        return null;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    properties.Add(new VariableObject(localModel));
-        //                    relativeToObject = localModel;
-        //                }
-        //            }
-        //            else if (propertyInfo != null)
-        //            {
-        //                VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
-        //                properties.Add(property);
-        //                relativeToObject = property.Value;
-        //            }
-        //            else if (relativeToObject is IList)
-        //            {
-        //                // Special case: we are trying to get a property of an array(IList). In this case
-        //                // we want to return the property value for all items in the array.
-        //                VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
-        //                properties.Add(property);
-        //                relativeToObject = property.Value;
-        //            }
-        //            else
-        //            {
-        //                return null;
-        //            }
-        //        }
-
-        //        // We now have a list of IVariable instances that can be evaluated to 
-        //        // produce a return value for the given path. Wrap the list into an IVariable.
-        //        returnVariable = new VariableComposite(namePath, properties);
-        //    }
-
-        //    // Add variable to cache.
-        //    cache.Add(cacheKey, returnVariable);
-
-        //    return returnVariable;
-        //}
-
-        /// <summary>
-        /// Gets all Type instances matching the specified class name with no namespace qualified class name.
-        /// Will not throw. May return empty array.
-        /// </summary>
-        private static Type[] GetTypeWithoutNameSpace(string className)
-        {
-            List<Type> returnVal = new List<Type>();
-
-            Type[] assemblyTypes = Assembly.GetExecutingAssembly().GetTypes();
-            for (int j = 0; j < assemblyTypes.Length; j++)
-            {
-                if (assemblyTypes[j].Name == className)
-                {
-                    returnVal.Add(assemblyTypes[j]);
-                }
-            }
-
-            return returnVal.ToArray();
-        }
-
     }
 }
