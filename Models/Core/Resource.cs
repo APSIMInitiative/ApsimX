@@ -38,40 +38,56 @@
             }
         }
 
-        /// <summary>Replace all child models (of a parent) that have ResourceName with a new model loaded from a resource.</summary>
-        /// <param name="parent">The parent model to search for children.</param>
-        public void Replace(IModel parent)
+        /// <summary>
+        /// Replace this model with one loaded from a resource
+        /// </summary>
+        /// <param name="model">The model to replace</param>
+        /// <param name="enabled">Whether the model is enabled</param>
+        public void ReplaceModel(IModel model, bool enabled)
         {
-            foreach (var child in parent.FindAllDescendants()
+            IModel modelFromResource = GetModel(model.ResourceName);
+            if (modelFromResource != null)
+            {
+                modelFromResource.Enabled = enabled;
+
+                bool isUnderReplacements = model.FindAncestor<Folder>("Replacements") != null;
+
+                // Add missing children from the model in resource
+                IEnumerable<IModel> childrenToAdd = modelFromResource.Children.Where(mc =>
+                {
+                    return !model.Children.Any(c => c.GetType() == mc.GetType() &&
+                                                    string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
+                });
+
+                // Make all children that area about to be added from resource hidden and readonly.
+                bool isHidden = !isUnderReplacements;
+                foreach (Model descendant in childrenToAdd)
+                {
+                    descendant.IsHidden = isHidden;
+                    descendant.ReadOnly = isHidden;
+                }
+
+                model.Children.InsertRange(0, childrenToAdd);
+
+                CopyPropertiesFrom(modelFromResource, model);
+                model.ParentAllDescendants();
+            }
+        }
+
+        /// <summary>Replace a model or all its child models that have ResourceName 
+        /// with new models loaded from a resource.</summary>
+        /// <param name="model">The model to search for resource replacement.</param>
+        public void Replace(IModel model)
+        {
+            if (!string.IsNullOrEmpty(model.ResourceName))
+                ReplaceModel(model, model.Enabled);
+            else
+            { 
+               foreach (var child in model.FindAllDescendants()
                                         .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
-            {
-                IModel modelFromResource = GetModel(child.ResourceName);
-                if (modelFromResource != null)
                 {
-                    modelFromResource.Enabled = parent.Enabled;
-
-                    bool isUnderReplacements = child.FindAncestor<Folder>("Replacements") != null;
-
-                    // Add missing children from the model in resource
-                    IEnumerable<IModel> childrenToAdd = modelFromResource.Children.Where(mc =>
-                    {
-                        return !child.Children.Any(c => c.GetType() == mc.GetType() &&
-                                                        string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
-                    });
-                    
-                    // Make all children that area about to be added from resource hidden and readonly.
-                    bool isHidden = !isUnderReplacements;
-                    foreach (Model descendant in childrenToAdd)
-                    {
-                        descendant.IsHidden = isHidden;
-                        descendant.ReadOnly = isHidden;
-                    }
-
-                    child.Children.InsertRange(0, childrenToAdd);
-
-                    CopyPropertiesFrom(modelFromResource, child);
-                    child.ParentAllDescendants();
+                    ReplaceModel(child, model.Enabled);
                 }
             }
         }
