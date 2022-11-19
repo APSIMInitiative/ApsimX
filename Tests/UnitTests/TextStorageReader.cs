@@ -6,7 +6,8 @@ namespace UnitTests
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.IO;
+	using System.Globalization;
+	using System.IO;
     using System.Linq;
     using System.Text;
 
@@ -38,9 +39,9 @@ namespace UnitTests
             }
         }
 
-        public List<string> CheckpointNames { get { return DataTableUtilities.GetColumnAsStrings(data, "CheckpointName").Distinct().ToList(); } }
+        public List<string> CheckpointNames { get { return DataTableUtilities.GetColumnAsStrings(data, "CheckpointName", CultureInfo.InvariantCulture).Distinct().ToList(); } }
 
-        public List<string> SimulationNames { get { return DataTableUtilities.GetColumnAsStrings(data, "SimulationName").Distinct().ToList(); } }
+        public List<string> SimulationNames { get { return DataTableUtilities.GetColumnAsStrings(data, "SimulationName", CultureInfo.InvariantCulture).Distinct().ToList(); } }
 
         public List<string> TableNames { get { return new List<string>() { "Report" }; } }
 

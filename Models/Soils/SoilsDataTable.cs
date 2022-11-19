@@ -8,12 +8,13 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
+	using System.Globalization;
 
-    /// <summary>
-    /// A generic class for turning a DataTable of soil information into
-    /// a list of sois.
-    /// </summary>
-    public class SoilsDataTable
+	/// <summary>
+	/// A generic class for turning a DataTable of soil information into
+	/// a list of sois.
+	/// </summary>
+	public class SoilsDataTable
     {
         /// <summary>Convert a table of soils data into a list of soils.</summary>
         public static List<Soil> ToSoils(DataTable table)
@@ -341,7 +342,7 @@
         {
             if (table.Columns.Contains(variableName))
             {
-                double[] Values = DataTableUtilities.GetColumnAsDoubles(table, variableName, numRows, row);
+                double[] Values = DataTableUtilities.GetColumnAsDoubles(table, variableName, numRows, row, CultureInfo.InvariantCulture);
                 if (MathUtilities.ValuesInArray(Values))
                 {
                     // Convert MissingValue for Nan
@@ -395,7 +396,7 @@
         {
             if (table.Columns.Contains(variableName))
             {
-                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow);
+                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow, CultureInfo.InvariantCulture);
                 if (MathUtilities.ValuesInArray(Values))
                     return Values;
             }
@@ -417,7 +418,7 @@
             if (!table.Columns.Contains(variableName))
                 return null;
 
-            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row);
+            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row, CultureInfo.InvariantCulture);
         }
 
         /// <summary>Set a column of metadata values for the specified column.</summary>

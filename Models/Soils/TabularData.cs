@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace Models.Soils
@@ -177,10 +178,11 @@ namespace Models.Soils
                 {
                     if (!property.IsReadOnly)
                     {
+                        // Must use current culture when reading strings which come from the GUI!
                         if (property.DataType == typeof(string[]))
-                            property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
+                            property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
                         else if (property.DataType == typeof(double[]))
-                            property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                            property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
                     }
                 }
             }
