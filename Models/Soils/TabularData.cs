@@ -162,7 +162,7 @@ namespace Models.Soils
                     if (property.DataType == typeof(string[]))
                         values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
                     else if (property.DataType == typeof(double[]))
-                        values = ((double[])propertyValue).Select(v => v.ToString("F3")).ToArray();
+                        values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
 
                     DataTableUtilities.AddColumn(data, Name, values, 1, values.Length);
                 }
