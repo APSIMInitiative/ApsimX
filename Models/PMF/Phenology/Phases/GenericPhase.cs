@@ -70,20 +70,28 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            ProgressionForTimeStep = progression.Value() * propOfDayToUse;
-            ProgressThroughPhase += ProgressionForTimeStep;
 
-            if (ProgressThroughPhase > Target)
+            if (ProgressThroughPhase >= Target)
             {
-                if (ProgressionForTimeStep > 0.0)
-                {
-                    proceedToNextPhase = true;
-                    propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
-                    ProgressionForTimeStep *= (1 - propOfDayToUse);
-                }
-                ProgressThroughPhase = Target;
+                // We have entered this timestep after Target decrease below progress so exit without doing anything
+                proceedToNextPhase = true;
             }
-            
+            else
+            {
+                ProgressionForTimeStep = progression.Value() * propOfDayToUse;
+                ProgressThroughPhase += ProgressionForTimeStep;
+
+                if (ProgressThroughPhase > Target)
+                {
+                    if (ProgressionForTimeStep > 0.0)
+                    {
+                        proceedToNextPhase = true;
+                        propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                        ProgressionForTimeStep *= (1 - propOfDayToUse);
+                    }
+                    ProgressThroughPhase = Target;
+                }
+            }
             return proceedToNextPhase;
         }
 

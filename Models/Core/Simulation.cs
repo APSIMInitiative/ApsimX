@@ -87,25 +87,6 @@ namespace Models.Core
             }
         }
 
-        /// <summary>A locater object for finding models and variables.</summary>
-        [NonSerialized]
-        private Locater locater;
-
-        /// <summary>Cache to speed up scope lookups.</summary>
-        /// <value>The locater.</value>
-        public Locater Locater
-        {
-            get
-            {
-                if (locater == null)
-                {
-                    locater = new Locater();
-                }
-
-                return locater;
-            }
-        }
-
         /// <summary>
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
@@ -124,6 +105,14 @@ namespace Models.Core
         /// <summary>Is the simulation running?</summary>
         public bool IsRunning { get; private set; } = false;
 
+        /// <summary>
+        /// Is this Simulation in the process of being initialised?
+        /// Use with caution! Leaving this set to "true" will block its
+        /// execution thread.
+        /// </summary>
+        [JsonIgnore]
+        public bool IsInitialising { get; set; } = false;
+
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
@@ -132,7 +121,7 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public object Get(string namePath)
         {
-            return Locater.Get(namePath, this);
+            return Locator.Get(namePath);
         }
 
         /// <summary>Get the underlying variable object for the given path.</summary>
@@ -140,7 +129,7 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         public IVariable GetVariableObject(string namePath)
         {
-            return Locater.GetInternal(namePath, this);
+            return Locator.GetObject(namePath);
         }
 
         /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
@@ -148,7 +137,7 @@ namespace Models.Core
         /// <param name="value">The value to set the property to</param>
         public void Set(string namePath, object value)
         {
-            Locater.Set(namePath, this, value);
+            Locator.Set(namePath, value);
         }
 
         /// <summary>Return the filename that this simulation sits in.</summary>
@@ -186,7 +175,7 @@ namespace Models.Core
         public void ClearCaches()
         {
             Scope.Clear();
-            Locater.Clear();
+            Locator.Clear();
         }
 
         /// <summary>Gets the next job to run</summary>
@@ -344,14 +333,6 @@ namespace Models.Core
         {
             model.Children.RemoveAll(child => !child.Enabled);
             model.Children.ForEach(child => RemoveDisabledModels(child));
-        }
-
-        /// <summary>
-        /// Gets the locater model.
-        /// </summary>
-        protected override Locater Locator()
-        {
-            return Locater;
         }
 
         /// <summary>

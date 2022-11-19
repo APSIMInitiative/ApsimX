@@ -18,6 +18,12 @@
     [ValidParent(ParentType = typeof(Soil))]
     public class Water : Model, ITabularData
     {
+        private double[] volumetric;
+
+        /// <summary>Last initialisation event.</summary>
+        public event EventHandler WaterChanged;
+
+
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
         [Units("mm")]
@@ -37,14 +43,14 @@
         /// <summary>Thickness</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial water values</summary>
         [Description("Initial values")]
         [Summary]
         [Units("mm/mm")]
         [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
-        /// <summary>Nitrate NO3.</summary>
+        /// <summary>Initial values total mm</summary>
         [Summary]
         [Units("mm")]
         [Display(Format = "N1")]
@@ -57,7 +63,18 @@
         /// <summary>Amount (mm/mm)</summary>
         [JsonIgnore]
         [Units("mm/mm")]
-        public double[] Volumetric { get; set; }
+        public double[] Volumetric
+        {
+            get
+            {
+                return volumetric;
+            }
+            set
+            {
+                volumetric = value;
+                WaterChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         /// <summary>Soil water potential (kPa)</summary>
         [Units("kPa")]
@@ -205,11 +222,11 @@
             }
         }
 
-        /// <summary>Finds the 'physical' node.</summary>
-        public IPhysical Physical => FindInScope<IPhysical>();
+        /// <summary>Finds the 'Physical' node.</summary>
+        public IPhysical Physical => FindAncestor<Soil>()?.FindDescendant<IPhysical>() ?? FindInScope<IPhysical>();
 
-        /// <summary>Finds the 'physical' node.</summary>
-        public ISoilWater WaterModel => FindInScope<ISoilWater>();
+        /// <summary>Finds the 'SoilWater' node.</summary>
+        public ISoilWater WaterModel => FindAncestor<Soil>()?.FindDescendant<ISoilWater>() ?? FindInScope<ISoilWater>();
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         public double[] RelativeToLL

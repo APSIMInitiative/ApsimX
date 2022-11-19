@@ -194,6 +194,15 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
 
+        /// <summary>Total mass of all standing surface organic materials</summary>
+        [Units("kg/ha")]
+        public double StandingWt => SurfOM.Sum(om => om.Standing.Sum(organ => organ.amount));
+
+        /// <summary>Total mass of all lying surface organic materials</summary>
+        [Units("kg/ha")]
+        public double LyingWt => SurfOM.Sum(om => om.Lying.Sum(organ => organ.amount));
+
+
         /// <summary>Total carbon of all surface organic carbon</summary>
         [Summary]
         [Description("Carbon content")]

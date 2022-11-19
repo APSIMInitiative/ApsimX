@@ -5,6 +5,7 @@ using Models.Storage;
 using System;
 using System.Data;
 using System.Linq;
+using Models.Core.Run;
 
 namespace Models.CLEM.Reporting
 {
@@ -17,7 +18,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
-    public class ReportQuery : Model, ICLEMUI
+    public class ReportQuery : Model, ICLEMUI, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -33,45 +34,37 @@ namespace Models.CLEM.Reporting
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
+        /// <inheritdoc/>
+        public void Run() => SaveView(dataStore); 
+
         /// <summary>
         /// Runs the query
         /// </summary>
         public DataTable RunQuery()
         {
-            var storage = FindInScope<IDataStore>();
-            if (storage != null)
-            {
-                SaveView(storage);
-                return storage.Reader.GetDataUsingSql(SQL);                
-            }
+            var storage = FindInScope<IDataStore>() ?? dataStore;
+            string viewSQL = storage.GetViewSQL(Name);
+            if (viewSQL != "")
+                return storage.Reader.GetData(Name);
             return new DataTable();
         }
-
-        /// <summary>
-        /// Saves the view post-simulation
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e) => SaveView(dataStore);        
 
         private void SaveView(IDataStore store)
         {
             if (Name.Any(c => c == ' '))
-                throw new Exception($"Invalid name: {Name}\nNames cannot contain spaces.");
+                throw new Exception($"Invalid name: [{Name}]\n[ReportQuery] names cannot contain spaces as they are used to name the database tables");
 
-            try
+            if (SQL != null && SQL != "")
             {
-                if (SQL != null && SQL != "")
+                // Find the data
+                var storage = FindInScope<IDataStore>() ?? dataStore;
+
+                string viewSQL = storage.GetViewSQL(Name);
+                if (!viewSQL.EndsWith(SQL.TrimEnd(new char[] { '\r', '\n' })))
                 {
-                    (store.Reader as DataStoreReader).ExecuteSql(SQL);
-                    store.AddView(Name, SQL);
+                    // We assume any sql errors are thrown when data is retreived
+                    storage.AddView($"{Name}", SQL);
                 }
-            }
-            catch (Exception ex)
-            {
-                var msg = $"Invalid SQL: Unable to create query report [{Name}] using SQL provided" +
-                    $"\r\nError: {ex.Message}" +
-                    $"\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created by disabling it in the first run and then enabling again.";
-                throw new ApsimXException(this, msg);
             }
         }
     }

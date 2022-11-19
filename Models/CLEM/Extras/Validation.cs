@@ -304,6 +304,7 @@ namespace Models.CLEM
                 case HerdChangeReason.MaxAgeSale:
                 case HerdChangeReason.AgeWeightSale:
                 case HerdChangeReason.DestockSale:
+                case HerdChangeReason.WeanerSale:
                     result = "sale";
                     break;
                 case HerdChangeReason.TradePurchase:

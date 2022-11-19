@@ -181,7 +181,11 @@ namespace Models.CLEM
         /// <summary>
         /// Reduce initial herd to management levels
         /// </summary>
-        ReduceInitialHerd
+        ReduceInitialHerd,
+        /// <summary>
+        /// Sale of weaner
+        /// </summary>
+        WeanerSale
     }
 
     /// <summary>
@@ -228,13 +232,13 @@ namespace Models.CLEM
     public enum LabourLimitType
     {
         /// <summary>
-        /// Represents a rate or fixed days specified
+        /// Represents a rate or fixed days per units specified
         /// </summary>
-        AsDaysRequired,
+        AsRatePerUnitsAllowed,
         /// <summary>
         /// Relates to the total days allowed
         /// </summary>
-        AsTotalAllowed,
+        AsTotalDaysAllowed,
         /// <summary>
         /// As proportion of the days required
         /// </summary>

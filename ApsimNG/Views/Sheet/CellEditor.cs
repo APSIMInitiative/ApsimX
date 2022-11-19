@@ -97,11 +97,17 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>End edit more.</summary>
-        public void EndEdit()
+        /// <summary>End edit mode.</summary>
+        public void EndEdit(bool saveEdit = true)
         {
             if (entry != null)
             {
+                if (saveEdit)
+                {
+                    sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
+                    sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, entry.Text);
+                }
+
                 entry.KeyPressEvent -= OnEntryKeyPress;
                 fix.Remove(entry);
                 entry = null;
@@ -118,14 +124,12 @@ namespace UserInterface.Views
         {
             if (args.Event.Key == Gdk.Key.Escape)
             {
-                EndEdit();
+                EndEdit(saveEdit: false);
             }
             else if (args.Event.Key == Gdk.Key.Return)
             {
-                sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
-                sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, entry.Text);
-                sheet.CellSelector.MoveDown();
                 EndEdit();
+                sheet.CellSelector.MoveDown();
             }
         }
     }

@@ -1,9 +1,12 @@
 ﻿namespace UserInterface.Presenters
 {
     using APSIM.Shared.Graphing;
+    using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.GrazPlan;
     using Models.Soils;
     using System;
+    using System.Collections.Generic;
     using Views;
 
     /// <summary>A presenter for the soil profile models.</summary>
@@ -13,7 +16,7 @@
         private NewGridPresenter gridPresenter;
 
         ///// <summary>The property presenter.</summary>
-        //private PropertyPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -32,6 +35,9 @@
 
         /// <summary>Graph.</summary>
         private GraphView graph;
+
+        /// <summary>Label showing number of layers.</summary>
+        private LabelView numLayersLabel;
 
         /// <summary>Default constructor</summary>
         public ProfilePresenter()
@@ -54,11 +60,13 @@
             water = this.model.FindInScope<Water>();
 
             var propertyView = view.GetControl<PropertyView>("properties");
-            var propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
+
+            numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
             if (!propertyView.AnyProperties)
             {
@@ -66,6 +74,15 @@
                 var propertiesLabel = view.GetControl<LabelView>("parametersLabel");
                 propertiesLabel.Visible = false;
                 layeredLabel.Visible = false;
+            }
+            else
+            {
+                // Position the splitter to give the "Properties" section as much space as it needs, and no more
+                if (view.MainWidget is Gtk.Paned paned)
+                {
+                    paned.Child1.GetPreferredHeight(out int minHeight, out int natHeight);
+                    paned.Position = natHeight;
+                }
             }
 
             Refresh();
@@ -76,6 +93,8 @@
         public void Detach()
         {
             DisconnectEvents();
+            gridPresenter.Detach();
+            propertyPresenter.Detach();
             view.Dispose();
         }
 
@@ -85,14 +104,31 @@
             try
             {
                 DisconnectEvents();
+                try
+                {
+                    if (water != null && (model is Physical || model is Water))
+                        WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                                                          water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
+                    else if (model is Organic organic)
+                        PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
+                    else if (model is Solute solute && solute.Thickness != null)
+                    {
+                        double[] vals = solute.InitialValues;
+                        if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
+                            vals = SoilUtilities.kgha2ppm(solute.Thickness, solute.SoluteBD, vals);
+                        PopulateSoluteGraph(graph, solute.Thickness, solute.Name, vals);
+                    }
+                    else if (model is Chemical chemical)
+                    {
+                        PopulateChemicalGraph(graph, chemical.Thickness, chemical.PH, chemical.PHUnits, chemical.GetStandardisedSolutes());
+                    }
 
-                if (water != null && (model is Physical || model is Water))
-                    WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                      water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
-                else if (model is Organic organic)
-                    PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
-                
-                ConnectEvents();
+                    numLayersLabel.Text = $"{gridPresenter.NumRows()} layers";
+                }
+                finally
+                {
+                    ConnectEvents();
+                }
             }
             catch (Exception err)
             {
@@ -124,6 +160,53 @@
             graph.FormatAxis(AxisPosition.Top, "Fresh organic matter (kg/ha)", inverted: false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
             graph.FormatAxis(AxisPosition.Bottom, "Fraction ", inverted: false, 0, 1, 0.2, false);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+            graph.Refresh();
+        }
+
+        public static void PopulateSoluteGraph(GraphView graph, double[] thickness, string soluteName, double[] values)
+        {
+            var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
+            graph.Clear();
+            graph.DrawLineAndMarkers($"{soluteName}", values,
+                                     cumulativeThickness,
+                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                     System.Drawing.Color.Blue, LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            graph.FormatAxis(AxisPosition.Top, $"Initial {soluteName} (ppm)", inverted: false, 0, double.NaN, double.NaN, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
+            graph.Refresh();
+        }
+
+        public static void PopulateChemicalGraph(GraphView graph, double[] thickness, double[] pH, Chemical.PHUnitsEnum phUnits, IEnumerable<Solute> solutes)
+        {
+            var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
+            graph.Clear();
+            int nColor = 0;
+            string units = (phUnits == Chemical.PHUnitsEnum.Water) ? "water" : "CaCl2";
+            graph.DrawLineAndMarkers($"pH", pH,
+                                     cumulativeThickness,
+                                     "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                                     ColourUtilities.ChooseColour(nColor++), LineType.Solid, MarkerType.None,
+                                     LineThickness.Normal, MarkerSize.Normal, 1, true);
+            foreach (var solute in solutes)
+            {
+                double[] vals = solute.InitialValues;
+                if (solute.InitialValuesUnits == Solute.UnitsEnum.kgha)
+                    vals = SoilUtilities.kgha2ppm(solute.Thickness, solute.SoluteBD, vals);
+                graph.DrawLineAndMarkers($"{solute.Name}", vals,
+                                         cumulativeThickness,
+                                         "", "", null, null, AxisPosition.Bottom, AxisPosition.Left,
+                                         ColourUtilities.ChooseColour(nColor++), LineType.Solid, MarkerType.None,
+                                         LineThickness.Normal, MarkerSize.Normal, 1, true);
+
+            }
+
+            graph.FormatAxis(AxisPosition.Top, $"pH ({units})", inverted: false, 2, 12, 2, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            graph.FormatAxis(AxisPosition.Bottom, "Initial solute (ppm) ", inverted: false, 0, double.NaN, double.NaN, false);
             graph.FormatLegend(LegendPosition.BottomRight, LegendOrientation.Vertical);
             graph.Refresh();
         }

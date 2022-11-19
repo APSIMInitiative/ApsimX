@@ -24,6 +24,10 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
+        private double fractionVrn1AtEmergence = 0.0;
+
+        private bool firstDay = true;
+
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -48,12 +52,22 @@ namespace Models.PMF.Phen
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            Target = CAMP.VrnSatThreshold;
-            ProgressThroughPhase = CAMP.MethColdVrn1;
+
+
+            if (firstDay)
+            {
+                fractionVrn1AtEmergence = CAMP.Vrn1;
+                firstDay = false;
+            }
+            Target = Math.Max(CAMP.pVrn2,1.0);
+            double RelativeVrn1Expression = Math.Min(1, (CAMP.Vrn1 - fractionVrn1AtEmergence) / (Target - fractionVrn1AtEmergence));
+
             double HS = phenology.FindChild<IFunction>("HaunStage").Value();
-            double RelativeBasicVegetative = Math.Max(1, HS / 1.1);
-            double RelativeVrn1Expression = Math.Max(1, ProgressThroughPhase / Target);
+            double RelativeBasicVegetative = Math.Min(1, HS / 1.1);
+
             FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);
+
+            ProgressThroughPhase = RelativeVrn1Expression;
             
             return CAMP.IsVernalised;
         }
@@ -61,7 +75,8 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            ProgressThroughPhase = 0.0;
+            firstDay = true;
+            fractionVrn1AtEmergence = 0.0;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

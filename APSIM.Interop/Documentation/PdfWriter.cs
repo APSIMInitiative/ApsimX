@@ -49,9 +49,9 @@ namespace APSIM.Interop.Documentation
         /// </summary>
         /// <param name="fileName">File name of the generated pdf.</param>
         /// <param name="tags">Tags to be converted to a PDF.</param>
-        public void Write(string fileName, IEnumerable<ITag> tags)
+        public void Write(string fileName, IEnumerable<ITag> tags, bool vertical = true)
         {
-            Document pdf = CreateStandardDocument();
+            Document pdf = CreateStandardDocument(vertical);
             PdfBuilder pdfRenderer = new PdfBuilder(pdf, options);
 
             Write(tags, pdfRenderer);

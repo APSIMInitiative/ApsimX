@@ -86,7 +86,7 @@ namespace Models.PMF
             var genOrgan = organ as GenericOrgan;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.Live.StructuralN + genOrgan.Live.StorageN + genOrgan.Live.MetabolicN - genOrgan.NSupply.Retranslocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.Live.StructuralN + genOrgan.Live.StorageN + genOrgan.Live.MetabolicN - genOrgan.NSupply.ReTranslocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
             var remainingN = nitrogen.Retranslocation;

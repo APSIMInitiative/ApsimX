@@ -64,6 +64,17 @@ namespace Models.Soils
         /// <param name="data"></param>
         public void SetData(DataTable data)
         {
+            // If Depth is the first column then use the number of values in
+            // that column to resize the other columns.
+            if (data != null && data.Columns.Count > 0 &&
+                data.Columns[0].ColumnName == "Depth")
+            {
+                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth");
+                var numLayers = depths.TrimEnd().Count;
+                while (data.Rows.Count > numLayers)
+                    data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
+            }
+
             foreach (var column in columns)
                 column.Set(data);
         }
@@ -178,11 +189,18 @@ namespace Models.Soils
                 {
                     if (!property.IsReadOnly)
                     {
-                        // Must use current culture when reading strings which come from the GUI!
-                        if (property.DataType == typeof(string[]))
-                            property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
-                        else if (property.DataType == typeof(double[]))
-                            property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
+                        if (numLayers == -1)
+                            property.Value = null;
+                        else
+                        {
+                            if (property.DataType == typeof(string[]))
+                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
+                            else if (property.DataType == typeof(double[]))
+                            {
+                                var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
+                                property.Value = values;
+                            }
+                        }
                     }
                 }
             }

@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
 
             // calculate milk intake shortfall for sucklings
             // all in units per day and multiplied at end of this section
-            if (ind.IsSucklingWithMother)
+            if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
                 ind.MilkPotentialIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
@@ -166,6 +166,7 @@ namespace Models.CLEM.Activities
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
 
                 ind.MilkIntake *= 30.4;
+                ind.MilkPotentialIntake *= 30.4;
             }
             else
             {
@@ -342,8 +343,8 @@ namespace Models.CLEM.Activities
                         // for calves
                         // these individuals have access to milk or are separated from mother and must survive on calf calculated pasture intake
 
-                        // if potential intake = 0 they wave not needed to consume pasture and intake will be zero.
-                        if(MathUtilities.IsPositive(ind.PotentialIntake))
+                        // if potential intake = 0 they have not needed to consume pasture and intake will be zero.
+                        if(MathUtilities.IsGreaterThanOrEqual(ind.PotentialIntake, 0.0))
                         {
                             ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
                             ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
@@ -419,6 +420,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
+            // all energy calculations are per day and multiplied at end to give monthly weight gain
+            
             // previously ind.MetabolicIntake / 30.4 - sure this was mistake
             double intakeDaily = ind.Intake / 30.4;
 
@@ -444,12 +447,12 @@ namespace Models.CLEM.Activities
                 // unweaned individuals without mother or milk from mother will need to try and survive on limited pasture until weaned.
 
                 // calculate engergy and growth from milk intake
-                // recalculate milk intake based on mothers updated milk production for the time step
-                double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
-                ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
+                // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
+                ind.MilkIntake = Math.Min(ind.MilkPotentialIntake, ind.MothersMilkProductionAvailable * 30.4);
 
                 if (ind.Mother != null)
-                    ind.Mother.TakeMilk(ind.MilkIntake * 30.4, MilkUseReason.Suckling);
+                    ind.Mother.TakeMilk(ind.MilkIntake, MilkUseReason.Suckling);
+                double milkIntakeDaily = ind.MilkIntake / 30.4;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
@@ -461,12 +464,12 @@ namespace Models.CLEM.Activities
                     // average energy efficiency for growth
                     kgl = ((ind.MilkIntake * 0.7) + (intakeDaily * kg)) / (ind.MilkIntake + intakeDaily);
                 }
-                double energyMilkConsumed = ind.MilkIntake * 3.2;
+                double energyMilkConsumed = milkIntakeDaily * 3.2;
                 // limit suckling intake of milk per day
                 energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.Age == 0) ? 0.1 : ind.Age)));
-                ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
+                ind.EnergyBalance = energyMilkConsumed + energyMetablicFromIntake - energyMaintenance;
                 ind.EnergyIntake = energyMilkConsumed + energyMetablicFromIntake;
                 ind.EnergyFetus = 0;
                 ind.EnergyMaintenance = energyMaintenance;

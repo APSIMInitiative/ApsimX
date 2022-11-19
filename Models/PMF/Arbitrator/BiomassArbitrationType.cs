@@ -193,10 +193,10 @@ namespace Models.PMF
 
             for (int i = 0; i < suppliesForEachOrgan.Length; i++)
             {
-                ReallocationSupply[i] = suppliesForEachOrgan[i].Reallocation;
+                ReallocationSupply[i] = suppliesForEachOrgan[i].ReAllocation;
                 UptakeSupply[i] = suppliesForEachOrgan[i].Uptake;
                 FixationSupply[i] = suppliesForEachOrgan[i].Fixation;
-                RetranslocationSupply[i] = suppliesForEachOrgan[i].Retranslocation;
+                RetranslocationSupply[i] = suppliesForEachOrgan[i].ReTranslocation;
             }
         }
 

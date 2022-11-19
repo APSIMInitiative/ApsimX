@@ -30,15 +30,15 @@ namespace Models.CLEM.Activities
         private ResourcePricing price;
         private FinanceType bankAccount;
         private IResourceType resourceToBuy;
-        private ActivityFee fee;
         private ResourceRequest marketRequest = null;
 
         /// <summary>
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
+        [System.ComponentModel.DefaultValueAttribute("No finance required")]
         public string AccountName { get; set; }
 
         /// <summary>
@@ -56,6 +56,14 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double Units { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ResourceActivityBuy()
+        {
+            this.SetDefaults();
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -63,38 +71,20 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get bank account object to use
-            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
+            if(AccountName != "No finance required")
+                bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
+            
             // get resource type to buy
             resourceToBuy = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get pricing
-            if((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
+            if ((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
                 if ((resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Sale))
                     price = (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Sale);
 
             // no market price found... look in local resources and allow 0 price if not found
-            if(price is null)
+            if (price is null)
                 price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
-
-            // if there's a bank account and no suitable fee add an ActivityFee
-            if(bankAccount == null)
-            {
-                var activityFee = FindAllChildren<ActivityFee>().Where(a => a.Measure == "per packet").FirstOrDefault();
-                if (activityFee is null)
-                {
-                    fee = new ActivityFee()
-                    {
-                        Name = "PurchaseFee",
-                        TransactionCategory = $"{TransactionCategory}.Fee",
-                        Amount = price.PricePerPacket,
-                        Parent = this,
-                        BankAccountName = AccountName,
-                        Measure = "per packet",
-                        UniqueID = ActivitiesHolder.AddToGuID(UniqueID, 1)
-                    };
-                    Children.Insert(0, fee);
-                }
-            }
         }
 
         /// <inheritdoc/>
@@ -109,7 +99,7 @@ namespace Models.CLEM.Activities
                         measures: new List<string>() {
                             "fixed",
                             "per packet",
-                            "perchase value"
+                            "purchase value"
                         }
                         );
                 default:
@@ -145,6 +135,22 @@ namespace Models.CLEM.Activities
                         ActivityModel = this
                     };
                     requests.Add(marketRequest);
+                }
+                // request funds
+                if(bankAccount != null)
+                {
+                    requests.Add(new ResourceRequest()
+                    {
+                        Resource = bankAccount,
+                        ResourceType = typeof(Finance),
+                        ResourceTypeName = AccountName,
+                        AllowTransmutation = true,
+                        Required = unitsToDo * price.PricePerPacket,
+                        Category = TransactionCategory,
+                        AdditionalDetails = this,
+                        RelatesToResource = ResourceTypeName,
+                        ActivityModel = this
+                    });
                 }
             }
 
@@ -193,7 +199,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (unitsToDo > 0)
+            if (unitsToDo - unitsToSkip > 0)
             {
                 resourceToBuy.Add((unitsToDo - unitsToSkip) * price.PacketSize, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial(unitsToSkip > 0);
@@ -207,11 +213,14 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Buy {CLEMModel.DisplaySummaryValueSnippet(Units, warnZero:true)} ");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Obtain {CLEMModel.DisplaySummaryValueSnippet(Units, warnZero:true)} ");
                 htmlWriter.Write(" packets of ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" using ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                if(AccountName != "No finance required")
+                {
+                    htmlWriter.Write(" using ");
+                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                }
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

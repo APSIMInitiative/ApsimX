@@ -74,6 +74,7 @@
         public void Detach()
         {
             DisconnectEvents();
+            gridPresenter.Detach();
             view.Dispose();
         }
 

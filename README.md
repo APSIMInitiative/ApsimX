@@ -30,7 +30,7 @@ Any individual or organisation (a 3rd party outside of the AI) who uses APSIM mu
 
 Intellectual property rights in APSIM are retained by the AI. If a licensee makes any improvements to APSIM, the intellectual property rights to those improvements belong to the AI. This means that the AI can choose to make the improvements - including source code – and these improvements would then be made available to all licensed users. As part of the submission process, you are complying with this term as well as making it available to all licensed users. Any Improvements to APSIM are required to be unencumbered and the contributing party warrants that the IP being contributed does not and will not infringe any third party IPR rights.
 
-Please read our [guide](https://apsimnextgeneration.netlify.com/development/contribute/).
+Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
 
 ## Publications 
 

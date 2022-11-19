@@ -136,6 +136,8 @@ namespace Models
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
         /// <summary>Occurs when [do soil water movement].</summary>
         public event EventHandler DoSoilWaterMovement;                                //Soil module
+        /// <summary>Invoked to tell soil erosion to perform its calculations.</summary>
+        public event EventHandler DoSoilErosion;
         /// <summary>Occurs when [do soil temperature].</summary>
         public event EventHandler DoSoilTemperature;
         //DoSoilNutrientDynamics will be here
@@ -161,6 +163,8 @@ namespace Models
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
+        /// <summary>Occurs when [start of simulation].</summary>
+        public event EventHandler PartitioningComplete;
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
         /// <summary> Process stock methods in GrazPlan Stock </summary>
@@ -329,6 +333,8 @@ namespace Models
                 if (DoEnergyArbitration != null)
                     DoEnergyArbitration.Invoke(this, args);
 
+                DoSoilErosion?.Invoke(this, args);
+
                 if (DoSoilWaterMovement != null)
                     DoSoilWaterMovement.Invoke(this, args);
 
@@ -369,6 +375,9 @@ namespace Models
 
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
+
+                if (PartitioningComplete != null)
+                    PartitioningComplete.Invoke(this, args);
 
                 if (DoStock != null)
                     DoStock.Invoke(this, args);

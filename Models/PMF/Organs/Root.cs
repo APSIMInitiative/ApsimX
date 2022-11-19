@@ -46,7 +46,7 @@
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority dmDemands = null;
+        private NutrientDemandFunctions dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -64,7 +64,7 @@
 
         /// <summary>Initial wt</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public BiomassDemand InitialWt = null;
+        public NutrientPoolFunctions InitialWt = null;
 
         /// <summary>Gets or sets the specific root length</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -73,7 +73,7 @@
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private BiomassDemandAndPriority nDemands = null;
+        private NutrientDemandFunctions nDemands = null;
 
         /// <summary>The N reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -188,7 +188,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<BiomassDemand>();
+            ZoneInitialDM = new List<NutrientPoolFunctions>();
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
@@ -204,7 +204,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [JsonIgnore]
-        public List<BiomassDemand> ZoneInitialDM { get; set; }
+        public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
@@ -352,11 +352,6 @@
                 return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
             }
         }
-
-        /// <summary>Gets or sets the mid points of each layer</summary>
-        [JsonIgnore]
-        [Units("mm")]
-        public double[] LayerMidPointDepth { get; private set; }
 
         /// <summary>Gets or sets relative water content for a soil layer (ie fraction between LL15 and DUL)</summary>
         [JsonIgnore]
@@ -561,8 +556,8 @@
         private void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = 0.0;
-            DMSupply.Retranslocation = dmRetranslocationSupply;
-            DMSupply.Reallocation = dmMReallocationSupply;
+            DMSupply.ReTranslocation = dmRetranslocationSupply;
+            DMSupply.ReAllocation = dmMReallocationSupply;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -571,8 +566,8 @@
         {
             NSupply.Fixation = 0.0;
             NSupply.Uptake = 0.0;
-            NSupply.Retranslocation = nRetranslocationSupply;
-            NSupply.Reallocation = nReallocationSupply;
+            NSupply.ReTranslocation = nRetranslocationSupply;
+            NSupply.ReAllocation = nReallocationSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
@@ -809,20 +804,15 @@
             if (myZone == null)
                 return null;
 
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
 
-            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (soilCrop == null)
-                throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
-
-            double[] kl = soilCrop.KL;
-            double[] ll = soilCrop.LL;
+            double[] kl = myZone.SoilCrop.KL;
+            double[] ll = myZone.SoilCrop.LL;
 
             double[] supply = new double[myZone.Physical.Thickness.Length];
-            LayerMidPointDepth = myZone.Physical.DepthMidPoints;
             for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
             {
-                if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
+                if (layer <= currentLayer)
                 {
                     double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
 

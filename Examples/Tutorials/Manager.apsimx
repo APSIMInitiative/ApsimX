@@ -1,16 +1,16 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 100,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 285,
+  "Version": 156,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
       "Text": "# Manager Model Documentation and Examples\n\n\n\n**Manager** is the model in APSIM that is used to script the on-farm management of a simulation. The examples in this document increase in complexity. [Read this to better understand the structure of a manager script](https://apsimnextgeneration.netlify.com/usage/writemanagerscript)\n\n\n\n   \n\n\n\n\n",
       "Name": "About this example",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -19,22 +19,23 @@
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
+      "Descriptors": null,
       "Name": "NTopupSimulation",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "# Change sowing fertiliser to a topup rule\n\nThis simulation started with the sowing fertiliser rule from the management toolbox.\n\n\t\tusing System;\n\t\tusing Models.Core;\n\t\tusing Models.PMF;\n\t\tnamespace Models\n\t\t{\n\t\t\t[Serializable]\n\t\t\tpublic class Script : Model\n\t\t\t{\n\t\t\t\t[Link] Clock Clock;\n\t\t\t\t[Link] Fertiliser Fertiliser;\n\t\t\t\t\n\t\t\t\t[Description(\"Crop to be fertilised\")]\n\t\t\t\tpublic IPlant Crop { get; set; }\n\n\t\t\t\t[Description(\"Type of fertiliser to apply? \")] \n\t\t\t\tpublic Fertiliser.Types FertiliserType { get; set; }\n\t\t\t\n\t\t\t\t[Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n\t\t\t\tpublic double Amount { get; set; }\n\t\t\t\t\n\t\t\t\t[EventSubscribe(\"Sowing\")]\n\t\t\t\tprivate void OnSowing(object sender, EventArgs e)\n\t\t\t\t{\n\t\t\t\t\tModel crop = sender as Model;\n\t\t\t\t\tif (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\n\t\t\t\t\t\tFertiliser.Apply(Amount: Amount, Type: FertiliserType);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\nThis script has 3 user-input properties, the sown crop model that the rule applies to, the fertiliser type to apply and the amount of fertiliser to apply:\n\n\t\t[Description(\"Crop to be fertilised\")]\n\t\tpublic IPlant Crop { get; set; }\n\n\t\t[Description(\"Type of fertiliser to apply? \")] \n\t\tpublic Fertiliser.Types FertiliserType { get; set; }\n\n\t\t[Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n\t\tpublic double Amount { get; set; }\n\n\nFor a simple N topup rule we don't need the crop or the fertiliser type and instead of specifying an amount to apply, we'll change this to a threshold amount to which the script will keep the NO3 level to. We'll rename this property to *NThreshold*:\n\n\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\tpublic double NThreshold { get; set;}\n\n\nNext we need to add a link to the NO3 solute as we'll need this to determine how much to apply. The new Link will look like this:\n\n        [Link(ByName=true)] Solute NO3;\n\nThis link looks different to the others because there are multiple solutes in the simulation and we want to make sure we are getting the NO3 solute. A regular *[Link]* looks for a model of the correct type and doesn't use the name to perform the match. If we used a regular link for this solute then we will get a link to the first solute found which may not be NO3. To fix this we need to specify that ByName=true, meaning that the link will be resolved by looking at the name of the variable (NO3 in this case) to do the match.\n\nFor this link to work though, we need to include another namespace. The nutrient model and all solutes are contained in the *Models.Soils.Nutrients* namespace so we need to add this to the top of the script:\n\n\t\tusing Models.Soils.Nutrients;\n\nCurrently in the script there is a OnSowing method that gets called whenever a sowing event occurs. We need to change this to a method that gets called every day of the simulation. Most management scripts use DoManagement for this purpose. \n\n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\nThe event name is *DoManagement* and this goes in the* EventSubscribe* attribute. The convention then is to name the method the same as the event but with *On* prefixed to the front of the event name.\n\nNow we can perform the calculation of the amount of NO3 to apply.\n\n\t\tdouble NAmount = Threshold - MathUtilities.Sum(NO3.kgha);\n\n*NO3.kgha* is an array variable (double[]) with one value per layer. We need to sum this over the whole array so we use a *MathUtilities.Sum* function to do this. For this to compile though we need to include another namespace at the top of the script \n\n\t\tusing APSIM.Shared.Utilities;\n\nWe can remove the existing references to *Crop* as this rule will apply all year around, not just within crop. We also hard code the fertiliser type on the apply line.\n\n\t\tFertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\nFinally, we rename the manager model to *NTopup*. The final script looks like:\n\n\t\tusing System;\n\t\tusing Models.Core;\n\t\tusing Models.PMF;\n\t\tusing Models.Soils.Nutrients;\n\t\tusing APSIM.Shared.Utilities;\n\t\tnamespace Models\n\t\t{\n\t\t\t[Serializable]\n\t\t\tpublic class Script : Model\n\t\t\t{\n\t\t\t\t[Link] Clock Clock;\n\t\t\t\t[Link] Fertiliser Fertiliser;\n\t\t\t\t[Link(ByName=true)] Solute NO3;\n\n\t\t\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\t\t\tpublic double NThreshold { get; set;}\n\n\t\t\t\t\n\t\t\t\t[EventSubscribe(\"DoManagement\")]\n\t\t\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t\t\t{\n\t\t\t\t\tdouble NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\n\t\t\t\t\tFertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\n\n",
+          "Text": "# Change sowing fertiliser to a topup rule\n\nFor this tutorial, we are going to take the *Fertilise at sowing* rule from the management toolbox and turn it into an N topup rule. The original code looks like this:\n\n    using Models.Soils;\n    using System;\n    using Models.Core;\n    using Models.PMF;\n    namespace Models\n    {\n        [Serializable]\n        public class Script : Model\n        {\n            [Link] Clock Clock;\n            [Link] Fertiliser Fertiliser;\n            \n            [Description(\"Crop to be fertilised\")]\n            public IPlant Crop { get; set; }\n    \n            [Description(\"Type of fertiliser to apply? \")] \n            public Fertiliser.Types FertiliserType { get; set; }\n        \n            [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n            public double Amount { get; set; }\n            \n            [EventSubscribe(\"Sowing\")]\n            private void OnSowing(object sender, EventArgs e)\n            {\n                Model crop = sender as Model;\n                if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\n                    Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\n            }\n        }\n    }\n\nThis script has 3 user-input properties which looks like this to the user:\n\n![](FertiliseAtSowingRule.png)\n\nThe script that relates to these parameters looks like this:\n\n    [Description(\"Crop to be fertilised\")]\n    public IPlant Crop { get; set; }\n\n    [Description(\"Type of fertiliser to apply? \")] \n    public Fertiliser.Types FertiliserType { get; set; }\n\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n    public double Amount { get; set; }\n\nFor a simple N topup rule we don't need the crop or the fertiliser type and instead of specifying an amount to apply, we'll change this to a threshold amount of N that the script will top up the NO3 to. We'll rename this property to *NThreshold*:\n\n    Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n    public double NThreshold { get; set;}\n\nNext we need to add a link to the NO3 solute as we'll need this to determine how much to apply. The easiest way to do this is to find the NO3 solute model in the simulation tree, right click on it and select *Copy manager snippet for model*. This will copy a snippet of script code to the clipboard that you can then paste into your manager script. The pasted code looks like this:\n\n\n    using Models.Soils;\n    [Link(ByName=true)] private Solute NO3;\n\n\nThe snippet gives you the correct using statement which you should move to the using section of your script. The link statement should be moved to the link section of your manager script.\n\nThis link looks different to the others because there are multiple solutes in the simulation and we want to make sure we are linking to the NO3 solute and not NH4 or Urea. A regular *[Link]* looks for a model of the correct type (Solute) and doesn't use the name to perform the match. If we used a regular link for this solute then we will get a link to the first solute found which may not be NO3. To fix this, the snippet above links using the name and type, meaning that the link will be resolved by looking at the name of the variable (NO3 in this case) to do the match. \n\nCurrently in the script there is an OnSowing method that gets called whenever a sowing event occurs. We need to change this to a method that gets called every day of the simulation. Most management scripts use DoManagement for this purpose. \n\n    [EventSubscribe(\"DoManagement\")]\n    private void OnDoManagement(object sender, EventArgs e)\n\nThe event name is *DoManagement* and this goes in the *EventSubscribe* attribute. The convention then is to name the method the same as the event but with *On* prefixed to the front of the event name.\n\nNow we can perform the calculation of the amount of NO3 to apply.\n\n    double NAmount = NThreshold - NO3.kgha.Sum();\n\n*NO3.kgha* is an array variable with one value per layer. We need to sum this over the whole array so we use a *Sum* function to do this. For this to compile though we need to include another namespace at the top of the script.\n\n    using System.Linq;\n\nWe can remove the existing references to *Crop* as this rule will apply all year around, not just within crop. We also hard code the fertiliser type on the apply line.\n\n    Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\nFinally, we rename the manager model to *NTopup*. The final script looks like:\n\n    using Models.Soils;\n    using APSIM.Shared.Utilities;\n    using Models.Soils.Nutrients;\n    using Models.PMF;\n    using Models.Core;\n    using System;\n    using System.Linq;\n    using Models.Soils.Nutrients;\n    namespace Models\n    {\n        [Serializable]\n        public class Script : Model\n        {\n            [Link] Clock Clock;\n            [Link] Fertiliser Fertiliser;\n            [Link(ByName=true)] private Solute NO3;\n            [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n            public double NThreshold { get; set;}\n            \n            [EventSubscribe(\"DoManagement\")]\n            private void OnDoManagement(object sender, EventArgs e)\n            {\n                double NAmount = NThreshold - NO3.kgha.Sum();\n                Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n            }\n        }\n    }\n\n",
           "Name": "Notes",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -43,37 +44,36 @@
           "Start": "1900-01-01T00:00:00",
           "End": "1900-12-31T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "SummaryFile",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -84,6 +84,7 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Field",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Report, Models",
@@ -96,16 +97,16 @@
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
               "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -126,21 +127,14 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -153,6 +147,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -213,7 +209,13 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -248,13 +250,12 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "WheatSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -272,9 +273,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "Slope": "NaN",
                   "DischargeWidth": "NaN",
                   "CatchmentArea": "NaN",
+                  "PSIDul": -100.0,
                   "Thickness": [
                     150.0,
                     150.0,
@@ -294,23 +295,14 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": false,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     150.0,
@@ -330,6 +322,7 @@
                     0.12,
                     0.12
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     12.0,
                     12.0,
@@ -358,31 +351,24 @@
                     1.0
                   ],
                   "FOM": [
-                    347.12903231275641,
+                    347.1290323127564,
                     270.3443621919937,
                     163.97214434990104,
-                    99.454132887040629,
-                    60.321980831124677,
-                    36.587130828674873,
+                    99.45413288704063,
+                    60.32198083112468,
+                    36.58713082867487,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -391,24 +377,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "NO3N": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "NH4N": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
                   ],
                   "PH": [
                     8.0,
@@ -419,38 +387,21 @@
                     8.0,
                     8.0
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 1,
-                  "FractionFull": 1.0,
-                  "DepthWetSoil": "NaN",
-                  "RelativeTo": null,
-                  "Name": "InitialWater",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
+                  "$type": "Models.Soils.Water, Models",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -460,111 +411,169 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
-                  "SW": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
+                  "InitialValues": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
                   ],
-                  "OC": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "EC": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "CL": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "ESP": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "PH": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "InitialN",
+                  "RelativeTo": null,
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": false,
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": false,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "Wheat",
               "Name": "Wheat",
-              "IncludeInDocumentation": false,
+              "ResourceName": "Wheat",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -574,20 +583,19 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link(ByName=true)] Solute NO3;\r\n\r\n        [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\r\n        public double NThreshold { get; set;}\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\r\n            Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "\tusing Models.Soils;\r\n\tusing APSIM.Shared.Utilities;\r\n\tusing Models.Soils.Nutrients;\r\n\tusing Models.PMF;\r\n\tusing Models.Core;\r\n\tusing System;\n\tusing System.Linq;\r\n\tusing Models.Soils.Nutrients;\r\n\tnamespace Models\r\n\t{\r\n\t\t[Serializable]\r\n\t\tpublic class Script : Model\r\n\t\t{\r\n\t\t    [Link] Clock Clock;\r\n\t\t    [Link] Fertiliser Fertiliser;\r\n\t\t    [Link(ByName=true)] private Solute NO3;\r\n\t\t    [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\r\n\t\t    public double NThreshold { get; set;}\r\n\t\t    \r\n\t\t    [EventSubscribe(\"DoManagement\")]\r\n\t\t    private void OnDoManagement(object sender, EventArgs e)\r\n\t\t    {\r\n\t\t        double NAmount = NThreshold - NO3.kgha.Sum();\r\n\t\t        Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\r\n\t\t    }\r\n\t\t}\r\n\t}",
               "Parameters": [
                 {
                   "Key": "NThreshold",
@@ -595,22 +603,24 @@
                 }
               ],
               "Name": "NTopup",
-              "IncludeInDocumentation": false,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "Harvest",
-              "IncludeInDocumentation": false,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link(ByName = true)] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link(ByName = true)] private Plant Wheat;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -650,12 +660,12 @@
                 }
               ],
               "Name": "SowingRule1",
-              "IncludeInDocumentation": false,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -664,33 +674,33 @@
           "Caption": "The N is kept around the 200 kg/ha threshold level as set by the NTopup rule",
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "NO3 (kg/ha)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "NO3",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -716,32 +726,31 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "series",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
+      "Descriptors": null,
       "Name": "WaterAndNTopupSimulation",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "# Change N topup rule to N and water topup rule\n\nThis simulation extends the previous simulation by adding a water topup rule to the topup rule. This is useful when a potential crop/pasture yield is required.\n\nThis script has a single user-input property, the N threshold below which fertiliser will be applied. \n\n\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\tpublic double NThreshold { get; set;}\n\nThis is still needed but we need to add a similar property for a water threshold.\n\n\t\t[Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\n\t\tpublic double WaterThreshold { get; set;}\n\nNext we need to add a link to the Soil model as we'll need this to get the current value of soil water.\n\n\t\t[Link] Soil Soil;\n\nWe then need to add an irrigation model to our field. Then we can add a link to it.\n\n\t\t[Link] Irrigation Irrigation;\n\nFor this link to work though, we need to include another namespace. The soil model is contained in the *Models.Soils* namespace so we need to add this to the top of the script:\n\n\t\tusing Models.Soils;\n\nIn the *OnDoManagement* script, we can calculate the amount of water to add then then apply the irrigation if the amount is greater than zero.\n\t\tdouble SWAmount = WaterThreshold - MathUtilities.Sum(Soil.Water);\n\t\tif (SWAmount > 0)\n           \t\tIrrigation.Apply(SWAmount);\n\nFinally, the manager model should be renamed to something more meaningful e.g. *NAndWaterTopup*. The final script looks like:\n\n\t\tusing System;\n\t\tusing Models.Core;\n\t\tusing Models.PMF;\n\t\tusing Models.Soils.Nutrients;\n\t\tusing APSIM.Shared.Utilities;\n\t\tusing Models.Soils;\n\t\tnamespace Models\n\t\t{\n\t\t\t[Serializable]\n\t\t\tpublic class Script : Model\n\t\t\t{\n\t\t\t\t[Link] Clock Clock;\n\t\t\t\t[Link] Fertiliser Fertiliser;\n\t\t\t\t[Link(ByName=true)] Solute NO3;\n\t\t\t\t[Link] Soil Soil;\n\t\t\t\t[Link] Irrigation Irrigation;\n\n\t\t\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\t\t\tpublic double NThreshold { get; set;}\n\n\t\t\t\t[Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\n\t\t\t\tpublic double WaterThreshold { get; set;}\n\n\t\t\t\t\n\t\t\t\t[EventSubscribe(\"DoManagement\")]\n\t\t\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t\t\t{\n\t\t\t\t\tdouble NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\n\t\t\t\t\tFertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\n\t\t\t\t\tdouble SWAmount = WaterThreshold - MathUtilities.Sum(Soil.Water);\n\t\t\t\t\tif (SWAmount > 0)\n\t\t\t\t\t\tIrrigation.Apply(SWAmount);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n",
+          "Text": "# Change N topup rule to N and water topup rule\n\nThis simulation extends the previous simulation by adding a water topup rule to the topup rule. This is useful when a potential crop/pasture yield is required.\n\nThis script has a single user-input property, the N threshold below which fertiliser will be applied. \n\n    [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n    public double NThreshold { get; set;}\n\nThis is still needed but we need to add a similar property for a water threshold.\n\n    [Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\n    public double WaterThreshold { get; set;}\n\nNext we need to add a link to the SoilWater model as we'll need this to get the current value of soil water. You can do this using the same manager snippet technique outlined above.\n\nWe then need to add an irrigation model to our field (use the manager snippet). Right click on the Field, select *Add Model* and add an irrigation model.\n\nIn the *OnDoManagement* script, we can calculate the amount of water to add then apply the irrigation if the amount is greater than zero.\n\n    double SWAmount = WaterThreshold - SoilWater.SWmm.Sum();\n    if (SWAmount > 0)\n        Irrigation.Apply(SWAmount);\n\nFinally, the manager model should be renamed to something more meaningful e.g. *NAndWaterTopup*. The final script looks like:\n\n```\nusing Models.Interfaces;\nusing Models.Soils;\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\nusing System.Linq;\nusing Models.Soils.Nutrients;\nusing Models.WaterModel;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Fertiliser Fertiliser;\n        [Link(ByName=true)] private Solute NO3;\n        [Link] private Soil Soil;\n        [Link] private Irrigation Irrigation;\n        [Link(ByName=true)] private WaterBalance SoilWater;\n\n        [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n        public double NThreshold { get; set;}\n\n        [Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\n        public double WaterThreshold { get; set;}\n\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            double NAmount = NThreshold - NO3.kgha.Sum();\n            Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\n            double SWAmount = WaterThreshold - SoilWater.SWmm.Sum();\n            if (SWAmount > 0)\n                Irrigation.Apply(SWAmount);\n        }\n    }\n}\n```",
           "Name": "Notes",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -750,37 +759,36 @@
           "Start": "1900-01-01T00:00:00",
           "End": "1900-12-31T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "SummaryFile",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -791,29 +799,30 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Field",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "sum([NO3].kgha) as no3",
-                "sum([Soil].Water) as SoilWater"
+                "sum([Soil].Water.MM) as SoilWater"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
               "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -834,21 +843,14 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -861,6 +863,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -921,7 +925,13 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -956,13 +966,12 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "WheatSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -980,9 +989,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "Slope": "NaN",
                   "DischargeWidth": "NaN",
                   "CatchmentArea": "NaN",
+                  "PSIDul": -100.0,
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1002,23 +1011,14 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": false,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     150.0,
@@ -1038,6 +1038,7 @@
                     0.12,
                     0.12
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     12.0,
                     12.0,
@@ -1066,31 +1067,24 @@
                     1.0
                   ],
                   "FOM": [
-                    347.12903231275641,
+                    347.1290323127564,
                     270.3443621919937,
                     163.97214434990104,
-                    99.454132887040629,
-                    60.321980831124677,
-                    36.587130828674873,
+                    99.45413288704063,
+                    60.32198083112468,
+                    36.58713082867487,
                     22.1912165985086
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1099,24 +1093,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "NO3N": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "NH4N": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
                   ],
                   "PH": [
                     8.0,
@@ -1127,38 +1103,21 @@
                     8.0,
                     8.0
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 1,
-                  "FractionFull": 1.0,
-                  "DepthWetSoil": "NaN",
-                  "RelativeTo": null,
-                  "Name": "InitialWater",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
+                  "$type": "Models.Soils.Water, Models",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1168,111 +1127,169 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
-                  "SW": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
+                  "InitialValues": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
                   ],
-                  "OC": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "EC": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "CL": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "ESP": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "PH": [
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN",
-                    "NaN"
-                  ],
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "InitialN",
+                  "RelativeTo": null,
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": false,
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": false,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "Wheat",
               "Name": "Wheat",
-              "IncludeInDocumentation": false,
+              "ResourceName": "Wheat",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1282,20 +1299,19 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link(ByName=true)] Solute NO3;\r\n        [Link] Soil Soil;\r\n        [Link] Irrigation Irrigation;\r\n\r\n        [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\r\n        public double NThreshold { get; set;}\r\n\r\n        [Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\r\n        public double WaterThreshold { get; set;}\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\r\n            Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\r\n\r\n               double SWAmount = WaterThreshold - MathUtilities.Sum(Soil.Water);\r\n               if (SWAmount > 0)\r\n                   Irrigation.Apply(SWAmount);\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\nusing System.Linq;\r\nusing Models.Soils.Nutrients;\nusing Models.WaterModel;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link(ByName=true)] private Solute NO3;\r\n        [Link] private Soil Soil;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link(ByName=true)] private WaterBalance SoilWater;\n\r\n        [Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\r\n        public double NThreshold { get; set;}\r\n\r\n        [Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\r\n        public double WaterThreshold { get; set;}\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double NAmount = NThreshold - NO3.kgha.Sum();\r\n            Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\r\n\r\n            double SWAmount = WaterThreshold - SoilWater.SWmm.Sum();\r\n            if (SWAmount > 0)\r\n                Irrigation.Apply(SWAmount);\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "NThreshold",
@@ -1307,22 +1323,24 @@
                 }
               ],
               "Name": "NAndWaterTopup",
-              "IncludeInDocumentation": false,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "Harvest",
-              "IncludeInDocumentation": false,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link(ByName = true)] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link(ByName = true)] private Plant Wheat;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -1362,20 +1380,20 @@
                 }
               ],
               "Name": "SowingRule1",
-              "IncludeInDocumentation": false,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1384,33 +1402,33 @@
           "Caption": "The water is kept close to the threshold level (700mm). It will go slightly below 700mm because the wheat crop will take water between when irrigation was applied and reporting.",
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Total soil water (mm)",
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Soil water",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -1436,23 +1454,20 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "series",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
