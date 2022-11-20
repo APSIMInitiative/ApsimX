@@ -69,7 +69,7 @@ namespace Models.Soils
             if (data != null && data.Columns.Count > 0 &&
                 data.Columns[0].ColumnName == "Depth")
             {
-                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth");
+                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth", CultureInfo.CurrentCulture);
                 var numLayers = depths.TrimEnd().Count;
                 while (data.Rows.Count > numLayers)
                     data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
