@@ -120,9 +120,9 @@
         /// <returns></returns>
         public double[] GetSoluteKgHa(string name)
         {
-            if (name == "PlantAvailableNO3")
+            if (name == "NO3")
                 return CalculateSoluteAvailableToPlants(GetSoluteObject("NO3").kgha);
-            else if (name == "PlantAvailableNH4")
+            else if (name == "NH4")
                 return CalculateSoluteAvailableToPlants(GetSoluteObject("NH4").kgha);
             return GetSoluteObject(name).kgha;
         }

@@ -1179,7 +1179,7 @@ namespace Models.AgPasture
         /// <summary>Amount of soil NO3-N taken up by the plant (kg/ha).</summary>
         private double[] mySoilNO3Uptake;
 
-        /// <summary>Amount of soil water taken up (mm).</summary>
+        /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
         public IReadOnlyList<double> NitrogenUptake  => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
 
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
