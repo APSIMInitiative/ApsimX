@@ -25,8 +25,6 @@
           "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
-          "ResourceName": "Wheat",
-          "Name": "Wheat",
           "Children": [
             {
               "$type": "Models.Memo, Models",
