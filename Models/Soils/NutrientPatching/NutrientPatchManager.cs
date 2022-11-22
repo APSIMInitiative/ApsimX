@@ -84,8 +84,8 @@ namespace Models.Soils.NutrientPatching
         /// <summary>The fresh organic matter surface residue pool.</summary>
         public INutrientPool SurfaceResidue { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.SurfaceResidue)); } }
 
-        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
-        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic }); } }
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
+        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic, Inert }); } }
 
         /// <summary>The NO3 pool.</summary>
         public ISolute NO3 { get { return SumSolutes(patches.Select(patch => patch.Nutrient.NO3)); } }
