@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -31,6 +31,2620 @@
       "ReadOnly": false
     },
     {
+      "$type": "Models.Core.Folder, Models",
+      "ShowInDocs": false,
+      "GraphsPerPage": 6,
+      "Name": "Replacements",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "allowIrrigation",
+              "Value": "True"
+            },
+            {
+              "Key": "seasonStart",
+              "Value": "1-sep"
+            },
+            {
+              "Key": "seasonEnd",
+              "Value": "30-mar"
+            },
+            {
+              "Key": "seasonsAllocation",
+              "Value": "10000"
+            },
+            {
+              "Key": "triggerDeficit",
+              "Value": "65"
+            },
+            {
+              "Key": "targetDeficit",
+              "Value": "95"
+            },
+            {
+              "Key": "returndays",
+              "Value": "3"
+            },
+            {
+              "Key": "maximumAmount",
+              "Value": "30"
+            },
+            {
+              "Key": "depthPAWC",
+              "Value": "300"
+            }
+          ],
+          "Name": "AutomaticIrrigation",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] \r\n        public string[] IrrigateDates { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")] \r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] \r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")] \r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")] \r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in IrrigateDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                    Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "IrrigateDates",
+              "Value": "15-jan, 15-feb, 15-mar, 15-apr, 15-sep, 15-oct, 15-nov, 15-dec"
+            },
+            {
+              "Key": "Amount",
+              "Value": "50"
+            },
+            {
+              "Key": "Depth",
+              "Value": "0"
+            },
+            {
+              "Key": "Efficiency",
+              "Value": "1"
+            },
+            {
+              "Key": "WillRunoff",
+              "Value": "False"
+            }
+          ],
+          "Name": "Irrigate on fixed dates",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "FertiliserType",
+              "Value": "UreaN"
+            },
+            {
+              "Key": "FertiliserDates",
+              "Value": "21-jan, 21-feb, 21-mar, 21-apr, 21-may, 21-jun, 21-jul, 21-aug, 21-sep, 21-oct, 21-nov, 21-dec"
+            },
+            {
+              "Key": "Amount",
+              "Value": "120"
+            },
+            {
+              "Key": "AmountType",
+              "Value": "False"
+            }
+          ],
+          "Name": "Fertilise on fixed dates",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.SimpleGrazing, Models",
+          "GrazingRotationType": 0,
+          "SimpleGrazingFrequencyString": "0",
+          "SimpleMinGrazable": 21.0,
+          "SimpleGrazingResidual": 1000.0,
+          "PreGrazeDMArray": null,
+          "PostGrazeDMArray": null,
+          "FlexibleExpressionForTimingOfGrazing": null,
+          "FlexibleGrazePostDM": 0.0,
+          "MaximumRotationLengthArray": null,
+          "MinimumRotationLengthArray": null,
+          "NoGrazingStartString": null,
+          "NoGrazingEndString": null,
+          "FractionDefoliatedNToSoil": [
+            0.0
+          ],
+          "FractionExcretedNToDung": [
+            0.4
+          ],
+          "CNRatioDung": "NaN",
+          "DepthUrineIsAdded": 200.0,
+          "FractionPopulationDecline": 0.0,
+          "TramplingOn": false,
+          "MaximumPropLitterMovedToSoil": 0.1,
+          "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+          "SpeciesCutProportions": null,
+          "Name": "SimpleGrazing",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+          "SurfOM": [],
+          "Canopies": [],
+          "InitialResidueName": "grass",
+          "InitialResidueType": "grass",
+          "InitialResidueMass": 0.0,
+          "InitialStandingFraction": 0.0,
+          "InitialCPR": 0.0,
+          "InitialCNR": 15.0,
+          "Name": "SurfaceOrganicMatter",
+          "ResourceName": "SurfaceOrganicMatter",
+          "Children": [
+            {
+              "$type": "Models.Surface.ResidueTypes, Models",
+              "ResidueType": [
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "base_type",
+                  "derived_from": null,
+                  "fraction_C": 0.4,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.2,
+                    0.7,
+                    0.1
+                  ],
+                  "fr_n": [
+                    0.2,
+                    0.7,
+                    0.1
+                  ],
+                  "fr_p": [
+                    0.2,
+                    0.7,
+                    0.1
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "inert",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "manure",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.08,
+                  "po4ppm": 10.0,
+                  "nh4ppm": 10.0,
+                  "no3ppm": 10.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ],
+                  "fr_n": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ],
+                  "fr_p": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "RuminantDung_PastureFed",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.4,
+                  "po4ppm": 5.0,
+                  "nh4ppm": 1250.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.3,
+                    0.5,
+                    0.2
+                  ],
+                  "fr_n": [
+                    0.3,
+                    0.5,
+                    0.2
+                  ],
+                  "fr_p": [
+                    0.3,
+                    0.5,
+                    0.2
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "algae",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.4,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "fym",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.08,
+                  "po4ppm": 40.0,
+                  "nh4ppm": 10.0,
+                  "no3ppm": 10.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ],
+                  "fr_n": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ],
+                  "fr_p": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "goatmanure",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.08,
+                  "po4ppm": 5.0,
+                  "nh4ppm": 1307.0,
+                  "no3ppm": 481.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.3,
+                    0.6,
+                    0.3
+                  ],
+                  "fr_n": [
+                    0.3,
+                    0.6,
+                    0.3
+                  ],
+                  "fr_p": [
+                    0.3,
+                    0.6,
+                    0.34
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "chickenmanure_base",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.374,
+                  "po4ppm": 5.0,
+                  "nh4ppm": 1307.0,
+                  "no3ppm": 481.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.0,
+                    0.5,
+                    0.5
+                  ],
+                  "fr_n": [
+                    0.0,
+                    0.5,
+                    0.5
+                  ],
+                  "fr_p": [
+                    0.0,
+                    0.5,
+                    0.5
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "cm",
+                  "derived_from": "chickenmanure_base",
+                  "fraction_C": 0.277,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 2558.0,
+                  "no3ppm": 873.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "cmA",
+                  "derived_from": "chickenmanure_base",
+                  "fraction_C": 0.374,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 1307.0,
+                  "no3ppm": 481.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "cmB",
+                  "derived_from": "chickenmanure_base",
+                  "fraction_C": 0.24,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 3009.0,
+                  "no3ppm": 36.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "manB",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.08,
+                  "po4ppm": 5.0,
+                  "nh4ppm": 1307.0,
+                  "no3ppm": 481.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.1,
+                    0.01,
+                    0.89
+                  ],
+                  "fr_n": [
+                    0.1,
+                    0.01,
+                    0.89
+                  ],
+                  "fr_p": [
+                    0.1,
+                    0.01,
+                    0.89
+                  ]
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "tithonia",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "TropicalPasture",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "Bambatsi",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "barley",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "broccoli",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "butterflypea",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "camaldulensis",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "canola",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "centro",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "chickpea",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "chicory",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0003,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "plantainForage",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0003,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "whiteclover",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0003,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "redclover",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0003,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "cowpea",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "danthonia",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "nativepasture",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "pasture",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "gliricidia",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "globulus",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "Eucalyptus",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "fababean",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "fieldpea",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "soybean",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "grass",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "lablab",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "lentil",
+                  "derived_from": "chickpea",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "lucerne",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "lucerne2",
+                  "derived_from": "lucerne",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "lupin",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "maize",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "medic",
+                  "derived_from": "lucerne",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "millet",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "mucuna",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "mungbean",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "horsegram",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "navybean",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "cotton",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "oats",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "orobanche",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "peanut",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "pigeonpea",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "poppies",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "potato",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "fodderbeet",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "kale",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "rice",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "soybean",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "sorghum",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "stylo",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "sugarcane",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0007,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "sunflower",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "sweetcorn",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "sweetsorghum",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "vetch",
+                  "derived_from": "fieldpea",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "weed",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "WF_Millet",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0004,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "wheat",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "wheatsprayed",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0003,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "Grapevine",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "teff",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "oilmallee",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "lolium_rigidum",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "frenchbean",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "oilpalmunderstory",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "raphanus_raphanistrum",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "scrum",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "sprum",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "slurp",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "SimpleFruitTree",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0005,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "oilpalm",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.44,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0002,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.05,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "oilpalmstem",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.44,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 5E-06,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": null,
+                  "fr_n": null,
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "all_carb",
+                  "derived_from": "base_type",
+                  "fraction_C": 1.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "fr_n": [
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "all_cell",
+                  "derived_from": "base_type",
+                  "fraction_C": 1.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": [
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "fr_n": [
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "all_lign",
+                  "derived_from": "base_type",
+                  "fraction_C": 1.0,
+                  "po4ppm": 0.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0,
+                  "cf_contrib": 0,
+                  "pot_decomp_rate": 0.0,
+                  "fr_c": [
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "fr_n": [
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "fr_p": null
+                },
+                {
+                  "$type": "Models.Surface.ResidueType, Models",
+                  "fom_type": "fyn",
+                  "derived_from": "base_type",
+                  "fraction_C": 0.08,
+                  "po4ppm": 40.0,
+                  "nh4ppm": 0.0,
+                  "no3ppm": 0.0,
+                  "specific_area": 0.0001,
+                  "cf_contrib": 1,
+                  "pot_decomp_rate": 0.1,
+                  "fr_c": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ],
+                  "fr_n": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ],
+                  "fr_p": [
+                    0.3,
+                    0.3,
+                    0.4
+                  ]
+                }
+              ],
+              "Name": "ResidueTypes",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Physical, Models",
+          "Thickness": [
+            200.0,
+            150.0,
+            200.0,
+            350.0,
+            150.0,
+            150.0,
+            300.0
+          ],
+          "ParticleSizeClay": [
+            20.0,
+            24.0,
+            39.0,
+            44.0,
+            44.0,
+            19.0,
+            19.0
+          ],
+          "ParticleSizeSand": [
+            14.5,
+            18.0,
+            13.0,
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "ParticleSizeSilt": [
+            65.5,
+            58.0,
+            48.0,
+            55.0,
+            55.0,
+            66.0,
+            66.0
+          ],
+          "Rocks": null,
+          "Texture": null,
+          "BD": [
+            1.31,
+            1.524,
+            1.42,
+            1.424,
+            1.424,
+            1.601,
+            1.601
+          ],
+          "AirDry": [
+            0.077,
+            0.201,
+            0.298,
+            0.308,
+            0.308,
+            0.162,
+            0.162
+          ],
+          "LL15": [
+            0.153,
+            0.201,
+            0.298,
+            0.308,
+            0.308,
+            0.162,
+            0.162
+          ],
+          "DUL": [
+            0.373,
+            0.332,
+            0.426,
+            0.446,
+            0.446,
+            0.325,
+            0.325
+          ],
+          "SAT": [
+            0.456,
+            0.394,
+            0.442,
+            0.456,
+            0.456,
+            0.376,
+            0.376
+          ],
+          "KS": [
+            4832.039,
+            389.229,
+            21.6,
+            19.051,
+            19.051,
+            97.995,
+            97.995
+          ],
+          "BDMetadata": null,
+          "AirDryMetadata": null,
+          "LL15Metadata": null,
+          "DULMetadata": null,
+          "SATMetadata": null,
+          "KSMetadata": null,
+          "RocksMetadata": null,
+          "TextureMetadata": null,
+          "ParticleSizeSandMetadata": null,
+          "ParticleSizeSiltMetadata": null,
+          "ParticleSizeClayMetadata": null,
+          "Name": "Physical",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Soils.SoilCrop, Models",
+              "LL": [
+                0.154,
+                0.201,
+                0.299,
+                0.308,
+                0.308,
+                0.162,
+                0.162
+              ],
+              "KL": [
+                0.1,
+                0.1,
+                0.1,
+                0.05,
+                0.05,
+                0.05,
+                0.05
+              ],
+              "XF": [
+                1.0,
+                0.8,
+                0.8,
+                0.3,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "LLMetadata": null,
+              "KLMetadata": null,
+              "XFMetadata": null,
+              "Name": "AGPRyegrassSoil",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.SoilCrop, Models",
+              "LL": [
+                0.154,
+                0.201,
+                0.299,
+                0.308,
+                0.308,
+                0.162,
+                0.162
+              ],
+              "KL": [
+                0.1,
+                0.1,
+                0.1,
+                0.05,
+                0.05,
+                0.05,
+                0.05
+              ],
+              "XF": [
+                1.0,
+                0.8,
+                0.8,
+                0.3,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "LLMetadata": null,
+              "KLMetadata": null,
+              "XFMetadata": null,
+              "Name": "AGPWhiteCloverSoil",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Organic, Models",
+          "FOMCNRatio": 40.0,
+          "Thickness": [
+            200.0,
+            150.0,
+            200.0,
+            350.0,
+            150.0,
+            150.0,
+            300.0
+          ],
+          "Carbon": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "CarbonUnits": 0,
+          "SoilCNRatio": [
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            11.0
+          ],
+          "FBiom": [
+            0.048,
+            0.027,
+            0.019,
+            0.015,
+            0.015,
+            0.015,
+            0.015
+          ],
+          "FInert": [
+            0.382,
+            0.634,
+            0.784,
+            0.924,
+            0.924,
+            0.971,
+            0.985
+          ],
+          "FOM": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "CarbonMetadata": null,
+          "FOMMetadata": null,
+          "Name": "Organic",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureSpecies, Models",
+          "doyGermination": 275,
+          "daysEmergenceToAnthesis": 120,
+          "daysAnthesisToMaturity": 85,
+          "degreesDayForAnthesis": 1100.0,
+          "degreesDayForMaturity": 900.0,
+          "daysAnnualsFactor": 45,
+          "FVPDFunction": {
+            "$type": "Models.Functions.LinearInterpolationFunction, Models",
+            "Name": "LinearInterpolationFunction",
+            "ResourceName": null,
+            "Children": [],
+            "Enabled": true,
+            "ReadOnly": false
+          },
+          "LightProfile": null,
+          "InitialShootDM": 1500.0,
+          "InitialRootDM": 450.0,
+          "InitialRootDepth": 750.0,
+          "initialDMFractionsGrasses": [
+            0.15,
+            0.25,
+            0.25,
+            0.05,
+            0.05,
+            0.1,
+            0.1,
+            0.05,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "initialDMFractionsLegumes": [
+            0.16,
+            0.23,
+            0.22,
+            0.05,
+            0.03,
+            0.05,
+            0.05,
+            0.01,
+            0.04,
+            0.08,
+            0.08
+          ],
+          "initialDMFractionsForbs": [
+            0.2,
+            0.2,
+            0.15,
+            0.05,
+            0.1,
+            0.15,
+            0.1,
+            0.05,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "PhotosyntheticEfficiency": 0.01,
+          "PhotosynthesisCurveFactor": 0.8,
+          "FractionPAR": 0.5,
+          "ReferenceCO2": 380.0,
+          "CO2EffectScaleFactor": 700.0,
+          "CO2EffectOffsetFactor": 600.0,
+          "CO2EffectMinimum": 0.7,
+          "CO2EffectExponent": 2.0,
+          "ReproSeasonDurationCoeff": 2.0,
+          "ReproSeasonShouldersLengthFactor": 1.0,
+          "ReproSeasonOnsetDurationFactor": 0.6,
+          "RelativeTurnoverEmerging": 2.0,
+          "DetachmentDroughtCoefficient": 3.0,
+          "DetachmentDroughtEffectMin": 0.1,
+          "TurnoverStockFactor": 0.01,
+          "TurnoverDefoliationEffectMin": 0.025,
+          "MinimumGreenLeafProp": 0.8,
+          "MinimumGreenRootProp": 0.5,
+          "Name": "AGPRyegrass",
+          "ResourceName": "AGPRyegrass",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+              "NConcOptimum": 0.04,
+              "NConcMinimum": 0.01,
+              "NConcMaximum": 0.0525,
+              "FractionStanding": 1.0,
+              "MinimumLiveDM": 10.0,
+              "Name": "Leaf",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.0,
+                  "FractionSugarNewGrowth": 0.5,
+                  "DigestibilityCellWall": 0.9,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "EmergingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.1,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.7,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DevelopingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.2,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.6,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "MatureTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 1.0,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.2,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DeadTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+              "NConcOptimum": 0.02,
+              "NConcMinimum": 0.0067,
+              "NConcMaximum": 0.03,
+              "FractionStanding": 1.0,
+              "MinimumLiveDM": 10.0,
+              "Name": "Stem",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.0,
+                  "FractionSugarNewGrowth": 0.5,
+                  "DigestibilityCellWall": 0.9,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "EmergingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.1,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.7,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DevelopingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.2,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.6,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "MatureTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 1.0,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.2,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DeadTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+              "NConcOptimum": 0.0,
+              "NConcMinimum": 0.0,
+              "NConcMaximum": 0.0,
+              "FractionStanding": 0.0,
+              "MinimumLiveDM": 10.0,
+              "Name": "Stolon",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.0,
+                  "FractionSugarNewGrowth": 0.5,
+                  "DigestibilityCellWall": 0.9,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "EmergingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.1,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.7,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DevelopingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.2,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.6,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "MatureTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 1.0,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.2,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DeadTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
+              "ExponentSoilMoisture": 1.5,
+              "MinimumRootingDepth": 50.0,
+              "MaximumPotentialRootingDepth": 1000.0,
+              "MaximumAllowedRootingDepth": 500.0,
+              "ElongationRate": 25.0,
+              "DepthDistributionParamTop": 90.0,
+              "DepthDistributionExponent": 3.2,
+              "DepthDistributionParamBottom": 1.05,
+              "SpecificRootLength": 100.0,
+              "NConcOptimum": 0.02,
+              "NConcMinimum": 0.008,
+              "NConcMaximum": 0.0275,
+              "KNH4": 0.01,
+              "KNO3": 0.025,
+              "MaximumNUptake": 10.0,
+              "MinimumLiveDM": 1.0,
+              "Depth": 0.0,
+              "Name": "Root",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.RootTissue, Models",
+                  "DMTransferredOut": 0.0,
+                  "FractionNRemobilisable": 0.2,
+                  "DMRemoved": 0.0,
+                  "NRemoved": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "Live",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.RootTissue, Models",
+                  "DMTransferredOut": 0.0,
+                  "FractionNRemobilisable": 1.0,
+                  "DMRemoved": 0.0,
+                  "NRemoved": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "Dead",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureSpecies, Models",
+          "doyGermination": 275,
+          "daysEmergenceToAnthesis": 120,
+          "daysAnthesisToMaturity": 85,
+          "degreesDayForAnthesis": 1100.0,
+          "degreesDayForMaturity": 900.0,
+          "daysAnnualsFactor": 45,
+          "FVPDFunction": {
+            "$type": "Models.Functions.LinearInterpolationFunction, Models",
+            "Name": "LinearInterpolationFunction",
+            "ResourceName": null,
+            "Children": [],
+            "Enabled": true,
+            "ReadOnly": false
+          },
+          "LightProfile": null,
+          "InitialShootDM": 550.0,
+          "InitialRootDM": 350.0,
+          "InitialRootDepth": 150.0,
+          "initialDMFractionsGrasses": [
+            0.15,
+            0.25,
+            0.25,
+            0.05,
+            0.05,
+            0.1,
+            0.1,
+            0.05,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "initialDMFractionsLegumes": [
+            0.16,
+            0.23,
+            0.22,
+            0.05,
+            0.03,
+            0.05,
+            0.05,
+            0.01,
+            0.04,
+            0.08,
+            0.08
+          ],
+          "initialDMFractionsForbs": [
+            0.2,
+            0.2,
+            0.15,
+            0.05,
+            0.1,
+            0.15,
+            0.1,
+            0.05,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "PhotosyntheticEfficiency": 0.01,
+          "PhotosynthesisCurveFactor": 0.8,
+          "FractionPAR": 0.5,
+          "ReferenceCO2": 380.0,
+          "CO2EffectScaleFactor": 700.0,
+          "CO2EffectOffsetFactor": 600.0,
+          "CO2EffectMinimum": 0.7,
+          "CO2EffectExponent": 2.0,
+          "ReproSeasonDurationCoeff": 2.0,
+          "ReproSeasonShouldersLengthFactor": 1.0,
+          "ReproSeasonOnsetDurationFactor": 0.6,
+          "RelativeTurnoverEmerging": 2.0,
+          "DetachmentDroughtCoefficient": 3.0,
+          "DetachmentDroughtEffectMin": 0.1,
+          "TurnoverStockFactor": 0.01,
+          "TurnoverDefoliationEffectMin": 0.025,
+          "MinimumGreenLeafProp": 0.8,
+          "MinimumGreenRootProp": 0.5,
+          "Name": "AGPWhiteClover",
+          "ResourceName": "AGPWhiteClover",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+              "NConcOptimum": 0.05,
+              "NConcMinimum": 0.0135,
+              "NConcMaximum": 0.06,
+              "FractionStanding": 1.0,
+              "MinimumLiveDM": 10.0,
+              "Name": "Leaf",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.0,
+                  "FractionSugarNewGrowth": 0.5,
+                  "DigestibilityCellWall": 0.9,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "EmergingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.1,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.8,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DevelopingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.2,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.7,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "MatureTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 1.0,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.2,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DeadTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+              "NConcOptimum": 0.0225,
+              "NConcMinimum": 0.0073,
+              "NConcMaximum": 0.03,
+              "FractionStanding": 1.0,
+              "MinimumLiveDM": 10.0,
+              "Name": "Stem",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.0,
+                  "FractionSugarNewGrowth": 0.5,
+                  "DigestibilityCellWall": 0.9,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "EmergingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.1,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.8,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DevelopingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.2,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.7,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "MatureTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 1.0,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.2,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DeadTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+              "NConcOptimum": 0.025,
+              "NConcMinimum": 0.008,
+              "NConcMaximum": 0.0325,
+              "FractionStanding": 0.3,
+              "MinimumLiveDM": 10.0,
+              "Name": "Stolon",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.0,
+                  "FractionSugarNewGrowth": 0.5,
+                  "DigestibilityCellWall": 0.9,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "EmergingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.1,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.8,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DevelopingTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 0.2,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.7,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "MatureTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.GenericTissue, Models",
+                  "FractionNRemobilisable": 1.0,
+                  "FractionSugarNewGrowth": 0.0,
+                  "DigestibilityCellWall": 0.2,
+                  "DigestibilityProtein": 1.0,
+                  "DMTransferredIn": 0.0,
+                  "NTransferredIn": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "DeadTissue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
+              "ExponentSoilMoisture": 1.5,
+              "MinimumRootingDepth": 30.0,
+              "MaximumPotentialRootingDepth": 350.0,
+              "MaximumAllowedRootingDepth": 500.0,
+              "ElongationRate": 25.0,
+              "DepthDistributionParamTop": 70.0,
+              "DepthDistributionExponent": 2.5,
+              "DepthDistributionParamBottom": 1.05,
+              "SpecificRootLength": 45.0,
+              "NConcOptimum": 0.0225,
+              "NConcMinimum": 0.01,
+              "NConcMaximum": 0.0275,
+              "KNH4": 0.005,
+              "KNO3": 0.01,
+              "MaximumNUptake": 5.0,
+              "MinimumLiveDM": 1.0,
+              "Depth": 0.0,
+              "Name": "Root",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.RootTissue, Models",
+                  "DMTransferredOut": 0.0,
+                  "FractionNRemobilisable": 0.1,
+                  "DMRemoved": 0.0,
+                  "NRemoved": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "Live",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.RootTissue, Models",
+                  "DMTransferredOut": 0.0,
+                  "FractionNRemobilisable": 1.0,
+                  "DMRemoved": 0.0,
+                  "NRemoved": 0.0,
+                  "NRemobilisable": 0.0,
+                  "NRemobilised": 0.0,
+                  "Name": "Dead",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Core.Simulation, Models",
       "Descriptors": null,
       "Name": "TestPatchManager",
@@ -38,8 +2652,8 @@
       "Children": [
         {
           "$type": "Models.Clock, Models",
-          "Start": "1972-01-21T00:00:00",
-          "End": "1982-03-31T00:00:00",
+          "Start": "1972-01-01T00:00:00",
+          "End": "2008-12-31T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -237,6 +2851,84 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
+              "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "allowIrrigation",
+                  "Value": "True"
+                },
+                {
+                  "Key": "seasonStart",
+                  "Value": "1-sep"
+                },
+                {
+                  "Key": "seasonEnd",
+                  "Value": "30-mar"
+                },
+                {
+                  "Key": "seasonsAllocation",
+                  "Value": "10000"
+                },
+                {
+                  "Key": "triggerDeficit",
+                  "Value": "65"
+                },
+                {
+                  "Key": "targetDeficit",
+                  "Value": "95"
+                },
+                {
+                  "Key": "returndays",
+                  "Value": "3"
+                },
+                {
+                  "Key": "maximumAmount",
+                  "Value": "30"
+                },
+                {
+                  "Key": "depthPAWC",
+                  "Value": "300"
+                }
+              ],
+              "Name": "AutomaticIrrigation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] \r\n        public string[] IrrigateDates { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")] \r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] \r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")] \r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")] \r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in IrrigateDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                    Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "IrrigateDates",
+                  "Value": "15-jan, 15-feb, 15-mar, 15-apr, 15-sep, 15-oct, 15-nov, 15-dec"
+                },
+                {
+                  "Key": "Amount",
+                  "Value": "50"
+                },
+                {
+                  "Key": "Depth",
+                  "Value": "0"
+                },
+                {
+                  "Key": "Efficiency",
+                  "Value": "1"
+                },
+                {
+                  "Key": "WillRunoff",
+                  "Value": "False"
+                }
+              ],
+              "Name": "Irrigate on fixed dates",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
               "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
@@ -245,7 +2937,7 @@
                 },
                 {
                   "Key": "FertiliserDates",
-                  "Value": "31-jan"
+                  "Value": "21-jan, 21-feb, 21-mar, 21-apr, 21-may, 21-jun, 21-jul, 21-aug, 21-sep, 21-oct, 21-nov, 21-dec"
                 },
                 {
                   "Key": "Amount",
@@ -293,7 +2985,7 @@
               "NoGrazingStartString": null,
               "NoGrazingEndString": null,
               "FractionDefoliatedNToSoil": [
-                0.9
+                0.0
               ],
               "FractionExcretedNToDung": [
                 0.4
@@ -664,10 +3356,10 @@
                     300.0
                   ],
                   "SWCON": [
-                    0.496441652363301,
-                    0.365575319464424,
-                    0.373877122593127,
-                    0.0758548332020159,
+                    0.496,
+                    0.366,
+                    0.374,
+                    0.076,
                     0.076,
                     0.306,
                     0.306
@@ -1016,7 +3708,8 @@
                 "[AgPWhiteClover].AboveGroundWt / AGBiomass as CloverProp",
                 "[SurfaceOrganicMatter].C as SOMC",
                 "[SurfaceOrganicMatter].Wt as SOMWt",
-                "sum([Soil].Nutrient.Catm) as C2Atm"
+                "sum([Soil].Nutrient.Catm) as C2Atm",
+                "[Irrigation].IrrigationApplied as Irrig"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -1043,6 +3736,84 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
+              "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "allowIrrigation",
+                  "Value": "True"
+                },
+                {
+                  "Key": "seasonStart",
+                  "Value": "1-sep"
+                },
+                {
+                  "Key": "seasonEnd",
+                  "Value": "30-mar"
+                },
+                {
+                  "Key": "seasonsAllocation",
+                  "Value": "10000"
+                },
+                {
+                  "Key": "triggerDeficit",
+                  "Value": "65"
+                },
+                {
+                  "Key": "targetDeficit",
+                  "Value": "95"
+                },
+                {
+                  "Key": "returndays",
+                  "Value": "3"
+                },
+                {
+                  "Key": "maximumAmount",
+                  "Value": "30"
+                },
+                {
+                  "Key": "depthPAWC",
+                  "Value": "300"
+                }
+              ],
+              "Name": "AutomaticIrrigation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] \r\n        public string[] IrrigateDates { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")] \r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] \r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")] \r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")] \r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in IrrigateDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                    Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "IrrigateDates",
+                  "Value": "15-jan, 15-feb, 15-mar, 15-apr, 15-sep, 15-oct, 15-nov, 15-dec"
+                },
+                {
+                  "Key": "Amount",
+                  "Value": "50"
+                },
+                {
+                  "Key": "Depth",
+                  "Value": "0"
+                },
+                {
+                  "Key": "Efficiency",
+                  "Value": "1"
+                },
+                {
+                  "Key": "WillRunoff",
+                  "Value": "False"
+                }
+              ],
+              "Name": "Irrigate on fixed dates",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
               "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
@@ -1051,7 +3822,7 @@
                 },
                 {
                   "Key": "FertiliserDates",
-                  "Value": "31-jan"
+                  "Value": "21-jan, 21-feb, 21-mar, 21-apr, 21-may, 21-jun, 21-jul, 21-aug, 21-sep, 21-oct, 21-nov, 21-dec"
                 },
                 {
                   "Key": "Amount",
@@ -1099,7 +3870,7 @@
               "NoGrazingStartString": null,
               "NoGrazingEndString": null,
               "FractionDefoliatedNToSoil": [
-                0.9
+                0.0
               ],
               "FractionExcretedNToDung": [
                 0.4
@@ -1822,14 +4593,15 @@
                 "[AgPRyegrass].NetGrowthWt + [AgPWhiteClover].NetGrowthWt as Growth",
                 "sum([Soil].NutrientPatchManager.DenitrifiedN) as Denit",
                 "sum([Soil].NutrientPatchManager.Organic.N) as OrganicN",
-                "sum([Soil].NutrientPatchManager.Organic.C) + sum([Soil].NutrientPatchManager.Inert) as OrganicC",
+                "sum([Soil].NutrientPatchManager.Organic.C) as OrganicC",
                 "[Soil].SoilWater.Drainage as Drainage",
                 "sum([AgPRyegrass].WaterUptake) + sum([AgPWhiteClover].WaterUptake) as WaterUptake",
                 "sum([AgPRyegrass].NitrogenUptake) +sum([AgPWhiteClover].NitrogenUptake) as NUptake",
                 "[AgPWhiteClover].AboveGroundWt / AGBiomass as CloverProp",
                 "[SurfaceOrganicMatter].C as SOMC",
                 "[SurfaceOrganicMatter].Wt as SOMWt",
-                "sum([Soil].NutrientPatchManager.Catm) as C2Atm"
+                "sum([Soil].NutrientPatchManager.Catm) as C2Atm",
+                "[Irrigation].IrrigationApplied as Irrig"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -3265,6 +6037,101 @@
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Patch",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Irrigation",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "NutrientReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "Irrig",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Nutrient",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "PatchReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "Irrig",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Patch",
