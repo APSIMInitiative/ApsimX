@@ -29,6 +29,11 @@ namespace Models.CLEM.Timers
         [Link]
         private ResourcesHolder resources = null;
 
+        [Link] Clock clock = null;
+
+        double amountAtFirstCheck;
+        DateTime checkDate = DateTime.Now;
+
         /// <summary>
         /// Paddock or pasture to graze
         /// </summary>
@@ -85,7 +90,13 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                return (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel && GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel);
+                if (clock.Today != checkDate)
+                {
+                    amountAtFirstCheck = GrazeFoodStoreModel.KilogramsPerHa;
+                    checkDate = clock.Today;
+                }
+
+                return (amountAtFirstCheck >= MinimumPastureLevel && amountAtFirstCheck < MaximumPastureLevel);
             }
         }
 

@@ -297,6 +297,7 @@ namespace Models.CLEM.Activities
         {
             // create Transaction category based on Zone settings
             TransactionCategory = UpdateTransactionCategory(this);
+            Status = ActivityStatus.Ignored;
         }
 
         /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
@@ -466,8 +467,8 @@ namespace Models.CLEM.Activities
             {
                 valuesForCompanionModels[key] = null;
             }
-            Status = ActivityStatus.Ignored;
             statusMessageList.Clear();
+            Status = ActivityStatus.Ignored;
         }
 
         /// <summary>
@@ -689,7 +690,8 @@ namespace Models.CLEM.Activities
 
                     // tests for invalid identifier
                     bool test = ((iChild.Identifier ?? "") == "") && identifiers.Any();
-                    bool test2 = identifiers.Any() && ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
+                    //bool test2 = identifiers.Any() && ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
+                    bool test2 = ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
 
                     if (test | test2)
                     {
@@ -701,7 +703,8 @@ namespace Models.CLEM.Activities
 
                     var units = DefineCompanionModelLabels(iChildType).Measures;
                     test = ((iChild.Measure ?? "") == "") == units.Any();
-                    test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
+                    //test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
+                    test2 = ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
                     if (test | test2)
                     {
                         string warn = $"Invalid parameter value in {(iChild as CLEMModel).FullPath}{Environment.NewLine}PARAMETER: Units of measure";
@@ -1162,10 +1165,12 @@ namespace Models.CLEM.Activities
             {
                 type = 1;
             }
+
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
                 Name = this.Name,
                 Status = this.Status,
+                StatusMessage = StatusMessage,
                 Id = this.UniqueID.ToString(),
                 ModelType = type
             });
@@ -1177,23 +1182,24 @@ namespace Models.CLEM.Activities
         /// <param name="status">The status of this activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
-            int type = 0;
-            if (GetType().Name.Contains("ActivityTimer"))
-            {
-                type = 2;
-            }
-            if (GetType().Name.Contains("Folder"))
-            {
-                type = 1;
-            }
+            //int type = 0;
+            //if (GetType().Name.Contains("ActivityTimer"))
+            //{
+            //    type = 2;
+            //}
+            //if (GetType().Name.Contains("Folder"))
+            //{
+            //    type = 1;
+            //}
             this.Status = status;
-            ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
-            {
-                Name = this.Name,
-                Status = status,
-                Id = this.UniqueID.ToString(),
-                ModelType = type
-            });
+            TriggerOnActivityPerformed();
+            //ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
+            //{
+            //    Name = this.Name,
+            //    Status = status,
+            //    Id = this.UniqueID.ToString(),
+            //    ModelType = type
+            //});
         }
     }
 }
