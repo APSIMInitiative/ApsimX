@@ -116,7 +116,21 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
-        private void ReportAllActivityStatus(object sender, EventArgs e)
+        private void ReportActivityStatusAtEndOfTimestep(object sender, EventArgs e)
+        {
+            ReportAllActivityStatus();
+        }
+
+        /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("FinalInitialise")]
+        private void ReportActivityStatusAfterInitialisation(object sender, EventArgs e)
+        {
+            ReportAllActivityStatus(true);
+        }
+
+        private void ReportAllActivityStatus(bool fromSetup = false)
         {
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
@@ -128,7 +142,7 @@ namespace Models.CLEM.Activities
                 Name = timeStep.Name,
                 Status = timeStep.Status,
                 Id = timeStep.UniqueID.ToString(),
-                ModelType = (int)ActivityPerformedType.Timer
+                ModelType = (int)ActivityPerformedType.Timer,
             };
             LastActivityPerformed = ea;
             OnActivityPerformed(ea);
@@ -141,7 +155,7 @@ namespace Models.CLEM.Activities
         public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
             // save 
-            LastActivityPerformed = e; // (e as ActivityPerformedEventArgs).Activity;
+            LastActivityPerformed = e;
             // call ActivityPerformedEventhandler
             OnActivityPerformed(e);
         }
