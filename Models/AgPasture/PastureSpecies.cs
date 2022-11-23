@@ -3690,7 +3690,8 @@ namespace Models.AgPasture
 
         /// <summary>Removes a given amount of biomass (DM and N) from the plant.</summary>
         /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
-        public Biomass RemoveBiomass(double amountToRemove)
+        /// <param name="doOutput">Report biomass removal to the Summary file (default = true)</param>
+        public Biomass RemoveBiomass(double amountToRemove, bool doOutput = true)
         {
             var defoliatedDM = 0.0;
             var defoliatedN = 0.0;
@@ -3799,7 +3800,8 @@ namespace Models.AgPasture
                 }
                 else
                 {
-                    mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
+                    if (doOutput)
+                        mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
                 }
 
                 myDefoliatedFraction = MathUtilities.Divide(HarvestedWt, preRemovalDMShoot, 0.0, Epsilon);
