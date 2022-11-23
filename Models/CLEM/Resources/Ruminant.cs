@@ -135,6 +135,33 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Age (Years)
+        /// </summary>
+        /// <units>Years</units>
+        [FilterByProperty]
+        public double AgeInYears
+        {
+            get
+            {
+                return age/12.0;
+            }
+        }
+
+        /// <summary>
+        /// Age (whole years)
+        /// </summary>
+        /// <units>Whole years</units>
+        [FilterByProperty]
+        public int AgeInWholeYears
+        {
+            get
+            {
+                return  Convert.ToInt32(Math.Floor(age / 12.0));
+            }
+        }
+
+
+        /// <summary>
         /// Calculate normalised weight from age
         /// </summary>
         /// <param name="age">Age in months</param>
