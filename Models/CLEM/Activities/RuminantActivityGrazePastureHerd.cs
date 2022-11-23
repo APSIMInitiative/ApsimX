@@ -109,6 +109,15 @@ namespace Models.CLEM.Activities
         public double PotentialIntakeGrazingTimeLimiter { get; set; }
 
         /// <summary>
+        /// Potential intake limit
+        /// </summary>
+        [JsonIgnore]
+        public double PotentialIntakeLimit 
+        {
+            get { return PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter * GrazingCompetitionLimiter; } 
+        }
+
+        /// <summary>
         /// Dry matter digestibility of pasture consumed (%)
         /// </summary>
         [JsonIgnore]
