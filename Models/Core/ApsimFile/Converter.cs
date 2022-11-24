@@ -562,6 +562,8 @@ namespace Models.Core.ApsimFile
                             // Convert array to string.
                             if (specifications.Count > 0)
                                 factor["Specification"] = specifications[0].ToString();
+                            else
+                                factor["Specification"] = new JArray();
                         }
                     }
                 }
@@ -3383,14 +3385,16 @@ namespace Models.Core.ApsimFile
                     memo["Text"] = text;
                 }
             }
+            foreach (var TrModelNode in JsonUtilities.ChildrenRecursively(root, "MaximumHourlyTrModel"))
+                TrModelNode["$type"] = "Models.Functions.SupplyFunctions.LimitedTranspirationRate, Models";
         }
-		
+
         /// <summary>
         /// Upgrade to version 128. Add ResourceName property to Fertiliser models.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion128(JObject root, string fileName)
+         private static void UpgradeToVersion128(JObject root, string fileName)
         {
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";

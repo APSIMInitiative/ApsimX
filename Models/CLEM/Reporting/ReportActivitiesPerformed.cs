@@ -103,7 +103,7 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastActivityPerformed.Status as Status",
                 "[Activities].LastActivityPerformed.Id as UniqueID",
                 "[Activities].LastActivityPerformed.StatusMessage as Message",
-                "[Activities].LastActivityPerformed.ModelType as Type"
+                "[Activities].LastActivityPerformed.ModelType as Type",
             };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
@@ -227,7 +227,6 @@ namespace Models.CLEM.Reporting
                             activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                             break;
                     }
-                    //List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns
@@ -238,7 +237,10 @@ namespace Models.CLEM.Reporting
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
-                        tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
+                        if(item.Day != DateTime.DaysInMonth(item.Year, item.Month))
+                            tbl.Columns.Add("00\r\n" + item.ToString("yy"));
+                        else
+                            tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
                     }
                     // add blank column for resize row height of pixelbuf with font size change
                     tbl.Columns.Add(" ");
@@ -255,7 +257,13 @@ namespace Models.CLEM.Reporting
                             {
                                 DateTime dte = (DateTime)activityTick["Date"];
                                 string status = activityTick["Status"].ToString();
-                                dr[dte.Month.ToString("00") + "\r\n" + dte.ToString("yy")] = status;
+
+                                string monthID = "00";
+                                if (dte.Day == DateTime.DaysInMonth(dte.Year, dte.Month))
+                                    monthID = dte.Month.ToString("00");
+
+                                if(!(monthID == "00" && status == "Timer"))
+                                    dr[monthID + "\r\n" + dte.ToString("yy")] = status;
                             }
                             dr[" "] = " ";
                             tbl.Rows.Add(dr);
