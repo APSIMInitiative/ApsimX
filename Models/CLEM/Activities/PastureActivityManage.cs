@@ -39,7 +39,6 @@ namespace Models.CLEM.Activities
         private string soilIndex = "0"; // obtained from LandType used
         private double stockingRateSummed;  //summed since last Ecological Calculation.
         private double ha2sqkm = 0.01; //convert ha to square km
-        private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
         private List<PastureDataType> pastureDataList;
         private Relationship relationshipLC;
         private Relationship relationshipGBA;
@@ -251,10 +250,10 @@ namespace Models.CLEM.Activities
             };
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            gotLandRequested = TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList, false);
 
             //Now the Land has been allocated we have an Area 
-            if (gotLandRequested)
+            if (ResourceRequestList.FirstOrDefault().Provided > 0)
             {            
                 //get the units of area for this run from the Land resource parent.
                 unitsOfArea2Ha = Resources.FindResourceGroup<Land>().UnitsOfAreaToHaConversion;
