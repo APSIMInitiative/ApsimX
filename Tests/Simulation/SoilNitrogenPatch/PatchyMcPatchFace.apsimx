@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -4752,11 +4752,11 @@
             {
               "$type": "Models.Factorial.CompositeFactor, Models",
               "Specifications": [
-                "[PatchAndZoneManager].Script.ZoneCount = 3"
+                "[PatchAndZoneManager].Script.ZoneCount = 1"
               ],
               "Paths": null,
               "Values": null,
-              "Name": "Exp1",
+              "Name": "Patches01",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -4765,11 +4765,115 @@
             {
               "$type": "Models.Factorial.CompositeFactor, Models",
               "Specifications": [
-                "[ZoneManager].Script.ZoneCount = 50"
+                "[PatchAndZoneManager].Script.ZoneCount = 2"
               ],
               "Paths": null,
               "Values": null,
-              "Name": "Exp50",
+              "Name": "Patches02",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 5"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches05",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 10"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches10",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 20"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches20",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 50"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches50",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 100"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches100",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 200"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches200",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 500"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches500",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.CompositeFactor, Models",
+              "Specifications": [
+                "[PatchAndZoneManager].Script.ZoneCount = 1000"
+              ],
+              "Paths": null,
+              "Values": null,
+              "Name": "Patches1000",
               "ResourceName": null,
               "Children": [],
               "Enabled": false,
@@ -4841,11 +4945,11 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Newtonsoft.Json;\nusing Models.Soils.Nutrients;\nusing Models.Soils.NutrientPatching;\nusing Models.Interfaces;\nusing System.Diagnostics;\nusing System.Collections.Generic;\nusing APSIM.Shared.Utilities;\nusing Models.Surface;\nusing Models.Soils;\nusing System.Xml.Serialization;\nusing Models.AgPasture;\nusing Models.Zones;\nusing Models.PMF;\nusing Models.Core;\nusing Models.Core.ApsimFile;\nusing System;\nusing System.Linq;\nusing Models.Climate;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private Clock clock;\n        [Link] private Soil soil;\n        [Link] private ISummary summary;\n        [Link] private Weather weather;\n        [Link] private Zone zone;\n        [Link] private IPhysical soilPhysical;\n        [Link] private List<NutrientPatchManager> patchManagers;\n\n        private Sward sward;\n      \n        [Description(\"Verbose reporting to the summary file?\")]\n        public bool Verbose { get; set; }\n        \n        [Description(\"Should this simulation create Patches? If not then explict Zones will be created\")]\n        public bool PseudoPatches { get; set; }\n        \n        [Description(\"How many patches or zones should be created?\")]\n        public int ZoneCount { get; set; }\n        \n        [Description(\"Type of nutrient return - calculated from the amount of herbage harvested or constant\")]\n        public UrineReturnTypes UrineReturnType { get; set; }\n\n        [Description(\"Depth of urine penetration (mm)\")]\n        public double UrineDepthPenetration { get; set; }\n\n        \n        public int ZoneNumForUrine { get; set; }\n        public double HarvestedWt { get; set; }\n        public double HarvestedN { get; set; }\n        public double AmountUrineNReturned { get; set; }\n        public double AmountDungNReturned { get; set; } \n        public double AmountDungCReturned { get; set; }\n        \n\n        \n        private double[] MonthlyUrineNAmt;\n        private bool GrazeToday;\n\t\tprivate double[] UrineDepthPenetrationArray;\n\n        /*public enum urineReturnPatterns\n        {\n            /// <summary>Uniform</summary>\n            UniformAcrossAllPatches,\n            /// <summary>Rotating in order</summary>\n            RotatingInOrder,\n            /// <summary>Random</summary>\n            Random,\n            /// <summary>Pseudo-random</summary>\n            PseudoRandom\n        }*/\n        \n        public enum UrineReturnTypes\n        {\n            /// <summary>FromHarvest</summary>\n            FromHarvest,\n            /// <summary>SetMonthly</summary>\n            SetMonthly\n        }\n\n\n        public override void OnPreLink()\n        {\n            var simulation = Parent.Parent as Simulation;\n            var zone = simulation.FindChild<Zone>();\n                \n\t\t\t// Set the maximum N uptake for all species\n\t\t\tforeach (var species in zone.FindAllDescendants<PastureSpecies>())\n\t\t\t{\n\t\t\t\tvar root = species.FindChild<PastureBelowGroundOrgan>();\n\t\t\t\troot.MaximumNUptake = 3.0;\n\t\t\t}\n\t\t\t\t\n            if (!PseudoPatches)\n            {\n\t            zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones  \n\t            for (int i = 0; i < ZoneCount-1; i++)\n\t            {\n\t                var newZone = Apsim.Clone(zone);\n\t                Structure.Add(newZone, simulation);\n\t            }\n\t         }\n        }\n\n        [EventSubscribe(\"StartOfSimulation\")] private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            if (Verbose && !PseudoPatches)\n            \tsummary.WriteMessage(this, \"Created \" + ZoneCount + \" identical zones, each of area \" + (1.0 / ZoneCount) + \" ha\", MessageType.Diagnostic);\n\n            if (Verbose)\n            \tsummary.WriteMessage(this, \"Initialising the ZoneManager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\n            sward = new Sward(zone); \n\n            //MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth\n            MonthlyUrineNAmt = new double[] { 100, 100, 100, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth\n\n            if (PseudoPatches)\n            {\n                foreach (var patchManager in patchManagers)\n                {\n                    //patchManager.MaximumNitrogenAvailableToPlants = 0.45; This is now set in pre start\n                    patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;\n                    patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;\n                    patchManager.basePatchApproach = BaseApproachEnum.IDBased;\n                    patchManager.AllowPatchAmalgamationByAge = false;\n                    patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge                                \n                }\n\n                int[] PatchToAddTo = new int[1];  //need an array variable for this\n                string[] PatchNmToAddTo = new string[1];  \n                int nPatchesAdded = 0;\n                double NewArea = 1.0 / ZoneCount;\n\t\t\t\t// here is where woudl want to limit N uptake\n\t\t\t\t\n                while (nPatchesAdded < ZoneCount - 1)\n                {\n                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();\n                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;\n                    NewPatch.AreaFraction = NewArea;\n                    PatchToAddTo[0] = 0;\n                    PatchNmToAddTo[0] = \"0\";\n                    NewPatch.AffectedPatches_id = PatchToAddTo;\n                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;\n                    NewPatch.SuppressMessages = Verbose;\n\n                    foreach (var patchManager in patchManagers)\n                        patchManager.Add(NewPatch);\n                    nPatchesAdded += 1;\n                }                \n\n                if (Verbose)\n                \tsummary.WriteMessage(this, patchManagers[0].NumPatches.ToString() + \"pseudopatches have been created\", MessageType.Diagnostic);\n            }\n\n            if (Verbose)\n            \tsummary.WriteMessage(this, \"Finished initialising the Manager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\n            //NumZonesForUrine = 1;  // in the future this might be > 1\n            ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below \n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {    \n\n            // if this is the start of the simulation then sort out the depth for the urine penetration. Can't do this in initialisation because of the module order\n            if (clock.Today == clock.StartDate)\n                UrinePenetration();\n\n            GrazeToday = false;\n\t\t\tif (clock.Today.AddDays(1).Day == 1)    // why separate this from the if below?  - to allow for multiple options in the future\n                GrazeToday = true;\n\n            if (GrazeToday)\n            {\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"Doing grazing\", MessageType.Diagnostic);\n\n                // do the herbage removal part of the grazing\n                int i = -1;  // to use as a zone counter\n                HarvestedWt = 0.0;\n                HarvestedN = 0.0;\n                foreach (Zone zone in this.Parent.FindAllInScope<Zone>())   // NOTE - this is a zone regardless of pseudopatches \n                {\n                    i += 1;\n                    var sward = new Sward(zone);\n                    sward.Graze(amount: 1000.0, type: \"SetResidueAmount\", Verbose);   // note that I have hardcoded the grazing residual for now\n                    HarvestedWt += sward.HarvestedWt * zone.Area;\n                    HarvestedN += sward.HarvestedN * zone.Area;\n                    if (Verbose)\n                    \tsummary.WriteMessage(this, \"Just harvested \" + HarvestedWt + \" from Zone \" + zone, MessageType.Diagnostic);\n                }\n\n                if (UrineReturnType == UrineReturnTypes.FromHarvest)\n                {\n                    AmountUrineNReturned = HarvestedN * 0.50;  // \n                    AmountDungNReturned = HarvestedN * 0.35;  // \n                    AmountDungCReturned = AmountDungNReturned * 20;\n                }\n                else if (UrineReturnType == UrineReturnTypes.SetMonthly)\n                {\n                \tAmountUrineNReturned = MonthlyUrineNAmt[clock.Today.Month - 1];   //  hardcoded as an input\n                \tAmountDungNReturned = AmountUrineNReturned * (0.35 / 0.50);  // \n                \tAmountDungCReturned = AmountDungNReturned * 20;\n                }\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"The amount of urine N to be returned to the whole paddock is \" + AmountUrineNReturned, MessageType.Diagnostic);\n\n                DoUrineReturn();\n\n                DoTramplingAndDungReturn();\n\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"Finished Grazing\", MessageType.Diagnostic);\n\n            }\n        }\n\n        public void DoTramplingAndDungReturn()\n        {\n \t\t\t// Note that dung is assumed to be spread uniformly over the paddock (patches or sones).\n \t\t\t// There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level\n \t\t\t           \n            int i = -1;  // patch or paddock counter\n            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n            {\n                i += 1;\n                SurfaceOrganicMatter surfaceOM = zone.FindInScope<SurfaceOrganicMatter>() as SurfaceOrganicMatter; \n\n                // do some trampling of litter\n                // accelerate the movement of surface litter into the soil - do this before the dung is added\n                double temp = surfaceOM.Wt * 0.1;\n\n                TillageType trampling = new TillageType();\n                surfaceOM.Incorporate(fraction: (double)0.1, depth: (double)100.0, Verbose);\n\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"For patch \" + i + \" the amount of litter trampled was \" + temp + \" and the remaining litter is \" + (surfaceOM.Wt), MessageType.Diagnostic);\n\n                // move the dung to litter  \n                AddFaecesType dung = new AddFaecesType();\n                dung.OMWeight = AmountDungCReturned / 0.4;  //assume dung C is 40% of OM  \n                dung.OMN = AmountDungNReturned;\n                surfaceOM.AddFaeces(dung);\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"For patch \" + i + \" the amount of dung DM added to the litter was \" + (AmountDungCReturned / 0.4) + \" and the amount of N added in the dung was \" + (AmountDungNReturned), MessageType.Diagnostic);\n\n            } \n        }\n\n        public void DoUrineReturn()\n        {\n            GetZoneForUrineReturn();  \n\n      \t\tif (Verbose)\n      \t\t\tsummary.WriteMessage(this, \"The Zone for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);\n\n            if (!PseudoPatches)\n            {\n            \tint i = -1; //to count the zones\n\t            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n    \t        {\n    \t            i += 1;\n    \t            if (i == ZoneNumForUrine)\n    \t            {\n    \t         \t\t//if (Verbose)\n    \t         \t\t\tsummary.WriteMessage(this, i + \" in explict zone \", MessageType.Diagnostic);\n\n    \t                Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;\n    \t                Soil soil = zone.FindInScope<Soil>() as Soil;  // do I need this?\n\t\n    \t                double tempDepth = 0.0;\n    \t                for (int ii = 0; ii <= (soilPhysical.Thickness.Length - 1); ii++)\n    \t                {\n    \t                    tempDepth += soilPhysical.Thickness[ii];\n    \t                    thisFert.Apply(Amount: (double)(UrineDepthPenetrationArray[ii] * ZoneCount * AmountUrineNReturned), Type: Fertiliser.Types.UreaN, Depth: (tempDepth - soilPhysical.Thickness[ii] / 2), doOutput: Verbose);\n    \t                    // above multiply by ZoneCount to get the patch concentration effect\n    \t                }\n                                        \n    \t         \t\tif (Verbose)\n    \t         \t\t\tsummary.WriteMessage(this, AmountUrineNReturned + \" urine N added to Zone \" + i + \", the local load was \" + ZoneCount * AmountUrineNReturned + \" kg N /ha\", MessageType.Diagnostic);\n    \t             }\n             \t}\n        \t}\n        \telse // PseudoPatches\n        \t{\n            \t/*int i = -1; //to count the patches\n\t            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n    \t        {\n    \t            i += 1;\n    \t            if (i == ZoneNumForUrine)\n    \t            { */\n    \t         \t\t//if (Verbose)\n    \t         \t\t\tsummary.WriteMessage(this,  \" in PP patch stuff\", MessageType.Diagnostic);\n\n\t\t                int[] PatchToAddTo = new int[1];  //because need an array variable for this\n        \t\t        string[] PatchNmToAddTo = new string[0];  //need an array variable for this\n        \t\t        List<IModel> zones = this.FindAllInScope<Zone>().OfType<IModel>().ToList();   //TODO ask Dean - is all this needed?\n        \t\t        Soil soil = zones[0].FindInScope<Soil>() as Soil; // Only one zone allowed for GP so use the first\n        \t\t        double[] UreaToAdd = new double[soilPhysical.Thickness.Length];  \n\n        \t\t        for (int ii = 0; ii <= (soilPhysical.Thickness.Length - 1); ii++)\n        \t\t            UreaToAdd[ii] = UrineDepthPenetrationArray[ii] * ZoneCount * AmountUrineNReturned;\n\n        \t\t        // needed??   UreaReturned += AmountFertNReturned;\n\n        \t\t        AddSoilCNPatchType CurrentPatch = new AddSoilCNPatchType();\n        \t\t        CurrentPatch.Sender = \"manager\";\n        \t\t        CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;\n        \t\t        PatchToAddTo[0] = ZoneNumForUrine;\n        \t\t        CurrentPatch.AffectedPatches_id = PatchToAddTo;\n        \t\t        CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;\n        \t\t        CurrentPatch.Urea = UreaToAdd;\n\n\n    \t         \t\tif (Verbose)\n\t        \t\t        summary.WriteMessage(this, \"Patch MinN prior to urine return:\", MessageType.Diagnostic);\n\n        \t\t        var patchManager = soil.FindChild<INutrientPatchManager>(); \n        \t\t        patchManager.Add(CurrentPatch); \n\n    \t         \t\tif (Verbose)\n\t        \t\t        summary.WriteMessage(this, \"Patch MinN after urine return:\", MessageType.Diagnostic);\n\n    \t            /* }\n             \t}*/\n        \t} \n        }\n\n        public void GetZoneForUrineReturn()\n        {\n            ZoneNumForUrine += 1;  //increment the zone number - it was initialised at -1. NOTE, ZoneNumForUrine is used for both zones and patches\n            if (ZoneNumForUrine >= ZoneCount)\n                ZoneNumForUrine = 0;  // but reset back to the first patch if needed\n\n            //Random rnd = new Random();\n            //PatchNumForFert = rnd.Next(0, NumPatches);\n            //summary.WriteMessage(this, \"The next random number patch for fertiliser return is \" + PatchNumForFert, MessageType.Diagnostic);\n        }\n\n\n        public void UrinePenetration()\n        {\n            // note that this only looks at the first paddock and assumes that all the paddocks are the same\n            int iii = -1;  // to use as a patch counter\n            foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())\n            {\n                iii += 1;\n                if (iii == 0)\n                {\n                    Soil soil = zone.FindInScope<Soil>() as Soil;\n                    double tempDepth = 0.0;\n                    UrineDepthPenetrationArray = new double[soilPhysical.Thickness.Length];\n                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)\n                    {\n                        tempDepth += soilPhysical.Thickness[i];\n                        if (tempDepth <= UrineDepthPenetration)\n                        {\n                            UrineDepthPenetrationArray[i] = soilPhysical.Thickness[i] / UrineDepthPenetration;\n                        }\n                        else\n                        {\n                            UrineDepthPenetrationArray[i] = (UrineDepthPenetration - (tempDepth - soilPhysical.Thickness[i])) / (tempDepth - (tempDepth - soilPhysical.Thickness[i])) * soilPhysical.Thickness[i] / UrineDepthPenetration;\n                            UrineDepthPenetrationArray[i] = Math.Max(0.0, Math.Min(1.0, UrineDepthPenetrationArray[i]));\n                        }\n                        if (Verbose)\n                        \tsummary.WriteMessage(this, \"The proportion of urine applied to the \" + i + \"th layer will be \" + UrineDepthPenetrationArray[i], MessageType.Diagnostic);\n                    }\n                }\n            }\n\n        }\n\n\n        \n   \n    // A class for aggregating a pasture species mix.  ??????????????? is this needed now?\n    [Serializable]\n    class Sward\n    {\n     \tprivate const double Epsilon = 0.000000001;\n        private double amountRequired;\n\n        public Sward(Zone zone)\n        {\n            Species = zone.FindAllDescendants<PastureSpecies>().OfType<IModel>().ToList().Cast<PastureSpecies>().ToList();\n\t\t}\n\t\t\n        public List<PastureSpecies> Species { get; private set; }\n\n        public double HarvestableWt { get { return Species.Sum(sp => sp.Harvestable.Wt); } }\n\n        public double HarvestedWt { get { return Species.Sum(sp => sp.HarvestedWt); } }\n\n        public double HarvestedN { get { return Species.Sum(sp => sp.HarvestedN); } }\n\n        public double StandingHerbageWt { get { return Species.Sum(sp => sp.Standing.Wt); } }\n\n        public double AboveGroundWt { get { return Species.Sum(sp => sp.AboveGroundWt); } }\n\n        public bool IsAlive\n        {\n            get\n            {\n                bool alive = true;\n                Species.ForEach(sp => alive = alive && sp.PlantStatus == \"alive\");\n                return alive;\n            }\n         }\n     \n\n        /// <summary>Removes plant material simulating a graze event.</summary>\n        /// <param name=\"amount\">The DM amount (kg/ha)</param>\n        /// <param name=\"type\">How the amount is interpreted (SetResidueAmount or SetRemoveAmount)</param>\n        public void Graze(double amount, string type, bool Verbose)\n        {\n            double amountAvailable = HarvestableWt;\n            if (IsAlive || (amountAvailable > Epsilon))\n            {\n                // Get the amount required to remove\n                if (type.ToLower() == \"setresidueamount\")\n                {\n                    // Remove all DM above given residual amount\n                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);\n                }\n                else if (type.ToLower() == \"setremoveamount\")\n                {\n                    // Remove a given amount\n                    amountRequired = Math.Max(0.0, amount);\n                }\n                else\n                {\n                    throw new Exception(\"Type of amount to remove on graze not recognized (use \\'SetResidueAmount\\' or \\'SetRemoveAmount\\'\");\n                }\n                // Get the actual amount to remove\n                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, amountAvailable));\n\n                // Get the amounts to remove by mySpecies:\n                if (amountToRemove > Epsilon)\n                {\n                    double[] fractionToRemove = new double[Species.Count];\n                    for (int s = 0; s < Species.Count; s++)\n                    {\n                        // get the fraction to required for each mySpecies, partition according to available DM to harvest\n                        fractionToRemove[s] = Species[s].Harvestable.Wt / amountAvailable;\n\n                        // remove DM and N for each mySpecies (digestibility is also evaluated)\n                        Species[s].RemoveBiomass(amountToRemove * fractionToRemove[s], Verbose);\n                    }\n                }\n            }\n        }\n\t}\n    }\n}\n",
+              "Code": "using Newtonsoft.Json;\nusing Models.Soils.Nutrients;\nusing Models.Soils.NutrientPatching;\nusing Models.Interfaces;\nusing System.Diagnostics;\nusing System.Collections.Generic;\nusing APSIM.Shared.Utilities;\nusing Models.Surface;\nusing Models.Soils;\nusing System.Xml.Serialization;\nusing Models.AgPasture;\nusing Models.Zones;\nusing Models.PMF;\nusing Models.Core;\nusing Models.Core.ApsimFile;\nusing System;\nusing System.Linq;\nusing Models.Climate;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private Clock clock;\n        [Link] private Soil soil;\n        [Link] private ISummary summary;\n        [Link] private Weather weather;\n        [Link] private Zone zone;\n        [Link] private IPhysical soilPhysical;\n        [Link] private List<NutrientPatchManager> patchManagers;\n\n        private Sward sward;\n      \n        [Description(\"Verbose reporting to the summary file?\")]\n        public bool Verbose { get; set; }\n        \n        [Description(\"Should this simulation create Patches? If not then explict Zones will be created\")]\n        public bool PseudoPatches { get; set; }\n        \n        [Description(\"How many patches or zones should be created?\")]\n        public int ZoneCount { get; set; }\n        \n        [Description(\"Nature of nutrient return\")]\n        public UrineReturnTypes UrineReturnType { get; set; }\n\n        [Description(\"Pattern (spatial) of nutrient return\")]\n        public UrineReturnPatterns UrineReturnPattern { get; set; }\n\n        [Description(\"Depth of urine penetration (mm)\")]\n        public double UrineDepthPenetration { get; set; }\n\n        \n        public int ZoneNumForUrine { get; set; }    // zone or patch that urine will be applied to\n        public int NumZonesForUrine { get; set; }   // not enabled yet but for applying urine across more than one zone or patch\n        \n        public double HarvestedWt { get; set; }     // from the whole paddock\n        public double HarvestedN { get; set; }      // from the whole paddock\n        public double AmountUrineNReturned { get; set; }   // to the whole paddock\n        public double AmountDungNReturned { get; set; }    // to the whole paddock\n        public double AmountDungCReturned { get; set; }    // to the whole paddock\n        \n        private double[] MonthlyUrineNAmt;                 // breaks the N balance but useful for testing\n        private bool GrazeToday;\n\t\tprivate double[] UrineDepthPenetrationArray;\n\n\t\tRandom pseudoRandom = new Random(666);  // sets a constant seed value\n\n\n        public enum UrineReturnPatterns\n        {\n            // <summary>Not enabled Uniform</summary>\n            //UniformAcrossAllPatches,\n            /// <summary>Rotating in order</summary>\n            RotatingInOrder,\n            /// <summary>Not enabled Random</summary>\n            Random,\n            /// <summary>Not enabled Pseudo-random</summary>\n            PseudoRandom\n        }\n        \n        public enum UrineReturnTypes\n        {\n            /// <summary>FromHarvest</summary>\n            FromHarvest,\n            /// <summary>SetMonthly</summary>\n            SetMonthly\n        }\n\n\n        public override void OnPreLink()\n        {\n            var simulation = Parent.Parent as Simulation;\n            var zone = simulation.FindChild<Zone>();\n                \n\t\t\t// Set the maximum N uptake for all species\n\t\t\tforeach (var species in zone.FindAllDescendants<PastureSpecies>())\n\t\t\t{\n\t\t\t\tvar root = species.FindChild<PastureBelowGroundOrgan>();\n\t\t\t\troot.MaximumNUptake = 3.0;\n\t\t\t}\n\t\t\t\t\n            if (!PseudoPatches)\n            {\n\t            zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones  \n\t            for (int i = 0; i < ZoneCount-1; i++)\n\t            {\n\t                var newZone = Apsim.Clone(zone);\n\t                Structure.Add(newZone, simulation);\n\t            }\n\t         }\n        }\n\n        [EventSubscribe(\"StartOfSimulation\")] private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            if (Verbose && !PseudoPatches)\n            \tsummary.WriteMessage(this, \"Created \" + ZoneCount + \" identical zones, each of area \" + (1.0 / ZoneCount) + \" ha\", MessageType.Diagnostic);\n\n            if (Verbose)\n            \tsummary.WriteMessage(this, \"Initialising the ZoneManager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\n            sward = new Sward(zone); \n\n            MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth\n\n            if (PseudoPatches)\n            {\n                foreach (var patchManager in patchManagers)\n                {\n                    //patchManager.MaximumNitrogenAvailableToPlants = 0.45; This is now set in pre start\n                    patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;\n                    patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;\n                    patchManager.basePatchApproach = BaseApproachEnum.IDBased;\n                    patchManager.AllowPatchAmalgamationByAge = false;\n                    patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge                                \n                }\n\n                int[] PatchToAddTo = new int[1];  //need an array variable for this\n                string[] PatchNmToAddTo = new string[1];  \n                int nPatchesAdded = 0;\n                double NewArea = 1.0 / ZoneCount;\n\t\t\t\t\n                while (nPatchesAdded < ZoneCount - 1)\n                {\n                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();\n                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;\n                    NewPatch.AreaFraction = NewArea;\n                    PatchToAddTo[0] = 0;\n                    PatchNmToAddTo[0] = \"0\";\n                    NewPatch.AffectedPatches_id = PatchToAddTo;\n                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;\n                    NewPatch.SuppressMessages = Verbose;\n\n                    foreach (var patchManager in patchManagers)\n                        patchManager.Add(NewPatch);\n                    nPatchesAdded += 1;\n                }                \n\n                if (Verbose)\n                \tsummary.WriteMessage(this, patchManagers[0].NumPatches.ToString() + \"pseudopatches have been created\", MessageType.Diagnostic);\n            }\n\n            if (Verbose)\n            \tsummary.WriteMessage(this, \"Finished initialising the Manager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\n            NumZonesForUrine = 1;  // in the future this might be > 1\n            ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below \n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {    \n\n            // if this is the start of the simulation then sort out the depth for the urine penetration. Can't do this in initialisation because of the module order\n            if (clock.Today == clock.StartDate)\n                UrinePenetration();\n\n            GrazeToday = false;\n\t\t\tif (clock.Today.AddDays(1).Day == 1)    // why separate this from the if below?  - to allow for multiple options in the future\n                GrazeToday = true;\n\n            if (GrazeToday)\n            {\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"Doing grazing\", MessageType.Diagnostic);\n\n                // do the herbage removal part of the grazing\n                int i = -1;  // to use as a zone counter\n                HarvestedWt = 0.0;\n                HarvestedN = 0.0;\n                foreach (Zone zone in this.Parent.FindAllInScope<Zone>())   // NOTE - this is a zone regardless of pseudopatches \n                {\n                    i += 1;\n                    var sward = new Sward(zone);\n                    sward.Graze(amount: 1000.0, type: \"SetResidueAmount\", Verbose);   // note that I have hardcoded the grazing residual for now\n                    HarvestedWt += sward.HarvestedWt * zone.Area;\n                    HarvestedN += sward.HarvestedN * zone.Area;\n                    if (Verbose)\n                    \tsummary.WriteMessage(this, \"Just harvested \" + HarvestedWt + \" from Zone \" + zone, MessageType.Diagnostic);\n                }\n\n                if (UrineReturnType == UrineReturnTypes.FromHarvest)\n                {\n                    AmountUrineNReturned = HarvestedN * 0.50;  // \n                    AmountDungNReturned = HarvestedN * 0.35;  // \n                    AmountDungCReturned = AmountDungNReturned * 20;\n                }\n                else if (UrineReturnType == UrineReturnTypes.SetMonthly)\n                {\n                \tAmountUrineNReturned = MonthlyUrineNAmt[clock.Today.Month - 1];   //  hardcoded as an input\n                \tAmountDungNReturned = AmountUrineNReturned * (0.35 / 0.50);  // \n                \tAmountDungCReturned = AmountDungNReturned * 20;\n                }\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"The amount of urine N to be returned to the whole paddock is \" + AmountUrineNReturned, MessageType.Diagnostic);\n\n                DoUrineReturn();\n\n                DoTramplingAndDungReturn();\n\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"Finished Grazing\", MessageType.Diagnostic);\n\n            }\n        }\n\n        public void DoTramplingAndDungReturn()\n        {\n \t\t\t// Note that dung is assumed to be spread uniformly over the paddock (patches or sones).\n \t\t\t// There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level\n \t\t\t           \n            int i = -1;  // patch or paddock counter\n            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n            {\n                i += 1;\n                SurfaceOrganicMatter surfaceOM = zone.FindInScope<SurfaceOrganicMatter>() as SurfaceOrganicMatter; \n\n                // do some trampling of litter\n                // accelerate the movement of surface litter into the soil - do this before the dung is added\n                double temp = surfaceOM.Wt * 0.1;\n\n                TillageType trampling = new TillageType();\n                surfaceOM.Incorporate(fraction: (double)0.1, depth: (double)100.0, Verbose);\n\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"For patch \" + i + \" the amount of litter trampled was \" + temp + \" and the remaining litter is \" + (surfaceOM.Wt), MessageType.Diagnostic);\n\n                // move the dung to litter  \n                AddFaecesType dung = new AddFaecesType();\n                dung.OMWeight = AmountDungCReturned / 0.4;  //assume dung C is 40% of OM  \n                dung.OMN = AmountDungNReturned;\n                surfaceOM.AddFaeces(dung);\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"For patch \" + i + \" the amount of dung DM added to the litter was \" + (AmountDungCReturned / 0.4) + \" and the amount of N added in the dung was \" + (AmountDungNReturned), MessageType.Diagnostic);\n\n            } \n        }\n\n        public void DoUrineReturn()\n        {\n            GetZoneForUrineReturn();  \n\n      \t\tif (Verbose)\n      \t\t\tsummary.WriteMessage(this, \"The Zone for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);\n\n            if (!PseudoPatches)\n            {\n            \tint i = -1; //to count the zones\n\t            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n    \t        {\n    \t            i += 1;\n    \t            if (i == ZoneNumForUrine)\n    \t            {\n    \t                Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;\n    \t                Soil soil = zone.FindInScope<Soil>() as Soil;  // do I need this?\n\t\n    \t                double tempDepth = 0.0;\n    \t                for (int ii = 0; ii <= (soilPhysical.Thickness.Length - 1); ii++)\n    \t                {\n    \t                    tempDepth += soilPhysical.Thickness[ii];\n    \t                    thisFert.Apply(Amount: (double)(UrineDepthPenetrationArray[ii] * ZoneCount * AmountUrineNReturned), Type: Fertiliser.Types.UreaN, Depth: (tempDepth - soilPhysical.Thickness[ii] / 2), doOutput: Verbose);\n    \t                    // above multiply by ZoneCount to get the patch concentration effect\n    \t                }\n                                        \n    \t         \t\tif (Verbose)\n    \t         \t\t\tsummary.WriteMessage(this, AmountUrineNReturned + \" urine N added to Zone \" + i + \", the local load was \" + ZoneCount * AmountUrineNReturned + \" kg N /ha\", MessageType.Diagnostic);\n    \t             }\n             \t}\n        \t}\n        \telse // PseudoPatches\n        \t{\n\t\t                int[] PatchToAddTo = new int[1];  //because need an array variable for this\n        \t\t        string[] PatchNmToAddTo = new string[0];  //need an array variable for this\n        \t\t        //List<IModel> zones = this.FindAllInScope<Zone>().OfType<IModel>().ToList();   //TODO ask Dean - is all this needed?\n        \t\t        double[] UreaToAdd = new double[soilPhysical.Thickness.Length];  \n\n        \t\t        for (int ii = 0; ii <= (soilPhysical.Thickness.Length - 1); ii++)\n        \t\t            UreaToAdd[ii] = UrineDepthPenetrationArray[ii] * ZoneCount * AmountUrineNReturned;\n\n        \t\t        // needed??   UreaReturned += AmountFertNReturned;\n\n        \t\t        AddSoilCNPatchType CurrentPatch = new AddSoilCNPatchType();\n        \t\t        CurrentPatch.Sender = \"manager\";\n        \t\t        CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;\n        \t\t        PatchToAddTo[0] = ZoneNumForUrine;\n        \t\t        CurrentPatch.AffectedPatches_id = PatchToAddTo;\n        \t\t        CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;\n        \t\t        CurrentPatch.Urea = UreaToAdd;\n\n    \t         \t\tif (Verbose)\n\t        \t\t        summary.WriteMessage(this, \"Patch MinN prior to urine return:\", MessageType.Diagnostic);\n\n        \t\t        var patchManager = soil.FindChild<INutrientPatchManager>(); \n        \t\t        patchManager.Add(CurrentPatch); \n\n    \t         \t\tif (Verbose)\n\t        \t\t        summary.WriteMessage(this, \"Patch MinN after urine return:\", MessageType.Diagnostic);\n        \t} \n        }\n\n        public void GetZoneForUrineReturn()\n        {\n            if (UrineReturnPattern == UrineReturnPatterns.RotatingInOrder) \n            {\n\t            ZoneNumForUrine += 1;  //increment the zone number - it was initialised at -1. NOTE, ZoneNumForUrine is used for both zones and patches\n\t            if (ZoneNumForUrine >= ZoneCount)\n\t                ZoneNumForUrine = 0;  // but reset back to the first patch if needed\n            }\n            else if (UrineReturnPattern == UrineReturnPatterns.Random)\n            {\n\t            Random rnd = new Random();\n\t            ZoneNumForUrine = rnd.Next(0, ZoneCount); // in C# the maximum value (ZoneCount) will not be selected\n            }\n            else if (UrineReturnPattern == UrineReturnPatterns.PseudoRandom)\n            {\n\t            ZoneNumForUrine = pseudoRandom.Next(0, ZoneCount); // in C# the maximum value (ZoneCount) will not be selected\n            }\n\t\t\telse\n\t\t\t\tthrow new Exception(\"UrineResturnPattern not recognised\");\n\n\t\t\tif (Verbose)\n            \tsummary.WriteMessage(this, \"The next zone/patch for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);\n        }\n\n\n        public void UrinePenetration()\n        {\n            // note that this only looks at the first paddock and assumes that all the paddocks are the same\n            int iii = -1;  // to use as a patch counter\n            foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())\n            {\n                iii += 1;\n                if (iii == 0)\n                {\n                    Soil soil = zone.FindInScope<Soil>() as Soil;\n                    double tempDepth = 0.0;\n                    UrineDepthPenetrationArray = new double[soilPhysical.Thickness.Length];\n                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)\n                    {\n                        tempDepth += soilPhysical.Thickness[i];\n                        if (tempDepth <= UrineDepthPenetration)\n                        {\n                            UrineDepthPenetrationArray[i] = soilPhysical.Thickness[i] / UrineDepthPenetration;\n                        }\n                        else\n                        {\n                            UrineDepthPenetrationArray[i] = (UrineDepthPenetration - (tempDepth - soilPhysical.Thickness[i])) / (tempDepth - (tempDepth - soilPhysical.Thickness[i])) * soilPhysical.Thickness[i] / UrineDepthPenetration;\n                            UrineDepthPenetrationArray[i] = Math.Max(0.0, Math.Min(1.0, UrineDepthPenetrationArray[i]));\n                        }\n                        if (Verbose)\n                        \tsummary.WriteMessage(this, \"The proportion of urine applied to the \" + i + \"th layer will be \" + UrineDepthPenetrationArray[i], MessageType.Diagnostic);\n                    }\n                }\n            }\n\n        }\n\n\n        \n   \n    // A class for aggregating a pasture species mix.  ??????????????? is this needed now?\n    [Serializable]\n    class Sward\n    {\n     \tprivate const double Epsilon = 0.000000001;\n        private double amountRequired;\n\n        public Sward(Zone zone)\n        {\n            Species = zone.FindAllDescendants<PastureSpecies>().OfType<IModel>().ToList().Cast<PastureSpecies>().ToList();\n\t\t}\n\t\t\n        public List<PastureSpecies> Species { get; private set; }\n\n        public double HarvestableWt { get { return Species.Sum(sp => sp.Harvestable.Wt); } }\n\n        public double HarvestedWt { get { return Species.Sum(sp => sp.HarvestedWt); } }\n\n        public double HarvestedN { get { return Species.Sum(sp => sp.HarvestedN); } }\n\n        public double StandingHerbageWt { get { return Species.Sum(sp => sp.Standing.Wt); } }\n\n        public double AboveGroundWt { get { return Species.Sum(sp => sp.AboveGroundWt); } }\n\n        public bool IsAlive\n        {\n            get\n            {\n                bool alive = true;\n                Species.ForEach(sp => alive = alive && sp.PlantStatus == \"alive\");\n                return alive;\n            }\n         }\n     \n\n        /// <summary>Removes plant material simulating a graze event.</summary>\n        /// <param name=\"amount\">The DM amount (kg/ha)</param>\n        /// <param name=\"type\">How the amount is interpreted (SetResidueAmount or SetRemoveAmount)</param>\n        public void Graze(double amount, string type, bool Verbose)\n        {\n            double amountAvailable = HarvestableWt;\n            if (IsAlive || (amountAvailable > Epsilon))\n            {\n                // Get the amount required to remove\n                if (type.ToLower() == \"setresidueamount\")\n                {\n                    // Remove all DM above given residual amount\n                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);\n                }\n                else if (type.ToLower() == \"setremoveamount\")\n                {\n                    // Remove a given amount\n                    amountRequired = Math.Max(0.0, amount);\n                }\n                else\n                {\n                    throw new Exception(\"Type of amount to remove on graze not recognized (use \\'SetResidueAmount\\' or \\'SetRemoveAmount\\'\");\n                }\n                // Get the actual amount to remove\n                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, amountAvailable));\n\n                // Get the amounts to remove by mySpecies:\n                if (amountToRemove > Epsilon)\n                {\n                    double[] fractionToRemove = new double[Species.Count];\n                    for (int s = 0; s < Species.Count; s++)\n                    {\n                        // get the fraction to required for each mySpecies, partition according to available DM to harvest\n                        fractionToRemove[s] = Species[s].Harvestable.Wt / amountAvailable;\n\n                        // remove DM and N for each mySpecies (digestibility is also evaluated)\n                        Species[s].RemoveBiomass(amountToRemove * fractionToRemove[s], Verbose);\n                    }\n                }\n            }\n        }\n\t}\n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "Verbose",
-                  "Value": "True"
+                  "Value": "False"
                 },
                 {
                   "Key": "PseudoPatches",
@@ -4858,6 +4962,10 @@
                 {
                   "Key": "UrineReturnType",
                   "Value": "SetMonthly"
+                },
+                {
+                  "Key": "UrineReturnPattern",
+                  "Value": "RotatingInOrder"
                 },
                 {
                   "Key": "UrineDepthPenetration",
@@ -4905,11 +5013,11 @@
               "VariableNames": [
                 "[Clock].Today as Date",
                 "[PatchAndZoneManager].Script.ZoneCount as ZoneCount",
-                "Sum of (sum([ReportingWithZonesHelper].Script.DenitByZone) / ZoneCount) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Denit",
-                "Sum of (sum([ReportingWithZonesHelper].Script.DenitN2OByZone) / ZoneCount) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as DenitN2O",
-                "Sum of (sum([ReportingWithZonesHelper].Script.LeachedNByZone) / ZoneCount) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as LeachN",
-                "Sum of (sum([ReportingWithZonesHelper].Script.HarvestedWtByZone) / ZoneCount) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedWt",
-                "//Last of [ReportingWithZonesHelper].Script.MinNByZone) / ZoneCount from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MineralN"
+                "Sum of (sum([ReportingWithZonesHelper].Script.DenitByZone) / 1.0) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as Denit",
+                "Sum of (sum([ReportingWithZonesHelper].Script.DenitN2OByZone) / 1.0) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as DenitN2O",
+                "Sum of (sum([ReportingWithZonesHelper].Script.LeachedNByZone) / 1.0) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as LeachN",
+                "Sum of (sum([ReportingWithZonesHelper].Script.HarvestedWtByZone) / 1.0) from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as HarvestedWt",
+                "//Last of [ReportingWithZonesHelper].Script.MinNByZone) / 1.0 from [ReportingWithPatchesPaddock].DayAfterLastOutput to [Clock].Today as MineralN"
               ],
               "EventNames": [
                 "[Clock].EndOfMonth"
@@ -5745,131 +5853,7 @@
                   "Name": "ZoneReport",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "NH4",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "ZoneReport",
-                      "XFieldName": "Date",
-                      "YFieldName": "PatchNH4(1)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "fix",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "ZoneReport",
-                      "XFieldName": "Date",
-                      "YFieldName": "PatchNH4(2)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "fix1",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "ZoneReport",
-                      "XFieldName": "Date",
-                      "YFieldName": "PatchNH4(3)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "fix2",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -6591,16 +6575,16 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16736653,
-                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "ReportingWithZones",
+                  "TableName": "ZoneReport",
                   "XFieldName": "Date",
-                  "YFieldName": "HerbageWtByZone(1)",
+                  "YFieldName": "PatchNH4(1)",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -8247,17 +8231,17 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "ReportingWithZonesPaddock",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
                   "YFieldName": "HarvestedWt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
+                  "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "ByGrazing",
+                  "Name": "Grazed",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -8313,7 +8297,7 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "ReportingWithZonesPaddock",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
                   "YFieldName": "Denit",
                   "X2FieldName": null,
@@ -8323,7 +8307,7 @@
                   "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "patch1",
+                  "Name": "Denit",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -8379,7 +8363,7 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "ReportingWithZonesPaddock",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
                   "YFieldName": "LeachN",
                   "X2FieldName": null,
@@ -8445,7 +8429,7 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "TableName": "ReportingWithZonesPaddock",
+                  "TableName": "ReportingWithPatchesPaddock",
                   "XFieldName": "Date",
                   "YFieldName": "DenitN2O",
                   "X2FieldName": null,
@@ -8455,137 +8439,13 @@
                   "Cumulative": true,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "fix",
+                  "Name": "N2O",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "NH4",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -11094807,
-              "FactorToVaryColours": "Graph series",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "ZoneReport",
-              "XFieldName": "Date",
-              "YFieldName": "PatchNH4(1)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "fix",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -11094807,
-              "FactorToVaryColours": "Graph series",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "ZoneReport",
-              "XFieldName": "Date",
-              "YFieldName": "PatchNH4(2)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "fix1",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -11094807,
-              "FactorToVaryColours": "Graph series",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "ZoneReport",
-              "XFieldName": "Date",
-              "YFieldName": "PatchNH4(3)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "fix2",
-              "ResourceName": null,
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
