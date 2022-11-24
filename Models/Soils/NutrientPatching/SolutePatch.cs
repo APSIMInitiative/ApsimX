@@ -42,6 +42,7 @@
         {
             if (!Name.Contains("PlantAvailable"))
                 Reset();
+            AmountLostInRunoff = new double[Thickness.Length];
         }
 
         /// <summary>
