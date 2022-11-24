@@ -269,6 +269,18 @@ namespace Models
             }
         }
 
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsStartMonth => Today.Day == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsStartYear => Today.DayOfYear == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsEndMonth => Today.AddDays(1).Day == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsEndYear => Today.AddDays(1).DayOfYear == 1;
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
