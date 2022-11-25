@@ -24,7 +24,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "1972-01-01T00:00:00",
-          "End": "1974-12-31T00:00:00",
+          "End": "1972-12-31T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -43,14 +43,6 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
-          "Name": "Soil Arbitrator",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.Summary, Models",
           "Verbosity": 100,
           "Name": "Summary",
@@ -60,32 +52,172 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "Soil Arbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.ForageDigestibility.Forages, Models",
+          "Parameters": [
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Leaf",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stem",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPRyegrass.Stolon",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Leaf",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stem",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "AGPWhiteClover.Stolon",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            }
+          ],
+          "Name": "Forages",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 0.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.0,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.0,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.Climate;\r\nusing System;\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Zones;\r\nusing Models.AgPasture;\r\nusing System.Xml.Serialization;\nusing Models.WaterModel;\nusing Models.Surface;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing Models.Soils.NutrientPatching;\r\nusing Models.Soils.Nutrients;\r\nusing MathNet.Numerics.Distributions;\nusing MathNet.Numerics.LinearAlgebra;\nusing System.Diagnostics;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class SimpleCowScript : Model\r\n    {\n\t\t[Link] Simulation simulation;\n        [Link] Clock clock;\n        [Link] Fertiliser fertiliser;\n        [Link] WaterBalance waterBalance;\n        [Link] SurfaceOrganicMatter surfaceOrganicMatter;\n        [Link] INutrientPatchManager patchManager;\n        [Link] ISummary summary;\n    \r\n        // --------------- Privates ---------------------------------\n\n        private double CowBodyWeight = 450.0;\n        // kg\n        private string CowDateCalving = \"1-aug\";\n        private string CowDateInCalf = \"1-nov\";\n        private string CowDateDryOff = \"30-apr\";\n        private double CowMSPerDay = 0.0;\n        // kgMS/day/head\n        private double CowMSEnergyPerKg = 77.0;\n        // MJME/kg MS (trying 77 c.f. 80)\n        private double CowWalkingDist = 3.0;\n        private double CowWalkingEnergyPerKm = 2.0;\n        // MJME/km\n        private double[] CowN2BodyPerc = { 30.0, 10.0 };\n        // Percent N in intake to body and product for milking and dry\n        private double[] CowN2UrinePerc = { 42.0, 54.0 };\n        // Percent N in intake to uriney and product for milking and dry\n        private double[] CowN2DungPerc = { 28.0, 36.0 };\n        // Percent N in intake to dung and product for milking and dry\n        private double[] LactationCurveParam = { 20.0, 0.2, -0.04, 0.092 };\n        // Parameters for the lactation curve, last parm 0.113 will give 500 kg MS, 0.092 will give 406 kg MS\n        private double WeeksBeforeCalving = 0.0;\n        private double LactationWeek = 0.0;\n        private double UrineDepth = 0;\n                \n\n        //private double[] CowPregnancyParam = {54.59, -0.135}; // multiplier and exponential parameters for pregnancy energy (25 kg calf), time in weeks before\n        //private double[] CowPregnancyParam = {63.931, -0.139}; // multiplier and exponential parameters for pregnancy energy (30 kg calf), time in weeks before\n        private double[] CowPregnancyParam = { 72.154, -0.143 };\n\n        // multiplier and exponential parameters for pregnancy energy (35 kg calf), time in weeks before\n        //private double[] CowPregnancyParam = {76.208, -0.142}; // multiplier and exponential parameters for pregnancy energy (40 kg calf), time in weeks before\n   \n        private double CowMaintME = 54.0;\n        // MJME/day https://www.dairynz.co.nz/media/5789573/facts_and_figures_web_chapter4_cow_feed_requirements.pdf page 4 450- kg cow\n\n        private int PatchNumForUrine = -1;\n        private double AmountDungCReturned = 0.0;\n        private double iniOrgC;\n        private double iniOrgN;\n        private double[] UrineDepthPlacement;\n        private double myResidual;\n        bool GrazeNow = false;\n\n        double[] ArrayLoad;\n        double[] ArrayArea;\n   \n        double[] ArrayDepth;\n        double[] ArrayVol;\n        double slopeVolWithLoad;\n        double incrWaterContent = 0.05;\n        \n   \t    [NonSerialized]\n        Random rndConstSeed;\n        // increase in volumetric water content - used ot calculate depth\n\n\n        // --------------- Enumerated types ---------------------------------\n\n        public enum ForageTypeEnum\n        {\n            P000,\n            P025,\n            P050,\n            P075,\n            P100\n        }\n\n        public enum UrineReturnEnum\n        {\n            UniformAcrossAllPatches,\n            RotatingInOrder,\n            Random,\n            PseudoRandom\n        }\n\n        public enum GeneralFertTypeEnum\n        {\n            AllYear,\n            NoWinter,\n            Monthly\n        }\n\n        // --------------- Parameters --------------------------------------\n\n        [Description(\"Verbose output?\")]\n        public bool Verbose { get; set; }\n\n        [Separator(\"Parameters for ArrayLoad and ArrayVol - whatever they are.\")]\n        \n        // - Paramters for this manager\n        [Description(\"Number of realisaitons to be generated: \")] public int NumRealisations { get; set; }\n        [Description(\"First mean load of the generated distribution (g N): \")] public double MeanLoadToGenerate { get; set; }\n        [Description(\"Amount to add to the first mean every day (g N): \")] public double AmountAddMeanLoad { get; set; }\n        [Description(\"Means of the original distributions, mu_i load (gN) first and then mu_j volume (L): \")] public double[] VectorOfMeans { get; set; }\n        [Description(\"Covariance matrix - in order of E_ii, E_ij, E_ij, E_jj: \")] public double[] CovarianceMatrix { get; set; }\n\n        [Separator(\"Herd and ME demand information\")]\n\n        // excreta return parameters\n        [Description(\"Stocking rate (animals/ha)\")]\n        [Units(\"cows/ha\")]\n        public double StockingRate { get; set; }\n\n        [Description(\"Number of paddocks on the farm\")]\n        [Units(\"days\")]\n        public int Num1HaPaddocks { get; set; }\n\n        [Description(\"N concentration of the silage fed out (% N in DM)\")]\n        [Units(\"kgN/kgDM\")]\n        public double SilageNConc { get; set; }\n\n        [Description(\"ME concentration of the silage fed out (MJ ME / kg DM)\")]\n        [Units(\"MJME/kgDM\")]\n        public double SilageMEConc { get; set; }\n\n        [Separator(\"Excreta return parameters\")]\n\n        [Description(\"Is the forage WithPlantain or NoPlantain?\")]\n        public ForageTypeEnum ForageType { get; set; }\n\n        [Description(\"Number of urinations per animal per day\")]\n        public double UrinationsPerHead { get; set; }\n\n        [Description(\"Adjust the urine volume and depth with N load scaling?\")]\n        public bool AdjustVolme { get; set; }\n\n        [Description(\"Size of the edge effect (m)\")]\n        [Units(\"m\")]\n        public double patchMargin { get; set; }\n\n        [Separator(\"Patch characteristics\")]\n\n        [Description(\"Pattern for urine N return (PseudoRandom uses a constant seed to all for repeatable simulations)\")]\n        public UrineReturnEnum UrineReturnPattern { get; set; }\n\n        // how the urine is returned to the soil\n        [Description(\"How many patches should there be in the grid?\")]\n        public int NumPatches { get; set; }\n\n        [Description(\"Suppress the intial patch creation messages to the summary file? yes is reccomended for large numbers of patches\")]\n        public bool SuppressPatchCreationMessages { get; set; }\n\n        [Separator(\"Fertiliser management\")]\n\n        [Description(\"Annual amount of urea-N fertiliser to apply (kg N /ha) - application on the 1st of the month\")]\n        [Units(\"kgN/ha/yr\")]\n        public double GeneralFertAmt { get; set; }\n\n        [Description(\"Apply fertiliser all year or not in winter (May, June, July)?\")]\n        public GeneralFertTypeEnum GeneralFertType { get; set; }\n\n        [Description(\"Send the list of patches to the summary file?\")]\n        public bool SendPatchesToSummary { get; set; }\n   \n        // --------------------------- Outputs -------------------------------------------\n      \n\n        ///<summary>A list (string) of patch numbers that the urine is returned to today using \"|\" as a seperator</summary>\n        public string ListOfPatches { get; set; }\n\n        public string ListOfDepths { get; set; }\n        public string ListOfAmounts { get; set; }\n        public string DepositionsPerGrid { get; set; }\n        public int NumPatchesForUrine { get; set; }\n\n        [Units(\"m2\")]\n        public double AreaUrinePatchesToday { get; set; }\n\n        [Units(\"kgN/ha\")]\n        public double AmountUrineNReturned { get; set; }\n\n        [Units(\"head/ha\")]\n        public double StockingDensity { get; set; }\n\n        public double LoadAdjustmentPropOverall { get; set; }\n\n        public double LoadAdjustmentGrammesIndividual { get; set; }\n\n        [Units(\"mm\")]\n        public double AverageUrineDepth { get; set; }\n   \n        [Units(\"kgN/ha\")]\n        public double UrineNReturned { get; set; }\n\n        public double SilageMade { get; set; }\n        public double SilageFed { get; set; }\n        public double SilageNFed { get; set; }\n        public double SilageMEFed { get; set; }\n        public double HerdMEDemand { get; set; }\n        public double CowMEDemand { get; set; }\n        public double CowDMIntake { get; set; }\n        public string CowState { get; set; }\n\n\n        // --------------------------- Methods -------------------------------------------\n    \n        /// <summary>Invoked when simulation starts.</summary>\n        /// <param name=\"sender\">The sender of the event.</param>\n        /// <param name=\"e\">The event arguments.</param>\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n        \t// Calculate array load and array vol \n        \t//Debugger.Break();\n            CowState = \"Dry-Pregnant\";\n            CalculateLoadVol();\n            if (AdjustVolme)\n            {\n                if (ForageType == ForageTypeEnum.P000)\n                \tslopeVolWithLoad = 0.119;\n            \telse if (ForageType == ForageTypeEnum.P025)\n            \t\tslopeVolWithLoad = 0.116;\n                else if (ForageType == ForageTypeEnum.P050)\n                \tslopeVolWithLoad = 0.128;\n                else if (ForageType == ForageTypeEnum.P075)\n                \tslopeVolWithLoad = 0.158;\n                else if (ForageType == ForageTypeEnum.P100)\n                \tslopeVolWithLoad = 0.224;\t\t\n            }\n            \n            rndConstSeed = new Random((int)666);\n        }\n        \n        \n        /// <summary>Invoked by clock to do management actions.</summary>\n        /// <param name=\"sender\">The sender of the event.</param>\n        /// <param name=\"e\">The event arguments.</param>\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            // if this is the start of the simulation then sort out the depth for the urine placement, can't do this in initialisation because of the module order\n            if (clock.Today == clock.StartDate)\n            {\n                CalcUrinePlacementDepth();   // calculate the layer weighting for the urine depth deposition\n                //patchManager.MaximumNitrogenAvailableToPlants = 3.0;  // user can change this but this value reccomneded after testing\n                patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;\n\n                // in a gridded patchy paddock the patches are created at the start of the simulation and stay there throughout - no amalgamation\n                patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;\n\n                patchManager.basePatchApproach = BaseApproachEnum.IDBased;\n        \n                patchManager.AllowPatchAmalgamationByAge = false;   // in a gridded patchy paddock the patches are created at the start of the simulation and stay there throughout - no amalgamation\n                patchManager.PatchAgeForForcedMerge = 3.0;\n                //patchManager.allowNewPools = true;               // this changes the calculation of soluble carbon for denitrification to use only the active pools (sometimes needed to prevent excessive denitrifciation when N from urine patches gets deep in the soil where all the carbon is inactive)\n  \n                int[] PatchToAddTo = new int[1];  //need an array variable for this\n                string[] PatchNmToAddTo = new string[1];\n                int nPatchesAdded = 0;\n                double NewArea = 1.0 / NumPatches;\n\n                while (nPatchesAdded < NumPatches - 1)\n                {\n                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();\n                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;\n                    NewPatch.AreaFraction = NewArea;\n                    PatchToAddTo[0] = 0;\n                    PatchNmToAddTo[0] = \"0\";\n                    NewPatch.AffectedPatches_id = PatchToAddTo;\n                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;\n                    NewPatch.SuppressMessages = SuppressPatchCreationMessages;\n                    patchManager.Add(NewPatch);\n                    nPatchesAdded += 1;\n                }\n            }\n         \n            SilageMade = 0.0;\n            SilageFed = 0.0;\n            SilageNFed = 0.0;\n            SilageMEFed = 0.0;\n      \n            UrineNReturned = 0.0;\n            ListOfPatches = \"|\";\n            ListOfDepths = \"|\";\n            ListOfAmounts = \"|\";\n            DepositionsPerGrid = \"|\";\n            AreaUrinePatchesToday = 0.0;\n            NumPatchesForUrine = 0;\n            //UrinePatchLoad = 0.0;\n            StockingDensity = /*DaysPerGrazeArray[Clock.month - 1] * */ Num1HaPaddocks * StockingRate;\n\n            DoCowStuff();\n\n            if ((GeneralFertAmt > 0.0) && (clock.Today.Day == 1))\n            {\n                DoFertiliser();\n            }\n\n        }\n        \n        \n        /// <summary>Invoked when a graze occurs.</summary>\n        /// <param name=\"sender\">The sender of the event.</param>\n        /// <param name=\"e\">The event arguments.</param>\n        [EventSubscribe(\"DoUrineReturn\")]\n        private void OnDoUrineReturn(object sender, SimpleGrazing.UrineReturnType urineReturn)\n        {\n            CowDMIntake = urineReturn.GrazedDM / StockingDensity;\n            // calculate the number of patches based on the patch size and the /cow pasture amount of 15 kg DM /cow /day and 12 urine patchs per cow per day * 0.25 m2 /patch\n         \n         \n            int NumUrinations = Convert.ToInt32(UrinationsPerHead * StockingDensity);  // this gives the number of samples from the array\n            int[] MySamples = new int[NumUrinations];  // this will hold the indicies of the samples\n            double randomSampleSumLoad = 0.0;\n            for (int i = 0; i < NumUrinations; i++)\n            {\n                MySamples[i] = rndConstSeed.Next(0, NumRealisations-1);  \n                randomSampleSumLoad += ArrayLoad[MySamples[i]] / 1000;  // to put this into kg\n            }\n            Array.Sort(MySamples);  // sort MySamples into increasing order - that will also cause a sort for increasing Load\n            ListOfPatches = \"|\";\n            ListOfDepths = \"|\";\n            ListOfAmounts = \"|\";\n            DepositionsPerGrid = \"|\";\n            AmountUrineNReturned = urineReturn.Amount;\n            LoadAdjustmentPropOverall = AmountUrineNReturned / randomSampleSumLoad;\n            AverageUrineDepth = 0.0;\n         \n            bool testMoreUrineToApply = true;\n            int indexMySamples = -1;\n\n            while (testMoreUrineToApply)\n            {\n                bool testAggregation = true;  // jump out of the aggregation (i.e. go to the next grid\n                double tmpLoad = 0.0;\n                double tmpArea = 0.0;\n                double tmpDepth = 0.0;\n                int tempNum2Agg = 0;\n\n                PatchNumForUrine = rndConstSeed.Next(0, NumPatches);  //gets the value for PatchNumForUrine\n                ListOfPatches += (PatchNumForUrine + 1) + \"|\";  // add 1 here because the output component uses 1-based rather than 0-based arrays\n        \n                int[] PatchToAddTo = new int[1];  //need an array variable for this\n                string[] PatchNameToAddTo = new string[1];\n                double[] UreaToAdd = new double[waterBalance.Thickness.Length];  \n\n                while (testAggregation)\n                {\n                    indexMySamples += 1;  // index of the individual samples\n                    tempNum2Agg += 1;\n\n                    //summary.WriteMessage(this, Clock.Today + \" up to 3 \" + indexMySamples + \" \" + NumUrinations + \" \" + MySamples.Length, MessageType.Diagnostic);\n                    //summary.WriteMessage(this, Clock.Today + \" up to 3 \" + indexMySamples + \" \" + MySamples[indexMySamples], MessageType.Diagnostic);\n                    //summary.WriteMessage(this, Clock.Today + \" up to 3 \" + indexMySamples + \" \" + MySamples[indexMySamples] + \" \" + ArrayDepth[MySamples[indexMySamples]], MessageType.Diagnostic);\n\n                    double thisPatchLoad = (ArrayLoad[MySamples[indexMySamples]]);  // result is in g N\n                    double LoadAdjustmentGrammesIndividual = (thisPatchLoad * LoadAdjustmentPropOverall - thisPatchLoad) * slopeVolWithLoad; // result is in L and is the additional L in volume\n\n                    double thisPatchVolumeAdjusted = Math.Max(1.0, (ArrayVol[MySamples[indexMySamples]] + LoadAdjustmentGrammesIndividual));\n                    double WettedAreaCm2 = 1349.8 * Math.Log(thisPatchVolumeAdjusted) + 1034.8;\n                    //summary.WriteMessage(this, \"thisPatchVolumeAdjusted \" + thisPatchVolumeAdjusted + \" Math.Log(thisPatchVolumeAdjusted) \" + Math.Log(thisPatchVolumeAdjusted), MessageType.Diagnostic);\n\n                    double WettedRadiusM = Math.Sqrt(WettedAreaCm2 / Math.PI) / 100;\n                    double AffectedAreaM2 = (WettedRadiusM + patchMargin) * (WettedRadiusM + patchMargin) * Math.PI;\n           \n                    //summary.WriteMessage(this, \"incrWaterContent \" + incrWaterContent +  \"WettedRadiusM \" + WettedRadiusM, MessageType.Diagnostic );\n           \n                    UrineDepth = (thisPatchVolumeAdjusted / 1000 / incrWaterContent) / (WettedRadiusM * WettedRadiusM * Math.PI) * 1000; // now in mm\n                    AverageUrineDepth += UrineDepth / NumUrinations;\n\n                    //summary.WriteMessage(this, \"UrineDepth \" + UrineDepth + \" thisPatchVolumeAdjusted \" + thisPatchVolumeAdjusted + \" thisPatchLoad \" + thisPatchLoad + \" thisPatchLoadAdjusted \" + (thisPatchLoad * LoadAdjustmentPropOverall), MessageType.Diagnostic);\n                    //UrineDepth = ArrayDepth[MySamples[indexMySamples]];\n                    CalcUrinePlacementDepth();\n           \n                    for (int ii = 0; ii <= (waterBalance.Thickness.Length - 1); ii++)\n                        UreaToAdd[ii] += UrineDepthPlacement[ii] * ((ArrayLoad[MySamples[indexMySamples]] / 1000 * (AmountUrineNReturned / randomSampleSumLoad)) / (10000.0 / NumPatches) * 10000);   // the first /1000 is to convert g load to kg// need ot make depth dynamic\n                    UrineNReturned += (ArrayLoad[MySamples[indexMySamples]] / 1000) * LoadAdjustmentPropOverall;\n\n                    //summary.WriteMessage(this, Clock.Today + \" up to 4\", MessageType.Diagnostic);\n\n                    /*AddSoilCNPatchType CurrentPatch = new AddSoilCNPatchType();\n                    CurrentPatch.Sender = \"manager\";\n                    CurrentPatch.DepositionType = \"ToSpecificPatch\";\n                    PatchToAddTo[0] = PatchNumForUrine;\n                    CurrentPatch.AffectedPatches_id = PatchToAddTo;\n                    CurrentPatch.Urea = UreaToAdd;\n                    AddSoilCNPatch.Invoke(CurrentPatch); */\n\n                    if (Verbose)\n                        summary.WriteMessage(this, \"For sample \" + indexMySamples + \" returned \" + (ArrayLoad[MySamples[indexMySamples]] / 1000) + \" kg urine N to patch \" + PatchNumForUrine, MessageType.Diagnostic);\n           \n                    tmpArea += AffectedAreaM2;\n                    double testArea = 0.0;\n                    //summary.WriteMessage(this, Clock.Today + \" up to 5c\", MessageType.Diagnostic);\n\n                    if (indexMySamples >= (NumUrinations - 1))\n                        testArea = 20000.0; // a large area to force a final deposition\n                    else\n                    {\n                        //summary.WriteMessage(this, Clock.Today + \" up to 5c \"  + \" tmpArea \" + tmpArea + \" NumUrinations -1  \" + (NumUrinations -1), MessageType.Diagnostic  );\n              \n                        //testArea = (tmpArea + tmpArea + ArrayArea[MySamples[indexMySamples + 1]]) / 2.0; \n                        testArea = (tmpArea + (tmpArea + AffectedAreaM2)) / 2.0; \n                    }\n                    //summary.WriteMessage(this, Clock.Today + \" up to 6\", MessageType.Diagnostic);\n\n                    if (testArea > (10000.0 / NumPatches))  // i.e. stop this aggregation and move to a new grid\n                    {\n                        NumPatchesForUrine += 1;\n                        testAggregation = false; // so jump out of this loop\n                    }\n           \n                    //summary.WriteMessage(this, Clock.Today + \" up to 7\", MessageType.Diagnostic);\n\n                } // end of the while (testAggregation)\n        \n                //summary.WriteMessage(this, Clock.Today + \"8 existed aggregation loop and about add up UreaToAdd\", MessageType.Diagnostic);\n                double tempNReturned = 0.0;\n                for (int ii = 0; ii <= (waterBalance.Thickness.Length - 1); ii++)\n                    tempNReturned += UreaToAdd[ii];\n\n                //summary.WriteMessage(this, Clock.Today + \"9 adding to list of amounts, tempNReturned and UrineDepth are \" + tempNReturned + \" and \" + UrineDepth, MessageType.Diagnostic);\n                ListOfAmounts += Convert.ToInt32(tempNReturned) + \"|\";\n                //summary.WriteMessage(this, Clock.Today + \"10\", MessageType.Diagnostic);\n                ListOfDepths += Convert.ToInt32(UrineDepth) + \"|\"; //mmm\n                //summary.WriteMessage(this, Clock.Today + \"11\", MessageType.Diagnostic);\n                DepositionsPerGrid += tempNum2Agg + \"|\"; //mmm\n                //summary.WriteMessage(this, Clock.Today + \"12\", MessageType.Diagnostic);\n        \n\n        \n                AddSoilCNPatchType CurrentPatch = new AddSoilCNPatchType();\n                CurrentPatch.Sender = \"manager\";\n                CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;\n                PatchToAddTo[0] = PatchNumForUrine;\n                PatchNameToAddTo[0] = PatchNumForUrine.ToString();\n                CurrentPatch.AffectedPatches_id = PatchToAddTo;\n                CurrentPatch.AffectedPatches_nm = PatchNameToAddTo;\n                CurrentPatch.Urea = UreaToAdd;\n                patchManager.Add(CurrentPatch);\n\n                if (indexMySamples >= (NumUrinations - 1))\n                {\n                    testMoreUrineToApply = false;\n                }\n            } // end of the while (testMoreUrineToApply)\n         \n            //AreaUrinePatchesToday = UrinationsPerHead * SingleUrinePatchArea * StockingDensity;\n            //double AreaSingleGPPatch = 10000.0 / NumPatches; // units are m2\n            //NumPatchesForUrine = Math.Max(1, Convert.ToInt32(AreaUrinePatchesToday / AreaSingleGPPatch));\n            //double UrineNPerPatch = AmountUrineNReturned / NumPatchesForUrine; // units are kg N /patch\n            //UrinePatchLoad = (UrineNReturned / AreaSingleGPPatch * 10000);\n\n            if (Verbose)  // this needs updating\n            {\n                summary.WriteMessage(this, \"The amount of urine N to be returned to the whole paddock is \" + AmountUrineNReturned, MessageType.Diagnostic);\n            }            \n            if (SendPatchesToSummary)\n            {\n                summary.WriteMessage(this, clock.Today + \", ListOfPatches, returned urine to \" + NumPatchesForUrine + \" patches, these being: \" + ListOfPatches, MessageType.Diagnostic);\n                summary.WriteMessage(this, clock.Today + \", ListOfDepths, for the above \" + NumPatchesForUrine + \" patches, was : \" + ListOfDepths, MessageType.Diagnostic);\n                summary.WriteMessage(this, clock.Today + \", ListOfAmounts, for the above \" + NumPatchesForUrine + \" patches, was : \" + ListOfAmounts, MessageType.Diagnostic);\n                summary.WriteMessage(this, clock.Today + \", DepositionsPerGrid, for the above \" + NumPatchesForUrine + \" patches, was : \" + DepositionsPerGrid, MessageType.Diagnostic);\n            }\n    \n            //DoUrineReturnGP();  // all this is above now\n        }\n        \n        private void CalcUrinePlacementDepth()\n        {\n            // calculates what proportion of the urinary N to put in each layer of the soil\n      \n            foreach (Zone Paddock in simulation.FindAllChildren<Zone>())\n            {\n                var SoilWater = Paddock.FindInScope<WaterBalance>();\n                double tempDepth = 0.0;\n                UrineDepthPlacement = new double[SoilWater.Thickness.Length];\n                for (int i = 0; i <= (SoilWater.Thickness.Length - 1); i++)\n                {\n                    tempDepth += SoilWater.Thickness[i];\n                    if (tempDepth <= UrineDepth)\n                    {\n                        UrineDepthPlacement[i] = SoilWater.Thickness[i] / UrineDepth;\n                    }\n                    else\n                    {\n                        UrineDepthPlacement[i] = (UrineDepth - (tempDepth - SoilWater.Thickness[i])) / (tempDepth - (tempDepth - SoilWater.Thickness[i])) * SoilWater.Thickness[i] / UrineDepth;\n                        UrineDepthPlacement[i] = Math.Max(0.0, Math.Min(1.0, UrineDepthPlacement[i]));\n                    }\n                    if (Verbose)\n                        summary.WriteMessage(this, \"The proportion of urinary-N deposited into the \" + i + \"th layer will be \" + UrineDepthPlacement[i], MessageType.Diagnostic);\n                }\n            }\n\n        }        \n        \n        private void DoFertiliser()\n        {\n            bool ApplyFert = false; // the test for first day of the month has already been done, this will only test to make sure no fertiliser in winter etc\n            double NumMonths;\n      \n            if (GeneralFertType == GeneralFertTypeEnum.Monthly)\n            {\n                NumMonths = 12;\n                ApplyFert = true;\n            }\n            else if (GeneralFertType == GeneralFertTypeEnum.NoWinter)\n            {\n                NumMonths = 9;\n                if ((clock.Today.Month < 5) || (clock.Today.Month > 7))\n                    ApplyFert = true;\n                else\n                    ApplyFert = false;\n            }\n            else\n                throw new Exception(\"Wrong fertiliser setting\");\n\n            if (ApplyFert)\n            {\n                foreach (Zone Paddock in simulation.FindAllChildren<Zone>())\n                {\n                    var fertiliser = Paddock.FindInScope<Fertiliser>();\n                    fertiliser.Apply(GeneralFertAmt / NumMonths, Fertiliser.Types.UreaN);\n                    if (Verbose)\n                        summary.WriteMessage(this, \"Applying \" + (GeneralFertAmt / NumMonths) + \" kg of fertiliser to the whole paddock\", MessageType.Diagnostic);\n                }\n            }\n        }\n        \n        private void DoCowStuff()\n        {\n            if (DateUtilities.CompareDates(CowDateCalving, clock.Today) > 0)\n                WeeksBeforeCalving = (DateUtilities.GetDate(CowDateCalving, (clock.Today.Year + 1)) - clock.Today).TotalDays / 7.0;\n            else\n                WeeksBeforeCalving = (DateUtilities.GetDate(CowDateCalving, clock.Today.Year) - clock.Today).TotalDays / 7.0;\n\n\n            if (DateUtilities.CompareDates(CowDateCalving, clock.Today) <= 0)\n                LactationWeek = (clock.Today - DateUtilities.GetDate(CowDateCalving, (clock.Today.Year - 1))).TotalDays / 7.0;\n            else\n                LactationWeek = (clock.Today - DateUtilities.GetDate(CowDateCalving, (clock.Today.Year))).TotalDays / 7.0;\n\n\n            // find state\n            if (DateUtilities.WithinDates(CowDateCalving, clock.Today, CowDateInCalf))\n            {\n                CowState = \"Milking-Notpreg\";\n                CowMSPerDay = LactationCurveParam[0] * Math.Pow(LactationWeek, LactationCurveParam[1]) * Math.Exp(LactationCurveParam[2] * LactationWeek) * LactationCurveParam[3];\n                //CowMEDemand = 0.0 + 0.0 + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;\n                CowMEDemand = CowMaintME + 0.0 + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;\n            }\n            else if (DateUtilities.WithinDates(CowDateInCalf, clock.Today, CowDateDryOff))\n            {\n                CowState = \"Milking-Pregnant\";\n                CowMSPerDay = LactationCurveParam[0] * Math.Pow(LactationWeek, LactationCurveParam[1]) * Math.Exp(LactationCurveParam[2] * LactationWeek) * LactationCurveParam[3];\n                //CowMEDemand = 0.0 + (CowPregnancyParam[0] * Math.Exp(CowPregnancyParam[1] * WeeksBeforeCalving)) + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)\n                CowMEDemand = CowMaintME + (CowPregnancyParam[0] * Math.Exp(CowPregnancyParam[1] * WeeksBeforeCalving)) + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)\n            }\n            else if (DateUtilities.WithinDates(CowDateDryOff, clock.Today, CowDateCalving))\n            {\n                CowState = \"Dry-Pregnant\";\n                CowMSPerDay = 0.0;\n                CowMEDemand = CowMaintME + (CowPregnancyParam[0] * Math.Exp(CowPregnancyParam[1] * WeeksBeforeCalving)) + CowWalkingDist * CowWalkingEnergyPerKm + 0.0;  //=72.154*EXP(-0.143*L3)\n            }\n            else\n                throw new Exception(\"Error in calculating CowState\");  \n\n            HerdMEDemand = CowMEDemand * StockingDensity;\n            //summary.WriteMessage(this, Clock.Today + \" CowState \" + CowState + \" CowMSPerDay \" + CowMSPerDay + \" CowMEDemand \" + CowMEDemand, MessageType.Diagnostic);\n\n      \n        }\n        \n        \n        private void CalculateLoadVol()\n        {\n        \tvar RandomNumGenerator = new Random(666);\n            \n            // Defines parameters of transformed distribution.\n            var loadToGenerate = MeanLoadToGenerate + AmountAddMeanLoad;\n            double NormalMeanLoadToGenerate = Math.Log10(loadToGenerate) - 0.5 * CovarianceMatrix[0];\n\n            double[,] TransformedMu = { { NormalMeanLoadToGenerate },\n                                        { VectorOfMeans[1] }};\n\n            double[,] SigmaRows = { { CovarianceMatrix[0], CovarianceMatrix[1] },\n                                    { CovarianceMatrix[2], CovarianceMatrix[3] } };\n\n            double[,] SigmaColumns = { { 1} };\n\n            // Converts parameters to MathNet matrices.\n            Matrix<double> TransformedMuMatrix = Matrix<double>.Build.DenseOfArray(TransformedMu);\n            Matrix<double> SigmaRowsMatrix = Matrix<double>.Build.DenseOfArray(SigmaRows);\n            Matrix<double> SigmaColumnsMatrix = Matrix<double>.Build.DenseOfArray(SigmaColumns);\n\n            // Initializes transformed distribution.\n            var TransformedMVN = new MatrixNormal(TransformedMuMatrix,\n                                                  SigmaRowsMatrix,\n                                                  SigmaColumnsMatrix,\n                                                  RandomNumGenerator);\n\n            // Generates samples and transforms them back to lognormal space.\n            double[] LogNormalLoadSamples = new double[NumRealisations];\n            double[] LogNormalVolumeSamples = new double[NumRealisations];\n\n            for (int i = 0; i < NumRealisations; i++)\n            {\n                Matrix<double> LoadVolumeSample = TransformedMVN.Sample();\n                LogNormalLoadSamples[i] = Math.Pow(10.0, LoadVolumeSample[0,0]);\n                LogNormalVolumeSamples[i] = Math.Pow(10.0, LoadVolumeSample[1,0]);\n            }\n\n            // Updates some script parameters.\n            ArrayLoad = LogNormalLoadSamples;\n            ArrayVol = LogNormalVolumeSamples;\n        }\n    }\r\n}\r\n",
+          "Code": "using Models.Climate;\nusing System;\nusing System.Linq;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Zones;\nusing Models.AgPasture;\nusing System.Xml.Serialization;\nusing Models.WaterModel;\nusing Models.Surface;\nusing Models.Soils;\nusing APSIM.Shared.Utilities;\nusing System.Collections.Generic;\nusing Models.Interfaces;\nusing Models.Soils.Nutrients;\nusing Models.Soils.NutrientPatching;\nusing MathNet.Numerics.Distributions;\nusing MathNet.Numerics.LinearAlgebra;\nusing System.Diagnostics;\nusing Newtonsoft.Json;\nusing Models.Core.ApsimFile;\n\n\n\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class SimpleCowScript : Model\n    {\n\t\t[Link] Simulation simulation;\n        [Link] Clock clock;\n        [Link] Fertiliser fertiliser;\n        [Link] WaterBalance waterBalance;\n        [Link] SurfaceOrganicMatter surfaceOrganicMatter;\n        [Link] INutrientPatchManager patchManager;\n        [Link] ISummary summary;\n    \n        [Link] private Soil soil;\n        [Link] private Weather weather;\n        [Link] private Zone zone;\n        [Link] private IPhysical soilPhysical;\n        [Link] private List<NutrientPatchManager> patchManagers;\n\n\n\n\n\t\t/// <summary>class for encapsulating a urine return.</summary>\n\t\tpublic class DoUrineReturnEventData : EventArgs\n\t\t{\n    \t\t/// <summary>Amount of urine to return (kg)</summary>\n\t    \tpublic double Amount { get; set;  }\n\n\t   \t\t/// <summary>Depth (mm) of soil to return urine into.</summary>\n    \t\tpublic double Depth { get; set;  }\n\n\t   \t\t/// <summary>Grazed dry matter.</summary>\n\t\t    public double GrazedDM { get; set; }\n\t\t}\n\n\t\t/// below is the definition of the event\n\t\tpublic event EventHandler<DoUrineReturnEventData> DoCowUrineReturn;\n\n\n        // --------------- Privates ---------------------------------\n\n        //private double CowBodyWeight = 450.0;      // kg put on UI\n        //private string CowDateCalving = \"1-aug\";   // put on UI\n        //private string CowDateInCalf = \"1-nov\";    //  3 months after calving\n        //private string CowDateDryOff = \"30-apr\";   // put on UI\n        private double CowMSPerDay = 0.0;         // kgMS/day/head - calculated, initialising here\n        private double CowMSEnergyPerKg = 77.0;         // MJME/kg MS (trying 77 c.f. 80)\n        private double CowWalkingDist = 3.0;            // km\n        private double CowWalkingEnergyPerKm = 2.0;         // MJME/km\n        private double[] CowN2BodyPerc = { 30.0, 10.0 };         // Percent N in intake to body and product for milking and dry\n        private double[] CowN2UrinePerc = { 42.0, 54.0 };         // Percent N in intake to uriney and product for milking and dry\n        private double[] CowN2DungPerc = { 28.0, 36.0 };         // Percent N in intake to dung and product for milking and dry\n        //private double[] LactationCurveParam = { 20.0, 0.2, -0.04, 0.092 };         // put on UI Parameters for the lactation curve, last parm 0.113 will give 500 kg MS, 0.092 will give 406 kg MS\n        private double WeeksBeforeCalving = 0.0;     // cannot this be calculated?\n        private double LactationWeek = 0.0;          // and this?\n        private double UrineDepth = 0;               // wot?\n                \n\t\t// perhaps should relate this to cow body weight\n        //private double[] CowPregnancyParam = {54.59, -0.135}; // multiplier and exponential parameters for pregnancy energy (25 kg calf), time in weeks before\n        //private double[] CowPregnancyParam = {63.931, -0.139}; // multiplier and exponential parameters for pregnancy energy (30 kg calf), time in weeks before\n        private double[] CowPregnancyParam = { 72.154, -0.143 }; // multiplier and exponential parameters for pregnancy energy (35 kg calf), time in weeks before\n        //private double[] CowPregnancyParam = {76.208, -0.142}; // multiplier and exponential parameters for pregnancy energy (40 kg calf), time in weeks before\n   \n        private double CowMaintME = 54; //But will be overridden in StartSimulation  \n        // MJME/day https://www.dairynz.co.nz/media/5789573/facts_and_figures_web_chapter4_cow_feed_requirements.pdf page 4 and Excel regression on table \"Maintenance MJ ME/day\"\n\n        private double AmountDungCReturned = 0.0;\n        private double myResidual;\n        bool GrazeNow = false;\n\n\n        // --------------- Parameters --------------------------------------\n\n        [Description(\"Verbose output?\")] public bool Verbose { get; set; } \n\n        [Separator(\"Cow characteristics\")]\n        \n        [Description(\"Cow mature live weight (kg) - only use 450 until make some of the other parameters dynamic\")]\n        [Units(\"kg\")]\n        public double CowBodyWeight { get; set; } // = 450.0;\n       \n        [Description(\"Calving date (dd-mmm)\")]\n        [Units(\"dd-mmm\")]\n        public string CowDateCalving{ get; set; }\n       \n        [Description(\"If-calf date (dd-mmm)\")]\n        [Units(\"dd-mmm\")]\n        public string CowDateInCalf{ get; set; }\n       \n        [Description(\"Dry-off date (dd-mmm)\")]\n        [Units(\"dd-mmm\")]\n        public string CowDateDryOff{ get; set; }\n\n        [Separator(\"          Woods equation lactation curve - 20.0, 0.2, -0.04, 0.092 for 406 kg MS in the seasoon. Last param at 0.113 will give 500\")]\n\n        [Description(\"Lactation curve parameters - try 20.0, 0.2, -0.04, 0.092 for 406 kg MS in the seasoon \")]\n        [Units(\"various\")]\n        public double[] LactationCurveParam { get; set; }\n       \n        /*[Description(\"\")]\n        [Units(\"\")]\n        public double X { get; set; }\n       \n        [Description(\"\")]\n        [Units(\"\")]\n        public double X { get; set; }\n       \n        [Description(\"\")]\n        [Units(\"\")]\n        public double X { get; set; }\n       \n        [Description(\"\")]\n        [Units(\"\")]\n        public double X { get; set; }*/\n       \n        \n\n        [Separator(\"Herd and ME demand information\")]\n\n\n        [Description(\"Stocking rate (cows/ha)\")]\n        [Units(\"cows/ha\")]\n        public double StockingRate { get; set; }\n\n        [Description(\"Number of paddocks on the farm\")]\n        [Units(\"days\")]\n        public int Num1HaPaddocks { get; set; }\n\n        [Description(\"N concentration of the silage fed out (% N in DM)\")]\n        [Units(\"kgN/kgDM\")]\n        public double SilageNConc { get; set; }\n\n        [Description(\"ME concentration of the silage fed out (MJ ME / kg DM)\")]\n        [Units(\"MJME/kgDM\")]\n        public double SilageMEConc { get; set; }\n\n        [Separator(\"Excreta return parameters\")]\n\n        [Description(\"Number of urinations per animal per day\")]\n        public double UrinationsPerHead { get; set; }\n\n\n        [Description(\"Size of the edge effect (m)\")]\n        [Units(\"m\")]\n        public double patchMargin { get; set; }\n        \n        [Description(\"Adjust the urine volume and depth with N load scaling?\")]\n        public bool AdjustVolme { get; set; }\n\n\n        [Separator(\"Patch characteristics\")]\n\n   \n        // --------------------------- Outputs -------------------------------------------\n      \n\n        [Units(\"m2\")]\n        public double AreaUrinePatchesToday { get; set; }\n\n        [Units(\"kgN/ha\")]\n        public double AmountUrineNReturned { get; set; }\n\n        [Units(\"head/ha\")]\n        public double StockingDensity { get; set; }\n\n        public double LoadAdjustmentPropOverall { get; set; }\n\n        public double LoadAdjustmentGrammesIndividual { get; set; }\n\n        [Units(\"mm\")]\n        public double AverageUrineDepth { get; set; }\n   \n        [Units(\"kgN/ha\")]\n        public double UrineNReturned { get; set; }\n\n        public double SilageMade { get; set; }\n        public double SilageFed { get; set; }\n        public double SilageNFed { get; set; }\n        public double SilageMEFed { get; set; }\n        public double HerdMEDemand { get; set; }\n        public double CowMEDemand { get; set; }\n        public double CowDMIntake { get; set; }\n        public string CowState { get; set; }\n\n\n        // --------------------------- Methods -------------------------------------------\n    \n        /// <summary>Invoked when simulation starts.</summary>\n        /// <param name=\"sender\">The sender of the event.</param>\n        /// <param name=\"e\">The event arguments.</param>\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n        \t//Debugger.Break();\n        \t\n\t\t\tCowMaintME = CowBodyWeight * 0.0942 + 11.507;   \n        \t// MJME/day https://www.dairynz.co.nz/media/5789573/facts_and_figures_web_chapter4_cow_feed_requirements.pdf page 4 and Excel regression on table \"Maintenance MJ ME/day\"\n\n        }\n\n        \n        /// <summary>Invoked by clock to do management actions.</summary>\n        /// <param name=\"sender\">The sender of the event.</param>\n        /// <param name=\"e\">The event arguments.</param>\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            CowPhysiologicalState();\n\n            SilageMade = 0.0;\n            SilageFed = 0.0;\n            SilageNFed = 0.0;\n            SilageMEFed = 0.0;\n      \n            UrineNReturned = 0.0;\n            \n            //TODO these grazing parameters need to go back into the manager!\n            StockingDensity = /*DaysPerGrazeArray[Clock.month - 1] * */ Num1HaPaddocks * StockingRate;\n\n\n\n        }\n        \n        \n        /// <summary>Invoked when a graze occurs.</summary>\n        /// <param name=\"sender\">The sender of the event.</param>\n        /// <param name=\"e\">The event arguments.</param>\n        [EventSubscribe(\"DoUrineReturn\")]\n        private void OnDoUrineReturn(object sender, SimpleGrazing.UrineReturnType urineReturn)\n        {\n        \n\t\t\tDoCowUrineReturn.Invoke(this,\n\t            new DoUrineReturnEventData()\n    \t        {\n    \t        \tAmount = 24, //AmountUrineNReturned,\n    \t            Depth = 200, //DepthUrineIsAdded,\n    \t            GrazedDM = 1200 //GrazedDM\n    \t        });\n        \n        }\n\n        \n        \n        private void CowPhysiologicalState()\n        {\n            if (DateUtilities.CompareDates(CowDateCalving, clock.Today) > 0)\n                WeeksBeforeCalving = (DateUtilities.GetDate(CowDateCalving, (clock.Today.Year + 1)) - clock.Today).TotalDays / 7.0;\n            else\n                WeeksBeforeCalving = (DateUtilities.GetDate(CowDateCalving, clock.Today.Year) - clock.Today).TotalDays / 7.0;\n\n\n            if (DateUtilities.CompareDates(CowDateCalving, clock.Today) <= 0)\n                LactationWeek = (clock.Today - DateUtilities.GetDate(CowDateCalving, (clock.Today.Year - 1))).TotalDays / 7.0;\n            else\n                LactationWeek = (clock.Today - DateUtilities.GetDate(CowDateCalving, (clock.Today.Year))).TotalDays / 7.0;\n\n\n            // find state\n            if (DateUtilities.WithinDates(CowDateCalving, clock.Today, CowDateInCalf))\n            {\n                CowState = \"Milking-Notpreg\";\n                CowMSPerDay = LactationCurveParam[0] * Math.Pow(LactationWeek, LactationCurveParam[1]) * Math.Exp(LactationCurveParam[2] * LactationWeek) * LactationCurveParam[3];\n                //CowMEDemand = 0.0 + 0.0 + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;\n                CowMEDemand = CowMaintME + 0.0 + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;\n            }\n            else if (DateUtilities.WithinDates(CowDateInCalf, clock.Today, CowDateDryOff))\n            {\n                CowState = \"Milking-Pregnant\";\n                CowMSPerDay = LactationCurveParam[0] * Math.Pow(LactationWeek, LactationCurveParam[1]) * Math.Exp(LactationCurveParam[2] * LactationWeek) * LactationCurveParam[3];\n                //CowMEDemand = 0.0 + (CowPregnancyParam[0] * Math.Exp(CowPregnancyParam[1] * WeeksBeforeCalving)) + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)\n                CowMEDemand = CowMaintME + (CowPregnancyParam[0] * Math.Exp(CowPregnancyParam[1] * WeeksBeforeCalving)) + CowWalkingDist * CowWalkingEnergyPerKm + CowMSPerDay * CowMSEnergyPerKg;  //=72.154*EXP(-0.143*L3)\n            }\n            else if (DateUtilities.WithinDates(CowDateDryOff, clock.Today, CowDateCalving))\n            {\n                CowState = \"Dry-Pregnant\";\n                CowMSPerDay = 0.0;\n                CowMEDemand = CowMaintME + (CowPregnancyParam[0] * Math.Exp(CowPregnancyParam[1] * WeeksBeforeCalving)) + CowWalkingDist * CowWalkingEnergyPerKm + 0.0;  //=72.154*EXP(-0.143*L3)\n            }\n            else\n                throw new Exception(\"Error in calculating CowState\");  \n\n            HerdMEDemand = CowMEDemand * StockingDensity;\n            //summary.WriteMessage(this, Clock.Today + \" CowState \" + CowState + \" CowMSPerDay \" + CowMSPerDay + \" CowMEDemand \" + CowMEDemand, MessageType.Diagnostic);\n\n      \n        }\n        \n        \n    }\n}\n",
           "Parameters": [
             {
               "Key": "Verbose",
               "Value": "False"
-            },
-            {
-              "Key": "NumRealisations",
-              "Value": "3334"
-            },
-            {
-              "Key": "MeanLoadToGenerate",
-              "Value": "0"
-            },
-            {
-              "Key": "AmountAddMeanLoad",
-              "Value": "2.5"
-            },
-            {
-              "Key": "VectorOfMeans",
-              "Value": "1.1567018157972, 0.400851532821705"
-            },
-            {
-              "Key": "CovarianceMatrix",
-              "Value": "0.047123025480434, 0.033361752139528, 0.033361752139528, 0.033598852595467"
             },
             {
               "Key": "StockingRate",
@@ -104,10 +236,6 @@
               "Value": "11"
             },
             {
-              "Key": "ForageType",
-              "Value": "P025"
-            },
-            {
               "Key": "UrinationsPerHead",
               "Value": "11"
             },
@@ -120,31 +248,62 @@
               "Value": "0.1"
             },
             {
-              "Key": "UrineReturnPattern",
-              "Value": "PseudoRandom"
+              "Key": "CowBodyWeight",
+              "Value": "450"
             },
             {
-              "Key": "NumPatches",
-              "Value": "3"
+              "Key": "CowDateCalving",
+              "Value": "1-aug"
             },
             {
-              "Key": "SuppressPatchCreationMessages",
-              "Value": "False"
+              "Key": "CowDateDryOff",
+              "Value": "10-may"
             },
             {
-              "Key": "GeneralFertAmt",
-              "Value": "100"
+              "Key": "LactationCurveParam",
+              "Value": "20, 0.2, -0.04, 0.092"
             },
             {
-              "Key": "GeneralFertType",
-              "Value": "NoWinter"
-            },
-            {
-              "Key": "SendPatchesToSummary",
-              "Value": "False"
+              "Key": "CowDateInCalf",
+              "Value": "1-nov"
             }
           ],
           "Name": "SimpleCow",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Newtonsoft.Json;\nusing Models.Soils.Nutrients;\nusing Models.Soils.NutrientPatching;\nusing Models.Interfaces;\nusing System.Diagnostics;\nusing System.Collections.Generic;\nusing APSIM.Shared.Utilities;\nusing Models.Surface;\nusing Models.Soils;\nusing System.Xml.Serialization;\nusing Models.AgPasture;\nusing Models.Zones;\nusing Models.PMF;\nusing Models.Core;\nusing Models.Core.ApsimFile;\nusing System;\nusing System.Linq;\nusing Models.Climate;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private Clock clock;\n        [Link] private Soil soil;\n        [Link] private ISummary summary;\n        [Link] private Weather weather;\n        [Link] private Zone zone;\n        [Link] private IPhysical soilPhysical;\n        [Link] private List<NutrientPatchManager> patchManagers;\n\n        private Sward sward;\n      \n        [Description(\"Verbose reporting to the summary file?\")]\n        public bool Verbose { get; set; }\n        \n        [Description(\"Should this simulation create Patches? If not then explict Zones will be created\")]\n        public bool PseudoPatches { get; set; }\n        \n        [Description(\"How many patches or zones should be created?\")]\n        public int ZoneCount { get; set; }\n        \n        [Description(\"Nature of nutrient return\")]\n        public UrineReturnTypes UrineReturnType { get; set; }\n\n        [Description(\"Pattern (spatial) of nutrient return\")]\n        public UrineReturnPatterns UrineReturnPattern { get; set; }\n\n        [Description(\"Depth of urine penetration (mm)\")]\n        public double UrineDepthPenetration { get; set; }\n\n        public int ZoneNumForUrine { get; set; }    // zone or patch that urine will be applied to\n        public int NumZonesForUrine { get; set; }   // not enabled yet but for applying urine across more than one zone or patch\n        public double DivisorForReporting { get; set; }   // \n        \n        public double HarvestedWt { get; set; }     // from the whole paddock\n        public double HarvestedN { get; set; }      // from the whole paddock\n        public double AmountUrineNReturned { get; set; }   // to the whole paddock\n        public double AmountDungNReturned { get; set; }    // to the whole paddock\n        public double AmountDungCReturned { get; set; }    // to the whole paddock\n        \n        private double[] MonthlyUrineNAmt;                 // breaks the N balance but useful for testing\n        private bool GrazeToday;\n\t\tprivate double[] UrineDepthPenetrationArray;\n\n\t\t[NonSerialized]\n\t\tRandom pseudoRandom; // = new Random(666);  // sets a constant seed value\n\n\n        public enum UrineReturnPatterns\n        {\n            // <summary>Not enabled Uniform</summary>\n            //UniformAcrossAllPatches,\n            /// <summary>Rotating in order</summary>\n            RotatingInOrder,\n            /// <summary>Not enabled Random</summary>\n            Random,\n            /// <summary>Not enabled Pseudo-random</summary>\n            PseudoRandom\n        }\n        \n        public enum UrineReturnTypes\n        {\n            /// <summary>FromHarvest</summary>\n            FromHarvest,\n            /// <summary>SetMonthly</summary>\n            SetMonthly,\n            /// <summary>From SimpleCow</summary>\n            FromElsewhere\n        }\n\n\n        public override void OnPreLink()\n        {\n            var simulation = Parent.Parent as Simulation;\n            var zone = simulation.FindChild<Zone>();\n                \n\t\t\t// Set the maximum N uptake for all species\n\t\t\tforeach (var species in zone.FindAllDescendants<PastureSpecies>())\n\t\t\t{\n\t\t\t\tvar root = species.FindChild<PastureBelowGroundOrgan>();\n\t\t\t\troot.MaximumNUptake = 3.0;\n\t\t\t}\n\t\t\t\t\n            if (!PseudoPatches)\n            {\n\t            zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones  \n\t            for (int i = 0; i < ZoneCount-1; i++)\n\t            {\n\t                var newZone = Apsim.Clone(zone);\n\t                Structure.Add(newZone, simulation);\n\t            }\n\t         }\n        }\n\n        [EventSubscribe(\"StartOfSimulation\")] private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            if (Verbose && !PseudoPatches)\n            \tsummary.WriteMessage(this, \"Created \" + ZoneCount + \" identical zones, each of area \" + (1.0 / ZoneCount) + \" ha\", MessageType.Diagnostic);\n\n            if (Verbose)\n            \tsummary.WriteMessage(this, \"Initialising the ZoneManager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\n            sward = new Sward(zone); \n\t\t\tpseudoRandom = new Random(666);  // sets a constant seed value\n\t\t\t\n\t\t\tif (PseudoPatches)\n\t\t\t\tDivisorForReporting = 1.0;\n\t\t\telse\n\t\t\t\tDivisorForReporting = ZoneCount;\n\t\t\t\n\t\t\tGrazeToday = false;\n\n            MonthlyUrineNAmt = new double[] { 24, 19, 17, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth\n            //MonthlyUrineNAmt = new double[] { 100, 100, 100, 12, 8, 5, 5, 10, 16, 19, 23, 25 }; //This is to get a pattern of return that varies with month but removes the variation that might be caused by small changes in herbage growth\n\n            if (PseudoPatches)\n            {\n                foreach (var patchManager in patchManagers)\n                {\n                    //patchManager.MaximumNitrogenAvailableToPlants = 0.45; This is now set in pre start\n                    patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;\n                    patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;\n                    patchManager.basePatchApproach = BaseApproachEnum.IDBased;\n                    patchManager.AllowPatchAmalgamationByAge = false;\n                    patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge                                \n                }\n\n                int[] PatchToAddTo = new int[1];  //need an array variable for this\n                string[] PatchNmToAddTo = new string[1];  \n                int nPatchesAdded = 0;\n                double NewArea = 1.0 / ZoneCount;\n\t\t\t\t\n                while (nPatchesAdded < ZoneCount - 1)\n                {\n                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();\n                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;\n                    NewPatch.AreaFraction = NewArea;\n                    PatchToAddTo[0] = 0;\n                    PatchNmToAddTo[0] = \"0\";\n                    NewPatch.AffectedPatches_id = PatchToAddTo;\n                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;\n                    NewPatch.SuppressMessages = Verbose;\n\n                    foreach (var patchManager in patchManagers)\n                        patchManager.Add(NewPatch);\n                    nPatchesAdded += 1;\n                }                \n\n                if (Verbose)\n                \tsummary.WriteMessage(this, patchManagers[0].NumPatches.ToString() + \" pseudopatches have been created\", MessageType.Diagnostic); \n            }\n\n            if (Verbose)\n            \tsummary.WriteMessage(this, \"Finished initialising the Manager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\n            NumZonesForUrine = 1;  // in the future this might be > 1\n            ZoneNumForUrine = -1;  // this will be incremented to 0 (first zone) below \n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {    \n\n            // if this is the start of the simulation then sort out the depth for the urine penetration. Can't do this in initialisation because of the module order\n            if (clock.Today == clock.StartDate)\n                UrinePenetration();\n\n            GrazeToday = false;\n\t\t\tif (clock.Today.AddDays(1).Day == 1)    // why separate this from the if below?  - to allow for multiple options in the future\n                GrazeToday = true;\n\n            if (GrazeToday)\n            {\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"Doing grazing\", MessageType.Diagnostic);\n\n                // do the herbage removal part of the grazing\n                int i = -1;  // to use as a zone counter\n                HarvestedWt = 0.0;\n                HarvestedN = 0.0;\n                foreach (Zone zone in this.Parent.FindAllInScope<Zone>())   // NOTE - this is a zone regardless of pseudopatches \n                {\n                    i += 1;\n                    var sward = new Sward(zone);\n                    sward.Graze(amount: 1000.0, type: \"SetResidueAmount\", Verbose);   // note that I have hardcoded the grazing residual for now\n                    HarvestedWt += sward.HarvestedWt * zone.Area;\n                    HarvestedN += sward.HarvestedN * zone.Area;\n                    if (Verbose)\n                    \tsummary.WriteMessage(this, \"Just harvested \" + HarvestedWt + \" from Zone \" + zone, MessageType.Diagnostic);\n                }\n\n                if (UrineReturnType == UrineReturnTypes.FromHarvest)\n                {\n                    AmountUrineNReturned = HarvestedN * 0.50;  // \n                    AmountDungNReturned = HarvestedN * 0.35;  // \n                    AmountDungCReturned = AmountDungNReturned * 20;\n                }\n                else if (UrineReturnType == UrineReturnTypes.SetMonthly)\n                {\n                \tAmountUrineNReturned = MonthlyUrineNAmt[clock.Today.Month - 1];   //  hardcoded as an input\n                \tAmountDungNReturned = AmountUrineNReturned * (0.35 / 0.50);  // \n                \tAmountDungCReturned = AmountDungNReturned * 20;\n                }\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"The amount of urine N to be returned to the whole paddock is \" + AmountUrineNReturned, MessageType.Diagnostic);\n\n                DoUrineReturn();\n\n                DoTramplingAndDungReturn();\n\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"Finished Grazing\", MessageType.Diagnostic);\n\n            }\n        }\n        \n        [EventSubscribe(\"DoCowUrineReturn\")]\n        private void OnDoCowUrineReturn(object sender, SimpleCowScript.DoUrineReturnEventData myEventData)\n        {    \n        \t\tvar junk = myEventData.Amount;\n\t\t}        \n        \n        \n\n        public void DoTramplingAndDungReturn()\n        {\n \t\t\t// Note that dung is assumed to be spread uniformly over the paddock (patches or sones).\n \t\t\t// There is no need to bring zone area into the calculations here but zone area must be included for variables reported FROM the zone to the upper level\n \t\t\t           \n            int i = -1;  // patch or paddock counter\n            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n            {\n                i += 1;\n                SurfaceOrganicMatter surfaceOM = zone.FindInScope<SurfaceOrganicMatter>() as SurfaceOrganicMatter; \n\n                // do some trampling of litter\n                // accelerate the movement of surface litter into the soil - do this before the dung is added\n                double temp = surfaceOM.Wt * 0.1;\n\n                TillageType trampling = new TillageType();\n                surfaceOM.Incorporate(fraction: (double) 0.1, depth: (double)100.0, Verbose);\n\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"For patch \" + i + \" the amount of litter trampled was \" + temp + \" and the remaining litter is \" + (surfaceOM.Wt), MessageType.Diagnostic);\n\n                // move the dung to litter  \n                AddFaecesType dung = new AddFaecesType();\n                dung.OMWeight = AmountDungCReturned / 0.4;  //assume dung C is 40% of OM  \n                dung.OMN = AmountDungNReturned;\n                surfaceOM.AddFaeces(dung);\n                if (Verbose)\n                \tsummary.WriteMessage(this, \"For patch \" + i + \" the amount of dung DM added to the litter was \" + (AmountDungCReturned / 0.4) + \" and the amount of N added in the dung was \" + (AmountDungNReturned), MessageType.Diagnostic);\n\n            } \n        }\n\n        public void DoUrineReturn()\n        {\n            GetZoneForUrineReturn();  \n\n      \t\tif (Verbose)\n      \t\t\tsummary.WriteMessage(this, \"The Zone for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);\n\n            if (!PseudoPatches)\n            {\n            \tint i = -1; //to count the zones\n\t            foreach (Zone zone in this.Parent.FindAllInScope<Zone>())\n    \t        {\n    \t            i += 1;\n    \t            if (i == ZoneNumForUrine)\n    \t            {\n    \t                Fertiliser thisFert = zone.FindInScope<Fertiliser>() as Fertiliser;\n\n  \t                    thisFert.Apply(amount: AmountUrineNReturned / zone.Area, \n  \t                    \t\ttype: Fertiliser.Types.UreaN, \n  \t                    \t\tdepthTop: 0.0, \n  \t                    \t\tdepthBottom: UrineDepthPenetration, \n  \t                    \t\tdoOutput: Verbose);\n                                        \n    \t         \t\tif (Verbose)\n    \t         \t\t\tsummary.WriteMessage(this, AmountUrineNReturned + \" urine N added to Zone \" + i + \", the local load was \" + AmountUrineNReturned / zone.Area + \" kg N /ha\", MessageType.Diagnostic);\n    \t             }\n             \t}\n        \t}\n        \telse // PseudoPatches\n        \t{\n\t\t                int[] PatchToAddTo = new int[1];  //because need an array variable for this\n        \t\t        string[] PatchNmToAddTo = new string[0];  //need an array variable for this\n        \t\t        //List<IModel> zones = this.FindAllInScope<Zone>().OfType<IModel>().ToList();   //TODO ask Dean - is all this needed?\n        \t\t        double[] UreaToAdd = new double[soilPhysical.Thickness.Length];  \n\n        \t\t        for (int ii = 0; ii <= (soilPhysical.Thickness.Length - 1); ii++)\n        \t\t            UreaToAdd[ii] = UrineDepthPenetrationArray[ii]  * AmountUrineNReturned * ZoneCount;\n\n        \t\t        // needed??   UreaReturned += AmountFertNReturned;\n\n        \t\t        AddSoilCNPatchType CurrentPatch = new AddSoilCNPatchType();\n        \t\t        CurrentPatch.Sender = \"manager\";\n        \t\t        CurrentPatch.DepositionType = DepositionTypeEnum.ToSpecificPatch;\n        \t\t        PatchToAddTo[0] = ZoneNumForUrine;\n        \t\t        CurrentPatch.AffectedPatches_id = PatchToAddTo;\n        \t\t        CurrentPatch.AffectedPatches_nm = PatchNmToAddTo;\n        \t\t        CurrentPatch.Urea = UreaToAdd;\n\n        \t\t        var patchManager = soil.FindChild<NutrientPatchManager>(); \n\n    \t         \t\tif (Verbose)\n\t        \t\t        summary.WriteMessage(this, \"Patch MinN prior to urine return: \" + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);\n        \t\t        patchManager.Add(CurrentPatch); \n    \t         \t\tif (Verbose)\n\t        \t\t        summary.WriteMessage(this, \"Patch MinN after urine return: \" + patchManager.MineralNEachPatch[ZoneNumForUrine], MessageType.Diagnostic);\n        \t} \n        }\n\n        public void GetZoneForUrineReturn()\n        {\n            if (UrineReturnPattern == UrineReturnPatterns.RotatingInOrder) \n            {\n\t            ZoneNumForUrine += 1;  //increment the zone number - it was initialised at -1. NOTE, ZoneNumForUrine is used for both zones and patches\n\t            if (ZoneNumForUrine >= ZoneCount)\n\t                ZoneNumForUrine = 0;  // but reset back to the first patch if needed\n            }\n            else if (UrineReturnPattern == UrineReturnPatterns.Random)\n            {\n\t            Random rnd = new Random();\n\t            ZoneNumForUrine = rnd.Next(0, ZoneCount); // in C# the maximum value (ZoneCount) will not be selected\n            }\n            else if (UrineReturnPattern == UrineReturnPatterns.PseudoRandom)\n            {\n\t            ZoneNumForUrine = pseudoRandom.Next(0, ZoneCount); // in C# the maximum value (ZoneCount) will not be selected\n            }\n\t\t\telse\n\t\t\t\tthrow new Exception(\"UrineResturnPattern not recognised\");\n\n\t\t\tif (Verbose)\n            \tsummary.WriteMessage(this, \"The next zone/patch for urine return is \" + ZoneNumForUrine, MessageType.Diagnostic);\n        }\n\n\n        public void UrinePenetration()\n        {\n            // note that this only looks at the first paddock and assumes that all the paddocks are the same\n            int iii = -1;  // to use as a patch counter\n            foreach (Zone zone in this.Parent.FindAllInScope<Zone>().OfType<IModel>().ToList())\n            {\n                iii += 1;\n                if (iii == 0)\n                {\n                    Soil soil = zone.FindInScope<Soil>() as Soil;\n                    double tempDepth = 0.0;\n                    UrineDepthPenetrationArray = new double[soilPhysical.Thickness.Length];\n                    for (int i = 0; i <= (soilPhysical.Thickness.Length - 1); i++)\n                    {\n                        tempDepth += soilPhysical.Thickness[i];\n                        if (tempDepth <= UrineDepthPenetration)\n                        {\n                            UrineDepthPenetrationArray[i] = soilPhysical.Thickness[i] / UrineDepthPenetration;\n                        }\n                        else\n                        {\n                            UrineDepthPenetrationArray[i] = (UrineDepthPenetration - (tempDepth - soilPhysical.Thickness[i])) / (tempDepth - (tempDepth - soilPhysical.Thickness[i])) * soilPhysical.Thickness[i] / UrineDepthPenetration;\n                            UrineDepthPenetrationArray[i] = Math.Max(0.0, Math.Min(1.0, UrineDepthPenetrationArray[i]));\n                        }\n                        if (Verbose)\n                        \tsummary.WriteMessage(this, \"The proportion of urine applied to the \" + i + \"th layer will be \" + UrineDepthPenetrationArray[i], MessageType.Diagnostic);\n                    }\n                }\n            }\n\n        } \n\n\n        \n   \n    // A class for aggregating a pasture species mix.  ??????????????? is this needed now?\n    [Serializable]\n    class Sward\n    {\n     \tprivate const double Epsilon = 0.000000001;\n        private double amountRequired;\n\n        public Sward(Zone zone)\n        {\n            Species = zone.FindAllDescendants<PastureSpecies>().OfType<IModel>().ToList().Cast<PastureSpecies>().ToList();\n\t\t}\n\t\t\n        public List<PastureSpecies> Species { get; private set; }\n\n        public double HarvestableWt { get { return Species.Sum(sp => sp.Harvestable.Wt); } }\n\n        public double HarvestedWt { get { return Species.Sum(sp => sp.HarvestedWt); } }\n\n        public double HarvestedN { get { return Species.Sum(sp => sp.HarvestedN); } }\n\n        public double StandingHerbageWt { get { return Species.Sum(sp => sp.Standing.Wt); } }\n\n        public double AboveGroundWt { get { return Species.Sum(sp => sp.AboveGroundWt); } }\n\n        public bool IsAlive\n        {\n            get\n            {\n                bool alive = true;\n                Species.ForEach(sp => alive = alive && sp.PlantStatus == \"alive\");\n                return alive;\n            }\n         }\n     \n\n        /// <summary>Removes plant material simulating a graze event.</summary>\n        /// <param name=\"amount\">The DM amount (kg/ha)</param>\n        /// <param name=\"type\">How the amount is interpreted (SetResidueAmount or SetRemoveAmount)</param>\n        public void Graze(double amount, string type, bool Verbose)\n        {\n            double amountAvailable = HarvestableWt;\n            if (IsAlive || (amountAvailable > Epsilon))\n            {\n                // Get the amount required to remove\n                if (type.ToLower() == \"setresidueamount\")\n                {\n                    // Remove all DM above given residual amount\n                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);\n                }\n                else if (type.ToLower() == \"setremoveamount\")\n                {\n                    // Remove a given amount\n                    amountRequired = Math.Max(0.0, amount);\n                }\n                else\n                {\n                    throw new Exception(\"Type of amount to remove on graze not recognized (use \\'SetResidueAmount\\' or \\'SetRemoveAmount\\'\");\n                }\n                // Get the actual amount to remove\n                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, amountAvailable));\n\n                // Get the amounts to remove by mySpecies:\n                if (amountToRemove > Epsilon)\n                {\n                    double[] fractionToRemove = new double[Species.Count];\n                    for (int s = 0; s < Species.Count; s++)\n                    {\n                        // get the fraction to required for each mySpecies, partition according to available DM to harvest\n                        fractionToRemove[s] = Species[s].Harvestable.Wt / amountAvailable;\n\n                        // remove DM and N for each mySpecies (digestibility is also evaluated)\n                        Species[s].RemoveBiomass(amountToRemove * fractionToRemove[s], Verbose);\n                    }\n                }\n            }\n        }\n\t}\n    }\n}\n",
+          "Parameters": [
+            {
+              "Key": "Verbose",
+              "Value": "False"
+            },
+            {
+              "Key": "PseudoPatches",
+              "Value": "False"
+            },
+            {
+              "Key": "ZoneCount",
+              "Value": "10"
+            },
+            {
+              "Key": "UrineReturnType",
+              "Value": "FromElsewhere"
+            },
+            {
+              "Key": "UrineReturnPattern",
+              "Value": "RotatingInOrder"
+            },
+            {
+              "Key": "UrineDepthPenetration",
+              "Value": "200"
+            }
+          ],
+          "Name": "PatchZoneManagerForSimpleCow",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -164,7 +323,7 @@
             },
             {
               "Key": "ReportingFreq",
-              "Value": "OnGrazing"
+              "Value": "Daily"
             },
             {
               "Key": "Site",
@@ -190,51 +349,17 @@
           "Name": "ReportingWithPatches",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[SimpleCow].SimpleCowScript.NumPatches",
-            "[ReportingWithPatches].ReportingWithPatchesScript.LocSoilFert as LocSoil",
-            "[SimpleCow].SimpleCowScript.UrinationsPerHead",
-            "[SimpleCow].SimpleCowScript.ForageType",
-            "[SimpleCow].SimpleCowScript.patchMargin",
-            "[SimpleCow].SimpleCowScript.StockingRate",
-            "[SimpleCow].SimpleCowScript.GeneralFertAmt",
-            "[SimpleGrazing].GrazingInterval",
-            "[SimpleGrazing].PreGrazeDM as PreGrazeDM",
-            "[SimpleGrazing].PostGrazeDM",
-            "[SimpleCow].SimpleCowScript.HerdMEDemand",
-            "[SimpleCow].SimpleCowScript.LoadAdjustmentPropOverall as LoadAdjustment",
-            "[SimpleCow].SimpleCowScript.AverageUrineDepth",
-            "[ReportingWithPatches].ReportingWithPatchesScript.Events",
-            "[ReportingWithPatches].ReportingWithPatchesScript.UreaReturned as UrineNReturned",
-            "[SimpleCow].SimpleCowScript.NumPatchesForUrine as GridsUsed",
-            "[ReportingWithPatches].ReportingWithPatchesScript.UrinePatchLoad",
-            "[SimpleGrazing].GrazedDM",
-            "[SimpleGrazing].GrazedN",
-            "[ReportingWithPatches].ReportingWithPatchesScript.LeachN",
-            "[ReportingWithPatches].ReportingWithPatchesScript.Denit",
-            "[ReportingWithPatches].ReportingWithPatchesScript.DenitN2O",
-            "[ReportingWithPatches].ReportingWithPatchesScript.Fixation",
-            "[ReportingWithPatches].ReportingWithPatchesScript.MinN",
-            "[ReportingWithPatches].ReportingWithPatchesScript.dltOrgN",
-            "[ReportingWithPatches].ReportingWithPatchesScript.Drainage600",
-            "[SimpleCow].SimpleCowScript.CowDMIntake",
-            "[ReportingWithPatches].ReportingWithPatchesScript.NHA",
-            "[ReportingWithPatches].ReportingWithPatchesScript.PGR",
-            "[ReportingWithPatches].ReportingWithPatchesScript.NetSilageImported",
-            "[ReportingWithPatches].ReportingWithPatchesScript.SumSilageMade as SilageMade",
-            "[ReportingWithPatches].ReportingWithPatchesScript.SumSilageFed as SilageFed",
-            "[SimpleCow].SimpleCowScript.StockingDensity",
-            "[SimpleCow].SimpleCowScript.CowState",
-            "[SimpleCow].SimpleCowScript.ListOfPatches"
+            "[SimpleCow].SimpleCowScript.NumPatches"
           ],
           "EventNames": [
-            ""
+            "[Clock].EndOfDay"
           ],
           "GroupByVariableName": null,
           "Name": "WholePaddock",
@@ -253,23 +378,53 @@
           "ResourceName": null,
           "Children": [
             {
-              "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": true,
-              "GraphsPerPage": 6,
-              "Name": "Manager folder",
-              "ResourceName": null,
-              "Children": [
+              "$type": "Models.Manager, Models",
+              "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; } = true;\r\n\n        [Description(\"Allow reporting to the summary file?\")]\r\n        public bool allowReporting { get; set; }\r\n\n\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n\n\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n\n\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n\n\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n\n\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n\n\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \n           \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                \n                Irrigation.Apply(AmountToApply, doOutput:  allowReporting);\r\n                \n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
                 {
-                  "$type": "Models.Manager, Models",
-                  "Code": "",
-                  "Parameters": null,
-                  "Name": "CentrePivot",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Key": "allowIrrigation",
+                  "Value": "True"
+                },
+                {
+                  "Key": "allowReporting",
+                  "Value": "False"
+                },
+                {
+                  "Key": "seasonStart",
+                  "Value": "1-sep"
+                },
+                {
+                  "Key": "seasonEnd",
+                  "Value": "30-mar"
+                },
+                {
+                  "Key": "seasonsAllocation",
+                  "Value": "10000"
+                },
+                {
+                  "Key": "triggerDeficit",
+                  "Value": "80"
+                },
+                {
+                  "Key": "targetDeficit",
+                  "Value": "95"
+                },
+                {
+                  "Key": "returndays",
+                  "Value": "3"
+                },
+                {
+                  "Key": "maximumAmount",
+                  "Value": "30"
+                },
+                {
+                  "Key": "depthPAWC",
+                  "Value": "300"
                 }
               ],
+              "Name": "AutomaticIrrigation",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -375,22 +530,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.MicroClimate, Models",
-              "a_interception": 0.0,
-              "b_interception": 0.0,
-              "c_interception": 0.0,
-              "d_interception": 0.0,
-              "SoilHeatFluxFraction": 0.0,
-              "MinimumHeightDiffForNewLayer": 0.0,
-              "NightInterceptionFraction": 0.0,
-              "ReferenceHeight": 2.0,
-              "Name": "MicroClimate",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Fertiliser, Models",
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
@@ -399,167 +538,9 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.AgPasture.PastureSpecies, Models",
-              "doyGermination": 275,
-              "daysEmergenceToAnthesis": 120,
-              "daysAnthesisToMaturity": 85,
-              "degreesDayForAnthesis": 1100.0,
-              "degreesDayForMaturity": 900.0,
-              "daysAnnualsFactor": 45,
-              "FVPDFunction": {
-                "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                "Name": "LinearInterpolationFunction",
-                "ResourceName": null,
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "LightProfile": null,
-              "InitialShootDM": 1500.0,
-              "InitialRootDM": 450.0,
-              "InitialRootDepth": 750.0,
-              "initialDMFractionsGrasses": [
-                0.15,
-                0.25,
-                0.25,
-                0.05,
-                0.05,
-                0.1,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "initialDMFractionsLegumes": [
-                0.16,
-                0.23,
-                0.22,
-                0.05,
-                0.03,
-                0.05,
-                0.05,
-                0.01,
-                0.04,
-                0.08,
-                0.08
-              ],
-              "initialDMFractionsForbs": [
-                0.2,
-                0.2,
-                0.15,
-                0.05,
-                0.1,
-                0.15,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "PhotosyntheticEfficiency": 0.01,
-              "PhotosynthesisCurveFactor": 0.8,
-              "FractionPAR": 0.5,
-              "ReferenceCO2": 380.0,
-              "CO2EffectScaleFactor": 700.0,
-              "CO2EffectOffsetFactor": 600.0,
-              "CO2EffectMinimum": 0.7,
-              "CO2EffectExponent": 2.0,
-              "ReproSeasonDurationCoeff": 2.0,
-              "ReproSeasonShouldersLengthFactor": 1.0,
-              "ReproSeasonOnsetDurationFactor": 0.6,
-              "RelativeTurnoverEmerging": 2.0,
-              "DetachmentDroughtCoefficient": 3.0,
-              "DetachmentDroughtEffectMin": 0.1,
-              "TurnoverStockFactor": 0.01,
-              "TurnoverDefoliationEffectMin": 0.025,
-              "MinimumGreenLeafProp": 0.8,
-              "MinimumGreenRootProp": 0.5,
-              "Name": "AGPRyegrass",
-              "ResourceName": "AGPRyegrass",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.PastureSpecies, Models",
-              "doyGermination": 275,
-              "daysEmergenceToAnthesis": 120,
-              "daysAnthesisToMaturity": 85,
-              "degreesDayForAnthesis": 1100.0,
-              "degreesDayForMaturity": 900.0,
-              "daysAnnualsFactor": 45,
-              "FVPDFunction": {
-                "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                "Name": "LinearInterpolationFunction",
-                "ResourceName": null,
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "LightProfile": null,
-              "InitialShootDM": 500.0,
-              "InitialRootDM": 150.0,
-              "InitialRootDepth": 350.0,
-              "initialDMFractionsGrasses": [
-                0.15,
-                0.25,
-                0.25,
-                0.05,
-                0.05,
-                0.1,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "initialDMFractionsLegumes": [
-                0.16,
-                0.23,
-                0.22,
-                0.05,
-                0.03,
-                0.05,
-                0.05,
-                0.01,
-                0.04,
-                0.08,
-                0.08
-              ],
-              "initialDMFractionsForbs": [
-                0.2,
-                0.2,
-                0.15,
-                0.05,
-                0.1,
-                0.15,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "PhotosyntheticEfficiency": 0.01,
-              "PhotosynthesisCurveFactor": 0.8,
-              "FractionPAR": 0.5,
-              "ReferenceCO2": 380.0,
-              "CO2EffectScaleFactor": 700.0,
-              "CO2EffectOffsetFactor": 600.0,
-              "CO2EffectMinimum": 0.7,
-              "CO2EffectExponent": 2.0,
-              "ReproSeasonDurationCoeff": 2.0,
-              "ReproSeasonShouldersLengthFactor": 1.0,
-              "ReproSeasonOnsetDurationFactor": 0.6,
-              "RelativeTurnoverEmerging": 2.0,
-              "DetachmentDroughtCoefficient": 3.0,
-              "DetachmentDroughtEffectMin": 0.1,
-              "TurnoverStockFactor": 0.01,
-              "TurnoverDefoliationEffectMin": 0.025,
-              "MinimumGreenLeafProp": 0.8,
-              "MinimumGreenRootProp": 0.5,
-              "Name": "AGPWhiteClover",
-              "ResourceName": "AGPWhiteClover",
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -801,7 +782,7 @@
                   "FBiom": [
                     0.048,
                     0.027,
-                    0.0195,
+                    0.019,
                     0.015,
                     0.015,
                     0.015,
@@ -817,13 +798,13 @@
                     0.985
                   ],
                   "FOM": [
-                    347.6697415161641,
-                    257.5600792948774,
-                    172.6476842098852,
-                    85.73430271224917,
-                    63.51353358667622,
-                    47.05198294088997,
-                    25.822675739258056
+                    347.67,
+                    257.56,
+                    172.648,
+                    85.734,
+                    63.514,
+                    47.052,
+                    25.823
                   ],
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
@@ -878,7 +859,7 @@
                     300.0
                   ],
                   "InitialValues": [
-                    0.3735,
+                    0.373,
                     0.332,
                     0.426,
                     0.446,
@@ -886,7 +867,7 @@
                     0.325,
                     0.325
                   ],
-                  "RelativeTo": null,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": true,
                   "Name": "Water",
                   "ResourceName": null,
@@ -919,7 +900,7 @@
                   "DischargeWidth": 5.0,
                   "CatchmentArea": 10.0,
                   "PSIDul": -100.0,
-                  "Thickness": null,
+                  "Thickness": [],
                   "SWCON": null,
                   "KLAT": null,
                   "Name": "WaterBalance",
@@ -962,15 +943,7 @@
                     150.0,
                     300.0
                   ],
-                  "InitialValues": [
-                    18.980269911034664,
-                    4.62457625454453,
-                    1.0468134997068956,
-                    1.0468134997068903,
-                    1.031208999804597,
-                    1.0,
-                    1.0
-                  ],
+                  "InitialValues": null,
                   "InitialValuesUnits": 0,
                   "WaterTableConcentration": 0.0,
                   "D0": 0.0,
@@ -997,15 +970,7 @@
                     150.0,
                     300.0
                   ],
-                  "InitialValues": [
-                    0.883817561664043,
-                    0.31295758807944385,
-                    0.1046813499706893,
-                    0.10468134997068919,
-                    0.13645423331379297,
-                    0.2,
-                    0.2
-                  ],
+                  "InitialValues": null,
                   "InitialValuesUnits": 0,
                   "WaterTableConcentration": 0.0,
                   "D0": 0.0,
@@ -1023,44 +988,6 @@
                 },
                 {
                   "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                  "Thickness": null,
-                  "InitialValues": null,
-                  "InitialValuesUnits": 0,
-                  "WaterTableConcentration": 0.0,
-                  "D0": 0.0,
-                  "Exco": null,
-                  "FIP": null,
-                  "DepthConstant": 0.0,
-                  "MaxDepthSoluteAccessible": 0.0,
-                  "RunoffEffectivenessAtMovingSolute": 0.0,
-                  "MaxEffectiveRunoff": 0.0,
-                  "Name": "PlantAvailableNO3",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                  "Thickness": null,
-                  "InitialValues": null,
-                  "InitialValuesUnits": 0,
-                  "WaterTableConcentration": 0.0,
-                  "D0": 0.0,
-                  "Exco": null,
-                  "FIP": null,
-                  "DepthConstant": 0.0,
-                  "MaxDepthSoluteAccessible": 0.0,
-                  "RunoffEffectivenessAtMovingSolute": 0.0,
-                  "MaxEffectiveRunoff": 0.0,
-                  "Name": "PlantAvailableNH4",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
                   "Thickness": [
                     200.0,
                     150.0,
@@ -1070,15 +997,7 @@
                     150.0,
                     300.0
                   ],
-                  "InitialValues": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
+                  "InitialValues": null,
                   "InitialValuesUnits": 1,
                   "WaterTableConcentration": 0.0,
                   "D0": 0.0,
@@ -1095,6 +1014,172 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "LightProfile": null,
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 450.0,
+              "InitialRootDepth": 750.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPRyegrass",
+              "ResourceName": "AGPRyegrass",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "LightProfile": null,
+              "InitialShootDM": 500.0,
+              "InitialRootDM": 150.0,
+              "InitialRootDepth": 350.0,
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
+              "Name": "AGPWhiteClover",
+              "ResourceName": "AGPWhiteClover",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1121,145 +1206,59 @@
           ],
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.ForageDigestibility.Forages, Models",
-          "Parameters": [
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "SurfaceOrganicMatter.Residue",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPRyegrass.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Leaf",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Leaf",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stem",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stem",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stolon",
-              "IsLive": true,
-              "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 100.0,
-              "UseDigestibilityFromModel": false
-            },
-            {
-              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-              "Name": "AGPWhiteClover.Stolon",
-              "IsLive": false,
-              "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
-              "MinimumAmount": 0.0,
-              "UseDigestibilityFromModel": false
-            }
-          ],
-          "Name": "Forages",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Report, Models",
+      "VariableNames": [
+        "[Clock].Today",
+        "[SimpleCow].SimpleCowScript.NumPatches",
+        "[ReportingWithPatches].ReportingWithPatchesScript.LocSoilFert as LocSoil",
+        "[SimpleCow].SimpleCowScript.UrinationsPerHead",
+        "[SimpleCow].SimpleCowScript.ForageType",
+        "[SimpleCow].SimpleCowScript.patchMargin",
+        "[SimpleCow].SimpleCowScript.StockingRate",
+        "[SimpleCow].SimpleCowScript.GeneralFertAmt",
+        "[SimpleGrazing].GrazingInterval",
+        "[SimpleGrazing].PreGrazeDM as PreGrazeDM",
+        "[SimpleGrazing].PostGrazeDM",
+        "[SimpleCow].SimpleCowScript.HerdMEDemand",
+        "[SimpleCow].SimpleCowScript.LoadAdjustmentPropOverall as LoadAdjustment",
+        "[SimpleCow].SimpleCowScript.AverageUrineDepth",
+        "[ReportingWithPatches].ReportingWithPatchesScript.Events",
+        "[ReportingWithPatches].ReportingWithPatchesScript.UreaReturned as UrineNReturned",
+        "[SimpleCow].SimpleCowScript.NumPatchesForUrine as GridsUsed",
+        "[ReportingWithPatches].ReportingWithPatchesScript.UrinePatchLoad",
+        "[SimpleGrazing].GrazedDM",
+        "[SimpleGrazing].GrazedN",
+        "[ReportingWithPatches].ReportingWithPatchesScript.LeachN",
+        "[ReportingWithPatches].ReportingWithPatchesScript.Denit",
+        "[ReportingWithPatches].ReportingWithPatchesScript.DenitN2O",
+        "[ReportingWithPatches].ReportingWithPatchesScript.Fixation",
+        "[ReportingWithPatches].ReportingWithPatchesScript.MinN",
+        "[ReportingWithPatches].ReportingWithPatchesScript.dltOrgN",
+        "[ReportingWithPatches].ReportingWithPatchesScript.Drainage600",
+        "[SimpleCow].SimpleCowScript.CowDMIntake",
+        "[ReportingWithPatches].ReportingWithPatchesScript.NHA",
+        "[ReportingWithPatches].ReportingWithPatchesScript.PGR",
+        "[ReportingWithPatches].ReportingWithPatchesScript.NetSilageImported",
+        "[ReportingWithPatches].ReportingWithPatchesScript.SumSilageMade as SilageMade",
+        "[ReportingWithPatches].ReportingWithPatchesScript.SumSilageFed as SilageFed",
+        "[SimpleCow].SimpleCowScript.StockingDensity",
+        "[SimpleCow].SimpleCowScript.CowState",
+        "[SimpleCow].SimpleCowScript.ListOfPatches"
+      ],
+      "EventNames": [
+        "[Clock].EndOfDay"
+      ],
+      "GroupByVariableName": null,
+      "Name": "WholePaddockOriginal",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": false,
       "ReadOnly": false
     }
   ],
