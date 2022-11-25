@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                             FilterDetails = new List<object>() { fg },
                             Category = this.TransactionCategory,
                         }
-                        ); ;
+                        ); 
                     }
                 }
             }
