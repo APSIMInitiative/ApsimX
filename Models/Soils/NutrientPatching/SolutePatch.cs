@@ -40,8 +40,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (!Name.Contains("PlantAvailable"))
-                Reset();
+            Reset();
             AmountLostInRunoff = new double[Thickness.Length];
         }
 
