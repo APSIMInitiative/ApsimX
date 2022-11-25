@@ -408,7 +408,7 @@ namespace UserInterface.Views
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 cell.Visible = true;
                 string iconName = "blank";
-                switch (dataVal.ToString())
+                switch (dataVal.ToString().Split(":")[0])
                 {
                     case "Success":
                         iconName = "Success";
