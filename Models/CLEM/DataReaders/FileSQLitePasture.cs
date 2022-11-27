@@ -709,13 +709,13 @@ namespace Models.CLEM
             
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
             
-            if(results.Rows.Count == 0)
+            if(results.Rows.Count == 0 && (startMonth != endMonth))
             {
                 switch (MissingDataAction)
                 {
                     case OnMissingResourceActionTypes.ReportWarning:
                         // this is no longer an error to allow situations where there is no pasture production reported in a given period
-                        string warn = $"No pasture production for was found for [{startMonth}/{startYear}] by [x={this.Name}]";
+                        string warn = $"No pasture production was found for [x={this.NameWithParent}] between [{startMonth}/{startYear}] and [{endMonth}/{endYear}]";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         break;
                     default:

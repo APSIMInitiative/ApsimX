@@ -1102,7 +1102,10 @@ namespace Models.CLEM.Activities
                                     }
 
                             if (numberToRemove > 0)
+                            {
+                                AddStatusMessage("Excess sires");
                                 Status = ActivityStatus.Warning;
+                            }
 
                         }
                     }
@@ -1217,8 +1220,11 @@ namespace Models.CLEM.Activities
                                     }
                                 }
                             }
-                            if (maleBreedersRequired > 0 && Status != ActivityStatus.Warning)
+                            if (maleBreedersRequired > 0 && Status != ActivityStatus.Warning) 
+                            {
+                                AddStatusMessage("Sire shortfall");
                                 Status = ActivityStatus.Partial;
+                            }
                         }
                     }
                 }
@@ -1270,7 +1276,10 @@ namespace Models.CLEM.Activities
                         // any additional excess cannot be solved so herd will be larger than desired
 
                         if (excessBreeders > 0)
+                        {
+                            AddStatusMessage("Excess breeders");
                             Status = ActivityStatus.Warning;
+                        }
                         else
                             this.Status = ActivityStatus.Success;
 
@@ -1491,7 +1500,10 @@ namespace Models.CLEM.Activities
                         }
 
                         if (femaleBreedersRequired > 0 && Status != ActivityStatus.Warning)
+                        {
+                            AddStatusMessage("Breeder shortfall");
                             Status = ActivityStatus.Partial;
+                        }
                         else
                             this.Status = ActivityStatus.Success;
 
