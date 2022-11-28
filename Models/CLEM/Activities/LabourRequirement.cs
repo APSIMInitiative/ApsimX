@@ -165,7 +165,7 @@ namespace Models.CLEM.Activities
             switch (LimitStyle)
             {
                 case LabourLimitType.AsRatePerUnitsAllowed:
-                    double units = amountRequested / UnitSize / LabourPerUnit;
+                    double units = amountRequested / LabourPerUnit;
                     maximumDaysPerPerson = units * MaximumPerPerson;
                     maximumDaysPerGroup = units * MaximumPerGroup;
                     minimumDaysPerPerson = units * MinimumPerPerson;
@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                             FilterDetails = new List<object>() { fg },
                             Category = this.TransactionCategory,
                         }
-                        ); ;
+                        ); 
                     }
                 }
             }
