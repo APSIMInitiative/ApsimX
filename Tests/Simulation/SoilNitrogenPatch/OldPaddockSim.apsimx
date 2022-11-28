@@ -1,33 +1,33 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 128,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 285,
+  "Version": 159,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "Base",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Clock, Models",
           "Start": "1972-01-01T00:00:00",
           "End": "1974-12-31T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -37,27 +37,25 @@
           "FileName": "%root%\\Tests\\WeatherFiles\\Ruakura.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "Summary",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -207,7 +205,8 @@
             }
           ],
           "Name": "ManageGriddedPaddock",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -373,7 +372,8 @@
             }
           ],
           "Name": "ReportingWithPatches",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -422,8 +422,8 @@
           ],
           "GroupByVariableName": null,
           "Name": "WholePaddock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -434,23 +434,26 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Paddock",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowPageOfGraphs": true,
+              "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "Manager folder",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
                   "Code": "",
                   "Parameters": null,
                   "Name": "CentrePivot",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -534,22 +537,24 @@
               "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
               "SpeciesCutProportions": null,
               "Name": "SimpleGrazing",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "grass",
               "InitialResidueType": "grass",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 10.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": true,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -559,44 +564,187 @@
               "b_interception": 0.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.0,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.0,
-              "ReferenceHeight": 0.0,
+              "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "IncludeInDocumentation": true,
+              "ResourceName": "Fertiliser",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "LightProfile": null,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
               "InitialRootDepth": 750.0,
-              "ResourceName": "AGPRyegrass",
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
               "Name": "AGPRyegrass",
-              "IncludeInDocumentation": true,
+              "ResourceName": "AGPRyegrass",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.AgPasture.PastureSpecies, Models",
+              "doyGermination": 275,
+              "daysEmergenceToAnthesis": 120,
+              "daysAnthesisToMaturity": 85,
+              "degreesDayForAnthesis": 1100.0,
+              "degreesDayForMaturity": 900.0,
+              "daysAnnualsFactor": 45,
+              "FVPDFunction": {
+                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                "Name": "LinearInterpolationFunction",
+                "ResourceName": null,
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "LightProfile": null,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
               "InitialRootDepth": 350.0,
-              "ResourceName": "AGPWhiteClover",
+              "initialDMFractionsGrasses": [
+                0.15,
+                0.25,
+                0.25,
+                0.05,
+                0.05,
+                0.1,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "initialDMFractionsLegumes": [
+                0.16,
+                0.23,
+                0.22,
+                0.05,
+                0.03,
+                0.05,
+                0.05,
+                0.01,
+                0.04,
+                0.08,
+                0.08
+              ],
+              "initialDMFractionsForbs": [
+                0.2,
+                0.2,
+                0.15,
+                0.05,
+                0.1,
+                0.15,
+                0.1,
+                0.05,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "PhotosyntheticEfficiency": 0.01,
+              "PhotosynthesisCurveFactor": 0.8,
+              "FractionPAR": 0.5,
+              "ReferenceCO2": 380.0,
+              "CO2EffectScaleFactor": 700.0,
+              "CO2EffectOffsetFactor": 600.0,
+              "CO2EffectMinimum": 0.7,
+              "CO2EffectExponent": 2.0,
+              "ReproSeasonDurationCoeff": 2.0,
+              "ReproSeasonShouldersLengthFactor": 1.0,
+              "ReproSeasonOnsetDurationFactor": 0.6,
+              "RelativeTurnoverEmerging": 2.0,
+              "DetachmentDroughtCoefficient": 3.0,
+              "DetachmentDroughtEffectMin": 0.1,
+              "TurnoverStockFactor": 0.01,
+              "TurnoverDefoliationEffectMin": 0.025,
+              "MinimumGreenLeafProp": 0.8,
+              "MinimumGreenRootProp": 0.5,
               "Name": "AGPWhiteClover",
-              "IncludeInDocumentation": true,
+              "ResourceName": "AGPWhiteClover",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -621,18 +769,10 @@
               "DataSource": "Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results",
               "Comments": "Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.",
               "Name": "HE_140mm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-35",
-                    "35-55",
-                    "55-90",
-                    "90-105",
-                    "105-120",
-                    "120-150"
-                  ],
                   "Thickness": [
                     200.0,
                     150.0,
@@ -729,6 +869,7 @@
                   "ParticleSizeSiltMetadata": null,
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -763,8 +904,8 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "AGPRyegrassSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -801,27 +942,17 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "AGPWhiteCloverSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-35",
-                    "35-55",
-                    "55-90",
-                    "90-105",
-                    "105-120",
-                    "120-150"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     200.0,
@@ -841,6 +972,7 @@
                     0.402,
                     0.4
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     11.0,
                     11.0,
@@ -880,22 +1012,13 @@
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-35",
-                    "35-55",
-                    "55-90",
-                    "90-105",
-                    "105-120",
-                    "120-150"
-                  ],
                   "Thickness": [
                     200.0,
                     150.0,
@@ -904,24 +1027,6 @@
                     150.0,
                     150.0,
                     300.0
-                  ],
-                  "NO3N": [
-                    18.980269911034664,
-                    4.62457625454453,
-                    1.0468134997068956,
-                    1.0468134997068903,
-                    1.031208999804597,
-                    1.0,
-                    1.0
-                  ],
-                  "NH4N": [
-                    0.883817561664043,
-                    0.31295758807944385,
-                    0.1046813499706893,
-                    0.10468134997068919,
-                    0.13645423331379297,
-                    0.2,
-                    0.2
                   ],
                   "PH": [
                     6.0,
@@ -932,7 +1037,7 @@
                     6.0,
                     6.0
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
                   "ECMetadata": null,
@@ -940,28 +1045,44 @@
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 0,
-                  "FractionFull": 1.0,
-                  "DepthWetSoil": "NaN",
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    200.0,
+                    150.0,
+                    200.0,
+                    350.0,
+                    150.0,
+                    150.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.3735,
+                    0.332,
+                    0.426,
+                    0.446,
+                    0.446,
+                    0.325,
+                    0.325
+                  ],
                   "RelativeTo": null,
-                  "Name": "InitialWater",
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -981,12 +1102,126 @@
                   "CNCov": 0.8,
                   "DischargeWidth": 5.0,
                   "CatchmentArea": 10.0,
+                  "PSIDul": -100.0,
                   "Thickness": null,
                   "SWCON": null,
                   "KLAT": null,
-                  "ResourceName": "WaterBalance",
                   "Name": "WaterBalance",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                  "Thickness": [
+                    200.0,
+                    150.0,
+                    200.0,
+                    350.0,
+                    150.0,
+                    150.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    18.980269911034664,
+                    4.62457625454453,
+                    1.0468134997068956,
+                    1.0468134997068903,
+                    1.031208999804597,
+                    1.0,
+                    1.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                  "Thickness": [
+                    200.0,
+                    150.0,
+                    200.0,
+                    350.0,
+                    150.0,
+                    150.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.883817561664043,
+                    0.31295758807944385,
+                    0.1046813499706893,
+                    0.10468134997068919,
+                    0.13645423331379297,
+                    0.2,
+                    0.2
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
+                  "Thickness": [
+                    200.0,
+                    150.0,
+                    200.0,
+                    350.0,
+                    150.0,
+                    150.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1000,59 +1235,12 @@
                   "PatchAgeForForcedMerge": 0.0,
                   "LayerForNPartition": -99.0,
                   "Name": "NutrientPatchManager",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                      "kgha": null,
-                      "Name": "NO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                      "kgha": null,
-                      "Name": "NH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                      "kgha": null,
-                      "Name": "Urea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                      "kgha": null,
-                      "Name": "PlantAvailableNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.NutrientPatching.SolutePatch, Models",
-                      "kgha": null,
-                      "Name": "PlantAvailableNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1071,23 +1259,29 @@
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.ForageDigestibility.Forages, Models",
+          "Parameters": null,
+          "Name": "Forages",
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

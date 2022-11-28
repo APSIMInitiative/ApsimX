@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 511,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -220,6 +220,26 @@
               "Value": "False"
             },
             {
+              "Key": "CowBodyWeight",
+              "Value": "450"
+            },
+            {
+              "Key": "CowDateCalving",
+              "Value": "1-aug"
+            },
+            {
+              "Key": "CowDateInCalf",
+              "Value": "1-nov"
+            },
+            {
+              "Key": "CowDateDryOff",
+              "Value": "10-may"
+            },
+            {
+              "Key": "LactationCurveParam",
+              "Value": "20, 0.2, -0.04, 0.092"
+            },
+            {
               "Key": "StockingRate",
               "Value": "2.25"
             },
@@ -240,32 +260,12 @@
               "Value": "11"
             },
             {
-              "Key": "AdjustVolme",
-              "Value": "False"
-            },
-            {
               "Key": "patchMargin",
               "Value": "0.1"
             },
             {
-              "Key": "CowBodyWeight",
-              "Value": "450"
-            },
-            {
-              "Key": "CowDateCalving",
-              "Value": "1-aug"
-            },
-            {
-              "Key": "CowDateDryOff",
-              "Value": "10-may"
-            },
-            {
-              "Key": "LactationCurveParam",
-              "Value": "20, 0.2, -0.04, 0.092"
-            },
-            {
-              "Key": "CowDateInCalf",
-              "Value": "1-nov"
+              "Key": "AdjustVolme",
+              "Value": "False"
             }
           ],
           "Name": "SimpleCow",
@@ -356,7 +356,7 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[SimpleCow].SimpleCowScript.NumPatches"
+            "//[SimpleCow].SimpleCowScript.NumPatches"
           ],
           "EventNames": [
             "[Clock].EndOfDay"
@@ -910,21 +910,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                  "MaximumNitrogenAvailableToPlants": 0.0,
-                  "NPartitionApproach": 0,
-                  "AutoAmalgamationApproach": 0,
-                  "basePatchApproach": 0,
-                  "AllowPatchAmalgamationByAge": false,
-                  "PatchAgeForForcedMerge": 0.0,
-                  "LayerForNPartition": -99.0,
-                  "Name": "NutrientPatchManager",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
@@ -1008,6 +993,21 @@
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
+                  "MaximumNitrogenAvailableToPlants": 0.0,
+                  "NPartitionApproach": 0,
+                  "AutoAmalgamationApproach": 0,
+                  "basePatchApproach": 0,
+                  "AllowPatchAmalgamationByAge": false,
+                  "PatchAgeForForcedMerge": 0.0,
+                  "LayerForNPartition": -99.0,
+                  "Name": "NutrientPatchManager",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

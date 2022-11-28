@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 419,
+  "ExplorerWidth": 285,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -1458,21 +1458,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                          "MaximumNitrogenAvailableToPlants": 0.0,
-                          "NPartitionApproach": 0,
-                          "AutoAmalgamationApproach": 0,
-                          "basePatchApproach": 0,
-                          "AllowPatchAmalgamationByAge": false,
-                          "PatchAgeForForcedMerge": 0.0,
-                          "LayerForNPartition": -99.0,
-                          "Name": "NutrientPatchManager",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Organic, Models",
                           "FOMCNRatio": 40.0,
                           "Thickness": [
@@ -1707,6 +1692,21 @@
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
+                          "MaximumNitrogenAvailableToPlants": 0.0,
+                          "NPartitionApproach": 0,
+                          "AutoAmalgamationApproach": 0,
+                          "basePatchApproach": 0,
+                          "AllowPatchAmalgamationByAge": false,
+                          "PatchAgeForForcedMerge": 0.0,
+                          "LayerForNPartition": -99.0,
+                          "Name": "NutrientPatchManager",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2286,21 +2286,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
-                          "MaximumNitrogenAvailableToPlants": 0.0,
-                          "NPartitionApproach": 0,
-                          "AutoAmalgamationApproach": 0,
-                          "basePatchApproach": 0,
-                          "AllowPatchAmalgamationByAge": false,
-                          "PatchAgeForForcedMerge": 0.0,
-                          "LayerForNPartition": -99.0,
-                          "Name": "NutrientPatchManager",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Organic, Models",
                           "FOMCNRatio": 40.0,
                           "Thickness": [
@@ -2535,6 +2520,21 @@
                           "RunoffEffectivenessAtMovingSolute": 0.0,
                           "MaxEffectiveRunoff": 0.0,
                           "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.NutrientPatching.NutrientPatchManager, Models",
+                          "MaximumNitrogenAvailableToPlants": 0.0,
+                          "NPartitionApproach": 0,
+                          "AutoAmalgamationApproach": 0,
+                          "basePatchApproach": 0,
+                          "AllowPatchAmalgamationByAge": false,
+                          "PatchAgeForForcedMerge": 0.0,
+                          "LayerForNPartition": -99.0,
+                          "Name": "NutrientPatchManager",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
