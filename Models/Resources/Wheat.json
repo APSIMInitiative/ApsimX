@@ -8106,7 +8106,7 @@
 				  "Command": [
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
 					"[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.051",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.051",
 					"[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 35",
 					"[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.5",
 					"[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
@@ -8305,7 +8305,7 @@
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
 					"[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
 					"[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.045",
 					"[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
 					"[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
 					"[Phenology].CAMP.FLNparams.MinLN = 11.0",
@@ -8495,7 +8495,7 @@
 				  "$type": "Models.PMF.Cultivar, Models",
 				  "Command": [
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.041",
 					"[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
 					"[Phenology].CAMP.FLNparams.MinLN = 6",
 					"[Phenology].CAMP.FLNparams.PpLN = 5.0",
@@ -8548,7 +8548,7 @@
 				  "$type": "Models.PMF.Cultivar, Models",
 				  "Command": [
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.48",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.041",
 					"[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
 					"[Phenology].CAMP.FLNparams.MinLN = 6.5",
 					"[Phenology].CAMP.FLNparams.PpLN = 3.5",
@@ -8839,7 +8839,7 @@
 				  "$type": "Models.PMF.Cultivar, Models",
 				  "Command": [
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.045",
 					"[Phenology].CAMP.FLNparams.MinLN = 6.5",
 					"[Phenology].CAMP.FLNparams.PpLN = 3.5",
 					"[Phenology].CAMP.FLNparams.VrnLN = 2.5",
@@ -8951,7 +8951,7 @@
 				  "Command": [
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
 					"[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.045",
 					"[Phenology].CAMP.FLNparams.MinLN = 9.5",
 					"[Phenology].CAMP.FLNparams.PpLN = 4.6",
 					"[Phenology].CAMP.FLNparams.VrnLN = -1.799999999999999",
@@ -9163,7 +9163,7 @@
 				  "Command": [
 					"[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
 					"[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 16",
-					"[Grain].MaximumPotentialGrainSize.FixedValue = 0.050",
+					"[Grain].MaximumPotentialGrainSize.MaximumSize.FixedValue = 0.050",
 					"[Grain].MaximumNConc.FixedValue = 0.026",
 					"[Phenology].GrainFilling.Target.FixedValue = 450",
 					"[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2",
