@@ -2897,7 +2897,7 @@
 				},
 				{
 				  "$type": "Models.Functions.VariableReference, Models",
-				  "VariableName": "[Weather].MaxT",
+				  "VariableName": "[IWeather].MaxT",
 				  "Name": "XValue",
 				  "ResourceName": null,
 				  "Children": [],
@@ -2979,7 +2979,7 @@
 									},
 									{
 									  "$type": "Models.Functions.VariableReference, Models",
-									  "VariableName": "[Weather].MinT",
+									  "VariableName": "[IWeather].MinT",
 									  "Name": "XValue",
 									  "ResourceName": null,
 									  "Children": [],
@@ -3115,7 +3115,7 @@
 									},
 									{
 									  "$type": "Models.Functions.VariableReference, Models",
-									  "VariableName": "[Weather].MinT",
+									  "VariableName": "[IWeather].MinT",
 									  "Name": "XValue",
 									  "ResourceName": null,
 									  "Children": [],
