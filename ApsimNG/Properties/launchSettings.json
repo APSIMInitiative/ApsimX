@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ApsimNG with debugging": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    }
+  }
+}
