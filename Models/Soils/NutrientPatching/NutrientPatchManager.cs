@@ -84,8 +84,8 @@ namespace Models.Soils.NutrientPatching
         /// <summary>The fresh organic matter surface residue pool.</summary>
         public INutrientPool SurfaceResidue { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.SurfaceResidue)); } }
 
-        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
-        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic }); } }
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
+        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic, Inert }); } }
 
         /// <summary>The NO3 pool.</summary>
         public ISolute NO3 { get { return SumSolutes(patches.Select(patch => patch.Nutrient.NO3)); } }
@@ -450,6 +450,13 @@ namespace Models.Soils.NutrientPatching
         [EventSubscribe("Commencing")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            // Make sure the NutrientPatchManager is after the solutes so that scoping works.
+            // This is an ugly hack but I can't think of an easy way to get around the problem of
+            // the plant models and soil water finding the solutes under NutrientPatchManager
+            // instead of the solute directly under the soil. Scoping design problem.
+            if (Parent.Children.Last() != this)
+                throw new Exception("NutrientPatchManager must be the last child of soil");
+
             // Create a new nutrient patch.
             var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
             newPatch.CreationDate = clock.Today;
@@ -477,10 +484,6 @@ namespace Models.Soils.NutrientPatching
 
             try
             {
-                // 1.5 If the calling model is a plant and the solute is NO3 or NH4 then use the 'PlantAvailable' solutes instead.
-                if (callingModelType == SoluteSetterType.Plant && (soluteName == "NO3" || soluteName == "NH4"))
-                    soluteName = "PlantAvailable" + soluteName;
-
                 // 2- gather how much solute is already in the soil
                 double[][] existingSoluteAmount = new double[patches.Count][];
                 for (int k = 0; k < patches.Count; k++)

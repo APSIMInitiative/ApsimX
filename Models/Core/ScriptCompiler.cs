@@ -190,6 +190,7 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.Extensions.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),

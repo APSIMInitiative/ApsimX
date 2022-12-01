@@ -669,7 +669,7 @@ namespace Models.Core.ApsimFile
             }
             foreach (var factor in JsonUtilities.ChildrenOfType(node, "Factor"))
             {
-                var specification = factor["Specification"].ToString();
+                var specification = factor["Specification"]?.ToString();
                 if (specification != null)
                 {
                     bool replacementFound = false;
