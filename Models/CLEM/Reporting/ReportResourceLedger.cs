@@ -69,7 +69,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Summary]
         [Description("Include resource pricing")]
-        [Category("General", "Extras")]
+        [Category("Financial", "Properties")]
         public bool IncludePrice { get; set; }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Summary]
         [Description("Include financial year")]
-        [Category("General", "Extras")]
+        [Category("Financial", "Properties")]
         public bool IncludeFinancialYear { get; set; }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Summary]
         [Description("Number of TransactionCategory levels to include as columns")]
-        [Category("General", "Extras")]
+        [Category("Transactions", "Categories")]
         public int TransactionCategoryLevels { get; set; }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Summary]
         [Description("List of TransactionCategory level column names")]
-        [Category("General", "Extras")]
+        [Category("Transactions", "Categories")]
         public string TransactionCategoryLevelColumnNames { get; set; }
 
         /// <summary>
@@ -112,6 +112,118 @@ namespace Models.CLEM.Reporting
         [Category("General", "Extras")]
         [Core.Display(Type = DisplayType.MultiLineText)]
         public string[] CustomVariableNames { get; set; }
+
+
+        /// <summary>
+        /// Include herd ledger property: Age
+        /// </summary>
+        [Summary]
+        [Description("Style of reporting Ruminant.Age")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(ReportAgeType.Months)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public ReportAgeType ReportRuminantAge { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: adult equivalents
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.AE")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantAE { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: Breed
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.Breed")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantBreed { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: category
+        /// </summary>
+        [Summary]
+        [Description("Include category (sale flag)")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantCategory { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: change direction
+        /// </summary>
+        [Summary]
+        [Description("Include change direction")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantChangeDirection { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: class
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.Class")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantClass { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: ID
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.ID")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(EnabledCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantID { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: Location
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.Location")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(EnabledCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantLocation { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: herdname as relates to
+        /// </summary>
+        [Summary]
+        [Description("Include herd name as RelatesTo")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantRelatesTo { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: Sex
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.Sex")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantSex { get; set; }
+
+        /// <summary>
+        /// Include herd ledger property: weight
+        /// </summary>
+        [Summary]
+        [Description("Include Ruminant.Weight")]
+        [Category("Ruminant", "Report properties")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Core.Display(VisibleCallback = "RuminantPropertiesVisible")]
+        public bool IncludeRuminantWeight { get; set; }
+
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -157,16 +269,42 @@ namespace Models.CLEM.Reporting
                     {
                         pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
 
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.ID as uID");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Breed as Breed");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Sex as Sex");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Age as Age");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Weight as Weight");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.AdultEquivalent as AE");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.SaleFlag as Category");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Class as Class");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.HerdName as RelatesTo");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.PopulationChangeDirection as Change");
+                        if(IncludeRuminantID)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.ID as uID");
+                        if (IncludeRuminantBreed)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Breed as Breed");
+                        if (IncludeRuminantSex)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Sex as Sex");
+                        switch (ReportRuminantAge)
+                        {
+                            case ReportAgeType.None:
+                                break;
+                            case ReportAgeType.Months:
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Age as Age");
+                                break;
+                            case ReportAgeType.FractionOfYears:
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.AgeInYears as Age");
+                                break;
+                            case ReportAgeType.WholeYears:
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.AgeinWholeYears as Age");
+                                break;
+                            default:
+                                break;
+                        }
+                        if (IncludeRuminantWeight)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Weight as Weight");
+                        if (IncludeRuminantAE)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.AdultEquivalent as AE");
+                        if (IncludeRuminantLocation)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Location as Location");
+                        if (IncludeRuminantCategory)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.SaleFlag as Category");
+                        if (IncludeRuminantClass)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Class as Class");
+                        if (IncludeRuminantRelatesTo)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.HerdName as RelatesTo");
+                        if (IncludeRuminantChangeDirection)
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.PopulationChangeDirection as Change");
 
                         // ToDo: add pricing for ruminants including buy and sell pricing
                         // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.
@@ -275,6 +413,15 @@ namespace Models.CLEM.Reporting
                 }
             }
             return results.AsEnumerable();
+        }
+
+        /// <summary>
+        /// Determines if a ruminant type has been selected
+        /// </summary>
+        /// <returns>True if ledger reports ruminant</returns>
+        public bool RuminantPropertiesVisible()
+        {
+            return FindInScope<RuminantHerd>((ResourceGroupsToReport??"").Split(".").FirstOrDefault()) != null;
         }
 
     }
