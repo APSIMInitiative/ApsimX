@@ -59,6 +59,9 @@ namespace Models.CLEM.Timers
         [System.ComponentModel.DefaultValueAttribute(12)]
         public MonthsOfYear EndMonth { get; set; }
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>

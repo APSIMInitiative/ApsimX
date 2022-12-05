@@ -413,10 +413,10 @@ namespace Models.CLEM.Reporting
                                     case "Success":
                                     case "NoTask":
                                     case "NotNeeded":
-                                    case "Timer":
                                     case "Calculation":
                                     case "Critical":
                                     case "Partial":
+                                    case "Timer":
                                     case "Ignore":
                                         image = $"ActivitiesReport{statusParts[0]}Web";
                                         break;

@@ -483,23 +483,26 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Protected method to cascade calls for activities performed for all dynamically created activities
         /// </summary>
-        public void ReportActivityStatus()
+        public void ReportActivityStatus(bool fromSetup = false)
         {
             this.TriggerOnActivityPerformed();
 
             // report all timers that were due this time step
-            foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
+            if (!fromSetup)
             {
-                if (timer.ActivityDue)
+                // report timer status and messages when not from setup
+                foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
                 {
                     // report activity performed.
                     ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
                     {
                         Name = (timer as IModel).Name,
-                        Status = ActivityStatus.Timer,
+                        Status = (timer.ActivityDue) ? ActivityStatus.Timer : ActivityStatus.Ignored,
                         Id = (timer as CLEMModel).UniqueID.ToString(),
-                        ModelType = (int)ActivityPerformedType.Timer
+                        ModelType = (int)ActivityPerformedType.Timer,
+                        StatusMessage = timer.StatusMessage
                     });
+                    timer.StatusMessage = "";
                 }
             }
             // call activity performed for all children of type CLEMActivityBase

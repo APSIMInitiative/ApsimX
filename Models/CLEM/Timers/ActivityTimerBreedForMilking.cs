@@ -61,6 +61,9 @@ namespace Models.CLEM.Timers
         [JsonIgnore]
         public IEnumerable<RuminantFemale> IndividualsToBreed { get; set; } = null;
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
