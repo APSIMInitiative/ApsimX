@@ -895,6 +895,9 @@ namespace Models.CLEM
         WholeYears
     }
 
+    /// <summary>
+    /// The style of calculation to use for the Activity Timer based on ruminant herd level
+    /// </summary>
     public enum ActivityTimerRuminantLevelStyle
     {
         /// <summary>
