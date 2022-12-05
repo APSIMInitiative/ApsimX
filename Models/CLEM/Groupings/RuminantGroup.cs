@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Models.CLEM.Interfaces;
 using System.Xml.Serialization;
+using Models.CLEM.Timers;
 
 namespace Models.CLEM.Groupings
 {
@@ -38,6 +39,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
+    [ValidParent(ParentType = typeof(ActivityTimerRuminantLevel))]
     [Description("Selects specific individuals ruminants from the herd")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]

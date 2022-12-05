@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
         {
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.ReportActivityStatus();
+                child.ReportActivityStatus(fromSetup);
 
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()

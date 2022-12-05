@@ -60,6 +60,9 @@ namespace Models.CLEM.Timers
         [JsonIgnore]
         public DateTime NextDueDate { get; set; }
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
