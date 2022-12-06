@@ -658,7 +658,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].CAMP.dVrn3",
+                  "VariableName": "[Phenology].CAMP.dVrn",
                   "Name": "Progression",
                   "ResourceName": null,
                   "Children": [],
@@ -1367,7 +1367,7 @@
                       "X": [
                         0.0,
                         8.0,
-                        16.0,
+                        20.0,
                         24.0
                       ],
                       "Y": [
@@ -1429,7 +1429,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": -0.0,
+                          "FixedValue": -5.0,
                           "Units": "/oCd",
                           "Name": "DeVernalisationRate",
                           "ResourceName": null,
@@ -1469,8 +1469,7 @@
                   "$type": "Models.PMF.Phen.FLNParameterEnvironment, Models",
                   "VrnTreatTemp": 6.0,
                   "VrnTreatDuration": 60.0,
-                  "TreatmentPTQ_L": 1.2,
-                  "TreatmentPTQ_S": 0.6,
+                  "TreatmentPp_L": 16,
                   "TtEmerge": 90.0,
                   "Name": "EnvData",
                   "ResourceName": null,
@@ -7146,13 +7145,13 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.0",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.0",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
-                    "[Phenology].CAMP.FLNparams.MinLN = 7.9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 5.499999999999998",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 3.900000000000002",
+                    "[Phenology].CAMP.FLNparams.MinLN = 9.13636",
+                    "[Phenology].CAMP.FLNparams.PpLN = 2.2037",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 5.019",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 1.0347",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 122",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
                   ],
                   "Name": "Amarok",
                   "ResourceName": null,
