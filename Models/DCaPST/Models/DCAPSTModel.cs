@@ -255,12 +255,10 @@ namespace Models.DCAPST
             var CPath = Canopy.Canopy;
             var temp = Temperature.AirTemperature;
 
-            bool[] tempConditions = new bool[4]
+            bool[] tempConditions = new bool[2]
             {
                 temp > pathway.ElectronTransportRateParams.TMax,
                 temp < pathway.ElectronTransportRateParams.TMin,
-                temp > pathway.MesophyllCO2ConductanceParams.TMax,
-                temp < pathway.MesophyllCO2ConductanceParams.TMin
             };
 
             bool invalidTemp = tempConditions.Any(b => b == true);

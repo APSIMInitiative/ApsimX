@@ -15,6 +15,8 @@ namespace Models.DCAPST
         [Units("")]
         public double IntercellularToAirCO2Ratio { get; set; }
 
+        /// **TODO** Check classics version of setting fraction.
+        /// Classic version: public double FractionOfCyclicElectronFlow { get; set; }
         /// <summary>
         /// Fraction of cyclic electron flow
         /// </summary>
@@ -57,11 +59,15 @@ namespace Models.DCAPST
         [Units("")]
         public double MesophyllCO2ConductanceSLNRatio { get; set; }
 
+		/// **TODO** Check classics version of setting fraction.
+        /// Classic version: public double MesophyllElectronTransportFraction { get; set; }
         /// <summary>
         /// Mesophyll electron transport fraction
         /// </summary>
         public double MesophyllElectronTransportFraction => ExtraATPCost / (3.0 + ExtraATPCost);
 
+		/// **TODO** Check classics version of setting fraction.
+        /// Classic version: public double ATPProductionElectronTransportFactor { get; set; }
         /// <summary>
         /// ATP production electron transport factor
         /// </summary>
@@ -145,7 +151,7 @@ namespace Models.DCAPST
         /// </summary>
         [Description("Mesophyll CO2 conductance temperature response")]
         [Display(Type = DisplayType.SubModel)]
-        public LeafTemperatureParameters MesophyllCO2ConductanceParams { get; set; }
+        public TemperatureResponseValues MesophyllCO2ConductanceParams { get; set; }
 
         /// <summary>
         /// Spectral correction factor
