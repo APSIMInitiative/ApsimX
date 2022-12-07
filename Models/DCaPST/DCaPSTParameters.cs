@@ -16,7 +16,7 @@ namespace Models.DCAPST
         /// PAR energy fraction
         /// </summary>
         [Description("PAR energy fraction")]
-        public double Rpar { get; set; }
+        public double Rpar { get; set; } = 0.5;
 
         /// <summary>
         /// Canopy parameters.
