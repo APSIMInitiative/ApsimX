@@ -1399,11 +1399,11 @@
                 {
                   "$type": "Models.Functions.HourlyInterpolation, Models",
                   "agregationMethod": 1,
-                  "Name": "DailyColdVrn1",
+                  "Name": "ColdVrnResponse",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.PMF.Phen.ColdUpRegVrn1, Models",
+                      "$type": "Models.PMF.Phen.ColdVrnResponse, Models",
                       "Name": "Response",
                       "ResourceName": null,
                       "Children": [

@@ -104,11 +104,6 @@ namespace Models.PMF.Phen
             // The soonest a wheat plant may exhibit vern saturation
             double MinVS = 1.1;
 
-            // Minimum phyllochron duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
-            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that have a high TSHS hit VS ~3HS prior to TS 
-            double MinVsTsHS = Math.Min(3.0,FLNset.LV - MinVS);
-
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Phyllochrons)
             //////////////////////////////////////////////////////////////////////////////////////
@@ -119,6 +114,11 @@ namespace Models.PMF.Phen
             double TS_LN = camp.calcTSHS(FLNset.LN);
             double TS_SV = camp.calcTSHS(FLNset.SV);
             double TS_SN = camp.calcTSHS(FLNset.SN);
+
+            // Minimum phyllochron duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
+            // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that have a high TSHS hit VS ~3HS prior to TS 
+            double MinVsTsHS = Math.Min(3.0, TS_LV - MinVS);
 
             // Calculate the accumulated phyllochrons at vernalisation saturation for each treatment
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

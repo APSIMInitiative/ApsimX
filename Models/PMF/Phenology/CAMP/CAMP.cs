@@ -28,7 +28,7 @@ namespace Models.PMF.Phen
         IFunction tt = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction DailyColdVrn1 = null;
+        IFunction ColdVrnResponse = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         CalcCAMPVrnRates calcCAMPVrnRates = null;
@@ -99,10 +99,14 @@ namespace Models.PMF.Phen
         /// <summary>IsReproductive True when terminal spikelet occurs, when Vrn3 >= 1.0 </summary>
         private bool isReproductive { get; set; }
 
-
+        /// <summary></summary>
+        [JsonIgnore] public bool IsGerminated { get { return isImbibed; } }
+        /// <summary></summary>
+        [JsonIgnore] public bool IsEmerged { get { return isEmerged; } }
         /// <summary></summary>
         [JsonIgnore] public bool IsVernalised { get { return isVernalised; } }
-
+        /// <summary></summary>
+        [JsonIgnore] public bool IsReproductive { get { return isReproductive; } }
         /// Vrn gene expression state variables
         /// <summary>The current expression of Vrn upregulated at base rate.  
         /// Is methalated each day so always accumulates.
@@ -152,6 +156,8 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double dHS { get; set; }
         /// <summary>Photo period releative to max and min thresholds</summary>
         [JsonIgnore] public double RelPp { get; set; }
+        /// <summary>Vernalisation releative to max and min temperatures</summary>
+        [JsonIgnore] public double RelCold { get; set; }
 
         /// Leaf number variables
         /// <summary>Haun stage of Vernalisation saturation</summary>
@@ -160,10 +166,6 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double TSHS { get; private set; }
         /// <summary>Final Leaf Number</summary>
         [JsonIgnore] public double FLN { get; private set; }
-
-        /// <summary>Proportion of emergence day that it not used for emergence</summary>
-        [JsonIgnore]
-        public double PropnOfDay { get; private set; }
 
         /// <summary>Vernalisation rate parameters for current cultivar</summary>
         [JsonIgnore] public CultivarRateParams Params { get; set; }
@@ -195,10 +197,9 @@ namespace Models.PMF.Phen
                 }
                 else
                 { // Crop emerged
-                    dHS = DHS.Value() * PropnOfDay;
+                    dHS = DHS.Value();
                 }
-                PropnOfDay = 1.0;
-
+                
                 // Set stage specific parameter values
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 if (isVernalised == false) // do vernalisation calculations if crop not yet vernalised
@@ -226,7 +227,8 @@ namespace Models.PMF.Phen
                 if (IsVernalised == false)
                 {
                     double ColdYesterday = Cold;
-                    dCold = DailyColdVrn1.Value();
+                    RelCold = ColdVrnResponse.Value();
+                    dCold = RelCold * dBaseVrn * Params.ColdVrn1Fact;
                     Cold = Math.Max(0.0, Cold + dCold);
                     if (Cold > Params.MethalationThreshold)
                     {
@@ -243,7 +245,7 @@ namespace Models.PMF.Phen
                     RelPp = PpResponse.Value(); //relative Pp, scaled between 0 at lower threshold and 1 at upper threshold
                     if (RelPp == 0) //Reduce MaxVrn2 if short Pp encountered
                     {
-                        MaxVrn2 -= dBaseVrn;
+                        MaxVrn2 = Math.Max(0,MaxVrn2-dBaseVrn);
                     }
                     if (isVernalised == false) // Set Vrn2 relative to MaxVrn2 and current Pp
                     {
@@ -295,7 +297,6 @@ namespace Models.PMF.Phen
         private void OnPlantEmerged(object sender, EventArgs e)
         {
             isEmerged = true;
-            PropnOfDay = (phenology.thermalTime.Value() - phenology.AccumulatedEmergedTT) / phenology.thermalTime.Value();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -304,6 +305,7 @@ namespace Models.PMF.Phen
         {
             Reset();
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, EnvData);
+            MaxVrn2 = Params.MaxVrn2;
             summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar, MessageType.Diagnostic);
             summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString(), MessageType.Diagnostic);
             summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString(), MessageType.Diagnostic);
