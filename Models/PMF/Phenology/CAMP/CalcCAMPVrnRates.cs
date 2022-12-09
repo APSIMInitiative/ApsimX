@@ -27,52 +27,6 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
 
-        [Link(Type = LinkType.Path, Path = "[Phenology].CAMP.PpResponse.XYPairs")]
-        IIndexedFunction ppResponse = null;
-
-        /// <summary>
-        /// The phyllochron leaf stage factor break points
-        /// </summary>
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.LeafStageFactor.XYPairs")]
-        XYPairs pLS = null;
-
-         /// <summary>
-        /// Calculates how much Tt has accumulated from emergence to the specified HaunStage
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="Pp"></param>
-        /// <param name="bP"></param>
-        /// <param name="pPpS"></param>
-        /// <param name="invert"></param>
-        private double convertHStoTt(double x, double Pp, double bP, double pPpS, bool invert = false)
-        {
-            double PpFactor = 1.0;
-            if (Pp == 8)
-                PpFactor = 1+pPpS;
-            List<double> HS = new List<double>();
-            HS.Add(0);
-            HS.AddRange(pLS.X.ToList<double>());
-            HS.Add(30);
-            List<double> yLSF = new List<double>();
-            yLSF.Add(pLS.Y[0]);
-            yLSF.AddRange(pLS.Y.ToList<double>());
-            yLSF.Add(pLS.Y.Last());
-            List<double> Tt = new List<double>();
-            Tt.Add(0);
-            for (int b = 1; b < HS.Count; b++)
-            {
-                double dxHS = HS[b] - HS[b - 1];
-                double mLSF = (yLSF[b] + yLSF[b - 1]) / 2;
-                Tt.Add(Tt[b - 1] + dxHS * bP * mLSF * PpFactor);
-            }
-            bool DidInterpolate = false;
-            if (invert == false)
-                return MathUtilities.LinearInterpReal(x, HS.ToArray<double>(), Tt.ToArray<double>(), out DidInterpolate);
-            else
-                return MathUtilities.LinearInterpReal(x, Tt.ToArray<double>(), HS.ToArray<double>(), out DidInterpolate);
-        }
-    
-
         /// <summary>
         /// Takes observed (or estimated) final leaf numbers and phyllochron for genotype with (V) and without (N) vernalisation in long (L)
         /// and short (S) photoperiods and works through calculation scheme and assigns values for vrn expresson parameters
@@ -93,8 +47,7 @@ namespace Models.PMF.Phen
 
             // Get some other parameters from phenology
             double BasePhyllochron = basePhyllochron.Value();
-            double RelPp = ppResponse.ValueIndexed(EnvData.TreatmentPp_L);
-
+            
             // Base Phyllochron duration of the Emergence Phase
             double EmergDurat = EnvData.TtEmerge/BasePhyllochron;
 
@@ -141,9 +94,9 @@ namespace Models.PMF.Phen
             // The maximum Vrn delta during the early reproductive phase.  Assuming Vrn increases by 1 bewtween VS and TS and proceeds at the maximum rate under long photoperiod
             Params.MaxDVrnER = 1 / MinVsTsHS;
             // The relative increase in delta Vrn cuased by Vrn3 expression under long photoperiod during early reproductive phase
-            Params.PpVrn3FactER = (Params.MaxDVrnER / Params.BaseDVrnER - 1) * 1 / RelPp + 1;
+            Params.PpVrn3FactER = (Params.MaxDVrnER / Params.BaseDVrnER - 1)  + 1;
             // The relative increase in delta Vrn1 caused by Vrn3 expression under long Pp during vegetative phase.  Same as PpVrn3FactER unless VS_LN is small
-            Params.PpVrn3FactVeg = ((1 / VS_LN) / Params.BaseDVrnVeg - 1) * 1 / RelPp + 1;
+            Params.PpVrn3FactVeg = ((1 / VS_LN) / Params.BaseDVrnVeg - 1)  + 1;
             Params.PpVrn3FactVeg = Math.Max(Params.PpVrn3FactER, Params.PpVrn3FactVeg);
 
             //////////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +110,7 @@ namespace Models.PMF.Phen
             // The accumulated Haun stages when Vrn2 expression is ended and effective baseVrn x Vrn3 expression starts under long Pp without vernalisation is vrn1xVrn3Durat prior to VS
             double endVrn2_LN = Math.Max(0, VS_LN - vrnxVrn3Durat);
             // The Vrn2 Expression that must be matched by Vrn1 before effective Vrn3 expression starts.  
-            Params.MaxVrn2 = (endVrn2_LN + EmergDurat) * Params.BaseDVrnVeg * 1 / RelPp;
+            Params.MaxVrn2 = (endVrn2_LN + EmergDurat) * Params.BaseDVrnVeg ;
 
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate cold upregulation of Vrn1
