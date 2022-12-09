@@ -49,7 +49,7 @@ namespace Models.DCAPST
         /// </summary>
         [Description("Ratio of SLN to max electron transport")]
         [Units("")]
-        public double MaxElectronTransportSLNRatio { get; set; } = 2.7 * PSI_FACTOR;
+        public double MaxElectronTransportSLNRatio { get; set; } = 2.5;
 
         /// <summary>
         /// Ratio of PEPc Activity to SLN
