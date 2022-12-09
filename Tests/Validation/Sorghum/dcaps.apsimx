@@ -10114,12 +10114,9 @@
                         "Beta": 1.0
                       },
                       "MesophyllCO2ConductanceParams": {
-                        "$type": "Models.DCAPST.LeafTemperatureParameters, Models",
-                        "C": 0.462820450976839,
-                        "TMax": 55.0,
-                        "TMin": 0.0,
-                        "TOpt": 42.0,
-                        "Beta": 1.0
+                        "$type": "Models.DCAPST.TemperatureResponseValues, Models",
+                        "Factor": 40600.0,
+                        "At25": 0.0
                       },
                       "SpectralCorrectionFactor": 0.15,
                       "PS2ActivityFraction": 0.1,
