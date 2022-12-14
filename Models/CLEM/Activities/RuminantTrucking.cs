@@ -221,9 +221,6 @@ namespace Models.CLEM.Activities
             // number provided by the parent for trucking
             parentNumberToDo = parentBuySellActivity.IndividualsToBeTrucked?.Count() ?? 0;
 
-            foreach (var iChild in FindAllChildren<IActivityCompanionModel>().OfType<CLEMActivityBase>())
-                iChild.Status = (parentNumberToDo > 0)? ActivityStatus.NotNeeded:ActivityStatus.NoTask;
-
             individualsToBeTrucked = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked).ToList();
             numberToDo = individualsToBeTrucked?.Count() ?? 0;
 
@@ -231,7 +228,10 @@ namespace Models.CLEM.Activities
 
             truckDetails = EstimateTrucking();
 
-            //TODO: check 
+            foreach (var iChild in FindAllChildren<IActivityCompanionModel>().OfType<CLEMActivityBase>())
+                iChild.Status = (Status == ActivityStatus.Skipped)? ActivityStatus.NotNeeded: ((parentNumberToDo > 0) ? ActivityStatus.NotNeeded : ActivityStatus.NoTask);
+            //iChild.Status = (Status == ActivityStatus.Skipped) ? ActivityStatus.Skipped : ((parentNumberToDo > 0) ? ActivityStatus.NotNeeded : ActivityStatus.NoTask);
+
             parentBuySellActivity.IndividualsToBeTrucked = parentBuySellActivity.IndividualsToBeTrucked.Except(individualsToBeTrucked.Take(truckDetails.individualsTransported));
 
             foreach (var valueToSupply in valuesForCompanionModels.ToList())
@@ -327,14 +327,18 @@ namespace Models.CLEM.Activities
             double vehicleMass = 0;
             double totalUnits = 0;
             double unitLoad = 0;
-            double individualContribution = 0;
+            double individualContribution = 1 / NumberPerLoadUnit;
             double payload = 0;
 
             int trucks = 0;
             int indCnt = 0;
             int loadCnt = 0;
+            int truckLoadCnt = 0;
             int trailerCnt = 0;
             int trailerId = 0;
+
+            if(!individualsToBeTrucked.Any())
+                return (0, 0, 0, 0, 0);
 
             double loadsRemaining = individualsToBeTrucked.Count / NumberPerLoadUnit;
             if (weightToNumberPerLoadUnit != null)
@@ -352,6 +356,7 @@ namespace Models.CLEM.Activities
                             loadingTruck = true;
                             loadingTrailer = false;
                             loadCnt = 0;
+                            truckLoadCnt = 0;
                             trailerCnt = 0;
                             trailerId = 0;
                             vehicleMass += TruckTareMass;
@@ -365,11 +370,11 @@ namespace Models.CLEM.Activities
                         {
                             if (MathUtilities.IsGreaterThan(loadsRemaining, MinimumLoadUnitsBeforeAddTrailer[trailerId]))
                             {
-                                if (loadCnt == MaximumLoadUnitsPerTruck)
+                                if (truckLoadCnt == MaximumLoadUnitsPerTruck)
                                 {
                                     loadingTruck = false;
                                 }
-                                else if (loadCnt <= LoadUnitsPerTrailer[trailerId])
+                                else if (truckLoadCnt < MaximumLoadUnitsPerTruck) // LoadUnitsPerTrailer[trailerId])
                                 {
                                     // add trailer
                                     trailerCnt++;
@@ -377,6 +382,7 @@ namespace Models.CLEM.Activities
                                     loadingTrailer = true;
                                     loadingUnit = false;
                                     vehicleMass += AggregateTrailerMass[trailerId];
+                                    loadCnt = 0;
                                 }
                             }
                             else
@@ -390,6 +396,7 @@ namespace Models.CLEM.Activities
                                 {
                                     loadingUnit = true;
                                     loadCnt++;
+                                    truckLoadCnt++;
                                     unitLoad = 0;
                                 }
                                 else
@@ -417,19 +424,6 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                // need to fill to minimum loads on last truck if needed
-                //while(loadCnt < MinimumLoadUnitsPerTruck)
-                //{
-                //    loadCnt++;
-                //    if (loadCnt == LoadUnitsPerTrailer[trailerId])
-                //    {
-                //        // add trailer
-                //        trailerCnt++;
-                //        trailerId = Math.Min(trailerCnt, LoadUnitsPerTrailer.Length - 1);
-                //        vehicleMass += AggregateTrailerMass[trailerId];
-                //    }
-                //}
-
             }
 
             if (numberToDo > indCnt)
@@ -438,13 +432,14 @@ namespace Models.CLEM.Activities
 
                 if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                     throw new ApsimXException(this, $"Unable to truck all required individuals [a={NameWithParent}]{Environment.NewLine}Adjust trucking rules or set OnPartialResourcesAvailableAction to [UseResourcesAvailable]");
-                else if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity && individualsToBeTrucked.Count > indCnt)
+                else if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity && (indCnt == 0 || individualsToBeTrucked.Count > indCnt))
                 {
+                    AddStatusMessage("No individuals loaded");
                     Status = ActivityStatus.Skipped;
                     return (0, 0, 0, 0, 0);
                 }
             }
-
+            Status = ActivityStatus.NotNeeded;
             return (trucks, totalUnits, vehicleMass, payload, indCnt);
         }
 
@@ -454,12 +449,20 @@ namespace Models.CLEM.Activities
         {
             if (parentNumberToDo > 0)
             {
+                if (Status == ActivityStatus.Skipped)
+                {
+                    return;
+                }
+
                 if (numberToDo == truckDetails.individualsTransported)
                     SetStatusSuccessOrPartial();
                 else
                 {
-                    if(truckDetails.individualsTransported == 0)
+                    if (truckDetails.individualsTransported == 0)
+                    {
                         this.Status = ActivityStatus.Warning;
+                        AddStatusMessage("No individuals loaded");
+                    }
                     else
                         this.Status = ActivityStatus.Partial;
                 }
