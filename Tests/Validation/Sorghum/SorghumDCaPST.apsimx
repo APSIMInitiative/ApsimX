@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 337,
+  "ExplorerWidth": 522,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -412,6 +412,52 @@
           "Name": "HarvestReport",
           "ResourceName": null,
           "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "CultivarParameters",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "Sorghum",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "Parameters.Canopy.SLNRatioTop = 1.5",
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                  ],
+                  "Name": "M35-1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "Parameters.Canopy.SLNRatioTop = 1.5",
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                  ],
+                  "Name": "CSH13R",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
@@ -1994,7 +2040,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -16865,9 +16922,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -17829,7 +17897,7 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -17838,43 +17906,7 @@
                               "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Core.Folder, Models",
-                                  "ShowInDocs": false,
-                                  "GraphsPerPage": 6,
-                                  "Name": "Sorghum",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.PMF.Cultivar, Models",
-                                      "Command": [
-                                        "Parameters.Canopy.SLNRatioTop = 1.5",
-                                        "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
-                                      ],
-                                      "Name": "M35-1",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.PMF.Cultivar, Models",
-                                      "Command": [
-                                        "Parameters.Canopy.SLNRatioTop = 1.5",
-                                        "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
-                                      ],
-                                      "Name": "CSH13R",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -18846,9 +18878,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -19885,9 +19928,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -20839,9 +20893,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -21806,9 +21871,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -22773,9 +22849,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -23927,9 +24014,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -25005,9 +25103,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -26363,9 +26472,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -27241,9 +27361,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -28212,9 +28343,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -29137,9 +29279,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -30224,9 +30377,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -38270,9 +38434,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -39195,9 +39370,20 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }

@@ -55,6 +55,11 @@ namespace Models.DCAPST
         public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
 
         /// <summary>
+        /// The name of the folder that is used to store the cultivar parameters.
+        /// </summary>
+        private const string CULTIVAR_PARAMETERS_FOLDER_NAME = "CultivarParameters";
+
+        /// <summary>
         /// Performs error checking at start of simulation.
         /// </summary>
         /// <param name="sender"></param>
@@ -125,7 +130,11 @@ namespace Models.DCAPST
         {
             // DcAPST allows specific Crop and Cultivar settings to be used.
             // Search and extract the Cultivar if it has been specified.
-            var cultivar = FindChild<Cultivar>($"CultivarParameters.{sowingData.Plant.Name}.{sowingData.Cultivar}");
+            var cultivar = 
+                FindChild(CULTIVAR_PARAMETERS_FOLDER_NAME)?.
+                FindChild(sowingData.Plant.Name)?.
+                FindChild<Cultivar>(sowingData.Cultivar);
+
             if (cultivar is null) return;
 
             // We've got a Cultivar so apply all of the specified overrides to manipulate this models settings.
