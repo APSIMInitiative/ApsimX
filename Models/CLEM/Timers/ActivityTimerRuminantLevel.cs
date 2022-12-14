@@ -141,9 +141,6 @@ namespace Models.CLEM.Timers
                     // filter based on all filtergroups
                     uniqueIndividuals = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups, parentRuminantBase.CurrentHerd());
 
-                    if (!uniqueIndividuals.Any())
-                        StatusMessage = "No individuals found";
-
                     if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
                         amountAtFirstCheck = uniqueIndividuals.Count();
                     else
