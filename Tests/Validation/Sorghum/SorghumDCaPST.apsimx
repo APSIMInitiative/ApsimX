@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 456,
+  "ExplorerWidth": 337,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -1992,7 +1992,7 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "Name": "DCaPSTModelNG",
+                          "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -16905,10 +16905,50 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[SowingRule].Script.Cultivar = QL41xQL36, Buster, M35-1",
+                      "Specification": "",
                       "Name": "Cultivar",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[SowingRule].Script.Cultivar = QL41xQL36"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "QL41xQL36",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[SowingRule].Script.Cultivar = Buster"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "Buster",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[SowingRule].Script.Cultivar = M35-1"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "M35-1",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -17791,7 +17831,54 @@
                           },
                           "Name": "DCaPSTModelNG",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Core.Folder, Models",
+                                  "ShowInDocs": false,
+                                  "GraphsPerPage": 6,
+                                  "Name": "Sorghum",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.PMF.Cultivar, Models",
+                                      "Command": [
+                                        "Parameters.Canopy.SLNRatioTop = 1.5",
+                                        "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                                      ],
+                                      "Name": "M35-1",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.PMF.Cultivar, Models",
+                                      "Command": [
+                                        "Parameters.Canopy.SLNRatioTop = 1.5",
+                                        "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                                      ],
+                                      "Name": "CSH13R",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }

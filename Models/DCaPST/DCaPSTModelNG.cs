@@ -7,6 +7,7 @@ using Models.DCAPST.Environment;
 using Models.DCAPST.Interfaces;
 using Models.Functions;
 using Models.Interfaces;
+using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 
@@ -114,6 +115,21 @@ namespace Models.DCAPST
                     canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
                 }
             }
+        }
+
+        /// <summary>Called when crop is being sown</summary>
+        /// <param name="sender"></param>
+        /// <param name="sowingData"></param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowingParameters sowingData)
+        {
+            // DcAPST allows specific Crop and Cultivar settings to be used.
+            // Search and extract the Cultivar if it has been specified.
+            var cultivar = FindChild<Cultivar>($"CultivarParameters.{sowingData.Plant.Name}.{sowingData.Cultivar}");
+            if (cultivar is null) return;
+
+            // We've got a Cultivar so apply all of the specified overrides to manipulate this models settings.
+            cultivar.Apply(this);
         }
 
         private double GetRootShootRatio(IPlant plant)
