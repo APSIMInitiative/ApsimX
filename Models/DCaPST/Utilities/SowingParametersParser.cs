@@ -23,6 +23,8 @@ namespace Models.DCAPST
         {
             if (model is null) return null;
             if (sowingParameters is null) return null;
+            if (sowingParameters.Plant is null) return null;
+            if (string.IsNullOrEmpty(sowingParameters.Cultivar)) return null;
 
             var cultivar = 
                 model.FindChild(CULTIVAR_PARAMETERS_FOLDER_NAME)?.

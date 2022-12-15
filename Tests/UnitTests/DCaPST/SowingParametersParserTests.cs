@@ -210,11 +210,51 @@ namespace UnitTests.DCaPST
         }
 
         [Test]
-        public void GetCultivarFromSowingParameters_NullModelAndSowingParams_CultivarNull()
+        public void GetCultivarFromSowingParameters_NullPlant_CultivarNull()
         {
             // Arrange
-            IModel model = null;
-            SowingParameters sowingParameters = null;
+            // Arrange
+            var modelCultivarFolderName = SowingParametersParser.CULTIVAR_PARAMETERS_FOLDER_NAME;
+            var plantName = SORGHUM_PLANT_NAME;
+            var cultivarName = CSH13R_CULTIVAR_NAME;
+            var model = CreateModel(modelCultivarFolderName, plantName, cultivarName);
+            SowingParameters sowingParameters = new SowingParameters();
+
+            // Act
+            var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
+
+            // Assert
+            Assert.IsNull(cultivar);
+        }
+
+        [Test]
+        public void GetCultivarFromSowingParameters_NullCultivarName_CultivarNull()
+        {
+            // Arrange
+            var modelCultivarFolderName = SowingParametersParser.CULTIVAR_PARAMETERS_FOLDER_NAME;
+            var plantName = SORGHUM_PLANT_NAME;
+            var cultivarName = CSH13R_CULTIVAR_NAME;
+            var model = CreateModel(modelCultivarFolderName, plantName, cultivarName);
+            var sowingParameters = CreateSowingParameters(plantName, cultivarName);
+            sowingParameters.Cultivar = null;
+
+            // Act
+            var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
+
+            // Assert
+            Assert.IsNull(cultivar);
+        }
+
+        [Test]
+        public void GetCultivarFromSowingParameters_EmptyCultivarName_CultivarNull()
+        {
+            // Arrange
+            var modelCultivarFolderName = SowingParametersParser.CULTIVAR_PARAMETERS_FOLDER_NAME;
+            var plantName = SORGHUM_PLANT_NAME;
+            var cultivarName = CSH13R_CULTIVAR_NAME;
+            var model = CreateModel(modelCultivarFolderName, plantName, cultivarName);
+            var sowingParameters = CreateSowingParameters(plantName, cultivarName);
+            sowingParameters.Cultivar = string.Empty;
 
             // Act
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(model, sowingParameters);
