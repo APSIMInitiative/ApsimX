@@ -130,11 +130,7 @@ namespace Models.DCAPST
         {
             // DcAPST allows specific Crop and Cultivar settings to be used.
             // Search and extract the Cultivar if it has been specified.
-            var cultivar = 
-                FindChild(CULTIVAR_PARAMETERS_FOLDER_NAME)?.
-                FindChild(sowingData.Plant.Name)?.
-                FindChild<Cultivar>(sowingData.Cultivar);
-
+            var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(this, sowingData);
             if (cultivar is null) return;
 
             // We've got a Cultivar so apply all of the specified overrides to manipulate this models settings.
