@@ -15,6 +15,7 @@ using Models.Storage;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Newtonsoft.Json;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Models.CLEM.Reporting
 {
@@ -137,8 +138,44 @@ namespace Models.CLEM.Reporting
                             .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
                             & (IncludeFolders || (row.Field<int>("Type") != 1))
                             & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2)) )  );
+
                         if (filteredData.Any())
                         {
+                            // flag folders for display
+                            if(IncludeFolders)
+                            {
+                                foreach (var item in filteredData)
+                                {
+                                    if (item.Field<int>("Type") == 1)
+                                        item.SetField<String>("Status", "Folder");
+                                }
+                            }
+
+                            // identify any timer or event that did not occur
+                            string currentID = "";
+                            List<string> list = new List<string>() { "Ignored", "Folder" };
+                            foreach (var item in filteredData)
+                            {
+                                if (item.Field<string>("UniqueID") != currentID)
+                                {
+                                    currentID = item.Field<string>("UniqueID");
+                                    if ((item.Field<int>("Type") != 1))
+                                    {
+                                        // look for no task controller activities
+                                        //var testc = filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1);
+                                        if(filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
+                                            item.SetField<String>("Status", "Controller");
+
+                                        // mark and message any with nothing to do.
+                                        if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
+                                        {
+                                            item.SetField<String>("Status", "Warning");
+                                            item.SetField<String>("Message",  $"Never occurs");
+                                        }
+                                    }
+                                }
+                            }
+
                             data = filteredData.CopyToDataTable();
                         }
                         else
@@ -289,19 +326,22 @@ namespace Models.CLEM.Reporting
                 "<meta http-equiv = \"Expires\" content = \"0\" />\r\n" +
                 "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n" +
                 "<style>\r\n" +
-                "body {color: [FontColor]; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
+                "body {color: [FontColor]; background-color: [BackColor]; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 "table,th,td {border: 1px solid #aaaaaa; }" +
                 "table th {padding:3px; color:[HeaderFontColor]; vertical-align: bottom; text-align: center;}" +
                 "th span {-ms-writing-mode: tb-rl;-webkit-writing-mode: vertical-rl;writing-mode: vertical-rl;transform: rotate(180deg);white-space: nowrap;}" +
                 "table td {padding:3px; position: relative;}" +
                 "td:nth-child(n+2) {text-align:center;}" +
-                "td:first-child {background: white; position: -webkit-sticky; /* for Safari */ position: sticky; left: 0; z-index: 9998;}" +
+                "td:first-child {position: -webkit-sticky; /* for Safari */ position: sticky; left: 0; z-index: 9998;}" +
+                //background: white;  in style above
                 "th:nth-child(1) {text-align:left;}" +
                 "th:first-child {left:0; z-index: 9999; }" +
                 "th {background-color: Black !important; position:-webkit-sticky; /* for Safari */ position: sticky; top: 0;}" +
-                "tr:nth-child(2n+3) {background-color:[ResRowBack] !important;}" +
-                "tr:nth-child(2n+2) {background-color:[ResRowBack2] !important;}" +
+                "tr:nth-child(2n+3) {background-color:[ResRowBack]}" +
+                "tr:nth-child(2n+2) {background-color:[ResRowBack2]}" +
+                ".folder {background-color:[FolderBack] !important;}" +
+                ".controller {background-color:[ControlBack] !important; color:[ControlColor]}" +
                 "td.fill {background-color: #c1946c !important;}" +
                 ".topspacing { margin-top:10px; }" +
                 ".disabled { color:#CCC; }" +
@@ -328,11 +368,16 @@ namespace Models.CLEM.Reporting
             if (!darkTheme)
             {
                 // light theme
+                html = html.Replace("[BackColor]", "white");
                 html = html.Replace("[FontColor]", "black");
                 html = html.Replace("[HeaderFontColor]", "white");
 
+                html = html.Replace("[FolderBack]", "#b3f1ff");
+                html = html.Replace("[ControlBack]", "#d7ffd6");
+                html = html.Replace("[ControlColor]", "black");
+
                 // resources
-                html = html.Replace("[ResRowBack]", "#fdfdfd");
+                html = html.Replace("[ResRowBack]", "#f5f5f5");
                 html = html.Replace("[ResRowBack2]", "white");
                 html = html.Replace("[ResContBack]", "floralwhite");
                 html = html.Replace("[ResContBackLight]", "white");
@@ -346,8 +391,13 @@ namespace Models.CLEM.Reporting
             else
             {
                 // dark theme
+                html = html.Replace("[BackColor]", "#281A0E");
                 html = html.Replace("[FontColor]", "#E5E5E5");
                 html = html.Replace("[HeaderFontColor]", "black");
+
+                html = html.Replace("[FolderBack]", "#b3f1ff");
+                html = html.Replace("[ControlBack]", "#a3a3a2");
+                html = html.Replace("[ControlColor]", "white");
 
                 // resources
                 html = html.Replace("[ResRowBack]", "#281A0E");
@@ -399,13 +449,19 @@ namespace Models.CLEM.Reporting
 
                     foreach (DataRow row in data.Rows)
                     {
-                        htmlString.WriteLine($"<tr>");
+                        string rowClass = "";
+                        if(row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
+                            rowClass = "class=\"folder\"";
+                        if(row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
+                            rowClass = "class=\"controller\"";
+
+                        htmlString.WriteLine($"<tr {rowClass}>");
                         foreach (var item in row.ItemArray)
                         {
                             if (item.ToString() != " ")
                             {
                                 string splitter = "\\";
-                                var statusParts = item.ToString().Split(':');
+                                var statusParts = item.ToString().Replace(" ", "&nbsp;").Split(':');
 
                                 string image = "";
                                 switch (statusParts[0])
@@ -418,12 +474,15 @@ namespace Models.CLEM.Reporting
                                     case "Partial":
                                     case "Timer":
                                     case "Ignore":
+                                    case "Skipped":
                                         image = $"ActivitiesReport{statusParts[0]}Web";
                                         break;
                                     case "Warning":
                                         image = $"ActivitiesReportIgnoreWeb";
                                         break;
                                     case "Ignored":
+                                    case "Folder":
+                                    case "Controller":
                                         image = "ActivitiesReportBlankWeb";
                                         break;
                                     default:
@@ -437,7 +496,7 @@ namespace Models.CLEM.Reporting
                                 }
                                 else
                                 {
-                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Any()? "note":"")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\"></td>");
+                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Any()? "note":"")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
                                 }
 
                                 //string image = "";

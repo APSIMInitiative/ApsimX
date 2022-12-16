@@ -47,7 +47,7 @@ namespace Models.CLEM
         /// <summary>
         /// Insufficient resources so activity skipped
         /// </summary>
-        Skipped
+        Skipped,
     }
 
     /// <summary>

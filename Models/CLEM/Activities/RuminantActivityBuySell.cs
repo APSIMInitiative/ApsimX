@@ -302,6 +302,16 @@ namespace Models.CLEM.Activities
                         rrEventArgs.Request.ShortfallStatus = "No implication";
                     if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications)
                         rrEventArgs.Request.ShortfallStatus = "Affected outcome";
+
+                    if(numberTrucked == 0)
+                    {
+                        Status= ActivityStatus.Warning;
+                        AddStatusMessage($"{ActivityStyle} could not be performed");
+                    }
+                    else
+                    {
+                        AddStatusMessage($"{ActivityStyle} were restricted");
+                    }
                 }
                 ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
 
