@@ -483,28 +483,33 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Protected method to cascade calls for activities performed for all dynamically created activities
         /// </summary>
-        public void ReportActivityStatus()
+        public void ReportActivityStatus(int level, bool fromSetup = false)
         {
-            this.TriggerOnActivityPerformed();
+            this.TriggerOnActivityPerformed(level);
+            level++;
+            string spaces = new string(' ', level*2);
 
             // report all timers that were due this time step
-            foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
+            if (!fromSetup)
             {
-                if (timer.ActivityDue)
+                // report timer status and messages when not from setup
+                foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
                 {
                     // report activity performed.
                     ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
                     {
-                        Name = (timer as IModel).Name,
-                        Status = ActivityStatus.Timer,
+                        Name = spaces+(timer as IModel).Name,
+                        Status = (timer.ActivityDue) ? ActivityStatus.Timer : ActivityStatus.Ignored,
                         Id = (timer as CLEMModel).UniqueID.ToString(),
-                        ModelType = (int)ActivityPerformedType.Timer
+                        ModelType = (int)ActivityPerformedType.Timer,
+                        StatusMessage = timer.StatusMessage
                     });
+                    timer.StatusMessage = "";
                 }
             }
             // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in FindAllChildren<CLEMActivityBase>())
-                activity.ReportActivityStatus();
+                activity.ReportActivityStatus(level);
         }
 
         /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>
@@ -1158,8 +1163,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to trigger an Activity Performed event 
         /// </summary>
-        public void TriggerOnActivityPerformed()
+        public void TriggerOnActivityPerformed(int level = 0)
         {
+            string spaces = new string(' ', level*2);
+
             int type = 0;
             if (GetType().Name.Contains("ActivityTimer"))
             {
@@ -1172,7 +1179,7 @@ namespace Models.CLEM.Activities
 
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
-                Name = this.Name,
+                Name = spaces + this.Name,
                 Status = this.Status,
                 StatusMessage = StatusMessage,
                 Id = this.UniqueID.ToString(),

@@ -48,6 +48,9 @@ namespace Models.CLEM.Timers
         /// </summary>
         public event EventHandler ActivityPerformed;
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>

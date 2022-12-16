@@ -72,6 +72,9 @@ namespace Models.CLEM.Timers
         [Description("Amount")]
         public double Amount { get; set; }
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Notify CLEM that this activity was performed.
         /// </summary>
