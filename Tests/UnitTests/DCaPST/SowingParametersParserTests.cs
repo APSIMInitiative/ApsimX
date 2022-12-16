@@ -9,14 +9,16 @@ namespace UnitTests.DCaPST
     [TestFixture]
     public class SowingParametersParserTests
     {
+        #region Constants
         private const string SORGHUM_PLANT_NAME = "Sorghum";
         private const string WHEAT_PLANT_NAME = "Wheat";
         private const string M35_CULTIVAR_NAME = "M35-1";
         private const string CSH13R_CULTIVAR_NAME = "CSH13R";
+        #endregion
 
         #region TestHelpers
 
-        private IModel CreateChildModel<T>(string name) where T : IModel, new()
+        private static IModel CreateChildModel<T>(string name) where T : IModel, new()
         {
             var child = new T()
             {
@@ -26,12 +28,12 @@ namespace UnitTests.DCaPST
             return child;
         }
 
-        private DCaPSTModelNG CreateModel()
+        private static DCaPSTModelNG CreateModel()
         {
             return new DCaPSTModelNG();
         }
 
-        private DCaPSTModelNG CreateModel(
+        private static DCaPSTModelNG CreateModel(
             string cultivarFolderName, 
             string plantName,
             string cultivarName
@@ -53,7 +55,7 @@ namespace UnitTests.DCaPST
             };
         }
 
-        private SowingParameters CreateSowingParameters(
+        private static SowingParameters CreateSowingParameters(
             string plantName,
             string cultivarName
         )
