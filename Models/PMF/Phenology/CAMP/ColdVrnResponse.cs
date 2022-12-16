@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class ColdUpRegVrn1 : Model, IFunction, IIndexedFunction
+    public class ColdVrnResponse : Model, IFunction, IIndexedFunction
     {
 
         [Link(ByName = true, Type = LinkType.Ancestor)]
@@ -52,14 +52,12 @@ namespace Models.PMF.Phen
         {
             if (camp.Params != null)
             {
-                double dBV = camp.dBaseVrn / 24;  //divide by 24 to make hourly
-                double UdVrn1 = Math.Exp(k.Value() * dX) * dBV * camp.Params.ColdVrn1Fact;
+                double UdVrn1 = Math.Exp(k.Value() * dX);
                 if (dX < deVernalisationTemp.Value())
-                    return UdVrn1;
+                    return UdVrn1/24;
                 else
                 {
-                    double dTt = (dX - deVernalisationTemp.Value())/24;
-                    return deVernalisationRate.Value() * dTt;
+                    return deVernalisationRate.Value()/24;
                 }
             }
             else return 0.0;
