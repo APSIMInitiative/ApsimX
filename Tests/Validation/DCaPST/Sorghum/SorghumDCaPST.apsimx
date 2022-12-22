@@ -452,6 +452,54 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "Parameters.Canopy.SLNRatioTop = 1.5",
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                  ],
+                  "Name": "ATX623xRTX430",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "Parameters.Canopy.SLNRatioTop = 1.5",
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                  ],
+                  "Name": "A35xQL36",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "Parameters.Canopy.SLNRatioTop = 1.5",
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                  ],
+                  "Name": "QL41xQL36",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "Parameters.Canopy.SLNRatioTop = 1.5",
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                  ],
+                  "Name": "QL39xQL36",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
