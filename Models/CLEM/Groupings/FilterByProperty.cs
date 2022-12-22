@@ -40,7 +40,24 @@ namespace Models.CLEM.Groupings
         [Required(AllowEmptyStrings = false, ErrorMessage = "Property or method to filter by required")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters), Order = 1)]
         public string PropertyOfIndividual { get; set; }
-        
+
+        /// <inheritdoc/>
+        public override object ModifiedValueToUse
+        {
+            get 
+            {
+                switch (PropertyOfIndividual)
+                {
+                    // allow full path names for location by ignoring the GrazeFoodStore component.
+                    case "Location":
+                        if(Value.ToString().Contains("."))
+                            return Value.ToString().Split('.')[1];
+                        break;
+                }
+                return Value;
+            }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -102,7 +119,24 @@ namespace Models.CLEM.Groupings
             var key = Expression.Property(filterInherit, propertyInfo.Name);
 
             // Try convert the Value into the same data type as the property
-            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) : Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType);
+
+            string propError = "";
+            switch (propertyInfo.PropertyType.Name)
+            {
+                case "Boolean":
+                    if(Value != null && !bool.TryParse(Value.ToString(), out _))
+                        propError = $"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]";
+                    break;
+                default:
+                    break;
+            }
+            if(propError != "")
+            {
+                Warnings.CheckAndWrite(propError, Summary, this, MessageType.Error);
+                throw new ApsimXException(this, propError);
+            }
+
+            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, ModifiedValueToUse.ToString(), true) : Convert.ChangeType(ModifiedValueToUse ?? 0, propertyInfo.PropertyType);
             var value = Expression.Constant(ce);
 
             // Create a lambda that compares the filter value to the property on T

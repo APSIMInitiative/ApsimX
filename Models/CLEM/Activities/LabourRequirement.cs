@@ -53,39 +53,46 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Days labour required per unit or fixed (days)
         /// </summary>
-        [Description("Days labour required [per unit or fixed]")]
+        [Description("Labour required (days)")]
+        [Tooltip("Number of days required for the number of units specified (or fixed if set as unit)")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Labour", "Rate")]
+        [System.ComponentModel.DefaultValueAttribute(1)]
         public double LabourPerUnit { get; set; }
 
         /// <summary>
         /// Size of unit
         /// </summary>
         [Description("Number of units")]
+        [Tooltip("The number of units per days labour required")]
         [Required, GreaterThanEqualValue(0)]
         [Category("Labour", "Units")]
+        [System.ComponentModel.DefaultValueAttribute(1)]
         public double UnitSize { get; set; }
-
-        /// <summary>
-        /// Whole unit blocks only
-        /// </summary>
-        [Description("Request as whole unit blocks only")]
-        [Category("Labour", "Units")]
-        public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
         /// Labour unit type
         /// </summary>
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
-        [Description("Measure to use")]
+        [Tooltip("The style of units to consider")]
+        [Description("Measure of units")]
         [Category("Labour", "Units")]
         public string Measure { get; set; }
+
+        /// <summary>
+        /// Whole unit blocks only
+        /// </summary>
+        [Description("Use whole units")]
+        [Tooltip("Labour supplied in whole blocks of the number of units only")]
+        [Category("Labour", "Units")]
+        public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
         /// Labour limit style
         /// </summary>
         [Description("Limit style")]
         [System.ComponentModel.DefaultValueAttribute(LabourLimitType.ProportionOfDaysRequired)]
+        [Tooltip("The style of providing limits to the amount of labour provided")]
         [Category("Labour", "Limits")]
         [Required]
         public LabourLimitType LimitStyle { get; set; }
@@ -157,13 +164,13 @@ namespace Models.CLEM.Activities
         {
             switch (LimitStyle)
             {
-                case LabourLimitType.AsDaysRequired:
-                    double units = amountRequested / UnitSize / LabourPerUnit;
+                case LabourLimitType.AsRatePerUnitsAllowed:
+                    double units = amountRequested / LabourPerUnit;
                     maximumDaysPerPerson = units * MaximumPerPerson;
                     maximumDaysPerGroup = units * MaximumPerGroup;
                     minimumDaysPerPerson = units * MinimumPerPerson;
                     break;
-                case LabourLimitType.AsTotalAllowed:
+                case LabourLimitType.AsTotalDaysAllowed:
                     maximumDaysPerPerson = MaximumPerPerson;
                     maximumDaysPerGroup = MaximumPerGroup;
                     minimumDaysPerPerson = MinimumPerPerson;
@@ -183,17 +190,14 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
             resourceList.Clear();
-            IEnumerable<LabourType> labourers = labourResource?.Items.Where(a => a.Hired != true);
-            double daysNeeded = 0;
-            double numberUnits = 0;
-
+            double daysNeeded;
             switch (Measure)
             {
                 case "Fixed":
                     daysNeeded = LabourPerUnit * activityMetric;
                     break;
                 default:
-                    numberUnits = activityMetric / UnitSize;
+                    double numberUnits = activityMetric / UnitSize;
                     if (WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);
                     daysNeeded = numberUnits * LabourPerUnit;
@@ -222,7 +226,7 @@ namespace Models.CLEM.Activities
                             FilterDetails = new List<object>() { fg },
                             Category = this.TransactionCategory,
                         }
-                        ); ;
+                        ); 
                     }
                 }
             }
@@ -312,29 +316,33 @@ namespace Models.CLEM.Activities
 
 
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
+                string extraLimit = "";
                 switch (LimitStyle)
                 {
-                    case LabourLimitType.AsDaysRequired:
-                        htmlWriter.Write($"as the days required</div>");
+                    case LabourLimitType.AsRatePerUnitsAllowed:
+                        htmlWriter.Write($"as the rate per number of units specified</div>");
+                        extraLimit = " times the number of unt blocks requested. i.e. using the same calculation as LabourPerUnits";
                         break;
-                    case LabourLimitType.AsTotalAllowed:
+                    case LabourLimitType.AsTotalDaysAllowed:
                         htmlWriter.Write($"as the total days permitted in the month</div>");
+                        extraLimit = " days";
                         break;
                     case LabourLimitType.ProportionOfDaysRequired:
-                        htmlWriter.Write($"as a proportion of the days required and therefore total required</div>");
+                        htmlWriter.Write($"as a proportion of the total days required</div>");
+                        extraLimit = " times the total days required";
                         break;
                     default:
                         break;
                 }
 
                 if (MaximumPerGroup > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span> day{((MaximumPerGroup == 1) ? "" : "s")}</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span>{extraLimit}</div>");
 
                 if (MinimumPerPerson > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span> day{((MinimumPerPerson == 1) ? "" : "s")} is required</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span>{extraLimit}</div>");
 
                 if (MaximumPerPerson > 0 && MaximumPerPerson < 31)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span> days</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span>{extraLimit}</div>");
 
                 if (ApplyToAll)
                     htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
@@ -343,23 +351,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        ///// <inheritdoc/>
-        //public override string ModelSummaryInnerOpeningTags()
-        //{
-        //    using (StringWriter htmlWriter = new StringWriter())
-        //    {
-        //        //htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
-        //        htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
-
-        //        if (this.FindAllChildren<LabourGroup>().Count() == 0)
-        //        {
-        //            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-        //            htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
-        //            htmlWriter.Write("</div>");
-        //        }
-        //        return htmlWriter.ToString(); 
-        //    }
-        //} 
         #endregion
 
 

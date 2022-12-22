@@ -194,6 +194,15 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
 
+        /// <summary>Total mass of all standing surface organic materials</summary>
+        [Units("kg/ha")]
+        public double StandingWt => SurfOM.Sum(om => om.Standing.Sum(organ => organ.amount));
+
+        /// <summary>Total mass of all lying surface organic materials</summary>
+        [Units("kg/ha")]
+        public double LyingWt => SurfOM.Sum(om => om.Lying.Sum(organ => organ.amount));
+
+
         /// <summary>Total carbon of all surface organic carbon</summary>
         [Summary]
         [Description("Carbon content")]
@@ -364,11 +373,13 @@ namespace Models.Surface
         /// <summary>Incorporates the specified fraction.</summary>
         /// <param name="fraction">The fraction.</param>
         /// <param name="depth">The depth.</param>
-        public void Incorporate(double fraction, double depth)
+        /// <param name="doOutput">Echo the incoporation to the Summary file? Default is true.</param>
+        public void Incorporate(double fraction, double depth, bool doOutput = true)
         {
             Incorp(fraction, depth);
 
-            summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +
+            if (doOutput)
+                summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +
                                                       "Fraction Incorporated = {0:0.0##}" + Environment.NewLine +
                                                       "Incorporated Depth    = {1:0.0##}",
                                                       fraction, depth), MessageType.Diagnostic);
