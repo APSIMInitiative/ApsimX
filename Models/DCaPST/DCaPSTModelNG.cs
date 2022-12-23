@@ -284,7 +284,7 @@ namespace Models.DCAPST
         /// </summary>
         private void HandleCropChange()
         {
-            Parameters = ParameterGenerator.Generate(cropName);
+            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
         }
     }
 }

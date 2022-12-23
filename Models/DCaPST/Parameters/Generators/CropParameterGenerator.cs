@@ -18,9 +18,12 @@ namespace Models.DCAPST
         {
             var dcapstParameters = new DCaPSTParameters();
 
-            if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
+            if (!string.IsNullOrEmpty(cropName))
             {
-                dcapstParameters = generatorFunc();
+                if (cropParameterMapper.TryGetValue(cropName.ToUpper(), out var generatorFunc))
+                {
+                    dcapstParameters = generatorFunc();
+                }
             }
 
             return dcapstParameters;
