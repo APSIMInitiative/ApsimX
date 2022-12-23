@@ -27,6 +27,7 @@ namespace UnitTests.DCaPST
 
             // Assert
             mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
+            Assert.AreEqual(model.CropName, cropName);
         }
 
         [Test]
@@ -48,6 +49,7 @@ namespace UnitTests.DCaPST
 
             // Assert
             mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
+            Assert.AreEqual(model.CropName, cropName);
         }
 
         [Test]
@@ -71,6 +73,7 @@ namespace UnitTests.DCaPST
             // Assert
             mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
             mock.Verify(cropGen => cropGen.Generate(differentCropName), Times.Once());
+            Assert.AreEqual(model.CropName, differentCropName);
         }
 
         #endregion
