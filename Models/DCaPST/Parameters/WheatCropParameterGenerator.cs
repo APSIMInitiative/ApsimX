@@ -1,9 +1,4 @@
-﻿using Models.DCAPST;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.DCaPST.Parameters
+﻿namespace Models.DCAPST
 {
     public static class WheatCropParameterGenerator
     {

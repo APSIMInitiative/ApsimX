@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
-using Models.DCaPST.Parameters;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
 using Models.DCAPST.Interfaces;
@@ -47,11 +46,6 @@ namespace Models.DCAPST
         private string cropName = string.Empty;
 
         /// <summary>
-        /// A helper object that can be used to generate crop parameters.
-        /// </summary>
-        private readonly CropParameterGenerator cropParameterGenerator = new CropParameterGenerator();
-
-        /// <summary>
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop against which DCaPST will run")]
@@ -78,6 +72,11 @@ namespace Models.DCAPST
         /// The DCaPST Parameters.
         /// </summary>
         public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
+
+        /// <summary>
+        /// A helper object that can be used to generate crop parameters.
+        /// </summary>
+        public ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
         /// The name of the folder that is used to store the cultivar parameters.
@@ -285,7 +284,7 @@ namespace Models.DCAPST
         /// </summary>
         private void HandleCropChange()
         {
-            Parameters = cropParameterGenerator.Generate(cropName);
+            Parameters = ParameterGenerator.Generate(cropName);
         }
     }
 }

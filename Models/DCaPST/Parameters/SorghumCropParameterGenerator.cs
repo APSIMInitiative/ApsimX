@@ -1,8 +1,6 @@
-﻿using Models.Core;
-using Models.DCAPST;
-using Models.DCAPST.Interfaces;
+﻿using Models.DCAPST.Interfaces;
 
-namespace Models.DCaPST.Parameters
+namespace Models.DCAPST
 {
     public static class SorghumCropParameterGenerator
     {

@@ -1,31 +1,19 @@
-﻿using Models.DCAPST;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Models.DCaPST.Parameters
+namespace Models.DCAPST
 {
     // Typedef this collection for convenience.
     using CropParameterMapper = Dictionary<string, Func<DCaPSTParameters>>;
 
-    public class CropParameterGenerator
+    public class CropParameterGenerator : ICropParameterGenerator
     {
         /// <summary>
         /// A mapping of the known crop name, to DCaPST parameter generators.
         /// </summary>
         private readonly CropParameterMapper cropParameterMapper = CreateCropParameterMapper();
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public CropParameterGenerator()
-        {
-        }
-
-        /// <summary>
-        /// Given the supplied crop name, return the specific crop DCaPST parameters.
-        /// </summary>
-        /// <param name="cropName"></param>
-        /// <returns>The DCaPSTParameters relevant to the specified crop name.</returns>
+        
+        /// <inheritdoc/>
         public DCaPSTParameters Generate(string cropName)
         {
             var dcapstParameters = new DCaPSTParameters();
