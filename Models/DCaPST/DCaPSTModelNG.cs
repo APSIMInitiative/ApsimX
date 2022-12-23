@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
+using Models.DCaPST.Parameters;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
 using Models.DCAPST.Interfaces;
@@ -41,17 +42,41 @@ namespace Models.DCAPST
         private ISoilWater soilWater = null;
 
         /// <summary>
+        /// The chosen crop name.
+        /// </summary>
+        private string cropName = string.Empty;
+
+        /// <summary>
+        /// A helper object that can be used to generate crop parameters.
+        /// </summary>
+        private readonly CropParameterGenerator cropParameterGenerator = new CropParameterGenerator();
+
+        /// <summary>
         /// The crop against which DCaPST will be run.
         /// </summary>
         [Description("The crop against which DCaPST will run")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetPlantNames))]
-        public string CropName { get; set; }
+        public string CropName
+        { 
+            get
+            {
+                return cropName;
+            } 
+            set
+            {
+                // Optimise Handling a Crop Change call so that it only happens if the 
+                // value has actually changed.
+                if (cropName != value)
+                {
+                    cropName = value;
+                    HandleCropChange();
+                }
+            }
+        }
 
         /// <summary>
-        /// Canopy parameters, as specified by user.
+        /// The DCaPST Parameters.
         /// </summary>
-        [Display(Type = DisplayType.SubModel)]
-        [Description("DCaPST")]
         public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
 
         /// <summary>
@@ -254,5 +279,13 @@ namespace Models.DCAPST
         /// Get the names of all plants in scope.
         /// </summary>
         private IEnumerable<string> GetPlantNames() => FindAllInScope<IPlant>().Select(p => p.Name);
+
+        /// <summary>
+        /// Reset the default DCaPST parameters according to the type of crop.
+        /// </summary>
+        private void HandleCropChange()
+        {
+            Parameters = cropParameterGenerator.Generate(cropName);
+        }
     }
 }

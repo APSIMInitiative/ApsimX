@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Models.Core;
-using Models.PMF;
+using System;
 
 namespace Models.DCAPST
 {
@@ -16,7 +13,7 @@ namespace Models.DCAPST
         /// PAR energy fraction
         /// </summary>
         [Description("PAR energy fraction")]
-        public double Rpar { get; set; } = 0.5;
+        public double Rpar { get; set; }
 
         /// <summary>
         /// Canopy parameters.
