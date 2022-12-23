@@ -51,7 +51,7 @@ namespace Models.DCAPST
         [Description("The crop against which DCaPST will run")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetPlantNames))]
         public string CropName
-        { 
+        {
             get
             {
                 return cropName;

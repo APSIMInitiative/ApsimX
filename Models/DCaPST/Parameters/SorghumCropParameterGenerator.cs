@@ -18,7 +18,7 @@ namespace Models.DCAPST
         /// The default value used for the extra ATP cost.
         /// Constant as it is also used in other initial calculations and never changes.
         /// </summary>
-        private const int DEFAULT_EXTRA_ATP_COST = 2;
+        private const double DEFAULT_EXTRA_ATP_COST = 2;
 
         /// <summary>
         /// The default value used for the fraction of cyclic electron flow.
@@ -85,7 +85,7 @@ namespace Models.DCAPST
                 MesophyllCO2ConductanceSLNRatio = 0.0135 * PSI_FACTOR,
                 MesophyllElectronTransportFraction = DEFAULT_EXTRA_ATP_COST / (3.0 + DEFAULT_EXTRA_ATP_COST),
                 ATPProductionElectronTransportFactor = (3.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW) / (4.0 * (1.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW)),
-                ExtraATPCost = 2,
+                ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
                 RubiscoCarboxylation = new TemperatureResponseValues
                 {
                     At25 = 1210,
