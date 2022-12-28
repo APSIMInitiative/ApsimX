@@ -2,6 +2,9 @@
 
 namespace Models.DCAPST
 {
+    /// <summary>
+    /// The Crop Parameter Generator for Wheat.
+    /// </summary>
     public static class WheatCropParameterGenerator
     {
         /// <summary>

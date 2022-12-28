@@ -2,6 +2,9 @@
 
 namespace Models.DCAPST
 {
+    /// <summary>
+    /// The Crop Parameter Generator for Sorghum.
+    /// </summary>
     public static class SorghumCropParameterGenerator
     {
         /// <summary>

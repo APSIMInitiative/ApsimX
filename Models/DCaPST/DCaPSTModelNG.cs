@@ -74,11 +74,6 @@ namespace Models.DCAPST
         public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
 
         /// <summary>
-        /// The name of the folder that is used to store the cultivar parameters.
-        /// </summary>
-        private const string CULTIVAR_PARAMETERS_FOLDER_NAME = "CultivarParameters";
-
-        /// <summary>
         /// Performs error checking at start of simulation.
         /// </summary>
         /// <param name="sender"></param>

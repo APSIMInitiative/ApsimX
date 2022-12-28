@@ -1,5 +1,8 @@
 ﻿namespace Models.DCAPST
 {
+    /// <summary>
+    /// A generic crop parameter generator interface.
+    /// </summary>
     public interface ICropParameterGenerator
     {
         /// <summary>

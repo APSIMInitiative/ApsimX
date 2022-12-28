@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -433,7 +433,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
                   ],
                   "Name": "M35-1",
                   "ResourceName": null,
@@ -445,7 +445,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
                   ],
                   "Name": "CSH13R",
                   "ResourceName": null,
@@ -457,7 +457,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
                   ],
                   "Name": "ATX623xRTX430",
                   "ResourceName": null,
@@ -469,7 +469,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
                   ],
                   "Name": "A35xQL36",
                   "ResourceName": null,
@@ -481,7 +481,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
                   ],
                   "Name": "QL41xQL36",
                   "ResourceName": null,
@@ -493,7 +493,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
                   ],
                   "Name": "QL39xQL36",
                   "ResourceName": null,
