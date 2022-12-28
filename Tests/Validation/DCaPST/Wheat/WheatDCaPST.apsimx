@@ -3546,9 +3546,6 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                          },
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
@@ -4572,9 +4569,6 @@
                               "PEPRegeneration": 0.0,
                               "BundleSheathConductance": 0.003
                             }
-                          },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
@@ -5643,9 +5637,6 @@
                               "PEPRegeneration": 0.0,
                               "BundleSheathConductance": 0.003
                             }
-                          },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
@@ -7145,9 +7136,6 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                          },
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
@@ -8481,9 +8469,6 @@
                               "PEPRegeneration": 0.0,
                               "BundleSheathConductance": 0.003
                             }
-                          },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
@@ -9832,9 +9817,6 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                          },
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
@@ -11029,9 +11011,6 @@
                               "PEPRegeneration": 0.0,
                               "BundleSheathConductance": 0.003
                             }
-                          },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
@@ -13622,9 +13601,6 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                          },
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
@@ -14731,9 +14707,6 @@
                               "PEPRegeneration": 0.0,
                               "BundleSheathConductance": 0.003
                             }
-                          },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
@@ -16150,9 +16123,6 @@
                                   "BundleSheathConductance": 0.003
                                 }
                               },
-                              "ParameterGenerator": {
-                                "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                              },
                               "Name": "DCaPST",
                               "ResourceName": null,
                               "Children": [],
@@ -17471,9 +17441,6 @@
                                   "BundleSheathConductance": 0.003
                                 }
                               },
-                              "ParameterGenerator": {
-                                "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                              },
                               "Name": "DCaPST",
                               "ResourceName": null,
                               "Children": [],
@@ -18472,9 +18439,6 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                          },
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
@@ -19438,9 +19402,6 @@
                               "BundleSheathConductance": 0.003
                             }
                           },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
-                          },
                           "Name": "DCaPST",
                           "ResourceName": null,
                           "Children": [],
@@ -20403,9 +20364,6 @@
                               "PEPRegeneration": 0.0,
                               "BundleSheathConductance": 0.003
                             }
-                          },
-                          "ParameterGenerator": {
-                            "$type": "Models.DCAPST.CropParameterGenerator, Models"
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
