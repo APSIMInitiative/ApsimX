@@ -1,4 +1,6 @@
 ﻿using Models.DCAPST;
+using Models.DCAPST.Interfaces;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace UnitTests.DCaPST
@@ -6,17 +8,99 @@ namespace UnitTests.DCaPST
     [TestFixture]
     public class SorghumCropParameterGeneratorTests
     {
+        #region TestHelpers
+
+        /// <summary>
+        /// This will create the DCaPSTParameters as per the classic code so that we 
+        /// can compare it to our defaults.
+        /// </summary>
+        /// <returns></returns>
+        private static DCaPSTParameters CreateClassicSorghumDcapstParameters()
+        {
+            const double PSI_FACTOR = 0.4;
+
+            var classicCanopy = ClassicDCaPSTDefaultDataSetup.SetUpCanopy(
+               CanopyType.C4, // Canopy type
+               363, // CO2 partial pressure
+               0.7, // Curvature factor
+               0.047, // Diffusivity-solubility ratio
+               210000, // O2 partial pressure
+               0.78, // Diffuse extinction coefficient
+               0.8, // Diffuse extinction coefficient NIR
+               0.036, // Diffuse reflection coefficient
+               0.389, // Diffuse reflection coefficient NIR
+               60, // Leaf angle
+               0.15, // Leaf scattering coefficient
+               0.8, // Leaf scattering coefficient NIR
+               0.15, // Leaf width
+               1.3, // SLN ratio at canopy top
+               14, // Minimum Nitrogen
+               1.5, // Wind speed
+               1.5 // Wind speed extinction
+            );
+
+            var classicPathway = ClassicDCaPSTDefaultDataSetup.SetUpPathway(
+               0, // jTMin
+               37.8649150880407, // jTOpt
+               55, // jTMax
+               0.711229539802063, // jC
+               1, // jBeta
+               40600, //mesophyll conductance factor
+               1210, // KcAt25
+               64200, // KcFactor
+               292000, // KoAt25
+               10500, // KoFactor
+               5.51328906454566, // VcVoAt25
+               21265.4029552906, // VcVoFactor
+               75, // KpAt25
+               36300, // KpFactor
+               78000, // VcFactor
+               46390, // RdFactor
+               57043.2677590512, // VpFactor
+               120, // pepRegeneration
+               0.15, // spectralCorrectionFactor
+               0.1, // ps2ActivityFraction
+               0.003, // bundleSheathConductance
+               0.465 * PSI_FACTOR, // maxRubiscoActivitySLNRatio
+               2.7 * PSI_FACTOR, // maxElectronTransportSLNRatio
+               0.0 * PSI_FACTOR, // respirationSLNRatio
+               1.55 * PSI_FACTOR, // maxPEPcActivitySLNRatio
+               0.0135 * PSI_FACTOR, // mesophyllCO2ConductanceSLNRatio
+               2, // extraATPCost
+               0.45 // intercellularToAirCO2Ratio
+            );
+
+            return new DCaPSTParameters
+            {
+                Rpar = 0.5,
+                Canopy = classicCanopy,
+                Pathway = classicPathway
+            };
+        }
+
+        private static bool AreObjectsEqual<T>(T obj1, T obj2)
+        {
+            var obj1Serialized = JsonConvert.SerializeObject(obj1);
+            var obj2Serialized = JsonConvert.SerializeObject(obj2);
+
+            return obj1Serialized == obj2Serialized;
+        }
+
+        #endregion
+
         #region Tests
-        
+
         [Test]
         public void Generate_ReturnsDefaultValues()
         {
             // Arrange
+            var classicSorghumParams = CreateClassicSorghumDcapstParameters();
 
             // Act
-            var paramDefaults = SorghumCropParameterGenerator.Generate();
+            var nextGenSorghumParams = SorghumCropParameterGenerator.Generate();
 
             // Assert
+            Assert.IsTrue(AreObjectsEqual(classicSorghumParams, nextGenSorghumParams));
         }
 
         #endregion

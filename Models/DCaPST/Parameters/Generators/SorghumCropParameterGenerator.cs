@@ -80,7 +80,7 @@ namespace Models.DCAPST
                 FractionOfCyclicElectronFlow = DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW,
                 RespirationSLNRatio = 0.0 * PSI_FACTOR,
                 MaxRubiscoActivitySLNRatio = 0.465 * PSI_FACTOR,
-                MaxElectronTransportSLNRatio = 2.5,
+                MaxElectronTransportSLNRatio = 2.7 * PSI_FACTOR,
                 MaxPEPcActivitySLNRatio = 1.55 * PSI_FACTOR,
                 MesophyllCO2ConductanceSLNRatio = 0.0135 * PSI_FACTOR,
                 MesophyllElectronTransportFraction = DEFAULT_EXTRA_ATP_COST / (3.0 + DEFAULT_EXTRA_ATP_COST),

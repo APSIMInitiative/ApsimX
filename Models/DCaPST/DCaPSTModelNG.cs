@@ -197,8 +197,8 @@ namespace Models.DCAPST
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CP"></param>
-        /// <param name="PP"></param>
+        /// <param name="canopyParameters"></param>
+        /// <param name="pathwayParameters"></param>
         /// <param name="DOY"></param>
         /// <param name="latitude"></param>
         /// <param name="maxT"></param>
@@ -207,8 +207,8 @@ namespace Models.DCAPST
         /// <param name="rpar"></param>
         /// <returns></returns>
         public static DCAPSTModel SetUpModel(
-            ICanopyParameters CP, 
-            IPathwayParameters PP,
+            ICanopyParameters canopyParameters, 
+            IPathwayParameters pathwayParameters,
             int DOY, 
             double latitude, 
             double maxT, 
@@ -217,21 +217,21 @@ namespace Models.DCAPST
             double rpar)
         {
             // Model the solar geometry
-            var SG = new SolarGeometry
+            var solarGeometry = new SolarGeometry
             {
                 Latitude = latitude.ToRadians(),
                 DayOfYear = DOY
             };
 
             // Model the solar radiation
-            var SR = new SolarRadiation(SG)
+            var solarRadiation = new SolarRadiation(solarGeometry)
             {
                 Daily = radn,
                 RPAR = rpar
             };
 
             // Model the environmental temperature
-            var TM = new Temperature(SG)
+            var temperature = new Temperature(solarGeometry)
             {
                 MaxTemperature = maxT,
                 MinTemperature = minT,
@@ -239,39 +239,47 @@ namespace Models.DCAPST
             };
 
             // Model the pathways
-            var SunlitAc1 = new AssimilationPathway(CP, PP);
-            var SunlitAc2 = new AssimilationPathway(CP, PP);
-            var SunlitAj = new AssimilationPathway(CP, PP);
+            var sunlitAc1 = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var sunlitAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var sunlitAj = new AssimilationPathway(canopyParameters, pathwayParameters);
 
-            var ShadedAc1 = new AssimilationPathway(CP, PP);
-            var ShadedAc2 = new AssimilationPathway(CP, PP);
-            var ShadedAj = new AssimilationPathway(CP, PP);
+            var shadedAc1 = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var shadedAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
+            var shadedAj = new AssimilationPathway(canopyParameters, pathwayParameters);
 
             // Model the canopy
-            IAssimilation A;
-            if (CP.Type == CanopyType.C3)
-                A = new AssimilationC3(CP, PP);
-            else if (CP.Type == CanopyType.C4)
-                A = new AssimilationC4(CP, PP);
-            else
-                A = new AssimilationCCM(CP, PP);
+            IAssimilation assimilation;
+            switch (canopyParameters.Type)
+            {
+                case CanopyType.C3:
+                    assimilation = new AssimilationC3(canopyParameters, pathwayParameters);
+                    break;
 
-            var sunlit = new AssimilationArea(SunlitAc1, SunlitAc2, SunlitAj, A);
-            var shaded = new AssimilationArea(ShadedAc1, ShadedAc2, ShadedAj, A);
-            var CA = new CanopyAttributes(CP, PP, sunlit, shaded);
+                case CanopyType.C4:
+                    assimilation = new AssimilationC4(canopyParameters, pathwayParameters);
+                    break;
+
+                default:
+                    assimilation = new AssimilationCCM(canopyParameters, pathwayParameters);
+                    break;
+            }
+
+            var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);
+            var shaded = new AssimilationArea(shadedAc1, shadedAc2, shadedAj, assimilation);
+            var canopyAttributes = new CanopyAttributes(canopyParameters, pathwayParameters, sunlit, shaded);
 
             // Model the transpiration
-            var WI = new WaterInteraction(TM);
-            var TR = new TemperatureResponse(CP, PP);
-            var TS = new Transpiration(CP, PP, WI, TR);
+            var waterInteraction = new WaterInteraction(temperature);
+            var temperatureResponse = new TemperatureResponse(canopyParameters, pathwayParameters);
+            var transpiration = new Transpiration(canopyParameters, pathwayParameters, waterInteraction, temperatureResponse);
 
             // Model the photosynthesis
-            var DM = new DCAPSTModel(SG, SR, TM, PP, CA, TS)
+            var dcapstModel = new DCAPSTModel(solarGeometry, solarRadiation, temperature, pathwayParameters, canopyAttributes, transpiration)
             {
                 B = 0.409
             };
 
-            return DM;
+            return dcapstModel;
         }
 
         /// <summary>
