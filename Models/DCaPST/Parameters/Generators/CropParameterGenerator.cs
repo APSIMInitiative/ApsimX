@@ -6,6 +6,9 @@ namespace Models.DCAPST
     // Typedef this collection for convenience.
     using CropParameterMapper = Dictionary<string, Func<DCaPSTParameters>>;
 
+    /// <summary>
+    /// A class that can be used to generate crop parameters.
+    /// </summary>
     public class CropParameterGenerator : ICropParameterGenerator
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         public DCaPSTParameters Generate(string cropName)
         {
-            var dcapstParameters = new DCaPSTParameters();
+            DCaPSTParameters dcapstParameters = null;
 
             if (!string.IsNullOrEmpty(cropName))
             {
@@ -38,13 +41,15 @@ namespace Models.DCAPST
         {
             return new CropParameterMapper()
             {
-                // Sorghum
                 {
-                    SorghumCropParameterGenerator.CROP_NAME.ToUpper(), SorghumCropParameterGenerator.Generate
-                },
-                // Wheat
+                    // Sorghum
+                    SorghumCropParameterGenerator.CROP_NAME.ToUpper(), 
+                    SorghumCropParameterGenerator.Generate
+                },                
                 {
-                    WheatCropParameterGenerator.CROP_NAME.ToUpper(), WheatCropParameterGenerator.Generate
+                    // Wheat
+                    WheatCropParameterGenerator.CROP_NAME.ToUpper(), 
+                    WheatCropParameterGenerator.Generate
                 }
             };
         }

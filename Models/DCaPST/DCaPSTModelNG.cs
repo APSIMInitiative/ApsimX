@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Models.Core;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
@@ -10,6 +7,9 @@ using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.DCAPST
 {
@@ -74,11 +74,6 @@ namespace Models.DCAPST
         public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
 
         /// <summary>
-        /// A helper object that can be used to generate crop parameters.
-        /// </summary>
-        public ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
-
-        /// <summary>
         /// The name of the folder that is used to store the cultivar parameters.
         /// </summary>
         private const string CULTIVAR_PARAMETERS_FOLDER_NAME = "CultivarParameters";
@@ -92,7 +87,9 @@ namespace Models.DCAPST
         private void OnStartOfSimulation(object sender, EventArgs args)
         {
             if (string.IsNullOrEmpty(CropName))
+            {
                 throw new ArgumentNullException($"No crop was specified in DCaPST configuration");
+            }
         }
 
         /// <summary>
@@ -105,14 +102,18 @@ namespace Models.DCAPST
         {
             IPlant plant = FindInScope<IPlant>(CropName);
             double rootShootRatio = GetRootShootRatio(plant);
-            DCAPSTModel model = SetUpModel(Parameters.Canopy,
-                                           Parameters.Pathway,
-                                           clock.Today.DayOfYear,
-                                           weather.Latitude,
-                                           weather.MaxT,
-                                           weather.MinT,
-                                           weather.Radn,
-                                           Parameters.Rpar);
+
+            DCAPSTModel model = SetUpModel(
+                Parameters.Canopy,
+                Parameters.Pathway,
+                clock.Today.DayOfYear,
+                weather.Latitude,
+                weather.MaxT,
+                weather.MinT,
+                weather.Radn,
+                Parameters.Rpar
+            );
+
             // From here, we can set additional options,
             // such as verbosity, BioLimit, Reduction, etc.
 
@@ -124,7 +125,9 @@ namespace Models.DCAPST
             // fixme - are we using the right SW??
             ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
             if (leaf == null)
+            {
                 throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
+            }
             if (leaf.LAI > 0)
             {
                 double sln = GetSln(leaf);
@@ -165,10 +168,16 @@ namespace Models.DCAPST
         {
             IVariable variable = plant.FindByPath("[ratioRootShoot]");
             if (variable == null)
+            {
                 return 0;
+            }
+
             IFunction function = variable.Value as IFunction;
             if (function == null)
+            {
                 return 0;
+            }
+
             return function.Value();
         }
 
@@ -180,17 +189,25 @@ namespace Models.DCAPST
                 sorghumLeaf.BiomassTE = actualBiomass;
             }
             else if (leaf is Leaf complexLeaf)
+            {
                 complexLeaf.DMSupply.Fixation = actualBiomass;
+            }
             else
+            {
                 throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
+            }
         }
 
         private double GetSln(ICanopy leaf)
         {
             if (leaf is SorghumLeaf sorghumLeaf)
+            {
                 return sorghumLeaf.SLN;
+            }
             if (leaf is IArbitration arbitration)
+            {
                 return arbitration.Live.N / leaf.LAI;
+            }
             throw new InvalidOperationException($"Unable to calculate SLN from leaf type {leaf.GetType()}");
         }
 
@@ -247,22 +264,12 @@ namespace Models.DCAPST
             var shadedAc2 = new AssimilationPathway(canopyParameters, pathwayParameters);
             var shadedAj = new AssimilationPathway(canopyParameters, pathwayParameters);
 
-            // Model the canopy
-            IAssimilation assimilation;
-            switch (canopyParameters.Type)
+            IAssimilation assimilation = canopyParameters.Type switch
             {
-                case CanopyType.C3:
-                    assimilation = new AssimilationC3(canopyParameters, pathwayParameters);
-                    break;
-
-                case CanopyType.C4:
-                    assimilation = new AssimilationC4(canopyParameters, pathwayParameters);
-                    break;
-
-                default:
-                    assimilation = new AssimilationCCM(canopyParameters, pathwayParameters);
-                    break;
-            }
+                CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters),
+                CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters),
+                _ => new AssimilationCCM(canopyParameters, pathwayParameters),
+            };
 
             var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);
             var shaded = new AssimilationArea(shadedAc1, shadedAc2, shadedAj, assimilation);
@@ -292,7 +299,8 @@ namespace Models.DCAPST
         /// </summary>
         private void HandleCropChange()
         {
-            Parameters = ParameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
+            var parameterGenerator = new CropParameterGenerator();
+            Parameters = parameterGenerator.Generate(cropName) ?? new DCaPSTParameters();
         }
     }
 }

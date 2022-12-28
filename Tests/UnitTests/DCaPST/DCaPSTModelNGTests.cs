@@ -1,4 +1,5 @@
-﻿using Models.DCAPST;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Models.DCAPST;
 using Moq;
 using NUnit.Framework;
 
@@ -10,70 +11,52 @@ namespace UnitTests.DCaPST
         #region Tests
         
         [Test]
-        public void SetCropName_NewValue_HandleCropChangeCalled()
+        public void SetCropName_ValueSet()
         {
             // Arrange
             var cropName = "testCrop";
-            var mock = new Mock<ICropParameterGenerator>(MockBehavior.Strict);
-            mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
-
-            var model = new DCaPSTModelNG()
+            var model = new DCaPSTModelNG
             {
-                ParameterGenerator = mock.Object
+                // Act
+                CropName = cropName
             };
 
-            // Act
-            model.CropName = cropName;
-
             // Assert
-            mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
             Assert.AreEqual(model.CropName, cropName);
         }
 
         [Test]
-        public void SetCropName_SameValue_HandleCropChangeCalled()
+        public void SetParameters_ValueSet()
         {
             // Arrange
-            var cropName = "testCrop";
-            var mock = new Mock<ICropParameterGenerator>(MockBehavior.Strict);
-            mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
+            // Choose a few random params to test.
+            var airC02 = 55.5;
+            var atpProductionElectronTransportFactor = 1.043;
+            var rpar = 20.7;
 
-            var model = new DCaPSTModelNG()
+            var dcapstParameters = new DCaPSTParameters()
             {
-                ParameterGenerator = mock.Object
+                Canopy = new CanopyParameters()
+                {
+                    AirCO2 = airC02
+                },
+                Pathway = new PathwayParameters()
+                {
+                    ATPProductionElectronTransportFactor = atpProductionElectronTransportFactor
+                },
+                Rpar = rpar
             };
 
-            // Act
-            model.CropName = cropName;
-            model.CropName = cropName;
-
-            // Assert
-            mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
-            Assert.AreEqual(model.CropName, cropName);
-        }
-
-        [Test]
-        public void SetCropName_DifferentValue_HandleCropChangeCalled()
-        {
-            // Arrange
-            var cropName = "testCrop";
-            var differentCropName = $"Different-{cropName}";            
-            var mock = new Mock<ICropParameterGenerator>(MockBehavior.Strict);
-            mock.Setup(cropGen => cropGen.Generate(It.IsAny<string>())).Returns(new DCaPSTParameters()).Verifiable();
-
-            var model = new DCaPSTModelNG()
+            var model = new DCaPSTModelNG
             {
-                ParameterGenerator = mock.Object
+                // Act
+                Parameters = dcapstParameters
             };
 
-            // Act
-            model.CropName = cropName;
-            model.CropName = differentCropName;
-
             // Assert
-            mock.Verify(cropGen => cropGen.Generate(cropName), Times.Once());
-            mock.Verify(cropGen => cropGen.Generate(differentCropName), Times.Once());
-            Assert.AreEqual(model.CropName, differentCropName);
+            Assert.AreEqual(model.Parameters.Canopy.AirCO2, airC02);
+            Assert.AreEqual(model.Parameters.Pathway.ATPProductionElectronTransportFactor, atpProductionElectronTransportFactor);
+            Assert.AreEqual(model.Parameters.Rpar, rpar);
         }
 
         #endregion
