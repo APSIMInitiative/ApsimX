@@ -40,7 +40,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The transpiration model
         /// </summary>
-        Transpiration transpiration;
+        private Transpiration transpiration;
 
         /// <summary>
         /// A public option to toggle if the interval values are tracked or not
