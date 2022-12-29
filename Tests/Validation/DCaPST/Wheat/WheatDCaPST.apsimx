@@ -224,6 +224,27 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "CultivarParameters",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "Wheat",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -3548,7 +3569,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -4572,7 +4604,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -5640,7 +5683,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -7138,7 +7192,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -8472,7 +8537,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -9819,7 +9895,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -11014,7 +11101,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -13603,7 +13701,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -14710,7 +14819,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -16125,7 +16245,18 @@
                               },
                               "Name": "DCaPST",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Core.Folder, Models",
+                                  "ShowInDocs": false,
+                                  "GraphsPerPage": 6,
+                                  "Name": "CultivarParameters",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -17443,7 +17574,18 @@
                               },
                               "Name": "DCaPST",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Core.Folder, Models",
+                                  "ShowInDocs": false,
+                                  "GraphsPerPage": 6,
+                                  "Name": "CultivarParameters",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -18441,7 +18583,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -19404,7 +19557,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -20367,7 +20531,18 @@
                           },
                           "Name": "DCaPST",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Core.Folder, Models",
+                              "ShowInDocs": false,
+                              "GraphsPerPage": 6,
+                              "Name": "CultivarParameters",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
