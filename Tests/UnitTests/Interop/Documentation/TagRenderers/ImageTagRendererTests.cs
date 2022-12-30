@@ -50,7 +50,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// <summary>
         /// Our mock image tag will return this image.
         /// </summary>
-        private static Image image;
+        private static Gdk.Pixbuf image;
 
         [SetUp]
         public void SetUp()
@@ -60,7 +60,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             pdfBuilder.UseTagRenderer(new MockTagRenderer());
-            image = new Bitmap(4, 4);
+            image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4);
 
             imageTag = new ImageTag(image);
             renderer = new ImageTagRenderer();
@@ -134,7 +134,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// </summary>
         /// <param name="expected">Expected image.</param>
         /// <param name="actual">Actual image.</param>
-        private void AssertEqual(Image expected, MigraDocImage actual)
+        private void AssertEqual(Gdk.Pixbuf expected, MigraDocImage actual)
         {
             if (expected == null)
                 Assert.Null(actual);

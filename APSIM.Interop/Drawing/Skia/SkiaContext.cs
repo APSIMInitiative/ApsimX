@@ -247,7 +247,7 @@ namespace APSIM.Interop.Drawing.Skia
         /// <summary>
         /// Save the current state of the drawing context to an image.
         /// </summary>
-        public Image Save()
+        public Gdk.Pixbuf Save()
         {
             using (SKImage image = SKImage.FromBitmap(bitmap))
             using (SKData data = image.Encode(SKEncodedImageFormat.Png, 100))
@@ -255,7 +255,7 @@ namespace APSIM.Interop.Drawing.Skia
             {
                 data.SaveTo(stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                return Image.FromStream(stream);
+                return new Gdk.Pixbuf(stream);
             }
         }
 
