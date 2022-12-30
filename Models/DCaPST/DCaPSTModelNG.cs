@@ -76,6 +76,9 @@ namespace Models.DCAPST
         /// <summary>
         /// A static crop parameter generation object.
         /// </summary>
+        /// TODO - This has been made static because otherwise it will be serialized,
+        /// even with the JSON Ignore attribute! There isn't any concern with it being 
+        /// static as the param generator doesn't carry any state.
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
@@ -136,7 +139,7 @@ namespace Models.DCAPST
             {
                 CanopyType.C3 => new AssimilationC3(canopyParameters, pathwayParameters),
                 CanopyType.C4 => new AssimilationC4(canopyParameters, pathwayParameters),
-                _ => new AssimilationCCM(canopyParameters, pathwayParameters),
+                _ => new AssimilationCCM(canopyParameters, pathwayParameters)
             };
 
             var sunlit = new AssimilationArea(sunlitAc1, sunlitAc2, sunlitAj, assimilation);

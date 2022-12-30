@@ -1,6 +1,5 @@
 ﻿using GLib;
 using Models.DCAPST;
-using Models.DCAPST.Interfaces;
 using Moq;
 using NUnit.Framework;
 
@@ -12,7 +11,7 @@ namespace UnitTests.DCaPST
         #region Tests
 
         [Test]
-        public void SetCropName_NewValue_HandleCropChangeCalled()
+        public void SetCropName_NewValue_HandleCropChangeCalledOnce()
         {
             // Arrange
             var cropName = "testCrop";
@@ -31,7 +30,7 @@ namespace UnitTests.DCaPST
         }
 
         [Test]
-        public void SetCropName_SameValue_HandleCropChangeCalled()
+        public void SetCropName_SameValue_HandleCropChangeCalledOnce()
         {
             // Arrange
             var cropName = "testCrop";
@@ -51,7 +50,7 @@ namespace UnitTests.DCaPST
         }
 
         [Test]
-        public void SetCropName_DifferentValue_HandleCropChangeCalled()
+        public void SetCropName_DifferentValue_HandleCropChangeCalledTwice()
         {
             // Arrange
             var cropName = "testCrop";
