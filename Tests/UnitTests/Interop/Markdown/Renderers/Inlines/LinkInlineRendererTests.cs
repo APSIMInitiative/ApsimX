@@ -182,8 +182,12 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         public void TestImageFromLocalFile()
         {
             string fileName = Path.GetTempFileName();
-            Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4);
-            image.Save(fileName, "png");
+            SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4));
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                image.Encode().SaveTo(fileStream);
+                fileStream.Flush();
+            }
             try
             {
                 string imageName = Path.GetFileName(fileName);

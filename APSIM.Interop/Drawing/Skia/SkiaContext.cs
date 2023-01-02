@@ -250,14 +250,6 @@ namespace APSIM.Interop.Drawing.Skia
         public SKImage Save()
         {
             return SKImage.FromBitmap(bitmap);
-//            using (SKImage image = SKImage.FromBitmap(bitmap))
-//            using (SKData data = image.Encode(SKEncodedImageFormat.Png, 100))
-//            using (MemoryStream stream = new MemoryStream())
-//            {
-//                data.SaveTo(stream);
-//                stream.Seek(0, SeekOrigin.Begin);
-//                return new Gdk.Pixbuf(stream);
-//            }
         }
 
         /// <inheritdoc />
