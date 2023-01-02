@@ -60,7 +60,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// <summary>
         /// Our mock graph will use this image as its generated graph.
         /// </summary>
-        private static Gdk.Pixbuf image;
+        private static SkiaSharp.SKImage image;
 
         [SetUp]
         public void SetUp()
@@ -70,15 +70,15 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             pdfBuilder.UseTagRenderer(new MockTagRenderer());
-            image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4);
+            image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4));
 
             Mock<IGraph> mockGraph = new Mock<IGraph>();
             graph = mockGraph.Object;
 
             // Mock graph exporter - this will just return the image field of this class.
             Mock<IGraphExporter> mockExporter = new Mock<IGraphExporter>();
-            mockExporter.Setup<Gdk.Pixbuf>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
-            mockExporter.Setup<Gdk.Pixbuf>(e => e.Export(It.IsAny<IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
+            mockExporter.Setup<SkiaSharp.SKImage>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
+            mockExporter.Setup<SkiaSharp.SKImage>(e => e.Export(It.IsAny<IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
 
             renderer = new GraphPageTagRenderer(mockExporter.Object);
         }
@@ -108,7 +108,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         {
             List<IGraph> graphs = new List<IGraph>(numGraphs);
             Mock<IGraphExporter> mockExporter = new Mock<IGraphExporter>();
-            List<Gdk.Pixbuf> images = new List<Gdk.Pixbuf>();
+            List<SkiaSharp.SKImage> images = new List<SkiaSharp.SKImage>();
             for (int i = 0; i < numGraphs; i++)
             {
                 // This is a little tricky because I want to have each graph
@@ -116,11 +116,11 @@ namespace UnitTests.Interop.Documentation.TagRenderers
                 // the intermediary plot model, and the graph exporter as well.
                 Mock<IGraph> mockGraph = new Mock<IGraph>();
                 IGraph graph = mockGraph.Object;
-                Gdk.Pixbuf graphImage = CreateImage(i + 1);
+                SkiaSharp.SKImage graphImage = CreateImage(i + 1);
                 Mock<IPlotModel> mockModel = new Mock<IPlotModel>();
                 IPlotModel graphModel = mockModel.Object;
                 mockExporter.Setup<IPlotModel>(e => e.ToPlotModel(graph)).Returns(() => graphModel);
-                mockExporter.Setup<Gdk.Pixbuf>(e => e.Export(graphModel, It.IsAny<double>(), It.IsAny<double>())).Returns(() => graphImage);
+                mockExporter.Setup<SkiaSharp.SKImage>(e => e.Export(graphModel, It.IsAny<double>(), It.IsAny<double>())).Returns(() => graphImage);
                 graphs.Add(graph);
                 images.Add(graphImage);
             }
@@ -281,9 +281,9 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// Get a square image with the specified size.
         /// </summary>
         /// <param name="i">Image size (height and width) in px.</param>
-        private Gdk.Pixbuf CreateImage(int i)
+        private SkiaSharp.SKImage CreateImage(int i)
         {
-            return new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, i, i), 0, 0, i, i);
+            return SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(i, i));
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// </summary>
         /// <param name="expected">Expected image.</param>
         /// <param name="actual">Actual image.</param>
-        private void AssertEqual(Gdk.Pixbuf expected, MigraDocImage actual)
+        private void AssertEqual(SkiaSharp.SKImage expected, MigraDocImage actual)
         {
             if (expected == null)
                 Assert.Null(actual);

@@ -535,7 +535,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// Append an image to the PDF document.
         /// </summary>
         /// <param name="image">Image to be appended.</param>
-        public void AppendImage(Gdk.Pixbuf image)
+        public void AppendImage(SkiaSharp.SKImage image)
         {
             AppendImage(image, GetLastParagraph());
         }
@@ -957,7 +957,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         /// <param name="image">Image to be appended.</param>
         /// <param name="paragraph">The paragraph to which the image should be appended.</param>
-        private void AppendImage(Gdk.Pixbuf image, Paragraph paragraph)
+        private void AppendImage(SkiaSharp.SKImage image, Paragraph paragraph)
         {
             // The image could potentially be too large. Therfore we read it,
             // adjust the size to fit the page better (if necessary), and add
@@ -971,7 +971,7 @@ namespace APSIM.Interop.Markdown.Renderers
             IImageSource imageSource = ImageSource.FromStream(Guid.NewGuid().ToString().Replace("-", ""), () =>
             {
                 image = ReadAndResizeImage(image, pageWidth, pageHeight);
-                Stream stream = new MemoryStream(image.SaveToBuffer("png"));
+                Stream stream = new MemoryStream(image.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100).ToArray());
                 stream.Seek(0, SeekOrigin.Begin);
                 return stream;
             });
@@ -1012,7 +1012,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <param name="image">The image to be resized.</param>
         /// <param name="targetWidth">Max allowed width of the image in pixels.</param>
         /// <param name="targetHeight">Max allowed height of the image in pixels.</param>
-        private static Gdk.Pixbuf ReadAndResizeImage(Gdk.Pixbuf image, double targetWidth, double targetHeight)
+        private static SkiaSharp.SKImage ReadAndResizeImage(SkiaSharp.SKImage image, double targetWidth, double targetHeight)
         {
             if ( (targetWidth > 0 && image.Width > targetWidth) || (targetHeight > 0 && image.Height > targetHeight) )
                 image = ImageUtilities.ResizeImage(image, targetWidth, targetHeight);

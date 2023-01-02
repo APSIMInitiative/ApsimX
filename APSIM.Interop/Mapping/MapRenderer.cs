@@ -1,6 +1,5 @@
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Wordprocessing;
-using GLib;
 using Mapsui;
 using Mapsui.Layers;
 using Mapsui.Projection;
@@ -46,11 +45,11 @@ namespace APSIM.Interop.Mapping
         private const double zoomStepFactor = 1.5;
 
         /// <summary>
-        /// Render the map as a <see cref="Gdk.Pixbuf"/> of the specified size.
+        /// Render the map as a <see cref="SkiaSharp.SKImage"/> of the specified size.
         /// </summary>
         /// <param name="map">Map tag to be rendered.</param>
         /// <param name="width">Width of the map in px.</param>
-        public static Gdk.Pixbuf ToImage(this MapTag map, int width)
+        public static SkiaSharp.SKImage ToImage(this MapTag map, int width)
         {
             Map exported = map.ToMapsuiMap();
             Viewport viewport = new Viewport();
@@ -65,7 +64,7 @@ namespace APSIM.Interop.Mapping
             double resolution = (78271.51696401953125 * 512 / width) / Math.Pow(MapRenderer.GetZoomStepFactor(), zoom);
             viewport.SetResolution(resolution);
 
-            Gdk.Pixbuf result = null;
+            SkiaSharp.SKImage result = null;
             TileLayer osmLayer = exported.Layers.FindLayer("OpenStreetMap").FirstOrDefault() as TileLayer;
 
             Mapsui.Fetcher.DataChangedEventHandler changedHandler = (s, e) =>
@@ -92,7 +91,7 @@ namespace APSIM.Interop.Mapping
                     }
                     MemoryStream bitmap = new Mapsui.Rendering.Skia.MapRenderer().RenderToBitmapStream(viewport, exported.Layers, exported.BackColor);
                     bitmap.Seek(0, SeekOrigin.Begin);
-                    result = new Gdk.Pixbuf(bitmap);
+                    result = SkiaSharp.SKImage.FromEncodedData(bitmap);
                 }
             };
 

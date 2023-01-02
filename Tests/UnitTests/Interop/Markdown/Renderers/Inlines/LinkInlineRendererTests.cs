@@ -96,7 +96,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             string dynamicUri = "dynamic uri";
             inline.GetDynamicUrl = () => dynamicUri;
             inline.IsImage = true;
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 1, 1), 0, 0, 1, 1))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(1, 1)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
@@ -118,7 +118,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             inline.IsImage = true;
             Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
             renderer.CallBase = true;
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 1, 1), 0, 0, 1, 1))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(1, 1)))
             {
                 renderer.Setup(b => b.GetImage(It.IsAny<string>()))
                         .Callback<string>(uri => Assert.AreEqual(inline.Url, uri))
@@ -233,7 +233,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             inline.IsImage = true;
             inline.AppendChild(new LiteralInline("caption"));
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
@@ -254,7 +254,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
         {
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             inline.IsImage = true;
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
@@ -273,7 +273,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             inline.IsImage = true;
             int height = (int)(document.DefaultPageSetup.PageHeight.Point * 1.5);
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 2, height), 0, 0, 2, height))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(2, height)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
@@ -293,7 +293,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             inline.IsImage = true;
             inline.AppendChild(new LiteralInline("Alt text"));
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
@@ -313,7 +313,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             Assert.AreEqual(0, pdfBuilder.FigureNumber);
             pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             inline.IsImage = true;
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
@@ -339,7 +339,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             builder.Setup(b => b.AppendText(altText, It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Normal, style)).CallBase();
             builder.Setup(b => b.AppendText(It.IsNotIn(altText), It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Strong, style)).CallBase();
 
-            using (Gdk.Pixbuf image = new Gdk.Pixbuf(new Cairo.ImageSurface(Cairo.Format.ARGB32, 4, 4), 0, 0, 4, 4))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4)))
             {
                 Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
                 renderer.CallBase = true;
