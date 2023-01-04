@@ -21,7 +21,7 @@ namespace Models.DCAPST
         /// The default value used for the extra ATP cost.
         /// Constant as it is also used in other initial calculations and never changes.
         /// </summary>
-        private const double DEFAULT_EXTRA_ATP_COST = 0.75;
+        private const double DEFAULT_EXTRA_ATP_COST = 0.0;
 
         /// <summary>
         /// The default value used for the fraction of cyclic electron flow.
@@ -65,8 +65,8 @@ namespace Models.DCAPST
                 Windspeed = 1.5,
                 WindSpeedExtinction = 1.5,
                 CurvatureFactor = 0.7,
-                DiffusivitySolubilityRatio = 0.047,
-                MinimumN = 14,
+                DiffusivitySolubilityRatio = 0.0,
+                MinimumN = 28.6,
                 SLNRatioTop = 1.3
             };
         }
@@ -82,10 +82,10 @@ namespace Models.DCAPST
                 IntercellularToAirCO2Ratio = 0.7,
                 FractionOfCyclicElectronFlow = DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW,
                 RespirationSLNRatio = 0.0 * PSI_FACTOR,
-                MaxRubiscoActivitySLNRatio = 1.1 * PSI_FACTOR,
-                MaxElectronTransportSLNRatio = 1.85 * PSI_FACTOR,
+                MaxRubiscoActivitySLNRatio = 1.45 * PSI_FACTOR,
+                MaxElectronTransportSLNRatio = 2.4 * PSI_FACTOR,
                 MaxPEPcActivitySLNRatio = 1.0 * PSI_FACTOR,
-                MesophyllCO2ConductanceSLNRatio = 0.00412 * PSI_FACTOR,
+                MesophyllCO2ConductanceSLNRatio = 0.005 * PSI_FACTOR,
                 MesophyllElectronTransportFraction = DEFAULT_EXTRA_ATP_COST / (3.0 + DEFAULT_EXTRA_ATP_COST),
                 ATPProductionElectronTransportFactor = (3.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW) / (4.0 * (1.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW)),
                 ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
@@ -117,7 +117,7 @@ namespace Models.DCAPST
                 PEPcActivity = new TemperatureResponseValues
                 {
                     At25 = 0,
-                    Factor = 57043.2677590512
+                    Factor = 0
                 },
                 Respiration = new TemperatureResponseValues
                 {
@@ -138,9 +138,9 @@ namespace Models.DCAPST
                     Factor = 6048.95289
                 },
                 SpectralCorrectionFactor = 0.15,
-                PS2ActivityFraction = 0.1,
-                PEPRegeneration = 0,
-                BundleSheathConductance = 0.003
+                PS2ActivityFraction = 0.0,
+                PEPRegeneration = 0.0,
+                BundleSheathConductance = 0.0
             };
         }
     }

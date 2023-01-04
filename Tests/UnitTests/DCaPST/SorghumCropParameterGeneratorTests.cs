@@ -1,6 +1,5 @@
 ﻿using Models.DCAPST;
 using Models.DCAPST.Interfaces;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace UnitTests.DCaPST
@@ -17,12 +16,10 @@ namespace UnitTests.DCaPST
         /// <returns></returns>
         private static DCaPSTParameters CreateClassicSorghumDcapstParameters()
         {
-            const double PSI_FACTOR = 0.4;
-
             var classicCanopy = ClassicDCaPSTDefaultDataSetup.SetUpCanopy(
                CanopyType.C4, // Canopy type
                363, // CO2 partial pressure
-               0.7, // Curvature factor
+               0.675, // Curvature factor
                0.047, // Diffusivity-solubility ratio
                210000, // O2 partial pressure
                0.78, // Diffuse extinction coefficient
@@ -32,9 +29,9 @@ namespace UnitTests.DCaPST
                60, // Leaf angle
                0.15, // Leaf scattering coefficient
                0.8, // Leaf scattering coefficient NIR
-               0.15, // Leaf width
+               0.09, // Leaf width
                1.3, // SLN ratio at canopy top
-               14, // Minimum Nitrogen
+               28.6, // Minimum Nitrogen
                1.5, // Wind speed
                1.5 // Wind speed extinction
             );
@@ -57,17 +54,17 @@ namespace UnitTests.DCaPST
                78000, // VcFactor
                46390, // RdFactor
                57043.2677590512, // VpFactor
-               120, // pepRegeneration
-               0.15, // spectralCorrectionFactor
+               1000, // pepRegeneration
+               0.39609236234459, // spectralCorrectionFactor
                0.1, // ps2ActivityFraction
                0.003, // bundleSheathConductance
-               0.465 * PSI_FACTOR, // maxRubiscoActivitySLNRatio
-               2.7 * PSI_FACTOR, // maxElectronTransportSLNRatio
-               0.0 * PSI_FACTOR, // respirationSLNRatio
-               1.55 * PSI_FACTOR, // maxPEPcActivitySLNRatio
-               0.0135 * PSI_FACTOR, // mesophyllCO2ConductanceSLNRatio
+               0.28, // maxRubiscoActivitySLNRatio
+               2.5, // maxElectronTransportSLNRatio
+               0.0, // respirationSLNRatio
+               1.1, // maxPEPcActivitySLNRatio
+               0.0146, // mesophyllCO2ConductanceSLNRatio
                2, // extraATPCost
-               0.45 // intercellularToAirCO2Ratio
+               0.40 // intercellularToAirCO2Ratio
             );
 
             return new DCaPSTParameters
@@ -76,14 +73,6 @@ namespace UnitTests.DCaPST
                 Canopy = classicCanopy,
                 Pathway = classicPathway
             };
-        }
-
-        private static bool AreObjectsEqual<T>(T obj1, T obj2)
-        {
-            var obj1Serialized = JsonConvert.SerializeObject(obj1);
-            var obj2Serialized = JsonConvert.SerializeObject(obj2);
-
-            return obj1Serialized == obj2Serialized;
         }
 
         #endregion
@@ -100,7 +89,8 @@ namespace UnitTests.DCaPST
             var nextGenSorghumParams = SorghumCropParameterGenerator.Generate();
 
             // Assert
-            Assert.IsTrue(AreObjectsEqual(classicSorghumParams, nextGenSorghumParams));
+            Assert.IsTrue(DCaPSTParametersComparer.AreDCaPSTParametersValuesEqual(classicSorghumParams, nextGenSorghumParams));
+            Assert.IsTrue(DCaPSTParametersComparer.AreDCaPSTParametersValuesEqualJsonCompare(classicSorghumParams, nextGenSorghumParams));
         }
 
         #endregion

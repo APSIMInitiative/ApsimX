@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 330,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -135,27 +135,6 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "Daily outputs from the old apsim test set using fixed/static tillering (via fertile tiller number supplied in the sowing rule).",
-                  "Name": "Memo",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PostSimulationTools.Input, Models",
-              "FileNames": [
-                "old\\combined_dynamic.csv"
-              ],
-              "Name": "OldApsimDynamic",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Daily outputs from the old apsim test set using dynamic tillering.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -432,8 +411,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
+                    "Parameters.Canopy.SLNRatioTop = 1.5"
                   ],
                   "Name": "M35-1",
                   "ResourceName": null,
@@ -445,7 +423,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
+                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
                   ],
                   "Name": "CSH13R",
                   "ResourceName": null,
@@ -456,8 +434,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
+                    "Parameters.Canopy.SLNRatioTop = 1.5"
                   ],
                   "Name": "ATX623xRTX430",
                   "ResourceName": null,
@@ -468,8 +445,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
+                    "Parameters.Canopy.SLNRatioTop = 1.5"
                   ],
                   "Name": "A35xQL36",
                   "ResourceName": null,
@@ -480,8 +456,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
+                    "Parameters.Canopy.SLNRatioTop = 1.5"
                   ],
                   "Name": "QL41xQL36",
                   "ResourceName": null,
@@ -492,8 +467,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5",
-                    "Parameters.Pathway.MaxElectronTransportSLNRatio = 1.188"
+                    "Parameters.Canopy.SLNRatioTop = 1.5"
                   ],
                   "Name": "QL39xQL36",
                   "ResourceName": null,

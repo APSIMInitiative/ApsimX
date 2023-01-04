@@ -13,21 +13,10 @@ namespace Models.DCAPST
         public const string CROP_NAME = "sorghum";
 
         /// <summary>
-        /// psiFactor-Psi Reduction Factor 
-        /// </summary>
-        private const double PSI_FACTOR = 0.4;
-
-        /// <summary>
         /// The default value used for the extra ATP cost.
         /// Constant as it is also used in other initial calculations and never changes.
         /// </summary>
         private const double DEFAULT_EXTRA_ATP_COST = 2;
-
-        /// <summary>
-        /// The default value used for the fraction of cyclic electron flow.
-        /// Constant as it is also used in other initial calculations and never changes.
-        /// </summary>
-        private const double DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW = 0.25 * DEFAULT_EXTRA_ATP_COST;
 
         /// <summary>
         /// Handles generating a DCaPSTParameters object, constructed with the defaults for this crop type.
@@ -55,7 +44,7 @@ namespace Models.DCAPST
                 AirO2 = 210000,
                 AirCO2 = 363,
                 LeafAngle = 60,
-                LeafWidth = 0.15,
+                LeafWidth = 0.09,
                 LeafScatteringCoeff = 0.15,
                 LeafScatteringCoeffNIR = 0.8,
                 DiffuseExtCoeff = 0.78,
@@ -64,9 +53,9 @@ namespace Models.DCAPST
                 DiffuseReflectionCoeffNIR = 0.389,
                 Windspeed = 1.5,
                 WindSpeedExtinction = 1.5,
-                CurvatureFactor = 0.7,
+                CurvatureFactor = 0.675,
                 DiffusivitySolubilityRatio = 0.047,
-                MinimumN = 14,
+                MinimumN = 28.6,
                 SLNRatioTop = 1.3
             };
         }
@@ -79,15 +68,15 @@ namespace Models.DCAPST
         {
             return new PathwayParameters()
             {
-                IntercellularToAirCO2Ratio = 0.45,
-                FractionOfCyclicElectronFlow = DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW,
-                RespirationSLNRatio = 0.0 * PSI_FACTOR,
-                MaxRubiscoActivitySLNRatio = 0.465 * PSI_FACTOR,
-                MaxElectronTransportSLNRatio = 2.7 * PSI_FACTOR,
-                MaxPEPcActivitySLNRatio = 1.55 * PSI_FACTOR,
-                MesophyllCO2ConductanceSLNRatio = 0.0135 * PSI_FACTOR,
-                MesophyllElectronTransportFraction = DEFAULT_EXTRA_ATP_COST / (3.0 + DEFAULT_EXTRA_ATP_COST),
-                ATPProductionElectronTransportFactor = (3.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW) / (4.0 * (1.0 - DEFAULT_FRACTION_OF_CYCLIC_ELECTRON_FLOW)),
+                IntercellularToAirCO2Ratio = 0.4,
+                FractionOfCyclicElectronFlow = 0.5,
+                RespirationSLNRatio = 0.0,
+                MaxRubiscoActivitySLNRatio = 0.28,
+                MaxElectronTransportSLNRatio = 2.5,
+                MaxPEPcActivitySLNRatio = 1.1,
+                MesophyllCO2ConductanceSLNRatio = 0.0146,
+                MesophyllElectronTransportFraction = 0.4,
+                ATPProductionElectronTransportFactor = 1.25,
                 ExtraATPCost = DEFAULT_EXTRA_ATP_COST,
                 RubiscoCarboxylation = new TemperatureResponseValues
                 {
@@ -137,9 +126,9 @@ namespace Models.DCAPST
                     At25 = 0,
                     Factor = 40600
                 },
-                SpectralCorrectionFactor = 0.15,
+                SpectralCorrectionFactor = 0.39609236234459,
                 PS2ActivityFraction = 0.1,
-                PEPRegeneration = 120,
+                PEPRegeneration = 1000,
                 BundleSheathConductance = 0.003
             };
         }

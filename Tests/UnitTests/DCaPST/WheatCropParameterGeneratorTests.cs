@@ -20,23 +20,24 @@ namespace UnitTests.DCaPST
             const double PSI_FACTOR = 1.0;
 
             var classicCanopy = ClassicDCaPSTDefaultDataSetup.SetUpCanopy(
-                   CanopyType.C3, // Canopy type
-                   370, // CO2 partial pressure
-                   0.7, // Empirical curvature factor
-                   0.047, // Diffusivity-solubility ratio
-                   210000, // O2 partial pressure
-                   0.78, // PAR diffuse extinction coefficient
-                   0.8, // NIR diffuse extinction coefficient
-                   0.036, // PAR diffuse reflection coefficient
-                   0.389, // NIR diffuse reflection coefficient
-                   60, // Leaf angle
-                   0.15, // PAR leaf scattering coefficient
-                   0.8, // NIR leaf scattering coefficient
-                   0.05, // Leaf width
-                   1.3, // SLN ratio at canopy top
-                   14, // Minimum structural nitrogen
-                   1.5, // Wind speed
-                   1.5); // Wind speed profile distribution coefficient
+                CanopyType.C3, // Canopy type
+                370, // CO2 partial pressure
+                0.7, // Empirical curvature factor
+                0.0, // Diffusivity-solubility ratio
+                210000, // O2 partial pressure
+                0.78, // PAR diffuse extinction coefficient
+                0.8, // NIR diffuse extinction coefficient
+                0.036, // PAR diffuse reflection coefficient
+                0.389, // NIR diffuse reflection coefficient
+                60, // Leaf angle
+                0.15, // PAR leaf scattering coefficient
+                0.8, // NIR leaf scattering coefficient
+                0.05, // Leaf width
+                1.3, // SLN ratio at canopy top
+                28.6, // Minimum structural nitrogen
+                1.5, // Wind speed
+                1.5 // Wind speed profile distribution coefficient
+            );
 
             var classicPathway = ClassicDCaPSTDefaultDataSetup.SetUpPathway(
                0, // Electron transport minimum temperature
@@ -44,36 +45,30 @@ namespace UnitTests.DCaPST
                45.0, // Electron transport maximum temperature
                0.911017958600129, // Electron transport scaling constant
                1, // Electron transport Beta value
-
                6048.95289, //mesophyll conductance factor
-
                273.422964228666, // Kc25 - Michaelis Menten constant of Rubisco carboxylation at 25 degrees C
                93720, // KcFactor
-
                165824.064155384, // Ko25 - Michaelis Menten constant of Rubisco oxygenation at 25 degrees C
                33600, // KoFactor
-
                4.59217066521612, // VcVo25 - Rubisco carboxylation to oxygenation at 25 degrees C
                35713.19871277176, // VcVoFactor
-
                0.0, // Kp25 - Michaelis Menten constant of PEPc activity at 25 degrees C (Unused in C3)
                0.0, // KpFactor (Unused in C3)
-
                65330, // VcFactor
                46390, // RdFactor
-               57043.2677590512, // VpFactor
-
+               0, // VpFactor
                0.0, // PEPc regeneration (Unused in C3)
                0.15, // Spectral correction factor
-               0.1, // Photosystem II activity fraction
-               0.003, // Bundle sheath CO2 conductance
-               1.1 * PSI_FACTOR, // Max Rubisco activity to SLN ratio
-               1.85 * PSI_FACTOR, // Max electron transport to SLN ratio
+               0.0, // Photosystem II activity fraction
+               0.0, // Bundle sheath CO2 conductance
+               1.45 * PSI_FACTOR, // Max Rubisco activity to SLN ratio
+               2.4 * PSI_FACTOR, // Max electron transport to SLN ratio
                0.0 * PSI_FACTOR, // Respiration to SLN ratio
                1.0 * PSI_FACTOR, // Max PEPc activity to SLN ratio
-               0.00412 * PSI_FACTOR, // Mesophyll CO2 conductance to SLN ratio
-               0.75, // Extra ATP cost
-               0.7); // Intercellular CO2 to air CO2 ratio
+               0.005 * PSI_FACTOR, // Mesophyll CO2 conductance to SLN ratio
+               0.0, // Extra ATP cost
+               0.7 // Intercellular CO2 to air CO2 ratio
+            );
 
             return new DCaPSTParameters
             {
@@ -81,14 +76,6 @@ namespace UnitTests.DCaPST
                 Canopy = classicCanopy,
                 Pathway = classicPathway
             };
-        }
-
-        private static bool AreObjectsEqual<T>(T obj1, T obj2)
-        {
-            var obj1Serialized = JsonConvert.SerializeObject(obj1);
-            var obj2Serialized = JsonConvert.SerializeObject(obj2);
-
-            return obj1Serialized == obj2Serialized;
         }
 
         #endregion
@@ -105,7 +92,8 @@ namespace UnitTests.DCaPST
             var nextGenWheatParams = WheatCropParameterGenerator.Generate();
 
             // Assert
-            Assert.IsTrue(AreObjectsEqual(classicWheatParams, nextGenWheatParams));
+            Assert.IsTrue(DCaPSTParametersComparer.AreDCaPSTParametersValuesEqual(classicWheatParams, nextGenWheatParams));
+            Assert.IsTrue(DCaPSTParametersComparer.AreDCaPSTParametersValuesEqualJsonCompare(classicWheatParams, nextGenWheatParams));
         }
 
         #endregion
