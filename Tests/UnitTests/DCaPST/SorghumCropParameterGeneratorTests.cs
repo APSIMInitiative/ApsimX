@@ -89,8 +89,7 @@ namespace UnitTests.DCaPST
             var nextGenSorghumParams = SorghumCropParameterGenerator.Generate();
 
             // Assert
-            Assert.IsTrue(DCaPSTParametersComparer.AreDCaPSTParametersValuesEqual(classicSorghumParams, nextGenSorghumParams));
-            Assert.IsTrue(DCaPSTParametersComparer.AreDCaPSTParametersValuesEqualJsonCompare(classicSorghumParams, nextGenSorghumParams));
+            DCaPSTParametersComparer.AssertDCaPSTParametersValuesEqual(classicSorghumParams, nextGenSorghumParams);
         }
 
         #endregion

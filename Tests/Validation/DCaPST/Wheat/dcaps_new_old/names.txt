@@ -1,0 +1,7 @@
+Wheat_Lincoln9192_I01=Lincoln9192Irrig01
+Wheat_Lincoln9192_I03=Lincoln9192Irrig03
+Wheat_Lincoln9192_I05=Lincoln9192Irrig05
+Wheat_Lincoln9192_I06=Lincoln9192Irrig06
+Wheat_Lincoln9192_I07=Lincoln9192Irrig07
+Wheat_Lincoln9192_I08=Lincoln9192Irrig08
+Wheat_Lincoln9192_I11=Lincoln9192Irrig11
