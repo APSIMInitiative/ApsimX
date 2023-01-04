@@ -39566,7 +39566,7 @@
                   "LineThickness": 0,
                   "TableName": "OldApsimFixed",
                   "XFieldName": "Date",
-                  "YFieldName": "BiomassWt",
+                  "YFieldName": "Biomass",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,

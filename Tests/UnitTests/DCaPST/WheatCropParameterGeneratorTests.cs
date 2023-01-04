@@ -22,7 +22,7 @@ namespace UnitTests.DCaPST
                 CanopyType.C3, // Canopy type
                 370, // CO2 partial pressure
                 0.7, // Empirical curvature factor
-                0.0, // Diffusivity-solubility ratio
+                0.00000, // Diffusivity-solubility ratio
                 210000, // O2 partial pressure
                 0.78, // PAR diffuse extinction coefficient
                 0.8, // NIR diffuse extinction coefficient
@@ -39,34 +39,47 @@ namespace UnitTests.DCaPST
             );
 
             var classicPathway = ClassicDCaPSTDefaultDataSetup.SetUpPathway(
-               0, // Electron transport minimum temperature
-               30.0, // Electron transport optimum temperature
-               45.0, // Electron transport maximum temperature
-               0.911017958600129, // Electron transport scaling constant
-               1, // Electron transport Beta value
-               6048.95289, //mesophyll conductance factor
-               273.422964228666, // Kc25 - Michaelis Menten constant of Rubisco carboxylation at 25 degrees C
-               93720, // KcFactor
-               165824.064155384, // Ko25 - Michaelis Menten constant of Rubisco oxygenation at 25 degrees C
-               33600, // KoFactor
-               4.59217066521612, // VcVo25 - Rubisco carboxylation to oxygenation at 25 degrees C
-               35713.19871277176, // VcVoFactor
-               0.0, // Kp25 - Michaelis Menten constant of PEPc activity at 25 degrees C (Unused in C3)
-               0.0, // KpFactor (Unused in C3)
-               65330, // VcFactor
-               46390, // RdFactor
-               0, // VpFactor
-               0.0, // PEPc regeneration (Unused in C3)
-               0.15, // Spectral correction factor
-               0.0, // Photosystem II activity fraction
-               0.0, // Bundle sheath CO2 conductance
-               1.45 * PSI_FACTOR, // Max Rubisco activity to SLN ratio
-               2.4 * PSI_FACTOR, // Max electron transport to SLN ratio
-               0.0 * PSI_FACTOR, // Respiration to SLN ratio
-               1.0 * PSI_FACTOR, // Max PEPc activity to SLN ratio
-               0.005 * PSI_FACTOR, // Mesophyll CO2 conductance to SLN ratio
-               0.0, // Extra ATP cost
-               0.7 // Intercellular CO2 to air CO2 ratio
+                0, // Electron transport minimum temperature
+                30.0, // Electron transport optimum temperature
+                45.0, // Electron transport maximum temperature
+                0.911017958600129, // Electron transport scaling constant
+                1, // Electron transport Beta value
+
+                //         0, // Mesophyll conductance minimum temperature
+                //         29.2338417788683, // Mesophyll conductance optimum temperature
+                //         45, // Mesophyll conductance maximum temperature
+                //         0.875790608584141, // Mesophyll conductance scaling constant
+                //         1, // Mesophyll conductance Beta value
+
+                6048.95289, //mesophyll conductance factor
+
+                273.422964228666, // Kc25 - Michaelis Menten constant of Rubisco carboxylation at 25 degrees C
+                93720, // KcFactor
+
+                165824.064155384, // Ko25 - Michaelis Menten constant of Rubisco oxygenation at 25 degrees C
+                33600, // KoFactor
+
+                4.59217066521612, // VcVo25 - Rubisco carboxylation to oxygenation at 25 degrees C
+                35713.19871277176, // VcVoFactor
+
+                0.00000, // Kp25 - Michaelis Menten constant of PEPc activity at 25 degrees C (Unused in C3)
+                0.00000, // KpFactor (Unused in C3)
+
+                65330, // VcFactor
+                46390, // RdFactor
+                0.00000, // VpFactor
+
+                0.00000, // PEPc regeneration (Unused in C3)
+                0.15, // Spectral correction factor
+                0.00000, // Photosystem II activity fraction
+                0.00000, // Bundle sheath CO2 conductance
+                1.45 * PSI_FACTOR, // Max Rubisco activity to SLN ratio
+                2.4 * PSI_FACTOR, // Max electron transport to SLN ratio
+                0.0 * PSI_FACTOR, // Respiration to SLN ratio
+                1.0 * PSI_FACTOR, // Max PEPc activity to SLN ratio
+                0.005 * PSI_FACTOR, // Mesophyll CO2 conductance to SLN ratio
+                0.00000, // Extra ATP cost
+                0.7 // Intercellular CO2 to air CO2 ratio
             );
 
             return new DCaPSTParameters
