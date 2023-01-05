@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private string grazeStore;
         private int numberToSkip = 0;
@@ -70,7 +70,7 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValue("Leave at current location")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
         public string GrazeFoodStoreName { get; set; }
-      
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -301,9 +301,9 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("</div>");
                 // ToDo: warn if natural weaning will take place
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

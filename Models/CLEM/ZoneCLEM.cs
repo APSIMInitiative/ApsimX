@@ -32,7 +32,7 @@ namespace Models.CLEM
         [Link]
         private Summary summary = null;
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            // if auto create summary 
+            // if auto create summary
             if (AutoCreateDescriptiveSummary)
             {
                 if (!File.Exists(wholeSimulationSummaryFile))
@@ -284,10 +284,10 @@ namespace Models.CLEM
             IModel simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
-            // get all validations 
+            // get all validations
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
-            // get all other errors 
+            // get all other errors
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
 
         }
@@ -486,10 +486,10 @@ namespace Models.CLEM
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
                     htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
-                
+
                 CurrentAncestorList = null;
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
