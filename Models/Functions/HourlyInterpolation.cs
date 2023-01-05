@@ -106,9 +106,9 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// Firstly 3-hourly estimates of air temperature (Ta) are interpolated 
-    /// using the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature 
-    /// pattern between Tmax and Tmin.  
+    /// Firstly 3-hourly estimates of air temperature (Ta) are interpolated
+    /// using the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature
+    /// pattern between Tmax and Tmin.
     /// </summary>
     [Serializable]
     [Description("A value is calculated at 3-hourly estimates using air temperature based on daily max and min temperatures\n\n" +
@@ -179,14 +179,14 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// Firstly hourly estimates of air temperature (Ta) are interpolated from Tmax, Tmin and daylength (d) 
-    /// using the method of [Goudriaan1994].  
-    /// During sunlight hours Ta is calculated each hour using a 
-    /// sinusoidal curve fitted to Tmin and Tmax . 
-    /// After sunset Ta is calculated as an exponential decline from Ta at sunset 
+    /// Firstly hourly estimates of air temperature (Ta) are interpolated from Tmax, Tmin and daylength (d)
+    /// using the method of [Goudriaan1994].
+    /// During sunlight hours Ta is calculated each hour using a
+    /// sinusoidal curve fitted to Tmin and Tmax .
+    /// After sunset Ta is calculated as an exponential decline from Ta at sunset
     /// to the Tmin at sunrise the next day.
-    /// The hour (Th) of sunrise is calculated as Th = 12 − d/2 and Ta is assumed 
-    /// to equal Tmin at this time.  Tmax is reached when Th equals 13.5. 
+    /// The hour (Th) of sunrise is calculated as Th = 12 − d/2 and Ta is assumed
+    /// to equal Tmin at this time.  Tmax is reached when Th equals 13.5.
     /// </summary>
     [Serializable]
     [Description("calculating the hourly temperature based on Tmax, Tmin and daylength")]
@@ -306,7 +306,7 @@ namespace Models.Functions
         /// Link to the clock object
         /// </summary>
         [Link]
-        protected Clock clock = null;
+        protected IClock clock = null;
 
         /// <summary>The type of variable for sub-daily values</summary>
         [JsonIgnore]

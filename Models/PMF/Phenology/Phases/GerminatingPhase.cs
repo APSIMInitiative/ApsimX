@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// This phase goes from a start stage to an end stage and assumes
-    /// germination will be reached on the day after sowing or the first day 
+    /// germination will be reached on the day after sowing or the first day
     /// thereafter when the extractable soil water at sowing depth is greater than zero."
     /// </summary>
     [Serializable]
@@ -39,7 +39,7 @@ namespace Models.PMF.Phen
         private Phenology phenology = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------

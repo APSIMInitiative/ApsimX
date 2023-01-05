@@ -24,13 +24,13 @@
         private IWeather weather = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         [Link]
         private MicroClimate microClimate = null;
 
         [Link]
-        private Physical physical = null;
+        private IPhysical physical = null;
 
         [Link]
         ISoilWater waterBalance = null;

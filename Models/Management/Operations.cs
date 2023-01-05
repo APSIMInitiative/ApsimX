@@ -61,7 +61,7 @@ namespace Models
     public class Operations : Model
     {
         /// <summary>The clock</summary>
-        [Link] Clock Clock = null;
+        [Link] IClock Clock = null;
 
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>

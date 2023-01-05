@@ -25,7 +25,7 @@ namespace Models.PMF.Phen
         Weather met = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ namespace Models.PMF.Phen
                         StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
                     else
                         StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
-                } 
+                }
                 else
                     StartDAWS = clock.Today.DayOfYear - met.WinterSolsticeDOY;
 

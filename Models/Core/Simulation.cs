@@ -94,7 +94,7 @@ namespace Models.Core
         {
             get
             {
-                Clock c = this.FindChild<Clock>();
+                IClock c = this.FindChild<IClock>();
                 if (c == null)
                     return 0;
                 else
@@ -267,8 +267,8 @@ namespace Models.Core
         /// <summary>
         /// Runs the simulation on the current thread and waits for the simulation
         /// to complete before returning to caller. Simulation is NOT cloned before
-        /// running. Use instance of Runner to get more options for running a 
-        /// simulation or groups of simulations. 
+        /// running. Use instance of Runner to get more options for running a
+        /// simulation or groups of simulations.
         /// </summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken = null)
@@ -276,7 +276,7 @@ namespace Models.Core
             IsRunning = true;
             Exception simulationError = null;
 
-            // If the cancelToken is null then give it a default one. This can happen 
+            // If the cancelToken is null then give it a default one. This can happen
             // when called from the unit tests.
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();

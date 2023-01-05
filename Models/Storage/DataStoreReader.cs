@@ -200,8 +200,8 @@
         /// <param name="orderByFieldNames">Optional column name to order by</param>
         /// <param name="distinct">Only return distinct values for field?</param>
         /// <returns></returns>
-        public DataTable GetData(string tableName, string checkpointName = "Current", 
-                                 IEnumerable<string> simulationNames = null, 
+        public DataTable GetData(string tableName, string checkpointName = "Current",
+                                 IEnumerable<string> simulationNames = null,
                                  IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0,
@@ -214,7 +214,7 @@
             // Get the field names in the table
             var table = tables.TryGetValue(tableName, out List<string> fieldNamesInTable);
 
-            // Return null if there are no fields in the table (or the table is missing) 
+            // Return null if there are no fields in the table (or the table is missing)
             // and we have no view.
             if ((fieldNamesInTable == null || fieldNamesInTable.Count == 0)  // no table.
                 && !Connection.ViewExists(tableName))                        // no view

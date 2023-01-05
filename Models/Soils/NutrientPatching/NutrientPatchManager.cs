@@ -18,11 +18,11 @@ namespace Models.Soils.NutrientPatching
     public class NutrientPatchManager : Model, INutrient, INutrientPatchManager
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         [Link]
         private IPhysical soilPhysical = null;
-        
+
         [Link]
         private ISummary summary = null;
 
@@ -59,7 +59,7 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Layer thickness to consider when N partition between patches is BasedOnSoilConcentration (mm).</summary>
         [Units("mm")]
         public double LayerForNPartition { get; set; } = -99;
-        
+
         /// <summary>The inert pool.</summary>
         public INutrientPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
 
@@ -95,7 +95,7 @@ namespace Models.Soils.NutrientPatching
 
         /// <summary>The Urea pool.</summary>
         public ISolute Urea { get { return SumSolutes(patches.Select(patch => patch.Nutrient.Urea)); } }
-        
+
         /// <summary>The NO3 pool.</summary>
         public double[] NO3ForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.NO3)); } }
 
@@ -409,7 +409,7 @@ namespace Models.Soils.NutrientPatching
         }
 
         /// <summary>
-        /// For each patch, sum all layers of a solute. 
+        /// For each patch, sum all layers of a solute.
         /// </summary>
         /// <param name="solutes">The list of solutes</param>
         /// <returns>A single total solute for each patch.</returns>
@@ -546,7 +546,7 @@ namespace Models.Soils.NutrientPatching
                             Result[k][layer] = (incomingDelta[layer] * partitionWeight[k]) / patches[k].RelativeArea;
                     }
                     else
-                    { 
+                    {
                         // there is no incoming solute for this layer
                         for (int k = 0; k < patches.Count; k++)
                             Result[k][layer] = 0.0;

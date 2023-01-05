@@ -21,7 +21,7 @@
     public class MicroClimateZone
     {
         /// <summary>The clock model.</summary>
-        private Clock clock;
+        private IClock clock;
 
         /// <summary>Solar radiation.</summary>
         private double Radn;
@@ -172,7 +172,7 @@
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        public MicroClimateZone(Clock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;

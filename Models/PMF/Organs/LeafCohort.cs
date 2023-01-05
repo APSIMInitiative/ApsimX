@@ -16,9 +16,9 @@ namespace Models.PMF.Organs
     /// A leaf cohort model
     /// </summary>
     /// <remarks>
-    /// 
+    ///
     /// @startuml
-    /// Initialized -> Appeared: Appearance 
+    /// Initialized -> Appeared: Appearance
     /// Appeared -> Expanded: GrowthDuration
     /// Expanded -> Senescing: LagDuration
     /// Senescing -> Senesced: SenescenceDuration
@@ -35,12 +35,12 @@ namespace Models.PMF.Organs
     /// Appeared -> Detached: IsAppeared
     /// Initialized -> Detached: IsInitialised
     /// @enduml
-    /// 
+    ///
     /// Leaf death
     /// ------------------------
-    /// The leaf area, structural biomass and structural nitrogen of 
+    /// The leaf area, structural biomass and structural nitrogen of
     /// green (live) parts is subtracted by a fraction.
-    /// 
+    ///
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -71,7 +71,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The clock</summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -529,7 +529,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (IsNotSenescing && (ShadeInducedSenRate == 0.0) && (StorageFraction > 0))
-                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
+                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is
                     return Math.Max(0.0, LuxaryNConc*(LiveStart.StructuralWt + LiveStart.MetabolicWt
                                                       + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) -
                                          Live.StorageN);
@@ -705,7 +705,7 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
         }
-        
+
         /// <summary>Returns a clone of this object</summary>
         /// <returns></returns>
         public virtual LeafCohort Clone()
@@ -813,7 +813,7 @@ namespace Models.PMF.Organs
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
 
-            
+
             if (Structure.ProportionPlantMortality > 0)
                 CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
@@ -943,10 +943,10 @@ namespace Models.PMF.Organs
             //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
 
-            
+
             //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
             LiveArea += deltaActualArea;
-            
+
             //Senessing leaf area
             double areaSenescing = LiveArea*SenescedFrac;
             double areaSenescingN = 0;
@@ -984,7 +984,7 @@ namespace Models.PMF.Organs
 
             Live.StorageN -= Math.Max(0.0,
                 StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
-            //Dont Senesess todays Storage N if it was retranslocated or reallocated 
+            //Dont Senesess todays Storage N if it was retranslocated or reallocated
             Dead.StorageN += Math.Max(0.0,
                 StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
 
@@ -1122,7 +1122,7 @@ namespace Models.PMF.Organs
                 double lsn = 0;
                 for (int i = 0; i < ApexCohort.GroupAge.Length; i++)
                 {
-                    
+
                     if (i == 0)
                     {
                         _lagDuration = LagDuration;
