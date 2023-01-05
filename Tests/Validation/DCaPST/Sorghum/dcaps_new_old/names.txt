@@ -15,6 +15,7 @@ Sorghum_HE5_T2=HE5CultivarM35-1
 Sorghum_HE5_T3=HE5CultivarCSH13R
 Sorghum_HE6_T1=HE6CultivarBuster
 Sorghum_HE6_T2=HE6CultivarM35-1
+Sorghum_HE6_T3=HE6CultivarCSH13R
 Sorghum_HE7_T1=HE7CultivarBuster
 Sorghum_HE7_T2=HE7CultivarM35-1r
 Sorghum_HE7_T3=HE7CultivarCSH13R
