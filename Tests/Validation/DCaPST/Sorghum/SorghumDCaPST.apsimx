@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 610,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -194,7 +194,7 @@
             "[Sorghum].Stem.Live.N as StemGreenN ",
             "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
             "[Sorghum].Rachis.Live.N as RachisGreenN",
-            "[Sorghum].Grain.Live.Wt as GrainGreenWt",
+            "[Sorghum].Grain.Live.Wt * 10 as GrainGreenWt",
             "[Sorghum].Grain.Live.N as GrainGreenN",
             "[Sorghum].Grain.Live.NConc * 100 as GrainGreenNConc // old apsim grain nconc is in percent",
             "[Sorghum].Grain.NumberFunction as GrainNo",
@@ -400,65 +400,10 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5"
-                  ],
-                  "Name": "M35-1",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "Parameters.Canopy.SLNRatioTop = 1.5",
                     "Parameters.Pathway.MaxElectronTransportSLNRatio = 2.75"
                   ],
                   "Name": "CSH13R",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5"
-                  ],
-                  "Name": "ATX623xRTX430",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5"
-                  ],
-                  "Name": "A35xQL36",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5"
-                  ],
-                  "Name": "QL41xQL36",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "Parameters.Canopy.SLNRatioTop = 1.5"
-                  ],
-                  "Name": "QL39xQL36",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
