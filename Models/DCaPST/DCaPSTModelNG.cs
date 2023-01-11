@@ -28,25 +28,25 @@ namespace Models.DCAPST
         /// Clock object reference (dcapst needs to know day of year).
         /// </summary>
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Weather provider.
         /// </summary>
         [Link]
-        private IWeather weather = null;
+        private readonly IWeather weather = null;
 
         /// <summary>
         /// Soil water balance.
         /// </summary>
         [Link]
-        private ISoilWater soilWater = null;
+        private readonly ISoilWater soilWater = null;
 
         /// <summary>
         /// Soil water balance.
         /// </summary>
         [Link]
-        private IUptakeMethod waterUptakeMethod = null;
+        private readonly IUptakeMethod waterUptakeMethod = null;
 
         /// <summary>
         /// The chosen crop name.
@@ -239,13 +239,8 @@ namespace Models.DCAPST
             if (GetShouldUseDcapst(leaf))
             {
                 double sln = GetSln(leaf);
-                double sw = soilWater.SW.Sum();
-                
-                if (leaf is SorghumLeaf &&
-                    waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
-                {
-                    sw = c4WaterUptakeMethod.WatSupply;
-                }
+                double sw = GetSoilWater(leaf);
+
                 model.DailyRun(leaf.LAI, sln, sw, rootShootRatio);
 
                 // Outputs
@@ -261,6 +256,19 @@ namespace Models.DCAPST
                     canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
                 }
             }
+        }
+
+        private double GetSoilWater(ICanopy leaf)
+        {
+            double sw = soilWater.SW.Sum();
+
+            if (leaf is SorghumLeaf &&
+                waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
+            {
+                sw = c4WaterUptakeMethod.WatSupply;
+            }
+
+            return sw;
         }
 
         private bool GetShouldUseDcapst(ICanopy leaf)
