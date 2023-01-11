@@ -10,6 +10,7 @@ namespace Models.DCAPST
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class DCAPSTModel : IPhotosynthesisModel
     {
         /// <summary>

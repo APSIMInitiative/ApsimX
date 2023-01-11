@@ -5,8 +5,10 @@ using Models.DCAPST.Interfaces;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF;
+using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,9 +43,26 @@ namespace Models.DCAPST
         private ISoilWater soilWater = null;
 
         /// <summary>
+        /// Soil water balance.
+        /// </summary>
+        [Link]
+        private C4WaterUptakeMethod c4Water = null;
+
+        /// <summary>
         /// The chosen crop name.
         /// </summary>
         private string cropName = string.Empty;
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        [JsonIgnore]
+        private DCAPSTModel model = null;
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        private bool startedUsingDcaps = false;
 
         /// <summary>
         /// The crop against which DCaPST will be run.
@@ -185,7 +204,7 @@ namespace Models.DCAPST
             IPlant plant = FindInScope<IPlant>(CropName);
             double rootShootRatio = GetRootShootRatio(plant);
 
-            DCAPSTModel model = SetUpModel(
+            model = SetUpModel(
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
@@ -210,13 +229,21 @@ namespace Models.DCAPST
             {
                 throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
             }
-            if (leaf.LAI > 0)
+            if (GetShouldUseDCaps(leaf))
             {
+                
+                double rootShootRatio2 = GetRootShootRatio(plant);
                 double sln = GetSln(leaf);
-                model.DailyRun(leaf.LAI, sln, soilWater.SW.Sum(), rootShootRatio);
+
+                double sw = soilWater.SW.Sum();
+                if (leaf is SorghumLeaf sorghumLeaf)
+                {
+                    sw = c4Water.WatSupply;
+                }
+                model.DailyRun(leaf.LAI, sln, sw, rootShootRatio);
 
                 // Outputs
-                SetBiomass(leaf, model.ActualBiomass);
+                //SetBiomass(leaf, model.ActualBiomass);
                 foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
                 {
                     canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
@@ -231,12 +258,52 @@ namespace Models.DCAPST
             }
         }
 
+        private bool GetShouldUseDCaps(ICanopy leaf)
+        {
+            //return leaf.LAI > 0;
+
+            if (!startedUsingDcaps)
+            {
+                if(leaf.LAI > 0.5)
+                {
+                    startedUsingDcaps = true;
+
+                    //Sorghum calculates InterceptedRadiation and WaterDemand internally
+                    //Use the MicroClimateSetting to override.
+                    var sorghumLeaf = leaf as SorghumLeaf;
+                    if (sorghumLeaf != null)
+                        sorghumLeaf.MicroClimateSetting = 1;
+                }
+            }
+
+            return startedUsingDcaps;
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            IPlant plant = FindInScope<IPlant>(CropName);
+            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
+
+            if (leaf is null)
+            {
+                throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
+            }
+
+            SetBiomass(leaf, model.ActualBiomass);
+        }
+
         /// <summary>Called when crop is being sown</summary>
         /// <param name="sender"></param>
         /// <param name="sowingData"></param>
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters sowingData)
         {
+            startedUsingDcaps = false;
+
             // DcAPST allows specific Crop and Cultivar settings to be used.
             // Search and extract the Cultivar if it has been specified.
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(this, sowingData);
@@ -260,7 +327,7 @@ namespace Models.DCAPST
                 return 0;
             }
 
-            return function.Value();
+            return function.Value() / 2.0;
         }
 
         private void SetBiomass(ICanopy leaf, double actualBiomass)
