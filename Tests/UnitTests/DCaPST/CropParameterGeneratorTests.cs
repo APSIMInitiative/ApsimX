@@ -1,6 +1,4 @@
 ﻿using Models.DCAPST;
-using Models.DCAPST.Interfaces;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace UnitTests.DCaPST
