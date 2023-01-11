@@ -376,8 +376,6 @@ namespace Models
                 if (DoPotentialPlantGrowth != null)
                     DoPotentialPlantGrowth.Invoke(this, args);
 
-                //DoDCAPST?.Invoke(this, args);
-
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
 
