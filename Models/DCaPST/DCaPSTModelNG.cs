@@ -46,7 +46,7 @@ namespace Models.DCAPST
         /// Soil water balance.
         /// </summary>
         [Link]
-        private C4WaterUptakeMethod c4Water = null;
+        private IUptakeMethod waterUptakeMethod = null;
 
         /// <summary>
         /// The chosen crop name.
@@ -54,15 +54,22 @@ namespace Models.DCAPST
         private string cropName = string.Empty;
 
         /// <summary>
-        /// TODO
+        /// Store the model as this is used in different functions after assignment.
         /// </summary>
         [JsonIgnore]
         private DCAPSTModel model = null;
 
         /// <summary>
-        /// TODO
+        /// This flag is set to indicate that we have started using DCaPST. 
+        /// We wait until the Leaf LAI reaches our tolerance before starting to use 
+        /// DCaPST and the continue to use it until a new sowing event occcurs.
         /// </summary>
         private bool startedUsingDcaps = false;
+
+        /// <summary>
+        /// The leaf LAI tolerence that has to be reached before starting to use DCaPST.
+        /// </summary>
+        private const double LEAF_LAI_START_USING_DCAPST_TOLERANCE = 0.5;
 
         /// <summary>
         /// The crop against which DCaPST will be run.
@@ -229,21 +236,19 @@ namespace Models.DCAPST
             {
                 throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
             }
-            if (GetShouldUseDCaps(leaf))
+            if (GetShouldUseDcapst(leaf))
             {
-                
-                double rootShootRatio2 = GetRootShootRatio(plant);
                 double sln = GetSln(leaf);
-
                 double sw = soilWater.SW.Sum();
-                if (leaf is SorghumLeaf sorghumLeaf)
+                
+                if (leaf is SorghumLeaf &&
+                    waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
                 {
-                    sw = c4Water.WatSupply;
+                    sw = c4WaterUptakeMethod.WatSupply;
                 }
                 model.DailyRun(leaf.LAI, sln, sw, rootShootRatio);
 
                 // Outputs
-                //SetBiomass(leaf, model.ActualBiomass);
                 foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
                 {
                     canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
@@ -258,21 +263,20 @@ namespace Models.DCAPST
             }
         }
 
-        private bool GetShouldUseDCaps(ICanopy leaf)
+        private bool GetShouldUseDcapst(ICanopy leaf)
         {
-            //return leaf.LAI > 0;
-
             if (!startedUsingDcaps)
             {
-                if(leaf.LAI > 0.5)
+                if (leaf.LAI > LEAF_LAI_START_USING_DCAPST_TOLERANCE)
                 {
                     startedUsingDcaps = true;
 
-                    //Sorghum calculates InterceptedRadiation and WaterDemand internally
-                    //Use the MicroClimateSetting to override.
-                    var sorghumLeaf = leaf as SorghumLeaf;
-                    if (sorghumLeaf != null)
+                    // Sorghum calculates InterceptedRadiation and WaterDemand internally
+                    // Use the MicroClimateSetting to override.
+                    if (leaf is SorghumLeaf sorghumLeaf)
+                    {
                         sorghumLeaf.MicroClimateSetting = 1;
+                    }
                 }
             }
 
