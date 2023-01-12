@@ -244,28 +244,39 @@ namespace Models.DCAPST
 
             CalculateDcapstTrigger(leaf);
 
-            if (leaf.LAI > 0.0 && dcapsReachedLAITriggerPoint)
+            if (!ShouldRunDcapsModel(leaf))
             {
-                double sln = GetSln(leaf);
-                double soilWaterValue = GetSoilWater(leaf);
-
-                model.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
-
-                // Outputs
-                foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
-                {
-                    canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
-                    {
-                        new CanopyEnergyBalanceInterceptionlayerType()
-                        {
-                            AmountOnGreen = model.InterceptedRadiation,
-                        }
-                    };
-
-                    canopy.PotentialEP = model.WaterDemanded;
-                    canopy.WaterDemand = model.WaterDemanded;
-                }
+                return;
             }
+
+            double sln = GetSln(leaf);
+            double soilWaterValue = GetSoilWater(leaf);
+
+            model.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
+
+            // Outputs
+            foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
+            {
+                canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
+                {
+                    new CanopyEnergyBalanceInterceptionlayerType()
+                    {
+                        AmountOnGreen = model.InterceptedRadiation,
+                    }
+                };
+
+                canopy.PotentialEP = model.WaterDemanded;
+                canopy.WaterDemand = model.WaterDemanded;
+            }
+        }
+
+        private bool ShouldRunDcapsModel(ICanopy leaf)
+        {
+            if (leaf is null) return false;
+
+            return
+                leaf.LAI > 0.0 &&
+                dcapsReachedLAITriggerPoint;
         }
 
         private double GetSoilWater(ICanopy leaf)
