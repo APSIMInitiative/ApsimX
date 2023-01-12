@@ -243,8 +243,12 @@ namespace Models.DCAPST
             }
 
             CalculateDcapstTrigger(leaf);
-
-            if (startedUsingDcaps)
+            
+            // The plant must be alive to perform DCaPST calculations. The started using dcaps flag
+            // alone is not sufficient as that is set once when the LAI reaches a certain level. However
+            // Once a crop has been harvested we need to stop performing calculations until it is 
+            // sown again and the LAI reaches our trigger point.
+            if (plant.IsAlive && startedUsingDcaps)
             {
                 double sln = GetSln(leaf);
                 double soilWaterValue = GetSoilWater(leaf);
