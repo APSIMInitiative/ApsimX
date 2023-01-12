@@ -69,7 +69,12 @@ namespace Models.DCAPST
         /// <summary>
         /// The leaf LAI tolerence that has to be reached before starting to use DCaPST.
         /// </summary>
-        private const double LEAF_LAI_START_USING_DCAPST_TOLERANCE = 0.5;
+        private const double LEAF_LAI_START_USING_DCAPST_TRIGGER = 0.5;
+
+        /// <summary>
+        /// The divisor that is used to calculate the correct root shoot ratio.
+        /// </summary>
+        private const double ROOT_SHOOT_RATIO_DIVISOR = 2.0;
 
         /// <summary>
         /// The crop against which DCaPST will be run.
@@ -236,12 +241,15 @@ namespace Models.DCAPST
             {
                 throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
             }
-            if (GetShouldUseDcapst(leaf))
+
+            CalculateDcapstTrigger(leaf);
+
+            if (startedUsingDcaps)
             {
                 double sln = GetSln(leaf);
-                double sw = GetSoilWater(leaf);
+                double soilWaterValue = GetSoilWater(leaf);
 
-                model.DailyRun(leaf.LAI, sln, sw, rootShootRatio);
+                model.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
 
                 // Outputs
                 foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
@@ -253,42 +261,40 @@ namespace Models.DCAPST
                             AmountOnGreen = model.InterceptedRadiation,
                         }
                     };
-                    canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
+
+                    canopy.PotentialEP = model.WaterDemanded;
+                    canopy.WaterDemand = model.WaterDemanded;
                 }
             }
         }
 
         private double GetSoilWater(ICanopy leaf)
         {
-            double sw = soilWater.SW.Sum();
+            double soilWaterValue = soilWater.SW.Sum();
 
             if (leaf is SorghumLeaf &&
                 waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
             {
-                sw = c4WaterUptakeMethod.WatSupply;
+                soilWaterValue = c4WaterUptakeMethod.WatSupply;
             }
 
-            return sw;
+            return soilWaterValue;
         }
 
-        private bool GetShouldUseDcapst(ICanopy leaf)
+        private void CalculateDcapstTrigger(ICanopy leaf)
         {
-            if (!startedUsingDcaps)
+            if (!startedUsingDcaps &&
+                leaf.LAI >= LEAF_LAI_START_USING_DCAPST_TRIGGER)
             {
-                if (leaf.LAI > LEAF_LAI_START_USING_DCAPST_TOLERANCE)
-                {
-                    startedUsingDcaps = true;
+                startedUsingDcaps = true;
 
-                    // Sorghum calculates InterceptedRadiation and WaterDemand internally
-                    // Use the MicroClimateSetting to override.
-                    if (leaf is SorghumLeaf sorghumLeaf)
-                    {
-                        sorghumLeaf.MicroClimateSetting = 1;
-                    }
+                // Sorghum calculates InterceptedRadiation and WaterDemand internally
+                // Use the MicroClimateSetting to override.
+                if (leaf is SorghumLeaf sorghumLeaf)
+                {
+                    sorghumLeaf.MicroClimateSetting = 1;
                 }
             }
-
-            return startedUsingDcaps;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -333,13 +339,16 @@ namespace Models.DCAPST
                 return 0;
             }
 
-            IFunction function = variable.Value as IFunction;
-            if (function is null)
+            if (!(variable.Value is IFunction function))
             {
                 return 0;
             }
 
-            return function.Value() / 2.0;
+            var rootShootRatioValue = ROOT_SHOOT_RATIO_DIVISOR > 0.0 ?
+                function.Value() / ROOT_SHOOT_RATIO_DIVISOR :
+                function.Value();
+
+            return rootShootRatioValue;
         }
 
         private void SetBiomass(ICanopy leaf, double actualBiomass)
