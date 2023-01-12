@@ -64,7 +64,7 @@ namespace Models.DCAPST
         /// We wait until the Leaf LAI reaches our tolerance before starting to use 
         /// DCaPST and the continue to use it until a new sowing event occcurs.
         /// </summary>
-        private bool startedUsingDcaps = false;
+        private bool dcapsReachedLAITriggerPoint = false;
 
         /// <summary>
         /// The leaf LAI tolerence that has to be reached before starting to use DCaPST.
@@ -244,7 +244,7 @@ namespace Models.DCAPST
 
             CalculateDcapstTrigger(leaf);
 
-            if (startedUsingDcaps)
+            if (leaf.LAI > 0.0 && dcapsReachedLAITriggerPoint)
             {
                 double sln = GetSln(leaf);
                 double soilWaterValue = GetSoilWater(leaf);
@@ -283,17 +283,21 @@ namespace Models.DCAPST
 
         private void CalculateDcapstTrigger(ICanopy leaf)
         {
-            if (!startedUsingDcaps &&
+            if (!dcapsReachedLAITriggerPoint &&
                 leaf.LAI >= LEAF_LAI_START_USING_DCAPST_TRIGGER)
             {
-                startedUsingDcaps = true;
+                dcapsReachedLAITriggerPoint = true;
+                SetMicroClimateForSpecificLeafTypes(leaf);
+            }
+        }
 
-                // Sorghum calculates InterceptedRadiation and WaterDemand internally
-                // Use the MicroClimateSetting to override.
-                if (leaf is SorghumLeaf sorghumLeaf)
-                {
-                    sorghumLeaf.MicroClimateSetting = 1;
-                }
+        private void SetMicroClimateForSpecificLeafTypes(ICanopy leaf)
+        {
+            // Sorghum calculates InterceptedRadiation and WaterDemand internally
+            // Use the MicroClimateSetting to override.
+            if (leaf is SorghumLeaf sorghumLeaf)
+            {
+                sorghumLeaf.MicroClimateSetting = 1;
             }
         }
 
@@ -320,8 +324,6 @@ namespace Models.DCAPST
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters sowingData)
         {
-            startedUsingDcaps = false;
-
             // DcAPST allows specific Crop and Cultivar settings to be used.
             // Search and extract the Cultivar if it has been specified.
             var cultivar = SowingParametersParser.GetCultivarFromSowingParameters(this, sowingData);
