@@ -271,7 +271,7 @@ namespace Models.DCAPST
         private double GetSoilWater(ICanopy leaf)
         {
             double soilWaterValue = soilWater.SW.Sum();
-
+             
             if (leaf is SorghumLeaf &&
                 waterUptakeMethod is C4WaterUptakeMethod c4WaterUptakeMethod)
             {
