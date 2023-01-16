@@ -45,11 +45,11 @@
         /// <summary>Export the view object to a file and return the file name</summary>
         public string ExportToPNG(string folder)
         {
-            Image image = view.Export();
+            Gdk.Pixbuf image = view.Export();
 
             
             string fileName = Path.ChangeExtension(Path.Combine(folder, Path.GetRandomFileName()), ".png");
-            image.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+            image.Save(fileName, "png");
 
             return fileName;
         }
