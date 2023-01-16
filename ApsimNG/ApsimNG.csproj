@@ -59,7 +59,7 @@
     <PackageReference Include="OxyPlot.Core" Version="2.1.0-Preview1" />
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.3-netcorebeta" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
