@@ -117,8 +117,8 @@ namespace Utility
                 {
                     try
                     {
-                        Bitmap b = ApsimNG.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
-                        b.Save(summaryJpg);
+                        Gdk.Pixbuf b = Gdk.Pixbuf.LoadFromResource("Apsim1.png");
+                        b.Save(summaryJpg, "jpeg");
                     }
                     catch
                     {

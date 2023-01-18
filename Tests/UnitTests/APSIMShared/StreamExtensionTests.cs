@@ -7,7 +7,7 @@ using System.Text;
 namespace UnitTests.APSIMShared
 {
     /// <summary>
-    /// Unit tests for <see cref="StreamExtensions"/>.
+    /// Unit tests for <see cref="APSIM.Shared.Extensions.StreamExtensions"/>.
     /// </summary>
     [TestFixture]
     public class StreamExtensionTests
@@ -89,12 +89,12 @@ namespace UnitTests.APSIMShared
         [Test]
         public void TestArrayEquals()
         {
-            Assert.True(StreamExtensions.Equal(null, null));
-            Assert.False(StreamExtensions.Equal(new byte[0], null));
-            Assert.False(StreamExtensions.Equal(null, new byte[0]));
-            Assert.False(StreamExtensions.Equal(new byte[0], new byte[1]));
-            Assert.False(StreamExtensions.Equal(new byte[2] { 0, 1 }, new byte[2] { 0, 2 }));
-            Assert.True(StreamExtensions.Equal(new byte[2] { 64, 128 }, new byte[2] { 64, 128 }));
+            Assert.True(APSIM.Shared.Extensions.StreamExtensions.Equal(null, null));
+            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], null));
+            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(null, new byte[0]));
+            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[0], new byte[1]));
+            Assert.False(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 0, 1 }, new byte[2] { 0, 2 }));
+            Assert.True(APSIM.Shared.Extensions.StreamExtensions.Equal(new byte[2] { 64, 128 }, new byte[2] { 64, 128 }));
         }
 
         /// <summary>
