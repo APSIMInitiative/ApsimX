@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 436,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -553,9 +553,9 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
+                  "Minimum": "NaN",
+                  "Maximum": 1200.0,
+                  "Interval": "NaN"
                 },
                 {
                   "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
@@ -563,8 +563,8 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
+                  "Minimum": 0.0,
+                  "Maximum": 1200.0,
                   "Interval": null
                 }
               ],
@@ -709,8 +709,8 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
+                  "Minimum": 0.0,
+                  "Maximum": 30.0,
                   "Interval": null
                 },
                 {
@@ -719,9 +719,9 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
+                  "Minimum": 0.0,
+                  "Maximum": 30.0,
+                  "Interval": "NaN"
                 }
               ],
               "LegendPosition": 3,
