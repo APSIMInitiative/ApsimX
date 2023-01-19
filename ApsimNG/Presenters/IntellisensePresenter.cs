@@ -310,7 +310,7 @@
 
             // Can't use await in a lambda...ugh
             List<NeedContextItemsArgs.ContextItem> result = new List<NeedContextItemsArgs.ContextItem>();
-            foreach (CompletionItem item in results.ItemsList)
+            foreach (CompletionItem item in results.Items)
                 result.Add(await GetContextItem(item));
             return result;
         }
