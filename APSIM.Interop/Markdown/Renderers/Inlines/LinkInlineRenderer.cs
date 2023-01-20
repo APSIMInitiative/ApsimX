@@ -37,7 +37,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
             string uri = link.GetDynamicUrl != null ? link.GetDynamicUrl() ?? link.Url : link.Url;
             if (link.IsImage)
             {
-                Image image = GetImage(uri);
+                SkiaSharp.SKImage image = GetImage(uri);
                 // Technically, the image should be written to the same paragraph as any existing content.
                 // However, if the image is too large, I'm going to add it to its own paragraph.
                 // I'm defining "too large" as "taller than page height * 0.9".
@@ -75,7 +75,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// Get the image specified by the given url.
         /// </summary>
         /// <param name="uri">Image URI.</param>
-        public virtual Image GetImage(string uri)
+        public virtual SkiaSharp.SKImage GetImage(string uri)
         {
             return APSIM.Shared.Documentation.Image.LoadImage(uri, imageRelativePath);
         }

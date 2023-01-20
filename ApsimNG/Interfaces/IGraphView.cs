@@ -338,7 +338,7 @@
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="r">Desired bitmap size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside);
+        void Export(out Gdk.Pixbuf bitmap, Rectangle r, bool legendOutside);
 
         /// <summary>
         /// Export the graph to the clipboard
