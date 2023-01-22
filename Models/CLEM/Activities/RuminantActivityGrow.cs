@@ -535,7 +535,7 @@ namespace Models.CLEM.Activities
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = energyMilk;
 
-                // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
+                // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
                 if (MathUtilities.IsPositive(ind.EnergyBalance))
                     feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
                 else
@@ -544,7 +544,7 @@ namespace Models.CLEM.Activities
                 double weightToReferenceRatio = Math.Min(1.0, ind.Weight / ind.StandardReferenceWeight);
 
                 // Reference:  MJ of Energy required per kg Empty body gain (SCA p.43)
-                double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept1 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
+                double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
                 // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
                 if (MathUtilities.IsPositive(ind.EnergyBalance))
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * kg * ind.EnergyBalance / energyEmptyBodyGain;
@@ -561,11 +561,6 @@ namespace Models.CLEM.Activities
             newWt = Math.Min(newWt, mxwt);
             ind.Weight = newWt;
             
-            // sped up above using locals
-            //ind.Weight += energyPredictedBodyMassChange;
-            //ind.Weight = Math.Max(0.0, ind.Weight);
-            //ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);
-
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
             // methane is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
