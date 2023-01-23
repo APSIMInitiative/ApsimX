@@ -79,6 +79,7 @@ namespace Models.PMF
         [JsonIgnore]
         public SowingParameters SowingData { get; set; } = new SowingParameters();
 
+        /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
 
         /// <summary>Gets the organs.</summary>
