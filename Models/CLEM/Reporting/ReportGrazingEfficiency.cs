@@ -22,7 +22,7 @@ namespace Models.CLEM.Reporting
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
-    [PresenterName("UserInterface.Presenters.ReportPresenter")]
+    [PresenterName("UserInterface.Presenters.CLEMReportResultsPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
@@ -31,6 +31,42 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/GrazingEfficiency.htm")]
     public class ReportGrazingEfficiency: Models.Report
     {
+        /// <summary>
+        /// Includes the potential intake modifier from pasture quality
+        /// </summary>
+        [Description("Include potential intake modifier from pasture quality")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludePastureQualityLimiter { get; set; }
+
+        /// <summary>
+        /// Includes the potential intake modifier from pasture biomass
+        /// </summary>
+        [Description("Include potential intake modifier from pasture biomass")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludePastureBiomassLimiter { get; set; }
+
+        /// <summary>
+        /// Includes the potential intake modifier from grazing time
+        /// </summary>
+        [Description("Include potential intake modifier from grazing time")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludeGrazingTimeLimiter { get; set; }
+
+        /// <summary>
+        /// Includes the potential intake modifier from competition
+        /// </summary>
+        [Description("Include potential intake modifier competition")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludeCompetitionLimiter { get; set; }
+
+        /// <summary>
+        /// Includes the potential intake combined modifier
+        /// </summary>
+        [Description("Include combined potential intake modifier")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludeCombinedLimit { get; set; }
+
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -38,16 +74,23 @@ namespace Models.CLEM.Reporting
         private void OnCommencing(object sender, EventArgs e)
         {
             var grzes = FindAllInScope<RuminantActivityGrazePastureHerd>();
+            var multiHerds = FindAllInScope<RuminantType>().Count() > 1;
+            var multiPaddock = grzes.Count() > 1;
 
             List<string> variableNames = new List<string>();
             variableNames.Add("[Clock].Today as Date");
             foreach (var grz in grzes)
             {
-                variableNames.Add($"[{grz.Name}].PotentialIntakePastureQualityLimiter as {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}PastureQualityLimiter");
-                variableNames.Add($"[{grz.Name}].PotentialIntakePastureBiomassLimiter as {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}PastureBiomassLimiter");
-                variableNames.Add($"[{grz.Name}].PotentialIntakeGrazingTimeLimiter as {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}GrazingTimeLimiter");
-                variableNames.Add($"[{grz.Name}].GrazingCompetitionLimiter as {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}CompetitionLimiter");
-                //variableNames.Add($"({PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}CompetitionLimiter * {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}PastureQualityLimiter * {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}PastureBiomassLimiter * {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}GrazingTimeLimiter) as {PastureHerdIdenifier(grz.Name, grzes.Count() > 1)}TotalReduction");
+                if(IncludePastureQualityLimiter)
+                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureQualityLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PastureQualityLimiter")}");
+                if(IncludePastureBiomassLimiter)
+                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureBiomassLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds,"PastureBiomassLimiter")}");
+                if(IncludeGrazingTimeLimiter)
+                    variableNames.Add($"[{grz.Name}].PotentialIntakeGrazingTimeLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "GrazingTimeLimiter")}");
+                if(IncludeCompetitionLimiter)
+                    variableNames.Add($"[{grz.Name}].GrazingCompetitionLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CompetitionLimiter")}");
+                if(IncludeCombinedLimit)
+                    variableNames.Add($"[{grz.Name}].PotentialIntakeLimit as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CombinedLimiter")}");
             }
 
             VariableNames = variableNames.ToArray();
@@ -58,11 +101,16 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
-        private string PastureHerdIdenifier(string modelName, bool multiHerdPasture)
+        private string PastureHerdIdenifier(string modelName, bool multiPasture, bool multiHerd, string propertyName)
         {
-            if (!multiHerdPasture) return "";
-            return $"{modelName.Split("_").Skip(1).Join("_")}_";
+            var nameParts = modelName.Split('_').Select(a => a.Replace(" ", "")).Skip(1).ToList();
+            if (!multiPasture)
+                nameParts[0] = "";
+            if (!multiHerd)
+                nameParts[1] = "";
 
+            nameParts.Add(propertyName);
+            return nameParts.Where(a => a != "").Join("_");
         }
 
     }

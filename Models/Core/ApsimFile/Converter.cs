@@ -562,6 +562,8 @@ namespace Models.Core.ApsimFile
                             // Convert array to string.
                             if (specifications.Count > 0)
                                 factor["Specification"] = specifications[0].ToString();
+                            else
+                                factor["Specification"] = new JArray();
                         }
                     }
                 }
@@ -3383,14 +3385,16 @@ namespace Models.Core.ApsimFile
                     memo["Text"] = text;
                 }
             }
+            foreach (var TrModelNode in JsonUtilities.ChildrenRecursively(root, "MaximumHourlyTrModel"))
+                TrModelNode["$type"] = "Models.Functions.SupplyFunctions.LimitedTranspirationRate, Models";
         }
-		
+
         /// <summary>
         /// Upgrade to version 128. Add ResourceName property to Fertiliser models.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion128(JObject root, string fileName)
+         private static void UpgradeToVersion128(JObject root, string fileName)
         {
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";
@@ -4612,17 +4616,19 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
             {
-                var fieldName3 = predictedObserved["FieldName3UsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName3.Value<string>()))
-                    predictedObserved["FieldName4UsedForMatch"] = fieldName3.Value<string>();
-                var fieldName2 = predictedObserved["FieldName2UsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName2.Value<string>()))
-                    predictedObserved["FieldName3UsedForMatch"] = fieldName2.Value<string>();
-                var fieldName1 = predictedObserved["FieldNameUsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName1.Value<string>()))
-                    predictedObserved["FieldName2UsedForMatch"] = fieldName1.Value<string>();
-                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
+                var field = predictedObserved["FieldName3UsedForMatch"];
+                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                    predictedObserved["FieldName4UsedForMatch"] = field.Value<string>();
 
+                field = predictedObserved["FieldName2UsedForMatch"];
+                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                    predictedObserved["FieldName3UsedForMatch"] = field.Value<string>();
+
+                field = predictedObserved["FieldNameUsedForMatch"];
+                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                    predictedObserved["FieldName2UsedForMatch"] = field.Value<string>();
+
+                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
             }
         }
 

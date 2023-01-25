@@ -47,13 +47,10 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0-1.final" />
-    <PackageReference Include="SharpMap" Version="1.2.0" />
-    <PackageReference Include="SharpMap.Layers.BruTile" Version="1.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
     <PackageReference Include="ISO3166" Version="1.0.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
-    <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <PackageReference Include="Markdig" Version="0.22.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />

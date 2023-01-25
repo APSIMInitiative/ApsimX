@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
             // This determines the proportional amount available for competing breeds with different green diet proportions
             // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
             double available = GrazeFoodStoreModel.Amount;
-            double limit = 0;
+            double limit = 1.0;
             if(MathUtilities.IsPositive(totalNeeded))
                 limit = Math.Min(1.0, available / totalNeeded);
 

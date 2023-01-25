@@ -101,6 +101,11 @@ namespace Models.CLEM.Activities
             {
                 RequestResourcesForTimestep();
                 PerformTasksForTimestep();
+                if (numberToDo > 0)
+                {
+                    AddStatusMessage("Moved individuals at start up");
+                    Status = ActivityStatus.Success;
+                }
             }
         }
 

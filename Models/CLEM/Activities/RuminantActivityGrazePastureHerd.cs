@@ -109,6 +109,15 @@ namespace Models.CLEM.Activities
         public double PotentialIntakeGrazingTimeLimiter { get; set; }
 
         /// <summary>
+        /// Potential intake limit
+        /// </summary>
+        [JsonIgnore]
+        public double PotentialIntakeLimit 
+        {
+            get { return PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter * GrazingCompetitionLimiter; } 
+        }
+
+        /// <summary>
         /// Dry matter digestibility of pasture consumed (%)
         /// </summary>
         [JsonIgnore]
@@ -325,6 +334,7 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.IsLessThan(shortfall, 1) || MathUtilities.IsGreaterThan(totalPastureDesired - (pastureRequest?.Provided??0), totalPastureDesired* shortfallReportingCutoff))
                 {
                     ResourceRequest shortfallRequest = pastureRequest;
+                    shortfallRequest.Required = totalPastureRequired;
                     if (shortfallRequest is null)
                     {
                         shortfallRequest = new ResourceRequest()
