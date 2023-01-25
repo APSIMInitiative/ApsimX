@@ -126,10 +126,16 @@ namespace UserInterface.Views
             {
                 EndEdit(saveEdit: false);
             }
-            else if (args.Event.Key == Gdk.Key.Return)
+            else
             {
-                EndEdit();
-                sheet.CellSelector.MoveDown();
+                // It's important to call ToSheetEventKey() here, as that function
+                // contains logic for detecting unusual/non-standard return keys.
+                SheetEventKey key = args.Event.ToSheetEventKey();
+                if (key.Key == Keys.Return)
+                {
+                    EndEdit();
+                    sheet.CellSelector.MoveDown();
+                }
             }
         }
     }
