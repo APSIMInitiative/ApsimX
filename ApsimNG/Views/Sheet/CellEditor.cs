@@ -131,10 +131,23 @@ namespace UserInterface.Views
                 // It's important to call ToSheetEventKey() here, as that function
                 // contains logic for detecting unusual/non-standard return keys.
                 SheetEventKey key = args.Event.ToSheetEventKey();
-                if (key.Key == Keys.Return)
+                if (key.Key == Keys.Return || key.Key == Keys.Tab)
                 {
                     EndEdit();
-                    sheet.CellSelector.MoveDown();
+                    if (key.Key == Keys.Return)
+                        sheet.CellSelector.MoveDown(key.Shift);
+                    else if (key.Key == Keys.Tab)
+                    {
+                        // User has clicked tab to finish editing the cell. If this
+                        // row contains more cells to the right of the current cell
+                        // then move the selection right. Otherwise, move the
+                        // selection down.
+                        sheet.CellSelector.GetSelection(out int col, out _);
+                        if ( (col + 1) < sheet.DataProvider.ColumnCount)
+                            sheet.CellSelector.MoveRight(key.Shift);
+                        else
+                            sheet.CellSelector.MoveDown(key.Shift);
+                    }
                 }
             }
         }

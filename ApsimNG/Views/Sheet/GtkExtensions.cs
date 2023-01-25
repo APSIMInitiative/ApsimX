@@ -33,6 +33,9 @@ namespace UserInterface.Views
                 keyParams.Key = Keys.End;
             else if (evnt.Key == Gdk.Key.Delete)
                 keyParams.Key = Keys.Delete;
+            else if (evnt.Key == Gdk.Key.Tab || evnt.Key == Gdk.Key.KP_Tab
+                || evnt.Key == Gdk.Key.ISO_Left_Tab)
+                keyParams.Key = Keys.Tab;
             else
             {
                 string keyName = char.ConvertFromUtf32((int)Gdk.Keyval.ToUnicode((uint)evnt.KeyValue));
