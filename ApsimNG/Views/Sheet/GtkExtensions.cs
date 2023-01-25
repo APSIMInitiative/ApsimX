@@ -1,4 +1,5 @@
-﻿using Gdk;
+﻿using System;
+using Gdk;
 
 namespace UserInterface.Views
 {
@@ -28,7 +29,15 @@ namespace UserInterface.Views
             else if (evnt.Key == Gdk.Key.Delete)
                 keyParams.Key = Keys.Delete;
             else
-                keyParams.KeyValue = (char)evnt.KeyValue;
+            {
+                string keyName = char.ConvertFromUtf32((int)Gdk.Keyval.ToUnicode((uint)evnt.KeyValue));
+                if (!char.TryParse(keyName, out keyParams.KeyValue))
+                    // Fallback to previous behaviour. This shouldn't usually happen, but it's probably
+                    // possible, and this fallback is unlikely to work successfully. E.g. on my keyboard,
+                    // the KeyValue from numpad 1, when cast to char, yields 'ﾱ'.
+                    keyParams.KeyValue = (char)evnt.KeyValue;
+            }
+
             keyParams.Control = evnt.State == ModifierType.ControlMask;
             keyParams.Shift = evnt.State == ModifierType.ShiftMask;
             return keyParams;
