@@ -24,7 +24,7 @@ namespace UnitTests.Interop.Markdown.Parsers.Inlines
         public void Setup()
         {
             parser = new ReferenceInlineParser();
-            Mock<InlineProcessor> mockProcessor = new Mock<InlineProcessor>(new MarkdownDocument(), new InlineParserList(new InlineParser[0]), false, new MarkdownParserContext());
+            Mock<InlineProcessor> mockProcessor = new Mock<InlineProcessor>(new MarkdownDocument(), new InlineParserList(new InlineParser[0]), false, new MarkdownParserContext(), false);
             processor = mockProcessor.Object;
         }
 

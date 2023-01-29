@@ -480,17 +480,17 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double Kme { get; set; }
         /// <summary>
-        /// Parameter for energy for growth #1
+        /// Parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
         /// </summary>
         [Category("Advanced", "Growth")]
-        [Description("Parameter for energy for growth #1")]
+        [Description("Energy per kg growth #1")]
         [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept1 { get; set; }
         /// <summary>
-        /// Parameter for energy for growth #2
+        /// Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
         /// </summary>
         [Category("Advanced", "Growth")]
-        [Description("Parameter for energy for growth #2")]
+        [Description("Energy per kg growth #2")]
         [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept2 { get; set; }
 
