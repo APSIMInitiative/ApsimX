@@ -12,6 +12,10 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="**\*.xml" />
     <EmbeddedResource Include="**\*.json" />

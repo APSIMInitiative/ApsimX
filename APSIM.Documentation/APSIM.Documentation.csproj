@@ -15,5 +15,9 @@
 
     <EmbeddedResource Include="index.css" />
   </ItemGroup>
+  
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>  
 
 </Project>

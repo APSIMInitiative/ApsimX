@@ -8,6 +8,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
+  
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>  
 
   <ItemGroup>
     <ProjectReference Include="../Models/Models.csproj" />
