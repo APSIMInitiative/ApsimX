@@ -54,8 +54,8 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             renderer = new CodeInlineRenderer();
-            inline = new CodeInline();
-            inline.Content = sampleCode = "sample code";
+            sampleCode = "sample code";
+            inline = new CodeInline(sampleCode);
         }
 
         /// <summary>

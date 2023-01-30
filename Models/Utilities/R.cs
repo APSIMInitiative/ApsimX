@@ -57,7 +57,7 @@ namespace Models.Utilities
         /// On Linux, this is ~/.config/ApsimInitiative/ApsimX/rpackages.
         /// </summary>
         public static string PackagesDirectory { get; } = Path.Combine(
-                                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create),
                                     "ApsimInitiative",
                                     "ApsimX",
                                     "rpackages").Replace("\\", "/");
