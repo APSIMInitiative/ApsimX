@@ -7,7 +7,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>apsim</AssemblyName>
     <SelfContained>false</SelfContained>
-</PropertyGroup>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
@@ -15,5 +15,9 @@
     <ProjectReference Include="../Models/Models.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
+
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
 
 </Project>

@@ -25,6 +25,10 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
   
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
   <ItemGroup>
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
