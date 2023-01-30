@@ -8,7 +8,11 @@
     <StartupObject />
     <SelfContained>false</SelfContained>
   </PropertyGroup>
-
+  
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="StyleCop.Cache" />
   </ItemGroup>

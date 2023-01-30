@@ -7,6 +7,10 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <ProjectReference Include="../Models/Models.csproj" />
