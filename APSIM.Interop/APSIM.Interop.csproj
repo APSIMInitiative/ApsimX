@@ -4,6 +4,7 @@
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>

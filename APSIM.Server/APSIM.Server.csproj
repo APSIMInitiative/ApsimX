@@ -6,6 +6,7 @@
     <AssemblyName>apsim-server</AssemblyName>
     <BaseOutputPath>../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>

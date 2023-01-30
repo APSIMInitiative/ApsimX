@@ -6,6 +6,7 @@
     <BaseOutputPath>../../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
 
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
 </Project>

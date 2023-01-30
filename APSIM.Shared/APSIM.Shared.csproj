@@ -8,6 +8,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
   
   <ItemGroup>
@@ -23,6 +24,7 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
 </Project>
