@@ -44,7 +44,7 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("")]
         private IFunction seedMortalityRate = null;
-        
+
         /// <summary>The phenology</summary>
         [Link(Type = LinkType.Child)]
         public IPhenology Phenology = null;
@@ -79,6 +79,9 @@ namespace Models.PMF
         [JsonIgnore]
         public SowingParameters SowingData { get; set; } = new SowingParameters();
 
+        /// <summary>Current cultivar.</summary>
+        private Cultivar cultivarDefinition = null;
+
         /// <summary>Gets the organs.</summary>
         [JsonIgnore]
         public IOrgan[] Organs { get; private set; }
@@ -110,7 +113,7 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.01)                    
+                if (IsAlive && value <= 0.01)
                     EndCrop();  // the plant is dying due to population decline
                 else
                 {
@@ -206,7 +209,7 @@ namespace Models.PMF
         /// <summary>Leaf area index.</summary>
         [Units("m^2/m^2")]
         public double LAI
-        { 
+        {
             get
             {
                 var leaf = Organs.FirstOrDefault(o => o is Leaf) as Leaf;
@@ -275,7 +278,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<IOrgan> organs = new List<IOrgan>();          
+            List<IOrgan> organs = new List<IOrgan>();
             foreach (IOrgan organ in this.FindAllChildren<IOrgan>())
                 organs.Add(organ);
 
@@ -411,7 +414,7 @@ namespace Models.PMF
                 this.Population = SowingData.Population = seeds;
 
             // Find cultivar and apply cultivar overrides.
-            Cultivar cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
+            cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
 
@@ -442,7 +445,7 @@ namespace Models.PMF
             // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-            
+
             if (biomassRemoveType == "Prune" && Pruning != null)
                 Pruning.Invoke(this, new EventArgs());
 
@@ -485,6 +488,8 @@ namespace Models.PMF
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
             summary.WriteMessage(this, "Crop ending", MessageType.Information);
 
+            // Undo cultivar changes.
+            cultivarDefinition.Unapply();
             // Invoke a plant ending event.
             if (PlantEnding != null)
                 PlantEnding.Invoke(this, new EventArgs());
