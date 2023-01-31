@@ -7,7 +7,8 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Linq;
+	using System.Globalization;
+	using System.Linq;
 
     /// <summary>
     /// A post processing model that produces simulation stats.
@@ -180,7 +181,7 @@
             {
                 if (!data.Columns.Contains(fieldName))
                     throw new Exception($"Cannot find field {fieldName} in table {data.TableName}");
-                fieldValues.Add(DataTableUtilities.GetColumnAsStrings(data, fieldName).Distinct().ToList());
+                fieldValues.Add(DataTableUtilities.GetColumnAsStrings(data, fieldName, CultureInfo.InvariantCulture).Distinct().ToList());
             }
 
             var permutations = MathUtilities.AllCombinationsOf<string>(fieldValues.ToArray());

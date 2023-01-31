@@ -178,6 +178,8 @@
             }
             set
             {
+                if (value < 0 || value > 1)
+                    throw new InvalidOperationException($"Invalid value for fraction full: {value}. Must be between [0, 1]");
                 double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 if (FilledFromTop)
                     InitialValues = DistributeWaterFromTop(value, Thickness, RelativeToLL, dul, RelativeToXF);

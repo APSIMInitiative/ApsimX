@@ -172,9 +172,12 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Get a column of values from the specified data table
         /// </summary>
-        static public double[] GetColumnAsDoubles(DataTable table, string columnName)
+        /// <param name="table"></param>
+        /// <param name="columnName"></param>
+        /// <param name="culture">Culture settings used for parsing doubles.</param>
+        static public double[] GetColumnAsDoubles(DataTable table, string columnName, CultureInfo culture)
         {
-            return GetColumnAsDoubles(table, columnName, table.Rows.Count);
+            return GetColumnAsDoubles(table, columnName, table.Rows.Count, culture);
         }
 
         /// <summary>
@@ -183,8 +186,9 @@ namespace APSIM.Shared.Utilities
         /// <param name="table"></param>
         /// <param name="columnName"></param>
         /// <param name="numValues"></param>
+        /// <param name="culture">Culture settings used for parsing doubles.</param>
         /// <returns></returns>
-        static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues)
+        static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, CultureInfo culture)
         {
             double[] values = new double[numValues];
             for (int Row = 0; Row != table.Rows.Count && Row != numValues; Row++)
@@ -192,7 +196,7 @@ namespace APSIM.Shared.Utilities
                 if (table.Rows[Row][columnName].ToString() == "")
                     values[Row] = double.NaN;
                 else
-                    values[Row] = Convert.ToDouble(table.Rows[Row][columnName], System.Globalization.CultureInfo.InvariantCulture);
+                    values[Row] = Convert.ToDouble(table.Rows[Row][columnName], culture);
             }
             return values;
         }
@@ -259,8 +263,9 @@ namespace APSIM.Shared.Utilities
         /// <param name="columnName"></param>
         /// <param name="numValues"></param>
         /// <param name="startRow"></param>
+        /// <param name="culture">Culture settings used to parse string values to double.</param>
         /// <returns></returns>
-        static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow)
+        static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
             double[] values = new double[numValues];
             int index = 0;
@@ -272,7 +277,7 @@ namespace APSIM.Shared.Utilities
                 {
                     try
                     {
-                        values[index] = Convert.ToDouble(table.Rows[Row][columnName], System.Globalization.CultureInfo.InvariantCulture);
+                        values[index] = Convert.ToDouble(table.Rows[Row][columnName], culture);
                     }
                     catch (Exception)
                     {
@@ -315,9 +320,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Get a column of values from the specified data table
         /// </summary>
-        static public string[] GetColumnAsStrings(DataTable table, string columnName)
+        static public string[] GetColumnAsStrings(DataTable table, string columnName, CultureInfo culture)
         {
-            return GetColumnAsStrings(table, columnName, table.Rows.Count);
+            return GetColumnAsStrings(table, columnName, table.Rows.Count, culture);
         }
         
         /// <summary>
@@ -326,12 +331,13 @@ namespace APSIM.Shared.Utilities
         /// <param name="table"></param>
         /// <param name="columnName"></param>
         /// <param name="numValues"></param>
+        /// <param name="culture">The culture settings used to convert to string values.</param>
         /// <returns></returns>
-        static public string[] GetColumnAsStrings(DataTable table, string columnName, int numValues)
+        static public string[] GetColumnAsStrings(DataTable table, string columnName, int numValues, CultureInfo culture)
         {
             string[] values = new string[numValues];
             for (int row = 0; row != table.Rows.Count && row != numValues; row++)
-                values[row] = Convert.ToString(table.Rows[row][columnName], CultureInfo.InvariantCulture);
+                values[row] = Convert.ToString(table.Rows[row][columnName], culture);
             return values;
         }
         
@@ -342,14 +348,15 @@ namespace APSIM.Shared.Utilities
         /// <param name="columnName"></param>
         /// <param name="numValues"></param>
         /// <param name="startRow"></param>
+        /// <param name="culture">Culture settings used to convert to string values.</param>
         /// <returns></returns>
-        static public string[] GetColumnAsStrings(DataTable table, string columnName, int numValues, int startRow)
+        static public string[] GetColumnAsStrings(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
             string[] values = new string[numValues];
             int index = 0;
             for (int Row = startRow; Row != table.Rows.Count && index != numValues; Row++)
             {
-                values[index] = Convert.ToString(table.Rows[Row][columnName], CultureInfo.InvariantCulture);
+                values[index] = Convert.ToString(table.Rows[Row][columnName], culture);
                 index++;
             }
             return values;
