@@ -25,6 +25,9 @@ You can download git <a href="https://git-scm.com/downloads">here</a>.
 
 Instructions on how to use Git to make and submit changes can be found <a href="https://git-scm.com/doc" target="_blank">here</a>
 
+A good practice is to always pull changes from the master APSIM repository before starting any new work. This is important to avoid any problems when it comes time to submit your changes.
+Doing this will ensure you have the most up to date version of the APSIM source files.
+
 ## Cloning the repository
 
 The first thing to do is to clone the <a href="https://github.com/APSIMInitiative/ApsimX" target="_blank">APSIMInitiative/ApsimX</a> repository. This can be done by using a command line terminal to navigate to the directory you want to download the source code to and run the command: 
@@ -33,7 +36,7 @@ The first thing to do is to clone the <a href="https://github.com/APSIMInitiativ
 	
 Alternatively, you can use Visual Studio to clone the repository from the start screen
 
-![Clone repo in visual studio](/images/clone_repo_visual_studio)
+![Clone repo in visual studio](/images/clone_repo_visual_studio.png)
 	
 It is best practice to fork(copy) the APSIM repository and push changes to this before submitting changes to the master version of APSIM. 
 
@@ -54,6 +57,11 @@ You can’t push directly to the main ApsimX repository. Instead, you need to pu
 - Clicking this will create a copy of the APSIM repository into your GitHub account.
 	![fork repo](/images/fork_repo.png)
 - Once you’ve done this you need to add your GitHub ‘remote’ to your git client. We recommend Fork. You can download it <a href="https://git-fork.com/" target="_blank"> here</a>
+	- Alternatively, you can add this as your remote repository by navigating to your APSIM project location on your pc and using the command in a terminal:
+	
+			git remote add https://github.com/ric394/ApsimX.git
+		
+	- Note: replace "ric394" in the above command with your personal GitHub profile username.
 - In the screenshot below, right click on ‘Remotes’ in the tree, click ‘Add Remote’ and fill in a name for your remote (usually your name or your github name) and the URL for the ApsimX repo. Mine looks like:
 	
 	![add remote](/images/add_remote.png)
