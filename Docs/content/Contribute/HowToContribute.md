@@ -42,9 +42,49 @@ It is best practice to fork(copy) the APSIM repository and push changes to this 
 
 See <a href="#to-create-a-fork">"To Create a Fork"</a> section below. 
 
+## Commiting changes to your local repository
+
+If you have files that you have added or modified, you can commit them to git. This process of adding commits keeps track of your progress as you work on files in APSIM.
+
+Commits also create a transparent history of your work that others can follow to understand what you've done and why. Each commit has an associated commit message, which is a description explaining why a particular change was made. Furthermore, each commit is considered a separate unit of change. This lets you roll back changes if a bug is found, or if you decide to head in a different direction.
+
+Commit messages are important, especially since git tracks your changes and then displays them as commits once they're pushed to the server. By writing clear commit messages, you can make it easier for other people to follow along and provide feedback.
+
+Commits are local to your computer only until you do a push to a remote repository. 
+
+To list new/modified files use `git status`
+
+To view the changes from the previous commit, use `git diff`
+
+To undo changes which you don't want to keep, use `git checkout ModifiedFile.txt`
+
+Before you commit your changes you must first add any new or modified files to the index.
+
+```
+git add ModifiedFile.txt
+```
+
+To remove a file from the index, use the reset command:
+
+```
+git reset ModifiedFile.txt
+```
+
+To perform the commit:
+
+```
+git commit -m "Commit message"
+```
+
+For additional options/help, use `git help commit` or `man git`
+
+
+
 ## Working on Apsim
 
-To see how to begin working on APSIM for your unique operating system see <a href="/contribute/compile/" target="_blank">Compile Section</a>
+To see how to begin working on APSIM for your unique operating system see <a href="/contribute/compile/" target="_blank">Compile Section</a>.
+
+An option for working on APSIM is to use Visual Studio 2022. You can be download it <a href="https://visualstudio.microsoft.com/vs/" target="_blank">here</a>.
 
 
 # 3. Contributing your changes
@@ -57,18 +97,29 @@ You can’t push directly to the main ApsimX repository. Instead, you need to pu
 - Clicking this will create a copy of the APSIM repository into your GitHub account.
 	![fork repo](/images/fork_repo.png)
 - Once you’ve done this you need to add your GitHub ‘remote’ to your git client. We recommend Fork. You can download it <a href="https://git-fork.com/" target="_blank"> here</a>
+	
+- In the screenshot below, right click on ‘Remotes’ in the tree, click ‘Add Remote’ and fill in a name for your remote (usually your name or your github name) and the URL for the ApsimX repo. Mine looks like:
+	
+	![add remote](/images/add_remote.png)
+	
 	- Alternatively, you can add this as your remote repository by navigating to your APSIM project location on your pc and using the command in a terminal:
 	
 			git remote add https://github.com/ric394/ApsimX.git
 		
 	- Note: replace "ric394" in the above command with your personal GitHub profile username.
-- In the screenshot below, right click on ‘Remotes’ in the tree, click ‘Add Remote’ and fill in a name for your remote (usually your name or your github name) and the URL for the ApsimX repo. Mine looks like:
 	
-	![add remote](/images/add_remote.png)
-	
-- 'ric394' is my github user name. You can then push to your remote (rather than origin). Click push and change ‘remote’ drop down to your newly created one. Mine looks like:
+- You can then push to your remote (rather than origin). Click push and change ‘remote’ drop down to your newly created one. Mine looks like:
 	
 	![push to remote](/images/push_to_remote.png)
+	
+	- Alternatively, you can push to your remote repository by navigating to your local APSIM project directory and use the command below in a terminal:
+	
+			git push ric394 master
+			
+		- replace "ric394" with your remote repository name.
+		- replace "master" with the branch name you'd like to push the changes to.
+	
+	
 	
 - After pushing you need to create a pull request. Right click on your ‘master’ branch and choose create pull request:
 	
@@ -78,7 +129,7 @@ You can’t push directly to the main ApsimX repository. Instead, you need to pu
 
 	![Create pull request](/images/create_pull_request.png)
 	
-	- You can reference issue numbers here. 
+	- You can reference issue numbers here. Each pull request must contain a issue number.
 	
 	- It is also good to add some extra comments in the top box that explains what is in the pull request e.g. New cotton validation data from site xyz. 
 	
