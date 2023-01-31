@@ -43,6 +43,7 @@ Instructions on how to use Git to make and submit changes can be found <a href="
 
 A good practice is to always pull changes from the master APSIM repository before starting any new work. This is important to avoid any problems when it comes time to submit your changes.
 Doing this will ensure you have the most up to date version of the APSIM source files.
+![Pulling changes from master image](/images/pull_master_changes.png)
 
 
 ## Commiting changes to your local repository
@@ -54,6 +55,22 @@ Commits also create a transparent history of your work that others can follow to
 Commit messages are important, especially since git tracks your changes and then displays them as commits once they're pushed to the server. By writing clear commit messages, you can make it easier for other people to follow along and provide feedback.
 
 Commits are local to your computer only until you do a push to a remote repository. 
+
+## Committing using Fork
+
+To view the changes you've made that are ready to be committed:
+ 
+- Select Local Changes.
+- Next highlight any files in the unstaged list that you would like to commit and click 'stage'.
+![committing changes](/images/committing_changes.png)
+- The files will then move to the 'Staged' section.
+![Staged changes](/images/staged_changes.png)
+- Next include a 'Commit Subject' and detailed 'Description' describing the changes you've made. This will benefit anyone reviewing your changes. 
+- To commit the changes click 'confirm'.
+![committing changes](/images/confirm_commit.png)
+
+
+## Committing using the command line interface
 
 To list new/modified files use `git status`
 
@@ -133,8 +150,18 @@ You can’t push directly to the main ApsimX repository. Instead, you need to pu
 	![Create pull request](/images/create_pull_request.png)
 	
 	- You can reference issue numbers here. Each pull request must contain a issue number.
+		- For example, if this pull request resolves an issue, type:
+		
+				resolves #1234
+			
+
+		- However, if this pull request involves an issue but does not resolve the issue, type: 
+		
+				working on #1234
+				
+				
 	
-	- It is also good to add some extra comments in the top box that explains what is in the pull request e.g. New cotton validation data from site xyz. 
+	- It is also good to add some extra comments in the top box that explain what is in the pull request e.g. New cotton validation data from site xyz. 
 	
 	- Once done, click the ‘Create Pull Request’ button at the bottom of the browser window. 
 	
