@@ -71,11 +71,9 @@
         }
 
         /// <summary>
-        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
-        /// back to default state.
+        /// Undoes cultivar changes, if any.
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        public void Unapply()
         {
             if (undos != null)
             {
@@ -83,6 +81,16 @@
                 relativeToModel = null;
                 undos = null;
             }
+        }
+
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Unapply();
         }
 
         /// <summary>Document the model.</summary>
