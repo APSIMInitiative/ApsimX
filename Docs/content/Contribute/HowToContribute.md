@@ -25,16 +25,23 @@ You can download git <a href="https://git-scm.com/downloads">here</a>.
 
 Instructions on how to use Git to make and submit changes can be found <a href="https://git-scm.com/doc" target="_blank">here</a>
 
-It is best practice to fork(make a copy) the APSIM repository and commit changes to this before submitting changes to the master version of APSIM. 
+## Cloning the repository
+
+The first thing to do is to clone the <a href="https://github.com/APSIMInitiative/ApsimX" target="_blank">APSIMInitiative/ApsimX</a> repository. This can be done by using a command line terminal to navigate to the directory you want to download the source code to and run the command: 
+
+	git clone https://github.com/APSIMInitiative/ApsimX.git
+	
+Alternatively, you can use Visual Studio to clone the repository from the start screen
+
+![Clone repo in visual studio](/images/clone_repo_visual_studio)
+	
+It is best practice to fork(copy) the APSIM repository and push changes to this before submitting changes to the master version of APSIM. 
 
 See <a href="#to-create-a-fork">"To Create a Fork"</a> section below. 
 
 ## Working on Apsim
 
 To see how to begin working on APSIM for your unique operating system see <a href="/contribute/compile/" target="_blank">Compile Section</a>
-
-
-
 
 
 # 3. Contributing your changes
