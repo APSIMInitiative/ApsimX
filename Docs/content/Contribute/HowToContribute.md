@@ -17,16 +17,11 @@ To create an account head to <a href="https://www.github.com/" target="_blank">G
 
 ## Download and install Git
 
+NOTE: This is only required if you choose not to use Fork for version control.
+
 Git is used to get the APSIM source code and to keep it up to date.
 
 You can download git <a href="https://git-scm.com/downloads">here</a>.
-
-## Using Git to make changes
-
-Instructions on how to use Git to make and submit changes can be found <a href="https://git-scm.com/doc" target="_blank">here</a>
-
-A good practice is to always pull changes from the master APSIM repository before starting any new work. This is important to avoid any problems when it comes time to submit your changes.
-Doing this will ensure you have the most up to date version of the APSIM source files.
 
 ## Cloning the repository
 
@@ -41,6 +36,14 @@ Alternatively, you can use Visual Studio to clone the repository from the start 
 It is best practice to fork(copy) the APSIM repository and push changes to this before submitting changes to the master version of APSIM. 
 
 See <a href="#to-create-a-fork">"To Create a Fork"</a> section below. 
+
+## Using Git to make changes
+
+Instructions on how to use Git to make and submit changes can be found <a href="https://git-scm.com/doc" target="_blank">here</a>
+
+A good practice is to always pull changes from the master APSIM repository before starting any new work. This is important to avoid any problems when it comes time to submit your changes.
+Doing this will ensure you have the most up to date version of the APSIM source files.
+
 
 ## Commiting changes to your local repository
 
