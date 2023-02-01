@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
@@ -27,16 +27,16 @@
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="4.4.0" />
-    <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="1.3.43" />
-    <PackageReference Include="MigraDocCore.Rendering" Version="1.3.43" />
-    <PackageReference Include="PdfSharpCore" Version="1.3.43" />
+    <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="1.3.45" />
+    <PackageReference Include="MigraDocCore.Rendering" Version="1.3.45" />
+    <PackageReference Include="PdfSharpCore" Version="1.3.45" />
 
     <EmbeddedResource Include="Resources\**" />
     <None Remove="Resources\**" />
