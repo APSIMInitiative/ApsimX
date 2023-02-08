@@ -10,17 +10,21 @@ To make a change to the website, modify or create new markdown files, commit the
 
 Before creating a pull request however, it might be a good idea to preview the changes you've made to the website, to ensure they look the way you intend.
 
-1. Download hugo from [here](https://github.com/gohugoio/hugo/releases)
+1. Download hugo from [here](https://github.com/APSIMInitiative/ApsimX/Docs/Hugo/Hugo.zip)
 
-2. (Optional) add the hugo binary to PATH
+2. Extract and place extracted folder where you normally install your programs for instance: `C:\Program Files`
+
+3. (Optional) add the hugo binary to PATH
 
     You will need to run hugo from a terminal. This is more convenient if the hugo binary is on PATH.
 
-3. Open a terminal, navigate to ApsimX/docs, and run `hugo server`:
+4. Open a terminal, navigate to ApsimX/docs, and run `hugo server`:
 
     ```
     cd /path/to/ApsimX/docs
     hugo server
     ```
 
-4. Open a web browser and navigate to https://localhost:1313
+5. Open a web browser and navigate to https://localhost:1313
+
+6. Note: To have the new changes made to the live site, simply create a pull request, making sure to include a `resolves #1234` comment (you may have to create a new issue in GitHub prior to doing this). This ensures changes are updated by Netlify when the pull request is merged.
