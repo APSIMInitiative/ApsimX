@@ -172,7 +172,8 @@
         {
             get
             {
-                double[] dulMM = SoilUtilities.MapConcentration(Physical.DULmm, Physical.Thickness, Thickness, Physical.DULmm.Last());
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                double[] dulMM = MathUtilities.Multiply(dul, Thickness);
                 return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
                                                    MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
             }

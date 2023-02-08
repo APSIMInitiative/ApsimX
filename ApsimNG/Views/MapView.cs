@@ -253,12 +253,12 @@
                         while (countryLayer.Busy && nSleeps++ < 700)
                             System.Threading.Thread.Sleep(10);
                     }
-                } 
+                }
+                osmLayer.DataChanged -= OsmLayer_DataChanged;
                 Mapsui.Rendering.Skia.MapRenderer renderer = new Mapsui.Rendering.Skia.MapRenderer();
                 MemoryStream stream = renderer.RenderToBitmapStream(viewport, map.Layers, map.BackColor, 1);
                 stream.Seek(0, SeekOrigin.Begin);
-                image.Pixbuf = new Gdk.Pixbuf(stream);
-                osmLayer.DataChanged -= OsmLayer_DataChanged;
+                InvokeOnMainThread(delegate { image.Pixbuf = new Gdk.Pixbuf(stream); });
             }
         }
 
