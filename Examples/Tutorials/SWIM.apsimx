@@ -1920,7 +1920,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\Users\\RIC394\\source\\repos\\ric394\\ApsimX\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -3029,7 +3029,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\Users\\RIC394\\source\\repos\\ric394\\ApsimX\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -4395,7 +4395,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\Users\\RIC394\\source\\repos\\ric394\\ApsimX\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -5761,7 +5761,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\Users\\RIC394\\source\\repos\\ric394\\ApsimX\\Tests\\Validation\\SWIM\\lincoln.met",
+              "FileName": "%root%\\Tests\\Validation\\SWIM\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
