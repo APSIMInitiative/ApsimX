@@ -319,18 +319,16 @@ namespace Models.CLEM.Activities
 
                         if (MathUtilities.IsLessThan(crudeProteinSupply, crudeProteinRequired))
                         {
-                            double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
+                            double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired); // half-linear
                             //TODO: add min protein to parameters
                             ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-                            ind.MetabolicIntake *= ratioSupplyRequired;
+                            ind.MetabolicIntake *= ratioSupplyRequired; // reduces intake proportionally as protein drops below CP required
                         }
-
-                        // old. I think IAT
-                        //double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                        // when discarding intake can we be specific and hang onto N?
                         ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
                     }
                     else
