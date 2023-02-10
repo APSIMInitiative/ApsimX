@@ -34,6 +34,11 @@
         private ComboBox combobox1;
 
         /// <summary>
+        /// The scrollbar for the combobox
+        /// </summary>
+        private Scrollbar scrollbar1;
+
+        /// <summary>
         /// The list model for the combobox
         /// </summary>
         private ListStore comboModel = new ListStore(typeof(string));
@@ -52,6 +57,8 @@
         public DropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
+            scrollbar1 = new Scrollbar(Orientation.Horizontal, null);
+            combobox1.Add(scrollbar1);
             SetupCombo();
         }
 
