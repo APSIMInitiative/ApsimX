@@ -417,8 +417,8 @@ namespace Models.CLEM.Activities
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
             
-            // previously ind.MetabolicIntake / 30.4 - sure this was mistake
-            double intakeDaily = ind.Intake / 30.4;
+            // ind.MetabolicIntake is the inake received adjusted by any crude protein shortfall in AnimalWeightGain()
+            double intakeDaily = ind.MetabolicIntake / 30.4;
 
             // Sme 1 for females and castrates
             double sme = 1;
