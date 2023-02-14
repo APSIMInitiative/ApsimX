@@ -57,8 +57,12 @@
         public DropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
-            scrollbar1 = new Scrollbar(Orientation.Horizontal, null);
+            scrollbar1 = new Scrollbar(Orientation.Vertical, null);
+            //combobox1.Add(scrollbar1);
             combobox1.Add(scrollbar1);
+            scrollbar1.Show();
+
+
             SetupCombo();
         }
 
