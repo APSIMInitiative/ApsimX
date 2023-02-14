@@ -162,6 +162,10 @@ namespace Models.AgPasture
         /// <summary></summary>
         [Separator("Urine and Dung.")]
 
+        [Description("Fraction of defoliated Biomass going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
+        public double[] FractionDefoliatedBiomassToSoil { get; set; } = new double[] { 1 };
+
+        /// <summary></summary>
         [Description("Fraction of defoliated N going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
         public double[] FractionDefoliatedNToSoil { get; set; }   
 
@@ -386,7 +390,10 @@ namespace Models.AgPasture
                 simpleGrazingFrequency = Convert.ToInt32(SimpleGrazingFrequencyString);
 
             if (FractionDefoliatedNToSoil == null || FractionDefoliatedNToSoil.Length == 0)
-                FractionDefoliatedNToSoil = new double[] { 0 };
+                FractionDefoliatedNToSoil = new double[] { 1};
+
+            if (FractionDefoliatedBiomassToSoil == null || FractionDefoliatedBiomassToSoil.Length == 0)
+                FractionDefoliatedBiomassToSoil = new double[] { 0 };
 
             // Initialise the days since grazing.
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -662,7 +669,8 @@ namespace Models.AgPasture
                 double returnedToSoilN = 0;
                 foreach (var grazedForage in grazedForages)
                 {
-                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
+                    returnedToSoilWt += GetValueFromMonthArray(FractionDefoliatedBiomassToSoil) *
+                                        (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
                     returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
                 }
 

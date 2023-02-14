@@ -139,8 +139,6 @@ namespace Models.CLEM.Activities
             // calculate daily potential intake for the selected individual/cohort
             double standardReferenceWeight = ind.StandardReferenceWeight;
 
-            // now calculated in Ruminant
-            // ind.NormalisedAnimalWeight = standardReferenceWeight - ((1 - ind.BreedParams.SRWBirth) * standardReferenceWeight) * Math.Exp(-(ind.BreedParams.AgeGrowthRateCoefficient * (ind.Age * 30.4)) / (Math.Pow(standardReferenceWeight, ind.BreedParams.SRWGrowthScalar)));
             double liveWeightForIntake = ind.NormalisedAnimalWeight;
             // now performed at allocation of weight in Ruminant
             if (MathUtilities.IsLessThan(ind.HighWeight, ind.NormalisedAnimalWeight))
@@ -175,8 +173,6 @@ namespace Models.CLEM.Activities
                     // Reference: SCA Metabolic LWTs
                     // restored in v112 of NABSA for weaner animals
                     potentialIntake = ind.BreedParams.IntakeCoefficient * standardReferenceWeight * (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(standardReferenceWeight, 0.75)) * (ind.BreedParams.IntakeIntercept - (Math.Pow(liveWeightForIntake, 0.75) / Math.Pow(standardReferenceWeight, 0.75)));
-                    // older individual check. previous method before adding calulation for weaners after discussions with Cam McD
-                    //double prevint = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
                 else // 12month+ weaned individuals
                 {
@@ -310,7 +306,6 @@ namespace Models.CLEM.Activities
                         // Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
                         // A Ash stated that the 75% limit is no longer required and DMD above 75% is possible even if unlikely.
 
-                        // TODO: Check equation. NABSA doesn't include the 0.9
                         // Crude protein required generally 130g per kg of digestable feed.
                         double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.DietDryMatterDigestibility / 100;
 
@@ -324,18 +319,16 @@ namespace Models.CLEM.Activities
 
                         if (MathUtilities.IsLessThan(crudeProteinSupply, crudeProteinRequired))
                         {
-                            double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
+                            double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired); // half-linear
                             //TODO: add min protein to parameters
                             ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-                            ind.MetabolicIntake *= ratioSupplyRequired;
+                            ind.MetabolicIntake *= ratioSupplyRequired; // reduces intake proportionally as protein drops below CP required
                         }
-
-                        // old. I think IAT
-                        //double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                        // when discarding intake can we be specific and hang onto N?
                         ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
                     }
                     else
@@ -366,8 +359,8 @@ namespace Models.CLEM.Activities
                     totalMethane += methane;
 
                     // grow wool and cashmere
-                    ind.Wool += ind.BreedParams.WoolCoefficient * ind.Intake;
-                    ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.Intake;
+                    ind.Wool += ind.BreedParams.WoolCoefficient * ind.MetabolicIntake;
+                    ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.MetabolicIntake;
                 }
 
                 // alert user to unfed animals in the month as this should not happen
@@ -422,8 +415,8 @@ namespace Models.CLEM.Activities
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
             
-            // previously ind.MetabolicIntake / 30.4 - sure this was mistake
-            double intakeDaily = ind.Intake / 30.4;
+            // ind.MetabolicIntake is the inake received adjusted by any crude protein shortfall in AnimalWeightGain()
+            double intakeDaily = ind.MetabolicIntake / 30.4;
 
             // Sme 1 for females and castrates
             double sme = 1;
@@ -434,7 +427,7 @@ namespace Models.CLEM.Activities
             double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
             // Reference: Nutrient Requirements of domesticated ruminants (p7)
             double energyMetabolic = energyDiet * 0.81;
-            double energyMetablicFromIntake = energyMetabolic * intakeDaily;
+            double energyMetabolicFromIntake = energyMetabolic * intakeDaily;
 
             double km = ind.BreedParams.EMaintEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EMaintEfficiencyIntercept;
             // Reference: SCA p.49
@@ -469,8 +462,8 @@ namespace Models.CLEM.Activities
                 energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.Age == 0) ? 0.1 : ind.Age)));
-                ind.EnergyBalance = energyMilkConsumed + energyMetablicFromIntake - energyMaintenance;
-                ind.EnergyIntake = energyMilkConsumed + energyMetablicFromIntake;
+                ind.EnergyBalance = energyMilkConsumed + energyMetabolicFromIntake - energyMaintenance;
+                ind.EnergyIntake = energyMilkConsumed + energyMetabolicFromIntake;
                 ind.EnergyFetus = 0;
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = 0;
@@ -527,10 +520,10 @@ namespace Models.CLEM.Activities
                 // Reference: SCA p.24
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
                 // 0.000082 is -0.03 Age in Years/365 for days 
-                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
-                ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFetus; // milk will be zero for non lactating individuals.
+                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
+                ind.EnergyBalance = energyMetabolicFromIntake - energyMaintenance - energyMilk - energyFetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
-                ind.EnergyIntake = energyMetablicFromIntake;
+                ind.EnergyIntake = energyMetabolicFromIntake;
                 ind.EnergyFetus = energyFetus;
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = energyMilk;
@@ -556,17 +549,20 @@ namespace Models.CLEM.Activities
 
             ind.PreviousWeight = ind.Weight;
 
-            double newWt = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
-            double mxwt = ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual;
-            newWt = Math.Min(newWt, mxwt);
-            ind.Weight = newWt;
+            //double newWt = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
+            //double maxwt = ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual;
+            //newWt = Math.Min(newWt, maxwt);
+            ind.Weight = Math.Min(
+                Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange),
+                ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual
+                );
             
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
             // methane is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
             // methane is methaneProduced / 55.28 * 1000; // grams per day
             
-            // Charmely et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
+            // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
         }
 
