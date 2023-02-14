@@ -119,11 +119,14 @@
             }
             set
             {
-                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
-                if (FilledFromTop)
-                    InitialValues = DistributeAmountWaterFromTop(value, Physical.Thickness, RelativeToLL, dul, RelativeToXF);
-                else
-                    InitialValues = DistributeAmountWaterEvenly(value, Physical.Thickness, RelativeToLL, dul);
+                if (Physical != null)
+                {
+                    double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                    if (FilledFromTop)
+                        InitialValues = DistributeAmountWaterFromTop(value, Physical.Thickness, RelativeToLL, dul, RelativeToXF);
+                    else
+                        InitialValues = DistributeAmountWaterEvenly(value, Physical.Thickness, RelativeToLL, dul);
+                }
             }
         }
 
