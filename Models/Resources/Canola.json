@@ -491,7 +491,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.SimpleLeafAppearancePhase, Models",
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FloralInitiation",
               "End": "GreenBud",
               "Name": "BudDevelopment",
@@ -499,19 +499,38 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].FinalLeafNumber",
-                  "Name": "TargetLeafNumber",
+                  "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
+                  "Name": "Progression",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].NodeNumber",
-                  "Name": "CurrentLeafNumber",
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "[Leaf].FinalLeafNumber - [FloralInitiationNodeNumber]",
+                  "Name": "Target",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.HoldFunction, Models",
+                  "WhenToHold": "FloralInitiation",
+                  "Name": "FloralInitiationNodeNumber",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].NodeNumber",
+                      "Name": "NodeNumber",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -2300,7 +2319,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Plant].SowingData.Population",
+                          "VariableName": "[Canola].SowingData.Population",
                           "Name": "Population",
                           "ResourceName": null,
                           "Children": [],
@@ -2876,7 +2895,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].SowingData.Population",
+                      "VariableName": "[Canola].SowingData.Population",
                       "Name": "PlantNumber",
                       "ResourceName": null,
                       "Children": [],
@@ -3569,7 +3588,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Plant].SowingData.Population",
+                                  "VariableName": "[Canola].SowingData.Population",
                                   "Name": "PlantNumber",
                                   "ResourceName": null,
                                   "Children": [],
