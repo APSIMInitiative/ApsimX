@@ -171,6 +171,12 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Total N2O lost to the atmosphere for each patch.</summary>
         public double[] DenitN2OEachPatch { get { return patches.Select(patch => patch.Nutrient.N2Oatm.Sum()).ToArray(); } }
 
+        /// <summary>Total C for each patch</summary>
+        public double[] TotalCEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalC.Sum()).ToArray(); } }
+
+        /// <summary>Total N for each patch</summary>
+        public double[] TotalNEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalN.Sum()).ToArray(); } }
+
         /// <summary>Calculate actual decomposition</summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
