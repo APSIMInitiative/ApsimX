@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 156,
+  "ExplorerWidth": 524,
+  "Version": 159,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -596,6 +596,73 @@
             }
           ],
           "Name": "Irrigate to crop PAW at sowing",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing System;\r\nusing System.Linq;\nusing System.Diagnostics;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] ISummary summary;\n        [Link] Physical physical;\n        [Link] Water water;\n    \r\n        [Separator(\"All soils\")]\n\r\n        [Description(\"Start of irrigation season (dd-mmm)\")] \r\n        public string IrrigStart { get; set; }\r\n\n        [Description(\"End of irrigation season (dd-mmm)\")] \r\n        public string IrrigEnd { get; set; }\r\n\r\n        [Description(\"Enter the depth to which water deficit is computed (mm)\")] \r\n        public double SoilDepth { get; set; }\r\n        \r\n        [Description(\"PAW below which soil is considered 'shallow' (mm)\")] \r\n        public double CritPAWForShallow { get; set; }\r\n\n        [Description(\"Amount of rainfall over the last 3 days to cause pause to irrigator (mm)\")] \r\n        public double CritRainToPause { get; set; }\r\n\r\n        [Description(\"Number of days to pause irrigator after critical delay (days)\")] \r\n        public double DaysToPauseOnCritRain { get; set; }\n        \n        [Separator(\"Shallow soils\")]\n        \n        [Description(\"Irrigation return period for shallow soils (days)\")] \r\n        public double IrrigReturnShallow { get; set; }\n\n        [Description(\"Effective irrigation amount for shallow soils (mm)\")] \r\n        public double IrrigAmtShallow { get; set; }\n\n        [Description(\"Percentage of PAW at which to irrigate shallow soils (%)\")] \r\n        public double PercPAWIrrigDeficitShallow { get; set; }\n\n        [Description(\"Irrigation efficiency for shallow soils (%)\")] \r\n        public double IrrigEffShallow { get; set; }\n\n        [Separator(\"Deep soils\")]\n        \n        [Description(\"Irrigation return period for deep soils (days)\")] \r\n        public double IrrigReturnDeep { get; set; }\n\n        [Description(\"Effective irrigation amount for deep soils (mm)\")] \r\n        public double IrrigAmtDeep { get; set; }\n\n        [Description(\"Percentage of PAW at which to irrigate deep soils (%)\")] \r\n        public double IrrigDeficitDeep { get; set; }\n\n        [Description(\"Irrigation efficiency for deep soils (%)\")] \r\n        public double IrrigEffDeep { get; set; }\n\n\n\t    // Output variables\n\t\t[Units(\"mm\")]\n\t\tpublic double TodayDeficit {get; set; }\n\t\t \n\t\t[Units(\"mm\")]\n\t\tpublic double TodayDeficit_nve {get; set; }\n\t\t \n\t\t[Units(\"\")]\n\t\tpublic double IrrigDay {get; set; }\n\t\t \n\t\t[Units(\"\")]\n\t\tpublic double SoilPAW {get; set; }\n\t\t \n\t\t[Units(\"\")]\n\t\tpublic double IrrigDeficit {get; set; }\n\t\t\n\t\t[Units(\"\")]\n\t\tpublic double IrrigReturn {get; set; }\n\t\t\n\t\t[Units(\"\")]\n\t\tpublic double IrrigAmt {get; set; }\n\t\t\n\t\t[Units(\"\")]\n\t\tpublic double IrrigEff {get; set; }\n\t\t\n\t\t[Units(\"mm\")]\n\t\tpublic double Rain3 {get; set; }\n\t\t\n\t\t[Units(\"mm\")]\n\t\tpublic double[] Rain_3 {get; set; } = new double[3];\n\t\t\n\t\t[Units(\"\")]\n\t\tpublic double Days2Pause {get; set; }\n\n \t\t// private variables\n\t\tprivate double irrigDeficitShallow {get; set; }\n\n        \n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n\t\t    IrrigDay = 5000;  // so will reset to 1 on first day\n\n\t\t    Rain3 = 0.0;\n\t\t    Rain_3[0] = 0.0; Rain_3[1] = 0.0; Rain_3[2] = 0.0;\n\n\t\t    SoilPAW = 0.0;\n\t\t    double mySoilDepth = 0;\n\t\t    for (int z = 0; z <= physical.Thickness.Length - 1; z++)\n\t\t    {\n\t\t        mySoilDepth = mySoilDepth + physical.Thickness[z];\n\t\t        if (mySoilDepth <= SoilDepth)\n\t\t            SoilPAW = SoilPAW + physical.DULmm[z] - physical.LL15mm[z];\n\t\t    }\n\t\t    if (SoilPAW <= CritPAWForShallow)\n\t\t    {\n\t\t        IrrigDeficit = PercPAWIrrigDeficitShallow / (double)100 * SoilPAW;\n\t\t        IrrigReturn = IrrigReturnShallow;\n\t\t        IrrigAmt = IrrigAmtShallow;\n\t\t        IrrigEff = IrrigEffShallow;\n\t\t        summary.WriteMessage(this, \"Soil is considered to be shallow \" + CritPAWForShallow + \" \" + SoilPAW, MessageType.Information);\n\t\t    }\n\t\t    else\n\t\t    {\n\t\t        IrrigDeficit = IrrigDeficitDeep;\n\t\t        IrrigReturn = IrrigReturnDeep;\n\t\t        IrrigAmt = IrrigAmtDeep;\n\t\t        IrrigEff = IrrigEffDeep;\n\t\t        summary.WriteMessage(this, \"Soil is considered to be deep\", MessageType.Information);\n\t\t    }\n\n\t\t    summary.WriteMessage(this, $\"Irrigation critical deficit (mm): {IrrigDeficit}\", MessageType.Information);\n\t\t    summary.WriteMessage(this, $\"        Irrigation return (days): {IrrigReturn}\", MessageType.Information);\n\t\t    summary.WriteMessage(this, $\"   Irrigation pumped amount (mm): {IrrigAmt}\", MessageType.Information);\n\t\t    summary.WriteMessage(this, $\"       Irrigation efficiency (%): {IrrigEff}\", MessageType.Information);\n        }\n        \n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\t\t    Rain_3[2] = Rain_3[1];\n\t\t    Rain_3[1] = Rain_3[0];\n\t\t    Rain_3[0] = weather.Rain;\n\t\t    Rain3 = Rain_3[0] + Rain_3[1] + Rain_3[2];\n\t\t    if (Rain3 >= CritRainToPause)\n\t\t        Days2Pause = DaysToPauseOnCritRain;\n\t\t    else\n\t\t        Days2Pause = Days2Pause - 1;\n\n\t\t    TodayDeficit = 0.0;\n\t\t    SoilPAW = 0.0;\n\t\t    double mySoilDepth = 0;\n\n\t\t    for (int z = 0; z <= physical.Thickness.Length - 1; z++)\n\t\t    {\n\t\t        mySoilDepth = mySoilDepth + physical.Thickness[z];\n\t\t        if (mySoilDepth <= SoilDepth)\n\t\t        {\n\t\t            SoilPAW = SoilPAW + physical.DULmm[z] - physical.LL15mm[z];\n\t\t            TodayDeficit = TodayDeficit + physical.DULmm[z] - Math.Min(physical.DULmm[z], water.MM[z]);\n\t\t        }\n\t\t    }\n\t\t    TodayDeficit_nve = -1 * TodayDeficit;\n\n\t\t    if (DateUtilities.WithinDates(IrrigStart, clock.Today, IrrigEnd))\n\t\t    {\n\t\t        if (SoilPAW <= CritPAWForShallow)\n\t\t        {\n\t\t            IrrigDeficit = PercPAWIrrigDeficitShallow / 100 * SoilPAW;\n\t\t            IrrigReturn = IrrigReturnShallow;\n\t\t            IrrigAmt = IrrigAmtShallow;\n\t\t            IrrigEff = IrrigEffShallow;\n\t\t        }\n\t\t        else\n\t\t        {\n\t\t            IrrigDeficit = IrrigDeficitDeep;\n\t\t            IrrigReturn = IrrigReturnDeep;\n\t\t            IrrigAmt = IrrigAmtDeep;\n\t\t            IrrigEff = IrrigEffDeep;\n\t\t        }\n\n\t\t        if (Days2Pause < 0.5)\n\t\t        {\n\t\t            IrrigDay = IrrigDay + 1;\n\t\t            if (IrrigDay > IrrigReturn)\n\t\t                IrrigDay = 1;// and day = 1 is when the irrigation happens\n\n\t\t            if (TodayDeficit >= IrrigDeficit)\n\t\t            {\n\t\t                if (IrrigDay == 1)\n                            irrigation.Apply(amount: IrrigAmt / (IrrigEff / 100.0));\r\n\t\t            }\n\t\t        }\n\t\t    }\n\t    }\t\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "IrrigStart",
+              "Value": "1-sep"
+            },
+            {
+              "Key": "IrrigEnd",
+              "Value": "30-apr"
+            },
+            {
+              "Key": "SoilDepth",
+              "Value": "500"
+            },
+            {
+              "Key": "CritPAWForShallow",
+              "Value": "60"
+            },
+            {
+              "Key": "CritRainToPause",
+              "Value": "30"
+            },
+            {
+              "Key": "DaysToPauseOnCritRain",
+              "Value": "3"
+            },
+            {
+              "Key": "IrrigReturnShallow",
+              "Value": "2"
+            },
+            {
+              "Key": "IrrigAmtShallow",
+              "Value": "10"
+            },
+            {
+              "Key": "IrrigEffShallow",
+              "Value": "100"
+            },
+            {
+              "Key": "IrrigReturnDeep",
+              "Value": "4"
+            },
+            {
+              "Key": "IrrigAmtDeep",
+              "Value": "20"
+            },
+            {
+              "Key": "IrrigDeficitDeep",
+              "Value": "25"
+            },
+            {
+              "Key": "IrrigEffDeep",
+              "Value": "100"
+            },
+            {
+              "Key": "PercPAWIrrigDeficitShallow",
+              "Value": "0"
+            }
+          ],
+          "Name": "Centre Pivot",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
