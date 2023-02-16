@@ -549,30 +549,6 @@
             this.view.StartPage2.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
 
-        /// <summary>
-        /// Event handler invoked when user clicks on 'Standard toolbox'.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        public void OnStandardToolboxClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.StandardToolbox.apsimx");
-                StreamReader streamReader = new StreamReader(s);
-                bool onLeftTabControl = true;
-                if (sender != null)
-                {
-                    onLeftTabControl = this.view.IsControlOnLeft(sender);
-                }
-
-                this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
 
         /// <summary>
         /// Gets the inner-most exception of an exception.
@@ -603,10 +579,6 @@
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
-            startPage.AddButton(
-                                "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
-                                          this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",

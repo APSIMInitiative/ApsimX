@@ -109,7 +109,26 @@
 
         /// <summary>Plant available water (mm).</summary>
         [Units("mm")]
-        public double InitialPAWmm => InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+        public double InitialPAWmm
+        {
+            get
+            {
+                if (InitialValues == null)
+                    return 0;
+                return MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum();
+            }
+            set
+            {
+                if (Physical != null)
+                {
+                    double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                    if (FilledFromTop)
+                        InitialValues = DistributeAmountWaterFromTop(value, Physical.Thickness, RelativeToLL, dul, RelativeToXF);
+                    else
+                        InitialValues = DistributeAmountWaterEvenly(value, Physical.Thickness, RelativeToLL, dul);
+                }
+            }
+        }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
         [Units("mm/mm")]
@@ -172,7 +191,8 @@
         {
             get
             {
-                double[] dulMM = SoilUtilities.MapConcentration(Physical.DULmm, Physical.Thickness, Thickness, Physical.DULmm.Last());
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                double[] dulMM = MathUtilities.Multiply(dul, Thickness);
                 return InitialValues == null ? 0 : MathUtilities.Subtract(InitialValuesMM, RelativeToLLMM).Sum() /
                                                    MathUtilities.Subtract(dulMM, RelativeToLLMM).Sum();
             }
@@ -279,10 +299,24 @@
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
         public static double[] DistributeWaterFromTop(double fractionFull, double[] thickness, double[] ll, double[] dul, double[] xf)
         {
+            
+            double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
+            double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
+            return DistributeAmountWaterFromTop(amountWater, thickness, ll, dul, xf);
+        }
+
+        /// <summary>Distribute amount of water from the top of the profile.</summary>
+        /// <param name="amountWater">The amount of water to fill the profile to.</param>
+        /// <param name="thickness">Layer thickness (mm).</param>
+        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
+        /// <param name="dul">Drained upper limit.</param>
+        /// <param name="xf">XF.</param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        private static double[] DistributeAmountWaterFromTop(double amountWater, double[] thickness, double[] ll, double[] dul, double[] xf)
+        {
             double[] sw = new double[thickness.Length];
             double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
 
-            double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
             for (int layer = 0; layer < thickness.Length; layer++)
             {
                 if (amountWater >= 0 && xf[layer] == 0)
@@ -317,6 +351,21 @@
                 sw[layer] = (fractionFull * (dul[layer] - ll[layer])) + ll[layer];
 
             return sw;
+        }
+
+        /// <summary>
+        /// Calculate a layered soil water using an amount of water and evenly distributed. Units: mm/mm
+        /// </summary>
+        /// <param name="amountWater">The amount of water to fill the profile to.</param>
+        /// <param name="thickness">Layer thickness (mm).</param>
+        /// <param name="ll">Relative ll (ll15 or crop ll).</param>
+        /// <param name="dul">Drained upper limit.</param>
+        /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
+        public static double[] DistributeAmountWaterEvenly(double amountWater, double[] thickness, double[] ll, double[] dul)
+        {
+            double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
+            double fractionFull = MathUtilities.Divide(amountWater, MathUtilities.Sum(pawcmm), 0);
+            return DistributeWaterEvenly(fractionFull, ll, dul);
         }
 
         /// <summary>

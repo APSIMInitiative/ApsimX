@@ -857,7 +857,7 @@ namespace Models.WaterModel
         {
             return new TabularData(Name, new TabularData.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly:true),
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
                 new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
                 new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
             });
