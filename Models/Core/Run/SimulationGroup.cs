@@ -214,6 +214,14 @@
                     if (duplicates != null && duplicates.Any())
                         throw new Exception($"Duplicate simulation names found: {string.Join(", ", duplicates)}");
 
+                    // Check for duplicate soils
+                    foreach (var zone in rootModel.FindAllDescendants<Zone>().Where(z => z.Enabled))
+                    {
+                        bool duplicateSoils = zone.FindAllChildren<Models.Soils.Soil>().Where(s => s.Enabled).Count() > 1;
+                        if (duplicateSoils)
+                            throw new Exception($"Duplicate soils found in zone: {zone.FullPath}");
+                    }
+
                     // Publish BeginRun event.
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });

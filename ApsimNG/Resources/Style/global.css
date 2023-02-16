@@ -21,7 +21,6 @@ progressbar.fat-progress-bar progress, progressbar.fat-progress-bar trough {
 	padding: 5px;
 }
 
-/* Adds scroll bar to comboboxes. */
-combobox{
+combobox {
 	-GtkComboBox-appears-as-list: true;
 }
