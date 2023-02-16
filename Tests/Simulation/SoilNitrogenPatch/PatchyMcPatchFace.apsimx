@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -20,7 +20,17 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
-      "Children": [],
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "The intent of this simulation is to replicate the testing in \n\nSnow, V.O., Cichota, R., McAuliffe, R.J., Hutchings, N.J., Vejlin, J., 2017. Increasing the spatial scale of process-based agricultural systems models by representing heterogeneity: The case of urine patches in grazed pastures. Environmental Modelling & Software 90 89-106.\n\nhttp://dx.doi.org/10.1016/j.envsoft.2017.01.005\n\nBasically it compares explicit patches to pseudo-patches under a range of conditions/intensity. Ideally there should be no or little difference between the two types of patches. Note that the grazing schedual (and the returns?? - check) should be imposed and the results compared on an annual basis.\n\nCurrent state is ....",
+          "Name": "Memo",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
       "Enabled": true,
       "ReadOnly": false
     },
@@ -4486,7 +4496,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 5",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 500",
                   "Name": "PatchNum",
                   "ResourceName": null,
                   "Children": [],
@@ -4519,7 +4529,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "1972-01-01T00:00:00",
-              "End": "1979-12-31T00:00:00",
+              "End": "2021-12-31T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -4538,7 +4548,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Tests\\WeatherFiles\\Ruakura.met",
+              "FileName": "VCS_Lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
