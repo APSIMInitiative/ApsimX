@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -4505,7 +4505,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 50",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 1, 5, 10, 20, 50, 70, 100, 150, 200, 300, 500",
                   "Name": "PatchNum",
                   "ResourceName": null,
                   "Children": [],
