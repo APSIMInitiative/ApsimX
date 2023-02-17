@@ -4505,11 +4505,20 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 1, 5, 10, 20, 50, 70, 100, 150, 200, 300, 500",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 1000",
                   "Name": "PatchNum",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[PatchAndZoneManager].Script.ZoneCount = 1, 5, 10, 20, 50, 70, 100, 150, 200, 300, 500",
+                  "Name": "PatchNumAll",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
