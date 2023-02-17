@@ -38,7 +38,7 @@
             get
             {
                 var data = Connection.ExecuteQuery("select Name from [_Simulations]");
-                return DataTableUtilities.GetColumnAsStrings(data, "Name").ToList();
+                return DataTableUtilities.GetColumnAsStrings(data, "Name", CultureInfo.InvariantCulture).ToList();
             }
         }
 

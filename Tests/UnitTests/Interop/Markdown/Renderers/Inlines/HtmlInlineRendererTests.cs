@@ -54,8 +54,8 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             renderer = new HtmlInlineRenderer();
-            inline = new HtmlInline();
-            inline.Tag = sampleHtml = "<td>";
+            sampleHtml = "<td>";
+            inline = new HtmlInline(sampleHtml);
         }
 
         /// <summary>

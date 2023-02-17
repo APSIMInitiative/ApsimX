@@ -9,8 +9,13 @@
     <NoWarn>CS1591,CS1572,CS1573,CS0067</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPublishable>false</IsPublishable>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="**\*.xml" />
     <EmbeddedResource Include="**\*.json" />
@@ -32,9 +37,9 @@
 
     <!-- nuget -->
     <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
-    <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
-    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="Moq" Version="4.18.4" />
   </ItemGroup>
 </Project>

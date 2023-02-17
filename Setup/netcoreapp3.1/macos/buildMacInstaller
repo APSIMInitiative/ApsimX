@@ -35,7 +35,7 @@ cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
 projects=(ApsimNG APSIM.Server Models)
 for project in ${projects[@]}
 do
-    dotnet publish --nologo -f netcoreapp3.1 -c Release -r osx-x64 $project
+    dotnet publish --nologo -f netcoreapp3.1 -c Release -r osx-x64 $project --self-contained
 done
 
 # Now generate the installer.

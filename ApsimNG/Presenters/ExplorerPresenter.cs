@@ -502,6 +502,7 @@
         /// <param name="pathToNodeToDelete">Path to the node to be deleted.</param>
         public void DeleteFromTree(string pathToNodeToDelete)
         {
+            this.ApsimXFile.Locator.ClearEntry(pathToNodeToDelete);
             view.Tree.Delete(pathToNodeToDelete);
         }
 
@@ -512,6 +513,7 @@
             try
             {
                 DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
+                this.ApsimXFile.Locator.Clear();
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -555,6 +557,7 @@
         /// </summary>
         public void Move(string originalPath, IModel toParent, TreeViewNode nodeDescription)
         {
+            this.ApsimXFile.Locator.ClearEntry(originalPath);
             view.Tree.Delete(originalPath);
             view.Tree.AddChild((toParent).FullPath, nodeDescription);
         }
@@ -1004,6 +1007,7 @@
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.HideRightHandPanel();
+                            this.ApsimXFile.Locator.ClearEntry(model.FullPath);
                             RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
                             this.ShowRightHandPanel();

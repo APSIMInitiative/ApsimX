@@ -163,6 +163,8 @@ namespace Models
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
         /// <summary>Occurs when [do actual plant growth].</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
+        /// <summary>Occurs when [start of simulation].</summary>
+        public event EventHandler PartitioningComplete;
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
         /// <summary> Process stock methods in GrazPlan Stock </summary>
@@ -266,6 +268,18 @@ namespace Models
                 }
             }
         }
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsStartMonth => Today.Day == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsStartYear => Today.DayOfYear == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsEndMonth => Today.AddDays(1).Day == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsEndYear => Today.AddDays(1).DayOfYear == 1;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -373,6 +387,9 @@ namespace Models
 
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
+
+                if (PartitioningComplete != null)
+                    PartitioningComplete.Invoke(this, args);
 
                 if (DoStock != null)
                     DoStock.Invoke(this, args);

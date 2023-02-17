@@ -14,6 +14,15 @@
     }
 
     /// <summary>
+    /// Interface for Biomass supply from photosynthesis
+    /// </summary>
+    public interface ITotalDMFixationSupply
+    {
+        /// <summary> The amount of DM fixed by photosynthesis</summary>
+        double TotalDMFixationSupply { get; }
+    }
+
+    /// <summary>
     /// An interface that defines what needs to be implemented by an organ
     /// that communicates to the OrganArbitrator.
     /// </summary>
@@ -133,24 +142,24 @@
         public double Fixation { get; set; }
         /// <summary>Gets or sets the reallocation.</summary>
         /// <value>The reallocation.</value>
-        public double Reallocation { get; set; }
+        public double ReAllocation { get; set; }
         /// <summary>Gets or sets the uptake.</summary>
         /// <value>The uptake.</value>
         public double Uptake { get; set; }
         /// <summary>Gets or sets the retranslocation.</summary>
         /// <value>The retranslocation.</value>
-        public double Retranslocation { get; set; }
+        public double ReTranslocation { get; set; }
 
         /// <summary>Gets the total supply.</summary>
         public double Total
-        { get { return Fixation + Reallocation + Retranslocation + Uptake; } }
+        { get { return Fixation + ReAllocation + ReTranslocation + Uptake; } }
 
         internal void Clear()
         {
             Fixation = 0;
-            Reallocation = 0;
+            ReAllocation = 0;
             Uptake = 0;
-            Retranslocation = 0;
+            ReTranslocation = 0;
         }
     }
     /// <summary>

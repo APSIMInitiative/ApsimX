@@ -100,6 +100,10 @@ namespace Models.Soils.Nutrients
         [Link(ByName = true)]
         public ISolute Urea { get; set; }
 
+        /// <summary>Child carbon flows.</summary>
+        [Link]
+        private CarbonFlow[] CarbonFlows { get; set; }
+
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
         {
@@ -168,8 +172,9 @@ namespace Models.Soils.Nutrients
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
 
-                foreach (CarbonFlow f in FindAllDescendants<CarbonFlow>())
-                    values = MathUtilities.Add(values, f.Catm);
+                foreach (CarbonFlow f in CarbonFlows)
+                    for (int i = 0; i < numLayers; i++)
+                        values[i] += f.Catm[i];
                 return values;
             }
         }
@@ -417,13 +422,9 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer
+        /// Carbon to Nitrogen Ratio for Fresh Organic Matter used by low level functions
         /// </summary>
-        public double FOMCNR(int layer)
-        {
-                return MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
-                               FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0); ;
-        }
+        public double[] FOMCNRFactor { get; private set; }
 
         /// <summary>Invoked at start of simulation.</summary>
         /// <param name="sender">The sender.</param>
@@ -432,6 +433,7 @@ namespace Models.Soils.Nutrients
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             fom = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
+            FOMCNRFactor = new double[soilPhysical.Thickness.Length];
         }
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
@@ -541,6 +543,10 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
+            for (int layer = 0; layer < FOMCNRFactor.Length; layer++)
+                FOMCNRFactor[layer] = MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
+                                                     FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0);
+
             // Get potential residue decomposition from surfaceom.
             SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
 

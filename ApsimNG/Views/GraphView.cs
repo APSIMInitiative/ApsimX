@@ -323,7 +323,7 @@
         /// <param name="fraction">Fraction of the parent window for the graph to occupy.</param>
         public void SetPreferredWidth(double fraction)
         {
-            plot1?.SetSizeRequest(Convert.ToInt32(vbox1.Window.Width * fraction), 100);
+            plot1?.SetSizeRequest(Convert.ToInt32(vbox1.Window.EffectiveParent.Width * fraction), 100);
         }
 
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
@@ -1244,18 +1244,14 @@
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="r">Desired image size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
+        public void Export(out Gdk.Pixbuf bitmap, Rectangle r, bool legendOutside)
         {
             MemoryStream stream = new MemoryStream();
             PngExporter pngExporter = new PngExporter();
             pngExporter.Width = r.Width;
             pngExporter.Height = r.Height;
             pngExporter.Export(plot1.Model, stream);
-            using (Graphics gfx = Graphics.FromImage(bitmap))
-            {
-                Bitmap newBitmap = new Bitmap(stream);
-                gfx.DrawImage(newBitmap, r);
-            }
+            bitmap = new Gdk.Pixbuf(stream);
         }
 
         /// <summary>

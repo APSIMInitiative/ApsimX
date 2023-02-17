@@ -135,6 +135,33 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Age (Years)
+        /// </summary>
+        /// <units>Years</units>
+        [FilterByProperty]
+        public double AgeInYears
+        {
+            get
+            {
+                return age/12.0;
+            }
+        }
+
+        /// <summary>
+        /// Age (whole years)
+        /// </summary>
+        /// <units>Whole years</units>
+        [FilterByProperty]
+        public int AgeInWholeYears
+        {
+            get
+            {
+                return  Convert.ToInt32(Math.Floor(age / 12.0));
+            }
+        }
+
+
+        /// <summary>
         /// Calculate normalised weight from age
         /// </summary>
         /// <param name="age">Age in months</param>
@@ -369,7 +396,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && Age<12);
+                return (Weaned && Age < 12);
             }
         }
 
@@ -478,6 +505,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
+                    case HerdChangeReason.WeanerSale:
                         return -1;
                     case HerdChangeReason.Born:
                     case HerdChangeReason.TradePurchase:

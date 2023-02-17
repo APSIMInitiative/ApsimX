@@ -118,6 +118,9 @@
         {
             var allowableModels = new SortedSet<ModelDescription>();
 
+            // Adding in replacements folder instance.
+            allowableModels.Add(new ModelDescription(typeof(Folder), "Replacements", null));
+
             // Add in all types that implement the IModel interface.
             foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel).Assembly, typeof(IModel)))
                 allowableModels.Add(new ModelDescription(t));

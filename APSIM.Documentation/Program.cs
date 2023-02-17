@@ -32,6 +32,7 @@ namespace APSIM.Documentation
         {
             try
             {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 // Get autodocs config - ie which models to document.
                 IEnumerable<IDocumentationTable> tables = new[]
                 {
@@ -99,6 +100,7 @@ namespace APSIM.Documentation
                 StandardTutorialRow("Parameter sensitivity (Morris)", "Sensitivity_MorrisMethod"),
                 StandardTutorialRow("Parameter sensitivity (SOBOL)", "Sensitivity_SobolMethod"),
                 StandardTutorialRow("Parameter sensitivity (Factorial ANOVA)", "Sensitivity_FactorialANOVA"),
+                StandardTutorialRow("Predicted/Observed data handling", "PredictedObserved"),
                 StandardTutorialRow("Report", "Report"),
             };
             return new DocumentationTable("Tutorials", cols, rows);
@@ -132,7 +134,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("OilPalm"),
                 StandardPmfPlantRow("Peanut"),
                 StandardPmfPlantRow("Pinus"),
-                StandardPmfPlantRow("Plantain"),
+                StandardPmfPlantRow("PlantainForage"),
                 StandardPmfPlantRow("Potato"),
                 StandardPmfPlantRow("RedClover"),
                 StandardPmfPlantRow("SCRUM"),

@@ -1263,13 +1263,12 @@ namespace Models.Soils
                 dx[i] = physical.Thickness[i] / 10.0;
 
             x[0] = 0.0;
-            x[1] = 0.0 + dx[0] / 2.0;
-            double cumDepth = 0.0;
+            double cumDepth = dx[0];
 
-            for (int i = 2; i < n; i++)
+            for (int i = 1; i < n; i++)
             {
-                cumDepth += dx[i - 2];
-                x[i] = cumDepth + dx[i - 1] / 2.0;
+                x[i] = cumDepth + dx[i] / 2.0;
+                cumDepth += dx[i];
             }
 
             x[n] = MathUtilities.Sum(dx);
@@ -1755,7 +1754,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                var soluteParam = FindInScope<Solute>(solute_names[i]);
+                var soluteParam = Parent.FindChild<Solute>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 fip[i] = SoilUtilities.MapConcentration(soluteParam.FIP, soluteParam.Thickness, physical.Thickness, double.NaN);
