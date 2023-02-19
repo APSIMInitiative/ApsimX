@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -52,7 +52,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = SetMonthly, FromHarvest",
+                  "Specification": "[PatchAndZoneManager].Script.UrineReturnType = SetMonthly",
                   "Name": "ReturnType",
                   "ResourceName": null,
                   "Children": [],
@@ -4523,7 +4523,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=true,false",
+                  "Specification": "[PatchAndZoneManager].Script.PseudoPatches=false",
                   "Name": "PatchType",
                   "ResourceName": null,
                   "Children": [],
