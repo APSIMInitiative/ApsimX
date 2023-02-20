@@ -443,6 +443,7 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
             GrowthRespiration = 0;
+            Number = 0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>

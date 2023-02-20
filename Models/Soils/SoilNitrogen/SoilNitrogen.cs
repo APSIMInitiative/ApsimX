@@ -65,7 +65,6 @@ namespace Models.Soils
     /// Full patch capability ported into ApsimX by Russel McAuliffe in June/2017, tidied up by RCichota (July/2017)
     /// </remarks>
     [Serializable]
-    [ValidParent(ParentType = typeof(Soil))]
     public partial class SoilNitrogen : Model, INutrient, INutrientPatchManager
     {
 

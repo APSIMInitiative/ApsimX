@@ -153,8 +153,7 @@
         protected override void PostAllRuns()
         {
             Status = "Waiting for datastore to finish writing";
-            storage?.Writer.Stop();
-            storage?.Reader.Refresh();
+            StorageFinishWriting();
 
             if (runPostSimulationTools)
                 RunPostSimulationTools();
@@ -162,6 +161,14 @@
             if (runTests)
                 RunTests();
 
+            StorageFinishWriting();
+        }
+
+        /// <summary>
+        /// Tell the datastore to finish writing.
+        /// </summary>
+        public void StorageFinishWriting()
+        {
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
         }

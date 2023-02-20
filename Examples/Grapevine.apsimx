@@ -1,22 +1,25 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 372,
-  "Version": 136,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 285,
+  "Version": 159,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
       "Text": "\n## Cautions for running the model \n- Vineyard conditions differ from one to the other due to differences in local climatic conditions, soil, rootstock, varieity, irrigtation, fertilization and canopy management practice. The current grapevine model rather provide a modelling framework to simulate phenology, canopy development, radiation interception, dry matter production and allocation, non-structural carbohydrate dynamics, yield components, soil water and nitrogen uptake in vineyard, than a universal model that can be applied anywhere without adjustments. \n- The current grapevine model was developed based on a rich phenology and yield dataset of Sauvignon blanc in New Zealand in five regions, mainly in the Marlborough region. The dataset were collected in irrigated and fertilized vineyards where water and nutrient stress were minimized. This was reflected in the simulation through irrigation and fertilization management script as well. For conditions with water and nutrient stress, further calibration based on local dataset would be needed. \n- Parameters for potential bunch number, berry number and berry mass determination were derived based on the long-term Sauvignon blanc trial in Marlborough. The general framework would hold for other varieties as well, but actual parameters needed to be refitted based on robust dataset for other varieties. \n- The current model can allocate vine roots to the alley and allocate the root of the alley crop to the vine row. However, the water and nitrogen competition between the vine and alley crop is based on the value of KL of each species, not based on the amount of root and root density presented in the soil zone. One option is change the KL as a function of root density or directly use root density in the source code. A good dataset of root distribution in different layor would be required. Further calibration of soil water, nitrogen and organic matter dynamics are needed.\n- Currently alley crop was represented by a generic plant model ‘Slurp’. The ‘Slurp’ model can take up water and nitrogen, but does not predict crop growth or yields. We forced its leaf area index to follow a reasonable growth pattern under the vineyard management in Marlborough New Zealand with periodic mowing events. Four different types were provided for the Slurp model: static crop, static tree, pasture, lurcern. see details in the Slurp node by right click and expanding the model structure. \n- The row crop light interception method assume the canopy shape is like a cube. So it is more suitable to use for verticle shoot prunned canopy. \n- Water stress was turned on for leaf expansion and photosynthesis, but nitrogen stress was turned off in the current model. However, nitrogen uptake and availability will still affect the organ development as the arbitrator is conducting biomass and nitrogen allocation automatically in the background.\n",
       "Name": "Cautions for new users",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
-      "$type": "Models.Core.Replacements, Models",
+      "$type": "Models.Core.Folder, Models",
+      "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Replacements",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Report, Models",
@@ -189,8 +192,8 @@
           ],
           "GroupByVariableName": null,
           "Name": "Report",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -223,14 +226,14 @@
           ],
           "GroupByVariableName": null,
           "Name": "ReportAlley",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.Climate;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadiationIntercepted\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                //LAIPerVine =  LAI*RowZone.Width*1.8;\r\n                //TreeInitialisation.Script.VineDistance;\r\n                //(double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadiationIntercepted\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                //LAIPerVine =  LAI*RowZone.Width*1.8;\r\n                //TreeInitialisation.Script.VineDistance;\r\n                //(double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "FRadInt",
@@ -266,13 +269,14 @@
             }
           ],
           "Name": "PlantVariables",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link] private Clock clock;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; } \r\n        \r\n        [Description(\"Irrigation start window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"Irrigation end window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"Amount of water (mm) applied each irrigation\")]\r\n        public double Amount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    irrigation.Apply(Amount, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link] private Clock clock;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; } \r\n        \r\n        [Description(\"Irrigation start window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"Irrigation end window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"Amount of water (mm) applied each irrigation\")]\r\n        public double Amount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    irrigation.Apply(Amount, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
           "Parameters": [
             {
               "Key": "FASW",
@@ -304,13 +308,14 @@
             }
           ],
           "Name": "AutoIrrigationBasedOnWaterDeficit",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "FertiliserType",
@@ -330,7 +335,8 @@
             }
           ],
           "Name": "Fertilise on fixed dates",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -344,9 +350,8 @@
           "InitialStandingFraction": 0.0,
           "InitialCPR": 0.0,
           "InitialCNR": 100.0,
-          "FractionFaecesAdded": 1.0,
-          "ResourceName": "SurfaceOrganicMatter",
           "Name": "SurfaceOrganicMatter",
+          "ResourceName": "SurfaceOrganicMatter",
           "Children": [
             {
               "$type": "Models.Surface.ResidueTypes, Models",
@@ -1778,19 +1783,18 @@
                 }
               ],
               "Name": "ResidueTypes",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "ResetDate",
@@ -1810,13 +1814,14 @@
             }
           ],
           "Name": "Reset on date",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.Soils;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] private SoilNitrogenNO3 SoilNitrogenNO3;\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]\r\n        public double Threshold { get; set;}\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double Amount = Threshold - MathUtilities.Sum(SoilNitrogenNO3.kgha);\r\n            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] private SoilNitrogenNO3 SoilNitrogenNO3;\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]\r\n        public double Threshold { get; set;}\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double Amount = Threshold - MathUtilities.Sum(SoilNitrogenNO3.kgha);\r\n            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "FertiliserType",
@@ -1828,12 +1833,12 @@
             }
           ],
           "Name": "Fertilise topup",
-          "IncludeInDocumentation": false,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -1842,16 +1847,16 @@
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "Vineyard",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Climate.Weather, Models",
@@ -1859,8 +1864,8 @@
           "FileName": "WeatherFiles\\Site1003_SEA.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1869,27 +1874,25 @@
           "Start": "2005-02-25T00:00:00",
           "End": "2020-05-01T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "Summary",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1904,8 +1907,8 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1917,51 +1920,54 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Row",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "Double Guyôt-trained vines, pruned each year to retain 24 nodes were monitored. Vines were trained using vertical shoot positioning (VSP), with an exposed leaf area height of 1.2 m, and trimmed to maintain a compact canopy. Vines were planted 1.8 m apart within the row, and 2.4 m apart between rows. Average flowering date was determined by monitoring all the inflorescences on one cane on a vine in each plot on a regular basis throughout flowering. Likewise, regular berry samples (at least weekly) were taken from before the date of véraison until harvest at a soluble solids concentration value of 21.5 oBrix. ",
               "Name": "Memo",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "Grapevine",
               "Name": "Grapevine",
-              "IncludeInDocumentation": true,
+              "ResourceName": "Grapevine",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "IncludeInDocumentation": false,
+              "ResourceName": "Fertiliser",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 10.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 30.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": false,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1986,21 +1992,10 @@
               "DataSource": null,
               "Comments": null,
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.LayerStructure, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-160",
-                    "160-200",
-                    "200-240",
-                    "240-300"
-                  ],
                   "Thickness": [
                     200.0,
                     200.0,
@@ -2014,21 +2009,13 @@
                     600.0
                   ],
                   "Name": "LayerStructure",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-45",
-                    "45-75",
-                    "75-90",
-                    "90-105",
-                    "105-300"
-                  ],
                   "Thickness": [
                     200.0,
                     250.0,
@@ -2095,6 +2082,7 @@
                   "ParticleSizeSiltMetadata": null,
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -2126,8 +2114,8 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "GrapevineSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2161,13 +2149,12 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "SlurpSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2187,6 +2174,7 @@
                   "CNCov": 0.8,
                   "DischargeWidth": 0.0,
                   "CatchmentArea": 0.0,
+                  "PSIDul": -100.0,
                   "Thickness": [
                     150.0,
                     150.0,
@@ -2235,22 +2223,14 @@
                     0.0,
                     0.0
                   ],
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150"
-                  ],
                   "FOMCNRatio": 30.0,
                   "Thickness": [
                     100.0,
@@ -2268,6 +2248,7 @@
                     0.47,
                     0.47
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     11.5,
                     11.5,
@@ -2294,30 +2275,22 @@
                   ],
                   "FOM": [
                     1243.9310541346904,
-                    833.83192147272689,
+                    833.8319214727269,
                     457.61666105087295,
-                    251.14534845521521,
+                    251.1453484552152,
                     137.83148958311097,
-                    75.643525303383925
+                    75.64352530338392
                   ],
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -2325,22 +2298,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "NO3N": [
-                    3.0,
-                    2.0,
-                    1.0,
-                    1.0,
-                    0.0,
-                    0.0
-                  ],
-                  "NH4N": [
-                    3.0,
-                    1.5,
-                    1.2,
-                    1.1,
-                    0.0,
-                    0.0
                   ],
                   "PH": [
                     6.6,
@@ -2350,38 +2307,51 @@
                     5.5,
                     5.5
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "LabileP": null,
-                  "UnavailableP": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 0,
-                  "FractionFull": 1.1428571428571428,
-                  "DepthWetSoil": "NaN",
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    200.0,
+                    250.0,
+                    300.0,
+                    150.0,
+                    150.0,
+                    1950.0
+                  ],
+                  "InitialValues": [
+                    0.35,
+                    0.35,
+                    0.35,
+                    0.33,
+                    0.28,
+                    0.1
+                  ],
+                  "InitialPAWmm": 262.5,
                   "RelativeTo": "LL15",
-                  "Name": "Initial water",
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2397,37 +2367,8 @@
                     150.0
                   ],
                   "Name": "OutputLayers",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-180"
-                  ],
-                  "Thickness": [
-                    1800.0
-                  ],
-                  "NO3": null,
-                  "NH4": [
-                    1.0
-                  ],
-                  "LabileP": null,
-                  "UnavailableP": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial conditions",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2467,60 +2408,117 @@
                   ],
                   "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                      "Name": "PlantAvailableNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                      "Name": "PlantAvailableNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
                   ],
-                  "IncludeInDocumentation": true,
+                  "InitialValues": [
+                    3.0,
+                    2.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    3.0,
+                    1.5,
+                    1.2,
+                    1.1,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF.Organs;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Functions;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            root.ZoneRootDepths.Add(2600);\r\n\t\t\tBiomassDemand InitialDM = new BiomassDemand();\r\n\t\t\tConstant InitStruct = new Constant();\r\n\t\t\tInitStruct.FixedValue = 10;\r\n\t\t\tInitialDM.Structural = InitStruct;\r\n\t\t\tConstant InitMetab = new Constant();\r\n\t\t\tInitMetab.FixedValue = 0;\r\n\t\t\tInitialDM.Metabolic = InitMetab;\r\n\t\t\tConstant InitStor = new Constant();\r\n\t\t\tInitStor.FixedValue = 0;\r\n\t\t\tInitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
+              "Code": "using Models.Soils;\r\nusing Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            root.ZoneRootDepths.Add(2600);\r\n            NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();\r\n            Constant InitStruct = new Constant();\r\n            InitStruct.FixedValue = 10;\r\n            InitialDM.Structural = InitStruct;\r\n            Constant InitMetab = new Constant();\r\n            InitMetab.FixedValue = 0;\r\n            InitialDM.Metabolic = InitMetab;\r\n            Constant InitStor = new Constant();\r\n            InitStor.FixedValue = 0;\r\n            InitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
               "Parameters": [
                 {
                   "Key": "UseExtraZone",
@@ -2528,22 +2526,24 @@
                 }
               ],
               "Name": "SetupTreeRootZones",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Root\")]\r\n        private Root root;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadiationIntercepted\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                //LAIPerVine =  LAI*RowZone.Width*1.8;\r\n                //TreeInitialisation.Script.VineDistance;\r\n                //(double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Root\")]\r\n        private Root root;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadiationIntercepted\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                //LAIPerVine =  LAI*RowZone.Width*1.8;\r\n                //TreeInitialisation.Script.VineDistance;\r\n                //(double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "PlantVariables",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n       [Link] Clock Clock;\r\n       [Link] Fertiliser Fertiliser;\r\n       [Link] Summary Summary;\r\n       [Link] Weather weather;\r\n\r\n        [Description(\"Fertilize_DAWS\")]\r\n         public int FertilizeDAWS { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied\")]\r\n        public double Amount { get; set; }\r\n\r\n       [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n          if (weather.DaysSinceWinterSolstice == FertilizeDAWS)\r\n           Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n\r\n\r\n       public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/4;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount*2, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n       [Link] Clock Clock;\r\n       [Link] Fertiliser Fertiliser;\r\n       [Link] Summary Summary;\r\n       [Link] Weather weather;\r\n\r\n        [Description(\"Fertilize_DAWS\")]\r\n         public int FertilizeDAWS { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied\")]\r\n        public double Amount { get; set; }\r\n\r\n       [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n          if (weather.DaysSinceWinterSolstice == FertilizeDAWS)\r\n           Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n\r\n\r\n       public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/4;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount*2, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "FertilizeDAWS",
@@ -2555,13 +2555,14 @@
                 }
               ],
               "Name": "DripIrrigator",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Struct;\r\nusing Models.Climate;\r\nusing System;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF.Phen;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [JsonIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                    \r\n                //int LeafTipsAppeared = (int)structure.LeafTipsAppeared;\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cane\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"StructuralRoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cane\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"StructuralRoot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cane\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"StructuralRoot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cane\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"StructuralRoot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cane\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cane\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"StructuralRoot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double caneBiomass = 96.9; //g/m2 reset the cane biomass to the original value \r\n                double caneNSC = caneBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cane.Live.StorageWt\", caneNSC);                \r\n                zone.Set(\"[Grapevine].Cane.Live.StructuralWt\", caneBiomass - caneNSC); \r\n\r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cane\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cane\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cane\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cane\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing Models.PMF.Phen;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Climate;\r\nusing Models.PMF.Struct;\r\nusing Newtonsoft.Json;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link] private Weather weather;\r\n        [Link]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Structure\")]\r\n        private Structure structure;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Phenology\")]\r\n        private Phenology phenology;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [JsonIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [JsonIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n             //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n             //PruneDate = DateTime.Parse(PruneDateString);\r\n             if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && phenology.Stage >= 3)\r\n             {\r\n                    \r\n                //int LeafTipsAppeared = (int)structure.LeafTipsAppeared;\r\n                //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n            \r\n                Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n                Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Cane\", 0);\r\n                Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n                Remove_1.SetFractionToRemove(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"StructuralRoot\", 0);\r\n                Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n            \r\n                Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n                Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n                Remove_1.SetFractionToResidue(\"Cane\", 0);\r\n                Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n                Remove_1.SetFractionToResidue(\"Root\", 0);\r\n                Remove_1.SetFractionToRemove(\"StructuralRoot\", 0);\r\n                Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n            \r\n               // Remove_1.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n        \r\n             }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && phenology.Stage >= 3)\r\n           {\r\n               \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cane\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"StructuralRoot\", 0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n         \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cane\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"StructuralRoot\", 0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n         \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cane\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cane\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"StructuralRoot\", 0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  1);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double caneBiomass = 96.9; //g/m2 reset the cane biomass to the original value \r\n                double caneNSC = caneBiomass * 0.18;\r\n\r\n                zone.Set(\"[Grapevine].Cane.Live.StorageWt\", caneNSC);                \r\n                zone.Set(\"[Grapevine].Cane.Live.StructuralWt\", caneBiomass - caneNSC); \r\n\r\n                //zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280);     \r\n               // zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70);     \r\n\r\n               // zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531);     \r\n               // zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349);     \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cane\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cane\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n           //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cane\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n           //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cane\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"StructuralRoot\", 0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n           //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n           //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "LeafPluckingDAWS",
@@ -2585,13 +2586,14 @@
                 }
               ],
               "Name": "HarvestNPruning",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Interfaces;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link] private Clock clock;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; } \r\n        \r\n        [Description(\"Irrigation start window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"Irrigation end window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"Amount of water (mm) applied each irrigation\")]\r\n        public double Amount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    irrigation.Apply(Amount, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link] private Clock clock;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; } \r\n        \r\n        [Description(\"Irrigation start window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"Irrigation end window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"Amount of water (mm) applied each irrigation\")]\r\n        public double Amount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    irrigation.Apply(Amount, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -2615,13 +2617,14 @@
                 }
               ],
               "Name": "AutoIrrigationBasedOnWaterDeficit",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "FertiliserType",
@@ -2641,13 +2644,14 @@
                 }
               ],
               "Name": "Fertilise on fixed dates",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\n        \tDebugger.Break();\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "ResetDate",
@@ -2667,7 +2671,8 @@
                 }
               ],
               "Name": "Reset on date",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2776,14 +2781,14 @@
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF.Phen;\r\nusing Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.PMF.Struct;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link]\r\n        private Structure structure;\r\n        [Link]\r\n        private Phenology phenology;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cane or spur biomass\r\n        [Description(\"Cane number(#)\")]\r\n        public double CaneNumber { get; set; }\r\n      \r\n        [Description(\"Cane diameter(mm)\")]\r\n        public double CaneDiameter { get; set; }\r\n\r\n        [Description(\"Cane length(m)\")]\r\n        public double CaneLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cane nonstructural carbon fraction\")]\r\n        public double CaneNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cane biomass\r\n                //calculate the biomass by length 1 meter time number of canes time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n                double woodDensity = 0.4; //g/mm2/m\r\n                double CaneNumber = BudNumber/12; //recalculating cane number as we \r\n                double caneBiomass = 3.1415926*(CaneDiameter/2)*(CaneDiameter/2)*CaneLength*CaneNumber *woodDensity * pop; \r\n                double caneNSC = caneBiomass * CaneNSC;\r\n                zone.Set(\"[Grapevine].Cane.CaneDiameter.FixedValue\", CaneDiameter);\r\n                zone.Set(\"[Grapevine].Cane.CaneLength.FixedValue\", CaneLength);\r\n                zone.Set(\"[Grapevine].Cane.CaneNumber.FixedValue\", CaneNumber);\r\n\r\n                zone.Set(\"[Grapevine].Cane.Live.StorageWt\", caneNSC);                \r\n                zone.Set(\"[Grapevine].Cane.Live.StructuralWt\", caneBiomass - caneNSC);                \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n                zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n                \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                // zone.Set(\"[Grapevine].StructuralRoot.DMDemands.Structural.RootTrunkRatio\",  RootTrunkRatio); \r\n                \r\n                 zone.Set(\"[Grapevine].StructuralRoot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].StructuralRoot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+              "Code": "using Models.PMF.Phen;\r\nusing Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Struct;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link]\r\n        private Structure structure;\r\n        [Link]\r\n        private Phenology phenology;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cane or spur biomass\r\n        [Description(\"Cane number(#)\")]\r\n        public double CaneNumber { get; set; }\r\n      \r\n        [Description(\"Cane diameter(mm)\")]\r\n        public double CaneDiameter { get; set; }\r\n\r\n        [Description(\"Cane length(m)\")]\r\n        public double CaneLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cane nonstructural carbon fraction\")]\r\n        public double CaneNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cane biomass\r\n                //calculate the biomass by length 1 meter time number of canes time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n                double woodDensity = 0.4; //g/mm2/m\r\n                double CaneNumber = BudNumber/12; //recalculating cane number as we \r\n                double caneBiomass = 3.1415926*(CaneDiameter/2)*(CaneDiameter/2)*CaneLength*CaneNumber *woodDensity * pop; \r\n                double caneNSC = caneBiomass * CaneNSC;\r\n                zone.Set(\"[Grapevine].Cane.CaneDiameter.FixedValue\", CaneDiameter);\r\n                zone.Set(\"[Grapevine].Cane.CaneLength.FixedValue\", CaneLength);\r\n                zone.Set(\"[Grapevine].Cane.CaneNumber.FixedValue\", CaneNumber);\r\n\r\n                zone.Set(\"[Grapevine].Cane.Live.StorageWt\", caneNSC);                \r\n                zone.Set(\"[Grapevine].Cane.Live.StructuralWt\", caneBiomass - caneNSC);                \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n                zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n                \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                // zone.Set(\"[Grapevine].StructuralRoot.DMDemands.Structural.RootTrunkRatio\",  RootTrunkRatio); \r\n                \r\n                 zone.Set(\"[Grapevine].StructuralRoot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].StructuralRoot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -2843,12 +2848,12 @@
                 }
               ],
               "Name": "TreeInitialisation",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -2860,6 +2865,7 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Alley",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Report, Models",
@@ -2887,52 +2893,54 @@
               ],
               "GroupByVariableName": null,
               "Name": "ReportAlley",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 10.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 30.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": false,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "Slurp",
               "Name": "Slurp",
-              "IncludeInDocumentation": true,
+              "ResourceName": "Slurp",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "IncludeInDocumentation": false,
+              "ResourceName": "Fertiliser",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing Models.Interfaces;\r\nusing Models.PMF.Organs;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Slurp;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Slurp].Root\")]\r\n        private Root root;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Maximum Root Depth\")]\r\n        public double RootDepth { get; set; }\r\n        [Description(\"Roof Front Velocity\")]\r\n        public double RFV { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);\r\n                \r\n                YKLModifiers = new double[soilPhysical.Thickness.Length];\r\n                XDepth = new double[soilPhysical.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)\r\n                {\r\n                    Depth += soilPhysical.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += soilPhysical.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"Slurp.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"Slurp.Root.KLModifier.XYPairs.X\", Depths);\r\n                object RD = RootDepth;\r\n                zone.Set(\"Slurp.Root.MaximumRootDepth.FixedValue\", RD);\r\n                object RV = RFV;\r\n                zone.Set(\"Slurp.Root.RootFrontVelocity.Potential.FixedValue\", RV);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"Slurp.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"Slurp.Leaf.R50\", R50Value); \r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing Models.Interfaces;\r\nusing Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Slurp;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Slurp].Root\")]\r\n        private Root root;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Maximum Root Depth\")]\r\n        public double RootDepth { get; set; }\r\n        [Description(\"Roof Front Velocity\")]\r\n        public double RFV { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);\r\n                \r\n                YKLModifiers = new double[soilPhysical.Thickness.Length];\r\n                XDepth = new double[soilPhysical.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)\r\n                {\r\n                    Depth += soilPhysical.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += soilPhysical.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"Slurp.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"Slurp.Root.KLModifier.XYPairs.X\", Depths);\r\n                object RD = RootDepth;\r\n                zone.Set(\"Slurp.Root.MaximumRootDepth.FixedValue\", RD);\r\n                object RV = RFV;\r\n                zone.Set(\"Slurp.Root.RootFrontVelocity.Potential.FixedValue\", RV);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"Slurp.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"Slurp.Leaf.R50\", R50Value); \r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -2972,13 +2980,14 @@
                 }
               ],
               "Name": "PastureInitialisation",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -2994,13 +3003,14 @@
                 }
               ],
               "Name": "SetPastureVariables",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF.Organs;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Functions;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Slurp;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Slurp].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
+              "Code": "using Models.Soils;\r\nusing Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Slurp;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Slurp].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            root.ZoneRootDepths.Add(600);\r\nNutrientPoolFunctions InitialDM = new NutrientPoolFunctions();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
               "Parameters": [
                 {
                   "Key": "UseExtraZone",
@@ -3008,7 +3018,8 @@
                 }
               ],
               "Name": "SetupPastureRootZones",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3023,23 +3034,24 @@
                 }
               ],
               "Name": "WinterRainfall",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Core;\r\nusing System;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "PlantVariables",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "ResetDate",
@@ -3059,7 +3071,8 @@
                 }
               ],
               "Name": "Reset on date",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3084,21 +3097,10 @@
               "DataSource": null,
               "Comments": null,
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.LayerStructure, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-160",
-                    "160-200",
-                    "200-240",
-                    "240-300"
-                  ],
                   "Thickness": [
                     200.0,
                     200.0,
@@ -3112,21 +3114,13 @@
                     600.0
                   ],
                   "Name": "LayerStructure",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-45",
-                    "45-75",
-                    "75-90",
-                    "90-105",
-                    "105-300"
-                  ],
                   "Thickness": [
                     200.0,
                     250.0,
@@ -3193,6 +3187,7 @@
                   "ParticleSizeSiltMetadata": null,
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -3224,8 +3219,8 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "GrapevineSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3259,13 +3254,12 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "SlurpSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3285,6 +3279,7 @@
                   "CNCov": 0.8,
                   "DischargeWidth": 0.0,
                   "CatchmentArea": 0.0,
+                  "PSIDul": -100.0,
                   "Thickness": [
                     150.0,
                     150.0,
@@ -3333,22 +3328,14 @@
                     0.0,
                     0.0
                   ],
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150"
-                  ],
                   "FOMCNRatio": 30.0,
                   "Thickness": [
                     100.0,
@@ -3366,6 +3353,7 @@
                     0.47,
                     0.47
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     11.5,
                     11.5,
@@ -3392,30 +3380,22 @@
                   ],
                   "FOM": [
                     1243.9310541346904,
-                    833.83192147272689,
+                    833.8319214727269,
                     457.61666105087295,
-                    251.14534845521521,
+                    251.1453484552152,
                     137.83148958311097,
-                    75.643525303383925
+                    75.64352530338392
                   ],
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -3423,22 +3403,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "NO3N": [
-                    3.0,
-                    2.0,
-                    1.0,
-                    1.0,
-                    0.0,
-                    0.0
-                  ],
-                  "NH4N": [
-                    3.0,
-                    1.5,
-                    1.2,
-                    1.1,
-                    0.0,
-                    0.0
                   ],
                   "PH": [
                     6.6,
@@ -3448,38 +3412,51 @@
                     5.5,
                     5.5
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
-                  "LabileP": null,
-                  "UnavailableP": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 0,
-                  "FractionFull": 1.1428571428571428,
-                  "DepthWetSoil": "NaN",
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    200.0,
+                    250.0,
+                    300.0,
+                    150.0,
+                    150.0,
+                    1950.0
+                  ],
+                  "InitialValues": [
+                    0.35,
+                    0.35,
+                    0.35,
+                    0.33,
+                    0.28,
+                    0.1
+                  ],
+                  "InitialPAWmm": 262.5,
                   "RelativeTo": "LL15",
-                  "Name": "Initial water",
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3495,37 +3472,8 @@
                     150.0
                   ],
                   "Name": "OutputLayers",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-180"
-                  ],
-                  "Thickness": [
-                    1800.0
-                  ],
-                  "NO3": null,
-                  "NH4": [
-                    1.0
-                  ],
-                  "LabileP": null,
-                  "UnavailableP": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial conditions",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3565,69 +3513,123 @@
                   ],
                   "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                      "Name": "PlantAvailableNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                      "Name": "PlantAvailableNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
                   ],
-                  "IncludeInDocumentation": true,
+                  "InitialValues": [
+                    3.0,
+                    2.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    3.0,
+                    1.5,
+                    1.2,
+                    1.1,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
