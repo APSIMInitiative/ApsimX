@@ -10,7 +10,8 @@ namespace Models.PostSimulationTools
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Linq;
+	using System.Globalization;
+	using System.Linq;
     using System.Text;
     using System.Threading;
 
@@ -218,8 +219,8 @@ namespace Models.PostSimulationTools
                         if (predictedObservedData.Columns.Contains("Predicted." + columnName) &&
                             predictedObservedData.Columns["Predicted." + columnName].DataType == typeof(double))
                         {
-                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName);
-                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName);
+                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName, CultureInfo.InvariantCulture);
+                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName, CultureInfo.InvariantCulture);
                             if (predicted.Length > 0 && predicted.Length == observed.Length)
                             {
                                 var errorData = MathUtilities.Subtract(predicted, observed);

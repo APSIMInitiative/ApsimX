@@ -93,7 +93,11 @@
                 explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information, false);
             // We don't need to display error messages now - they are displayed as they occur.
 
+#if NET6_0_OR_GREATER
+            if (!Configuration.Settings.Muted && OperatingSystem.IsWindows())
+#else
             if (!Configuration.Settings.Muted)
+#endif
             {
                 // Play a completion sound.
                 SoundPlayer player = new SoundPlayer();

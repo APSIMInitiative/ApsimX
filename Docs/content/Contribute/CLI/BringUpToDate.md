@@ -1,6 +1,6 @@
 ---
 title: "4. Bring folder up to date"
-draft: false
+draft: true
 ---
 
 **NOTE:** Before you bring your folder up to date, you need to [commit or discard all files that you have added or modified](/contribute/cli/commit). If you don't do this you may get errors during the pull process outlined below.

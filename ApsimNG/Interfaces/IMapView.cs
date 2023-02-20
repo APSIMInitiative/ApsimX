@@ -19,7 +19,7 @@ namespace UserInterface.Interfaces
         void ShowMap(List<Coordinate> coordinates, List<string> locNames, double zoom, Coordinate center);
 
         /// <summary>Export the map to an image.</summary>
-        System.Drawing.Image Export();
+        Gdk.Pixbuf Export();
 
         /// <summary>
         /// Get or set the zoom factor of the map

@@ -1339,7 +1339,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\n\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n",
+                  "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\n\nusing Models.Core;\nusing System;\r\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n",
                   "Parameters": [],
                   "Name": "ExtraVariables",
                   "IncludeInDocumentation": true,

@@ -1,6 +1,8 @@
 ﻿namespace Models.Core
 {
     using APSIM.Shared.Utilities;
+    using MathNet.Numerics.Integration;
+    using Microsoft.CodeAnalysis.VisualBasic.Syntax;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -338,50 +340,62 @@
                     {
                         if (namePathBits[j].IndexOf('(') > 0)
                         {
-                            relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')));
-                            if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
-                            {
-                                methodInfo = relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')), BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                            }
-                        }
-                        if (methodInfo != null)
-                        {
+                            // before trying to access the method we need to identify the types of arguments to identify overloaded methods.
+                            // assume: presence of quotes is string
+                            // assume: tolower = false or true is boolean
+                            // assume: presence of . and tryparse is double
+                            // assume: tryparse is int32
+                            List<Type> argumentsTypes = new List<Type>();
+                            argumentsList = new List<object>();
                             // get arguments and store in VariableMethod
                             string args = namePathBits[j].Substring(namePathBits[j].IndexOf('('));
                             args = args.Substring(0, args.IndexOf(')'));
                             args = args.Replace("(", "").Replace(")", "");
+
                             if (args.Length > 0)
                             {
-                                argumentsList = new List<object>();
                                 args = args.Trim('(').Trim(')');
-                                var argList = args.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                                // get arguments
-                                ParameterInfo[] pars = methodInfo.GetParameters();
+                                var argList = args.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim(' ')).ToArray();
 
                                 for (int argid = 0; argid < argList.Length; argid++)
                                 {
-                                    var cleanArg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ').Trim('"');
-                                    switch (Type.GetTypeCode(pars[argid].ParameterType))
+                                    var trimmedarg = argList[argid].Trim(' ').Trim(new char[] { '(', ')' }).Trim(' ');
+                                    if (trimmedarg.Contains('"'))
                                     {
-                                        case TypeCode.Double:
-                                            argumentsList.Add(Convert.ToDouble(cleanArg, CultureInfo.InvariantCulture));
-                                            break;
-                                        case TypeCode.Int32:
-                                            argumentsList.Add(Convert.ToInt32(cleanArg, CultureInfo.InvariantCulture));
-                                            break;
-                                        case TypeCode.String:
-                                            argumentsList.Add(cleanArg);
-                                            break;
-                                        case TypeCode.Boolean:
-                                            argumentsList.Add(Convert.ToBoolean(cleanArg, CultureInfo.InvariantCulture));
-                                            break;
-                                        default:
-                                            if (throwOnError)
-                                                throw new ApsimXException(relativeToModel, "The type of argument (" + Type.GetTypeCode(pars[argid].ParameterType) + ") is not currently supported in Report methods");
-                                            else
-                                                return null;
+                                        argumentsTypes.Add(typeof(string));
+                                        argumentsList.Add(trimmedarg.Trim('\"'));
+                                    }
+                                    else if (trimmedarg.ToLower() == "false" || trimmedarg.ToLower() == "true")
+                                    {
+                                        argumentsTypes.Add(typeof(bool));
+                                        argumentsList.Add(Convert.ToBoolean(trimmedarg, CultureInfo.InvariantCulture));
+                                    }
+                                    else if (trimmedarg.Contains('.') && double.TryParse(trimmedarg, out _))
+                                    {
+                                        argumentsTypes.Add(typeof(double));
+                                        argumentsList.Add(Convert.ToDouble(trimmedarg, CultureInfo.InvariantCulture));
+                                    }
+                                    else if (Int32.TryParse(trimmedarg, out _))
+                                    {
+                                        argumentsTypes.Add(typeof(Int32));
+                                        argumentsList.Add(Convert.ToInt32(trimmedarg, CultureInfo.InvariantCulture));
+                                    }
+                                    else
+                                    {
+                                        if (throwOnError)
+                                            throw new ApsimXException(relativeToModel, $"Unable to determine the type of argument ({trimmedarg}) in Report method");
+                                        else
+                                            return null;
                                     }
                                 }
+                            }
+
+                            // try get the method with identified arguments
+                            methodInfo = relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')), argumentsTypes.ToArray<Type>());
+                            if (methodInfo == null && ignoreCase) // If not found, try using a case-insensitive search
+                            {
+                                BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
+                                methodInfo = relativeToObject.GetType().GetMethod(namePathBits[j].Substring(0, namePathBits[j].IndexOf('(')), argumentsTypes.Count(), bindingFlags, null, argumentsTypes.ToArray<Type>(), null);
                             }
                         }
                     }
@@ -432,7 +446,6 @@
                         {
                             method = new VariableMethod(relativeToObject, methodInfo, null);
                         }
-                        //                        VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(method);
                         if (propertiesOnly && j == namePathBits.Length - 1)
                             break;

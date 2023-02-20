@@ -13,11 +13,12 @@
     using Views;
     using APSIM.Shared.Graphing;
     using Series = Models.Series;
+	using System.Globalization;
 
-    /// <summary>
-    /// The presenter class for populating an InitialWater view with an InitialWater model.
-    /// </summary>
-    public class XYPairsPresenter : GridPresenter, IPresenter
+	/// <summary>
+	/// The presenter class for populating an InitialWater view with an InitialWater model.
+	/// </summary>
+	public class XYPairsPresenter : GridPresenter, IPresenter
     {
         /// <summary>
         /// The XYPairs model.
@@ -350,7 +351,7 @@
                     Array values;
                     if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
                     {
-                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
+                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName, CultureInfo.CurrentCulture);
                         if (!MathUtilities.ValuesInArray((double[])values))
                         {
                             values = null;
@@ -362,7 +363,7 @@
                     }
                     else
                     {
-                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName);
+                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName, CultureInfo.CurrentCulture);
                         values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
                     }
 

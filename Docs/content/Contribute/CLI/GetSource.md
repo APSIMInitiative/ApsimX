@@ -1,6 +1,6 @@
 ---
 title: "1. Get source code"
-draft: false
+draft: true
 ---
 
 ## Create GitHub account

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,13 +6,18 @@
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>apsim</AssemblyName>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <ProjectReference Include="../APSIM.Interop/APSIM.Interop.csproj" />
     <ProjectReference Include="../Models/Models.csproj" />
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
+
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
 
 </Project>

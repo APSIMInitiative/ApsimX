@@ -1,6 +1,7 @@
 ﻿using ApsimNG.Interfaces;
 using Models;
 using Models.Core;
+using Models.Factorial;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -60,8 +61,21 @@ namespace UserInterface.Presenters
                     return markdownWriter.ToString();
 
                 DataTable dataTable = null;
-                if(ds.Reader.TableNames.Any())
-                    dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+
+                bool expSim = model.FindAllAncestors<Experiment>().Any();
+                if (expSim)
+                {
+                    markdownWriter.Write("### Multiple simulation experiment performed");
+                    markdownWriter.Write("  \r\n  \r\n");
+
+                    if (ds.Reader.TableNames.Any())
+                        dataTable = ds.Reader.GetData(tableName: "_Messages");
+                }
+                else
+                {
+                    if (ds.Reader.TableNames.Any())
+                        dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                }
 
                 if (dataTable == null)
                 {
@@ -162,6 +176,8 @@ namespace UserInterface.Presenters
                             }
 
                             markdownWriter.Write("  \r\n### ");
+                            if (expSim)
+                                markdownWriter.Write($"[{dr[2]}].");
                             markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
                             msgStr = msgStr.Replace("[r=", @".resource-**");

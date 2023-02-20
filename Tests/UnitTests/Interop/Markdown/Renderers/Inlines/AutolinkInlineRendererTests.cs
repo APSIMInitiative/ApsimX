@@ -51,8 +51,8 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             renderer = new AutolinkInlineRenderer();
-            autolink = new AutolinkInline();
-            autolink.Url = sampleUri = "theurl";
+            sampleUri = "theurl";
+            autolink = new AutolinkInline(sampleUri);
         }
 
         /// <summary>

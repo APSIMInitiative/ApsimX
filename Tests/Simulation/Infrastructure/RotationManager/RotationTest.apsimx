@@ -1,43 +1,41 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 130,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 159,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
       "Text": "A (not very useful by itself) test of the rotation manager's features.\n\n- Many arcs from one node\n- Many arcs to one node\n- Loopback arcs\n- Boolean conditions\n- Integer conditions (returning -1, 1, 2)",
       "Name": "Memo",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "rotation",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Clock, Models",
           "Start": "1900-01-01T00:00:00",
           "End": "1910-01-01T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "SummaryFile",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -216,8 +214,8 @@
           "InitialState": "initial",
           "Verbose": false,
           "Name": "RotationManager",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -233,31 +231,32 @@
           ],
           "GroupByVariableName": null,
           "Name": "TransitionReport",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\nusing Models.Core;\nusing Models.Storage;\nusing System.Data;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n    \t[Link] private Clock clock;\n    \tprivate int a1LoopbackCounter;\n\n    \t[EventSubscribe(\"StartOfSimulation\")]\n    \tprivate void StartOfSim(object sender, EventArgs args)\n    \t{\n    \t\ta1LoopbackCounter = 0;\n    \t}\n\n    \t// Can go to A only on even-numbered days.\n    \tpublic bool CanGoToA\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.DayOfYear % 2 == 0;\n    \t\t}\n    \t}\n\n    \t// Can go to A1 only in even years.\n    \tpublic bool CanGoToA1\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.Year % 2 == 0;\n    \t\t}\n    \t}\n\n    \t// A1 can always loopback.\n    \tpublic bool A1CanLoopback\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn true;\n    \t\t}\n    \t}\n\n    \t// Count the number of times we've looped back inside A1\n    \tpublic void A1Loopback()\n    \t{\n    \t\ta1LoopbackCounter++;\n    \t}\n\n    \t// Can go from A1 to A2 only after looping back 5 times.\n    \tpublic int CanGoFromA1ToA2\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\tif (a1LoopbackCounter < 5)\n    \t\t\t\treturn 0;\n    \t\t\tif (a1LoopbackCounter == 5)\n    \t\t\t\treturn 1;\n    \t\t\treturn 2;\n    \t\t}\n    \t}\n\n    \t// Can go to A2 with normal priority if year >= 1901.\n    \t// Can go to A2 with high priority if year == 1901.\n    \tpublic int CanGoFromAToA2\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\tif (clock.Today.Year == 1901)\n    \t\t\t\treturn 2;\n    \t\t\tif (clock.Today.Year > 1901)\n    \t\t\t\treturn 1;\n    \t\t\treturn 0;\n    \t\t}\n    \t}\n\n    \t// Can never go to A3 before 1905.\n    \t// Can go to A3 with normal priority in even years.\n    \t// Gan go to A3 with high priority in odd years.\n    \tpublic int CanGoFromAToA3\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\tif (clock.Today.Year < 1905)\n    \t\t\t\treturn -1;\n    \t\t\tif (clock.Today.Year % 2 == 0)\n    \t\t\t\treturn 1;\n    \t\t\treturn 2;\n    \t\t}\n    \t}\n\n    \t// Can go from A2 to B in December only.\n    \tpublic bool CanGoFromA2ToB\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.Month == 12;\n    \t\t}\n    \t}\n\n    \t// Can go from A3 to B in July.\n    \tpublic bool CanGoFromA3ToB\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.Month == 7;\n    \t\t}\n    \t}\n\n    \t// Can go from B to A only on January 1.\n    \tpublic bool CanGoFromBToA\n    \t{\n    \t\tget\n    \t\t{\n    \t\t\treturn clock.Today.DayOfYear == 1;\n    \t\t}\n    \t}\n    }\n}\n",
+          "Code": "using Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.Storage;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock clock;\r\n        private int a1LoopbackCounter;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void StartOfSim(object sender, EventArgs args)\r\n        {\r\n            a1LoopbackCounter = 0;\r\n        }\r\n\r\n        // Can go to A only on even-numbered days.\r\n        public bool CanGoToA\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.DayOfYear % 2 == 0;\r\n            }\r\n        }\r\n\r\n        // Can go to A1 only in even years.\r\n        public bool CanGoToA1\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.Year % 2 == 0;\r\n            }\r\n        }\r\n\r\n        // A1 can always loopback.\r\n        public bool A1CanLoopback\r\n        {\r\n            get\r\n            {\r\n                return true;\r\n            }\r\n        }\r\n\r\n        // Count the number of times we've looped back inside A1\r\n        public void A1Loopback()\r\n        {\r\n            a1LoopbackCounter++;\r\n        }\r\n\r\n        // Can go from A1 to A2 only after looping back 5 times.\r\n        public int CanGoFromA1ToA2\r\n        {\r\n            get\r\n            {\r\n                if (a1LoopbackCounter < 5)\r\n                    return 0;\r\n                if (a1LoopbackCounter == 5)\r\n                    return 1;\r\n                return 2;\r\n            }\r\n        }\r\n\r\n        // Can go to A2 with normal priority if year >= 1901.\r\n        // Can go to A2 with high priority if year == 1901.\r\n        public int CanGoFromAToA2\r\n        {\r\n            get\r\n            {\r\n                if (clock.Today.Year == 1901)\r\n                    return 2;\r\n                if (clock.Today.Year > 1901)\r\n                    return 1;\r\n                return 0;\r\n            }\r\n        }\r\n\r\n        // Can never go to A3 before 1905.\r\n        // Can go to A3 with normal priority in even years.\r\n        // Gan go to A3 with high priority in odd years.\r\n        public int CanGoFromAToA3\r\n        {\r\n            get\r\n            {\r\n                if (clock.Today.Year < 1905)\r\n                    return -1;\r\n                if (clock.Today.Year % 2 == 0)\r\n                    return 1;\r\n                return 2;\r\n            }\r\n        }\r\n\r\n        // Can go from A2 to B in December only.\r\n        public bool CanGoFromA2ToB\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.Month == 12;\r\n            }\r\n        }\r\n\r\n        // Can go from A3 to B in July.\r\n        public bool CanGoFromA3ToB\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.Month == 7;\r\n            }\r\n        }\r\n\r\n        // Can go from B to A only on January 1.\r\n        public bool CanGoFromBToA\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.DayOfYear == 1;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "RotationScript",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\nusing Models.Core;\nusing Models.Storage;\nusing System.Data;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model, ITest\n    {\n        public void Run()\n        {\n            IStorageReader storage = this.FindInScope<IDataStore>().Reader;\n            DataTable data = storage.GetData(\"TransitionReport\", \"Current\", new string[] { \"rotation\" }, new[] { \"doy\", \"state\" });\n            int[] dates = DataTableUtilities.GetColumnAsIntegers(data, \"doy\");\n            string[] states = DataTableUtilities.GetColumnAsStrings(data, \"state\");\n\n            if (dates.Length != expectedDates.Length)\n            \tthrow new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedDates.Length, dates.Length));\n            for (int i = 0; i < dates.Length; i++)\n            \tif (dates[i] != expectedDates[i])\n            \t\tthrow new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedDates[i], dates[i]));\n            for (int i = 0; i < states.Length; i++)\n            \tif (states[i] != expectedStates[i])\n            \t\tthrow new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedStates[i], states[i]));\n        \tif (states.Length != expectedStates.Length)\n            \tthrow new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedStates.Length, states.Length));\n        }\n\n        private static readonly int[] expectedDates = new int[]\n        {\n            2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t2,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t336,\n\t\t\t1,\n\t\t\t1,\n\t\t\t182,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t335,\n\t\t\t1,\n\t\t\t1,\n\t\t\t182,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1,\n\t\t\t336,\n\t\t\t1,\n\t\t\t1,\n\t\t\t182,\n\t\t\t1,\n\t\t\t1,\n\t\t\t1\n        };\n\n        private static readonly string[] expectedStates = new string[]\n        {\n        \t\"initial\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A3\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A3\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\",\n\t\t\t\"A2\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A3\",\n\t\t\t\"B\",\n\t\t\t\"A\",\n\t\t\t\"A1\"\n        };\n    }\n}\n",
+          "Code": "using Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.Storage;\r\nusing Models.Core;\r\nusing System;\nusing System.Globalization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            IStorageReader storage = this.FindInScope<IDataStore>().Reader;\r\n            DataTable data = storage.GetData(\"TransitionReport\", \"Current\", new string[] { \"rotation\" }, new[] { \"doy\", \"state\" });\r\n            int[] dates = DataTableUtilities.GetColumnAsIntegers(data, \"doy\");\r\n            string[] states = DataTableUtilities.GetColumnAsStrings(data, \"state\", CultureInfo.InvariantCulture);\r\n\r\n            if (dates.Length != expectedDates.Length)\r\n                throw new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedDates.Length, dates.Length));\r\n            for (int i = 0; i < dates.Length; i++)\r\n                if (dates[i] != expectedDates[i])\r\n                    throw new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedDates[i], dates[i]));\r\n            for (int i = 0; i < states.Length; i++)\r\n                if (states[i] != expectedStates[i])\r\n                    throw new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedStates[i], states[i]));\r\n            if (states.Length != expectedStates.Length)\r\n                throw new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedStates.Length, states.Length));\r\n        }\r\n\r\n        private static readonly int[] expectedDates = new int[]\r\n        {\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            335,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            1,\r\n            336,\r\n            1,\r\n            1,\r\n            182,\r\n            1,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            182,\r\n            1,\r\n            1,\r\n            1,\r\n            336,\r\n            1,\r\n            1,\r\n            182,\r\n            1,\r\n            1,\r\n            1\r\n        };\r\n\r\n        private static readonly string[] expectedStates = new string[]\r\n        {\r\n            \"initial\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A3\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A3\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A3\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\"\r\n        };\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "ResultsValidator",
-          "IncludeInDocumentation": true,
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -266,13 +265,12 @@
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
