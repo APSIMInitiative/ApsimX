@@ -165,6 +165,18 @@ namespace Models.Soils.NutrientPatching
         /// <summary>The amount of mineral N in each patch (kg/ha).</summary>
         public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()+ patch.Nutrient.NH4.kgha.Sum()+ patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
+        /// <summary>Denitrified Nitrogen (N flow from NO3) for each patch.</summary>
+        public double[] DenitrifiedNEachPatch { get { return patches.Select(patch => patch.Nutrient.DenitrifiedN.Sum()).ToArray(); } }
+
+        /// <summary>Total N2O lost to the atmosphere for each patch.</summary>
+        public double[] DenitN2OEachPatch { get { return patches.Select(patch => patch.Nutrient.N2Oatm.Sum()).ToArray(); } }
+
+        /// <summary>Total C for each patch</summary>
+        public double[] TotalCEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalC.Sum()).ToArray(); } }
+
+        /// <summary>Total N for each patch</summary>
+        public double[] TotalNEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalN.Sum()).ToArray(); } }
+
         /// <summary>Calculate actual decomposition</summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
