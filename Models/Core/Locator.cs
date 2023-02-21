@@ -282,7 +282,7 @@
                 bool includeDisabled = (flags & LocatorFlags.IncludeDisabled) == LocatorFlags.IncludeDisabled;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType) && (includeDisabled || m.Enabled));
+                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Trim().Equals(namePathBits[i], compareType) && (includeDisabled || m.Enabled));
                     if (localModel == null)
                     {
                         break;
