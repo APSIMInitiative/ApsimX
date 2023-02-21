@@ -4069,7 +4069,7 @@ namespace Models.Core.ApsimFile
                         });
                     }
 
-                    if (soilChildren != null && chemicalChildren != null && bdToken != null)
+                    if (soilChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
                         var bdThickness = physical["Thickness"].Values<double>().ToArray();
@@ -4114,11 +4114,19 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Move solutes from nutrient to soil.
-                        var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        var no3Token = JsonUtilities.ChildWithName(soil, "NO3");
+                        if (no3Token == null)
+                        {
+                            var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        }
 
-                        var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        var nh4Token = JsonUtilities.ChildWithName(soil, "NH4");
+                        if (nh4Token == null)
+                        {
+                            var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        }
 
                         var labileP = GetValues(tokensContainingValues, "LabileP", 0.0, bd, bdThickness, null);
                         var unavailableP = GetValues(tokensContainingValues, "UnavailableP", 0.0, bd, bdThickness, null);
@@ -4159,8 +4167,12 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Add a urea solute to soil
-                        var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
-                        soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        var ureaToken = JsonUtilities.ChildWithName(soil, "Urea");
+                        if (ureaToken == null)
+                        {
+                            var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
+                            soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        }
                     }
 
 
