@@ -8795,14 +8795,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97.1048561789481",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.330486171103675",
-                    "[Phenology].CAMP.FLNparams.MinLN = 14.354361439042343",
-                    "[Phenology].CAMP.FLNparams.PpLN = 8.190699412411387",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 10.171551364057434",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -3.3252753053818918",
+                    "[Phenology].CAMP.FLNparams.MinLN = 7.597685293660247",
+                    "[Phenology].CAMP.FLNparams.PpLN = 0.49238022902938494",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 4.16112136144893",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -2.8773645434867845",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 421.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.5213641257513082"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 78.0",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.0806356685051717"
                   ],
                   "Name": "CSIROW002",
                   "ResourceName": null,
@@ -9566,7 +9566,8 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50.0",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.9141268535838023"
                   ],
-                  "Name": "suneca"
+                  "Name": "suneca",
+                  "Children": []
                 }
               ],
               "Enabled": true,
