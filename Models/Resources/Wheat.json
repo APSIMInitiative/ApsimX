@@ -7586,16 +7586,7 @@
                   ],
                   "Name": "Gregory",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suneca",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9380,7 +9371,16 @@
                   ],
                   "Name": "Spitfire",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+				    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Drysdale",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+				  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9541,24 +9541,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 8.5",
-                    "[Phenology].CAMP.FLNparams.PpLN = 10.2",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 7.0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 4.0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 120.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-                  ],
-                  "Name": "Drysdale",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 7.998939178952586",
                     "[Phenology].CAMP.FLNparams.PpLN = 9.34962595828825",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0.29018276679671734",
@@ -9566,7 +9548,7 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50.0",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.9141268535838023"
                   ],
-                  "Name": "suneca",
+                  "Name": "Suneca",
                   "Children": []
                 }
               ],
