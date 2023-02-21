@@ -4069,7 +4069,7 @@ namespace Models.Core.ApsimFile
                         });
                     }
 
-                    if (soilChildren != null && chemicalChildren != null && bdToken != null)
+                    if (soilChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
                         var bdThickness = physical["Thickness"].Values<double>().ToArray();
