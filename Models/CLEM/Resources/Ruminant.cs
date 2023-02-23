@@ -479,7 +479,7 @@ namespace Models.CLEM.Resources
         /// Flag to identify individual ready for sale
         /// </summary>
         [FilterByProperty]
-        public HerdChangeReason SaleFlag { get; set; }
+        public HerdChangeReason SaleFlag { get; set; } = HerdChangeReason.None;
 
         /// <summary>
         /// Determines if the change reason is positive or negative

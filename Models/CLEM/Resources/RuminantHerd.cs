@@ -329,13 +329,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (Herd != null)
-                Herd.Clear();
-
+            Herd?.Clear();
             Herd = null;
-            if (PurchaseIndividuals != null)
-                PurchaseIndividuals.Clear();
-
+            PurchaseIndividuals?.Clear();
             PurchaseIndividuals = null;
         }
 
@@ -345,8 +341,7 @@ namespace Models.CLEM.Resources
         {
             // clear purchased individuals at start of time step as there is no carryover
             // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
-            if (PurchaseIndividuals != null)
-                PurchaseIndividuals.Clear();
+            PurchaseIndividuals?.Clear();
         }
 
         /// <summary>
