@@ -14,6 +14,57 @@ Residue cover declines as residues decompose.
 Residue decomposition is simulated in APSIM in response to weather, as well as the chemical composition of the residues. 
 By doing this simulation you will reinforce skills learned in previous exercises and learn to do some basic editing of default values to "customise" your simulations.
 
-This module assumes you have completed the previous module: `Module One: Fallow Simulation`. It will introduce you to the Surface Organic Matter module and demonstrate how surface residue decomposes over time.
+This module assumes you have completed the previous module: "Module One: Fallow Simulation". It will introduce you to the Surface Organic Matter module and demonstrate how surface residue decomposes over time.
 
-1.   For this module we will use the simulation we created in Exercise 1 (Module1) as a base. There is also a completed example in the training toolbox if you would prefer to use that. Open the file Module1.apsim.
+1. For this module we will use the simulation we created in Exercise 1 (Module1) as a base. 
+There is also a completed example in the training toolbox if you would prefer to use that. Open the file Module1.apsim.
+
+2. Save the file as Module2.apsim in your `Apsim Training` folder. 
+Remember to use `Save As` not `Save` or you will overwrite the old file.
+
+3. Delete the `Sand Fallow` simulation. We'll use `Clay Fallow` as the starting point. Also delete the graph.
+
+4. Make a copy of `Clay Fallow` by dragging it to the simulations node in the tree and rename this new simulation to `Clay Residue`.
+	- Your node tree should look like this:
+	![Node tree](/images/moduleTwoImages/step1.png)
+
+5. Expand the new simulation then expand the paddock node. Click the SurfaceOrganicMatter module and change the initial surface residue to 3000 kg/ha.
+![residue variable](/images/moduleTwoImages/step2.png)
+
+6. Run both of the simulations, either by clicking on the `simulations` node at the top and then clicking Run, or selecting them individually and running them.
+
+7. Create a graph of Date vs surface organic matter cover (SurfaceOrganicMatter.Cover) and Weather.Rain (right hand axis) for the `Clay Residue` simulation. 
+	- To do this:
+		- right-click `Clay Residue` node.
+		- change graph name to `Organic Matter Cover` 
+		- right-click `Organic Matter Cover` node, 
+			- double-click `Add model...`, 
+			- double-click `Series` 
+		- click `Series` node
+			- change `X` to `Clock.Today` 
+			- change `Y` to `SurfaceOrganicMatter.Cover`
+			- select `Report` as data source
+			- change the `type` to `Scatter`
+			- change `line type` to `Solid`
+			- change `marker type` to `None`
+			- change `colour` to yellow
+			- rename this `Series` node as `SOM`.
+		- Your node tree should look like this:
+		![SOM node](/images/moduleTwoImages/step3.png)
+8. Create another series for rain under the `Graph` node. 
+	- To do this:
+		- right-click `Graph` node
+			- double-click `Add model...`
+			- double-click `Series`
+			- rename this series to `Rain`
+		- click `Rain` node
+			- select `Report` for `Data Source`
+			- change `X` to `Clock.Today`
+			- change `Y` to `Weather.Rain`
+				- check `on right?` checkbox
+			- change `Type` to `Scatter`
+			- change `Line type` to `Solid`
+			- change `Marker type` to `None`
+			- change `Colour` to blue.
+		- Your node tree should look like this:
+		![Rain node](/images/moduleTwoImages/step4.png)
