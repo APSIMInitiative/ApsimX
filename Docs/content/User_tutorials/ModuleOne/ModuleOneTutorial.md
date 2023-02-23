@@ -4,6 +4,8 @@ draft: false
 ---
 <p style="font-size: 10px">Created 22/02/2023</p>
 
+<em style="color: red"> IMPORTANT NOTE: It is highly recommended that you upgrade your APSIM Next Gen version to at least version 2023.2.7164.0 or later.</em>
+
 We will create a simulation that examines the water balance over time in a fallow field in two locations with different soil types.
 
 1. In the top menu bar, click on "Open an example".
