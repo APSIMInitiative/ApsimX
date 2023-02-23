@@ -111,7 +111,9 @@ We will create a simulation that examines the water balance over time in a fallo
 
 	![New simulation structure](/images/ModuleOneImages/step18.png)
 
-16. Results for the simulation are found in the ‘DataStore’ node. The data that is reported into the datastore is configured in the "Report" node. Click the "Report" node and delete all the Variables under the "Reporting variables" section. To do this:
+16. Results for the simulation are found in the ‘DataStore’ node. 
+The data that is reported into the datastore is configured in the "Report" node. 
+Click the "Report" node and delete all the Variables under the "Reporting variables" section. To do this:
 	- Highlight all the text.
 	- Right-click the highlighted text and click "delete".
 
@@ -142,7 +144,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 	Your report view should now look like this:
 
-	![Deleting reporting variables](/images/ModuleOneImages/step20.png)
+	![Reporting variables](/images/ModuleOneImages/step20.png)
 
 	 You can choose a regular interval such as every day or once a month/year, etc, or you specify an event. 
 	 
@@ -173,7 +175,7 @@ We will create a graph of Date vs ESW and Rain(Right Hand Axis).
 1.	First lets delete the existing graph called: "Wheat Yield Time Series" by right-clicking the node and clicking "delete". ![Delete graph](/images/ModuleOneImages/step22.png)
 
 2.	Next lets create a new graph for this simulation.
-	- Right-click "Simulation"
+	- Right-click "Clay Fallow"
 	- Click "add model" ![add model](/images/ModuleOneImages/step23.png)
 	- Click "graph" this will add it to the list of nodes. ![add graph](/images/ModuleOneImages/step24.png)
 
@@ -195,20 +197,87 @@ We will create a graph of Date vs ESW and Rain(Right Hand Axis).
 5.	Let's add another series to the "Graph" node. Rename it "Rain".
 	- In the `Data Source` drop down menu, select `Report`.
 	- In the `X` drop down menu, select `Clock.Today`.
-	- In the `Y` drop down menu, select `Weather.Rain`. Also, tick "on right?" checkbox.
+	- In the `Y` drop down menu, select `Weather.Rain`. 
+		- Also, tick the "on right?" checkbox. This will add it to the right side of the graph.
 	- In the `Type` drop down menu, select `Scatter`.
 	- In the `Line Type` drop down menu, select `Solid`.
 	- In the `Marker type` drop down menu, select `None`.
 	- In the `Colour` drop down menu, select <span style="color:blue;">blue</span>.
 	- Your Rain series variables should now look like this: ![Rain graph variables](/images/ModuleOneImages/step27.png)
 
-6.	Click on the Plot sub component. Click on the ‘X variables’ square to make sure the background of the square is pink. Then click on the ‘Date’ column heading. It should appear in the list in the square.
+6.	If we click on the "Graph" node now it will display all the data like so
+	![Graphed data](/images/ModuleOneImages/step28.png)
 
-7.	Click on the ‘Y variables’ square to make its background pink. Click on the ‘esw’ column heading, and the ‘Rain’ column heading. They should be added to the list in the square. To make ‘Rain’ appear on the right hand axis, click ‘Rain’ in the square to highlight it, and then right click on it. In the popup menu click on ‘Right Hand Axis’.
+7.	Try to create a graph of Date vs Runoff and Rain (right hand axis). 
+		- Change the line type to "Dot". 
+		- Tip: you can copy a graph by dragging it to the node where you want it to appear. 
+		- Try copying your graph to the "Simulation" node and then edit the new one. 
+		- It should look like this:
+		![Runoff graph](/images/ModuleOneImages/step29.png)
 
-8.	We want a nice clean line to be plotted with no points so now under ‘Point type’ choose ‘None’.
+## Comparing Simulations
 
-9.	Now just click on the top level ESW component to view the graph. The graph should show the ESW (in mm) increasing with day of year. The sudden increases are due to rainfall events and the declines to evaporation and drainage loss. Daily rainfall will show this more clearly.
+Quite often you will want to examine differences between multiple simulations. 
+Let’s examine the effect of runoff on the water balance of two different soil types. 
+To do this, we’ll copy our simulation to create a new one exactly the same.
+
+1. Drag the "Clay Fallow" node up to the top simulations node. 
+Now drop it on the node to create a copy.
+![Copy Clay Fallow node](/images/ModuleOneImages/step30.png)
+
+2. Rename this new simulation "Sand Fallow".
+![Rename Simulation](/images/ModuleOneImages/step31.png)
+
+3. Drag the Sand soil from the Training toolbox onto the "Field" node under the new Sand Fallow simulation. 
+Then delete the Heavy Clay soil. 
+![Copy sand soil type](/images/ModuleOneImages/step32.png)
+
+4. Since we have a new soil we need to set initial water and nitrogen again.
+	- Click "Water" node and change variable "percent full" to 10% and check "filled from top?"
+	![Change water variables](/images/ModuleOneImages/step33.png)
+	- Click "NO3" node and change "0-2000" Depth value to: "0-1300".
+	- Change "ppm" to "kg/ha" by right-clicking "ppm" and clicking "kg/ha".
+	- Change the "initial value" to 50 and press enter.
+	- Next, click "NH4" node and change the "ppm" value to "kg/ha" like we did above with "NO3" node.
+	- Change Depth to "0-1300" and "initial value" to "3".
+	- Your nodes variables should look like below:
+<table>
+	<tr>
+
+		<td>
+		<p>NO3</p>
+		![NO3](/images/ModuleOneImages/step34.png)
+		</td>
+
+		<td>
+		<p>NH4</p>
+		![NH4](/images/ModuleOneImages/step35.png)
+		</td>
+
+	</tr>
+</table>
+
+## Graph both Simulations
+1. Next, run APSIM.
+2. Let's graph both the simulations together. To do this:
+	- Click "Simulation" node at the very top of the left panel.
+	- Click "Add model..."
+	- Click "Graph"
+	![Whole simulation graph](/images/ModuleOneImages/step36.png)
+3. Let's rename it "Runoff". 
+4. Let's add a series to this graph by right-clicking the "Graph", clicking "Add model...", and clicking "Series".
+5. Rename the series "runoff" and change the variables to match the image below.
+![runoff series variables](/images/ModuleOneImages/step37.png)
+6. Add another "series" to the "Runoff" graph and rename it "rain". 
+7. Change the variables to match the image below>
+![rain series variables](/images/ModuleOneImages/step38.png)
+8. Now we have a graph showing the runoff of both soils. 
+![Final graph](/images/ModuleOneImages/step39.png)
+
+ *Congratulations on completing your first module!*
+
+
+
 
 
 	
