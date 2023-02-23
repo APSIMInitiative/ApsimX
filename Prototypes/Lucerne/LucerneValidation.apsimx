@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 332,
+  "ExplorerWidth": 394,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -15233,11 +15233,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -23032,11 +23032,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -25746,11 +25746,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -28871,7 +28871,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -33769,7 +33769,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -33781,7 +33781,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PhenologyStage",
                       "ResourceName": null,
@@ -34156,7 +34156,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Cover",
                       "ResourceName": null,
@@ -34251,7 +34251,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ShootPopulation",
                       "ResourceName": null,
@@ -37022,11 +37022,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -37034,7 +37034,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PhenologyStage",
                       "ResourceName": null,
@@ -40288,7 +40288,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -40300,7 +40300,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PhenologyStage",
                       "ResourceName": null,
@@ -40673,7 +40673,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Cover",
                       "ResourceName": null,
@@ -40768,7 +40768,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ShootPopulation",
                       "ResourceName": null,
@@ -40874,16 +40874,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "SD2",
-                        "SD3",
-                        "SD4",
-                        "SD5",
-                        "SD6",
-                        "SD7",
-                        "SD8",
-                        "SD9"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SoilWaterContent",
                       "ResourceName": null,
@@ -42632,7 +42623,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -43658,7 +43649,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "SW250-310",
+                          "YFieldName": "SD250-310",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -43692,11 +43683,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Soil runoff",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": 0.0,
+                          "Minimum": null,
                           "Maximum": null,
                           "Interval": null
                         }
@@ -43706,7 +43697,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "RunOff",
+                      "Name": "Runoff",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -43725,8 +43716,8 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Runoff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -43743,22 +43734,22 @@
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
-                          "ColourArgb": -990142,
-                          "FactorToVaryColours": "SimulationName",
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
-                          "Marker": 0,
+                          "Marker": 1,
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Runoff",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
-                          "Cumulative": true,
+                          "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
@@ -45082,7 +45073,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -46950,11 +46941,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -48541,11 +48532,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -49861,11 +49852,11 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Aboveground live weight (g DM/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": null,
+                      "Minimum": "NaN",
                       "Maximum": null,
                       "Interval": null
                     }
@@ -52069,7 +52060,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "leafgreenwt",
+                          "YFieldName": "LeafWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -53465,7 +53456,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16747854,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": "Sow",
                       "Marker": 11,
@@ -53554,7 +53545,7 @@
                       "YFieldName": "ShootWt",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -53678,7 +53669,7 @@
                       "YFieldName": "Total_SW",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -54309,6 +54300,10 @@
                       "Code": "\r\nusing Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Lucerne;\r\n        [Link] Clock Clock;\r\n        [Link] Summary summary;\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Depth (mm) Grains are planted\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Seeds sown (/m2)\")]\r\n        public double SowingRate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        summary.WriteMessage(this,SowingDate.ToString(), MessageType.Diagnostic);\r\n        if (Clock.Today == SowingDate)\r\n                Lucerne.Sow(population: SowingRate, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing, budNumber: 1);\r\n            //Lucerne.Sow(... Contains the following arguements:\r\n            //Population  double  Required  Seeds sowing/m2\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
+                          "Key": "SowingDate",
+                          "Value": "05/26/1988 00:00:00"
+                        },
+                        {
                           "Key": "RowSpacing",
                           "Value": "150"
                         },
@@ -54323,10 +54318,6 @@
                         {
                           "Key": "CultivarName",
                           "Value": "Trifecta"
-                        },
-                        {
-                          "Key": "SowingDate",
-                          "Value": "1988-05-26"
                         }
                       ],
                       "Name": "LucerneSowingRule",
@@ -54937,7 +54928,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16747854,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": "SowDate",
                       "Marker": 11,
@@ -56313,11 +56304,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -64705,11 +64696,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -65684,7 +65675,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "EC",
+                      "Name": "ET",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -67411,11 +67402,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -67522,7 +67513,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryColours": "FD",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
@@ -67531,7 +67522,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NodeNumber",
+                          "YFieldName": "ShootWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -67551,7 +67542,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryColours": "FD",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -67560,7 +67551,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NodeNumber",
+                          "YFieldName": "ShootWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -68730,7 +68721,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -69114,7 +69105,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Height (mm)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -70048,7 +70039,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -71411,7 +71402,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -71700,7 +71691,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Height (mm)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -72864,11 +72855,11 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
+                          "Minimum": "NaN",
                           "Maximum": null,
                           "Interval": null
                         }
@@ -72964,11 +72955,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "ElliottFDFD7WaterIrr",
-                        "ElliottFDFD10WaterIrr",
-                        "ElliottFDFD10WaterDry"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "AboveGroundWt",
                       "ResourceName": null,
@@ -74148,11 +74135,11 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Aboveground live weight (g DM/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": null,
+                      "Minimum": "NaN",
                       "Maximum": null,
                       "Interval": null
                     }
@@ -74172,7 +74159,7 @@
                       "YAxis": 0,
                       "ColourArgb": -16777216,
                       "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": "Defoliation",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
@@ -74278,7 +74265,7 @@
                       "YAxis": 0,
                       "ColourArgb": -16777216,
                       "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
@@ -75056,17 +75043,17 @@
                             100.0
                           ],
                           "InitialValues": [
-                            0.27112,
-                            0.27112,
-                            0.26732,
-                            0.33048,
-                            0.33716,
-                            0.37364,
-                            0.41003999999999996,
-                            0.38316000000000006,
-                            0.38024
+                            0.271,
+                            0.271,
+                            0.267,
+                            0.33,
+                            0.337,
+                            0.374,
+                            0.41,
+                            0.383,
+                            0.38
                           ],
-                          "InitialPAWmm": 136.528,
+                          "InitialPAWmm": 136.4,
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
@@ -75092,7 +75079,7 @@
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "PSIDul": -100.0,
-                          "Thickness": null,
+                          "Thickness": [],
                           "SWCON": null,
                           "KLAT": null,
                           "Name": "SoilWater",
@@ -75536,13 +75523,13 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Aboveground live weight (g DM/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "Minimum": null,
                       "Maximum": null,
-                      "Interval": null
+                      "Interval": "NaN"
                     }
                   ],
                   "LegendPosition": 0,
@@ -75835,7 +75822,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Soil.OutputLayers.SW(1)",
+                      "YFieldName": "SWmm(1)",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": false,
@@ -77535,7 +77522,7 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Aboveground live weight (g DM/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
@@ -77707,11 +77694,11 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Leaf Area Index (m2/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 0.0,
+                      "Minimum": "NaN",
                       "Maximum": null,
                       "Interval": null
                     }
@@ -78763,7 +78750,7 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Aboveground live weight (g DM/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
@@ -78935,12 +78922,12 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Leaf Area Index (m2/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 0.0,
-                      "Maximum": null,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
                       "Interval": null
                     }
                   ],
@@ -80882,7 +80869,7 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Aboveground live weight (g DM/m2)",
+                      "Title": "",
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
@@ -85063,7 +85050,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight (g DM/m2)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
