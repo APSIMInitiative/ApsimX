@@ -675,7 +675,7 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.FloatsAreEqual(EnergyGross, 0))
                     htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
                 else
-                    htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{EnergyGross}</span>");
                 htmlWriter.Write(" MJ/kg dry matter</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");

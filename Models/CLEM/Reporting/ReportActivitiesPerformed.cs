@@ -499,40 +499,6 @@ namespace Models.CLEM.Reporting
                                     htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Any()? "note":"")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
                                 }
 
-                                //string image = "";
-                                //switch (item.ToString())
-                                //{
-                                //    case "Success":
-                                //    case "NoTask":
-                                //    case "NotNeeded":
-                                //    case "Timer":
-                                //    case "Calculation":
-                                //    case "Critical":
-                                //    case "Partial":
-                                //    case "Ignore":
-                                //        image = $"ActivitiesReport{item.ToString()}Web";
-                                //        break;
-                                //    case "Warning":
-                                //        image = $"ActivitiesReportIgnoreWeb";
-                                //        break;
-                                //    case "Ignored":
-                                //        image = "ActivitiesReportBlankWeb";
-                                //        break;
-                                //    default:
-                                //        image = "";
-                                //        break;
-                                //}
-
-                                //if (image == "")
-                                //{
-                                //    htmlString.Write($"<td>{item.ToString().Replace("\r\n", splitter)}</td>");
-                                //}
-                                //else
-                                //{
-                                //    htmlString.Write($"<td><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" tooltip=\"{"None"}\"></td>");
-                                //}
-
-
                             }
                         }
                         htmlString.WriteLine($"</tr>");
@@ -670,14 +636,14 @@ namespace Models.CLEM.Reporting
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"namediv\">" + this.Name + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>");
+                htmlWriter.Write($"<div class=\"namediv\">{this.Name}{((!this.Enabled) ? " - DISABLED!" : "")}</div>");
                 if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 {
                     htmlWriter.Write("<div class=\"partialdiv\"");
                     htmlWriter.Write(">");
                      htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write($"<div class=\"typediv\">{ this.GetType().Name}</div>");
                 return htmlWriter.ToString();
             }
         }

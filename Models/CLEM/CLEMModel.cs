@@ -620,9 +620,9 @@ namespace Models.CLEM
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
-                htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
-                htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
+                htmlWriter.Write($"\r\n<div class=\"holder{((extra == "") ? "main" : "sub")} {overall}\" style=\"opacity: {SummaryOpacity(FormatForParentControl)};\">");
+                htmlWriter.Write($"\r\n<div class=\"clearfix {overall}banner{extra}\">{ModelSummaryNameTypeHeader()}</div>");
+                htmlWriter.Write($"\r\n<div class=\"{overall}content{((extra != "") ? extra : "")}\">");
 
                 return htmlWriter.ToString(); 
             }
