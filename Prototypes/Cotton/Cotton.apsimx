@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 155,
+  "ExplorerWidth": 417,
+  "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2024,7 +2024,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2128,7 +2128,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -2958,7 +2958,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "DMDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -2997,7 +2997,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "NDemandPriorityFactors",
                   "ResourceName": null,
                   "Children": [
@@ -3525,7 +3525,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3711,7 +3711,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -3858,7 +3858,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -4289,7 +4289,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4464,7 +4464,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -4950,7 +4950,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5148,7 +5148,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5259,7 +5259,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -5685,7 +5685,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
                   "ResourceName": null,
                   "Children": [
@@ -5858,7 +5858,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
                   "ResourceName": null,
                   "Children": [
@@ -6073,7 +6073,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [
@@ -7281,9 +7281,10 @@
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "DailyReport",
           "ObservedTableName": "Observed",
-          "FieldNameUsedForMatch": "Clock.Today",
-          "FieldName2UsedForMatch": null,
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
           "AllColumns": false,
           "Name": "PredictedObserved",
           "ResourceName": null,
@@ -8237,6 +8238,10 @@
                                   "D0": 0.0,
                                   "Exco": null,
                                   "FIP": null,
+                                  "DepthConstant": 0.0,
+                                  "MaxDepthSoluteAccessible": 0.0,
+                                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                                  "MaxEffectiveRunoff": 0.0,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -8268,6 +8273,10 @@
                                   "D0": 0.0,
                                   "Exco": null,
                                   "FIP": null,
+                                  "DepthConstant": 0.0,
+                                  "MaxDepthSoluteAccessible": 0.0,
+                                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                                  "MaxEffectiveRunoff": 0.0,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -8299,6 +8308,10 @@
                                   "D0": 0.0,
                                   "Exco": null,
                                   "FIP": null,
+                                  "DepthConstant": 0.0,
+                                  "MaxDepthSoluteAccessible": 0.0,
+                                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                                  "MaxEffectiveRunoff": 0.0,
                                   "Name": "Urea",
                                   "ResourceName": null,
                                   "Children": [],
@@ -10086,6 +10099,10 @@
                                   "D0": 0.0,
                                   "Exco": null,
                                   "FIP": null,
+                                  "DepthConstant": 0.0,
+                                  "MaxDepthSoluteAccessible": 0.0,
+                                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                                  "MaxEffectiveRunoff": 0.0,
                                   "Name": "NO3",
                                   "ResourceName": null,
                                   "Children": [],
@@ -10121,6 +10138,10 @@
                                   "D0": 0.0,
                                   "Exco": null,
                                   "FIP": null,
+                                  "DepthConstant": 0.0,
+                                  "MaxDepthSoluteAccessible": 0.0,
+                                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                                  "MaxEffectiveRunoff": 0.0,
                                   "Name": "NH4",
                                   "ResourceName": null,
                                   "Children": [],
@@ -10156,6 +10177,10 @@
                                   "D0": 0.0,
                                   "Exco": null,
                                   "FIP": null,
+                                  "DepthConstant": 0.0,
+                                  "MaxDepthSoluteAccessible": 0.0,
+                                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                                  "MaxEffectiveRunoff": 0.0,
                                   "Name": "Urea",
                                   "ResourceName": null,
                                   "Children": [],
