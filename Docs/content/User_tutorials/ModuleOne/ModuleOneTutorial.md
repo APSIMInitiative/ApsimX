@@ -12,9 +12,9 @@ We will create a simulation that examines the water balance over time in a fallo
 
 	![Open example menu bar option](/images/ModuleOneImages/step1.png)
 
-	Because all simulations generally share the same base components, we do not recommend starting from scratch. The best method is to choose the simulation closest to the one you want to build then modify it. For the purpose of this exercise we will use the Continuous Wheat simulation. Click ‘Wheat.apsim’ then click Open.
+	Because all simulations generally share the same base components, we do not recommend starting from scratch. The best method is to choose the simulation closest to the one you want to build then modify it. For the purpose of this exercise we will use the Continuous Wheat simulation. Click ‘Wheat.apsimx’ then click Open.
 
-2. Select "Wheat.apsim". 
+2. Select "Wheat.apsimx". 
 
 	![Open wheat.apsim](/images/ModuleOneImages/step2.png)
 
@@ -24,7 +24,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 
 4. Create a new folder called ‘Apsim Training’ to save all of your work in.  
-	- Remember this location, as you will save all training modules to this location.  Save the file as "Module1.apsim". You will now see the new simulation loaded.
+	- Remember this location, as you will save all training modules to this location.  Save the file as "Module1". You will now see the new simulation loaded.
 
 	<br></br>
 	![Create new folder](/images/ModuleOneImages/step4.png)
@@ -51,7 +51,7 @@ We will create a simulation that examines the water balance over time in a fallo
 
 	![Getting to the training toolbox](/images/ModuleOneImages/step9.png)
 
-	- Inside the training toolbox click "Soils". 
+	- Inside the training toolbox double-click "Soils". 
 	- Right-click the "Heavy Clay", click copy.
 
 		![Getting to the training toolbox](/images/ModuleOneImages/step10.png)
@@ -73,7 +73,7 @@ We will create a simulation that examines the water balance over time in a fallo
 	![Setting starting water settings](/images/ModuleOneImages/step13.png)
 	<br></br>
 
-11. Click the Initial Nitrogen component and set the starting NO3 to 50 kg/ha and starting NH4 to 3 kg/ha. We’ll spread it evenly through the entire soil profile. First, we need to tell Apsim that we want to work in units of kg/ha, not ppm.
+11. Click the "NO3" component and set the starting NO3 to 50 kg/ha and starting NH4 to 3 kg/ha. We’ll spread it evenly through the entire soil profile. First, we need to tell Apsim that we want to work in units of kg/ha, not ppm.
 	- To change the units, right-click the "initial values" cell and select "kg/ha" 
 	- Change NO3 and NH4 to kg/ha then enter the values below.
 	<br></br>
@@ -87,9 +87,9 @@ We will create a simulation that examines the water balance over time in a fallo
 
 ![Checking depths](/images/ModuleOneImages/step16.png)
 
-13. In the SurfaceOrganicMatter node, check that the ‘Organic Matter type’ is wheat and change the ‘Initial surface residue’ to 1000 kg/ha.
+13. In the SurfaceOrganicMatter node, check that the ‘Type of initial residue pool’ is wheat and change the ‘Mass of initial surface residue (kg/ha)’ to 1000 kg/ha.
 
-	- To do this click in the cell to the right of "Mass of initial urface residue (kg/ha)".
+	- To do this click in the cell to the right of "Mass of initial surface residue (kg/ha)".
 	- Then change the value from 500 to 1000.
 
 	<br>
@@ -99,8 +99,10 @@ We will create a simulation that examines the water balance over time in a fallo
 
  14. Delete the fertiliser, wheat, and three Manager nodes: SowingFertiliser, Harvest and SowingRule1, as we do not need them for a fallow simulation.<br>
 
-		- To do this right click each node
+		- To do this right click each manager node
 		- Then click delete.
+		- These nodes have this icon: 
+				<div style="display:block;"><img style="display:inline;" src="/images/ModuleOneImages/step14pt2.png"></div>
 		
 		It should now look like this:
 
@@ -114,7 +116,7 @@ We will create a simulation that examines the water balance over time in a fallo
 	![New simulation structure](/images/ModuleOneImages/step18.png)
 
 16. Results for the simulation are found in the ‘DataStore’ node. 
-The data that is reported into the datastore is configured in the "Report" node. 
+The data that is reported into the datastore is configured in the "Report" node, found under the "Field" node. 
 Click the "Report" node and delete all the Variables under the "Reporting variables" section. To do this:
 	- Highlight all the text.
 	- Right-click the highlighted text and click "delete".
@@ -159,7 +161,7 @@ Click the "Report" node and delete all the Variables under the "Reporting variab
 	18. We've finished building the simulation. 
 		- Click `run` button in the menu bar. The bottom panel will display a message like `Simulation complete [.09 sec]`.
 		- Once the run is complete, click the ‘DataStore’ component to view the results. 
-		- This information can exported as an spreadsheet by:
+		- This information can exported as a spreadsheet by:
 			- right-clicking "DataStore" node		
 		![DataStore](/images/ModuleOneImages/step21.png)
 			- click "Export to EXCEL" 
@@ -179,12 +181,12 @@ We will create a graph of Date vs ESW and Rain(Right Hand Axis).
 2.	Next lets create a new graph for this simulation.
 	- Right-click "Clay Fallow"
 	- Click "add model" ![add model](/images/ModuleOneImages/step23.png)
-	- Click "graph" this will add it to the list of nodes. ![add graph](/images/ModuleOneImages/step24.png)
+	- Double-click "graph" this will add it to the list of nodes. ![add graph](/images/ModuleOneImages/step24.png)
 
 3.	To add data to our graphs we will add "series" to our graph. To do this:
-	- right-click "graph"
-	- click "Add model..."
-	- click "Series" ![add series](/images/ModuleOneImages/step25.png)
+	- Right-click "graph"
+	- Click "Add model..."
+	- Double-click "Series" ![add series](/images/ModuleOneImages/step25.png)
 
 4.	Click "Series". Rename it to ESW.Now we will change the specifics for this series.
 	- In the `Data Source` drop down menu, select `Report`.
@@ -193,7 +195,7 @@ We will create a graph of Date vs ESW and Rain(Right Hand Axis).
 	- In the `Type` drop down menu, select `Scatter`.
 	- In the `Line Type` drop down menu, select `Solid`.
 	- In the `Marker type` drop down menu, select `None`.
-	- In the `Colour` drop down menu, select <span style="color:orange;">orange</span>.
+	- In the `Colour` drop down menu, select orange.
 	- Your ESW series variables should now look like this: ![ESW series variables](/images/ModuleOneImages/step26.png)
 
 5.	Let's add another series to the "Graph" node. Rename it "Rain".
@@ -204,7 +206,7 @@ We will create a graph of Date vs ESW and Rain(Right Hand Axis).
 	- In the `Type` drop down menu, select `Scatter`.
 	- In the `Line Type` drop down menu, select `Solid`.
 	- In the `Marker type` drop down menu, select `None`.
-	- In the `Colour` drop down menu, select <span style="color:blue;">blue</span>.
+	- In the `Colour` drop down menu, select blue.
 	- Your Rain series variables should now look like this: ![Rain graph variables](/images/ModuleOneImages/step27.png)
 
 6.	If we click on the "Graph" node now it will display all the data like so
@@ -262,12 +264,12 @@ Then delete the Heavy Clay soil.
 ## Graph both Simulations
 1. Next, run APSIM.
 2. Let's graph both the simulations together. To do this:
-	- Click "Simulation" node at the very top of the left panel.
+	- Right-click "Simulation" node at the very top of the left panel.
 	- Click "Add model..."
-	- Click "Graph"
+	- Double-click "Graph"
 	![Whole simulation graph](/images/ModuleOneImages/step36.png)
 3. Let's rename it "Runoff". 
-4. Let's add a series to this graph by right-clicking the "Graph", clicking "Add model...", and clicking "Series".
+4. Let's add a series to this graph by right-clicking the "Graph", clicking "Add model...", and double-clicking "Series".
 5. Rename the series "runoff" and change the variables to match the image below.
 ![runoff series variables](/images/ModuleOneImages/step37.png)
 6. Add another "series" to the "Runoff" graph and rename it "rain". 

@@ -53,7 +53,7 @@ Remember to use `Save As` not `Save` or you will overwrite the old file.
 		![SOM node](/images/moduleTwoImages/step3.png)
 8. Create another series for rain under the `Graph` node. 
 	- To do this:
-		- right-click `Graph` node
+		- right-click `Organic Matter Cover` node
 			- double-click `Add model...`
 			- double-click `Series`
 			- rename this series to `Rain`
@@ -68,3 +68,44 @@ Remember to use `Save As` not `Save` or you will overwrite the old file.
 			- change `Colour` to blue.
 		- Your node tree should look like this:
 		![Rain node](/images/moduleTwoImages/step4.png)
+
+## The effect of cover decline on runoff and evaporation
+
+We will compare the effect that ground cover has on runoff. 
+
+1. Graph both simulations, with Date vs runoff (cumulative) and Rain (right axis). 
+	- To do this:
+		- right-click the `Simulations` node
+		- click `add model...`
+		- double-click `Graph`
+2. Rename the graph to Runoff. 
+3. Let's build the graph
+	- To do this:
+		- right-click `Runoff` graph
+		- click `Add model...`
+		- double-click `Series`
+		- rename series to `Cumulative Runoff`
+		- Set your series variables to below:
+		![Runoff graph image](/images/moduleTwoImages/step5.png)
+		- NOTE: If you only get one graph it means that one simulation has not been run yet. 
+
+4. Let's add another Series for `Rain`
+	- To do this:
+		- right-click `Runoff`
+		- click `Add model`
+		- double-click `Series`
+		- rename this series to `Rain`
+		- set the series variables to below:
+		![rain series variables](/images/moduleTwoImages/step6.png)
+
+## The effect of residue type on speed of decomposition
+
+The APSIM residue model will decompose residues at differing rates according to the C:N ratio of the material. 
+To demonstrate this we will reproduce the previous simulation but apply legume residues in the place of the wheat residues.
+
+1. Create another copy of the `Clay Residue` simulation. Rename it to `Clay Chickpea Residue`. Remove the graph component.
+2. Change the SurfaceOrganicMatter residue parameters to 3000 kg/ha of chickpea residue. 
+	- Also change the organic matter pool name to ‘chickpea’.
+3. Change the C:N ratio to 25.
+
+
