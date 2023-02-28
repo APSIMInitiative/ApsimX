@@ -94,7 +94,7 @@ namespace Utility
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
-        public bool Muted { get; set; }
+        public bool Muted { get; set; } = true;
 
         /// <summary>
         /// In theory, if there are any commands in the command history,
