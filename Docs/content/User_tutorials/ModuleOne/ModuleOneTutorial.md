@@ -4,6 +4,7 @@ draft: false
 ---
 <p style="font-size: 10px">Created 22/02/2023</p>
 
+
 <em style="color: red"> IMPORTANT NOTE: It is highly recommended that you upgrade your APSIM Next Gen version to at least version 2023.2.7164.0 or later.</em>
 
 We will create a simulation that examines the water balance over time in a fallow field in two locations with different soil types.
@@ -98,7 +99,6 @@ We will create a simulation that examines the water balance over time in a fallo
 	<br>
 
  14. Delete the fertiliser, wheat, and three Manager nodes: SowingFertiliser, Harvest and SowingRule1, as we do not need them for a fallow simulation.<br>
-
 		- To do this right click each manager node
 		- Then click delete.
 		- These nodes have this icon: 
