@@ -1,5 +1,5 @@
 ---
-title: "APSIM Next Gen: User Tutorials"
+title: "APSIM Next Gen User Tutorials"
 draft: false
 ---
 
