@@ -47,7 +47,7 @@ Make the depth equal to the entire soil profile (check Water node for the profil
 		sum([Soil].SoilWater.ESW)
 		sum([Soil].NO3.kgha) as NO3Total
 		sum([Soil].NH4.kgha) as NH4Total
-		sum([Soil].Nutrient.Denitrification) as Denitrification
+		sum([Soil].Nutrient.DenitrifiedN) as Denitrification
 	
 16. Run the simulation
 17. Delete the current graph named `Wheat Yield Time Series`
@@ -63,6 +63,9 @@ Make the depth equal to the entire soil profile (check Water node for the profil
 	![NH4 total series variables](/images/moduleThreeImages/img8.png)
 24. Create a new graph with a series each for `rain`, `sum([Soil].SoilWater.ESW)`, `NO3Total`, `Denitrification`.
 	- each series should have `[Clock].Today` as the `X` axis variable.
+25. From this chart you can see that significant nitrogen is lost via denitrification when large amounts of nitrate are available in saturated soil conditions.
+![Denitrification graph](/images/moduleThreeImages/img9.png)
 
+*Congratulations on finishing the 3rd module!*
 
 
