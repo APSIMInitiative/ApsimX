@@ -24,29 +24,35 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IValidatableObject
+    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeedType, IValidatableObject
     {
         [Link]
-        private ZoneCLEM zoneCLEM = null;
+        private readonly ZoneCLEM zoneCLEM = null;
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
 
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
         private double biomassAddedThisYear;
         private double biomassConsumed;
 
-        /// <summary>
-        /// Unit type
-        /// </summary>
+        /// <inheritdoc/>
         [Description("Units (nominal)")]
-        public string Units { get; private set; }
+        public string Units { get; private set; } = "kg";
 
-        /// <summary>
-        /// List of pools available
-        /// </summary>
-        [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
+        /// <inheritdoc/>
+        [System.ComponentModel.DefaultValueAttribute(18.4)]
+        [Description("Gross energy content")]
+        [Units("MJ/kg digestible DM")]
+        [Required]
+        public double EnergyGross { get; set; }
+
+        /// <inheritdoc/>
+        public double FatContent { get; set; } = 0;
+
+        /// <inheritdoc/>
+        [Description("Crude protein degradability")]
+        public double CPDegradability { get; set; }
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -68,7 +74,7 @@ namespace Models.CLEM.Resources
         /// Nitrogen of new growth (%)
         /// </summary>
         [Category("Basic", "Quality")]
-        [Description("Nitrogen of new growth (%)")]
+        [Description("Nitrogen content of new growth (%)")]
         [Required, Percentage]
         public double GreenNitrogen { get; set; }
 
@@ -141,7 +147,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Initial biomass")]
         [Description("Initial biomass (kg per ha)")]
-        public double InitialBiomass { get; set; }
+        public double StartingAmount { get; set; }
 
         /// <summary>
         /// First month of seasonal growth
@@ -168,6 +174,12 @@ namespace Models.CLEM.Resources
         [Description("Number of months for initial biomass")]
         [System.ComponentModel.DefaultValueAttribute(5)]
         public int NumberMonthsForInitialBiomass { get; set; }
+
+        /// <summary>
+        /// List of pools available
+        /// </summary>
+        [JsonIgnore]
+        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
@@ -265,6 +277,7 @@ namespace Models.CLEM.Resources
 
                 return Math.Max(MinimumDMD, dmd);
             }
+            set { throw new NotImplementedException("GrazeFoodStore DMD is calulated"); }
         }
 
         /// <summary>
@@ -280,6 +293,7 @@ namespace Models.CLEM.Resources
 
                 return Math.Max(MinimumNitrogen, n);
             }
+            set { throw new NotImplementedException("GrazeFoodStore percent nitrogen is calulated"); }
         }
 
         /// <summary>

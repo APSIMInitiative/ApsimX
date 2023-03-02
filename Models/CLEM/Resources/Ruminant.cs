@@ -412,6 +412,15 @@ namespace Models.CLEM.Resources
             }
         }
 
+
+        public double ConsumedMass { get; set; }
+        public double ConsumedMilk { get; set; }
+        public double ConsumedFat { get; set; }
+        public double ConsumedCrudeProtein { get; set; }
+        public double ConsumedEnergy { get; set; }
+        public double ConsumedDMD { get; set; }
+
+
         /// <summary>
         /// Current monthly intake store
         /// </summary>
@@ -702,7 +711,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// A funtion to add intake and track changes in %N and DietDryMatterDigestibility
+        /// A funtion to add intake and totals of N, CP, DMD, Fat and energy
         /// </summary>
         /// <param name="intake">Feed request containing intake information kg, %N, DMD</param>
         public void AddIntake(FoodResourcePacket intake)

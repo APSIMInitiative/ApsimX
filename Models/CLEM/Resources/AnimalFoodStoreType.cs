@@ -21,30 +21,45 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
     public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeedType, IResourceType
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        public string Units { get; private set; }
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
-        /// <summary>
-        /// Dry Matter Digestibility (%)
-        /// </summary>
+        /// <inheritdoc/>
+        public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
+        [System.ComponentModel.DefaultValueAttribute(18.4)]
+        [Required, GreaterThanValue(0)]
+        [Description("Gross energy content")]
+        [Units("MJ/kg digestible DM")]
+        public double EnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Description("Fat content (%)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double FatContent { get; set; }
+
+        /// <inheritdoc/>
         [Description("Dry Matter Digestibility (%)")]
         [Required, Percentage, GreaterThanValue(0)]
-        public double DMD { get; set; }
+        public double DryMatterDigestability { get; set; }
 
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        [Description("Nitrogen (%)")]
-        [Required, Percentage, GreaterThanValue(0)]
-        public double Nitrogen { get; set; }
+        /// <inheritdoc/>
+        [Description("Nitrogen content (%)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenContent { get; set; }
 
-        /// <summary>
-        /// Current store nitrogen (%)
-        /// </summary>
-        [JsonIgnore]
-        public double CurrentStoreNitrogen { get; set; }
+        /// <inheritdoc/>
+        [Description("Crude protein degradability")]
+        [Required, Proportion, GreaterThanValue(0)]
+        public double CPDegradability { get; set; }
+
+        ///// <summary>
+        ///// Current store nitrogen (%)
+        ///// </summary>
+        //[JsonIgnore]
+        //public double CurrentStoreNitrogen { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
@@ -58,15 +73,23 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public double Amount { get { return amount; } set { return; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
+
+        /// <summary>
+        /// A packet to pass the current food quality to activities. Allws for mixing of feed into store
+        /// </summary>
+        public FoodResourcePacket CurrentStoreDetails { get; set; }
+
+        /// <summary>
+        /// A packet to store the quality details of this food
+        /// </summary>
+        public FoodResourcePacket StoreDetails { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public AnimalFoodStoreType()
         {
-            Units = "kg";
+            base.SetDefaults();
         }
 
         /// <summary>
@@ -89,6 +112,24 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (StartingAmount > 0)
                 Add(StartingAmount, null, null, "Starting value");
+
+            // initialise the current state and details of this store
+            CurrentStoreDetails = new FoodResourcePacket()
+            {
+                EnergyContent = EnergyContent,
+                CPDegradability = CPDegradability,
+                DryMatterDigestability = DryMatterDigestability,
+                FatContent= FatContent,
+                NitrogenContent = NitrogenContent
+            };
+            StoreDetails = new FoodResourcePacket()
+            {
+                EnergyContent = EnergyContent,
+                CPDegradability = CPDegradability,
+                DryMatterDigestability = DryMatterDigestability,
+                FatContent = FatContent,
+                NitrogenContent = NitrogenContent
+            };
         }
 
         #region Transactions
@@ -98,30 +139,33 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+        /// <param name="relatesToResource">Resource the transasction relates to</param>
+        /// <param name="category">Transaction category</param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
+            FoodResourcePacket foodPacket;
             double addAmount;
-            double nAdded;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
+                    foodPacket = StoreDetails;
                     addAmount = (double)resourceAmount;
-                    nAdded = Nitrogen;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    addAmount = ((FoodResourcePacket)resourceAmount).Amount;
-                    nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
+                    foodPacket = resourceAmount as FoodResourcePacket;
+                    addAmount = foodPacket.Amount;
                     break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type {resourceAmount.GetType()} is not supported Add method in {this.Name}");
             }
 
             if (addAmount > 0)
             {
-                // update N based on new input added
-                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * addAmount)) / (Amount + addAmount);
+                // update quality details to allow mixed feed inputs
+                CurrentStoreDetails.NitrogenContent = ((CurrentStoreDetails.NitrogenContent * Amount) + (foodPacket.NitrogenContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.DryMatterDigestability = ((CurrentStoreDetails.DryMatterDigestability * Amount) + (foodPacket.DryMatterDigestability * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.FatContent = ((CurrentStoreDetails.FatContent * Amount) + (foodPacket.FatContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.EnergyContent = ((CurrentStoreDetails.EnergyContent * Amount) + (foodPacket.EnergyContent * addAmount)) / (Amount + addAmount);
 
                 this.amount += addAmount;
 
@@ -162,20 +206,21 @@ namespace Models.CLEM.Resources
             {
                 this.amount -= amountRemoved;
 
-                FoodResourcePacket additionalDetails = new FoodResourcePacket
-                {
-                    DMD = this.DMD,
-                    PercentN = this.CurrentStoreNitrogen
-                };
-                request.AdditionalDetails = additionalDetails;
+                //FoodResourcePacket additionalDetails = new FoodResourcePacket
+                //{
+                //    DMD = this.DMD,
+                //    PercentN = this.CurrentStoreNitrogen
+                //};
+                request.AdditionalDetails = CurrentStoreDetails;
 
                 request.Provided = amountRemoved;
 
                 // send to market if needed
                 if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                    (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
+                    FoodResourcePacket marketDetails = CurrentStoreDetails.Clone(amountRemoved * request.MarketTransactionMultiplier);
+                    //additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
+                    (EquivalentMarketStore as AnimalFoodStoreType).Add(marketDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
                 }
 
                 ResourceTransaction details = new ResourceTransaction
@@ -195,32 +240,22 @@ namespace Models.CLEM.Resources
             return;
         }
 
-        /// <summary>
-        /// Set amount of animal food available
-        /// </summary>
-        /// <param name="newValue">New value to set food store to</param>
+        /// <inheritdoc/>
         public new void Set(double newValue)
         {
             this.amount = newValue;
         }
 
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler TransactionOccurred;
 
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected virtual void OnTransactionOccurred(EventArgs e)
         {
             TransactionOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
+        /// <inheritdoc/>
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 

@@ -40,15 +40,6 @@ namespace Models.CLEM.Activities
         private RuminantHerd ruminantHerd;
 
         /// <summary>
-        /// Gross energy content of forage (MJ/kg DM)
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(18.4)]
-        [Description("Gross energy content of forage (MJ/kg digestible DM)")]
-        [Required]
-        [Units("MJ/kg DM")]
-        public double EnergyGross { get; set; }
-
-        /// <summary>
         /// Methane store for emissions
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]

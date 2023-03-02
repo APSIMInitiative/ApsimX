@@ -1,37 +1,48 @@
 ﻿using Models.Core;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Interfaces
 {
     /// <summary>
-    /// Interface for feet types
+    /// Interface for nutritional quality of feed types 
     /// </summary>
-    public interface IFeedType: IResourceType
+    public interface IFeedType
     {
+        /// <summary>
+        /// Gross energy content (MJ/kg DM)
+        /// </summary>
+        double EnergyContent { get; set; }
+
         /// <summary>
         /// Dry Matter Digestibility (%)
         /// </summary>
         [Description("Dry Matter Digestibility (%)")]
-        double DMD { get; set; }
+        double DryMatterDigestability { get; set; }
 
         /// <summary>
-        /// Nitrogen (%)
+        /// Fat content (%)
         /// </summary>
-        [Description("Nitrogen (%)")]
-        double Nitrogen { get; set; }
+        [Description("Fat content (%)")]
+        double FatContent { get; set; }
 
         /// <summary>
-        /// Starting Amount (kg)
+        /// Nitrogen content (%)
         /// </summary>
-        [Description("Starting Amount (kg)")]
-        double StartingAmount { get; set; }
+        [Description("Nitrogen content (%)")]
+        double NitrogenContent { get; set; }
 
         /// <summary>
-        /// Amount (kg)
+        /// Crude protein degradability
         /// </summary>
-        [JsonIgnore]
-        new double Amount { get; }
+        [Description("Crude protein degradability")]
+        double CPDegradability { get; set; }
 
+        ///// <summary>
+        ///// Starting amount (kg)
+        ///// </summary>
+        //[Description("Starting amount (kg)")]
+        //double StartingAmount { get; set; }
     }
 }

@@ -289,7 +289,7 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             // grazing or feeding from store treated the same way
-            // grazing does not access pools by breed by gets all it needs of this quality common pasture
+            // grazing does not access pools by breed but gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
             FoodResourcePacket additionalDetails = new FoodResourcePacket
