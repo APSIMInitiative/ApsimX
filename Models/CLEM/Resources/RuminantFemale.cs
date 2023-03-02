@@ -9,15 +9,13 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Object for an individual female Ruminant.
     /// </summary>
-
+    [Serializable]
     public class RuminantFemale : Ruminant
     {
-        private Sex sex = Sex.Male;
-
         /// <summary>
         /// Sex of individual
         /// </summary>
-        public override Sex Sex { get { return sex; } }
+        public override Sex Sex { get { return Sex.Female; } }
 
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight 
