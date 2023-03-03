@@ -77,10 +77,16 @@ namespace Models.CLEM.Activities
         public bool StopFeedingWhenSatisfied { get; set; }
 
         /// <summary>
-        /// Feed type
+        /// Feed resource
         /// </summary>
         [JsonIgnore]
-        public IFeedType FeedType { get; set; }
+        public IResourceType FeedResource { get; set; }
+
+        /// <summary>
+        /// Feed quality
+        /// </summary>
+        [JsonIgnore]
+        public IFeedType FeedDetails { get; set; }
 
         /// <summary>
         /// The list of individuals remaining to be fed in the current timestep
@@ -136,7 +142,8 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             // locate FeedType resource
-            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedDetails = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedResource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -307,7 +314,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         Required = wasted,
                         Available = wasted,
-                        Resource = FeedType,
+                        Resource = FeedResource,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
@@ -325,7 +332,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         Required = excessFed,
                         Available = excessFed,
-                        Resource = FeedType,
+                        Resource = FeedResource,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,

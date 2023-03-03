@@ -141,14 +141,14 @@ namespace Models.CLEM.Groupings
             // create food resource packet with details
             FoodResourcePacket foodPacket = new FoodResourcePacket()
             {
-                DMD = feedActivityParent.FeedType.DMD,
-                PercentN = feedActivityParent.FeedType.Nitrogen
+                DryMatterDigestability = feedActivityParent.FeedDetails.DryMatterDigestability,
+                NitrogenContent = feedActivityParent.FeedDetails.NitrogenContent
             };
 
             currentFeedRequest = new ResourceRequest()
             {
                 AllowTransmutation = true,
-                Resource = feedActivityParent.FeedType,
+                Resource = feedActivityParent.FeedResource,
                 ResourceType = typeof(AnimalFoodStore),
                 ResourceTypeName = feedActivityParent.FeedTypeName,
                 ActivityModel = Parent as CLEMActivityBase,
@@ -207,7 +207,7 @@ namespace Models.CLEM.Groupings
                         feedNeeed = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        feedNeeed = value * feedActivityParent.FeedType.Amount;
+                        feedNeeed = value * feedActivityParent.FeedResource.Amount;
                         break;
                     default:
                         break;

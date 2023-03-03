@@ -239,8 +239,8 @@ namespace Models.CLEM.Activities
                 FoodResourcePacket packet = new FoodResourcePacket()
                 {
                     Amount = amountToDo - amountToSkip,
-                    PercentN = pasture.Nitrogen,
-                    DMD = pasture.EstimateDMD(pasture.Nitrogen)
+                    NitrogenContent = pasture.NitrogenContent,
+                    DryMatterDigestability = pasture.EstimateDMD(pasture.NitrogenContent)
                 };
 
                 foodstore.Add(packet, this, null, TransactionCategory);

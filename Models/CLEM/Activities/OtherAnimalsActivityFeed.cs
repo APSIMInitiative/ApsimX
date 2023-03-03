@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = amount,
-                        Resource = FeedType,
+                        //Resource = FeedType,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,

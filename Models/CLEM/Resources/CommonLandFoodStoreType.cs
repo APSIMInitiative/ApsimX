@@ -141,7 +141,7 @@ namespace Models.CLEM.Resources
                 switch (pasture.GetType().ToString())
                 {
                     case "AnimalFoodStoreType":
-                        Nitrogen = (pasture as AnimalFoodStoreType).Nitrogen;
+                        Nitrogen = (pasture as AnimalFoodStoreType).NitrogenContent;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
@@ -149,7 +149,7 @@ namespace Models.CLEM.Resources
                         dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
                     case "GrazeFoodStoreType":
-                        Nitrogen = (pasture as GrazeFoodStoreType).Nitrogen;
+                        Nitrogen = (pasture as GrazeFoodStoreType).NitrogenContent;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
@@ -257,8 +257,8 @@ namespace Models.CLEM.Resources
                 pool = new GrazeFoodStorePool();
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                 pool.Set(packet.Amount);
-                pool.Nitrogen = packet.PercentN;
-                pool.DMD = packet.DMD;
+                pool.NitrogenContent = packet.NitrogenContent;
+                pool.DryMatterDigestability = packet.DryMatterDigestability;
             }
 
             if (pool.Amount > 0)
@@ -294,8 +294,8 @@ namespace Models.CLEM.Resources
 
             FoodResourcePacket additionalDetails = new FoodResourcePacket
             {
-                PercentN = this.Nitrogen,
-                DMD = this.dryMatterDigestibility,
+                NitrogenContent = this.Nitrogen,
+                DryMatterDigestability = this.dryMatterDigestibility,
                 Amount = request.Required
             };
             request.AdditionalDetails = additionalDetails;

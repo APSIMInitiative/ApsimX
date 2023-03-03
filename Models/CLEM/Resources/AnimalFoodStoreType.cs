@@ -269,9 +269,9 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>");
-                if (DMD > 0)
-                    htmlWriter.Write(" and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>");
+                htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenContent.ToString("0.###")}%</span>");
+                if (DryMatterDigestability > 0)
+                    htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestability.ToString("0.###")}%</span>");
                 else
                     htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
 
@@ -279,7 +279,7 @@ namespace Models.CLEM.Resources
                 if (StartingAmount > 0)
                 {
                     htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg");
+                    htmlWriter.Write($"Simulation starts with <span class=\"setvalue\">{StartingAmount.ToString("#,##0.##")}</span> kg");
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString(); 

@@ -412,7 +412,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         public double ConsumedMass { get; set; }
         public double ConsumedMilk { get; set; }
         public double ConsumedFat { get; set; }
@@ -719,9 +718,9 @@ namespace Models.CLEM.Resources
             if (intake.Amount > 0)
             {
                 // determine the adjusted DMD of all intake
-                this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DMD * intake.Amount)) / (this.Intake + intake.Amount);
+                this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DryMatterDigestability * intake.Amount)) / (this.Intake + intake.Amount);
                 // determine the adjusted percentage N of all intake
-                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount);
+                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.NitrogenContent * intake.Amount)) / (this.Intake + intake.Amount);
                 this.Intake += intake.Amount;
             }
         }

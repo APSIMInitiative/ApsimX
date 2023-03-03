@@ -13,19 +13,19 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStorePool : IFeedType, IResourceType
     {
         /// <inheritdoc/>
-        public double EnergyGross { get; set; }
+        public double EnergyContent { get; set; }
 
         /// <inheritdoc/>
         public double FatContent { get; set; }
 
         /// <inheritdoc/>
-        public double Nitrogen { get; set; }
+        public double NitrogenContent { get; set; }
 
         /// <inheritdoc/>
         public double CPDegradability { get; set; }
 
         /// <inheritdoc/>
-        public double DMD { get; set; }
+        public double DryMatterDigestability { get; set; }
 
         /// <summary>
         /// Amount (kg)
@@ -75,10 +75,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double? Value
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
 
         /// <summary>
@@ -122,11 +119,11 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // adjust DMD and N% based on incoming if needed
-                if (DMD != pool.DMD || Nitrogen != pool.Nitrogen)
+                if (DryMatterDigestability != pool.DryMatterDigestability || NitrogenContent != pool.NitrogenContent)
                 {
                     //TODO: run calculation passed others.
-                    DMD = ((DMD * Amount) + (pool.DMD * pool.Amount)) / (Amount + pool.Amount);
-                    Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
+                    DryMatterDigestability = ((DryMatterDigestability * Amount) + (pool.DryMatterDigestability * pool.Amount)) / (Amount + pool.Amount);
+                    NitrogenContent = ((NitrogenContent * Amount) + (pool.NitrogenContent * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
                 Growth += pool.Growth;
