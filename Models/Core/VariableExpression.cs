@@ -160,14 +160,18 @@
                     sym.m_values = (double[])singleArrayOfValues.ToArray();
                 }
                 else if (sometypeofobject is IFunction fun)
-                {
-                    // TODO: Functions can take array indices for their values. How to use that in an expression?
-                    // Currently this does what VariableGroup does when encountering a function, but this warrants
-                    // more thought.
                     sym.m_value = fun.Value();
-                }
                 else
-                    throw new Exception($"Don't know how to use type {sometypeofobject.GetType()} of variable {sym.m_name} in an expression!");
+                {
+                    try
+                    {
+                        sym.m_value = Convert.ToDouble(sometypeofobject, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    catch (InvalidCastException)
+                    {
+                         throw new Exception($"Don't know how to use type {sometypeofobject.GetType()} of variable {sym.m_name} in an expression!");
+                    }
+                }
                 variablesToFill[i] = sym;
             }
             fn.Variables = variablesToFill;
