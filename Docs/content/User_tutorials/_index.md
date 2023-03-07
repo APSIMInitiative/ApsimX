@@ -13,4 +13,4 @@ to the new APSIM Next Gen workflow.
 * [Module 2: Soil Organic Matter](/user_tutorials/moduletwo/moduletwotutorial)
 * [Module 3 - Coming soon](/User_tutorials/module3)
 * [Module 4 - Coming soon](/User_tutorials/module4)
-* [Module 5 - Coming soon](/User_tutorials/module5)
+* [Module 5 - Long-term Simulations](/User_tutorials/moduleFive/moduleFiveTutorial)
