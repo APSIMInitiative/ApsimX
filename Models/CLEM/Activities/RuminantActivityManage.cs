@@ -1642,10 +1642,15 @@ namespace Models.CLEM.Activities
 
             if (purchaseDetails.Count() == 0)
             {
-                if (MaximumSiresPerPurchase > 0 | MaximumProportionBreedersPerPurchase > 0)
+                if (ManageMaleBreederNumbers && PerformMaleStocking && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
-                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components or disable purchases by setting [MaximumSiresPerPurchase] and/or [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
+                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames));
+                }
+                if (ManageFemaleBreederNumbers && PerformFemaleStocking && MaximumProportionBreedersPerPurchase > 0)
+                {
+                    string[] memberNames = new string[] { "Specify purchased individuals' details" };
+                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
                 }
             }
             else
