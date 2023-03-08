@@ -29,7 +29,7 @@ We can then try different management strategies to see which one would have work
 5. Set the starting `Water` to `50%` full - filled from top.
 6. Set NO3 `Depth` to `0-1800` and `initial value` to `20kg/ha` (right-click heading to change units).
 7. Set NH4 `Depth` to `0-1800` and `initial value` to `0kg/ha`.
-8. Change the `Surface Organic Matter` node's type to sorghum (don't forget to rename the pool name to `sorghum` as well), 
+8. Change the `SurfaceOrganicMatter` node's type to sorghum (don't forget to rename the pool name to `sorghum` as well), 
 initial surface residue: `550 kg/ha`, Carbon:Nitrogen ratio of `76`, leave the Fraction of residue standing as is.
 8. Right-click `Field` and add a `Chickpea` plant node.
 9. In `SowingRule1` change the values to match the following:
@@ -111,6 +111,30 @@ initial surface residue: `550 kg/ha`, Carbon:Nitrogen ratio of `76`, leave the F
 10. Run the simulation.
 11. You should get an error with the message: Cannot find a soil crop parameterisation called ChickpeaSoil
 	- This is caused by using a soil that is missing a `SoilCrop` node (located under `Physical`) with the same name as the plant node you are using.
-12. To fix this error, copy and paste the `WheatSoil` node, located under `Heavy Clay` > `Physical`. Rename `WheatSoil1` to `ChickpeaSoil`
+12. To fix this error, copy and paste the `WheatSoil` node, located under `Heavy Clay` > `Physical`. Rename `WheatSoil1` to `ChickpeaSoil`.
+13. Your simulation should now run successfully and you should have data in your `DataStore` node.
+![Datastore node](/images/moduleFiveImages/img2.png)
+14. Add a management script called `Reset on date` to the `Chickpea` simulation (found in `Management Toolbox` under `Other`)
+![reset on date location](/images/moduleFiveImages/img3.png)
+15. Leave all parameters as yes and change the `date to reset on` to `1-may`. 
+    - <strong style="color: red;">note:</strong> make sure this management script sits above all other management scripts in the tree as they are ran in the order they are arranged from top to bottom.
+16. Add the below to the Report variables.   
+
+        [Clock].Today
+        [Chickpea].Grain.Total.Wt*10 as Yield
+
+17. Make report frequency as:
+
+        [Chickpea].Harvesting
+
+17. Remove `SowingFertiliser` management node.
+16. Rename the `Chickpea` simulation as `Chickpea 10 plants`.
+17. Copy `Chickpea 10 plants` and rename it `Chickpea 15 plants`.
+18. Change the `Plant population(/m2)` to `15` in the `SowingRule1` management script.
+19. Run the simulations.
+20. Create a graph. Rename it `Total chickpea yield time series` with a series that plots `[Clock].Today` and `Yield`.
+21. Now you have a graph showing yield when comparing differing plant density of 40 years.
+![Final total yield graph](/images/moduleFiveImages/img4.png)
+
 
 
