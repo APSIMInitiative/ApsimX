@@ -161,17 +161,6 @@
                 }
                 else if (sometypeofobject is IFunction fun)
                     sym.m_value = fun.Value();
-                else
-                {
-                    try
-                    {
-                        sym.m_value = Convert.ToDouble(sometypeofobject, System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                    catch (InvalidCastException)
-                    {
-                         throw new Exception($"Don't know how to use type {sometypeofobject.GetType()} of variable {sym.m_name} in an expression!");
-                    }
-                }
                 variablesToFill[i] = sym;
             }
             fn.Variables = variablesToFill;
