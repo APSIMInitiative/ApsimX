@@ -7906,14 +7906,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 106.268453805677",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.137742329295879",
-                    "[Phenology].CAMP.FLNparams.MinLN = 6.7",
-                    "[Phenology].CAMP.FLNparams.PpLN = 2.558",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 2.476",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -1.7213",
+                    "[Phenology].CAMP.FLNparams.MinLN = 7.6",
+                    "[Phenology].CAMP.FLNparams.PpLN = 1.09",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 1.21",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -0.7831",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.9"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 74",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.69"
                   ],
                   "Name": "Mace",
                   "ResourceName": null,
