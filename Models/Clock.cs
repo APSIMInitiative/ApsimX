@@ -167,6 +167,10 @@ namespace Models
         public event EventHandler PartitioningComplete;
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
+
+        // process the pasture model
+
+
         /// <summary> Process stock methods in GrazPlan Stock </summary>
         public event EventHandler DoStock;
         /// <summary> Process a Pest and Disease lifecycle object </summary>
@@ -390,6 +394,9 @@ namespace Models
 
                 if (PartitioningComplete != null)
                     PartitioningComplete.Invoke(this, args);
+
+                // pasture event 
+
 
                 if (DoStock != null)
                     DoStock.Invoke(this, args);

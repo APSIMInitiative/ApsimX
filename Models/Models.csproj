@@ -18,6 +18,14 @@
   
   <PropertyGroup>
    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
+    <NoWarn>1701;1702;0414;0169</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
+    <NoWarn>1701;1702;0414;0169</NoWarn>
   </PropertyGroup>  
 
   <ItemGroup>
@@ -49,6 +57,12 @@
     <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Reference Include="CMPServices">
+      <HintPath>..\..\cmp\ausfarm\dotnet\CMPServices.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
