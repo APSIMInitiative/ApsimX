@@ -47,12 +47,11 @@ namespace Models.GrazPlan
         /// <summary>
         /// Represents a large value
         /// </summary>
-        public const double VeryLarge = 1.0E6;
-
+        public const double VERYLARGE = 1.0E6;
         /// <summary>
         /// Represents a small value
         /// </summary>
-        public const double VerySmall = 1.0E-4;
+        public const double VERYSMALL = 1.0E-4;
 
         /// <summary>
         /// Number of digestibility classes
@@ -154,6 +153,7 @@ namespace Models.GrazPlan
             /// </summary>
             s
         }
+        public enum TPlantElement {N=1, P, S };
 
         /// <summary>
         /// Plant nutrients
@@ -181,7 +181,9 @@ namespace Models.GrazPlan
             pnSO4
         }
 
-        // SoilArray         = packed array[SURFACE..MaxSoilLayers] of Float;
+        public enum TSoilNutrient { snNO3, snNH4, snUrea, snPOx, snSO4, snElS, snCations };
+        
+		// SoilArray         = packed array[SURFACE..MaxSoilLayers] of Float;
         // LayerArray        = packed array[1..MaxSoilLayers]       of Float;
         // DigClassArray     = packed array[1..DigClassNo]          of Float; // double[GrazType.DigClassNo+1]
         // PastureArray      = packed array[1..MaxPlantSpp]         of Float;
@@ -210,7 +212,20 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Zero the DM pool
+        /// Initialise a layer array with default values 
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="defValue"></param>
+        public static void InitLayerArray(ref double[] values, double defValue)
+        {
+            for (int i = 0; i < MaxSoilLayers; i++)
+            {
+                values[i] = defValue;
+            }
+        }
+
+        /// <summary>
+        /// Zero the DM pool used in Animal
         /// </summary>
         /// <param name="pool">Pool to zero</param>
         public static void ZeroDMPool(ref DM_Pool pool)
@@ -564,6 +579,67 @@ namespace Models.GrazPlan
                                                         partInputs.TotalGreen + partInputs.TotalDead);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public class TPopnHerbageAttr
+        {
+            /// <summary>
+            /// kg/ha
+            /// </summary>
+            public double fMass_DM;
+            /// <summary>
+            /// kg/kg
+            /// </summary>
+            public double fDM_Digestibility;
+            /// <summary>
+            /// kg/kg
+            /// </summary>
+            public double[] fNutrientConc = new double[3]; // TODO: Check this!! [N..S]                                                    
+            /// <summary>
+            /// kg/kg
+            /// </summary>
+            public double fNDegradability;
+            /// <summary>
+            /// mol/kg
+            /// </summary>
+            public double fAshAlkalinity;
+            /// <summary>
+            /// kg/m^3
+            /// </summary>
+            public double fBulkDensity;
+            /// <summary>
+            /// 0-1, bite-size scale
+            /// </summary>
+            public double fGroundAreaFract;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public class TPopnHerbageData
+        {
+            /// <summary>
+            /// Is a legume
+            /// </summary>
+            public bool bIsLegume;
+            /// <summary>
+            /// 
+            /// </summary>
+            public double fSelectFactor;
+            /// <summary>
+            /// 
+            /// </summary>
+            public TPopnHerbageAttr[,] Herbage = new TPopnHerbageAttr[2, HerbClassNo + 1];
+            /// <summary>
+            /// 
+            /// </summary>
+            public TPopnHerbageAttr[] Seeds = new TPopnHerbageAttr[RIPE + 1];
+            /// <summary>
+            /// 
+            /// </summary>
+            public int[] iSeedClass = new int[RIPE + 1];
+        }
+        /* TSppSeedArray => double[MaxPlantSpp + 1, 3]  //1..50(1..MaxPlantSpp), 1..2(UNRIPE..RIPE)     */
 
         /// <summary>
         /// 
@@ -590,7 +666,42 @@ namespace Models.GrazPlan
                 Array.Copy(src.Seed, this.Seed, src.Seed.Length);
             }
         }
-        
+
+
+        public const int MAXNUTRAREAS = 5;
+
+
+        public class TSoilNutrientDistn
+        {
+            public int NoAreas;
+            public double[] RelAreas = new double[MAXNUTRAREAS - 1];
+            /// <summary>
+            /// Solution soil nutrient conc. (mg/l)
+            /// </summary>
+            public double[][] SolnPPM = { new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1]
+            };
+            /// <summary>
+            /// These are in kg/(total ha), not kg/(patch ha)
+            /// </summary>
+            public double[][] AvailKgHa = { new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1],
+                                          new double[GrazType.MaxSoilLayers+1]
+            };
+        }
+
+        //TSoilUptakeDistn =  array[0..MAXNUTRAREAS - 1] of LayerArray;
+
+        // Various constants with biological meanings      
+        /// <summary>
+        /// Default class digestibilites
+        /// </summary>
+        static public readonly double[] ClassDig = { 0.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3 };
         /// <summary>
         /// Carbon content of dry matter
         /// </summary>
@@ -627,11 +738,6 @@ namespace Models.GrazPlan
         public const double ProteinE2DM = 14.0;
 
         // Various constants with biological meanings      
-
-        /// <summary>
-        /// Default class digestibilities
-        /// </summary>
-        static public readonly double[] ClassDig = { 0.0, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.3 };
 
         /// <summary>
         /// Get a weighted average
