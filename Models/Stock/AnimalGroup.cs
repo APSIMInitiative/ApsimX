@@ -1527,7 +1527,7 @@ namespace Models.GrazPlan
             // testResult : float;
             double result;
 
-            if ((this.AnimalState.DM_Intake.Solid < GrazType.VerySmall) || (this.AnimalState.RDP_Intake >= this.AnimalState.RDP_Reqd))
+            if ((this.AnimalState.DM_Intake.Solid < GrazType.VERYSMALL) || (this.AnimalState.RDP_Intake >= this.AnimalState.RDP_Reqd))
                 result = 1.0;
             else
             {
@@ -1666,7 +1666,7 @@ namespace Models.GrazPlan
                 for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
                 {
                     classIdx = theAnimals.Herbage.SeedClass[speciesIdx, ripeIdx];
-                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VerySmall))
+                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VERYSMALL))
                     {
                         WeightAverage(ref heightRatio[classIdx],
                                         availFeed[classIdx],
@@ -1698,7 +1698,7 @@ namespace Models.GrazPlan
                 relQ[classIdx] = 1.0 - theAnimals.Genotype.GrazeC[3] * StdMath.DIM(theAnimals.Genotype.GrazeC[1] - selectFactor, theAnimals.Herbage.Herbage[classIdx].Digestibility); // Eq. 21 
             relQ[GrazType.DigClassNo + 1] = 1;                                             // fixes range check error. Set this to the value that was calc'd when range check error was in place
 
-            suppRemains = (suppFWPerHead > GrazType.VerySmall);                           // Compute relative quality of supplement (if present)
+            suppRemains = (suppFWPerHead > GrazType.VERYSMALL);                           // Compute relative quality of supplement (if present)
             if (suppRemains)
             {
                 suppRelQ = Math.Min(theAnimals.Genotype.GrazeC[14],
@@ -1725,7 +1725,7 @@ namespace Models.GrazPlan
 
             fillRemaining = theAnimals.startFU;
 
-            if (suppRemains && (feedSuppFirst || (totalFeed <= GrazType.VerySmall)))
+            if (suppRemains && (feedSuppFirst || (totalFeed <= GrazType.VERYSMALL)))
             {
                 // Case where supplement is fed first
                 EatSupplement(theAnimals, timeStepLength, suppDWPerHead, theAnimals.IntakeSupplement, suppRelQ, true, ref suppRelIntake, ref fillRemaining);
@@ -1733,11 +1733,11 @@ namespace Models.GrazPlan
                 suppRemains = false;
             }
 
-            if (totalFeed > GrazType.VerySmall)
+            if (totalFeed > GrazType.VERYSMALL)
             {
                 // Case where there is pasture available to the animals
                 classIdx = 1;
-                while ((classIdx <= GrazType.DigClassNo + 1) && (fillRemaining >= GrazType.VerySmall))
+                while ((classIdx <= GrazType.DigClassNo + 1) && (fillRemaining >= GrazType.VERYSMALL))
                 {
                     suppEntry = Math.Min(1.0, 0.5 + (substSuppRelQ - relQ[classIdx])
                                                    / (CLASSWIDTH * theAnimals.Genotype.GrazeC[3]));
@@ -1781,7 +1781,7 @@ namespace Models.GrazPlan
                 for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
                 {
                     classIdx = theAnimals.Herbage.SeedClass[speciesIdx, ripeIdx];
-                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VerySmall))
+                    if ((classIdx > 0) && (theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VERYSMALL))
                         seedRI[speciesIdx, ripeIdx] = relIntake[classIdx] * theAnimals.Herbage.Seeds[speciesIdx, ripeIdx].Biomass / availFeed[classIdx];
                 }
             }
@@ -3539,7 +3539,7 @@ namespace Models.GrazPlan
             this.AnimalState.DietPropn.Supp = this.AnimalState.DietPropn.Solid * StdMath.XDiv(this.AnimalState.ME_Intake.Supp, this.AnimalState.ME_Intake.Solid);
             this.AnimalState.DietPropn.Herbage = this.AnimalState.DietPropn.Solid - this.AnimalState.DietPropn.Supp;
 
-            if (this.AnimalState.ME_Intake.Total < GrazType.VerySmall)                             
+            if (this.AnimalState.ME_Intake.Total < GrazType.VERYSMALL)                             
             {
                 // Efficiencies of various uses of ME
                 this.AnimalState.Efficiency.Maint = this.Genotype.EfficC[4];
@@ -4047,7 +4047,7 @@ namespace Models.GrazPlan
 
             NetProtein = this.AnimalState.ProteinUse.Gain - this.AnimalState.GainPContent * this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent;
 
-            if ((NetProtein < 0) && (this.AnimalState.ProteinUse.Lact > GrazType.VerySmall))                // Deficiency of protein, i.e. protein is   
+            if ((NetProtein < 0) && (this.AnimalState.ProteinUse.Lact > GrazType.VERYSMALL))                // Deficiency of protein, i.e. protein is   
             {                                                                                               //  more limiting than ME                  
                 MilkScalar = Math.Max(0.0, 1.0 + Genotype.GainC[16] * NetProtein /                           // Redirect protein from milk to weight change    
                                                                 this.AnimalState.ProteinUse.Lact);                                           
@@ -4414,7 +4414,7 @@ namespace Models.GrazPlan
         {
             double suppRelFill;
 
-            if (theAnimals.PotIntake < GrazType.VerySmall)
+            if (theAnimals.PotIntake < GrazType.VERYSMALL)
                 suppRelFill = 0.0;
             else
             {
