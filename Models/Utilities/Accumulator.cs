@@ -16,7 +16,7 @@ namespace Models.Utilities
         private IModel parentModel;
         private string variableName;
         private int numberOfDays;
-        private List<double> values = new List<double>();
+        
 
         /// <summary>
         /// Constructor
@@ -31,18 +31,21 @@ namespace Models.Utilities
             this.numberOfDays = numberOfDays;
         }
 
+        /// <summary>The values collected.</summary>
+        public List<double> Values { get; set; } = new List<double>();
+
         /// <summary>
         /// Perform update
         /// </summary>
         public void Update()
         {
-            if (values.Count > 0 && values.Count >= numberOfDays)
-                values.RemoveAt(0);
+            if (Values.Count > 0 && Values.Count >= numberOfDays)
+                Values.RemoveAt(0);
 
             try
             {
                 double value = (double) parentModel.FindByPath(variableName)?.Value;
-                values.Add(value);
+                Values.Add(value);
             }
             catch (Exception err)
             {
@@ -53,6 +56,8 @@ namespace Models.Utilities
         /// <summary>
         /// Return the sum 
         /// </summary>
-        public double Sum { get { return MathUtilities.Sum(values); } }
+        public double Sum { get { return MathUtilities.Sum(Values); } }
+
+        
     }
 }

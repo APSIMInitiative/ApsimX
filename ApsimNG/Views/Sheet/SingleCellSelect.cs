@@ -88,7 +88,7 @@ namespace UserInterface.Views
                     Delete();
                 sheet.Refresh();
             }
-            else if (sheet.CellEditor != null && evnt.KeyValue < 255)
+            else if (sheet.CellEditor != null && evnt.KeyValue > 0 && evnt.KeyValue < 255)
             {
                 if (evnt.KeyValue == 'c' && evnt.Control)
                     Copy();

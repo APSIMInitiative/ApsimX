@@ -200,12 +200,12 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
+        private NutrientPoolFunctions dmDemands = null;
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
+        private NutrientPoolFunctions nDemands = null;
 
         /// <summary>The extinction coefficient function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -334,8 +334,8 @@ namespace Models.PMF.Organs
         private void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = Photosynthesis.Value();
-            DMSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
-            DMSupply.Reallocation = 0.0;
+            DMSupply.ReTranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
+            DMSupply.ReAllocation = 0.0;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -346,8 +346,8 @@ namespace Models.PMF.Organs
             double lrt = LeafResidenceTime.Value();
             double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= lrt, l => l.Live.StorageN);
 
-            NSupply.Reallocation = senescingStorageN * NReallocationFactor.Value();
-            NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
+            NSupply.ReAllocation = senescingStorageN * NReallocationFactor.Value();
+            NSupply.ReTranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
             NSupply.Uptake = 0.0;        
         }
 
@@ -600,8 +600,8 @@ namespace Models.PMF.Organs
                 cohort.IncreaseAge(developmentRate);
 
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
-                StartNReallocationSupply = NSupply.Reallocation;
-                StartNRetranslocationSupply = NSupply.Retranslocation;
+                StartNReallocationSupply = NSupply.ReAllocation;
+                StartNRetranslocationSupply = NSupply.ReTranslocation;
             }
         }
 

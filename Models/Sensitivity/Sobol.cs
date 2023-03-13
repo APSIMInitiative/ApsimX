@@ -404,9 +404,13 @@
                         foreach (DataColumn col in resultsForValue.Columns)
                         {
                             if (col.DataType == typeof(string))
-                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsStrings(resultsForValue, col.ColumnName));
+                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsStrings(resultsForValue, col.ColumnName, CultureInfo.InvariantCulture));
                             else
-                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsDoubles(resultsForValue, col.ColumnName));
+                                // Someone needs to test this on a non-Australian locale.
+                                // Does R print out numbers using the system locale, or
+                                // an international one? If the system locale, change this
+                                // to CultureInfo.CurrentCulture.
+                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsDoubles(resultsForValue, col.ColumnName, CultureInfo.InvariantCulture));
                         }
                     }
                     catch (Exception err)

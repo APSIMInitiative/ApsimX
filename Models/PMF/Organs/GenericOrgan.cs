@@ -69,17 +69,17 @@
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority dmDemands = null;
+        private NutrientDemandFunctions dmDemands = null;
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority nDemands = null;
+        private NutrientDemandFunctions nDemands = null;
 
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
-        public BiomassDemand InitialWt = null;
+        public NutrientPoolFunctions InitialWt = null;
 
         /// <summary>The initial N Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -272,8 +272,8 @@
         [EventSubscribe("SetDMSupply")]
         protected virtual void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.Reallocation = AvailableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();         
+            DMSupply.ReAllocation = AvailableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();         
             DMSupply.Fixation = Photosynthesis.Value();
             DMSupply.Uptake = 0;
         }
@@ -282,12 +282,12 @@
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            NSupply.Reallocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * SenescenceRate.Value() * nReallocationFactor.Value());
-            if (NSupply.Reallocation < -BiomassToleranceValue)
+            NSupply.ReAllocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * SenescenceRate.Value() * nReallocationFactor.Value());
+            if (NSupply.ReAllocation < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = RetranslocateNitrogen.Calculate(this);
-            if (NSupply.Retranslocation < -BiomassToleranceValue)
+            NSupply.ReTranslocation = RetranslocateNitrogen.Calculate(this);
+            if (NSupply.ReTranslocation < -BiomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
 

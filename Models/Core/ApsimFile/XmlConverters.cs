@@ -311,7 +311,7 @@ namespace Models.Core.ApsimFile
                 try
                 {
                     DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
-                    foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name"))
+                    foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name", CultureInfo.InvariantCulture))
                     {
                         if (tableName == "Simulations" || tableName == "Messages" || tableName == "InitialConditions")
                             connection.ExecuteNonQuery("ALTER TABLE " + tableName + " RENAME TO " + "_" + tableName);
@@ -623,7 +623,7 @@ namespace Models.Core.ApsimFile
                 try
                 {
                     DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
-                    List<string> tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name").ToList();
+                    List<string> tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name", CultureInfo.InvariantCulture).ToList();
                     if (!tableNames.Contains("_Checkpoints"))
                     {
                         connection.ExecuteNonQuery("BEGIN");

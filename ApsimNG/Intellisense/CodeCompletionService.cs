@@ -135,10 +135,10 @@ namespace UserInterface.Intellisense
                 {
                     // get recommended symbols to match them up later with SymbolCompletionProvider
                     SemanticModel semanticModel = await document.GetSemanticModelAsync();
-                    ISymbol[] recommendedSymbols = (await Recommender.GetRecommendedSymbolsAtPositionAsync(semanticModel, offset, workspace)).ToArray();
+                    ISymbol[] recommendedSymbols = (await Recommender.GetRecommendedSymbolsAtPositionAsync(document, offset)).ToArray();
 
                     bool isSuggestionMode = completionList.SuggestionModeItem != null;
-                    foreach (CompletionItem item in completionList.Items)
+                    foreach (CompletionItem item in completionList.ItemsList)
                     {
                         string completionText = item.DisplayText;
                         bool preselect = item.Rules.MatchPriority == MatchPriority.Preselect;

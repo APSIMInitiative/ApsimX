@@ -18,6 +18,9 @@ namespace APSIM.Shared.JobRunning
         /// <summary>Return an enumeration of jobs that need running.</summary>
         IEnumerable<IRunnable> GetJobs();
 
+        /// <summary>Call JobHasCompleted when job is complete?</summary>
+        bool NotifyWhenJobComplete { get; }
+
         /// <summary>A job has completed running.</summary>
         void JobHasCompleted(JobCompleteArguments args);
     }

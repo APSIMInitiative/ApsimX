@@ -394,6 +394,7 @@ namespace Models.PMF.Phen
             FIHS = 0;
             TSHS = 0;
             FLN = 2.86;
+            LPp = 0;
             ZeroDeltas();
             //HS = 0;
         }

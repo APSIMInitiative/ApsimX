@@ -125,7 +125,7 @@
                     foreach (var (job, jobManager) in GetJobs())
                     {
                         if (cancelToken.IsCancellationRequested)
-                            return;
+                            break;
 
                         // Wait until we have a spare processor to run a job.
                         if (multiThreaded)
@@ -196,7 +196,8 @@
                 if (!(job is JobRunnerSleepJob))
                 {
                     // Signal to JobManager the job has finished.
-                    InvokeJobCompleted(job, jobManager, startTime, error);
+                    if (jobManager.NotifyWhenJobComplete)
+                        InvokeJobCompleted(job, jobManager, startTime, error);
 
                     lock (runningLock)
                     {

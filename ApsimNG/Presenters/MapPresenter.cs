@@ -77,8 +77,8 @@
             string path = this.map.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
 
-            Image rawImage = this.view.Export();
-            rawImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+            Gdk.Pixbuf rawImage = this.view.Export();
+            rawImage.Save(fileName, "png");
 
             return fileName;
         }

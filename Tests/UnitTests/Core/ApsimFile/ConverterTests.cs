@@ -7,7 +7,8 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.IO;
+	using System.Globalization;
+	using System.IO;
     using System.Linq;
 
     /// <summary>This is a test class for the .apsimx file converter.</summary>
@@ -291,7 +292,7 @@
                 Assert.IsTrue(converter.DidConvert);
 
                 DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
-                string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
+                string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name", CultureInfo.InvariantCulture);
                 Assert.AreEqual(tableNames, new string[] { "_Simulations", "_Messages", "_Units", "Report" } );
             }
             finally

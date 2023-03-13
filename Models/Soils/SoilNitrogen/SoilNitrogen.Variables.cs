@@ -6515,10 +6515,7 @@ namespace Models.Soils
         public double[] MineralisedNSurfaceResidue => dlt_n_min_res;
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
-        public double FOMCNR(int i)
-        {
-            throw new NotImplementedException();
-        }
+        public double[] FOMCNRFactor => throw new NotImplementedException();
     }
 
     #region classes for organising data

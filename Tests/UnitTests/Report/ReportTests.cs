@@ -440,12 +440,12 @@
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
-            double[] values = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            double[] values = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 364 };
             Assert.AreEqual(expected, values);
 
             data = storage.Reader.GetData("ReportOnIrrigation", fieldNames: fieldNames);
-            values = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            values = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             // There is one less irrigation event, as the manager script doesn't irrigate.
             expected = new double[] { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 };
             Assert.AreEqual(expected, values);
@@ -485,7 +485,7 @@
             List<string> fieldNames = new List<string>() { "doy" };
             IDataStore storage = file.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
-            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
             Assert.AreEqual(expected, actual);
         }
@@ -542,9 +542,9 @@
             Assert.IsTrue(columnNames.Contains("MockModel.Z(3)"));
             Assert.IsTrue(columnNames.Contains("MockModel.Z(4)"));
             
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(4)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(4)", CultureInfo.InvariantCulture),
                             new double[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
         }
 
@@ -576,9 +576,9 @@
             Assert.IsTrue(columnNames.Contains("MockModel.Z(2)"));
             Assert.IsFalse(columnNames.Contains("MockModel.Z(3)"));
             Assert.IsFalse(columnNames.Contains("MockModel.Z(4)"));
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(1)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(1)", CultureInfo.InvariantCulture),
                             new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture),
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 });
         }
 
@@ -611,10 +611,10 @@
             Assert.IsTrue(columnNames.Contains("MockModel.Z(3)"));
             Assert.IsFalse(columnNames.Contains("MockModel.Z(4)"));
 
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture),
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 });
 
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
         }
 
@@ -668,7 +668,7 @@ namespace Models
             List<string> fieldNames = new List<string>() { "x" };
             IDataStore storage = sims.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
-            string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x");
+            string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x", CultureInfo.InvariantCulture);
 
             // The enum values should have been cast to strings before being reported.
             string[] expected = Enumerable.Repeat("Red", actual.Length).ToArray();

@@ -6,6 +6,7 @@ namespace UserInterface.Classes
     using Models.Core;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.PMF.Phen;
 
     /// <summary>
     /// Helper functions for the property presenter. Most involve
@@ -80,7 +81,34 @@ namespace UserInterface.Classes
             }
             return new string[0];
         }
-    
+
+        
+        /// <summary>Get a list of life phases for the plant.</summary>
+        /// <param name="plant">The the plant.</param>
+        /// <returns>A list of phases.</returns>
+        public static string[] GetCropStageNames(Plant plant)
+        {
+            List<IPhase> phases = plant.FindAllInScope<IPhase>().ToList();
+            if (phases.Count > 0)
+            {
+                string[] Namelist = new string[phases.Count+1];
+                int i = 0;
+                foreach (IPhase p in phases)
+                {
+                    if (i == 0)
+                    {
+                        Namelist[i] = p.Start;
+                        i++;
+                    }
+                    Namelist[i] = p.End;
+                    i++;
+                    
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
+
         /// <summary>Get a list of phases for lifecycle.</summary>
         /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>

@@ -94,7 +94,7 @@ namespace Utility
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
-        public bool Muted { get; set; }
+        public bool Muted { get; set; } = true;
 
         /// <summary>
         /// In theory, if there are any commands in the command history,
@@ -117,8 +117,8 @@ namespace Utility
                 {
                     try
                     {
-                        Bitmap b = ApsimNG.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
-                        b.Save(summaryJpg);
+                        Gdk.Pixbuf b = Gdk.Pixbuf.LoadFromResource("Apsim1.png");
+                        b.Save(summaryJpg, "jpeg");
                     }
                     catch
                     {

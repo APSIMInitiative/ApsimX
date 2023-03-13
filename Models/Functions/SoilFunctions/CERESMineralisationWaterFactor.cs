@@ -14,12 +14,13 @@ namespace Models.Functions
     [Description("Mineralisation Water Factor from CERES-Maize")]
     public class CERESMineralisationWaterFactor : Model, IFunction
     {
+        private double[] wf;
 
         [Link]
         Soil soil = null;
 
         [Link]
-        ISoilWater soilwater = null;
+        Water water = null;
 
         [Link]
         IPhysical physical = null;
@@ -41,29 +42,40 @@ namespace Models.Functions
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
+        /// <param name="arrayIndex">The index to return.</param>
         public double Value(int arrayIndex = -1)
         {
-            if (arrayIndex == -1)
-                throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
+            if (wf == null)
+                return 0;
+            else
+                return wf[arrayIndex];
+        }
 
-            double[] SW = soilwater.SW;
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
+        [EventSubscribe("WaterChanged")]
+        public void OnWaterChanged(object sender, EventArgs e)
+        {
+            double[] SW = water.Volumetric;
             double[] LL15 = physical.LL15;
             double[] DUL = physical.DUL;
             double[] SAT = physical.SAT;
-
-            double WF = 0;
-            if (SW[arrayIndex] < LL15[arrayIndex])
-                WF = 0;
-            else if (SW[arrayIndex] < DUL[arrayIndex])
+            if (wf == null)
+                wf = new double[SW.Length];
+            for (int i = 0; i < SW.Length; i++)
+            {
+                if (SW[i] < LL15[i])
+                    wf[i] = 0;
+                else if (SW[i] < DUL[i])
+                {
                     if (isSand)
-                        WF = 0.05+0.95*Math.Min(1, 2 * MathUtilities.Divide(SW[arrayIndex] - LL15[arrayIndex], DUL[arrayIndex] - LL15[arrayIndex],0.0));
+                        wf[i] = 0.05 + 0.95 * Math.Min(1, 2 * MathUtilities.Divide(SW[i] - LL15[i], DUL[i] - LL15[i], 0.0));
                     else
-                        WF = Math.Min(1, 2 * MathUtilities.Divide(SW[arrayIndex] - LL15[arrayIndex], DUL[arrayIndex] - LL15[arrayIndex],0.0));
-            else
-                WF = 1 - 0.5 * MathUtilities.Divide(SW[arrayIndex] - DUL[arrayIndex], SAT[arrayIndex] - DUL[arrayIndex],0.0);
-
-            return WF;
+                        wf[i] = Math.Min(1, 2 * MathUtilities.Divide(SW[i] - LL15[i], DUL[i] - LL15[i], 0.0));
+                }
+                else
+                    wf[i] = 1 - 0.5 * MathUtilities.Divide(SW[i] - DUL[i], SAT[i] - DUL[i], 0.0);
+            }
         }
     }
 }

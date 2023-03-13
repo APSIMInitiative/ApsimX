@@ -339,7 +339,8 @@ namespace Models.CLEM.Resources
                         valueToUse = Pool(age, true).Sum(a => a.Amount);
                     break;
                 case "Growth":
-                    return Pool(0, true).Sum(a => a.Growth);
+                    valueToUse = Pool(0, true).Sum(a => a.Growth);
+                    break;
                 case "Consumed":
                     if (age < 0)
                         valueToUse = Pools.Sum(a => a.Consumed);

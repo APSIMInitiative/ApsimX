@@ -71,6 +71,15 @@
         /// <summary>time after 2nd-stage soil evaporation begins (d)</summary>
         public double t;
 
+        /// <summary>Is simulation in summer?</summary>
+        private bool isInSummer;
+
+        /// <summary>Date for start of summer.</summary>
+        private DateTime summerStartDate;
+
+        /// <summary>Date for start of winter.</summary>
+        private DateTime winterStartDate;
+
         /// <summary>Atmospheric potential evaporation (mm)</summary>
         [JsonIgnore]
         public double Eo { get; set; }
@@ -115,6 +124,10 @@
             double sumes2_max = 25;
             double u = waterBalance.WinterU;
             double cona = waterBalance.WinterCona;
+            summerStartDate = DateUtilities.GetDate(waterBalance.SummerDate, 1900).AddDays(1); // AddDays(1) - to reproduce behaviour of DateUtilities.WithinDate
+            winterStartDate = DateUtilities.GetDate(waterBalance.WinterDate, 1900);
+            isInSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
+
             if (IsSummer)
             {
                 u = waterBalance.SummerU;
@@ -148,6 +161,12 @@
         /// <returns></returns>
         public double Calculate()
         {
+            // Done like this to speed up runtime. Using DateUtilities.WithinDates is slow.
+            if (clock.Today.Day == summerStartDate.Day && clock.Today.Month == summerStartDate.Month)
+                isInSummer = true;
+            else if (clock.Today.Day == winterStartDate.Day && clock.Today.Month == winterStartDate.Month)
+                isInSummer = false;
+
             //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
             CalcEs();
@@ -155,13 +174,7 @@
         }
 
         /// <summary>Return true if simulation is in summer.</summary>
-        private bool IsSummer
-        {
-            get
-            {
-                return !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
-            }
-        }
+        private bool IsSummer => isInSummer;
 
         /// <summary>Calculate the Eo (atmospheric potential)</summary>
         private void CalcEo()

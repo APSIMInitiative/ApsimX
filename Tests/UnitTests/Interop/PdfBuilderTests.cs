@@ -81,7 +81,7 @@ namespace UnitTests.Interop
         {
             EnsureCanRenderTag(new SectionTag("title", new ITag[1] { new ParagraphTag("") }));
             EnsureCanRenderTag(new ParagraphTag("paragraph text"));
-            using (Image image = new Bitmap(2, 2))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(2, 2)))
                 EnsureCanRenderTag(new ImageTag(image));
             EnsureCanRenderTag(new TableTag(CreateTable()));
             EnsureCanRenderTag(CreateGraphTag());
@@ -418,13 +418,13 @@ namespace UnitTests.Interop
         }
 
         /// <summary>
-        /// Ensure that <see cref="PdfBuilder.AppendImage(Image)"/> adds the
+        /// Ensure that <see cref="PdfBuilder.AppendImage(SkiaSharp.SKImage)"/> adds the
         /// image into the document.
         /// </summary>
         [Test]
         public void TestAppendImage()
         {
-            using (Image image = new Bitmap(2, 2))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(2, 2)))
             {
                 builder.AppendImage(image);
                 Assert.AreEqual(1, doc.LastSection.Elements.Count);
@@ -458,7 +458,7 @@ namespace UnitTests.Interop
             // When setting the page width and height, convert from px to points.
             section.PageSetup.PageWidth =  Unit.FromPoint(pageWidth / pointsToPixels);
             section.PageSetup.PageHeight = Unit.FromPoint(pageHeight / pointsToPixels);
-            using (Image image = new Bitmap(imageWidth, imageHeight))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(imageWidth, imageHeight)))
             {
                 builder.AppendImage(image);
                 Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
@@ -472,7 +472,7 @@ namespace UnitTests.Interop
         }
 
         /// <summary>
-        /// Ensure that <see cref="PdfBuilder.AppendImage(System.Drawing.Image)"/>
+        /// Ensure that <see cref="PdfBuilder.AppendImage(SkiaSharp.SKImage)"/>
         /// adds the image at the end of the document, in an existing paragraph
         /// (if one exists).
         /// </summary>
@@ -480,7 +480,7 @@ namespace UnitTests.Interop
         public void TestAppendImageLocation()
         {
             doc.AddSection().AddParagraph("some text is already in the paragraph");
-            using (Image image = new Bitmap(2, 2))
+            using (SkiaSharp.SKImage image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(2, 2)))
                 builder.AppendImage(image);
             Assert.AreEqual(1, doc.LastSection.Elements.Count);
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];

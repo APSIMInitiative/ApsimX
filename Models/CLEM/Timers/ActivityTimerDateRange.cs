@@ -55,6 +55,9 @@ namespace Models.CLEM.Timers
         [Required]
         public bool Invert { get; set; }
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Activity performed
         /// </summary>

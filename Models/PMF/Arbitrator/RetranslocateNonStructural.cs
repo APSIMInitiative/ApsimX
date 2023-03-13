@@ -34,7 +34,7 @@ namespace Models.PMF
         public double CalculateBiomass(IOrgan organ)
         {
             GenericOrgan genOrgan = organ as GenericOrgan; // FIXME!
-            double availableDM = Math.Max(0.0, genOrgan.StartLive.StorageWt - genOrgan.DMSupply.Reallocation) * genOrgan.DMRetranslocationFactor.Value();
+            double availableDM = Math.Max(0.0, genOrgan.StartLive.StorageWt - genOrgan.DMSupply.ReAllocation) * genOrgan.DMRetranslocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -49,7 +49,7 @@ namespace Models.PMF
             var genOrgan = organ as GenericOrgan;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN - genOrgan.NSupply.Reallocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN - genOrgan.NSupply.ReAllocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
             double storageRetranslocation = Math.Min(genOrgan.Live.StorageN, nitrogen.Retranslocation);

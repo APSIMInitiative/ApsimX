@@ -52,7 +52,9 @@ namespace Models.Core
             if (matchType == Override.MatchTypeEnum.Name)
             {
                 // Replacements uses this.
-                variables = model.FindAllInScope(path).Select(m => new VariableObject(m));
+                variables = model.FindAllInScope(path)
+                    .Where(m => m.Parent != null)
+                    .Select(m => new VariableObject(m));
             }
             else
             {

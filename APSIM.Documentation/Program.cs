@@ -32,6 +32,7 @@ namespace APSIM.Documentation
         {
             try
             {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 // Get autodocs config - ie which models to document.
                 IEnumerable<IDocumentationTable> tables = new[]
                 {

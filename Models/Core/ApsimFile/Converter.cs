@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 157; } }
+        public static int LatestVersion { get { return 159; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -562,6 +562,8 @@ namespace Models.Core.ApsimFile
                             // Convert array to string.
                             if (specifications.Count > 0)
                                 factor["Specification"] = specifications[0].ToString();
+                            else
+                                factor["Specification"] = new JArray();
                         }
                     }
                 }
@@ -3383,14 +3385,16 @@ namespace Models.Core.ApsimFile
                     memo["Text"] = text;
                 }
             }
+            foreach (var TrModelNode in JsonUtilities.ChildrenRecursively(root, "MaximumHourlyTrModel"))
+                TrModelNode["$type"] = "Models.Functions.SupplyFunctions.LimitedTranspirationRate, Models";
         }
-		
+
         /// <summary>
         /// Upgrade to version 128. Add ResourceName property to Fertiliser models.
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion128(JObject root, string fileName)
+         private static void UpgradeToVersion128(JObject root, string fileName)
         {
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";
@@ -4065,7 +4069,7 @@ namespace Models.Core.ApsimFile
                         });
                     }
 
-                    if (soilChildren != null && chemicalChildren != null && bdToken != null)
+                    if (soilChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
                         var bdThickness = physical["Thickness"].Values<double>().ToArray();
@@ -4110,11 +4114,19 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Move solutes from nutrient to soil.
-                        var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        var no3Token = JsonUtilities.ChildWithName(soil, "NO3");
+                        if (no3Token == null)
+                        {
+                            var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        }
 
-                        var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        var nh4Token = JsonUtilities.ChildWithName(soil, "NH4");
+                        if (nh4Token == null)
+                        {
+                            var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        }
 
                         var labileP = GetValues(tokensContainingValues, "LabileP", 0.0, bd, bdThickness, null);
                         var unavailableP = GetValues(tokensContainingValues, "UnavailableP", 0.0, bd, bdThickness, null);
@@ -4155,8 +4167,12 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Add a urea solute to soil
-                        var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
-                        soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        var ureaToken = JsonUtilities.ChildWithName(soil, "Urea");
+                        if (ureaToken == null)
+                        {
+                            var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
+                            soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        }
                     }
 
 
@@ -4602,6 +4618,7 @@ namespace Models.Core.ApsimFile
                 cultivarFolder["$type"] = "Models.Core.Folder, Models";
         }
 
+       
         /// <summary>
         /// Change PredictedObserved to make SimulationName an explicit first field to match on.
         /// </summary>
@@ -4611,17 +4628,19 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
             {
-                var fieldName3 = predictedObserved["FieldName3UsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName3.Value<string>()))
-                    predictedObserved["FieldName4UsedForMatch"] = fieldName3.Value<string>();
-                var fieldName2 = predictedObserved["FieldName2UsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName2.Value<string>()))
-                    predictedObserved["FieldName3UsedForMatch"] = fieldName2.Value<string>();
-                var fieldName1 = predictedObserved["FieldNameUsedForMatch"];
-                if (!string.IsNullOrEmpty(fieldName1.Value<string>()))
-                    predictedObserved["FieldName2UsedForMatch"] = fieldName1.Value<string>();
-                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
+                var field = predictedObserved["FieldName3UsedForMatch"];
+                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                    predictedObserved["FieldName4UsedForMatch"] = field.Value<string>();
 
+                field = predictedObserved["FieldName2UsedForMatch"];
+                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                    predictedObserved["FieldName3UsedForMatch"] = field.Value<string>();
+
+                field = predictedObserved["FieldNameUsedForMatch"];
+                if (!String.IsNullOrEmpty(field?.Value<string>()))
+                    predictedObserved["FieldName2UsedForMatch"] = field.Value<string>();
+
+                predictedObserved["FieldNameUsedForMatch"] = "SimulationName";
             }
         }
 
@@ -4713,10 +4732,57 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Change [Root].LayerMidPointDepth to [Physical].LayerMidPointDepth
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion158(JObject root, string fileName)
+        {
+            //Fix variable references
+            foreach (JObject varref in JsonUtilities.ChildrenOfType(root, "VariableReference"))
+            {
+                if (varref["VariableName"].ToString() == "[Root].LayerMidPointDepth")
+                    varref["VariableName"] = "[Physical].DepthMidPoints";
+            }
+        }
+
+        /// <summary>
+        /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion159(JObject root, string fileName)
+        {
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemandAndPriority"))
+            {
+                demand["$type"] = "Models.PMF.NutrientDemandFunctions, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemand"))
+            {
+                demand["$type"] = "Models.PMF.NutrientPoolFunctions, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "EnergyBalance"))
+            {
+                demand["$type"] = "Models.PMF.EnergyBalance, Models";
+            }
+
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, "BiomassDemand", "NutrientPoolFunctions");
+                JsonUtilities.ReplaceManagerCode(manager, "BiomassDemandAndPriority", "NutrientDemandFunctions");
+                JsonUtilities.ReplaceManagerCode(manager, "Reallocation", "ReAllocation");
+                JsonUtilities.ReplaceManagerCode(manager, "Retranslocation", "ReTranslocation");
+            }
+
+        }
+
+        /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
+        /// 
+
         private static void UpgradeToVersion889(JObject root, string fileName)
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))

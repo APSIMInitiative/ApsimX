@@ -30,6 +30,11 @@ namespace Models.CLEM.Timers
         [Link]
         private ResourcesHolder resources = null;
 
+        [Link] Clock clock = null;
+
+        double amountAtFirstCheck;
+        DateTime checkDate = DateTime.Now;
+
         /// <summary>
         /// Name of resource to check
         /// </summary>
@@ -67,6 +72,9 @@ namespace Models.CLEM.Timers
         [Description("Amount")]
         public double Amount { get; set; }
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Notify CLEM that this activity was performed.
         /// </summary>
@@ -95,26 +103,32 @@ namespace Models.CLEM.Timers
         {
             get
             {
+                if (clock.Today != checkDate)
+                {
+                    amountAtFirstCheck = ResourceTypeModel.Amount;
+                    checkDate = clock.Today;
+                }
+
                 bool due = false;
                 switch (Operator)
                 {
                     case ExpressionType.Equal:
-                        due = (ResourceTypeModel.Amount == Amount);
+                        due = (amountAtFirstCheck == Amount);
                         break;
                     case ExpressionType.NotEqual:
-                        due = (ResourceTypeModel.Amount != Amount);
+                        due = (amountAtFirstCheck != Amount);
                         break;
                     case ExpressionType.LessThan:
-                        due = (ResourceTypeModel.Amount < Amount);
+                        due = (amountAtFirstCheck < Amount);
                         break;
                     case ExpressionType.LessThanOrEqual:
-                        due = (ResourceTypeModel.Amount <= Amount);
+                        due = (amountAtFirstCheck <= Amount);
                         break;
                     case ExpressionType.GreaterThan:
-                        due = (ResourceTypeModel.Amount > Amount);
+                        due = (amountAtFirstCheck > Amount);
                         break;
                     case ExpressionType.GreaterThanOrEqual:
-                        due = (ResourceTypeModel.Amount >= Amount);
+                        due = (amountAtFirstCheck >= Amount);
                         break;
                     default:
                         break;

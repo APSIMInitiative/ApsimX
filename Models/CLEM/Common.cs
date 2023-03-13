@@ -48,7 +48,6 @@ namespace Models.CLEM
         /// Insufficient resources so activity skipped
         /// </summary>
         Skipped,
-
     }
 
     /// <summary>
@@ -232,13 +231,13 @@ namespace Models.CLEM
     public enum LabourLimitType
     {
         /// <summary>
-        /// Represents a rate or fixed days specified
+        /// Represents a rate or fixed days per units specified
         /// </summary>
-        AsDaysRequired,
+        AsRatePerUnitsAllowed,
         /// <summary>
         /// Relates to the total days allowed
         /// </summary>
-        AsTotalAllowed,
+        AsTotalDaysAllowed,
         /// <summary>
         /// As proportion of the days required
         /// </summary>
@@ -870,6 +869,57 @@ namespace Models.CLEM
         /// Do not present Memos
         /// </summary>
         Ignore
+    }
+
+
+    /// <summary>
+    /// Style of reporting age
+    /// </summary>
+    public enum ReportAgeType
+    {
+        /// <summary>
+        /// Do not report
+        /// </summary>
+        None,
+        /// <summary>
+        /// Age in months
+        /// </summary>
+        Months,
+        /// <summary>
+        /// Age in years with decimale fractions
+        /// </summary>
+        FractionOfYears,
+        /// <summary>
+        /// Age in truncated whole years
+        /// </summary>
+        WholeYears
+    }
+
+    /// <summary>
+    /// The style of calculation to use for the Activity Timer based on ruminant herd level
+    /// </summary>
+    public enum ActivityTimerRuminantLevelStyle
+    {
+        /// <summary>
+        /// Number of individuals selected
+        /// </summary>
+        NumberOfIndividuals,
+        /// <summary>
+        /// Sum of property across all individuals selected
+        /// </summary>
+        SumOfProperty,
+        /// <summary>
+        /// Mean of property across all individuals selected
+        /// </summary>
+        MeanOfProperty,
+        /// <summary>
+        /// Minimum of property across all individuals selected
+        /// </summary>
+        MinimumOfProperty,
+        /// <summary>
+        /// Maximum of property across all individuals selected
+        /// </summary>
+        MaximumOfProperty
     }
 
     /// <summary>

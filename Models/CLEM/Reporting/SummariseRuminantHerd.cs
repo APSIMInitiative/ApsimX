@@ -39,11 +39,16 @@ namespace Models.CLEM
         public SummarizeRuminantHerdStyle GroupStyle { get; set; }
 
         /// <summary>
+        /// Include location group
+        /// </summary>
+        [Description("Include location in grouping")]
+        public bool AddGroupByLocation { get; set; }
+
+        /// <summary>
         /// Include total population column
         /// </summary>
         [Description("Include total population column")]
         public bool IncludeTotalColumn { get; set; }
-
 
         /// <summary>
         /// Report item was generated event handler
@@ -128,27 +133,28 @@ namespace Models.CLEM
             foreach (RuminantGroup group in herdFilters)
                 herd = group.Filter(herd);
 
-            IEnumerable<IGrouping<Tuple<string, string, Sex, string>, Ruminant>> groups = null;
+            IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>> groups = null;
 
             if (GroupStyle != SummarizeRuminantHerdStyle.Classic)
             {
                 switch (GroupStyle)
                 {
+                    case SummarizeRuminantHerdStyle.BySexClass:
                     case SummarizeRuminantHerdStyle.ByClass:
-                        groups = herd.GroupBy(a => new Tuple<string, string, Sex, string>(a.Breed, a.HerdName, a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation)?a.Location:"", a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeYears:
-                        groups = herd.GroupBy(a => new Tuple<string, string, Sex, string>(a.Breed, a.HerdName, a.Sex, Math.Truncate(a.Age / 12.0).ToString())) as IEnumerable<IGrouping<Tuple<string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.AgeInYears.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeMonths:
-                        groups = herd.GroupBy(a => new Tuple<string, string, Sex, string>(a.Breed, a.HerdName, a.Sex, a.Age.ToString())) as IEnumerable<IGrouping<Tuple<string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Age.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     default:
                         break;
                 }
 
                 // decide what groups to use
-                groups = herd.GroupBy(a => new Tuple<string, string, Sex, string>(a.Breed, a.HerdName, a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, Sex, string>, Ruminant>>;
+                //groups = herd.GroupBy(a => new Tuple<string, string, Sex, string>(a.Breed, a.HerdName, a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
 
                 var result = groups.Select(group => new
                 {
@@ -158,8 +164,9 @@ namespace Models.CLEM
                         TimeStep = timestep,
                         Breed = group.Key.Item1,
                         Herd = group.Key.Item2,
-                        Sex = group.Key.Item3.ToString(),
-                        Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass) ? $"{group.Key.Item3}.{group.Key.Item4}" : group.Key.Item4,
+                        Sex = group.Key.Item4.ToString(),
+                        Location = group.Key.Item3,
+                        Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass) ? $"{group.Key.Item4}.{group.Key.Item5}" : group.Key.Item5,
                         Number = group.Count(),
                         Age = group.Average(a => a.Age),
                         AverageWeight = group.Average(a => a.Weight),
@@ -169,9 +176,9 @@ namespace Models.CLEM
                         AverageProportionPotentialIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
                         AverageWeightGain = group.Average(a => a.WeightGain),
                         AdultEquivalents = group.Sum(a => a.AdultEquivalent),
-                        NumberPregnant = (group.Key.Item3 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count() : 0,
-                        NumberLactating = (group.Key.Item3 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count() : 0,
-                        NumberOfBirths = (group.Key.Item3 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
+                        NumberPregnant = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count() : 0,
+                        NumberLactating = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count() : 0,
+                        NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
                     }
                 });
 
@@ -272,6 +279,9 @@ namespace Models.CLEM
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
+                if(AddGroupByLocation)
+                    htmlWriter.Write("based on location and ");
+
                 switch (GroupStyle)
                 {
                     case SummarizeRuminantHerdStyle.Classic:
@@ -357,6 +367,11 @@ namespace Models.CLEM
         /// Sex of individuals
         /// </summary>
         public string Sex { get; set; }
+        /// <summary>
+        /// Location of individuals
+        /// </summary>
+        public string Location { get; set; }
+
         /// <summary>
         /// Number of individuals
         /// </summary>
