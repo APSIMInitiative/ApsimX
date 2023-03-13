@@ -59,7 +59,7 @@
             "[Clock].Today",
             "[Lucerne].Arbitrator.N.Retranslocation",
             "[Lucerne].AboveGround.Wt",
-            "[Lucerne].AboveGround.Wt*10 - [Lucerne].AboveGroundDead*10 as ShootWt",
+            "[Lucerne].AboveGround.Wt*10 - [Lucerne].AboveGroundDead.Wt*10 as ShootWt",
             "[Lucerne].Grain.Live.N",
             "[Lucerne].Grain.Live.Wt",
             "[Lucerne].Leaf.CoverDead",
