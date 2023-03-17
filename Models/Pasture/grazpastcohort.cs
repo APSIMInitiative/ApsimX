@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-    using CMPServices;
+    //using CMPServices;
     using StdUnits;
     using static GrazType;
     using static PastureUtil;
@@ -641,7 +641,7 @@
 
             return result;
         }
-
+        /*
         /// <summary>
         /// 
         /// </summary>
@@ -878,7 +878,7 @@
                 }
             }
         }
-
+        */
         /// <summary>
         /// 
         /// </summary>
@@ -3734,7 +3734,7 @@
             return result;
         }
 
-        /// <summary>
+/*        /// <summary>
         /// Populates a TPastureCohort from a TTypedValue                                
         /// * The status of the cohort has already been assigned when this method is     
         ///   called                                                                     
@@ -3871,6 +3871,6 @@
 
                 PastureUtil.WriteInteger(ref aValue, "frosts", (int)Math.Round(PastureUtil.Div0(this.FrostFactor, this.Params.DeathK[6])), 0);
             }
-        }
+        }*/
     }
 }

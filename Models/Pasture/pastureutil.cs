@@ -1,6 +1,6 @@
 ﻿namespace Models.GrazPlan
 {
-    using CMPServices;
+    //using CMPServices;
     using System;
     using static GrazType;
 
@@ -585,7 +585,7 @@
             aPool.AshAlk = newDM * Div0(aPool.AshAlk, aPool.DM);
             aPool.DM = newDM;
         }
-
+        /*
         /// <summary>
         /// Unit is kg/ha unless explicitly specified otherwise
         /// </summary>
@@ -605,7 +605,7 @@
 
             return result;
         }
-
+        */
         public static double ReadMass(double aValue, string units)
         {
             double result;
@@ -639,7 +639,7 @@
         }
 
         // Utility routines for I/O from TTypedValues
-
+        /*
         /// <summary>
         /// 
         /// </summary>
@@ -664,7 +664,7 @@
 
             return result;
         }
-
+        *//*
         /// <summary>
         /// 
         /// </summary>
@@ -688,7 +688,7 @@
 
             return result;
         }
-
+        *//*
         /// <summary>
         /// 
         /// </summary>
@@ -712,7 +712,7 @@
 
             return result;
         }
-
+        *//*
         /// <summary>
         /// 
         /// </summary>
@@ -736,7 +736,7 @@
 
             return result;
         }
-
+        *//*
         /// <summary>
         /// 
         /// </summary>
@@ -759,7 +759,7 @@
                 aMember.setValue(value);
             }
         }
-
+        *//*
         /// <summary>
         /// 
         /// </summary>
@@ -780,7 +780,7 @@
                 aMember.setValue(value);
             }
         }
-
+        *//*
         /// <summary>
         /// 
         /// </summary>
@@ -800,6 +800,6 @@
             {
                 aMember.setValue(value);
             }
-        }
+        }*/
     }
 }

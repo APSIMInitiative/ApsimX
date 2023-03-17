@@ -671,6 +671,7 @@ namespace Models.GrazPlan
         public const int MAXNUTRAREAS = 5;
 
 
+        [Serializable]
         public class TSoilNutrientDistn
         {
             public int NoAreas;

@@ -27,6 +27,9 @@
         /// <summary>Gets or sets the rainfall (mm)</summary>
         double Rain { get; set; }
 
+        /// <summary>Pan evaporation</summary>
+        public double PanEvap { get; set; }
+
         /// <summary>Gets or sets the solar radiation. MJ/m2/day</summary>
         double Radn { get; set; }
 
@@ -90,7 +93,7 @@
         /// <summary>Gets or sets the minimum temperature (oc)</summary>
         public double MinT { get; set; }
 
-        /// <summary>Daily mean VPD  /// </summary>
+        /// <summary>Daily evap  /// </summary>
         public double PanEvap { get; set; }
 
         /// <summary>Gets or sets the rainfall (mm)</summary>

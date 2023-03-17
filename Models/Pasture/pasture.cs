@@ -18,8 +18,14 @@ namespace Models.GrazPlan
     using Models.Core;
     using Models.Interfaces;
     using static Models.GrazPlan.GrazType;
-    using CMPServices;
+    using Models.PMF;
+    using DocumentFormat.OpenXml.Wordprocessing;
+    using DocumentFormat.OpenXml.Drawing.Charts;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    [Serializable]
     public class TSoilInstance : Core.Model
     {
         protected int FNoLayers;                                                        // Layer profile used by this component
@@ -27,20 +33,54 @@ namespace Models.GrazPlan
 
         protected int FNoInputLayers;                                                   // Temporary arrays                      
 
+        /// <summary>Layer thicknesses</summary>
         protected double[] FInputProfile = new double[GrazType.MaxSoilLayers + 1];      // [1..
+        
+        /// <summary>Layer values</summary>
         protected double[] FLayerValues = new double[GrazType.MaxSoilLayers + 1];       // [1..
+        
+        /// <summary></summary>
         protected double[] FSoilValues = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers] SURFACE = 0
         protected double[] FSoilDepths = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers]
         protected double[] FLayer2Soil = new double[GrazType.MaxSoilLayers + 1];        // [1..
+
+        /// <summary>
+        /// Set the layer count and thicknesses
+        /// </summary>
+        /// <param name="profile"></param>
+        protected void SetLayerProfile(double[] profile)
+        {
+            FNoLayers = profile.Length;
+            Value2LayerArray(profile, ref FLayerProfile);
+        }
+
+        /// <summary>
+        /// Fill a layer array where [0] is unused
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="LayerA"></param>
+        protected void Value2LayerArray(double[] profile, ref double[] LayerA)
+        {
+            if (profile != null)
+            {
+                PastureUtil.FillArray(LayerA, 0.0);
+                for (uint Ldx = 1; Ldx < profile.Length; Ldx++)
+                {
+                    LayerA[Ldx] = profile[Ldx];
+                }
+            }
+        }
     }
 
+
+
     /// <summary>
-    /// # Pasture
+    /// # Pasture class that models temperate pastures
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
-    [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Pasture : TSoilInstance
     {
         private TPasturePopulation PastureModel;
@@ -52,11 +92,32 @@ namespace Models.GrazPlan
         private double[] F_DUL = new double[GrazType.MaxSoilLayers + 1];            // [1..
         private double[] F_LL15 = new double[GrazType.MaxSoilLayers + 1];           // [1..
 
+        private double FFieldGreenDM;
+        private double FFieldGAI;
+        private double FFieldDAI;
+        private double FFieldCoverSum;
+
         private double FFieldArea;
         private double FHarvestHeight;
         private int FToday;             // StdDate.Date
         private double FFertility;
         private double FIntercepted;
+        private double[] FLightAbsorbed = new double[GrazType.stSENC + 1];      // [stSEEDL..stSENC] - [1..3]
+        private double[][] FSoilPropn = new double[GrazType.stSENC + 1][];      // [stSEEDL..stSENC] - [1..3][1..]
+        private double[][] FTranspiration = new double[GrazType.stSENC + 1][];  // [TOTAL..stSENC]   - [0..3][1..]
+
+        private bool FLightAllocated;
+        private bool FWaterAllocated;
+        private bool FSoilAllocated;
+        private string FSoilResidueDest = "";                     // Destination for OM outputs            
+        private string FSurfaceResidueDest = "";
+        private bool FBiomassRemovedFound;
+        private bool FWaterValueReqd;
+
+        public const int evtINITSTEP = 1;
+        public const int evtWATER = 2;
+        public const int evtGROW = 3;
+        public const int evtENDSTEP = 4;
 
         #region Class links
         /// <summary>
@@ -70,6 +131,13 @@ namespace Models.GrazPlan
         /// </summary>
         [Link]
         private IWeather locWtr = null;
+
+        /// <summary>Link to the soil physical properties.</summary>
+        [Link]
+        private IPhysical soilPhysical = null;
+
+        [Link]
+        private ISoilWater water = null;
 
         /// <summary>
         /// The supplement component
@@ -94,6 +162,18 @@ namespace Models.GrazPlan
         {
             FInputs = new TPastureInputs();
 
+            FLightAllocated = false;
+            FWaterAllocated = false;
+            FSoilAllocated = false;
+
+            for (int Ldx = 1; Ldx <= GrazType.MaxSoilLayers; Ldx++)
+            {
+                FInputs.pH[Ldx] = 7.0;  // Default value for pH          
+            }
+
+            FInputs.CO2_PPM = GrazEnv.REFERENCE_CO2;
+            FInputs.Windspeed = 2.0;
+            FFieldArea = 1.0;
         }
 
         #region Initialisation properties ====================================================
@@ -133,7 +213,7 @@ namespace Models.GrazPlan
         /// The default value is calculated from soil bulk density and sand content
         /// mm
         /// </summary>
-        public double MaxRtDep { get; set; }
+        public double MaxRtDep { get; set; } = 1.0;
 
         /// <summary>
         /// Lagged daytime temperature.
@@ -192,7 +272,6 @@ namespace Models.GrazPlan
         public double DormT { get; set; } = -999.9;
 
         /// <summary>
-        /// Apparent extinction coefficients.
         /// Apparent extinction coefficients of seedlings, established plants and senescing plants.
         /// </summary>
         public double[] ExtinctCoeff { get; set; }
@@ -266,14 +345,24 @@ namespace Models.GrazPlan
         /// Total dry weight of all herbage
         /// </summary>
         [Units("kg/ha")]
-        public double ShootDM { get; }
+        public double ShootDM {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                
+                double result = PastureModel.GetHerbageMass(GrazType.sgGREEN, TOTAL, TOTAL);
+                PastureModel.MassUnit = sUnit;
 
+                return result;
+            }
+        }
 
         /// <summary>
         /// Dry weight of herbage of seedlings in each digestibility class
         /// </summary>
         [Units("kg/ha")]
-        public double[] shootDMq { get; }
+        public double[] shootDMQ { get; }
 
         /// <summary>
         /// Average DM digestibility of all herbage
@@ -345,9 +434,18 @@ namespace Models.GrazPlan
         [Units("g/g")]
         public double SeedlS { get; }
 
+        /// <summary>
+        /// Total dry weight of herbage of established plants
+        /// </summary>
+        [Units("kg/ha")]
+        public double EstabDM { get; }  //prpESTAB_DM
+
+        /// <summary>
+        /// Dry weight of herbage of established plants in each digestibility class
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] EstabDMQ { get; } //prpESTAB_Q
         /*        
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_DM, "estab_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of herbage of established plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_Q, "estab_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of herbage of established plants in each digestibility class", "");
             AddOneVariable(ref Idx, PastureProps.prpESTAB_DMD, "estab_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of herbage of established plants", "");
             AddOneVariable(ref Idx, PastureProps.prpESTAB_CP, "estab_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of herbage of established plants.", "");
             AddOneVariable(ref Idx, PastureProps.prpESTAB_N, "estab_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of herbage of established plants", "");
@@ -480,9 +578,54 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            // =========================================================
+            // Some initialisation that will be on the user interface
+            //
+
+            this.Species = "Phalaris";
+            this.MaxRtDep = 650;
+
+            // =========================================================
+
             FWeather = new TWeatherHandler();
             PastureModel = new TPasturePopulation();
             PastureModel.MassUnit = "g/m^2";
+
+            // required at initialisation
+            FWeather.fLatDegrees = locWtr.Latitude;                             // Location. South is -ve
+            SetLayerProfile(soilPhysical.Thickness);                            // Layers
+            Value2LayerArray(soilPhysical.BD, ref F_BulkDensity);               // Soil bulk density profile Mg/m^3
+            Value2LayerArray(soilPhysical.DUL, ref F_DUL);                      // Profile of water content at drained upper limit
+            Value2LayerArray(soilPhysical.LL15, ref F_LL15);                    // Profile of water content at (soil) lower limit
+            Value2LayerArray(soilPhysical.ParticleSizeSand, ref F_SandPropn);   // Sand content profile //// TODO: check this
+
+            // Light interception profiles of plant populations
+            LightProfile lightProfile = null;       //// TODO: populate this light profile from the allocator (paddock)
+            storeLightPropn(lightProfile);
+
+            FWaterValueReqd = false;
+
+            // Water uptake by plant populations from the allocator (paddock)
+            WaterUptake[] water = null;     //// TODO: populate this
+            storeWaterSupply(water);
+
+            //Proportion of the soil volume occupied by roots of plant populations (paddock)
+            SoilFract[] soilFract = null;       //// TODO: populate this
+            StoreSoilPropn(soilFract);
+
+            NutrAvail nutrNH4 = null;      //// TODO: populate this
+            Value2SoilNutrient(nutrNH4, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);   // Soil ammonium availability
+            // if using ppm then
+            // Value2LayerArray(aValue, ref FLayerValues);
+            // LayerArray2SoilNutrient(FLayerValues, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);
+
+            NutrAvail nutrNO3 = null;      //// TODO: populate this
+            Value2SoilNutrient(nutrNO3, ref FInputs.Nutrients[(int)TPlantNutrient.pnNO3]);   // Soil nitrate availability
+
+            this.LocateDestinations();
+
+            if (FSurfaceResidueDest != "")
+            { } // TODO: set biomassremoved to this component also
 
             PastureModel.ReadParamsFromValues(this.Nutrients, this.Species, this.Fertility, this.MaxRtDep, this.KL, this.LL); // initialise the model with initial values
 
@@ -502,15 +645,45 @@ namespace Models.GrazPlan
 
                 PastureModel.ReadStateFromValues(this.LaggedDayT, this.Phenology, this.FlowerLen, this.FlowerTime, this.SencIndex, this.DormIndex, this.DormT, this.ExtinctCoeff, this.Green, this.Dry, this.Seeds, this.SeedDormTime, this.GermIndex);
 
-                int currentDay = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);
+                FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
 
             /* 
-             if (FSoilResidueDest != "")
-                    addEvent(FSoilResidueDest + ".add_fom", evtADD_FOM, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeADD_FOM, "", "", 0);
-                if ((FSurfaceResidueDest != "") && FBiomassRemovedFound)
-                    addEvent(FSurfaceResidueDest + ".BiomassRemoved", evtBIOMASS_OUT, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeBIOMASSREMOVED, "", "", 0);
+            // TODO: connect these
+            if (FSoilResidueDest != "")
+                addEvent(FSoilResidueDest + ".add_fom", evtADD_FOM, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeADD_FOM, "", "", 0);
+            if ((FSurfaceResidueDest != "") && FBiomassRemovedFound)
+                addEvent(FSurfaceResidueDest + ".BiomassRemoved", evtBIOMASS_OUT, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeBIOMASSREMOVED, "", "", 0);
              */
+        }
+
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            InitStep();
+        }
+
+        [EventSubscribe("DoPastureWater")]
+        private void OnDoPastureWater(object sender, EventArgs e)
+        {
+            DoPastureWater();
+        }
+
+        /// <summary>
+        /// Grow pasture
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("DoActualPlantGrowth")]
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        {
+            DoPastureGrowth();
+        }
+
+        [EventSubscribe("DoEndPasture")]
+        private void OnDoEndPasture(object sender, EventArgs e)
+        {
+            EndStep();
         }
 
         /// <summary>
@@ -531,6 +704,639 @@ namespace Models.GrazPlan
         #endregion
 
         #region Private functions ============================================
+
+
+        /// <summary>
+        /// Initial step = 100
+        /// </summary>
+        private void InitStep()
+        {
+            resetDrivers();
+            
+            FFieldGreenDM = PastureModel.GetHerbageMass(sgGREEN, TOTAL, TOTAL);
+            FFieldGAI = PastureModel.AreaIndex(sgGREEN);
+            FFieldDAI = PastureModel.AreaIndex(sgDRY);
+            FFieldCoverSum = PastureModel.Cover(TOTAL);
+
+            // TODO: get values from sibling components
+            // From each sibling:
+            //  - cover (add to FFieldCoverSum)
+            //  - green DM (add to FFieldGreenDM)
+            //  - GAI (add to FFieldGAI)
+            //  - DAI (add to FFieldDAI)
+           
+            PastureModel.BeginTimeStep();
+            passDrivers(evtINITSTEP);
+        }
+
+        private void GetWtrDrivers()
+        {
+            FInputs.CO2_PPM = locWtr.CO2;            // atmospheric CO2 ppm
+            FInputs.MaxTemp = locWtr.MaxT;
+            FInputs.Precipitation = locWtr.Rain;
+            FInputs.MinTemp = locWtr.MinT;
+            FInputs.Radiation = locWtr.Radn;    // Will need "radn" when "light_profile" is read later  
+            FInputs.Windspeed = locWtr.Wind;
+            FInputs.VP_Deficit = locWtr.VPD;
+            // TODO: FInputs.SurfaceEvap = found in grazplan soilwater
+        }
+
+        /// <summary>
+        /// Get climate and water = 4000
+        /// </summary>
+        private void DoPastureWater()
+        {
+            GetWtrDrivers();
+            /* 
+            if (FLightAllocated)                                                                          
+                sendDriverRequest(drvLIGHT, eventID);
+
+            if (FDriverThere[drvSW_L])                                              // Soil water is obtained *before* soil water dynamics calculations are made      
+                sendDriverRequest(drvSW_L, eventID);                                
+            else                                                                                                   
+                sendDriverRequest(drvSW, eventID);
+            FWaterFromSWIM = false;
+            */
+            passDrivers(evtWATER);
+           /* if (!FLightAllocated)
+                FModel.SetMonocultureLight();
+            if (!FWaterAllocated)
+                FModel.ComputeWaterUptake();
+            */
+        }
+
+        /// <summary>
+        /// Do the growth = 6000
+        /// </summary>
+        private void DoPastureGrowth()
+        {
+            // TODO: sendDriverRequest(drvTIME, eventID);            // Time driver                           
+            GetWtrDrivers(); // Weather drivers                       
+
+            // TODO: sendDriverRequest(drvINTCPD, eventID);
+
+            FFieldGreenDM = PastureModel.GetHerbageMass(sgGREEN, TOTAL, TOTAL);
+            FFieldGAI = PastureModel.AreaIndex(sgGREEN);
+            FFieldDAI = PastureModel.AreaIndex(sgDRY);
+            FFieldCoverSum = PastureModel.Cover(TOTAL);
+
+
+            // TODO: get values from sibling components
+            // From each sibling:
+            //  - cover (add to FFieldCoverSum)
+            //  - green DM (add to FFieldGreenDM)
+            //  - GAI (add to FFieldGAI)
+            //  - DAI (add to FFieldDAI)
+
+            FWaterValueReqd = false;
+            /* if (FWaterAllocated && !FWaterFromSWIM)                                 // Paddock drivers                       
+                sendDriverRequest(drvWATER_UPTAKE, eventID);
+            if (FSoilAllocated)
+                sendDriverRequest(drvSOIL_FRACT, eventID);
+
+            FInputs.TrampleRate = 0.0;
+            sendDriverRequest(drvTRAMPLE, eventID);                                 // Animal drivers                        
+
+            if (FModel.ElementSet.Length == 0)                                      // Nutrient drivers                      
+            {
+                //retrieve the fertility scalar if it exists elsewhere
+                if (base.driverList[drvFERTSCL] == null)
+                    addDriver("fert_scalar", drvFERTSCL, 0, 1, "-", false, TTypedValue.STYPE_DOUBLE, "Fertility scalar", "Default is the value of fertility. Only used when nutrients=''.", 0);
+
+                sendDriverRequest(drvFERTSCL, eventID);
+            }
+            else
+            {
+                var values = Enum.GetValues(typeof(TPlantNutrient)).Cast<TPlantNutrient>().ToArray();
+                foreach (var _Nutr in values)
+                {
+                    if (FModel.ElementSet.Contains(NutrToElement[(int)_Nutr]))
+                    {
+                        if (FDriverThere[NutrDriver[(int)_Nutr, 1]])
+                            sendDriverRequest(NutrDriver[(int)_Nutr, 1], eventID);
+                        else if (NutrDriver[(int)_Nutr, 2] >= 0)
+                            sendDriverRequest(NutrDriver[(int)_Nutr, 2], eventID);
+                    }
+                }
+            }
+            if (FDriverThere[drvPH_L])
+                sendDriverRequest(drvPH_L, eventID);
+            else
+                sendDriverRequest(drvPH, eventID);
+        }
+
+        */
+
+            passDrivers(evtINITSTEP);
+            passDrivers(evtGROW);
+            if (!FSoilAllocated)
+                PastureModel.SetMonocultureSoil();
+
+            PastureModel.ComputeRates();
+        }
+
+        /// <summary>
+        /// Publish biomass values = 9900
+        /// </summary>
+        private void EndStep()
+        {
+            PastureModel.UpdateState();
+
+            if (FSoilResidueDest != "")                                             // Publish an "add_fom" event            
+            {
+                /*publParams = eventParams(evtADD_FOM);
+                if (makeFOMValue(ref publParams))
+                    sendPublishEvent(evtADD_FOM, false);*/
+            }
+
+            if ((FSurfaceResidueDest != "") && FBiomassRemovedFound)
+            {
+                /*publParams = eventParams(evtBIOMASS_OUT);
+                if (transferLitterToValue(ref publParams))
+                    sendPublishEvent(evtBIOMASS_OUT, false);*/
+            }
+        }
+
+        /// <summary>
+        /// Pass driving values to the pasture model
+        /// </summary>
+        /// <param name="iEventID"></param>
+        /// <exception cref="Exception"></exception>
+        private void passDrivers(int iEventID)
+        {
+            if (PastureModel != null)
+            {
+                if (iEventID == evtINITSTEP)
+                {
+                    PastureModel.PastureGreenDM = FFieldGreenDM;
+                    PastureModel.PastureGAI = FFieldGAI;
+                    PastureModel.PastureAreaIndex = FFieldGAI + FFieldDAI;
+                    PastureModel.PastureCoverSum = FFieldCoverSum;
+                }
+
+                else if (iEventID == evtWATER)
+                {
+                    completeInputs(evtWATER);
+                    PastureModel.Inputs = FInputs;
+                    if (FLightAllocated)
+                    {
+                        for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                        {
+                            if (FInputs.Radiation > 0.0)
+                                PastureModel.SetLightPropn(iComp, FLightAbsorbed[iComp] / FInputs.Radiation);
+                            else
+                                PastureModel.SetLightPropn(iComp, 0.0);
+                        }
+                    }
+                }
+
+                else if (iEventID == evtGROW)
+                {
+                    completeInputs(evtGROW);
+                    PastureModel.SetFertility(FFertility);
+                    PastureModel.Inputs = FInputs;
+
+                    for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                    {
+                        if (FSoilAllocated)
+                            PastureModel.SetSoilPropn(iComp, FSoilPropn[iComp]);
+                        if (FWaterAllocated)
+                            PastureModel.SetTranspiration(iComp, FTranspiration[iComp]);
+                    }
+                }
+            }
+            else
+                throw new Exception("PastureModel == null in Pasture.passDrivers().");
+        }
+
+        /// <summary>
+        /// Computes the derived values that go to make up the FInputs record            
+        /// </summary>
+        /// <param name="iEventID"></param>
+        private void completeInputs(int iEventID)
+        {
+            int Ldx;
+
+            if (iEventID == evtWATER)
+            {
+                for (Ldx = 1; Ldx <= FNoLayers; Ldx++)
+                {
+                    FInputs.ASW[Ldx] = (FInputs.Theta[Ldx] - F_LL15[Ldx]) / (F_DUL[Ldx] - F_LL15[Ldx]);
+                    FInputs.ASW[Ldx] = Math.Max(0.0, Math.Min(FInputs.ASW[Ldx], 1.0));
+                    FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
+                }
+            }
+
+            else if (iEventID == evtGROW)
+            {
+                if (FWeather != null)
+                {
+                    FWeather.setToday(StdDate.DayOf(FToday), StdDate.MonthOf(FToday), StdDate.YearOf(FToday));  // also clears FWeather data list
+                    FWeather[TWeatherData.wdtRain] = FInputs.Precipitation;
+                    FWeather[TWeatherData.wdtMaxT] = FInputs.MaxTemp;
+                    FWeather[TWeatherData.wdtMinT] = FInputs.MinTemp;
+                    FWeather[TWeatherData.wdtRadn] = FInputs.Radiation;
+                    FWeather[TWeatherData.wdtWind] = FInputs.Windspeed;
+                    FWeather[TWeatherData.wdtEpan] = locWtr.PanEvap;
+                    FWeather[TWeatherData.wdtVP] = locWtr.VP;
+                    
+                    FInputs.MeanTemp = FWeather.MeanTemp();
+                    FInputs.MeanDayTemp = FWeather.MeanDayTemp();
+                    FInputs.DayLength = FWeather.Daylength(true);
+                    FInputs.DayLenIncreasing = FWeather.DaylengthIncreasing();
+                    FInputs.PotentialET = FWeather.PotentialET(GrazEnv.HERBAGE_ALBEDO);       // Reference evapotranspiration mm
+
+                    if (FInputs.Precipitation > 0.0)
+                        FInputs.RainIntercept = Math.Min(1.0, FIntercepted / FInputs.Precipitation);
+                    else
+                        FInputs.RainIntercept = 1.0;
+                }
+                else
+                    throw new Exception("FWeather is null in Pasture.completeInputs().");
+            }
+        }
+
+
+        /// <summary>
+        /// Configure connections to other models
+        /// </summary>
+        private void LocateDestinations()
+        {
+            // Locate the single destination for "add_fom", sibling closest or descendant or in the same system
+            // set FSurfaceResidueDest
+
+            // Locate the single destination for "BiomassRemoved"
+            // This is a two-step process;  (i) locate nearby "surfaceom_c" - set FSurfaceResidueDest    & then
+            //                              (ii) locate "BiomassRemoved", because Pasture modules
+            //                                  also subscribe to "BiomassRemoved" - set FBiomassRemovedFound
+
+            // Sibling modules with "cover_tot" - add the source
+            // Sibling modules with "green_dm" - add the source
+            // Sibling modules with "dai" - add the source
+            // Sibling modules with "gai" - add the source
+        }
+
+        private void resetDrivers()
+        {
+            FLightAbsorbed = new double[GrazType.stSENC + 1];
+            FSoilPropn = new double[GrazType.stSENC + 1][];
+            FTranspiration = new double[GrazType.stSENC + 1][];
+            for (int i = 0; i <= GrazType.stSENC; i++)
+            {
+                FSoilPropn[i] = new double[MaxSoilLayers + 1];
+                FTranspiration[i] = new double[MaxSoilLayers + 1];
+            }
+        }
+
+
+        public static string[] sCOMPNAME = { "", "seedling", "established", "senescing", "dead", "litter" };    // [stSEEDL..stLITT1]  - [1..5]
+
+        /// <summary>
+        /// This function is used to store the light intercepted as calculated from the allocation object (paddock)
+        /// </summary>
+        /// <param name="lightValues"></param>
+        private void storeLightPropn(LightProfile lightValues)
+        {
+            Population[] intcpValue;
+            PopulationItem[] popnValue;
+            PopulationItem compValue;
+            int iComp;
+
+            if (lightValues != null)
+            {
+                FLightAllocated = true; // if light source found
+
+                for (iComp = stSEEDL; iComp <= stSENC; iComp++)
+                    FLightAbsorbed[iComp] = 0.0;
+
+                intcpValue = lightValues.interception;
+                popnValue = null;
+                int Idx = 0;
+                while (Idx < intcpValue.Length && (popnValue == null))
+                {
+                    if (intcpValue[Idx].population == this.Name)    ///// TODO: check this name
+                        popnValue = intcpValue[Idx].element;                                  
+                    else
+                        Idx++;
+                }
+
+                if (popnValue != null)
+                {
+                    for (Idx = 0; Idx < popnValue.Length; Idx++)                                // One entry per component for which a FPC was given                     
+                    {
+                        compValue = popnValue[Idx];
+
+                        iComp = stSEEDL;                                                      
+                        while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
+                            iComp++;
+                        if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
+                        {
+                            for (uint Ldx = 0; Ldx <= compValue.layer.Length; Ldx++)          
+                                FLightAbsorbed[iComp] = FLightAbsorbed[iComp] + compValue.layer[Ldx].amount; 
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="water"></param>
+        /// <exception cref="Exception"></exception>
+        private void storeWaterSupply(WaterUptake[] water)
+        {
+            uint Idx, Jdx;
+            int iComp;
+            WaterPopItem[] popnValue;
+            WaterPopItem compValue;
+
+            if (water != null)
+            {
+                FWaterAllocated = true;
+                popnValue = null;
+                Idx = 0;
+                while ((Idx < water.Length) && (popnValue == null))
+                {
+                    if (water[Idx].population == this.Name)                //// TODO: check this name                 
+                        popnValue = water[Idx].element;                                     
+                    else
+                        Idx++;
+                }
+
+                if (FWaterValueReqd && (popnValue == null))
+                {
+                    throw new Exception("Water uptake value not located for module " + this.Name);
+                }
+
+                if (popnValue != null)
+                {
+                    for (Jdx = 0; Jdx < popnValue.Length; Jdx++)                            // One entry per component for which a demand was given                       
+                    {                                                                       
+                        compValue = popnValue[Jdx];
+
+                        iComp = stSEEDL;                                                    
+                        while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
+                            iComp++;
+                        if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
+                            Layers2LayerArray(compValue.layer, ref FTranspiration[iComp], true);   
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="layers"></param>
+        /// <param name="LayerA"></param>
+        /// <param name="bLayersOuter"></param>
+        /// <param name="iDataField"></param>
+        protected void Layers2LayerArray(SoilLayer[] layers, ref double[] LayerA, bool bLayersOuter = false, int iDataField = 2)
+        {
+            int Ldx;
+            SoilLayer soilLayer;
+
+            if (bLayersOuter)
+            {
+                FNoInputLayers = layers.Length;
+                for (Ldx = 0; Ldx < FNoInputLayers; Ldx++)
+                {
+                    soilLayer = layers[Ldx];
+                    FInputProfile[Ldx+1] = soilLayer.thickness;
+                    if (iDataField == 2)
+                        FLayerValues[Ldx+1] = soilLayer.amount;
+                }
+            }
+            else
+            {   //// TODO: check if unused - uses layer[], value[]
+                ////setInputProfile(aValue[1]);
+                ////Value2LayerArray(aValue[2], ref FLayerValues);
+            }
+            Input2LayerProfile(FLayerValues, true, ref LayerA);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Values1"></param>
+        /// <param name="bAsAverage"></param>
+        /// <param name="Values2"></param>
+        protected void Input2LayerProfile(double[] Values1, bool bAsAverage, ref double[] Values2)
+        {
+            if (bAsAverage)
+                MakeLayersAsAverage(FInputProfile, FNoInputLayers, Values1, FLayerProfile, FNoLayers, ref Values2);
+            else
+                MakeLayersAsFlow(FInputProfile, FNoInputLayers, Values1, FLayerProfile, FNoLayers, ref Values2);
+        }
+
+        protected const double EPS = 1.0E-5;
+        protected const double GM2_KGHA = 10.0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Layers1"></param>
+        /// <param name="iNoLayers1"></param>
+        /// <param name="Values1"></param>
+        /// <param name="Layers2"></param>
+        /// <param name="iNoLayers2"></param>
+        /// <param name="Values2"></param>
+        protected void MakeLayersAsAverage(double[] Layers1,
+                               int iNoLayers1,
+                               double[] Values1,
+                               double[] Layers2,
+                               int iNoLayers2,
+                               ref double[] Values2)
+        {
+            int iSameLayers;
+            double fTopDepth;
+            double fBaseDepth1;
+            double fBaseDepth2;
+            int Ldx1, Ldx2;
+
+            Values2 = new double[GrazType.MaxSoilLayers + 1];
+
+            // Deal quickly with the case where layers are the same     
+            Ldx1 = 1;
+            while ((Ldx1 <= iNoLayers1)                                                 
+                  && (Ldx1 <= iNoLayers2)                                                                
+                  && (Math.Abs(Layers1[Ldx1] - Layers2[Ldx1]) < 2.0 * EPS))
+            {
+                Values2[Ldx1] = Values1[Ldx1];
+                Ldx1++;
+            }
+            iSameLayers = Ldx1 - 1;
+
+            if (iSameLayers < iNoLayers2)                                                      
+            {
+                // We have found a layer mismatch.
+                fTopDepth = 0.0;
+                for (Ldx1 = 1; Ldx1 <= iSameLayers; Ldx1++)
+                {
+                    fTopDepth = fTopDepth + Layers1[Ldx1];
+                }
+
+                fBaseDepth1 = fTopDepth + Layers1[iSameLayers + 1];
+                fBaseDepth2 = fTopDepth + Layers2[iSameLayers + 1];
+
+                Ldx1 = iSameLayers + 1;
+                Ldx2 = iSameLayers + 1;
+                while ((Ldx1 <= iNoLayers1) && (Ldx2 <= iNoLayers2))
+                {
+                    if (fBaseDepth1 < fBaseDepth2 + EPS)                                
+                    {
+                        // Base of data layer shallower than or equal to base of soil budget layer     
+                        Values2[Ldx2] = Values2[Ldx2] + Values1[Ldx1] * (fBaseDepth1 - fTopDepth);
+
+                        Ldx1++;
+                        fTopDepth = fBaseDepth1;
+                        fBaseDepth1 = fTopDepth + Values1[Ldx1];
+
+                        if (Math.Abs(fBaseDepth1 - fBaseDepth2) < 2.0 * EPS)            
+                        {
+                            // Layer bases at same depth - increment both
+                            Ldx2++;
+                            fBaseDepth2 = fBaseDepth2 + Layers2[Ldx2];
+                        }
+                    }
+                    else                                                                
+                    {
+                        // Base of data layer deeper than base of soil budget layer                  
+                        Values2[Ldx2] = Values2[Ldx2] + Values1[Ldx1] * (fBaseDepth2 - fTopDepth);
+                        fTopDepth = fBaseDepth2;
+                        Ldx2++;
+                        fBaseDepth2 = fBaseDepth2 + Layers2[Ldx2];
+                    }
+
+                    // Complete the average                  
+                    for (Ldx2 = iSameLayers + 1; Ldx2 <= iNoLayers2; Ldx2++)
+                    {
+                        Values2[Ldx2] = Values2[Ldx2] / Layers2[Ldx2];
+                    }
+                } // _ if (iSameLayers < Model.Params.LastLayer) _
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Layers1"></param>
+        /// <param name="iNoLayers1"></param>
+        /// <param name="Values1"></param>
+        /// <param name="Layers2"></param>
+        /// <param name="iNoLayers2"></param>
+        /// <param name="Values2"></param>
+        protected void MakeLayersAsFlow(double[] Layers1, int iNoLayers1,
+                               double[] Values1,
+                               double[] Layers2, int iNoLayers2,
+                               ref double[] Values2)
+        {
+            double fBaseDepth1;
+            double fBaseDepth2;
+            int Ldx1, Ldx2;
+
+            Values2 = new double[GrazType.MaxSoilLayers + 1];
+
+            Ldx1 = 0;
+            fBaseDepth1 = 0.0;
+            fBaseDepth2 = 0.0;
+            for (Ldx2 = 1; Ldx2 <= iNoLayers2; Ldx2++)
+            {
+                fBaseDepth2 = fBaseDepth2 + Layers2[Ldx2];
+                while ((Ldx1 <= iNoLayers1) && (fBaseDepth2 > fBaseDepth1 + EPS))
+                {
+                    Ldx1++;
+                    fBaseDepth1 = fBaseDepth1 + Layers1[Ldx1];
+                }
+                Values2[Ldx2] = Values1[Ldx1];
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aValue"></param>
+        private void StoreSoilPropn(SoilFract[] aValue)
+        {
+            uint Idx;
+            uint Jdx;
+            int iComp;
+            SoilPopItem[] popnValue;
+            SoilFract aValueItem;
+            SoilPopItem compValue;
+
+            if (aValue != null)
+            {
+                FSoilAllocated = true;
+
+                popnValue = null;
+                Idx = 0;
+                while ((Idx < aValue.Length) && (popnValue == null))
+                {
+                    aValueItem = aValue[Idx];
+                    if (aValueItem.population == this.Name)   //// TODO: check this name
+                    {
+                        popnValue = aValueItem.element;
+                    }
+                    else
+                        Idx++;
+                }
+
+                if (popnValue != null)
+                {
+                    for (Jdx = 0; Jdx < popnValue.Length; Jdx++)                         // One entry per component for which a demand was given                      
+                    {
+                        compValue = popnValue[Jdx];
+                        iComp = stSEEDL;                                                        
+                        while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
+                            iComp++;
+                        if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
+                            Layers2LayerArray(compValue.layer, ref FSoilPropn[iComp], true); 
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nutrValue"></param>
+        /// <param name="NutrD"></param>
+        protected void Value2SoilNutrient(NutrAvail nutrValue, ref GrazType.TSoilNutrientDistn NutrD)
+        {
+            Nutrient areaValue;
+            uint Idx;
+
+            if (nutrValue != null)
+            {
+                setInputProfile(nutrValue.layers);
+
+                NutrD.NoAreas = nutrValue.nutrient.Length;
+                for (Idx = 0; Idx <= NutrD.NoAreas - 1; Idx++)
+                {
+                    areaValue = nutrValue.nutrient[Idx + 1];
+                    if (NutrD.NoAreas > 1)
+                        NutrD.RelAreas[Idx] = areaValue.area_fract;
+                    else
+                        NutrD.RelAreas[Idx] = 1.0;
+                    Value2LayerArray(areaValue.soiln_conc, ref FLayerValues);
+                    Input2LayerProfile(FLayerValues, true, ref NutrD.SolnPPM[Idx]);
+                    Value2LayerArray(areaValue.avail_nutr, ref FLayerValues);
+                    Input2LayerProfile(FLayerValues, true, ref NutrD.AvailKgHa[Idx]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aValue"></param>
+        protected void setInputProfile(double[] aValue)
+        {
+            FNoInputLayers = aValue.Length;
+            Value2LayerArray(aValue, ref FInputProfile);
+        }
 
         #endregion
     }

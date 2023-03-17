@@ -10,6 +10,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Reflection;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
@@ -861,6 +862,7 @@
                         throw new Exception(message);
                     }
 
+                    // Get the column indexes of the various variables
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
@@ -1038,6 +1040,6 @@
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
-        }
+        }        
     }
 }

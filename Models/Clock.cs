@@ -149,6 +149,9 @@ namespace Models
         public event EventHandler DoUpdateWaterDemand;
         /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
+
+        public event EventHandler DoPastureWater;
+
         /// <summary>Occurs between DoWaterArbitration and DoPhenology. Performs sorghum final leaf no calcs.</summary>
         public event EventHandler PrePhenology;
         /// <summary>Occurs when [do phenology].</summary>                             
@@ -167,16 +170,15 @@ namespace Models
         public event EventHandler PartitioningComplete;
         /// <summary>Occurs when [do update].</summary>
         public event EventHandler DoUpdate;
-
-        // process the pasture model
-
-
         /// <summary> Process stock methods in GrazPlan Stock </summary>
         public event EventHandler DoStock;
         /// <summary> Process a Pest and Disease lifecycle object </summary>
         public event EventHandler DoLifecycle;
         /// <summary>Occurs when [do management calculations].</summary>
         public event EventHandler DoManagementCalculations;
+
+        public event EventHandler DoEndPasture;
+
         /// <summary>Occurs when [do report calculations].</summary>
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
@@ -362,7 +364,7 @@ namespace Models
 
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-
+                
                 if (DoUpdateWaterDemand != null)
                     DoUpdateWaterDemand.Invoke(this, args);
 
@@ -386,6 +388,9 @@ namespace Models
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
 
+                if (DoPastureWater != null)
+                    DoPastureWater.Invoke(this, args);
+
                 if (DoActualPlantPartioning != null)
                     DoActualPlantPartioning.Invoke(this, args);
 
@@ -394,9 +399,6 @@ namespace Models
 
                 if (PartitioningComplete != null)
                     PartitioningComplete.Invoke(this, args);
-
-                // pasture event 
-
 
                 if (DoStock != null)
                     DoStock.Invoke(this, args);
@@ -409,6 +411,9 @@ namespace Models
 
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
+
+                if (DoEndPasture != null)
+                    DoEndPasture.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);

@@ -1,11 +1,39 @@
+using APSIM.Shared.Interfaces;
+using DocumentFormat.OpenXml.Spreadsheet;
+using static Models.Climate.Weather;
+using System;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
+using MathNet.Numerics.LinearAlgebra.Factorization;
+using Models.GrazPlan;
+using Models.PMF.Phen;
+using Models.Soils;
+using SkiaSharp;
+using static Models.Core.AutoDocumentation;
+using System.Drawing;
+using Models.Aqua;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.APSoil;
+using MathNet.Numerics.LinearAlgebra;
+using Models.CLEM.Resources;
+using System.Runtime.ConstrainedExecution;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+
 namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+    using DocumentFormat.OpenXml.Bibliography;
+    using DocumentFormat.OpenXml.Office2019.Excel.RichData2;
+    using MathNet.Numerics.Statistics.Mcmc;
+    using Models.DCAPST.Environment;
+    using Models.Soils;
+    using Newtonsoft.Json.Linq;
     using StdUnits;
-   // using static Models.GrazPlan.PastureUtil;
-
+   
     /// <summary>
     /// Environment interface
     /// </summary>
@@ -46,8 +74,20 @@ namespace Models.GrazPlan
         /// <summary>
         /// Reference [CO2] in ppm
         /// </summary>
-        public const double REFERENCE_CO2 = 350.0;                                                                       
+        public const double REFERENCE_CO2 = 350.0;
     }
+
+    /// <summary>
+    /// Evaporation method for Potential ET calculation
+    /// </summary>
+    public enum EvapMethod
+    {
+        emPropnPan,
+        emPenman,
+        emCERES,
+        emPriestley,
+        emFAO
+    };
 
     /// <summary>
     /// Daily weather data, used as inputs
@@ -66,11 +106,11 @@ namespace Models.GrazPlan
         wdtSunH,                                                    //   Hours of bright sunshine    hr      
         wdtTrMT                                                     //   Terrestrial min. temperature deg C  
     };
-   
 
     /// <summary>
     /// Class TWeatherHandler
     /// </summary>
+    [Serializable]
     public class TWeatherHandler
     {
         public const int NO_ELEMENTS = 1 + (int)TWeatherData.wdtTrMT;
@@ -90,7 +130,7 @@ namespace Models.GrazPlan
         private int FCO2_Order;
         private double[] FCO2_Coeffs = new double[6];                // Coefficients of a polynomial for [CO2]
         private double FCO2_Conc;
-        
+
         protected int FToday;      // StdDATE.Date;
 
         public double this[TWeatherData D]
@@ -104,7 +144,7 @@ namespace Models.GrazPlan
         public double fCO2_PPM { get { return FCO2_Conc; } }
 
         // Constants for daylength & extraterrestrial radiation calculations            
-      
+
         public static double[] DAYANGLE = { 90.0 * GrazEnv.DEG2RAD, 90.833 * GrazEnv.DEG2RAD };     // Horizon angles                        
         public const double MAXDECLIN = 23.45 * GrazEnv.DEG2RAD;                                    // Maximum declination of the sun (rad)  
         public const double DECLINBASE = 172;                                                       // Day of year for maximum declination   
@@ -121,6 +161,36 @@ namespace Models.GrazPlan
         public const double PARTON_A = 1.86;
         public const double PARTON_B = 2.20;
         public const double PARTON_C = -0.17;
+
+        // Constants used in evapotranspiration calculations                            
+        public const double SIGMA = 4.903E-9;           // Stefan - Boltzmann constant, MJ / m ^ 2 / d / K ^ 4 
+        public const double KARMAN = 0.41;              //    von Karman's constant                 
+        public const double SEC2DAY = 1.0 / 86400.0;    // Convert seconds to days               
+        public const double EPSILON = 0.622;            // Molecular weight ratio H20:air        
+        public const double GAS_CONST = 0.287;         // Specific gas constant,     kJ / kg / K    
+
+        /// <summary>
+        /// Default parameters for the fEvaporation method 
+        /// </summary>
+        public double[,] EVAPDEFAULTS = {
+                    {0.8, 0.0, 0.0 },                       // emPropnPan              
+                    { GrazEnv.HERBAGE_ALBEDO, 0.12, 70.0 }, // emPenman
+                    { GrazEnv.HERBAGE_ALBEDO, 0.0, 0.0 },   // emCERES
+                    { GrazEnv.HERBAGE_ALBEDO, 1.26, 0.0 },  // emPriestley
+                    { GrazEnv.HERBAGE_ALBEDO, 1.0, 0.0 }    // emFAO
+        };
+
+        /// <summary>
+        /// Fields required by the various evap calculation methods
+        /// </summary>
+        public TWeatherData[][] EVAP_REQUIREMENT =
+        {
+            new TWeatherData[] { TWeatherData.wdtEpan },                                                                                        // emPropnPan
+            new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT, TWeatherData.wdtRadn, TWeatherData.wdtVP, TWeatherData.wdtWind },  // emPenman
+            new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT, TWeatherData.wdtRadn },
+            new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT, TWeatherData.wdtRadn, TWeatherData.wdtVP },
+            new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT, TWeatherData.wdtRadn, TWeatherData.wdtVP, TWeatherData.wdtWind }
+        };
 
         /// <summary>
         /// TWeatherHandler constructor
@@ -218,7 +288,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="bCivil"></param>
         /// <returns>If TRUE, the daylength value includes civil twilight.</returns>
-        public double fDaylength(bool bCivil = false)
+        public double Daylength(bool bCivil = false)
         {
             return FDaylengths[Convert.ToInt32(bCivil)];
         }
@@ -228,7 +298,7 @@ namespace Models.GrazPlan
         /// Today is set.
         /// </summary>
         /// <returns></returns>
-        public bool bDaylengthIncreasing()
+        public bool DaylengthIncreasing()
         {
             return FDayLenIncr;
         }
@@ -238,38 +308,38 @@ namespace Models.GrazPlan
         /// Today is set.                                                                
         /// </summary>
         /// <returns></returns>
-        public double fExtraT_Radiation()
+        public double ExtraT_Radiation()
         {
             return FET_Radn;
         }
-  
+
         /// <summary>
         /// Mean daily temperature, taken as the average of maximum and minimum T         
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public double fMeanTemp()
+        public double MeanTemp()
         {
             if (!bInputKnown(new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT }))
                 throw new Exception("Weather handler: Mean temperature cannot be calculated");
             else
                 return 0.5 * (getData(TWeatherData.wdtMaxT) + getData(TWeatherData.wdtMinT));
         }
-        
+
         /// <summary>
         /// Equation for the mean temperature during daylight hours.  Integrated from a  
         /// model of Parton and Logan (1981), Agric.Meteorol. 23:205                       
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public double fMeanDayTemp()
+        public double MeanDayTemp()
         {
             double fDayLen;
 
             if (!bInputKnown(new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT }))
                 throw new Exception("Weather handler: Mean daytime temperature cannot be calculated");
 
-            fDayLen = fDaylength(true);
+            fDayLen = Daylength(true);
             double Result = getData(TWeatherData.wdtMinT) + (getData(TWeatherData.wdtMaxT) - getData(TWeatherData.wdtMinT))
                                        * (1.0 + 2.0 * PARTON_A / fDayLen)
                                        * (Math.Cos(-PARTON_C / (fDayLen + 2.0 * PARTON_A) * Math.PI)
@@ -313,24 +383,26 @@ namespace Models.GrazPlan
 
             Dt = StdDate.DateVal(iDay, iMonth, iYear);
 
-            if ((FToday == 0) || (StdDate.DateShift(FToday, 1, 0, 0) != Dt))                      // Compute yesterday's day length where  
-            {                                                                        // it isn't already known              
+            if ((FToday == 0) || (StdDate.DateShift(FToday, 1, 0, 0) != Dt))                     
+            {
+                // Compute yesterday's day length where it isn't already known   
                 FToday = StdDate.DateShift(Dt, -1, 0, 0);
                 computeDLandETR(StdDate.DOY(FToday, true), ref FDaylengths[0], ref FDaylengths[1], ref FET_Radn);   // 0 - false
             }
 
-            FToday = Dt; 
+            FToday = Dt;
             var values = Enum.GetValues(typeof(TWeatherData)).Cast<TWeatherData>().ToArray();
             foreach (var D in values)
                 FDataKnown[(int)D] = false;
 
-            fOldDayLen = fDaylength();
+            fOldDayLen = Daylength();
             computeDLandETR(StdDate.DOY(FToday, true), ref FDaylengths[0], ref FDaylengths[1], ref FET_Radn);
-            FDayLenIncr = fDaylength() > fOldDayLen;
+            FDayLenIncr = Daylength() > fOldDayLen;
 
             FCO2_Conc = FCO2_Coeffs[0];
-            if (FCO2_Order > 0)                                                      // Polynomial time course for [CO2]      
+            if (FCO2_Order > 0)                                                      
             {
+                // Polynomial time course for [CO2]      
                 X = StdDate.Interval(StdDate.DateVal(1, 1, 2001), FToday) / 365.25; // Years since reference date            
                 XN = 1;
                 for (Idx = 1; Idx <= FCO2_Order; Idx++)
@@ -341,16 +413,280 @@ namespace Models.GrazPlan
             }
         }
 
-        public double getData(TWeatherData D)
+        /// <summary>
+        /// Accessor function to FData
+        /// </summary>
+        /// <param name="D"></param>
+        /// <returns></returns>
+        private double getData(TWeatherData D)
         {
             return FData[(int)D];
         }
 
-        public void setData(TWeatherData D, double fValue)
+        /// <summary>
+        /// Accessor function to FData
+        /// </summary>
+        /// <param name="D"></param>
+        /// <param name="value"></param>
+        private void setData(TWeatherData D, double value)
         {
-            FData[(int)D] = fValue;
-            FDataKnown[(int)D] = true;
+            if (!double.IsNaN(value))
+            {
+                FData[(int)D] = value;
+                FDataKnown[(int)D] = true;
+            }
+        }
+                     
+        /// <summary>
+        /// Calculate Potential evapotranspiration (mm H2O)
+        /// </summary>
+        /// <param name="albedo"></param>
+        /// <returns>Potential ET. If input requirements are not met return MISSING</returns>
+        public double PotentialET(double albedo)
+        {
+            double fUpperBound;
+            double result = 0.0;
+
+            EvapMethod evapMethod = EvapMethod.emPropnPan;  // **** default ****
+            double evapParam = 0.8;
+
+            if (!bInputKnown(EVAP_REQUIREMENT[(int)evapMethod]))
+                result = StdMath.DMISSING;
+            else if (evapMethod == EvapMethod.emPropnPan)
+            {
+                if (bInputKnown(new TWeatherData[] { TWeatherData.wdtMaxT, TWeatherData.wdtMinT, TWeatherData.wdtRadn }))
+                    fUpperBound = Math.Max(4.0, 1.5 * Evaporation(EvapMethod.emCERES, GrazEnv.HERBAGE_ALBEDO));
+                else
+                    fUpperBound = 20.0;
+
+                result = Math.Min(Evaporation(EvapMethod.emPropnPan, evapParam), fUpperBound);
+            }
+            else
+                result = Evaporation(evapMethod, albedo);
+
+            return result;
         }
 
+        /// <summary>
+        /// Evapotranspiration calculation using various methods.                        
+        ///  *All methods return potential evaporation except pmPenman, which returns    
+        ///  the estimated evaporation rate for a nominated surface resistance.         
+        ///  *The meaning of param1, param2 and param3 depends upon the method:       
+        ///  Method Param.  Meaning Unit  Default       
+        ///  emPropnPan     1     potential: pan evaporation ratio - 0.8           
+        ///  emPenman       1     albedo - 0.23          
+        ///                 2     crop height                      m     0.12          
+        ///                 3     surface resistance               s/m   70.0          
+        ///  emCERES        1     albedo - 0.23          
+        ///  emPriestley    1     albedo - 0.23          
+        ///                 2     potential: equilibrium ratio     -1.26          
+        ///  emFAO          1     albedo - 0.23          
+        ///                 2     crop coefficient                 -1.0           
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="param1"></param>
+        /// <param name="param2"></param>
+        /// <param name="param3"></param>
+        /// <returns>Potential evaporation</returns>
+        private double Evaporation(EvapMethod method, double param1 = 0.0, double param2 = 0.0, double param3 = 0.0)
+        {
+            if (param1 == 0.0)
+                param1 = EVAPDEFAULTS[(int)method, 0];
+            if (param2 == 0.0)
+                param2 = EVAPDEFAULTS[(int)method, 1];
+            if (param3 == 0.0)
+                param3 = EVAPDEFAULTS[(int)method, 2];
+
+            double result = 0;
+            switch (method) {
+                case EvapMethod.emPropnPan:
+                    result = param1 * getData(TWeatherData.wdtEpan);
+                    if (result >= 12.0)                                    // Large E(pan) values are untrustworthy 
+                        result = Math.Min(result, CeresPET(GrazEnv.HERBAGE_ALBEDO ));
+                    break;
+                case EvapMethod.emPenman: result = PenmanPET(param1, param2, param3);
+                    break;
+                case EvapMethod.emCERES: result = CeresPET(param1);
+                    break;
+                // TODO:
+                /*case EvapMethod.emPriestley: result = PriestleyPET(param1, param2);
+                      break;
+                  case EvapMethod.emFAO: result = param2 * FAO_ReferenceET(param1);
+                      break;*/
+                default: result = 0.0; 
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Potential evaporation estimator using the logic from the CERES suite of crop 
+        /// growth models. This estimator is a variant of the Priestley - Taylor estimator 
+        /// </summary>
+        /// <param name="albedo"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private double CeresPET(double albedo)
+        {
+            double fMeanT;
+            double fEEQ;
+            double fEEQ_FAC;
+
+            if (!bInputKnown(EVAP_REQUIREMENT[(int)EvapMethod.emCERES]))
+                throw new Exception("Weather handler: CERES evaporation cannot be calculated");
+
+            double maxt = getData(TWeatherData.wdtMaxT);
+            fMeanT = 0.6 * maxt + 0.4 * getData(TWeatherData.wdtMinT);
+            fEEQ = getData(TWeatherData.wdtRadn) * 23.8846 * (0.000204 - 0.000183 * albedo) * (29.0 + fMeanT);
+            if (maxt >= 5.0)
+                fEEQ_FAC = 1.1 + 0.05 * Math.Max(0.0, maxt - 35.0);
+            else
+                fEEQ_FAC = 0.01 * Math.Exp(0.18 * (maxt + 20.0));
+
+            return fEEQ_FAC * fEEQ;
+        }
+
+        private const double MEASURE_HEIGHT = 2.0;                                                        // Assumed height of measurement(m)
+        private double PenmanPET(double albedo, double cropHeight, double surfaceResist)
+        {
+            double fDelta;
+            double fGamma;
+            double fVirtualT;                                                 // "Virtual temperature" for gas law, K  
+            double fRho_Cp;                                                 // Density x specific heat of air, MJ/m^3/K
+
+            double fSoilFlux;           // Soil heat flux G, MJ/ m ^ 2 / d            
+            double fZeroPlaneDispl;     // Zero plane displacement d, m          
+            double fRoughLengthMom;     // Roughness length for momentum z(om), m
+            double fRoughLengthVapour;  // Roughness length for heat & water vapour z(oh), m                     
+            double fAeroResist;         // Aerodynamic resistance, s/ m and d/ m   
+
+            if (!bInputKnown(EVAP_REQUIREMENT[(int)EvapMethod.emPenman]))
+                throw new  Exception( "Weather handler: Penman-Monteith evaporation cannot be calculated" );
+
+            double meanTemp = MeanTemp();
+            fDelta = SatVPSlope(meanTemp);
+            fGamma = PsychrometricConst();
+
+            fVirtualT = 1.01 * (meanTemp + GrazEnv.C_2_K);
+            fRho_Cp = fGamma * EPSILON * LatentHeat(meanTemp) / (GAS_CONST * fVirtualT);
+
+            fSoilFlux = 0.0;
+
+            fZeroPlaneDispl = 2 / 3 * Math.Max(0.005, cropHeight);            // Set a floor of 5mm on the height used 
+            fRoughLengthMom = 0.123 * Math.Max(0.005, cropHeight);            //   in calculating the aerodynamic      
+            fRoughLengthVapour = 0.1 * Math.Max(0.005, cropHeight);            // resistance                          
+            // Aerodynamic resistance in s / m         
+            fAeroResist = Math.Log((MEASURE_HEIGHT - fZeroPlaneDispl) / fRoughLengthMom   
+                            * (MEASURE_HEIGHT - fZeroPlaneDispl) / fRoughLengthVapour)
+                            / (Math.Pow(KARMAN, 2) * getData(TWeatherData.wdtWind));
+
+            fAeroResist = fAeroResist * SEC2DAY;                // Convert the resistances to d / m for    
+            surfaceResist = fAeroResist * SEC2DAY;             // consistency with other units        
+
+            double result = (fDelta * (NetRadiation(albedo) - fSoilFlux) + fRho_Cp * VP_Deficit() / fAeroResist)
+                            / (fDelta + fGamma * (1.0 + surfaceResist / fAeroResist))
+                            / LatentHeat(meanTemp);
+
+            return result;
+        }
+
+        //Derivative of the SVP-temperature curve
+        private double SatVPSlope(double temperature)
+        {
+            return 17.27 * 237.3 / Math.Pow(temperature + 237.3, 2) * SaturatedVP(temperature);
+        }
+
+        // Psychrometric constant, following Allen et al(1998).                        }
+        // * The equation for atmospheric pressure is also taken from Allen et al.      }
+        private double PsychrometricConst()
+        {
+            double fPressure;
+
+            fPressure = 101.3 * Math.Pow(1.0 - 0.0065 * fElevationM / (20.0 + GrazEnv.C_2_K), 5.26); // Atmospheric pressure, in kPa          
+            return 6.65E-4 * fPressure;
+        }
+
+        // Latent heat of vaporization of water, in MJ/kg
+        private double LatentHeat(double meanT)
+        {
+            return 2.501 - 0.002361 * meanT;
+        }
+
+        /// <summary>
+        ///   Net radiation estimate.                                                      
+        /// This calculation follows Allen et al (1998)                                  
+        /// </summary>
+        /// <param name="albedo"></param>
+        /// <returns></returns>
+        private double NetRadiation(double albedo)
+        {
+            double fRadClearDay;
+            double fRadFract;
+            double fNetLongWave;
+
+            fRadClearDay = (0.75 + 2.0e-5 * fElevationM) * ExtraT_Radiation();
+            fRadFract = Math.Min(1.0, getData(TWeatherData.wdtRadn) / fRadClearDay);
+            fNetLongWave = SIGMA * (Math.Pow(getData(TWeatherData.wdtMaxT) + GrazEnv.C_2_K, 4) + Math.Pow(getData(TWeatherData.wdtMinT) + GrazEnv.C_2_K, 4)) / 2.0
+                            * (0.34 - 0.14 * Math.Sqrt( getData(TWeatherData.wdtVP) ))
+                            * (1.35 * fRadFract - 0.35);
+
+            return (1.0 - albedo) * getData(TWeatherData.wdtRadn) - fNetLongWave;
+        }
+
+        /// <summary>
+        /// Saturated vapour pressure at a given temperature, in kPa.                   
+        /// The equation is taken from Allen et al(1998), FAO Irrigation and Drainage   
+        /// Paper 56.                                                                    
+        /// </summary>
+        /// <param name="temperature"></param>
+        /// <returns></returns>
+        private double SaturatedVP(double temperature)
+        {
+            return 0.6108 * Math.Exp(17.27 * temperature / (temperature + 237.3));
+        }
+
+        /// <summary>
+        /// Daily average vapour pressure deficit
+        /// * The weighting in the saturated VP calculation follows Jeffrey et al.    
+        /// (2001), Env.Modelling and Software 16:309                                   
+        /// * In the absence of VP or RH data, assumes that dew point can be approximated
+        /// by the minimum temperature.                                                
+        /// </summary>
+        /// <returns></returns>
+        private double VP_Deficit()
+        {
+            double SVP;
+
+            SVP = 0.75 * SaturatedVP(getData(TWeatherData.wdtMaxT)) + 0.25 * SaturatedVP(getData(TWeatherData.wdtMinT));
+
+            if (!bInputKnown(TWeatherData.wdtVP))
+                computeVP();
+            return SVP - getData(TWeatherData.wdtVP);
+        }
+
+        /// <summary>
+        /// Computes the daily average vapour pressure, in kPa, and stores it in   
+        /// Data[wdtVP]. Computation is done as follows:                                 
+        /// 1. If relative humidity is available, it is computed from that.              
+        /// 2. Otherwise, VP is computed by assuming that dew point = min. T.            
+        /// </summary>
+        /// <returns></returns>
+        private void computeVP()
+        {
+            double SVP;
+            double dewPoint;
+
+            if (bInputKnown(TWeatherData.wdtRelH))
+            {
+                SVP = 0.75 * SaturatedVP(getData(TWeatherData.wdtMaxT)) + 0.25 * SaturatedVP(getData(TWeatherData.wdtMinT));
+                setData(TWeatherData.wdtVP, getData(TWeatherData.wdtRelH) * SVP);
+            }
+            else
+            {
+                dewPoint = getData(TWeatherData.wdtMinT);
+                setData(TWeatherData.wdtVP, SaturatedVP(dewPoint));
+            }
+        }
     }
 }

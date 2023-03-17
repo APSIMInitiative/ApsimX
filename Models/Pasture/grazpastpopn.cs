@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using CMPServices;
+//    using CMPServices;
     using StdUnits;
     using static GrazType;
     using static PastureUtil;
@@ -13,6 +13,7 @@
     /// WaterDemand and computeRates methods.  It contains all the inputs            
     /// required by these two methods. 
     /// </summary>
+    [Serializable]
     public class TPastureInputs
     {
         /// <summary>Gets or sets the Maximum air temperature (deg C)</summary>
@@ -60,8 +61,8 @@
         /// <summary>SW/SAT                           (-)</summary>
         public double[] WFPS = new double[GrazType.MaxSoilLayers + 1];
 
-        /// <summary></summary>
-        public double SurfaceEvap { get; set; }
+        /// <summary>Evaporation rate of free surface water (including water intercepted on herbage). Default value is 0.0. (mm)</summary>
+        public double SurfaceEvap { get; set; } = 0;
 
         /// <summary></summary>
         public double[] pH = new double[GrazType.MaxSoilLayers + 1];
@@ -168,6 +169,7 @@
     /// The pasture population
     /// Population of a single pasture species 
     /// </summary>
+    [Serializable]
     public class TPasturePopulation
     {
         private bool FRecomputeRoots;
@@ -441,16 +443,16 @@
         /// <param name="Source"></param>
         public TPasturePopulation(TPasturePopulation Source) : base()
         {
-            TTypedValue aValue;
+            //TTypedValue aValue;
             this.FCohorts = new TPastureCohort[0];
 
             this.Initialise("", 1.0, new TPlantElement[0]);
 
-            aValue = new TDDMLValue("<type/>", "");
-            Source.WriteToValue(ref aValue);
-            this.ReadParamsFromValue(aValue, Source.Params); ///////////// replace with new function
+            //aValue = new TDDMLValue("<type/>", "");
+            /////////////////// Source.WriteToValue(ref aValue); replace with new function
+            ///////////// this.ReadParamsFromValue(aValue, Source.Params); ///////////// replace with new function
             this.SetSoilParams(Source.FSoilLayers, Source.FBulkDensity, Source.FSandContent, Source.FCampbellParam);
-            this.ReadStateFromValue(aValue);    ////////////// replace with new function
+            /////////////////// this.ReadStateFromValue(aValue);    ////////////// replace with new function
         }
 
         // delegates used for setting the functions when certain nutrients are present.
@@ -3147,15 +3149,18 @@
                 this.SetMaxRootDepth(maxroot);
             }
 
-            kl.CopyTo(this.fWater_KL, 1);
-            ll.CopyTo(this.fPlant_LL, 1);
+            if (kl != null && kl.Length > 0)
+            {
+                kl.CopyTo(this.fWater_KL, 1);
+            }
+
+            if (ll != null && ll.Length > 0)
+            {
+                ll.CopyTo(this.fPlant_LL, 1);
+            }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="paramSet"></param>
-        public void ReadParamsFromValue(TTypedValue aValue, TPastureParamSet paramSet)
+                
+/*        public void ReadParamsFromValue(TTypedValue aValue, TPastureParamSet paramSet)
         {
             string sParamFile;
             string sSpeciesName;
@@ -3201,7 +3206,7 @@
             this.ReadLayers(aValue, "kl", ref this.fWater_KL);
             this.ReadLayers(aValue, "ll", ref this.fPlant_LL);
         }
-
+*/
         /// <summary></summary>
         public TPlantElement[] FElements = new TPlantElement[0];
 
@@ -3681,7 +3686,7 @@
             this.FCohorts[destCohort].AddRoots(this.FCohorts[srcCohort]);
             this.FCohorts[srcCohort].ClearRoots();
         }
-
+        /*
         /// <summary>
         /// 
         /// </summary>
@@ -3720,7 +3725,7 @@
                 }
             }
         }
-
+        */
         /// <summary>
         /// Read the state (at init time)
         /// </summary>
@@ -3801,23 +3806,26 @@
                     this.DormMeanTemp = fDormT;
                 }
             }
-
-            if ((extintc.Length >= 1) && this.Params.bHasSeeds)
+            
+            if (extintc != null)
             {
-                this.SetExtinctionCoeff(GrazType.stSEEDL, extintc[0]);
+                if ((extintc.Length >= 1) && this.Params.bHasSeeds)
+                {
+                    this.SetExtinctionCoeff(GrazType.stSEEDL, extintc[0]);
+                }
+
+                if (extintc.Length >= 2)
+                {
+                    this.SetExtinctionCoeff(GrazType.stESTAB, extintc[1]);
+                }
+
+                if (extintc.Length >= 3)
+                {
+                    this.SetExtinctionCoeff(GrazType.stSENC, extintc[2]);
+                }
             }
 
-            if (extintc.Length >= 2)
-            {
-                this.SetExtinctionCoeff(GrazType.stESTAB, extintc[1]);
-            }
-
-            if (extintc.Length >= 3)
-            {
-                this.SetExtinctionCoeff(GrazType.stSENC, extintc[2]);
-            }
-
-            if (green.Length > 0)
+            if ((green != null) && green.Length > 0)
             {
                 for (idx = 0; idx < green.Length; idx++)
                 {
@@ -3837,7 +3845,7 @@
                 }
             }
 
-            if (dry.Length > 0)
+            if ((dry != null) && dry.Length > 0)
             {
                 for (idx = 0; idx < dry.Length; idx++)
                 {
@@ -3914,12 +3922,9 @@
 
             this.MassUnit = sPrevUnit;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        public void ReadStateFromValue(TTypedValue aValue)
+       
+        
+       /* public void ReadStateFromValue(TTypedValue aValue)
         {
             string sPrevUnit;
             TTypedValue subValue;
@@ -4115,8 +4120,8 @@
 
             this.MassUnit = sPrevUnit;
         }
-
-        /// <summary>
+       */
+/*        /// <summary>
         /// 
         /// </summary>
         /// <param name="aValue"></param>
@@ -4293,7 +4298,7 @@
                 WriteReal(ref aValue, "germ_index", "d", this.GermnIndex, 0.0);
             }
         }
-
+*/
         /// <summary>
         /// *N.B.the order of search for a parameter set containing sSpeciesName is:  
         /// 1.the TPastureParamSet given by mainParamSet                              

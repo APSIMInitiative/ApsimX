@@ -14,6 +14,7 @@ namespace Models.GrazPlan
     using CMPServices;
     using CommandLine.Text;
     using Models.Core;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Class that wraps the XML param reader
@@ -398,9 +399,7 @@ namespace Models.GrazPlan
         /// <param name="bModify"></param>
         public void readFromResource(string sResID, ref TParameterSet Params, bool bModify)
         {
-            string paramStr = Resource.GetString(sResID);
-            //ResourceManager rm = new ResourceManager("pasture.prm", typeof(Example).Assembly);
-            //string paramStr = rm.GetString(sResID); //Properties.Resources.ResourceManager.GetString(sResID);
+            string paramStr = ReflectionUtilities.GetResourceAsString("Models.Resources.GrazPlan." + sResID);
             readFromXML(paramStr, ref Params, bModify);
         }
 
