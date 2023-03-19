@@ -7464,7 +7464,7 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70.0",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
@@ -7586,16 +7586,7 @@
                   ],
                   "Name": "Gregory",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suneca",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9380,7 +9371,15 @@
                   ],
                   "Name": "Spitfire",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Drysdale",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9541,24 +9540,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 8.5",
-                    "[Phenology].CAMP.FLNparams.PpLN = 10.2",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 7.0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 4.0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 120.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-                  ],
-                  "Name": "Drysdale",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 5.0",
                     "[Phenology].CAMP.FLNparams.PpLN = 5.614296735457546",
                     "[Phenology].CAMP.FLNparams.VrnLN = 4.503674325777882",
@@ -9566,7 +9547,7 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 203.0",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8901521997762343"
                   ],
-                  "Name": "suneca"
+                  "Name": "Suneca"
                 }
               ],
               "Enabled": true,
