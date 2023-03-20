@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 417,
+  "ExplorerWidth": 411,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -60,6 +60,7 @@
             "[Lucerne].Arbitrator.N.Retranslocation",
             "[Lucerne].AboveGround.Wt",
             "[Lucerne].AboveGround.Wt*10 - [Lucerne].AboveGroundDead.Wt*10 as ShootWt",
+            "[Lucerne].TotalLive.Wt",
             "[Lucerne].Grain.Live.N",
             "[Lucerne].Grain.Live.Wt",
             "[Lucerne].Leaf.CoverDead",
@@ -71,10 +72,13 @@
             "[Lucerne].Leaf.Fw",
             "[Lucerne].Leaf.Height as Height",
             "[Lucerne].Leaf.LAI as LAI",
+            "[Lucerne].Leaf.SpecificArea",
             "[Lucerne].Leaf.Area",
+            "[Lucerne].Leaf.Allocated.StructuralWt",
             "[Lucerne].Leaf.Live.N *10 as LeafNWt ",
             "[Lucerne].Leaf.Live.NConc*100 as LeafN",
             "[Lucerne].Leaf.Live.Wt *10 as LeafWt",
+            "[Lucerne].Leaf.Removed.Wt",
             "[Lucerne].Leaf.NodeNumber as NodeNumber",
             "[Lucerne].Leaf.BasalBuds.NodeNumber",
             "[Lucerne].Leaf.SenescenceRate",
@@ -116,7 +120,7 @@
             "[Lucerne].TapRoot.Live.StructuralWt *10 as StructuralWt",
             "[Lucerne].TapRoot.Live.Wt*10 as RootWt",
             "[Lucerne].TapRoot.MaintenanceRespiration",
-            "[Lucerne].TapRoot.RetranslocationWt",
+            "[Lucerne].TapRoot.RetranslocateNitrogen",
             "[lucerne].TapRoot.Senesced.Wt",
             "[Lucerne].TapRoot.StructuralFraction.FixedValue",
             "[Lucerne].TapRoot.Total.Wt*10 as RootTotal",
@@ -2973,7 +2977,27 @@
                           "VariableName": "[Leaf].SpecificArea",
                           "Name": "SLA",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Plant].SowingData.Population",
+                              "Name": "Population",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0005,
+                              "Units": null,
+                              "Name": "AreaPerPlant",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -6121,496 +6145,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                  "Name": "DMDemands",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Structural",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "GapToMaxStructural",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MaximumFunction, Models",
-                              "Name": "MaximumTapRootStructuralDM",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TapRoot].Live.StructuralWt",
-                                  "Name": "ActualStructuralDM",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.MinimumFunction, Models",
-                                  "Name": "MinimumFunction",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 250.0,
-                                      "Units": "g structural DM/m2",
-                                      "Name": "MaxStrTapRootPerM2",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "MinStrTapRootPerM2ByPlant",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.8,
-                                          "Units": "minimum g structural taproot DM / lucerne plant ",
-                                          "Name": "MaxStrTapRootPerPlant",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Lucerne].Population",
-                                          "Name": "Population",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TapRoot].Live.StructuralWt",
-                              "Name": "TapRootStructuralDM",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.01,
-                          "Units": "fraction of biomass gap per day as demand",
-                          "Name": "DailyStrucDemandRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The logic here is:\r\n\r\n- Assume a mimimum amount of structural biomass\r\n- Create demand to reach this target if current amount is less than that\r\n- Assumes that 1% of potential difference is \"demanded\" by day \r\n- Assumes a maximum 2.5 t/ha of taproot",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Storage",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "StorageGap",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "PotentialStorage",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TapRoot].Live.StructuralWt",
-                                  "Name": "CurrentStructural",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.3,
-                                  "Units": "minimum share of structural in taproot",
-                                  "Name": "StructuralFraction",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TapRoot].Live.StorageWt",
-                              "Name": "ActualStorage",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LessThanFunction, Models",
-                              "Name": "AnnualEffect",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].DeltaPhotoperiod",
-                                  "Name": "DeltaPp",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": -0.02,
-                                  "Units": null,
-                                  "Name": "Ref",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": "100% storage demand at decreasing Pp",
-                                  "Name": "DecreasingPp",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "IncreasingPp",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        10.5,
-                                        16.5
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        1.0
-                                      ],
-                                      "XVariableName": null,
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].Photoperiod",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "RegrowthEffect",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    250.0,
-                                    300.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    1.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].ThermalTimeAfterCutting",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The logic here is:\r\n\r\n- Assumes a mimimum of 20% **StructuralFraction** biomass in taproot - so a **PotentialStorage** of 80% DM\r\n- Compares current Storage with PotentialStorage (**StorageGap**)\r\n- Allows a **MaxDailyStorageRate** as a fraction of the StorageGap (g DM/m2 per day)\n- MaxDailyDemand is a first try to ensure we do not have exess demands per day - needs check FIXME\r\n\r\nFIXME: Parameters require references (parameterised empirically as per Yang X PhD Thesis)",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "StorageX",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "StorageGap",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "PotentialStorage",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TapRoot].Live.StructuralWt",
-                                  "Name": "CurrentStructural",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.3,
-                                  "Units": "minimum share of structural in taproot",
-                                  "Name": "StructuralFraction",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TapRoot].Live.StorageWt",
-                              "Name": "ActualStorage",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LessThanFunction, Models",
-                          "Name": "SeasonalStorageDemand",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].DeltaPhotoperiod",
-                              "Name": "DeltaPp",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": -0.02,
-                              "Units": null,
-                              "Name": "Ref",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": "100% storage demand at decreasing Pp",
-                              "Name": "DecreasingPp",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "IncreasingPp",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    10.5,
-                                    16.5
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    1.0
-                                  ],
-                                  "XVariableName": null,
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Photoperiod",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.02,
-                          "Units": "max fraction of gap demanded per day",
-                          "Name": "MaxDailyStorageRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The logic here is:\r\n\r\n- Assumes a mimimum of 20% **StructuralFraction** biomass in taproot - so a **PotentialStorage** of 80% DM\r\n- Compares current Storage with PotentialStorage (**StorageGap**)\r\n- Allows a **MaxDailyStorageRate** as a fraction of the StorageGap (g DM/m2 per day)\r\n\r\nFIXME: Parameters require references (parameterised empirically as per Yang X PhD Thesis)",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "g DM m2/day",
-                      "Name": "Metabolic",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "QStructuralPriority",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "QMetabolicPriority",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "QStoragePriority",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
                   "Units": "fractional",
@@ -6687,113 +6221,20 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "0 is \"OFF\" and 1 is \"ON\"",
-                      "Name": "Switch",
+                      "FixedValue": 0.35,
+                      "Units": "g dm/g N remoboilized",
+                      "Name": "Rate",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "BaseRespirationCoefficient",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Arbitrator].N.Retranslocation[5]",
+                      "Name": "NTranslocation",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.3
-                          ],
-                          "Y": [
-                            0.015,
-                            0.04
-                          ],
-                          "XVariableName": null,
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Lucerne].Arbitrator.N.Retranslocation[5]",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "Q10^ExpTempAdj",
-                      "Name": "Q10TempAdj",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.8,
-                          "Units": "increase for every 10oC rise in the temperature",
-                          "Name": "Q10",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "ExpTempAdj",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SoilTemperatureDepthFunction, Models",
-                                  "Depth": 100.0,
-                                  "Name": "SoilTemperatureDepthFunction",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 20.0,
-                                  "Units": "oC reference temperature",
-                                  "Name": "Constant",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
-                              "Units": "oC",
-                              "Name": "Constant",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -7336,6 +6777,349 @@
                   "Name": "CriticalNConc",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                  "Name": "DMDemands",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "GapToMaxStructural",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MaximumFunction, Models",
+                              "Name": "MaximumTapRootStructuralDM",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[TapRoot].Live.StructuralWt",
+                                  "Name": "ActualStructuralDM",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MinimumFunction, Models",
+                                  "Name": "MinimumFunction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 250.0,
+                                      "Units": "g structural DM/m2",
+                                      "Name": "MaxStrTapRootPerM2",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "MinStrTapRootPerM2ByPlant",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.8,
+                                          "Units": "minimum g structural taproot DM / lucerne plant ",
+                                          "Name": "MaxStrTapRootPerPlant",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Lucerne].Population",
+                                          "Name": "Population",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[TapRoot].Live.StructuralWt",
+                              "Name": "TapRootStructuralDM",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": "fraction of biomass gap per day as demand",
+                          "Name": "DailyStrucDemandRate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The logic here is:\r\n\r\n- Assume a mimimum amount of structural biomass\r\n- Create demand to reach this target if current amount is less than that\r\n- Assumes that 1% of potential difference is \"demanded\" by day \r\n- Assumes a maximum 2.5 t/ha of taproot",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Storage",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "StorageGap",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "PotentialStorage",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[TapRoot].Live.StructuralWt",
+                                  "Name": "CurrentStructural",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.3,
+                                  "Units": "minimum share of structural in taproot",
+                                  "Name": "StructuralFraction",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[TapRoot].Live.StorageWt",
+                              "Name": "ActualStorage",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "MultiplyFunction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.LessThanFunction, Models",
+                              "Name": "AnnualEffect",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].DeltaPhotoperiod",
+                                  "Name": "DeltaPp",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": -0.02,
+                                  "Units": null,
+                                  "Name": "Ref",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": "100% storage demand at decreasing Pp",
+                                  "Name": "DecreasingPp",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "IncreasingPp",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        10.5,
+                                        16.5
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        1.0
+                                      ],
+                                      "XVariableName": null,
+                                      "Name": "XYPairs",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].Photoperiod",
+                                      "Name": "XValue",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "RegrowthEffect",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    250.0,
+                                    300.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                  ],
+                                  "XVariableName": null,
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTimeAfterCutting",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The logic here is:\r\n\r\n- Assumes a mimimum of 20% **StructuralFraction** biomass in taproot - so a **PotentialStorage** of 80% DM\r\n- Compares current Storage with PotentialStorage (**StorageGap**)\r\n- Allows a **MaxDailyStorageRate** as a fraction of the StorageGap (g DM/m2 per day)\n- MaxDailyDemand is a first try to ensure we do not have exess demands per day - needs check FIXME\r\n\r\nFIXME: Parameters require references (parameterised empirically as per Yang X PhD Thesis)",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g DM m2/day",
+                      "Name": "Metabolic",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -11190,32 +10974,8 @@
                       "Code": "\r\nusing Models.Soils;\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Newtonsoft.Json;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Lucerne;\r\n        [Link] private Clock clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Lucerne].Phenology\")]\r\n        private Phenology phenology;\r\n        [JsonIgnore] private RemovalFractions Remove { get; set; }\r\n    public double Year { get;set;}\r\n    public double Rotation { get;set;}\r\n    public double YearRotation { get;set;}\r\n    bool YearPassed { get;set;}\r\n    public bool HarvestFlag { get;set;}\r\n    [Description(\"Change to the next growth year\")]\r\n    public string YearTransation { get;set;}\r\n    public double BudsDays { get;set;}\r\n    public double FloDays { get;set;}\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {   Year = 1;\r\n            Rotation =1;\r\n            YearRotation= Year + Rotation;\r\n            HarvestFlag=false;\r\n            YearPassed= false;\r\n            Remove = new RemovalFractions();\r\n        }\r\n        [EventSubscribe(\"EndOfDay\")]\r\n        private void OnEndOfDay(object sender, EventArgs e)\r\n        {\r\n        if (DateUtilities.WithinDates(YearTransation, clock.Today, YearTransation))\r\n         YearPassed= true;\r\n         HarvestFlag= false;\r\n         BudsDays= (double)zone.Get(\"Lucerne.Phenology.BudsVisableDaysAfterCutting.Value()\");\r\n         FloDays= (double)zone.Get(\"Lucerne.Phenology.FloweringDaysAfterCutting.Value()\");\r\n        }\r\n        public void Cut()\r\n        {   /*double TtFlo=(double)zone.Get(\"Lucerne.Phenology.ThermalTimeAfterFlowering.Value()\");\r\n            double LeafWt= (double)zone.Get(\"Lucerne.Leaf.Wt\");\r\n            double NewLeaf= Math.Min(5,TtFlo*0.025);\r\n            double LeafRemove= (LeafWt-NewLeaf)/LeafWt;\r\n            double StemWt= (double)zone.Get(\"Lucerne.Stem.Wt\");\r\n            double NewStem= Math.Min(3,TtFlo*0.015);\r\n            double StemRemove= (StemWt-NewStem)/StemWt;\r\n            Remove.SetFractionToRemove(\"Leaf\",LeafRemove*0.9);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemove*0.1);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemove*0.5);\r\n            Remove.SetFractionToResidue(\"Stem\",StemRemove*0.5);\r\n            object LAIRemove= 1-Math.Min(0.1,TtFlo*0.0005);\r\n            zone.Set(\"Lucerne.Leaf.Area.FractionRemovedOnCut\",LAIRemove);*/\r\n            Remove.SetPhenologyStage = 4;  \r\n            Lucerne.RemoveBiomass(\"Cut\", Remove);\r\n            Rotation+=1;\r\n            HarvestFlag= true;\r\n            if (YearPassed)\r\n            {Year+=1;\r\n            Rotation=1;\r\n            YearPassed=false;}\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                       "Parameters": [
                         {
-                          "Key": "Year",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "Rotation",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "YearRotation",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "HarvestFlag",
-                          "Value": "False"
-                        },
-                        {
                           "Key": "YearTransation",
                           "Value": "1-Jun"
-                        },
-                        {
-                          "Key": "BudsDays",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "FloDays",
-                          "Value": "0"
                         }
                       ],
                       "Name": "Mower",
@@ -12358,7 +12118,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Water",
+                          "FactorToVaryColours": "WaterTreatment",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -12453,9 +12213,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Water",
+                          "FactorToVaryColours": "WaterTreatment",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Water",
+                          "FactorToVaryLines": "WaterTreatment",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -12500,6 +12260,72 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Date",
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "",
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": "NaN",
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LAI1",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "WaterTreatment",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "WaterTreatment",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.Allocated.StructuralWt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -12821,7 +12647,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight(kg/ha)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -12853,7 +12679,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Photoperiod",
+                          "YFieldName": "Lucerne.Leaf.Removed.Wt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -20146,7 +19972,6 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [
                         "SL",
-                        "SS",
                         "LS"
                       ],
                       "LegendOutsideGraph": false,
@@ -20244,7 +20069,6 @@
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
                       "DisabledSeries": [
-                        "LL",
                         "SL",
                         "LS"
                       ],
@@ -21454,11 +21278,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "Iversen_91DefoliationSL",
-                        "Iversen_91DefoliationSS",
-                        "Iversen_91DefoliationLS"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "RootDMRetrans",
                       "ResourceName": null,
@@ -30265,7 +30085,6 @@
                         "Iversen_121DefoliationSSFDFD2",
                         "Iversen_121DefoliationLLFDFD2",
                         "Iversen_121DefoliationHHFDFD2",
-                        "Iversen_121DefoliationHHFDFD5",
                         "Iversen_121DefoliationSSFDFD10",
                         "Iversen_121DefoliationLLFDFD10",
                         "Iversen_121DefoliationHHFDFD10"
@@ -30632,7 +30451,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "RootNWt",
+                          "YFieldName": "RootN",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -57435,6 +57254,12 @@
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Date": "1991-05-21",
+                          "Action": " [Mower].Script.Cut();",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
                           "Date": "1991-07-19",
                           "Action": " [Mower].Script.Cut();",
                           "Enabled": true
@@ -65044,7 +64869,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NodeNumber",
+                          "YFieldName": "LAI",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -65073,7 +64898,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NodeNumber",
+                          "YFieldName": "LAI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
