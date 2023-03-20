@@ -8378,7 +8378,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
-                    "[Phenology].CAMP.FLNparams.MinLN = 7.5",
+                    "[Phenology].CAMP.FLNparams.MinLN = 7.0",
                     "[Phenology].CAMP.FLNparams.PpLN = 3",
                     "[Phenology].CAMP.FLNparams.VrnLN = 4",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
