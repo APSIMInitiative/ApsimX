@@ -572,9 +572,7 @@ namespace Models.CLEM.Activities
                 if (herds.Count() == 1)
                 {
                     string warn = "";
-                    minBreeders = (this.MinimumBreedersKept > this.MaximumBreedersKept) ? this.MaximumBreedersKept : this.MinimumBreedersKept;
-                    maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
-
+                    List<string> information = new List<string>();
                     // calculate the number of breeders, sucklings, weaners and prebreeders
                     IEnumerable<RuminantTypeCohort> cohorts = herds.FirstOrDefault().FindAllDescendants<RuminantTypeCohort>();
 
@@ -588,7 +586,7 @@ namespace Models.CLEM.Activities
                                 // if no breeders numbers defined we need to bring them up to 
                                 // distribute evently across breeder cohorts
                                 double totalf = breederf.Sum(a => a.Number);
-                                if (totalf <= 0)
+                                if (MathUtilities.IsLessThanOrEqual(totalf, 0))
                                 {
                                     foreach (var item in breederf)
                                         item.Number = Math.Truncate(minBreeders / breederf.Count() + 0.5);
@@ -602,14 +600,14 @@ namespace Models.CLEM.Activities
                                 else
                                 {
                                     double adjustment = 1;
-                                    if(totalf > maxBreeders)
-                                        adjustment = totalf / maxBreeders;
+                                    if (totalf > maxBreeders)
+                                        adjustment = maxBreeders / totalf;
                                     else if (totalf < minBreeders)
                                         adjustment = minBreeders / totalf;
 
-                                    if (adjustment > 500)
+                                    if (MathUtilities.IsGreaterThan(adjustment, 500))
                                     {
-                                        warn = $"Problem [Adjust breeding female cohorts at start-up] using [a={this.Name}]. Adjustment factor [{adjustment:F1}] from initial cohort numbers limited to 500x. Add more individuals to initial cohorts (set Number) to allow adjustment.";
+                                        warn = $"Problem [Adjust breeding female cohorts at start-up] using [a={this.Name}]. Adjustment factor [{adjustment:F1}] from initial cohort numbers limited to 500x. Add more individuals to initial cohorts (set Number) to allow ensure a more efficient adjustment.";
                                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                                     }
                                     if (adjustment != 1)
@@ -617,10 +615,13 @@ namespace Models.CLEM.Activities
                                         foreach (var item in breederf)
                                             item.Number = Math.Truncate(item.Number * adjustment + 0.5);
 
+                                        information.Add($"[Adjust breeding female cohorts at start-up] {(adjustment<1?"reduced":"increased")} the female breeder numbers from [{totalf}] to the [{(adjustment<1?"Maximum breeders":"Minimum breeders")} kept] of [{(adjustment < 1 ? maxBreeders : minBreeders)}]");
+
                                         if (AdjustOthersToFemaleBreedersPropAtStartup)
                                         {
                                             foreach (var item in cohorts.Where(a => !breederf.Contains(a) && a.Sire == false))
                                                 item.Number = Math.Truncate(item.Number * adjustment + 0.5);
+                                            information.Add($"[Adjust all cohorts based on breeders at start-up] {(adjustment < 1 ? "reduced" : "increased")} all non-breeder numbers by a factor of [{adjustment:F3}]");
                                         }
                                     }
                                 }
@@ -632,19 +633,25 @@ namespace Models.CLEM.Activities
                             }
                         }
 
-                        if (AdjustBreedingMalesAtStartup & SiresKept > 0)
+                        if (AdjustBreedingMalesAtStartup)
                         {
                             var breederm = cohorts.Where(a => a.Sex == Sex.Male && a.Sire == true);
                             if(breederm.Any())
                             {
+                                double totalm = breederm.Sum(a => a.Number);
                                 if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
                                     SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
                                 else
                                     SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
 
-                                double sireAdjustment = breederm.Sum(a => a.Number) / SiresKept;
-                                foreach (var item in breederm)
-                                    item.Number = Math.Truncate(item.Number * sireAdjustment + 0.5);
+                                if (SiresKept > 0 && MathUtilities.IsPositive(totalm))
+                                {
+                                    double sireAdjustment = SiresKept / totalm;
+                                    foreach (var item in breederm)
+                                        item.Number = Math.Truncate(item.Number * sireAdjustment + 0.5);
+
+                                    information.Add($"[Adjust breeding male (sire) cohorts at start-up] {(sireAdjustment < 1 ? "reduced" : "increased")} the male breeder (sire) numbers from [{totalm:F0}] to [{SiresKept}]{(MathUtilities.IsLessThan(MaximumSiresKept, 1)?" based on specified proportion of the adjusted female breeder herd":"")} ");
+                                }
                             }
                             else
                             {
@@ -652,10 +659,14 @@ namespace Models.CLEM.Activities
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                             }
                         }
+                        if(information.Any())
+                        {
+                            information.Insert(0, $"The numbers in initial cohorts for [{cohorts.FirstOrDefault().FindAncestor<RuminantType>().Breed}] were adjusted by [a={this.Name}] at start of the simulation.");
+                            Warnings.CheckAndWrite(string.Join(Environment.NewLine, information), Summary, this, MessageType.Information);
+                        }
                     }
                 }
             }
-
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
