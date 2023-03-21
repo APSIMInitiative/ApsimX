@@ -40,7 +40,8 @@ namespace Models.Core
         /// <param name="seeds">The number of seeds sown (/m2).</param>
         /// <param name="tillering">tillering method (-1, 0, 1).</param>
         /// <param name="ftn">Fertile Tiller Number.</param>
-        void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0);
+        /// <param name="cultivarOverwrites">Cultivar overwrites passed in with sowing function</param>
+        void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0, Cultivar cultivarOverwrites = null);
 
         /// <summary>Returns true if the crop is ready for harvesting</summary>
         bool IsReadyForHarvesting { get; }
