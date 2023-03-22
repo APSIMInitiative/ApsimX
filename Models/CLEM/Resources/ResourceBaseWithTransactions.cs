@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
         /// Last transaction received
         /// </summary>
         [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
+        public ResourceTransaction LastTransaction { get; set; } = new ResourceTransaction();
 
         /// <summary>
         /// Provide full name of resource StoreName.TypeName
@@ -77,8 +77,12 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected void Resource_TransactionOccurred(object sender, EventArgs e)
         {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
             OnTransactionOccurred(e);
+        }
+
+        public void PerformTransactionOccurred()
+        {
+            TransactionOccurred?.Invoke(this, null);
         }
 
     }
