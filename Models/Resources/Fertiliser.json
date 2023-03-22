@@ -105,6 +105,18 @@
         },
         {
           "$type": "Models.FertiliserType, Models",
+          "Name": "UAN_N",
+          "Description": "N as Urea-AmmoniumNitrate",
+          "FractionNO3": 0.25,
+          "FractionNH4": 0.25,
+          "FractionUrea": 0.5,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
           "Name": "UreaN",
           "Description": "N as urea",
           "FractionNO3": 0.0,

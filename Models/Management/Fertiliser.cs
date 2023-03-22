@@ -57,6 +57,8 @@ namespace Models
             DAP,
             /// <summary>The map</summary>
             MAP,
+            /// <summary>The UAN n</summary>
+            UAN_N,
             /// <summary>The urea n</summary>
             UreaN,
             /// <summary>The urea n o3</summary>
