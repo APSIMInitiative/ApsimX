@@ -694,7 +694,7 @@
 
         /// <summary>Method to read one days met data in from file</summary>
         /// <param name="date">the date to read met data</param>
-        private DailyMetDataFromFile GetMetData(DateTime date)
+        public DailyMetDataFromFile GetMetData(DateTime date)
         {
             if (this.doSeek)
             {
