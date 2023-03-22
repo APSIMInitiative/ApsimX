@@ -143,7 +143,7 @@
                 else
                     return "XValue";
             }
-            else if (xYPairs.Parent is HourlyInterpolation)
+            else if (xYPairs.Parent is SubDailyInterpolation)
             {
                 return "Air temperature (oC)";
             }
