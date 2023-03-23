@@ -154,7 +154,7 @@ namespace Models.Core
                 storage.Reader.Refresh();
             }
             List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
