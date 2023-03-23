@@ -18,7 +18,7 @@ namespace Models.CLEM
         private static WarningLog instance;
 
         /// <summary>
-        /// Obtain a static single instance of thei object
+        /// Obtain a static single instance of the object
         /// </summary>
         /// <param name="maxEntries">Maximum number of entries permitted</param>
         /// <returns>A shared WarningLog</returns>

@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 159; } }
+        public static int LatestVersion { get { return 160; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2266,7 +2266,7 @@ namespace Models.Core.ApsimFile
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
                 AirTempFunc["agregationMethod"] = "0";
-                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourAirTemperature), "InterpolationMethod");
             }
         }
 
@@ -2327,7 +2327,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
             {
-                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                atf["$type"] = "Models.Functions.SubDailyInterpolation, Models";
                 foreach (JObject c in atf["Children"])
                 {
                     if (c["Name"].ToString() == "TemperatureResponse")
@@ -4069,7 +4069,7 @@ namespace Models.Core.ApsimFile
                         });
                     }
 
-                    if (soilChildren != null && chemicalChildren != null && bdToken != null)
+                    if (soilChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
                         var bdThickness = physical["Thickness"].Values<double>().ToArray();
@@ -4114,11 +4114,19 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Move solutes from nutrient to soil.
-                        var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        var no3Token = JsonUtilities.ChildWithName(soil, "NO3");
+                        if (no3Token == null)
+                        {
+                            var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        }
 
-                        var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        var nh4Token = JsonUtilities.ChildWithName(soil, "NH4");
+                        if (nh4Token == null)
+                        {
+                            var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        }
 
                         var labileP = GetValues(tokensContainingValues, "LabileP", 0.0, bd, bdThickness, null);
                         var unavailableP = GetValues(tokensContainingValues, "UnavailableP", 0.0, bd, bdThickness, null);
@@ -4159,8 +4167,12 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Add a urea solute to soil
-                        var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
-                        soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        var ureaToken = JsonUtilities.ChildWithName(soil, "Urea");
+                        if (ureaToken == null)
+                        {
+                            var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
+                            soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        }
                     }
 
 
@@ -4762,6 +4774,23 @@ namespace Models.Core.ApsimFile
                 JsonUtilities.ReplaceManagerCode(manager, "Retranslocation", "ReTranslocation");
             }
 
+        }
+
+        /// <summary>
+        /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion160(JObject root, string fileName)
+        {
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "ThreeHourSin"))
+            {
+                demand["$type"] = "Models.Functions.ThreeHourAirTemperature, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "HourlyInterpolation"))
+            {
+                demand["$type"] = "Models.Functions.SubDailyInterpolation, Models";
+            }
         }
 
         /// <summary>

@@ -17,9 +17,9 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>Depth of water table (mm)</summary>
@@ -38,7 +38,7 @@
             int sat_layer = -1;
             for (int i = 0; i < SW.Length; i++)
             {
-                // Find the first layer that is above saturation or really close to it. 
+                // Find the first layer that is above saturation or really close to it.
                 if (MathUtilities.FloatsAreEqual(soil.Water[i], SAT[i]))
                 {
                     sat_layer = i;
@@ -52,10 +52,9 @@
                 //set the depth of watertable to the total depth of the soil profile
                 Depth = MathUtilities.Sum(Thickness);
             }
-
             // Do the calculation of the water table if the fully saturated layer is not the top layer AND
             // the layer above the fully saturated layer is saturated.
-            if (sat_layer > 0 && SaturatedFraction(sat_layer, soil.Water, DUL, SAT) >= 0.999999 &&
+            else if (sat_layer > 0 && SaturatedFraction(sat_layer, soil.Water, DUL, SAT) >= 0.999999 &&
                                     SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) > 0.0)
             {
                 // layer above is over dul
@@ -96,7 +95,7 @@
             {
                 top = bottom;
                 bottom = bottom + soilPhysical.Thickness[i];
-                
+
                 if (initialDepth >= bottom)
                 {
                     //do nothing;

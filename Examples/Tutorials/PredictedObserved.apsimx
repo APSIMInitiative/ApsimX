@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 426,
-  "Version": 156,
+  "ExplorerWidth": 300,
+  "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -642,47 +642,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogen, Models",
-                      "fom_types": [
-                        "default",
-                        "manure",
-                        "mucuna",
-                        "lablab",
-                        "shemp",
-                        "stable"
-                      ],
-                      "fract_carb": [
-                        0.2,
-                        0.3,
-                        0.54,
-                        0.57,
-                        0.45,
-                        0.0
-                      ],
-                      "fract_cell": [
-                        0.7,
-                        0.3,
-                        0.37,
-                        0.37,
-                        0.47,
-                        0.1
-                      ],
-                      "fract_lign": [
-                        0.1,
-                        0.4,
-                        0.09,
-                        0.06,
-                        0.08,
-                        0.9
-                      ],
-                      "NPartitionApproach": 0,
-                      "Name": "SoilNitrogen",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.Organic, Models",
                       "FOMCNRatio": 20.0,
                       "Thickness": [
@@ -727,12 +686,12 @@
                         0.96
                       ],
                       "FOM": [
-                        390.59753892353666,
-                        289.36177378799243,
-                        158.8051084956577,
-                        87.15409141359129,
-                        47.83117950098136,
-                        26.250307878240648
+                        390.598,
+                        289.362,
+                        158.805,
+                        87.154,
+                        47.831,
+                        26.25
                       ],
                       "CarbonMetadata": null,
                       "FOMMetadata": null,
@@ -774,7 +733,7 @@
                         0.25,
                         0.25
                       ],
-                      "RelativeTo": null,
+                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -783,7 +742,15 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -793,12 +760,12 @@
                         300.0
                       ],
                       "InitialValues": [
-                        14.599999999999996,
-                        17.800000000000004,
-                        6.8,
-                        7.6,
-                        10.2,
-                        11.2
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                       ],
                       "InitialValuesUnits": 0,
                       "WaterTableConcentration": 0.0,
@@ -809,14 +776,14 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
-                      "Name": "NO3",
+                      "Name": "Urea",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -849,7 +816,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -859,14 +826,14 @@
                         300.0
                       ],
                       "InitialValues": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        14.6,
+                        17.8,
+                        6.8,
+                        7.6,
+                        10.2,
+                        11.2
                       ],
-                      "InitialValuesUnits": 1,
+                      "InitialValuesUnits": 0,
                       "WaterTableConcentration": 0.0,
                       "D0": 0.0,
                       "Exco": null,
@@ -875,7 +842,7 @@
                       "MaxDepthSoluteAccessible": 0.0,
                       "RunoffEffectivenessAtMovingSolute": 0.0,
                       "MaxEffectiveRunoff": 0.0,
-                      "Name": "Urea",
+                      "Name": "NO3",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
