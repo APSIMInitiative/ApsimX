@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
-
 using TreeModel = Gtk.ITreeModel;
 
 
@@ -44,17 +42,6 @@ namespace UserInterface.Views
         /// <summary>Add a new row to list view.</summary>
         /// <param name="index">The index of the row to remove.</param>
         void RemoveRow(int index);
-    }
-
-    /// <summary>Render details for a cell.</summary>
-    public class CellRendererDescription
-    {
-        public int RowIndex { get; set; }
-        public int ColumnIndex { get; set; }
-        public bool StrikeThrough { get; set; }
-        public bool Bold { get; set; }
-        public bool Italics { get; set; }
-        public System.Drawing.Color Colour { get; set; }
     }
 
     /// <summary>A list view.</summary>

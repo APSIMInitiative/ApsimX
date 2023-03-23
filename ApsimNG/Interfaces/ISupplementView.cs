@@ -9,16 +9,6 @@
         public double AttrVal { get; set; }
     }
 
-    public class TStringArgs : EventArgs
-    {
-        public string Name { get; set; }
-    }
-
-    public class TIntArgs : EventArgs
-    {
-        public int Value { get; set; }
-    }
-
     /// <summary>
     /// Interface for a supplement view.
     /// </summary>
