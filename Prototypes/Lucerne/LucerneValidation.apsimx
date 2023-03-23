@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 411,
+  "ExplorerWidth": 485,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -60,7 +60,6 @@
             "[Lucerne].Arbitrator.N.Retranslocation",
             "[Lucerne].AboveGround.Wt",
             "[Lucerne].AboveGround.Wt*10 - [Lucerne].AboveGroundDead.Wt*10 as ShootWt",
-            "[Lucerne].TotalLive.Wt",
             "[Lucerne].Grain.Live.N",
             "[Lucerne].Grain.Live.Wt",
             "[Lucerne].Leaf.CoverDead",
@@ -72,13 +71,10 @@
             "[Lucerne].Leaf.Fw",
             "[Lucerne].Leaf.Height as Height",
             "[Lucerne].Leaf.LAI as LAI",
-            "[Lucerne].Leaf.SpecificArea",
             "[Lucerne].Leaf.Area",
-            "[Lucerne].Leaf.Allocated.StructuralWt",
             "[Lucerne].Leaf.Live.N *10 as LeafNWt ",
             "[Lucerne].Leaf.Live.NConc*100 as LeafN",
             "[Lucerne].Leaf.Live.Wt *10 as LeafWt",
-            "[Lucerne].Leaf.Removed.Wt",
             "[Lucerne].Leaf.NodeNumber as NodeNumber",
             "[Lucerne].Leaf.BasalBuds.NodeNumber",
             "[Lucerne].Leaf.SenescenceRate",
@@ -120,7 +116,7 @@
             "[Lucerne].TapRoot.Live.StructuralWt *10 as StructuralWt",
             "[Lucerne].TapRoot.Live.Wt*10 as RootWt",
             "[Lucerne].TapRoot.MaintenanceRespiration",
-            "[Lucerne].TapRoot.RetranslocateNitrogen",
+            "[Lucerne].TapRoot.RetranslocationWt",
             "[lucerne].TapRoot.Senesced.Wt",
             "[Lucerne].TapRoot.StructuralFraction.FixedValue",
             "[Lucerne].TapRoot.Total.Wt*10 as RootTotal",
@@ -183,7 +179,7 @@
           "PlantType": "Lucerne",
           "IsEnding": false,
           "DaysAfterEnding": 0,
-          "Name": "Lucerne",
+          "Name": "Lucerne1",
           "ResourceName": null,
           "Children": [
             {
@@ -10974,8 +10970,32 @@
                       "Code": "\r\nusing Models.Soils;\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Newtonsoft.Json;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Lucerne;\r\n        [Link] private Clock clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Lucerne].Phenology\")]\r\n        private Phenology phenology;\r\n        [JsonIgnore] private RemovalFractions Remove { get; set; }\r\n    public double Year { get;set;}\r\n    public double Rotation { get;set;}\r\n    public double YearRotation { get;set;}\r\n    bool YearPassed { get;set;}\r\n    public bool HarvestFlag { get;set;}\r\n    [Description(\"Change to the next growth year\")]\r\n    public string YearTransation { get;set;}\r\n    public double BudsDays { get;set;}\r\n    public double FloDays { get;set;}\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {   Year = 1;\r\n            Rotation =1;\r\n            YearRotation= Year + Rotation;\r\n            HarvestFlag=false;\r\n            YearPassed= false;\r\n            Remove = new RemovalFractions();\r\n        }\r\n        [EventSubscribe(\"EndOfDay\")]\r\n        private void OnEndOfDay(object sender, EventArgs e)\r\n        {\r\n        if (DateUtilities.WithinDates(YearTransation, clock.Today, YearTransation))\r\n         YearPassed= true;\r\n         HarvestFlag= false;\r\n         BudsDays= (double)zone.Get(\"Lucerne.Phenology.BudsVisableDaysAfterCutting.Value()\");\r\n         FloDays= (double)zone.Get(\"Lucerne.Phenology.FloweringDaysAfterCutting.Value()\");\r\n        }\r\n        public void Cut()\r\n        {   /*double TtFlo=(double)zone.Get(\"Lucerne.Phenology.ThermalTimeAfterFlowering.Value()\");\r\n            double LeafWt= (double)zone.Get(\"Lucerne.Leaf.Wt\");\r\n            double NewLeaf= Math.Min(5,TtFlo*0.025);\r\n            double LeafRemove= (LeafWt-NewLeaf)/LeafWt;\r\n            double StemWt= (double)zone.Get(\"Lucerne.Stem.Wt\");\r\n            double NewStem= Math.Min(3,TtFlo*0.015);\r\n            double StemRemove= (StemWt-NewStem)/StemWt;\r\n            Remove.SetFractionToRemove(\"Leaf\",LeafRemove*0.9);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemove*0.1);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemove*0.5);\r\n            Remove.SetFractionToResidue(\"Stem\",StemRemove*0.5);\r\n            object LAIRemove= 1-Math.Min(0.1,TtFlo*0.0005);\r\n            zone.Set(\"Lucerne.Leaf.Area.FractionRemovedOnCut\",LAIRemove);*/\r\n            Remove.SetPhenologyStage = 4;  \r\n            Lucerne.RemoveBiomass(\"Cut\", Remove);\r\n            Rotation+=1;\r\n            HarvestFlag= true;\r\n            if (YearPassed)\r\n            {Year+=1;\r\n            Rotation=1;\r\n            YearPassed=false;}\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                       "Parameters": [
                         {
+                          "Key": "Year",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "Rotation",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "YearRotation",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "HarvestFlag",
+                          "Value": "False"
+                        },
+                        {
                           "Key": "YearTransation",
                           "Value": "1-Jun"
+                        },
+                        {
+                          "Key": "BudsDays",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "FloDays",
+                          "Value": "0"
                         }
                       ],
                       "Name": "Mower",
@@ -12118,7 +12138,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "WaterTreatment",
+                          "FactorToVaryColours": "Water",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -12213,9 +12233,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "WaterTreatment",
+                          "FactorToVaryColours": "Water",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "WaterTreatment",
+                          "FactorToVaryLines": "Water",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -12260,72 +12280,6 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Date",
-                          "Position": 3,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
-                          "Interval": null
-                        },
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "",
-                          "Position": 0,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "Minimum": "NaN",
-                          "Maximum": null,
-                          "Interval": null
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "LegendOrientation": 0,
-                      "AnnotationLocation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "LAI1",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "WaterTreatment",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "WaterTreatment",
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.Leaf.Allocated.StructuralWt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -12647,7 +12601,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "",
+                          "Title": "Aboveground live weight(kg/ha)",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -12679,7 +12633,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.Leaf.Removed.Wt",
+                          "YFieldName": "Photoperiod",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -19972,6 +19926,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [
                         "SL",
+                        "SS",
                         "LS"
                       ],
                       "LegendOutsideGraph": false,
@@ -20069,6 +20024,7 @@
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
                       "DisabledSeries": [
+                        "LL",
                         "SL",
                         "LS"
                       ],
@@ -21278,7 +21234,11 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "Iversen_91DefoliationSL",
+                        "Iversen_91DefoliationSS",
+                        "Iversen_91DefoliationLS"
+                      ],
                       "LegendOutsideGraph": false,
                       "Name": "RootDMRetrans",
                       "ResourceName": null,
@@ -30085,6 +30045,7 @@
                         "Iversen_121DefoliationSSFDFD2",
                         "Iversen_121DefoliationLLFDFD2",
                         "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationHHFDFD5",
                         "Iversen_121DefoliationSSFDFD10",
                         "Iversen_121DefoliationLLFDFD10",
                         "Iversen_121DefoliationHHFDFD10"
@@ -30451,7 +30412,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "RootN",
+                          "YFieldName": "RootNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -57254,12 +57215,6 @@
                         },
                         {
                           "$type": "Models.Operation, Models",
-                          "Date": "1991-05-21",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
                           "Date": "1991-07-19",
                           "Action": " [Mower].Script.Cut();",
                           "Enabled": true
@@ -64869,7 +64824,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LAI",
+                          "YFieldName": "NodeNumber",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -64898,7 +64853,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LAI",
+                          "YFieldName": "NodeNumber",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
