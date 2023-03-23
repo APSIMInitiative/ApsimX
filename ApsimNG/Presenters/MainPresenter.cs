@@ -506,6 +506,12 @@
                     Simulations simulations = converter.NewModel as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
+                    // Clear simulation messages.
+                    this.ShowMessage("", Simulation.MessageType.Information, true);
+
+                    if (converter.DidConvert)
+                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
+
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
                     Configuration.Settings.Save();
