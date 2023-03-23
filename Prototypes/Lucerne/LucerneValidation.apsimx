@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 485,
+  "ExplorerWidth": 473,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -179,7 +179,7 @@
           "PlantType": "Lucerne",
           "IsEnding": false,
           "DaysAfterEnding": 0,
-          "Name": "Lucerne1",
+          "Name": "Lucerne",
           "ResourceName": null,
           "Children": [
             {
