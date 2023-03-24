@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 388,
-  "Version": 159,
+  "ExplorerWidth": 285,
+  "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -14,11 +14,8 @@
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
-          "PlantType": "SCRUM",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "SCRUM",
-          "ResourceName": null,
+          "ResourceName": "SCRUM",
           "Children": [
             {
               "$type": "Models.Memo, Models",
@@ -35,7 +32,7 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "ResourceName": null,
@@ -69,7 +66,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "ResourceName": null,
@@ -636,7 +633,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].MinimumNConc",
+                      "VariableName": "[Product].MaximumNConc",
                       "Name": "MaximumNConc",
                       "ResourceName": null,
                       "Children": [],
@@ -1465,7 +1462,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 800.0,
+                              "FixedValue": 200.0,
                               "Units": null,
                               "Name": "b",
                               "ResourceName": null,
@@ -1540,7 +1537,7 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "$type": "Models.Functions.SubDailyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "ResourceName": null,
@@ -1567,7 +1564,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                           "TempRangeFactors": null,
                           "Name": "InterpolationMethod",
                           "ResourceName": null,
@@ -4323,8 +4320,7 @@
                 "[SCRUM].Arbitrator.N.TotalPlantSupply",
                 "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                "[SCRUM].Nodule.DMDemands.Structural.DMDemandFunction.PartitionFraction"
+                "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -5805,7 +5801,18 @@
               "Filter": null,
               "Name": "CoverTotal",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6483,36 +6490,18 @@
               "Filter": null,
               "Name": "Stage",
               "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -65536,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Phenology.CurrentStageName",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "CoverTotal",
-              "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
