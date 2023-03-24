@@ -26,6 +26,15 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class Cultivar : Model, ILineEditor
     {
+        /// <summary>
+        /// Constructor to initialise culivar instance with specified commands
+        /// </summary>
+        /// <param name="commnads">list of parameter overwrite commands</param>
+        public Cultivar (string[] commnads)
+        {
+            Command = commnads;
+        }
+        
         /// <summary>The model the cultvar is relative to.</summary>
         private IModel relativeToModel;
 

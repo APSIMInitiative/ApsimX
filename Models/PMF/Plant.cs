@@ -416,14 +416,16 @@ namespace Models.PMF
 
             // Find cultivar and apply cultivar overrides.
             if (cultivarOverwrites != null)
-                cultivarOverwrites.Apply(this);
+                cultivarDefinition = cultivarOverwrites;
             else
             {
                 cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
-                if (cultivarDefinition == null)
-                    throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
-                cultivarDefinition.Apply(this);
             }
+            
+            if (cultivarDefinition == null)
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
+            cultivarDefinition.Apply(this);
+            
             
             // Invoke an AboutToSow event.
             if (Sowing != null)

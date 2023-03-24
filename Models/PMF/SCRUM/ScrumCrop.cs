@@ -1,4 +1,4 @@
-﻿namespace Models.PMF
+﻿namespace Models.PMF.Scrum
 {
     using Models.Core;
     using System;
@@ -10,7 +10,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ScrumCrop
+    public class ScrumCrop: Model
     {
         /// <summary>Harvest Index</summary>
         [Description("Harvest Index")]
@@ -24,17 +24,13 @@
         [Description("Root Biomass proportion")]
         public double Proot { get; set; }
 
-        /// <summary>Root depth at harvest</summary>
+        /// <summary>Root depth at harvest (mm)</summary>
         [Description("Root depth at harvest")]
         public double MaxRD { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Description("Maximum green cover")]
         public double Acover { get; set; }
-
-        /// <summary>Cover rate </summary>
-        [Description("Cover rate")]
-        public double rCover { get; set; }
 
         /// <summary>Root Nitrogen Concentration</summary>
         [Description("Root Nitrogen concentration")]

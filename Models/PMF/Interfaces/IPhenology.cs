@@ -25,5 +25,10 @@ namespace Models.PMF.Interfaces
         /// Gets the current zadok stage number. Used in manager scripts.
         /// </summary>
         double Zadok { get; }
+
+        /// <summary>
+        /// Gets and sets the Emerged state of the crop.
+        /// </summary>
+        bool Emerged { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Models.PMF
+﻿namespace Models.PMF.Scrum
 {
     using Models.Core;
     using System;
@@ -10,7 +10,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ScrumManagement
+    public class ScrumManagement : Model
     {
         /// <summary>Establishemnt Date</summary>
         [Description("Establishment Date")]
@@ -21,7 +21,7 @@
         [Display(Type = DisplayType.CropStageName)]
         public string EstablishStage { get; set; }
 
-        /// <summary>Planting Date</summary>
+        /// <summary>Harvest Date</summary>
         [Description("Harvest Date")]
         public DateTime HarvestDate { get; set; }
 
@@ -30,10 +30,8 @@
         [Display(Type = DisplayType.CropStageName)]
         public string HarvestStage { get; set; }
 
-        /// <summary>Expected Yield</summary>
+        /// <summary>Expected Yield (g FW/m2)</summary>
         [Description("Expected Yield")]
         public double ExpectedYield { get; set; }
-
     }
-
 }

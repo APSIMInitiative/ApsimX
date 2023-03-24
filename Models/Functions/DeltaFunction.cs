@@ -12,6 +12,8 @@ namespace Models.Functions
     /// This function returns the daily delta for its child function
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
     public class DeltaFunction : Model, IFunction
     {
