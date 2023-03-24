@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
+using Models.PMF;
 
 namespace Models.Functions
 {
@@ -33,17 +34,29 @@ namespace Models.Functions
         [Link]
         Phenology Phenology = null;
 
+        [Link(Type =LinkType.Ancestor)]
+        Plant parentPlant = null;
+
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             YesterdaysValue = 0;
         }
 
+        [EventSubscribe("Sowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+            YesterdaysValue = Integral.Value();
+        }
+
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (StartStageName != null) //For functions that don't start giving values on the first day of simulation and don't have zero as their first value we need to set a start stage so the first values is picked up on the correct day
-            {
+            if ((parentPlant != null) && (parentPlant.IsAlive) && (StartStageName != null))
+            { 
+                //For functions that don't start giving values on the first day of simulation
+                //and don't have zero as their first value we need to set a start stage so
+                //the first values is picked up on the correct day
                 if (Phenology.Beyond(StartStageName))
                 {
                     YesterdaysValue = Integral.Value();

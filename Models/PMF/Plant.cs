@@ -424,6 +424,7 @@ namespace Models.PMF
             
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
+            
             cultivarDefinition.Apply(this);
             
             
