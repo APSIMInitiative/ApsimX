@@ -211,6 +211,11 @@ namespace Models.Core
                 foreach (Soils.Soil soil in soils)
                     soil.Standardise();
 
+                // Check to make sure there is only one ISoilWater in each zone.
+                foreach (var zone in FindAllChildren<Zone>())
+                    if (FindAllInScope<Models.Interfaces.ISoilWater>().Count() > 1)
+                        throw new Exception($"More than one water balance found in zone {zone.Name}");
+
                 // If this simulation was not created from deserialisation then we need
                 // to parent all child models correctly and call OnCreated for each model.
                 bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
