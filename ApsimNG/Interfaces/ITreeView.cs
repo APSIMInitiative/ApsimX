@@ -1,11 +1,9 @@
-﻿using UserInterface.Views;
+﻿using System;
+using System.Collections.Generic;
+using UserInterface.Views;
+
 namespace UserInterface.Interfaces
 {
-    
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// This interface encapsulates a hierachical tree view that the user interacts with.
     /// </summary>
@@ -127,61 +125,6 @@ namespace UserInterface.Interfaces
 
         /// <summary>Determines whether this node's font is strikethrough</summary>
         public bool Strikethrough;
-    }
-
-    /// <summary>A class for holding info about a node selection event.</summary>
-    public class NodeSelectedArgs : EventArgs
-    {
-        /// <summary>The old node path</summary>
-        public string OldNodePath;
-        /// <summary>The new node path</summary>
-        public string NewNodePath;
-    }
-
-    /// <summary>A clas for holding info about a node rename event.</summary>
-    public class NodeRenameArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The new name</summary>
-        public string NewName;
-        /// <summary>The cancel edit</summary>
-        public bool CancelEdit;
-    }
-
-    /// <summary>A class for holding info about a begin drag event.</summary>
-    public class DragStartArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The drag object</summary>
-        public ISerializable DragObject;
-    }
-
-    /// <summary>A class for holding info about a begin drag event.</summary>
-    public class AllowDropArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The drag object</summary>
-        public ISerializable DragObject;
-        /// <summary>The allow</summary>
-        public bool Allow;
-    }
-
-    /// <summary>A class for holding info about a begin drag event.</summary>
-    public class DropArgs : EventArgs
-    {
-        /// <summary>The node path</summary>
-        public string NodePath;
-        /// <summary>The copied</summary>
-        public bool Copied;
-        /// <summary>The moved</summary>
-        public bool Moved;
-        /// <summary>The linked</summary>
-        public bool Linked;
-        /// <summary>The drag object</summary>
-        public ISerializable DragObject;
     }
 
 }
