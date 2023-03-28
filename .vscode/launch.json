@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/ApsimNG.dll",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
@@ -19,7 +19,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/APSIM.Documentation.dll",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
@@ -29,7 +29,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/apsim.dll",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/apsim.dll",
             "args": [
                 "document",
                 "${workspaceFolder}/Examples/Wheat.apsimx"
@@ -43,7 +43,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/apsim-server.dll",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/apsim-server.dll",
             "args": [
                 "-vkrf",
                 "Examples/Potato.apsimx",

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SelfContained>false</SelfContained>
@@ -16,18 +16,12 @@
     <ProjectReference Include="../Models/Models.csproj" />
     <PackageReference Include="CairoSharp" Version="3.24.24.38" />
     <PackageReference Include="Mapsui" Version="3.0.2" />
-    <PackageReference Include="Markdig" Version="0.30.4" />
+    <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
     <EmbeddedResource Include="Resources\**" />
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
     <None Remove="Resources\Images\Swim-layers.png" />
-  </ItemGroup>
-
-  <!-- .NET Core-specific references -->
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
-    <PackageReference Include="MigraDocCore.Rendering" Version="1.3.43" />
-    <PackageReference Include="PdfSharpCore" Version="1.3.43" />
     <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
     <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.2" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
