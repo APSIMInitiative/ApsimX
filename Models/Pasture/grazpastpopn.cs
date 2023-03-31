@@ -2734,12 +2734,12 @@
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="part">Plant part - leaf, stem, root, seed or total</param>
-        /// <param name="DMD"></param>
+        /// <param name="iDMD"></param>
         /// <param name="elem"></param>
         /// <returns></returns>
-        public double GetHerbageConc(int comp, int part, int DMD, TPlantElement elem)
+        public double GetHerbageConc(int comp, int part, int iDMD, TPlantElement elem)
         {
-            return PastureUtil.Div0(this.GetHerbageNutr(comp, part, DMD, elem), this.GetHerbageMass(comp, part, DMD));
+            return PastureUtil.Div0(this.GetHerbageNutr(comp, part, iDMD, elem), this.GetHerbageMass(comp, part, iDMD));
         }
 
         /// <summary>

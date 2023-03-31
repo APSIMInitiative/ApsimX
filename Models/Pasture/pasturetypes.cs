@@ -1,9 +1,134 @@
 ﻿
+using Models.Core;
 using System;
 using System.IO.Pipes;
+using static Models.GrazPlan.GrazType;
 
 namespace Models.GrazPlan
 {
+    [Serializable]
+    public class WaterInfo
+    {
+        public string Name;
+        public string PlantType;
+        [Units("kg/m^2")]
+        public double Demand;
+        public WaterLayer[] Layer;
+    }
+
+    [Serializable] 
+    public class WaterLayer 
+    {
+        [Units("mm")]
+        public double Thickness;
+        
+        [Units("kg/m^2")]
+        public double MaxSupply;
+
+        [Units("mm/mm^3")]
+        public double RLD;
+        
+        [Units("mm")]
+        public double Radius;
+    }
+
+    [Serializable]
+    public class Canopy
+    {
+        public string Name;
+        public string PlantType;
+        public CanopyLayer[] Layer;
+    }
+
+    [Serializable]
+    public class CanopyLayer
+    {
+        /// <summary>m</summary>
+        [Units("m")]
+        public double Thickness;
+
+        /// <summary>m^2/m^2</summary>
+        [Units("m^2/m^2")]
+        public double AreaIndex;
+        
+        /// <summary>-</summary>
+        public double CoverGreen;
+        
+        /// <summary>-</summary>
+        public double CoverTotal;
+    }
+
+    [Serializable]
+    public class Leachate
+    {
+        public double N;    // kg/ha
+        public double P;    // kg/ha
+        public double S;    // kg/ha
+    }
+    
+
+    [Serializable]
+    public class OrganicMatter
+    {
+        /// <summary>kg/ha</summary>
+        public double Weight;
+        /// <summary>kg/ha</summary>
+        public double N;
+        /// <summary>kg/ha</summary>
+        public double P;
+        /// <summary>kg/ha</summary>
+        public double S;
+        /// <summary>mol/ha</summary>
+        public double AshAlk;
+    }
+
+    [Serializable]
+    public class Residue : OrganicMatter
+    {
+        public void CopyFrom(DM_Pool Pool)
+        {
+                Weight = Pool.DM;                    // kg/ha            
+                N = Pool.Nu[(int)TPlantElement.N];   // kg/ha            
+                P = Pool.Nu[(int)TPlantElement.P];   // kg/ha            
+                S = Pool.Nu[(int)TPlantElement.S];   // kg/ha            
+                AshAlk = Pool.AshAlk;                // mol/ha           
+        }
+    }
+
+    [Serializable]
+    public class Allocation
+    {
+        public double Leaf;
+        public double Stem;
+        public double Root;
+        public double Seed;
+    }
+    
+
+    [Serializable]
+    public class HerbageProfile
+    {
+        /// <summary>mm</summary>
+        public double[] bottom;
+        /// <summary>mm</summary>
+        public double[] top;
+        /// <summary>kg/ha</summary>
+        public double[] leaf;
+        /// <summary>kg/ha</summary>
+        public double[] stem;
+        /// <summary>kg/ha</summary>
+        public double[] head;
+
+        public HerbageProfile(int items)
+        {
+            bottom = new double[items];
+            top = new double[items];
+            leaf = new double[items];
+            stem = new double[items];
+            head = new double[items];
+        }
+    }
+
     [Serializable]
     public class Herbage
     {
@@ -98,7 +223,7 @@ namespace Models.GrazPlan
     public class SoilLayer
     {
         public double thickness;    // mm
-        public double amount;       // kg/m^2 (water), fract (roots propn)
+        public double amount;       // kg/m^2 (water), fract (roots propn), kg/ha (nutr uptake)
     }
 
     /// <summary>
