@@ -30,7 +30,6 @@ namespace Models.Functions
 
         /// <summary>The start stage name in numeric values</summary>
         [Description("Numeric Stage to start accumulation")]
-        [Display(Type = DisplayType.CropStageName)]
         public Double StartStageName { get; set; }
 
         /// <summary>The end stage name</summary>

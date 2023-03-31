@@ -215,8 +215,11 @@ namespace Models.CLEM
                             NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
                         }
                     });
-                    ReportDetails = herdResult.FirstOrDefault().Info;
-                    ReportItemGenerated(ReportDetails);
+                    if (herdResult.Any())
+                    {
+                        ReportDetails = herdResult.FirstOrDefault().Info;
+                        ReportItemGenerated(ReportDetails);
+                    }
                 }
             }
             else

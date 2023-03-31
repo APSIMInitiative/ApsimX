@@ -679,7 +679,7 @@ namespace APSIM.Shared.Utilities
                     if (excelFriendly)
                         writer.Write(stringTable.Columns[i].ColumnName);
                     else
-                        writer.Write("{0," + columnWidths[i] + "}", stringTable.Columns[i].ColumnName);
+                        writer.Write(stringTable.Columns[i].ColumnName);
                 }
                 writer.Write(Environment.NewLine);
             }
@@ -694,7 +694,7 @@ namespace APSIM.Shared.Utilities
                     if (excelFriendly)
                         writer.Write(row[i]);
                     else
-                        writer.Write("{0," + columnWidths[i] + "}", row[i]);
+                        writer.Write(row[i]);
                 }
                 writer.Write(Environment.NewLine);
             }

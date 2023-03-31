@@ -1,5 +1,4 @@
 ﻿# if NETCOREAPP
-using TreeModel = Gtk.ITreeModel;
 #endif
 using UserInterface.Presenters;
 
@@ -51,13 +50,6 @@ namespace UserInterface.Views
         /// Invoked when a drag operation has commenced. Need to create a DragObject.
         /// </summary>
         event EventHandler<DragStartArgs> DragStarted;
-    }
-
-    public class IkonView : IconView
-    {
-        public IkonView(TreeModel model) : base(model) { }
-
-
     }
 
     /// <summary>A list view.</summary>

@@ -406,9 +406,11 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false);
-                    soil.Children.Add(new CERESSoilTemperature());
-                    soil.OnCreated();
+                    var soilXML = $"<folder>{soilNodes[0].OuterXml}</folder>";
+                    var soilFolder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
+
+                    var soil = soilFolder.Children[0] as Soil;
+                    InitialiseSoil(soil);
 
                     soils.Add(new SoilFromDataSource()
                     {
