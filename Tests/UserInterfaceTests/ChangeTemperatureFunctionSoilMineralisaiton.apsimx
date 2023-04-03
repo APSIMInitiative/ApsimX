@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
@@ -34,7 +34,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "C:\\Work\\Repos\\ApsimInitiative\\ApsimX\\Examples\\WeatherFiles\\lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -222,7 +222,7 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing Models.Functions;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\n        [Link(Path=\"[Nutrient].FOMLignin.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFLignin;\n\t\t[Link(Path=\"[Nutrient].FOMCellulose.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFCellulose;\n\t\t[Link(Path=\"[Nutrient].FOMCarbohydrate.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFCarbohydrate;\n\t\t[Link(Path=\"[Nutrient].Microbial.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFMicrobial;\n\t\t[Link(Path=\"[Nutrient].Humic.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFHumic;\n\t\t[Link(Path=\"[Nutrient].Nitrification.Rate.CERESMineralisationTemperatureFactor\")] private CERESMineralisationTemperatureFactor TFNitrification;\n\t\t\n\t\t\n        [Description(\"New base temperature for decomposition (oC)\")] public double BaseTemp { get; set; }\n        [Description(\"New optimum temperature for decomposition (oC)\")] public double OptTemp { get; set; }\n        \n        \n        [Separator(\"To which soil organic matter fractions should the above values apply?\")]\n\n        [Description(\"Apply these to the FOM Lignin fraction?\")] public bool DoLignin { get; set; }\n        [Description(\"Apply these to the FOM Cellulose fraction?\")] public bool DoCellulose { get; set; }\n        [Description(\"Apply these to the FOM Carbohydrate fraction?\")] public bool DoCarbohydrate { get; set; }\n        [Description(\"Apply these to the Microbial fraction?\")] public bool DoMicrobial { get; set; }\n        [Description(\"Apply these to the Humic fraction?\")] public bool DoHumic { get; set; }\n        [Description(\"Apply these to the Nitrification rate?\")] public bool DoNitrification { get; set; }\n\n\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\n   \t\t\tif (DoLignin)\n   \t\t\t{\n   \t\t\t\tTFLignin.MineralisationSTBase = BaseTemp;\n        \t\tTFLignin.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoCellulose)\n   \t\t\t{\n   \t\t\t\tTFCellulose.MineralisationSTBase = BaseTemp;\n        \t\tTFCellulose.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoCarbohydrate)\n   \t\t\t{\n   \t\t\t\tTFCarbohydrate.MineralisationSTBase = BaseTemp;\n        \t\tTFCarbohydrate.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoMicrobial)\n   \t\t\t{\n   \t\t\t\tTFMicrobial.MineralisationSTBase = BaseTemp;\n        \t\tTFMicrobial.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoHumic)\n   \t\t\t{\n   \t\t\t\tTFHumic.MineralisationSTBase = BaseTemp;\n        \t\tTFHumic.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoNitrification)\n   \t\t\t{\n   \t\t\t\tTFNitrification.MineralisationSTBase = BaseTemp;\n        \t\tTFNitrification.MineralisationSTOpt = OptTemp;\n        \t}\n\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing Models.Functions;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\n        [Link(Type = LinkType.Path, Path=\"[Nutrient].FOMLignin.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFLignin;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].FOMCellulose.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFCellulose;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].FOMCarbohydrate.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFCarbohydrate;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].Microbial.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFMicrobial;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].Humic.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFHumic;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].Nitrification.Rate.CERESMineralisationTemperatureFactor\")] private CERESMineralisationTemperatureFactor TFNitrification;\n\t\t\n\t\t\n        [Description(\"New base temperature for decomposition (oC)\")] public double BaseTemp { get; set; }\n        [Description(\"New optimum temperature for decomposition (oC)\")] public double OptTemp { get; set; }\n        \n        \n        [Separator(\"To which soil organic matter fractions should the above values apply?\")]\n\n        [Description(\"Apply these to the FOM Lignin fraction?\")] public bool DoLignin { get; set; }\n        [Description(\"Apply these to the FOM Cellulose fraction?\")] public bool DoCellulose { get; set; }\n        [Description(\"Apply these to the FOM Carbohydrate fraction?\")] public bool DoCarbohydrate { get; set; }\n        [Description(\"Apply these to the Microbial fraction?\")] public bool DoMicrobial { get; set; }\n        [Description(\"Apply these to the Humic fraction?\")] public bool DoHumic { get; set; }\n        [Description(\"Apply these to the Nitrification rate?\")] public bool DoNitrification { get; set; }\n\n\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\n   \t\t\tif (DoLignin)\n   \t\t\t{\n   \t\t\t\tTFLignin.MineralisationSTBase = BaseTemp;\n        \t\tTFLignin.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoCellulose)\n   \t\t\t{\n   \t\t\t\tTFCellulose.MineralisationSTBase = BaseTemp;\n        \t\tTFCellulose.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoCarbohydrate)\n   \t\t\t{\n   \t\t\t\tTFCarbohydrate.MineralisationSTBase = BaseTemp;\n        \t\tTFCarbohydrate.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoMicrobial)\n   \t\t\t{\n   \t\t\t\tTFMicrobial.MineralisationSTBase = BaseTemp;\n        \t\tTFMicrobial.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoHumic)\n   \t\t\t{\n   \t\t\t\tTFHumic.MineralisationSTBase = BaseTemp;\n        \t\tTFHumic.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoNitrification)\n   \t\t\t{\n   \t\t\t\tTFNitrification.MineralisationSTBase = BaseTemp;\n        \t\tTFNitrification.MineralisationSTOpt = OptTemp;\n        \t}\n\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "BaseTemp",
@@ -802,8 +802,7 @@
                 "[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor.MineralisationSTOpt as OptST",
                 "",
                 "",
-                "// Why does the report line below not work?",
-                "//[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor "
+                "[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor.Value(1)  as TF"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -1409,8 +1408,7 @@
                 "[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor.MineralisationSTBase as BaseST",
                 "[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor.MineralisationSTOpt as OptST",
                 "",
-                "// Why does the report line below not work?",
-                "//[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor[1] as ST"
+                "[Soil].Nutrient.Nitrification.Rate.CERESMineralisationTemperatureFactor.Value(1)  as TF"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -1661,7 +1659,7 @@
               "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "Base temperature",
+              "Name": "Base and opt temperature",
               "ResourceName": null,
               "Children": [
                 {
@@ -1682,7 +1680,7 @@
                   "YFieldName": "BaseST",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "ShowInLegend": false,
+                  "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
@@ -1704,7 +1702,7 @@
                   "FactorToVaryLines": null,
                   "Marker": 11,
                   "MarkerSize": 0,
-                  "Line": 0,
+                  "Line": 1,
                   "LineThickness": 0,
                   "TableName": "Results",
                   "XFieldName": "Date",
@@ -1717,6 +1715,72 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "TF",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Zone",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Results",
+                  "XFieldName": "Date",
+                  "YFieldName": "TF",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
