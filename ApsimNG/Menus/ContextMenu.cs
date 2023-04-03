@@ -12,7 +12,7 @@
     using Models.Soils;
     using APSIM.Shared.Utilities;
     using Models.Storage;
-    //using Utility = ApsimNG.Utility;
+    using Utility;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using System.Reflection;
@@ -26,7 +26,6 @@
     using System.Threading.Tasks;
     using System.Threading;
     using APSIM.Server.Sensibility;
-    using Microsoft.IdentityModel.Tokens;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -295,16 +294,13 @@
                 string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
                 string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
-
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
-                if (!text.IsNullOrEmpty())
+
+                IModel currentNode = explorerPresenter.CurrentNode as IModel;
+                if (currentNode != null)
                 {
-                    IModel currentNode = explorerPresenter.CurrentNode as IModel;
-                    if (currentNode != null)
-                    {
-                        ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
-                        explorerPresenter.CommandHistory.Add(command, true);
-                    }
+                    ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
+                    explorerPresenter.CommandHistory.Add(command, true);
                 }
             }
             catch (Exception err)
