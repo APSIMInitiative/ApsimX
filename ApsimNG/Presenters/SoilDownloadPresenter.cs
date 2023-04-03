@@ -318,7 +318,7 @@ namespace UserInterface.Presenters
                 ICommand addSoil = new AddModelCommand(model, matchingSoil, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(addSoil);
             }
-            explorerPresenter.Populate();
+            //explorerPresenter.Populate();
         }
 
         /// <summary>
