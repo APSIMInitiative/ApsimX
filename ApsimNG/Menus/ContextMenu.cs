@@ -295,12 +295,15 @@
                 string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
-
-                IModel currentNode = explorerPresenter.CurrentNode as IModel;
-                if (currentNode != null)
+                if (!string.IsNullOrEmpty(text))
                 {
-                    ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
-                    explorerPresenter.CommandHistory.Add(command, true);
+
+                    IModel currentNode = explorerPresenter.CurrentNode as IModel;
+                    if (currentNode != null)
+                    {
+                        ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                    }
                 }
             }
             catch (Exception err)
