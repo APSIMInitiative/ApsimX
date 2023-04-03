@@ -210,7 +210,7 @@
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false);
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false).NewModel as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }

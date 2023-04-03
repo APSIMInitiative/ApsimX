@@ -34,7 +34,7 @@
         /// <returns>null for success or a list of exceptions.</returns>
         public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
-            IModel model = FileFormat.ReadFromFile<IModel>(file, e => throw e, false);
+            IModel model = FileFormat.ReadFromFile<IModel>(file, e => throw e, false).NewModel as IModel;
             Runner runner = new Runner(file);
             return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
         }
