@@ -7,6 +7,7 @@ using Models.Soils;
 using APSIM.Shared.Utilities;
 using UserInterface.Views;
 using UserInterface.EventArguments;
+using UserInterface.Commands;
 
 namespace UserInterface.Presenters
 {

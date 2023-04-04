@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using APSIM.Shared.Utilities;
 using Models;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
