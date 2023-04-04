@@ -1,12 +1,12 @@
 ﻿using System;
 using UserInterface.Interfaces;
-
+using Models.Core;
+using Models.GrazPlan;
 
 
 namespace UserInterface.Commands
 {
-    using Models.Core;
-    using Models.GrazPlan;
+
 
     class AddSupplementCommand : ICommand
     {

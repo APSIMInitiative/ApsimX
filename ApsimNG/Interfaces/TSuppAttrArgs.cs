@@ -1,7 +1,8 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+using Models.GrazPlan;
+
+namespace UserInterface.Interfaces
 {
-    using System;
-    using Models.GrazPlan;
 
     public class TSuppAttrArgs : EventArgs
     {

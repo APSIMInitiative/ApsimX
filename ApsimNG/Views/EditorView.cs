@@ -1,20 +1,17 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using Gtk;
+using Utility;
+using System.Globalization;
+using System.Linq;
+using System.Collections.Generic;
+using GtkSource;
+using System.Text;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
+using UserInterface.Intellisense;
+
+namespace UserInterface.Views
 {
-    using System;
-    using System.Reflection;
-    using EventArguments;
-    using Gtk;
-    using System.IO;
-    using Utility;
-    using Cairo;
-    using System.Globalization;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Intellisense;
-    using Interfaces;
-    using GtkSource;
-    using Extensions;
-    using System.Text;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.

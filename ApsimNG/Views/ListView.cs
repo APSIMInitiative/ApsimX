@@ -9,41 +9,6 @@ using TreeModel = Gtk.ITreeModel;
 namespace UserInterface.Views
 {
 
-    /// <summary>An interface for a list view</summary>
-    public interface IListView
-    {
-        /// <summary>Invoked when the user changes the selection</summary>
-        event EventHandler Changed;
-
-        /// <summary>Get or sets the datasource for the view.</summary>
-        DataTable DataSource { get; set; }
-
-        /// <summary>Gets or sets the selected row in the data source.</summary>
-        int[] SelectedIndicies { get; set; }
-
-        /// <summary>Sets the render details for particular cells.</summary>
-        List<CellRendererDescription> CellRenderDetails { get; set; }
-
-        /// <summary>Add a column to the list view.</summary>
-        /// <param name="columnName">The column heading.</param>
-        /// <param name="colType">The System.Type if other than string</param>
-        void AddColumn(string columnName, System.Type colType = null);
-
-        /// <summary>Clear all columns and data.</summary>
-        void Clear();
-
-        /// <summary>Clear all data.</summary>
-        void ClearRows();
-
-        /// <summary>Add a new row to list view.</summary>
-        /// <param name="itemArray">A list of items to add.</param>
-        void AddRow(object[] itemArray);
-
-        /// <summary>Add a new row to list view.</summary>
-        /// <param name="index">The index of the row to remove.</param>
-        void RemoveRow(int index);
-    }
-
     /// <summary>A list view.</summary>
     public class ListView : ViewBase, IListView
     {
@@ -469,5 +434,40 @@ namespace UserInterface.Views
                 return string.Compare(o1.ToString(), o2.ToString());
             return 0;
         }
+    }
+
+    /// <summary>An interface for a list view</summary>
+    public interface IListView
+    {
+        /// <summary>Invoked when the user changes the selection</summary>
+        event EventHandler Changed;
+
+        /// <summary>Get or sets the datasource for the view.</summary>
+        DataTable DataSource { get; set; }
+
+        /// <summary>Gets or sets the selected row in the data source.</summary>
+        int[] SelectedIndicies { get; set; }
+
+        /// <summary>Sets the render details for particular cells.</summary>
+        List<CellRendererDescription> CellRenderDetails { get; set; }
+
+        /// <summary>Add a column to the list view.</summary>
+        /// <param name="columnName">The column heading.</param>
+        /// <param name="colType">The System.Type if other than string</param>
+        void AddColumn(string columnName, System.Type colType = null);
+
+        /// <summary>Clear all columns and data.</summary>
+        void Clear();
+
+        /// <summary>Clear all data.</summary>
+        void ClearRows();
+
+        /// <summary>Add a new row to list view.</summary>
+        /// <param name="itemArray">A list of items to add.</param>
+        void AddRow(object[] itemArray);
+
+        /// <summary>Add a new row to list view.</summary>
+        /// <param name="index">The index of the row to remove.</param>
+        void RemoveRow(int index);
     }
 }

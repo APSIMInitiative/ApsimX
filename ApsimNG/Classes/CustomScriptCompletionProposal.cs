@@ -1,11 +1,12 @@
+using System;
+using Gdk;
+using GLib;
+using GtkSource;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Intellisense
 {
-    using System;
-    using Gdk;
-    using GLib;
-    using EventArguments;
-    using GtkSource;
+
 
 
     /// <summary>
