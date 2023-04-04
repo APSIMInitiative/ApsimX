@@ -1,16 +1,13 @@
+using Gtk;
+using System;
+using System.IO;
+using System.Net.NetworkInformation;
+using APSIM.Shared.Utilities;
+using System.Reflection;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.IO;
-    using System.Net.NetworkInformation;
-    using System.Globalization;
-    using Extensions;
-    using System.Runtime.InteropServices;
-    using APSIM.Shared.Utilities;
-    using System.Reflection;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
