@@ -1,9 +1,7 @@
 using APSIM.Shared.Utilities;
 using Gtk;
-using Models;
 using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,7 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UserInterface.Commands;
-using UserInterface.Extensions;
 using UserInterface.Presenters;
 using UserInterface.Views;
 using MessageType = Gtk.MessageType;
