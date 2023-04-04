@@ -1,25 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
-    using System.Linq;
-    using System.Diagnostics;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using EventArguments;
-    using Utility;
-    using Models.Core.ApsimFile;
-    using Models.Core.Apsim710File;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using System.Linq;
+using Utility;
+using Models.Core.ApsimFile;
+using Models.Core.Apsim710File;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
     /// which is a tab control where each tabs represent an .apsimx file. Each tab
@@ -101,7 +95,7 @@
         /// Detach this presenter from the view.
         /// </summary>
         /// <param name="view">The view used for this object</param>
-        public void Detach(object view)
+        public void Detach()
         {
             this.view.AllowClose -= this.OnClosing;
             this.view.StartPage1.List.DoubleClicked -= this.OnFileDoubleClicked;
@@ -473,7 +467,7 @@
         /// <param name="fileSpec">The file specification to filter the files.</param>
         /// <param name="oldFilename">The current file name.</param>
         /// <returns>Returns the new file name or null if action cancelled by user.</returns>
-        public string AskUserForSaveFileName(string fileSpec, string oldFilename)
+        public string AskUserForSaveFileName(string fileSpec)
         {
             IFileDialog fileChooser = new FileDialog()
             {
@@ -781,7 +775,7 @@
                 string fileName = this.view.GetMenuItemFileName(obj);
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    string newName = this.AskUserForSaveFileName("ApsimX files|*.apsimx", fileName);
+                    string newName = this.AskUserForSaveFileName("ApsimX files|*.apsimx");
                     if (!string.IsNullOrEmpty(newName) && newName != fileName)
                     {
                         try
@@ -818,7 +812,7 @@
                 {
                     string newFileName = "Copy of " + Path.GetFileName(fileName);
                     string newFilePath = Path.Combine(Path.GetDirectoryName(fileName), newFileName);
-                    string copyName = this.AskUserForSaveFileName("ApsimX files|*.apsimx", newFilePath);
+                    string copyName = this.AskUserForSaveFileName("ApsimX files|*.apsimx");
                     if (!string.IsNullOrEmpty(copyName))
                     {
                         try
