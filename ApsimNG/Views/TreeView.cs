@@ -1,19 +1,19 @@
+using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Timers;
+using UserInterface.Interfaces;
+using Utility;
+using TreeModel = Gtk.ITreeModel;
+
+
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Serialization;
-    using System.Timers;
-    using Utility;
-    using TreeModel = Gtk.ITreeModel;
-
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.

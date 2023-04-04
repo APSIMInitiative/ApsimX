@@ -1,20 +1,20 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using Utility;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using Extensions;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Utility;
-    using Views;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -333,7 +333,7 @@
         /// <returns>True if file was saved.</returns>
         public bool SaveAs()
         {
-            string newFileName = MainPresenter.AskUserForSaveFileName("ApsimX files|*.apsimx", this.ApsimXFile.FileName);
+            string newFileName = MainPresenter.AskUserForSaveFileName("ApsimX files|*.apsimx");
             if (newFileName != null)
             {
                 try

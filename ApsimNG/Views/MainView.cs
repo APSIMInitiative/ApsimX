@@ -1,20 +1,18 @@
-﻿namespace UserInterface.Views
-{
-    using APSIM.Shared.Utilities;
-    using Gtk;
-    using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using System.Text;
+using Utility;
+using MessageType = Models.Core.MessageType;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
 
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using global::UserInterface.Extensions;
-    using System.Text;
-    using Utility;
-    using MessageType = Models.Core.MessageType;
+namespace UserInterface.Views
+{
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -1072,7 +1070,7 @@
         /// <param name="font">The new default font.</param>
         private void ChangeFont(Pango.FontDescription font)
         {
-            SetWidgetFont(mainWidget, font);
+            SetWidgetFont(font);
 
             //Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
@@ -1082,7 +1080,7 @@
         /// </summary>
         /// <param name="widget"></param>
         /// <param name="newFont"></param>
-        private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
+        private void SetWidgetFont(Pango.FontDescription newFont)
         {
 
             int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);

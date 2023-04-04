@@ -1,18 +1,19 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using Views;
 
     public class ExperimentPresenter : IPresenter
     {
@@ -179,7 +180,7 @@
         {
             try
             {
-                var path = explorerPresenter.MainPresenter.AskUserForSaveFileName("*.csv", null);
+                var path = explorerPresenter.MainPresenter.AskUserForSaveFileName("*.csv");
                 if (path != null)
                 {
                     // Clone the datatable and add an enabled column.
