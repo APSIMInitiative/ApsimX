@@ -4,13 +4,12 @@
 // Shortcuts (accelerators in Gtk terminology) haven't yet been implemented.
 // Link doesn't work, but it appears that move and link aren't working in the Windows.Forms implementation either.
 // Actually, Move "works" here but doesn't undo correctly
+using Gtk;
+using System;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
     
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left

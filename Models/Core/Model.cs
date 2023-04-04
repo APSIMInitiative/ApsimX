@@ -1,14 +1,15 @@
-﻿namespace Models.Core
-{
-    using APSIM.Shared.Utilities;
-    using Models.Factorial;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using System.Linq;
-    using System.Reflection;
+﻿using APSIM.Shared.Utilities;
+using Models.Factorial;
+using System;
+using APSIM.Shared.Documentation;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Linq;
+using System.Reflection;
 
+namespace Models.Core
+{
+    
     /// <summary>
     /// Base class for all models
     /// </summary>
