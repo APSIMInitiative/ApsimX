@@ -1,26 +1,13 @@
-﻿using static Models.GrazPlan.GrazType;
-
-namespace Models.GrazPlan
+﻿namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using DocumentFormat.OpenXml.EMMA;
-    using MathNet.Numerics.Random;
-    using Models.Climate;
-    using Models.PMF.Interfaces;
+    using Models.Core;
+    using Models.Interfaces;
     using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
     using StdUnits;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Models.Core;
-    using Models.Interfaces;
     using static Models.GrazPlan.GrazType;
-    using Models.PMF;
-    using DocumentFormat.OpenXml.Wordprocessing;
-    using DocumentFormat.OpenXml.Drawing.Charts;
+    using static Models.GrazPlan.PastureUtil;
 
     /// <summary>
     /// 
@@ -35,10 +22,10 @@ namespace Models.GrazPlan
 
         /// <summary>Layer thicknesses</summary>
         protected double[] FInputProfile = new double[GrazType.MaxSoilLayers + 1];      // [1..
-        
+
         /// <summary>Layer values</summary>
         protected double[] FLayerValues = new double[GrazType.MaxSoilLayers + 1];       // [1..
-        
+
         /// <summary></summary>
         protected double[] FSoilValues = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers] SURFACE = 0
         protected double[] FSoilDepths = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers]
@@ -320,38 +307,18 @@ namespace Models.GrazPlan
         #endregion
 
         #region Readable properties ====================================================
-        /*
-         Data exchange vars
-            AddOneVariable(ref Idx, PastureProps.prpCANOPY, "canopy", PastureProps.typeCANOPY, "Canopy characteristics of a child APSIM-Plant module. The array has one member per sub-canopy", "");
-            AddOneVariable(ref Idx, PastureProps.prpWATER_INFO, "water_info", PastureProps.typeWATER_INFO, "Water demand and supply attributes of a child APSIM-Plant module (one member per sub-population)", "");
-            AddOneVariable(ref Idx, PastureProps.prpPLANT2STOCK, "plant2stock", PastureProps.typePLANT2STOCK, "Description of the pasture for use by the ruminant model", "");
-            AddOneVariable(ref Idx, PastureProps.prpGAI, "gai", "<type kind=\"double\" unit=\"m^2/m^2\"/>", "Green area index", "");
-            AddOneVariable(ref Idx, PastureProps.prpDAI, "dai", "<type kind=\"double\" unit=\"m^2/m^2\"/>", "Dead area index", "");
-            AddOneVariable(ref Idx, PastureProps.prpCOVER_G, "cover_green", "<type kind=\"double\" unit=\"m^2/m^2\"/>", "Green cover", "");
-            AddOneVariable(ref Idx, PastureProps.prpCOVER_T, "cover_tot", "<type kind=\"double\" unit=\"m^2/m^2\"/>", "Total cover", "");
-            AddOneVariable(ref Idx, PastureProps.prpCOVER_R, "residue_cover", "<type kind=\"double\" unit=\"m^2/m^2\"/>", "Cover of standing dead and litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpHEIGHT, "height", "<type kind=\"double\" unit=\"mm\"/>", "Average height of the pasture", "");
-            AddOneVariable(ref Idx, PastureProps.prpNH4_UPTAKE, "nh4_uptake", PastureProps.typeNUTR_UPTAKE, "Ammonium-N uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpNO3_UPTAKE, "no3_uptake", PastureProps.typeNUTR_UPTAKE, "Nitrate-N uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpPOX_UPTAKE, "pox_uptake", PastureProps.typeNUTR_UPTAKE, "Phosphate-P uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpSO4_UPTAKE, "so4_uptake", PastureProps.typeNUTR_UPTAKE, "Sulphate-S uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpWATERPARAMS, "water_params", "<type kind=\"double\" unit=\"\"      array=\"T\"/>", "Parameters used by the Paddock component to determine water uptake", "");
-            AddOneVariable(ref Idx, PastureProps.prpWATERDEMAND, "WaterDemand", "<type kind=\"double\" unit=\"mm\"/>", "Total water demand", "");
-            //AddOneVariable(ref Idx, PastureProps.prpAVAILANIMAL, "availabletoanimal",typeCOHORTAVAIL,                                   "Characteristics of herbage available for defoliation",   "");
-        */
-        // readable properties
 
-        /// <summary>
-        /// Total dry weight of all herbage
-        /// </summary>
-        [Units("kg/ha")]
-        public double ShootDM {
+        /// <summary>Canopy characteristics of a child APSIM-Plant module. The array has one member per sub-canopy</summary>
+        [Units("-")]
+        public Canopy[] Canopy
+        {
             get
             {
                 string sUnit = PastureModel.MassUnit;
                 PastureModel.MassUnit = "kg/ha";
                 
-                double result = PastureModel.GetHerbageMass(GrazType.sgGREEN, TOTAL, TOTAL);
+                Canopy[] result = MakeCanopy(PastureModel);
+
                 PastureModel.MassUnit = sUnit;
 
                 return result;
@@ -359,213 +326,1680 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Dry weight of herbage of seedlings in each digestibility class
+        /// 
         /// </summary>
+        /// <param name="Model"></param>
+        /// <param name="iComp"></param>
+        /// <returns>A canopy object</returns>
+        private Canopy MakeCanopyElement(TPasturePopulation Model, int iComp)
+        {
+            Canopy anElement = new Canopy();
+
+            if (iComp == GrazType.sgLITTER)    
+                anElement.Name = sCOMPNAME[stLITT1];
+            else
+                anElement.Name = sCOMPNAME[iComp];
+            anElement.PlantType = "pasture";
+            anElement.Layer = new CanopyLayer[1];
+
+            anElement.Layer[0].Thickness = 0.001 * Model.Height_MM();             // thickness (in metres)    
+            anElement.Layer[0].AreaIndex = Model.AreaIndex(iComp);            
+            if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
+            {
+                anElement.Layer[0].CoverGreen = Model.Cover(iComp);
+                anElement.Layer[0].CoverTotal = anElement.Layer[0].CoverGreen;
+            }
+            else // stDEAD, sgLITTER
+            {
+                anElement.Layer[0].CoverGreen = 0.0;               
+                anElement.Layer[0].CoverTotal = Model.Cover(iComp);
+            }
+
+            return anElement;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        private Canopy[] MakeCanopy(TPasturePopulation Model)
+        {
+            int iCount;
+            int iComp;
+            uint Jdx;
+
+            iCount = 0;
+            for (iComp = stSEEDL; iComp <= stDEAD; iComp++)
+            {
+                if (Model.AreaIndex(iComp) > 0.0)
+                {
+                    iCount++;
+                }
+            }
+
+            if (Model.AreaIndex(sgLITTER) > 0.0)
+            {
+                iCount++;
+            }
+
+            Canopy[] result = new Canopy[iCount];
+
+            Jdx = 0;
+            for (iComp = stSEEDL; iComp <= stDEAD; iComp++)
+            {
+                if (Model.AreaIndex(iComp) > 0.0)
+                {
+                    Jdx++;
+                    result[Jdx - 1] = MakeCanopyElement(Model, iComp);
+                }
+            }
+
+            if (Model.AreaIndex(sgLITTER) > 0.0)
+            {
+                Jdx++;
+                result[Jdx - 1] = MakeCanopyElement(Model, sgLITTER);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        private WaterInfo[] MakeWaterInfo(TPasturePopulation Model)
+        {
+            int iCount;
+            int iComp;
+            double[] fRootLD;
+            double[] fRootRad;
+            double[] fSupply;
+            int Jdx, Ldx;
+
+            iCount = 0;
+            for (iComp = stSEEDL; iComp <= stSENC; iComp++)
+            {
+                if (Model.WaterDemand(iComp) > 0.0)
+                {
+                    iCount++;
+                }
+            }
+
+            WaterInfo[] result = new WaterInfo[iCount];
+            
+            iCount = Model.SoilLayerCount;
+            Jdx = 0;
+            for (iComp = stSEEDL; iComp <= stSENC; iComp++)
+            {
+                if (Model.WaterDemand(iComp) > 0.0)
+                {
+                    fSupply = Model.WaterMaxSupply(iComp);
+                    fRootLD = Model.EffRootLengthD(iComp);
+                    fRootRad = Model.RootRadii(iComp);
+
+                    Jdx++;
+                    result[Jdx - 1].Name = sCOMPNAME[iComp];
+                    result[Jdx - 1].PlantType = "pasture";
+                    result[Jdx - 1].Demand = Model.WaterDemand(iComp);
+                    result[Jdx - 1].Layer = new WaterLayer[iCount];
+                    for (Ldx = 1; Ldx <= iCount; Ldx++)
+                    {
+                        result[Jdx - 1].Layer[Ldx-1].Thickness = Model.SoilLayer_MM[Ldx];
+                        result[Jdx - 1].Layer[Ldx - 1].MaxSupply = fSupply[Ldx];
+                        result[Jdx - 1].Layer[Ldx - 1].RLD = 1.0E-6 * fRootLD[Ldx]; // converted from m/m^3 to mm/mm^3 
+                        result[Jdx - 1].Layer[Ldx - 1].Radius = fRootRad[Ldx];    
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>Water demand and supply attributes (one member per sub-population)</summary>
+        [Units("-")]
+        public WaterInfo[] WaterDemandSupply
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                WaterInfo[] result = MakeWaterInfo(PastureModel);
+
+                PastureModel.MassUnit = sUnit;
+                return result;
+            }
+        }
+
+        /// <summary>Green area index</summary>
+        [Units("m^2/m^2")]
+        public double GAI
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.AreaIndex(GrazType.sgGREEN);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Dead area index</summary>
+        [Units("m^2/m^2")]
+        public double DAI
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.AreaIndex(GrazType.sgDRY);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Green cover</summary>
+        [Units("m^2/m^2")]
+        public double CoverGreen
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.Cover(GrazType.sgGREEN);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Total cover</summary>
+        [Units("m^2/m^2")]
+        public double CoverTotal
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.Cover(GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Cover of standing dead and litter</summary>
+        [Units("m^2/m^2")]
+        public double CoverResidue
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.Cover(GrazType.sgDRY);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Cover of standing dead and litter</summary>
+        [Units("mm")]
+        public double Height
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.Height_MM();
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Ammonium-N uptake from each soil layer</summary>
+        [Units("-")]
+        public SoilLayer[] NH4Uptake { get { return NutrUptake(TPlantNutrient.pnNH4); } }
+
+        /// <summary>Nitrate-N uptake from each soil layer</summary>
+        [Units("-")]
+        public SoilLayer[] NO3Uptake { get { return NutrUptake(TPlantNutrient.pnNO3); } }
+
+        /// <summary>Phosphate-P uptake from each soil layer</summary>
+        [Units("-")]
+        public SoilLayer[] POXUptake { get { return NutrUptake(TPlantNutrient.pnPOx); } }
+
+        /// <summary>Sulphate-S uptake from each soil layer</summary>
+        [Units("-")]
+        public SoilLayer[] SO4Uptake { get { return NutrUptake(TPlantNutrient.pnSO4); } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nutr"></param>
+        /// <returns></returns>
+        private SoilLayer[] NutrUptake(TPlantNutrient nutr)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+
+            double[][] Uptakes = PastureModel.GetNutrUptake(nutr);
+            SoilLayer[] result = new SoilLayer[PastureModel.SoilLayerCount];
+            double value;
+            for (uint Ldx = 1; Ldx <= PastureModel.SoilLayerCount; Ldx++)
+            {
+                value = 0.0;
+                for (int Kdx = 0; Kdx <= MAXNUTRAREAS - 1; Kdx++)
+                    value = value + Uptakes[Kdx][Ldx];
+
+                result[Ldx - 1].thickness = PastureModel.SoilLayer_MM[Ldx];
+                result[Ldx - 1].amount = value;
+            }
+
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>Parameters used by the Paddock component to determine water uptake</summary>
+        [Units("")]
+        public double[] WaterParams
+        {
+            get
+            {
+                double[] result;
+                if ((PastureModel.fWater_KL[1] > 0.0) && (PastureModel.fPlant_LL[1] > 0.0))
+                    result = new double[0];
+                else if (PastureModel.Params.iWaterUptakeVersion == 1)
+                    result = new double[2];
+                else
+                    result = new double[4];
+                for (int Idx = 1; Idx <= result.Length; Idx++)
+                    result[Idx - 1] = PastureModel.Params.WaterUseK[Idx];
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Total water demand
+        /// </summary>
+        [Units("mm")]
+        public double WaterDemand
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double fValue = 0.0;
+                for (int Idx = stSEEDL; Idx <= stSENC; Idx++)
+                    fValue += PastureModel.WaterDemand(Idx);
+                double result = fValue;
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /*
+         Data exchange vars
+          AddOneVariable(ref Idx, PastureProps.prpPLANT2STOCK, "plant2stock", PastureProps.typePLANT2STOCK, "Description of the pasture for use by the ruminant model", "");
+        //AddOneVariable(ref Idx, PastureProps.prpAVAILANIMAL, "availabletoanimal",typeCOHORTAVAIL,      "Characteristics of herbage available for defoliation",   "");
+        */
+
+        /// <summary>Total dry weight of all herbage</summary>
         [Units("kg/ha")]
-        public double[] shootDMQ { get; }
+        public double ShootDM { get { return GetDM(GrazType.TOTAL, GrazType.TOTAL); } }
 
-        /// <summary>
-        /// Average DM digestibility of all herbage
-        /// </summary>
-        [Units("g/g")]
-        public double ShootDMD { get; }
-
-        /// <summary>
-        /// Average crude protein content of all herbage
-        /// </summary>
-        [Units("g/g")]
-        public double ShootCP { get; }
-
-        /// <summary>
-        /// Average nitrogen content of all herbage
-        /// </summary>
-        [Units("g/g")]
-        public double ShootN { get; }
-
-        /// <summary>
-        /// Average phosphorous content of all herbage
-        /// </summary>
-        [Units("g/g")]
-        public double ShootP { get; }
-
-        /// <summary>
-        /// Average sulphur content of all herbage
-        /// </summary>
-        [Units("g/g")]
-        public double ShootS { get; }
-
-        /// <summary>
-        /// Total dry weight of seedlings
-        /// </summary>
+        /// <summary>Dry weight of herbage of all herbage in each digestibility class</summary>
         [Units("kg/ha")]
-        public double SeedlDM { get; }
+        public double[] shootDMQ { get { return GetDMQ(GrazType.TOTAL, GrazType.TOTAL); } }
 
-        /// <summary>
-        /// Dry weight of herbage of seedlings in each digestibility class
-        /// </summary>
+        /// <summary>Average DM digestibility of all herbage</summary>
+        [Units("g/g")]
+        public double ShootDMD { get { return GetDMD(GrazType.TOTAL, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of all herbage</summary>
+        [Units("g/g")]
+        public double ShootCP { get { return GetPlantCP(GrazType.TOTAL, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of all herbage</summary>
+        [Units("g/g")]
+        public double ShootN { get { return GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorous content of all herbage</summary>
+        [Units("g/g")]
+        public double ShootP { get { return GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of all herbage</summary>
+        [Units("g/g")]
+        public double ShootS { get { return GetPlantNutr(GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of seedlings</summary>
         [Units("kg/ha")]
-        public double[] SeedlMDq { get; }
+        public double SeedlDM { get { return GetDM(GrazType.stSEEDL, GrazType.TOTAL); } }
 
-        /// <summary>
-        /// Average DM digestibility of seedlings
-        /// </summary>
-        [Units("g/g")]
-        public double SeedlDMD { get; }
-
-        /// <summary>
-        /// Average crude protein content of seedlings
-        /// </summary>
-        [Units("g/g")]
-        public double SeedlCP { get; }
-
-        /// <summary>
-        /// Average nitrogen content of seedlings
-        /// </summary>
-        [Units("g/g")]
-        public double SeedlN { get; }
-        /// <summary>
-        /// Average phosphorus content of seedlings
-        /// </summary>
-        [Units("g/g")]
-        public double SeedlP { get; }
-        /// <summary>
-        /// Average sulphur content of seedlings
-        /// </summary>
-        [Units("g/g")]
-        public double SeedlS { get; }
-
-        /// <summary>
-        /// Total dry weight of herbage of established plants
-        /// </summary>
+        /// <summary>Dry weight of herbage of seedlings in each digestibility class</summary>
         [Units("kg/ha")]
-        public double EstabDM { get; }  //prpESTAB_DM
+        public double[] SeedlDMQ { get { return GetDMQ(GrazType.stSEEDL, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of seedlings</summary>
+        [Units("g/g")]
+        public double SeedlDMD { get { return GetDMD(GrazType.stSEEDL, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of seedlings</summary>
+        [Units("g/g")]
+        public double SeedlCP { get { return GetPlantCP(GrazType.stSEEDL, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of seedlings</summary>
+        [Units("g/g")]
+        public double SeedlN { get { return GetPlantNutr(GrazType.stSEEDL, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of seedlings</summary>
+        [Units("g/g")]
+        public double SeedlP { get { return GetPlantNutr(GrazType.stSEEDL, GrazType.TOTAL, TPlantElement.P); } }
+        /// <summary>Average sulphur content of seedlings</summary>
+        [Units("g/g")]
+        public double SeedlS { get { return GetPlantNutr(GrazType.stSEEDL, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of herbage of established plants</summary>
+        [Units("kg/ha")]
+        public double EstabDM { get { return GetDM(GrazType.stESTAB, GrazType.TOTAL); } }
+
+        /// <summary>Dry weight of herbage of established plants in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] EstabDMQ { get { return GetDMQ(GrazType.stESTAB, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of herbage of established plants</summary>
+        [Units("g/g")]
+        public double EstabDMD { get { return GetDMD(GrazType.stESTAB, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of herbage of established plants</summary>
+        [Units("g/g")]
+        public double EstabCP { get { return GetPlantCP(GrazType.stESTAB, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of herbage of established plants</summary>
+        [Units("g/g")]
+        public double EstabN { get { return GetPlantNutr(GrazType.stESTAB, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of herbage of established plants</summary>
+        [Units("g/g")]
+        public double EstabP { get { return GetPlantNutr(GrazType.stESTAB, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of herbage of established plants</summary>
+        [Units("g/g")]
+        public double EstabS { get { return GetPlantNutr(GrazType.stESTAB, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of herbage of senescing plants</summary>
+        [Units("kg/ha")]
+        public double SencDM { get { return GetDM(GrazType.stSENC, GrazType.TOTAL); } }
+
+        /// <summary>Dry weight of herbage of senescing plants in each digestibility clas</summary>
+        [Units("kg/ha")]
+        public double[] SencDMQ { get { return GetDMQ(GrazType.stSENC, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of herbage of senescing plants</summary>
+        [Units("g/g")]
+        public double SencDMD { get { return GetDMD(GrazType.stSENC, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of herbage of senescing plants</summary>
+        [Units("g/g")]
+        public double SencCP { get { return GetPlantCP(GrazType.stSENC, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of senescing plants</summary>
+        [Units("g/g")]
+        public double SencN { get { return GetPlantNutr(GrazType.stSENC, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of senescing plants</summary>
+        [Units("g/g")]
+        public double SencP { get { return GetPlantNutr(GrazType.stSENC, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of senescing plants</summary>
+        [Units("g/g")]
+        public double SencS { get { return GetPlantNutr(GrazType.stSENC, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of standing dead herbage</summary>
+        [Units("kg/ha")]
+        public double DeadDM { get { return GetDM(GrazType.stDEAD, GrazType.TOTAL); } }
+
+        /// <summary>Dry weight of standing dead herbage in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] DeadDMQ { get { return GetDMQ(GrazType.stDEAD, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of standing dead herbage</summary>
+        [Units("g/g")]
+        public double DeadDMD { get { return GetDMD(GrazType.stDEAD, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of standing dead herbage</summary>
+        [Units("g/g")]
+        public double DeadCP { get { return GetPlantCP(GrazType.stDEAD, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of standing dead herbage</summary>
+        [Units("g/g")]
+        public double DeadN { get { return GetPlantNutr(GrazType.stDEAD, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of standing dead herbage</summary>
+        [Units("g/g")]
+        public double DeadP { get { return GetPlantNutr(GrazType.stDEAD, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of standing dead herbage</summary>
+        [Units("g/g")]
+        public double DeadS { get { return GetPlantNutr(GrazType.stDEAD, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of litter</summary>
+        [Units("kg/ha")]
+        public double LitterDM { get { return GetDM(GrazType.sgLITTER, GrazType.TOTAL); } }
+
+        /// <summary>Dry weight of herbage of litter in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] LitterDMQ { get { return GetDMQ(GrazType.sgLITTER, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of litter</summary>
+        [Units("g/g")]
+        public double LitterDMD { get { return GetDMD(GrazType.sgLITTER, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of litter</summary>
+        [Units("g/g")]
+        public double LitterCP { get { return GetPlantCP(GrazType.sgLITTER, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of litter</summary>
+        [Units("g/g")]
+        public double LitterN { get { return GetPlantNutr(GrazType.sgLITTER, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of litter</summary>
+        [Units("g/g")]
+        public double LitterP { get { return GetPlantNutr(GrazType.sgLITTER, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of litter</summary>
+        [Units("g/g")]
+        public double LitterS { get { return GetPlantNutr(GrazType.sgLITTER, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of green herbage</summary>
+        [Units("kg/ha")]
+        public double GreenDM { get { return GetDM(GrazType.sgGREEN, GrazType.TOTAL); } }
+
+        /// <summary>Dry weight of green herbage in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] GreenDMQ { get { return GetDMQ(GrazType.sgGREEN, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of green herbage</summary>
+        [Units("g/g")]
+        public double GreenDMD { get { return GetDMD(GrazType.sgGREEN, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of green herbage (seedlings+established+senescing)</summary>
+        [Units("g/g")]
+        public double GreenCP { get { return GetPlantCP(GrazType.sgGREEN, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of green herbage</summary>
+        [Units("g/g")]
+        public double GreenN { get { return GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of green herbage</summary>
+        [Units("g/g")]
+        public double GreenP { get { return GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of green herbage</summary>
+        [Units("g/g")]
+        public double GreenS { get { return GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of dry herbage</summary>
+        [Units("kg/ha")]
+        public double DryDM { get { return GetDM(GrazType.sgDRY, GrazType.TOTAL); } }
+
+        /// <summary>Dry weight of dry herbage in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] DryDMQ { get { return GetDMQ(GrazType.sgDRY, GrazType.TOTAL); } }
+
+        /// <summary>Average DM digestibility of dry herbage</summary>
+        [Units("g/g")]
+        public double DryDMD { get { return GetDMD(GrazType.sgDRY, GrazType.TOTAL); } }
+
+        /// <summary>Average crude protein content of dry herbage (standing dead+litter)</summary>
+        [Units("g/g")]
+        public double DryCP { get { return GetPlantCP(GrazType.sgDRY, GrazType.TOTAL); } }
+
+        /// <summary>Average nitrogen content of dry herbage</summary>
+        [Units("g/g")]
+        public double DryN { get { return GetPlantNutr(GrazType.sgDRY, GrazType.TOTAL, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of dry herbage</summary>
+        [Units("g/g")]
+        public double DryP { get { return GetPlantNutr(GrazType.sgDRY, GrazType.TOTAL, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of dry herbage</summary>
+        [Units("g/g")]
+        public double DryS { get { return GetPlantNutr(GrazType.sgDRY, GrazType.TOTAL, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of all leaves</summary>
+        [Units("kg/ha")]
+        public double LeafDM { get { return GetDM(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+        /// <summary>Dry weight of all leaves in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] LeafDMQ { get { return GetDMQ(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+        /// <summary>Average DM digestibility of all leaves</summary>
+        [Units("g/g")]
+        public double LeafDMD { get { return GetDMD(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+        /// <summary>Average crude protein content of all leaves</summary>
+        [Units("g/g")]
+        public double LeafCP { get { return GetPlantCP(GrazType.TOTAL, GrazType.ptLEAF); } }
+
+        /// <summary>Average nitrogen content of all leaves</summary>
+        [Units("g/g")]
+        public double LeafN { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of all leaves</summary>
+        [Units("g/g")]
+        public double LeafP { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of all leaves</summary>
+        [Units("g/g")]
+        public double LeafS { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptLEAF, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of all stems</summary>
+        [Units("kg/ha")]
+        public double StemDM { get { return GetDM(GrazType.TOTAL, GrazType.ptSTEM); } }
+
+        /// <summary>Dry weight of all stems in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] StemDMQ { get { return GetDMQ(GrazType.TOTAL, GrazType.ptSTEM); } }
+
+        /// <summary>Average DM digestibility of all stems</summary>
+        [Units("g/g")]
+        public double StemDMD { get { return GetDMD(GrazType.TOTAL, GrazType.ptSTEM); } }
+
+        /// <summary>Average crude protein content of all stems</summary>
+        [Units("g/g")]
+        public double StemCP { get { return GetPlantCP(GrazType.TOTAL, GrazType.ptSTEM); } }
+
+        /// <summary>Average nitrogen content of all stems</summary>
+        [Units("g/g")]
+        public double StemN { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.N); } }
+
+        /// <summary>Average phosphorus content of all stems</summary>
+        [Units("g/g")]
+        public double StemP { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.P); } }
+
+        /// <summary>Average sulphur content of all stems</summary>
+        [Units("g/g")]
+        public double StemS { get { return GetPlantNutr(GrazType.TOTAL, GrazType.ptSTEM, TPlantElement.S); } }
+
+        /// <summary>Total dry weight of herbage available for grazing</summary>
+        [Units("kg/ha")]
+        public double AvailDM
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.AvailHerbage(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight of herbage available for grazing in each digestibility class</summary>
+        [Units("kg/ha")]
+        public double[] AvailDMQ
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[GrazType.HerbClassNo]; ;
+                for (int i = 1; i <= GrazType.HerbClassNo; i++)
+                    result[i - 1] = PastureModel.AvailHerbage(GrazType.TOTAL, GrazType.TOTAL, i);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average DM digestibility of herbage available for grazing</summary>
+        [Units("g/g")]
+        public double AvailDMD
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double result = WeightAverage(PastureModel.Digestibility(GrazType.sgGREEN, GrazType.TOTAL),
+                                     PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
+                                     PastureModel.Digestibility(GrazType.sgDRY, GrazType.TOTAL),
+                                     PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
+                
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+        
+        /// <summary>Average crude protein content of herbage available for grazing</summary>
+        [Units("g/g")]
+        public double AvailCP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double result = WeightAverage(PastureModel.CrudeProtein(GrazType.sgGREEN, GrazType.TOTAL),
+                                     PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
+                                     PastureModel.CrudeProtein(GrazType.sgDRY, GrazType.TOTAL),
+                                     PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Weight of green (seedling+established+senescing) herbage available for grazing</summary>
+        [Units("kg/ha")]
+        public double AvailGreen
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Weight of dry (standing dead+litter) herbage available for grazing</summary>
+        [Units("kg/ha")]
+        public double AvailDry
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Height profile of green herbage (by plant parts)</summary>
+        [Units("kg/ha")]
+        public HerbageProfile GreenProfile
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                HerbageProfile result = makeHerbageProfile(PastureModel, GrazType.sgGREEN);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Height profile of all herbage (by plant parts)</summary>
+        [Units("-")]
+        public HerbageProfile ShootProfile
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                HerbageProfile result = makeHerbageProfile(PastureModel, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        private HerbageProfile makeHerbageProfile(TPasturePopulation Model, int iComp)
+        {
+            double[] fPartMasses = new double[5];         // [ptLEAF..ptSEED] 
+            int iHeightProfileCount = 0;
+            double[] fHeightProfile = new double[MaxSoilLayers + 1];
+            double[][] fProfilePropns = new double[5][];     // [ptLEAF..ptSEED] of LayerArray;
+            int iPart;
+            int iLayer;
+            
+            
+            for (int i = 0; i <= 5; i++)
+            {
+                fProfilePropns[i] = new double[MaxSoilLayers + 1];
+            }
+         
+            // init fProfilePropns
+            for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
+            {
+                for (iLayer = 1; iLayer <= MaxSoilLayers; iLayer++)
+                    fProfilePropns[iPart][iLayer] = 0;
+            }
+
+            for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
+            {
+                fPartMasses[iPart] = Model.GetHerbageMass(iComp, iPart, TOTAL);
+            }
+            
+            fPartMasses[ptSEED] = Model.GetSeedMass(TOTAL, TOTAL, 1);
+
+            if (fPartMasses[ptLEAF] + fPartMasses[ptSTEM] + fPartMasses[ptSEED] <= 0.0)
+            {
+                iHeightProfileCount = 0;
+            }
+            else
+            {
+                Model.GetHeightProfile(iComp, ptSEED, ref iHeightProfileCount, ref fHeightProfile, ref fProfilePropns[ptSEED]);
+                Model.GetHeightProfile(iComp, ptSTEM, ref iHeightProfileCount, ref fHeightProfile, ref fProfilePropns[ptSTEM]);
+                Model.GetHeightProfile(iComp, ptLEAF, ref iHeightProfileCount, ref fHeightProfile, ref fProfilePropns[ptLEAF]);
+            }
+
+            HerbageProfile result = new HerbageProfile(iHeightProfileCount);
+            
+            for (iLayer = 1; iLayer <= iHeightProfileCount; iLayer++)
+            {
+                if (iLayer == 1)
+                    result.bottom[iLayer-1] = 0.0;
+                else
+                    result.bottom[iLayer - 1] = fHeightProfile[iLayer - 1];
+                result.top[iLayer-1] = fHeightProfile[iLayer];
+                result.leaf[iLayer-1] = fPartMasses[ptLEAF] * fProfilePropns[ptLEAF][iLayer];
+                result.stem[iLayer-1] = fPartMasses[ptSTEM] * fProfilePropns[ptSTEM][iLayer];
+                result.head[iLayer-1] = fPartMasses[ptSEED] * fProfilePropns[ptSEED][iLayer];
+            } 
+
+            return result;
+        }
+
+        /// <summary>Total dry weight of all roots</summary>
+        [Units("kg/ha")]
+        public double RootDM
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average nitrogen content of all roots</summary>
+        [Units("g/g")]
+        public double RootN
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average phosphorus content of all roots</summary>
+        [Units("g/g")]
+        public double RootP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average sulphur content of all roots</summary>
+        [Units("g/g")]
+        public double RootS
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight of all roots in each soil layer</summary>
+        [Units("kg/ha")]
+        public double[] RootDMProfile
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1] = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, i);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average nitrogen content of roots in each soil layer</summary>
+        [Units("kg/ha")]
+        public double[] RootDMProfileN
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1] = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, i, TPlantElement.N);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average phosphorus content of roots in each soil layer</summary>
+        [Units("kg/ha")]
+        public double[] RootDMProfileP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1] = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, i, TPlantElement.P);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average sulphur content of roots in each soil layer</summary>
+        [Units("kg/ha")]
+        public double[] RootDMProfileS
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1] = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, i, TPlantElement.S);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Total dry weight of effective roots</summary>
+        [Units("kg/ha")]
+        public double RootEffDM
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.EFFR, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight of effective roots in each soil layer</summary>
+        [Units("kg/ha")]
+        public double[] RootEffDMProfile
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1] = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.EFFR, i);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Current depth of the rooting front</summary>
+        [Units("mm")]
+        public double RootDep
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS) ;
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average radius of all roots</summary>
+        [Units("mm")]
+        public double RootRadius
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.RootRadii(GrazType.sgGREEN)[1];
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Length density of effective roots in each soil layer</summary>
+        [Units("mm/mm^3")]
+        public double[] RootLVProfile
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                double[] result = new double[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1] = PastureModel.EffRootLengthD(GrazType.sgGREEN)[i] * 1e-6;
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Total dry weight of seeds in all soil layers</summary>
+        [Units("kg/ha")]
+        public double SeedDM
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetSeedMass(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average crude protein content of seeds</summary>
+        [Units("g/g")]
+        public double SeedCP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.SeedCrudeProtein(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average nitrogen content of seeds</summary>
+        [Units("g/g")]
+        public double SeedN
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average phosphorus content of seeds</summary>
+        [Units("g/g")]
+        public double SeedP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.P);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Average sulphur content of seeds</summary>
+        [Units("g/g")]
+        public double SeedS
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetSeedNutr(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.S);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Weighted average value of the establishment index for seedlings</summary>
+        [Units("-")]
+        public double EstIndex
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.EstablishIndex();
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Weighted average value of the seedling stress index</summary>
+        [Units("-")]
+        public double StressIndex
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.SeedlingStress();
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Water uptake from each soil layer</summary>
+        [Units("mm")]
+        public double[] SWUptake
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double[] result = LayerArray2Value(PastureModel.Transpiration(GrazType.sgGREEN), PastureModel.SoilLayerCount);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        private double[] LayerArray2Value(double[] fLayers, int iNoLayers)
+        {
+            double[] result = new double[iNoLayers];
+            
+            for (int Ldx = 1; Ldx <= iNoLayers; Ldx++)
+                result[Ldx-1] = fLayers[Ldx];
+
+            return result;
+        }
+
+        /// <summary>Whole-plant net primary productivity</summary>
+        [Units("kg/ha/d")]
+        public double NPP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.NetPP(GrazType.sgGREEN, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Net primary productivity of shoots</summary>
+        [Units("kg/ha/d")]
+        public double ShootNPP
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.NetPP(GrazType.sgGREEN, GrazType.TOTAL) - PastureModel.NetPP(GrazType.sgGREEN, GrazType.ptROOT);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Gross whole-plant assimilation rate</summary>
+        [Units("kg/ha/d")]
+        public double Assimilation
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.Assimilation(GrazType.sgGREEN, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Whole-plant respiration rate, in dry weight equivalent terms</summary>
+        [Units("kg/ha/d")]
+        public double Respiration
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.Respiration(GrazType.sgGREEN, GrazType.TOTAL);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Daily shoot growth rate</summary>
+        [Units("kg/ha/d")]
+        public double Growth
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.TopGrowth();
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Green leaf area index</summary>
+        [Units("m^2/m^2")]
+        public double LAI
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.AreaIndex(GrazType.sgGREEN, GrazType.ptLEAF);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Light interception growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_GAI { get { return GetGLF(TGrowthLimit.glGAI); } }
+
+        /// <summary>VPD growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_VPD { get { return GetGLF(TGrowthLimit.glVPD); } }
+
+        /// <summary>Soil moisture growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_SM { get { return GetGLF(TGrowthLimit.glSM); } }
+
+        /// <summary>Temperature growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_Temp { get { return GetGLF(TGrowthLimit.glLowT); } }
+
+        /// <summary>Waterlogging growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_WL { get { return GetGLF(TGrowthLimit.glWLog); } }
+
+        /// <summary>Nitrogen growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_N { get { return GetGLF(TGrowthLimit.gl_N); } }
+
+        /// <summary>Phosphorus growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_P { get { return GetGLF(TGrowthLimit.gl_P); } }
+
+        /// <summary>Sulphur growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_S { get { return GetGLF(TGrowthLimit.gl_S); } }
+
+        private double GetGLF(TGrowthLimit factor)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.GrowthLimit(GrazType.sgGREEN, factor);   // glGAI, glVPD, glSM, glLowT, glWLog, gl_N, gl_P, gl_S 
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>Nutrient growth-limiting factor</summary>
+        [Units("-")]
+        public double GLF_Nutr
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = Math.Min(PastureModel.GrowthLimit(GrazType.sgGREEN, TGrowthLimit.gl_N), Math.Min(PastureModel.GrowthLimit(GrazType.sgGREEN, TGrowthLimit.gl_P), PastureModel.GrowthLimit(GrazType.sgGREEN, TGrowthLimit.gl_S)));
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Nitrogen fixation rate</summary>
+        [Units("kg/ha/d")]
+        public double N_Fixed
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.N_Fixation(GrazType.sgGREEN);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Ammonium-N uptake from each soil layer</summary>
+        [Units("kg/ha/d")]
+        public double[] Uptake_NH4  { get { return UptakeByLayer(TPlantNutrient.pnNH4); } }
+
+        /// <summary>Nitrate-N uptake from each soil layer</summary>
+        [Units("kg/ha/d")]
+        public double[] Uptake_NO3 { get { return UptakeByLayer(TPlantNutrient.pnNO3); } }
+
+        /// <summary>Phosphate-P uptake from each soil layer</summary>
+        [Units("kg/ha/d")]
+        public double[] Uptake_POx { get { return UptakeByLayer(TPlantNutrient.pnPOx); } }
+
+        /// <summary>Sulphate-S uptake from each soil layer</summary>
+        [Units("kg/ha/d")]
+        public double[] Uptake_SO4 { get { return UptakeByLayer(TPlantNutrient.pnSO4); } }
 
         /// <summary>
-        /// Dry weight of herbage of established plants in each digestibility class
+        /// Get the plant nutrient uptake from each soil layer
         /// </summary>
+        /// <param name="nutr"></param>
+        /// <returns></returns>
+        private double[] UptakeByLayer(TPlantNutrient nutr)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+
+            double[][] Uptakes = PastureModel.GetNutrUptake(nutr);   // TSoilUptakeDistn
+            double[] result = new double[PastureModel.SoilLayerCount];
+
+            for (int layer = 1; layer <= PastureModel.SoilLayerCount; layer++)
+            {
+                double value = 0.0;
+                for (int area = 0; area <= MAXNUTRAREAS - 1; area++)
+                    value = value + Uptakes[area][layer];
+
+                result[layer - 1] = value;
+            }
+
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>Allocation of assimilate to each plant part</summary>
+        [Units("-")]
+        public Allocation PlantAllocation
+        {
+            get
+            {
+                Allocation result = new Allocation();
+                result.Leaf = PastureModel.Allocation(GrazType.sgGREEN, GrazType.ptLEAF);
+                result.Stem = PastureModel.Allocation(GrazType.sgGREEN, GrazType.ptSTEM);
+                result.Root = PastureModel.Allocation(GrazType.sgGREEN, GrazType.ptROOT);
+                result.Seed = PastureModel.Allocation(GrazType.sgGREEN, GrazType.ptSEED);
+
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight and quality of residues incorporated into the soil in this time step (one member per soil layer). [0] is surface</summary>
+        [Units("-")]
+        public Residue[] ResiduePlant
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                Residue[] result = new Residue[PastureModel.SoilLayerCount];
+
+                DM_Pool surfPool = PastureModel.GetResidueFlux(GrazType.ptLEAF);
+                AddDMPool(PastureModel.GetResidueFlux(GrazType.ptSTEM), surfPool);
+                AddDMPool(PastureModel.GetResidueFlux(GrazType.ptROOT, 1), surfPool);
+                result[0].CopyFrom(surfPool);
+                for (int i = 2; i <= PastureModel.SoilLayerCount; i++)
+                    result[i - 1].CopyFrom(PastureModel.GetResidueFlux(ptROOT, i));
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight and quality of leaf residues incorporated into the soil in this time step</summary>
+        [Units("-")]
+        public Residue ResidueLeaf
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                Residue result = new Residue();
+                result.CopyFrom(PastureModel.GetResidueFlux(GrazType.ptLEAF));
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight and quality of stem residues incorporated into the soil in this time step</summary>
+        [Units("-")]
+        public Residue ResidueStem
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                Residue result = new Residue();
+                result.CopyFrom(PastureModel.GetResidueFlux(GrazType.ptSTEM));
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Dry weight and quality of root residues incorporated into the soil in this time step (one member per soil layer)</summary>
+        [Units("-")]
+        public Residue[] ResidueRoot
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                Residue[] result = new Residue[PastureModel.SoilLayerCount];
+                for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
+                    result[i-1].CopyFrom(PastureModel.GetResidueFlux(GrazType.ptROOT, i));
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Mass of organic nutrients leached from dead pasture and litter by rainfall</summary>
+        [Units("-")]
+        public Leachate PlantLeachate
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                Leachate result = new Leachate();
+                DM_Pool pool = PastureModel.GetLeachate();
+                result.N = pool.Nu[(int)TPlantElement.N];
+                result.P = pool.Nu[(int)TPlantElement.P];
+                result.S = pool.Nu[(int)TPlantElement.S];
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Rate of volatilization of tissue N into the atmosphere</summary>
+        [Units("kg/ha/d")]
+        public double GasNLoss
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = PastureModel.GetGaseousLoss(TPlantElement.N);
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Herbage bulk density of green shoots</summary>
+        [Units("kg/m^3")]
+        public double GreenBD
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double result = REF_HERBAGE_BD / PastureModel.Params.HeightRatio;
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Relative height of two 'horizons' affecting the impact of defoliation on phenology</summary>
+        [Units("-")]
+        public double[] PhenHorizon
+        {
+            get
+            {
+                double[] result = new double[2];
+                result[0] = PastureModel.fPhenoHorizon[0];
+                result[1] = PastureModel.fPhenoHorizon[1];
+
+                return result;
+            }
+        }
+
+        private int[] DefoliationCompMap = { 0, sgGREEN, stDEAD, sgLITTER };    // 1..3
+        private int[] DefoliationPartMap = { 0, ptLEAF, ptSTEM };               // 1..2
+
+        /// <summary>Amount of herbage defoliated from each of green/standing dead/litter (1st index) x leaf/stem (2nd index) x DMD class (3rd index, 1=DMD 80-85pc, 12=DMD 35-40pc)</summary>
         [Units("kg/ha")]
-        public double[] EstabDMQ { get; } //prpESTAB_Q
-        /*        
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_DMD, "estab_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of herbage of established plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_CP, "estab_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of herbage of established plants.", "");
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_N, "estab_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of herbage of established plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_P, "estab_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of herbage of established plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpESTAB_S, "estab_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of herbage of established plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_DM, "senc_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of herbage of senescing plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_Q, "senc_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of herbage of senescing plants in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_DMD, "senc_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of herbage of senescing plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_CP, "senc_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of herbage of senescing plants", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_N, "senc_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of seedlings", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_P, "senc_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of seedlings", "");
-            AddOneVariable(ref Idx, PastureProps.prpSENC_S, "senc_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of seedlings", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_DM, "dead_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of standing dead herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_Q, "dead_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of standing dead herbage in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_DMD, "dead_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of standing dead herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_CP, "dead_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of standing dead herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_N, "dead_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of standing dead herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_P, "dead_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of standing dead herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEAD_S, "dead_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of standing dead herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_DM, "litter_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_Q, "litter_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of herbage of litter in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_DMD, "litter_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_CP, "litter_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_N, "litter_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_P, "litter_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpLITT_S, "litter_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of litter", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_DM, "green_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of green herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_Q, "green_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of green herbage in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_DMD, "green_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of green herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_CP, "green_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of green herbage (seedlings+established+senescing)", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_N, "green_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of green herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_P, "green_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of green herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_S, "green_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of green herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_DM, "dry_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of dry herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_Q, "dry_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of dry herbage in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_DMD, "dry_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of dry herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_CP, "dry_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of dry herbage (standing dead+litter)", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_N, "dry_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of dry herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_P, "dry_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of dry herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpDRY_S, "dry_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of dry herbage", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_DM, "leaf_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of all leaves", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_Q, "leaf_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of all leaves in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_DMD, "leaf_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of all leaves", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_CP, "leaf_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of all leaves", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_N, "leaf_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of all leaves", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_P, "leaf_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of all leaves", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEAF_S, "leaf_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of all leaves", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_DM, "stem_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of all stems", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_Q, "stem_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of all stems in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_DMD, "stem_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of all stems", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_CP, "stem_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of all stems", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_N, "stem_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of all stems", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_P, "stem_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of all stems", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTEM_S, "stem_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of all stems", "");
-            AddOneVariable(ref Idx, PastureProps.prpAVAIL_DM, "avail_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of herbage available for grazing", "");
-            AddOneVariable(ref Idx, PastureProps.prpAVAIL_Q, "avail_dm_q", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of herbage available for grazing in each digestibility class", "");
-            AddOneVariable(ref Idx, PastureProps.prpAVAIL_DMD, "avail_dmd", "<type kind=\"double\" unit=\"g/g\"/>", "Average DM digestibility of herbage available for grazing", "");
-            AddOneVariable(ref Idx, PastureProps.prpAVAIL_CP, "avail_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of herbage available for grazing", "");
-            AddOneVariable(ref Idx, PastureProps.prpAVAIL_G, "avail_green", "<type kind=\"double\" unit=\"kg/ha\"/>", "Weight of green (seedling+established+senescing) herbage available for grazing", "");
-            AddOneVariable(ref Idx, PastureProps.prpAVAIL_D, "avail_dry", "<type kind=\"double\" unit=\"kg/ha\"/>", "Weight of dry (standing dead+litter) herbage available for grazing", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREENPROFILE, "green_profile", PastureProps.typeHERBAGEPROFILE, "Height profile of green herbage (by plant parts)", "");
-            AddOneVariable(ref Idx, PastureProps.prpSHOOTPROFILE, "shoot_profile", PastureProps.typeHERBAGEPROFILE, "Height profile of all herbage (by plant parts)", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_DM, "root_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of all roots", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_PROF, "root_dm_dep", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of all roots in each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_N, "root_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of all roots", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_PROF_N, "root_n_dep", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Average nitrogen content of roots in each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_P, "root_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of all roots", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_PROF_P, "root_p_dep", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Average phosphorus content of roots in each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_S, "root_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of all roots", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_PROF_S, "root_s_dep", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Average sulphur content of roots in each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpEFFR_DM, "eff_root_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of effective roots", "");
-            AddOneVariable(ref Idx, PastureProps.prpEFFR_PROF, "eff_root_dm_dep", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Dry weight of effective roots in each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpLAI, "lai", "<type kind=\"double\" unit=\"m^2/m^2\"/>", "Green leaf area index", "");
-            AddOneVariable(ref Idx, PastureProps.prpRTDEP, "rtdep", "<type kind=\"double\" unit=\"mm\"/>", "Current depth of the rooting front", "");
-            AddOneVariable(ref Idx, PastureProps.prpROOT_RAD, "root_radius", "<type kind=\"double\" unit=\"mm\"/>", "Average radius of all roots", "");
-            AddOneVariable(ref Idx, PastureProps.prpRLV, "rlv", "<type kind=\"double\" unit=\"mm/mm^3\" array=\"T\"/>", "Length density of effective roots in each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpSEED_DM, "seed_dm", "<type kind=\"double\" unit=\"kg/ha\"/>", "Total dry weight of seeds in all soil layers", "");
-            AddOneVariable(ref Idx, PastureProps.prpSEED_CP, "seed_cp", "<type kind=\"double\" unit=\"g/g\"/>", "Average crude protein content of seeds", "");
-            AddOneVariable(ref Idx, PastureProps.prpSEED_N, "seed_n", "<type kind=\"double\" unit=\"g/g\"/>", "Average nitrogen content of seeds", "");
-            AddOneVariable(ref Idx, PastureProps.prpSEED_P, "seed_p", "<type kind=\"double\" unit=\"g/g\"/>", "Average phosphorus content of seeds", "");
-            AddOneVariable(ref Idx, PastureProps.prpSEED_S, "seed_s", "<type kind=\"double\" unit=\"g/g\"/>", "Average sulphur content of seeds", "");
-            AddOneVariable(ref Idx, PastureProps.prpEST_IDX, "est_index", "<type kind=\"double\" unit=\"-\"/>", "Weighted average value of the establishment index for seedlings", "");
-            AddOneVariable(ref Idx, PastureProps.prpSTRESS_IDX, "stress_index", "<type kind=\"double\" unit=\"-\"/>", "Weighted average value of the seedling stress index", "");
-            AddOneVariable(ref Idx, PastureProps.prpRWU, "sw_uptake", "<type kind=\"double\" unit=\"mm\" array=\"T\"/>", "Water uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpNPP, "npp", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Whole-plant net primary productivity", "");
-            AddOneVariable(ref Idx, PastureProps.prpNPP_SHOOT, "shoot_npp", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Net primary productivity of shoots", "");
-            AddOneVariable(ref Idx, PastureProps.prpASSIM, "assimilation", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Gross whole-plant assimilation rate", "");
-            AddOneVariable(ref Idx, PastureProps.prpRESPIRE, "respiration", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Whole-plant respiration rate, in dry weight equivalent terms", "");
-            AddOneVariable(ref Idx, PastureProps.prpGROWTH, "growth", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Daily shoot growth rate", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_GAI, "glf_gai", "<type kind=\"double\" unit=\"-\"/>", "Light interception growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_VPD, "glf_vpd", "<type kind=\"double\" unit=\"-\"/>", "VPD growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_SM, "glf_sm", "<type kind=\"double\" unit=\"-\"/>", "Soil moisture growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_TMP, "glf_tmp", "<type kind=\"double\" unit=\"-\"/>", "Temperature growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_WLOG, "glf_wl", "<type kind=\"double\" unit=\"-\"/>", "Waterlogging growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_N, "glf_nitr", "<type kind=\"double\" unit=\"-\"/>", "Nitrogen growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_P, "glf_phos", "<type kind=\"double\" unit=\"-\"/>", "Phosphorus growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_S, "glf_sulf", "<type kind=\"double\" unit=\"-\"/>", "Sulphur growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpGLF_NUTR, "glf_nutr", "<type kind=\"double\" unit=\"-\"/>", "Nutrient growth-limiting factor", "");
-            AddOneVariable(ref Idx, PastureProps.prpNFIX, "n_fixed", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Nitrogen fixation rate", "");
-            AddOneVariable(ref Idx, PastureProps.prpUPT_NH4, "uptake_nh4", "<type kind=\"double\" unit=\"kg/ha/d\" array=\"T\"/>", "Ammonium-N uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpUPT_NO3, "uptake_no3", "<type kind=\"double\" unit=\"kg/ha/d\" array=\"T\"/>", "Nitrate-N uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpUPT_POX, "uptake_pox", "<type kind=\"double\" unit=\"kg/ha/d\" array=\"T\"/>", "Phosphate-P uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpUPT_SO4, "uptake_so4", "<type kind=\"double\" unit=\"kg/ha/d\" array=\"T\"/>", "Sulphate-S uptake from each soil layer", "");
-            AddOneVariable(ref Idx, PastureProps.prpALLOCATION, "allocation", PastureProps.typeALLOCATION, "Allocation of assimilate to each plant part", "");
-            AddOneVariable(ref Idx, PastureProps.prpRESIDUE, "residues", PastureProps.typeRESIDUES, "Dry weight and quality of residues incorporated into the soil in this time step (one member per soil layer)", "");
-            AddOneVariable(ref Idx, PastureProps.prpRESID_LEAF, "leaf_residues", PastureProps.typeRESIDUE, "Dry weight and quality of leaf residues incorporated into the soil in this time step", "");
-            AddOneVariable(ref Idx, PastureProps.prpRESID_STEM, "stem_residues", PastureProps.typeRESIDUE, "Dry weight and quality of stem residues incorporated into the soil in this time step", "");
-            AddOneVariable(ref Idx, PastureProps.prpRESID_ROOT, "root_residues", PastureProps.typeRESIDUES, "Dry weight and quality of root residues incorporated into the soil in this time step (one member per soil layer)", "");
-            AddOneVariable(ref Idx, PastureProps.prpLEACHATE, "leachate", PastureProps.typeLEACHATE, "Mass of organic nutrients leached from dead pasture and litter by rainfall", "");
-            AddOneVariable(ref Idx, PastureProps.prpGAS_N_LOSS, "n_gas_loss", "<type kind=\"double\" unit=\"kg/ha/d\"/>", "Rate of volatilization of tissue N into the atmosphere", "");
-            AddOneVariable(ref Idx, PastureProps.prpGREEN_BD, "green_bd", "<type kind=\"double\" unit=\"kg/m^3\"/>", "Herbage bulk density of green shoots", "");
-            AddOneVariable(ref Idx, PastureProps.prpPHEN_HRZ, "pheno_horizon", "<type kind=\"double\" unit=\"-\"       array=\"T\"/>", "Relative height of two 'horizons' affecting the impact of defoliation on phenology", "");
-            AddOneVariable(ref Idx, PastureProps.prpDEFOLIATION, "defoliation", PastureProps.typeDEFOLIATION, "Amount of herbage defoliated", "Amount of herbage defoliated from each of green/standing dead/litter (1st index) x leaf/stem (2nd index) x DMD class (3rd index, 1=DMD 80-85pc, 12=DMD 35-40pc)");
-            AddOneVariable(ref Idx, PastureProps.prpLOSS_GREEN, "death_rate", PastureProps.typeLOSS_RATE, "Rate of death of green herbage", "Rate of death of green herbage from each of leaf/stem (1st index) x DMD class (2rd index, 1=DMD 80-85pc, 12=DMD 35-40pc). Does not include defoliation or death due to kill, cultivate or cut events");
-            AddOneVariable(ref Idx, PastureProps.prpLOSS_DEAD, "fall_rate", PastureProps.typeLOSS_RATE, "Rate of fall of standing dead herbage", "Rate of fall of standing dead herbage from each of leaf/stem (1st index) x DMD class (2nd index, 1=DMD 80-85pc, 12=DMD 35-40pc)");
-            AddOneVariable(ref Idx, PastureProps.prpLOSS_LITTER, "incorp_rate", PastureProps.typeLOSS_RATE, "Rate of incorporation of litter", "Rate of incorporation of litter from each of leaf/stem (1st index) x DMD class (2nd index, 1=DMD 80-85pc, 12=DMD 35-40pc)");
-            AddOneVariable(ref Idx, PastureProps.prpKILLED, "killed", "<type kind=\"double\" unit=\"kg/ha\" array=\"T\"/>", "Amount of death of green herbage", "Amount of death of green herbage as a result of kill or cultivate events from each of leaf and stem");
+        public double[,,] Defoliation
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
 
+                double[,,] result = new double[3, 2, 12];
 
-         */
+                for (int Idx = 1; Idx <= 3; Idx++)
+                {
+                    for (int Jdx = 1; Jdx <= 2; Jdx++)
+                    {
+                        for (int Kdx = 1; Kdx <= 12; Kdx++)
+                        {
+                            result[Idx-1, Jdx-1, Kdx-1] = PastureModel.Removal(DefoliationCompMap[Idx], DefoliationPartMap[Jdx], Kdx);
+                        }
+                    }
+                }
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+
+        /// <summary>Rate of death of green herbage from each of leaf/stem (1st index) x DMD class (2nd index, 1=DMD 80-85pc, 12=DMD 35-40pc). Does not include defoliation or death due to kill, cultivate or cut events</summary>
+        [Units("kg/ha/d")]
+        public double[,] DeathRate { get { return Loss(GrazType.sgGREEN); } }
+
+        /// <summary>Rate of fall of standing dead herbage from each of leaf/stem (1st index) x DMD class (2nd index, 1=DMD 80-85pc, 12=DMD 35-40pc)</summary>
+        [Units("kg/ha/d")]
+        public double[,] FallRate { get { return Loss(GrazType.stDEAD); } }
+
+        /// <summary>Rate of incorporation of litter from each of leaf/stem (1st index) x DMD class (2nd index, 1=DMD 80-85pc, 12=DMD 35-40pc)</summary>
+        [Units("kg/ha/d")]
+        public double[,] IncorpRate { get { return Loss(GrazType.stLITT2); } }
+
+        private double[,] Loss(int comp)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double[,] result = new double[2, 12];
+
+            for (int Jdx = 1; Jdx <= 2; Jdx++)
+            {
+                for (int Kdx = 1; Kdx <= 12; Kdx++)
+                {
+                    result[Jdx - 1, Kdx - 1] = PastureModel.BiomassExit(comp, DefoliationPartMap[Jdx], Kdx);
+                }
+            }
+
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>Amount of death of green herbage as a result of kill or cultivate events from each of leaf and stem</summary>
+        [Units("kg/ha")]
+        public double[] Killed
+        {
+            get
+            {
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                double[] result = new double[2];
+                result[0] = PastureModel.ShootKilled(GrazType.ptLEAF, GrazType.TOTAL);
+                result[1] = PastureModel.ShootKilled(GrazType.ptSTEM, GrazType.TOTAL);
+
+                PastureModel.MassUnit = sUnit;
+
+                return result;
+            }
+        }
+        
+        /// <summary>
+        /// Total dry weight of herbage of a plant
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="part">Plant part</param>
+        /// <returns></returns>
+        private double GetDM(int comp, int part)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.GetHerbageMass(comp, part, GrazType.TOTAL);
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the average digestibility of this herbage
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="part">Plant part</param>
+        /// <returns></returns>
+        private double GetDMD(int comp, int part)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.Digestibility(comp, part);
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get the dry weight of a plant in each digestibility class
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="part">Plant part</param>
+        /// <returns></returns>
+        private double[] GetDMQ(int comp, int part)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double[] result = new double[GrazType.HerbClassNo];
+            for (int i = 1; i <= GrazType.HerbClassNo; i++)
+                result[i - 1] = PastureModel.GetHerbageMass(comp, part, i);
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get average nutrient content of a plant
+        /// </summary>
+        /// <param name="comp">Herbage</param>
+        /// <param name="part">Plant part</param>
+        /// <param name="elem">Nutrient element</param>
+        /// <returns></returns>
+        private double GetPlantNutr(int comp, int part, TPlantElement elem)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get average crude protein of plant
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="part">Plant part</param>
+        /// <returns></returns>
+        private double GetPlantCP(int comp, int part)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.CrudeProtein(comp, part, GrazType.TOTAL);
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
         #endregion
 
         #region Subscribed events ====================================================
@@ -712,7 +2146,7 @@ namespace Models.GrazPlan
         private void InitStep()
         {
             resetDrivers();
-            
+
             FFieldGreenDM = PastureModel.GetHerbageMass(sgGREEN, TOTAL, TOTAL);
             FFieldGAI = PastureModel.AreaIndex(sgGREEN);
             FFieldDAI = PastureModel.AreaIndex(sgDRY);
@@ -724,7 +2158,7 @@ namespace Models.GrazPlan
             //  - green DM (add to FFieldGreenDM)
             //  - GAI (add to FFieldGAI)
             //  - DAI (add to FFieldDAI)
-           
+
             PastureModel.BeginTimeStep();
             passDrivers(evtINITSTEP);
         }
@@ -758,11 +2192,11 @@ namespace Models.GrazPlan
             FWaterFromSWIM = false;
             */
             passDrivers(evtWATER);
-           /* if (!FLightAllocated)
-                FModel.SetMonocultureLight();
-            if (!FWaterAllocated)
-                FModel.ComputeWaterUptake();
-            */
+            /* if (!FLightAllocated)
+                 FModel.SetMonocultureLight();
+             if (!FWaterAllocated)
+                 FModel.ComputeWaterUptake();
+             */
         }
 
         /// <summary>
@@ -939,7 +2373,7 @@ namespace Models.GrazPlan
                     FWeather[TWeatherData.wdtWind] = FInputs.Windspeed;
                     FWeather[TWeatherData.wdtEpan] = locWtr.PanEvap;
                     FWeather[TWeatherData.wdtVP] = locWtr.VP;
-                    
+
                     FInputs.MeanTemp = FWeather.MeanTemp();
                     FInputs.MeanDayTemp = FWeather.MeanDayTemp();
                     FInputs.DayLength = FWeather.Daylength(true);
@@ -989,7 +2423,7 @@ namespace Models.GrazPlan
         }
 
 
-        public static string[] sCOMPNAME = { "", "seedling", "established", "senescing", "dead", "litter" };    // [stSEEDL..stLITT1]  - [1..5]
+        public static string[] sCOMPNAME = { "", "seedling", "established", "senescing", "dead", "litter" };    // [0, stSEEDL..stLITT1]  - [0, 1..5]
 
         /// <summary>
         /// This function is used to store the light intercepted as calculated from the allocation object (paddock)
@@ -1015,7 +2449,7 @@ namespace Models.GrazPlan
                 while (Idx < intcpValue.Length && (popnValue == null))
                 {
                     if (intcpValue[Idx].population == this.Name)    ///// TODO: check this name
-                        popnValue = intcpValue[Idx].element;                                  
+                        popnValue = intcpValue[Idx].element;
                     else
                         Idx++;
                 }
@@ -1026,13 +2460,13 @@ namespace Models.GrazPlan
                     {
                         compValue = popnValue[Idx];
 
-                        iComp = stSEEDL;                                                      
+                        iComp = stSEEDL;
                         while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
                             iComp++;
                         if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
                         {
-                            for (uint Ldx = 0; Ldx <= compValue.layer.Length; Ldx++)          
-                                FLightAbsorbed[iComp] = FLightAbsorbed[iComp] + compValue.layer[Ldx].amount; 
+                            for (uint Ldx = 0; Ldx <= compValue.layer.Length; Ldx++)
+                                FLightAbsorbed[iComp] = FLightAbsorbed[iComp] + compValue.layer[Ldx].amount;
                         }
                     }
                 }
@@ -1059,7 +2493,7 @@ namespace Models.GrazPlan
                 while ((Idx < water.Length) && (popnValue == null))
                 {
                     if (water[Idx].population == this.Name)                //// TODO: check this name                 
-                        popnValue = water[Idx].element;                                     
+                        popnValue = water[Idx].element;
                     else
                         Idx++;
                 }
@@ -1072,14 +2506,14 @@ namespace Models.GrazPlan
                 if (popnValue != null)
                 {
                     for (Jdx = 0; Jdx < popnValue.Length; Jdx++)                            // One entry per component for which a demand was given                       
-                    {                                                                       
+                    {
                         compValue = popnValue[Jdx];
 
-                        iComp = stSEEDL;                                                    
+                        iComp = stSEEDL;
                         while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
                             iComp++;
                         if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
-                            Layers2LayerArray(compValue.layer, ref FTranspiration[iComp], true);   
+                            Layers2LayerArray(compValue.layer, ref FTranspiration[iComp], true);
                     }
                 }
             }
@@ -1103,9 +2537,9 @@ namespace Models.GrazPlan
                 for (Ldx = 0; Ldx < FNoInputLayers; Ldx++)
                 {
                     soilLayer = layers[Ldx];
-                    FInputProfile[Ldx+1] = soilLayer.thickness;
+                    FInputProfile[Ldx + 1] = soilLayer.thickness;
                     if (iDataField == 2)
-                        FLayerValues[Ldx+1] = soilLayer.amount;
+                        FLayerValues[Ldx + 1] = soilLayer.amount;
                 }
             }
             else
@@ -1159,8 +2593,8 @@ namespace Models.GrazPlan
 
             // Deal quickly with the case where layers are the same     
             Ldx1 = 1;
-            while ((Ldx1 <= iNoLayers1)                                                 
-                  && (Ldx1 <= iNoLayers2)                                                                
+            while ((Ldx1 <= iNoLayers1)
+                  && (Ldx1 <= iNoLayers2)
                   && (Math.Abs(Layers1[Ldx1] - Layers2[Ldx1]) < 2.0 * EPS))
             {
                 Values2[Ldx1] = Values1[Ldx1];
@@ -1168,7 +2602,7 @@ namespace Models.GrazPlan
             }
             iSameLayers = Ldx1 - 1;
 
-            if (iSameLayers < iNoLayers2)                                                      
+            if (iSameLayers < iNoLayers2)
             {
                 // We have found a layer mismatch.
                 fTopDepth = 0.0;
@@ -1184,7 +2618,7 @@ namespace Models.GrazPlan
                 Ldx2 = iSameLayers + 1;
                 while ((Ldx1 <= iNoLayers1) && (Ldx2 <= iNoLayers2))
                 {
-                    if (fBaseDepth1 < fBaseDepth2 + EPS)                                
+                    if (fBaseDepth1 < fBaseDepth2 + EPS)
                     {
                         // Base of data layer shallower than or equal to base of soil budget layer     
                         Values2[Ldx2] = Values2[Ldx2] + Values1[Ldx1] * (fBaseDepth1 - fTopDepth);
@@ -1193,14 +2627,14 @@ namespace Models.GrazPlan
                         fTopDepth = fBaseDepth1;
                         fBaseDepth1 = fTopDepth + Values1[Ldx1];
 
-                        if (Math.Abs(fBaseDepth1 - fBaseDepth2) < 2.0 * EPS)            
+                        if (Math.Abs(fBaseDepth1 - fBaseDepth2) < 2.0 * EPS)
                         {
                             // Layer bases at same depth - increment both
                             Ldx2++;
                             fBaseDepth2 = fBaseDepth2 + Layers2[Ldx2];
                         }
                     }
-                    else                                                                
+                    else
                     {
                         // Base of data layer deeper than base of soil budget layer                  
                         Values2[Ldx2] = Values2[Ldx2] + Values1[Ldx1] * (fBaseDepth2 - fTopDepth);
@@ -1288,11 +2722,11 @@ namespace Models.GrazPlan
                     for (Jdx = 0; Jdx < popnValue.Length; Jdx++)                         // One entry per component for which a demand was given                      
                     {
                         compValue = popnValue[Jdx];
-                        iComp = stSEEDL;                                                        
+                        iComp = stSEEDL;
                         while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
                             iComp++;
                         if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
-                            Layers2LayerArray(compValue.layer, ref FSoilPropn[iComp], true); 
+                            Layers2LayerArray(compValue.layer, ref FSoilPropn[iComp], true);
                     }
                 }
             }
