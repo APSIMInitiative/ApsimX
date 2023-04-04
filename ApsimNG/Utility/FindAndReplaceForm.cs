@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gtk;
-
 using GtkSource;
-
-using Cairo;
 using UserInterface.Views;
-using UserInterface.Extensions;
 
 namespace Utility
 {
@@ -170,15 +165,15 @@ namespace Utility
 
         private void BtnFindPrevious_Click(object sender, EventArgs e)
         {
-            FindNext(false, false, "Text not found");
+            FindNext(false, "Text not found");
         }
         private void BtnFindNext_Click(object sender, EventArgs e)
         {
-            FindNext(false, true, "Text not found");
+            FindNext(true, "Text not found");
         }
 
 
-        public bool FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
+        public bool FindNext(bool searchForward, string messageIfNotFound)
         {
             context.Settings.SearchText = txtLookFor.Text;
             context.Settings.CaseSensitive = chkMatchCase.Active;

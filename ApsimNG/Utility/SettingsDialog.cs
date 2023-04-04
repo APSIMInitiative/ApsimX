@@ -1,18 +1,16 @@
+using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Utility;
+using System.Collections;
+using Models.Core;
+using System.Globalization;
+using UserInterface.Classes;
+
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Classes;
-    using Gtk;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Utility;
-    using System.Collections;
-    using Models.Core;
-    using System.Globalization;
-    using Extensions;
 
     /// <summary>
     /// A class for a dialog window for user settings.

@@ -1,15 +1,16 @@
+using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using UserInterface.Classes;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using Utility;
+
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using Classes;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Utility;
 
     /// <summary>
     /// This view will display a list of properties to the user
@@ -122,7 +123,7 @@ namespace UserInterface.Views
         public virtual void DisplayProperties(PropertyGroup properties)
         {
             // Get the row/column indices of the child widget with focus.
-            (int row, int col) = GetFocusChildIndices(propertyTable);
+            (int row, int col) = GetFocusChildIndices();
 
             // Dispose of current properties table.
             box.Remove(propertyTable);
@@ -516,7 +517,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="row">Row index of the child with focus, or -1 if no children have focus.</param>
         /// <param name="grid">Column index of the child with focus, or -1 if no children have focus.</param>
-        private (int row, int col) GetFocusChildIndices(Grid grid)
+        private (int row, int col) GetFocusChildIndices()
         {
             // Check if a widget currently has the focus. If so, we should
             // attempt to give focus back to this widget after rebuilding the

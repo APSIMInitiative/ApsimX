@@ -1,20 +1,21 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models;
+using Models.Storage;
+using APSIM.Shared.Graphing;
+using Series = Models.Series;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
+using UserInterface.Commands;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using EventArguments;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
-    using Models;
-    using Views;
-    using Commands;
-    using Models.Storage;
-    using APSIM.Shared.Graphing;
-    using Series = Models.Series;
 
     /// <summary>
     /// A presenter class for graph series.

@@ -1,13 +1,12 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Collections.Generic;
+using Gtk;
+using System.Linq;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using Gtk;
-    using EventArguments;
-    using Intellisense;
-    using System.Linq;
-    using Interfaces;
-    using Extensions;
 
     class IntellisenseView : ViewBase
     {

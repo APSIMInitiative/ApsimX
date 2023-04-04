@@ -1,19 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Interop.Visualisation;
+using Gtk;
+using Models.Management;
+using Utility;
+using APSIM.Shared.Graphing;
+using Node = APSIM.Shared.Graphing.Node;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments.DirectedGraph;
+using UserInterface.EventArguments;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using APSIM.Interop.Visualisation;
-    using Gtk;
-    using Models.Management;
-    using Models;
-    using Extensions;
-    using Utility;
-    using APSIM.Shared.Graphing;
-    using Node = APSIM.Shared.Graphing.Node;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

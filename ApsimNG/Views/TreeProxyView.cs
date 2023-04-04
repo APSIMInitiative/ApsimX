@@ -1,18 +1,18 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Data;
-    using Gtk;
-    using OxyPlot;
-    using OxyPlot.Axes;
-    using OxyPlot.GtkSharp;
-    using Interfaces;
-    using System.Drawing;
-    using EventArguments;
-    using APSIM.Interop.Graphing.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using Gtk;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using System.Drawing;
+using APSIM.Interop.Graphing.Extensions;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -288,7 +288,7 @@
                 Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
                 SetForegroundColour(aboveGroundGraph, foregroundColour);
-                SetBackgroundColour(aboveGroundGraph, backgroundColour);
+                SetBackgroundColour(backgroundColour);
             }
             //don't draw the series if the format is wrong
             catch (FormatException)
@@ -344,7 +344,7 @@
                 Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
                 SetForegroundColour(belowGroundGraph, foregroundColour);
-                SetBackgroundColour(belowGroundGraph, backgroundColour);
+                SetBackgroundColour(backgroundColour);
             }
             // Don't draw the series if the format is wrong.
             catch (FormatException)
@@ -358,7 +358,7 @@
             }
         }
 
-        private void SetBackgroundColour(PlotView graph, Color colour)
+        private void SetBackgroundColour(Color colour)
         {
             OxyColor backgroundColour = Utility.Colour.ToOxy(colour);
         }

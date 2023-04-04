@@ -1,18 +1,18 @@
-﻿namespace UserInterface.Views
-{
-    using APSIM.Interop.Mapping;
-    using APSIM.Shared.Utilities;
-    using Gtk;
-    using Interfaces;
-    using Mapsui;
-    using Mapsui.Layers;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using ApsimCoordinate = Models.Mapping.Coordinate;
-    using MapTag = Models.Mapping.MapTag;
+﻿using APSIM.Interop.Mapping;
+using APSIM.Shared.Utilities;
+using Gtk;
+using Mapsui;
+using Mapsui.Layers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UserInterface.Interfaces;
+using ApsimCoordinate = Models.Mapping.Coordinate;
+using MapTag = Models.Mapping.MapTag;
 
+namespace UserInterface.Views
+{
     /// <remarks>
     /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
     /// and room for improvement. 

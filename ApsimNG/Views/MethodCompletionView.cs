@@ -1,13 +1,12 @@
-﻿namespace UserInterface.Views
-{
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Drawing;
-    using System.Collections.Generic;
-    using Intellisense;
-    using Extensions;
+﻿using Gtk;
+using System;
+using System.Drawing;
+using System.Collections.Generic;
+using UserInterface.Interfaces;
+using UserInterface.Intellisense;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// View for a small intellisense window which displays the 
     /// completion options for a method.

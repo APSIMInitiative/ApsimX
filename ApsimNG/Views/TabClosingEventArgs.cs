@@ -1,7 +1,8 @@
-﻿namespace UserInterface.Views
-{
-    using System;
+﻿using System;
 
+namespace UserInterface.Views
+{
+ 
     /// <summary>An event argument structure with a string.</summary>
     public class TabClosingEventArgs : EventArgs
     {

@@ -1,9 +1,10 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using Gtk;
+using OxyPlot.Axes;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using Gtk;
-    using Interfaces;
-    using OxyPlot.Axes;
 
     /// <summary>
     /// A Windows forms implementation of an AxisView

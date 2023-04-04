@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Gtk;
-using Cairo;
 using UserInterface.Views;
 using System.Linq;
-using UserInterface.Extensions;
 
 namespace Utility
 {
@@ -148,7 +145,7 @@ namespace Utility
         {
             try
             {
-                FindNext(false, false, "Text not found");
+                FindNext(false, "Text not found");
             }
             catch (Exception err)
             {
@@ -159,7 +156,7 @@ namespace Utility
         {
             try
             {
-                FindNext(false, true, "Text not found");
+                FindNext(true, "Text not found");
             }
             catch (Exception err)
             {
@@ -177,7 +174,7 @@ namespace Utility
         }
 
 
-        public void FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
+        public void FindNext(bool searchForward, string messageIfNotFound)
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {

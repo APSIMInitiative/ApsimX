@@ -1,34 +1,31 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using Gtk;
+using OxyPlot;
+using OxyPlot.Annotations;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using OxyPlot.GtkSharp;
+using APSIM.Shared.Utilities;
+using System.Linq;
+using System.Globalization;
+using MathNet.Numerics.Statistics;
+using APSIM.Shared.Graphing;
+using APSIM.Interop.Graphing.Extensions;
+using APSIM.Interop.Graphing.CustomSeries;
+using Utility;
+
+using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
+
+namespace UserInterface.Views
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using Gtk;
-    using Interfaces;
-    using Models;
-    using OxyPlot;
-    using OxyPlot.Annotations;
-    using OxyPlot.Axes;
-    using OxyPlot.Series;
-    using OxyPlot.GtkSharp;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
-    using System.Linq;
-    using System.Globalization;
-    using MathNet.Numerics.Statistics;
-    using Extensions;
-    using APSIM.Shared.Graphing;
-    using APSIM.Interop.Graphing.Extensions;
-    using APSIM.Interop.Graphing.CustomSeries;
-    using Utility;
-
-    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
-    using LegendPlacement = OxyPlot.Legends.LegendPlacement;
-
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

@@ -1,12 +1,13 @@
-﻿namespace UserInterface.Views
-{
-    using global::UserInterface.Interfaces;
-    using Gtk;
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using Utility;
+﻿using Gtk;
+using System;
+using System.IO;
+using System.Reflection;
+using UserInterface.Interfaces;
+using Utility;
 
+namespace UserInterface.Views
+{
+    
     public class ViewBase : IDisposable
     {
         /// <summary>A builder instance for extracting controls from resource.</summary>

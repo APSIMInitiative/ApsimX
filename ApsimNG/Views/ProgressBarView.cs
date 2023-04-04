@@ -1,9 +1,9 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using Gtk;
-    using Interfaces;
+﻿using System;
+using Gtk;
 
+
+namespace UserInterface.Views
+{
     /// <summary>A progress bar view.</summary>
     public class ProgressBarView : ViewBase
     {

@@ -1,11 +1,12 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UserInterface.Interfaces;
+using Utility;
+
+namespace UserInterface.Views
 {
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Utility;
 
     /// <summary>
     /// Encapsulates a toolstrip (button bar)

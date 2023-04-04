@@ -1,7 +1,8 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+
+namespace UserInterface.Views
 {
-    using Gtk;
-    using System;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

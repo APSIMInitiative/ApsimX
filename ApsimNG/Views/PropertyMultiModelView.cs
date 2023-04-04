@@ -1,18 +1,10 @@
+using System;
+using System.Collections.Generic;
+using Gtk;
+using UserInterface.Classes;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using Interfaces;
-    using Classes;
-    using Gtk;
-    using Utility;
-    using System.Linq;
-    using Models.Core;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
-    using System.Globalization;
-    using System.Reflection;
-    using Extensions;
 
     /// <summary>
     /// This class inherits the PropertyView and overrides the methods needed to display a list of models (children)

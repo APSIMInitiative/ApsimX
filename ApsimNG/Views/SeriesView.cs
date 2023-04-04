@@ -1,10 +1,10 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using Interfaces;
-    using Gtk;
-    using System;
-    using Extensions;
-    using APSIM.Shared.Utilities;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView

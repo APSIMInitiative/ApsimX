@@ -1,16 +1,16 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Gtk;
+using UserInterface.Extensions;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
 
     /// <summary>
     /// An upgrade form.
@@ -302,7 +302,7 @@
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnUpgrade(object sender, EventArgs e)
+        private async void OnUpgrade(object sender, EventArgs e)
         {
             try
             {
@@ -364,7 +364,7 @@
 
                             var cancellationToken = new System.Threading.CancellationTokenSource();
                             FileStream file = new FileStream(tempSetupFileName, FileMode.Create, System.IO.FileAccess.Write);
-                            WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*");
+                            await WebUtilities.GetAsyncWithProgress(sourceURL, file, progress, cancellationToken.Token, "*/*");
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
                                 cancellationToken.Cancel();
 

@@ -13,7 +13,6 @@ using Markdig.Syntax.Inlines;
 using UserInterface.Extensions;
 using Utility;
 using Pango;
-using UserInterface.Classes;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views

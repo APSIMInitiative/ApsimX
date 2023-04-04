@@ -1,6 +1,5 @@
 ﻿using Gtk;
 using System;
-using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views

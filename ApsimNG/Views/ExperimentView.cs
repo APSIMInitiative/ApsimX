@@ -1,9 +1,9 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using Extensions;
-    using Interfaces;
-    using Gtk;
-    using System;
 
     public class ExperimentView : ViewBase, IExperimentView
     {

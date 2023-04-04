@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using APSIM.Shared.Utilities;
 using Gtk;
 using UserInterface.Hotkeys;

@@ -1,18 +1,18 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using UserInterface.Classes;
+using UserInterface.EventArguments;
+using UserInterface.Extensions;
+using UserInterface.Interfaces;
+using Utility;
+
+namespace UserInterface.Views
 {
-    using Classes;
-    using EventArguments;
-    using Extensions;
-    using Gtk;
-    using Interfaces;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Reflection;
-    using Utility;
 
     /// <summary>
     /// A grid control that implements the grid view interface.

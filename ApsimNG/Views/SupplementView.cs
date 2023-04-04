@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UserInterface.Extensions;
 using Gtk;
 using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
 using UserInterface.Interfaces;

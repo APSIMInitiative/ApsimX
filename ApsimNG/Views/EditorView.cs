@@ -486,7 +486,7 @@ namespace UserInterface.Views
                     if (string.IsNullOrEmpty(findForm.LookFor))
                         findForm.ShowFor(textEditor, searchContext, false);
                     else
-                        findForm.FindNext(true, (args.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                        findForm.FindNext((args.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
                     args.RetVal = true;
                     return;
                 }
@@ -606,13 +606,13 @@ namespace UserInterface.Views
             textEditor.QueueDraw();
         }
 
-        /// <summary>
-        /// Display a list of completion options to the user.
-        /// </summary>
-        public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
-        {
+        ///// <summary>
+        ///// Display a list of completion options to the user.
+        ///// </summary>
+        //public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
+        //{
 
-        }
+        //}
 
         /// <summary>
         /// Hide the completion window.

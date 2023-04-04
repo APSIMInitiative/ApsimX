@@ -1,6 +1,8 @@
-﻿namespace Utility
+﻿using ClosedXML.Excel;
+
+namespace Utility
 {
-    using ClosedXML.Excel;
+
 
     /// <summary>
     /// TODO: Update summary.

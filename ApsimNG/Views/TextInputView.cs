@@ -1,10 +1,10 @@
+using Gtk;
+using System;
+using System.Text;
+using FontDescription = Pango.FontDescription;
+
 namespace UserInterface.Views
 {
-    using Gtk;
-    using System;
-    using System.Text;
-    using FontDescription = Pango.FontDescription;
-
     public class TextInputView : ViewBase
     {
         private TextView editor;

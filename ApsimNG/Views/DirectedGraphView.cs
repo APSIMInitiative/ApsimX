@@ -1,20 +1,16 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Point = System.Drawing.Point;
+using APSIM.Interop.Visualisation;
+using APSIM.Shared.Graphing;
+using Utility;
+using UserInterface.EventArguments;
+using UserInterface.EventArguments.DirectedGraph;
+
+namespace UserInterface.Views
 {
-    using Cairo;
-    using Extensions;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using Gtk;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using Color = System.Drawing.Color;
-    using Point = System.Drawing.Point;
-    using APSIM.Interop.Visualisation;
-    using APSIM.Shared.Graphing;
-    using Utility;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

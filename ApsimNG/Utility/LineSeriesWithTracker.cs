@@ -1,10 +1,10 @@
-﻿namespace Utility
-{
-    using System;
-    using OxyPlot;
-    using OxyPlot.Series;
-    using UserInterface.EventArguments;
+﻿using System;
+using OxyPlot;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
 
+namespace Utility
+{
     /// <summary>
     /// A line series with a better tracker.
     /// </summary>

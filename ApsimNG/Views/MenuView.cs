@@ -1,13 +1,13 @@
-﻿namespace UserInterface.Views
-{
-    using Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Utility;
+﻿using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UserInterface.Extensions;
+using UserInterface.Interfaces;
+using Utility;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// Encapsulates a menu
     /// </summary>

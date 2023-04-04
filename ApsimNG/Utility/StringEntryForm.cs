@@ -1,11 +1,9 @@
-﻿
+﻿using Gtk;
+using UserInterface.Views;
+using UserInterface.Presenters;
 
 namespace Utility
 {
-    using Gtk;
-    using UserInterface.Views;
-    using UserInterface.Presenters;
-    using UserInterface.Extensions;
 
     public class StringEntryForm
     {
