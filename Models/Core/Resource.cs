@@ -250,7 +250,7 @@
             /// <param name="resourceJson">The resource JSON.</param>
             public ResourceModel(string resourceJson)
             {
-                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false);
+                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false).NewModel as IModel;
                 Model = Model.Children.First();
                 Properties = GetPropertiesFromResourceModel(Model, resourceJson);
             }

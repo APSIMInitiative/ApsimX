@@ -20,10 +20,10 @@ namespace Models.PMF.Phen
         Phenology phenology = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        HourlyInterpolation vernalisingDays = null;
+        SubDailyInterpolation vernalisingDays = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        HourlyInterpolation DevernalisingDays = null;
+        SubDailyInterpolation DevernalisingDays = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         Constant DaysToStabilise = null;

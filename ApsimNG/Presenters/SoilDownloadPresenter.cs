@@ -356,8 +356,8 @@ namespace UserInterface.Presenters
                             foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
                             {
                                 var soilXML = $"<folder>{soilNode.OuterXml}</folder>";
-                                var folder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
-                                var soil = folder.Children[0] as Soil;
+                                var folder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false).NewModel as Folder;
+                                var soil = folder.Children[0] as Soil;      
 
                                 // fixme: this should be handled by the converter or the importer.
                                 InitialiseSoil(soil);
@@ -406,7 +406,7 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false);
+                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false).NewModel as Soil;
                     soil.Children.Add(new CERESSoilTemperature());
                     soil.OnCreated();
 
@@ -452,7 +452,7 @@ namespace UserInterface.Presenters
                 if (soilNodes.Count > 0)
                 {
                     var soilXML = $"<folder>{soilNodes[0].OuterXml}</folder>";
-                    var soilFolder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false);
+                    var soilFolder = FileFormat.ReadFromString<Folder>(soilXML, e => throw e, false).NewModel as Folder;
                     var soil = soilFolder.Children[0] as Soil;
                     InitialiseSoil(soil);
 

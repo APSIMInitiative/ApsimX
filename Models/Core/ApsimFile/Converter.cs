@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 159; } }
+        public static int LatestVersion { get { return 160; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2266,7 +2266,7 @@ namespace Models.Core.ApsimFile
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
                 AirTempFunc["agregationMethod"] = "0";
-                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourAirTemperature), "InterpolationMethod");
             }
         }
 
@@ -2327,7 +2327,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
             {
-                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                atf["$type"] = "Models.Functions.SubDailyInterpolation, Models";
                 foreach (JObject c in atf["Children"])
                 {
                     if (c["Name"].ToString() == "TemperatureResponse")
@@ -4774,6 +4774,23 @@ namespace Models.Core.ApsimFile
                 JsonUtilities.ReplaceManagerCode(manager, "Retranslocation", "ReTranslocation");
             }
 
+        }
+
+        /// <summary>
+        /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion160(JObject root, string fileName)
+        {
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "ThreeHourSin"))
+            {
+                demand["$type"] = "Models.Functions.ThreeHourAirTemperature, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "HourlyInterpolation"))
+            {
+                demand["$type"] = "Models.Functions.SubDailyInterpolation, Models";
+            }
         }
 
         /// <summary>

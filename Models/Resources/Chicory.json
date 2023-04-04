@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 159,
+  "Version": 160,
   "Name": "Simulations",
   "Children": [
     {
@@ -44,7 +44,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.HourlyInterpolation, Models",
+              "$type": "Models.Functions.SubDailyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -75,7 +75,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ThreeHourSin, Models",
+                  "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                   "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -115,7 +115,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "Name": "VernalisingDays",
                   "Children": [
                     {
@@ -139,7 +139,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -153,7 +153,7 @@
                   "agregationMethod": "0"
                 },
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "Name": "DevernalisingDays",
                   "Children": [
                     {
@@ -177,7 +177,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
