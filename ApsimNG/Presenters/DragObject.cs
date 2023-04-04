@@ -1,7 +1,8 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// An object that encompasses the data that is dragged during a drag/drop operation.

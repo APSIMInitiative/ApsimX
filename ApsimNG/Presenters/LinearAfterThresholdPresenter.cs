@@ -1,12 +1,11 @@
-﻿namespace UserInterface.Presenters
-{
-    using Models.Functions;
-    using Models;
-    using System;
-    using System.Collections.Generic;
-    using Views;
-    using APSIM.Shared.Graphing;
+﻿using Models.Functions;
+using System;
+using System.Collections.Generic;
+using APSIM.Shared.Graphing;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presenter for the <see cref="LinearAfterThresholdFunction"/> class.
     /// </summary>

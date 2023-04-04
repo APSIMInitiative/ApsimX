@@ -1,12 +1,12 @@
-﻿namespace UserInterface.Presenters
-{
-    using System.Collections.Generic;
-    using Models.Core;
-    using Models;
-    using Views;
-    using Models.Storage;
-    using System.Linq;
+﻿using System.Collections.Generic;
+using Models.Core;
+using Models;
+using Views;
+using Models.Storage;
+using System.Linq;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// This presenter connects an instance of a folder model with a 
     /// folder view.

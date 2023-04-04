@@ -1,16 +1,12 @@
-﻿namespace UserInterface.Presenters
-{
-    using EventArguments;
-    using global::UserInterface.Interfaces;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Views;
+﻿using Models.Interfaces;
+using Models.Soils;
+using System;
+using System.Collections.Generic;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A generic grid presenter for displaying tabular data and allowing editing.</summary>
     public class NewGridPresenter : IPresenter
     {

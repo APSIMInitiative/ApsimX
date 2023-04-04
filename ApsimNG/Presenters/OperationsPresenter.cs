@@ -1,14 +1,11 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models;
-    using Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using APSIM.Shared.Utilities;
+using Models;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// A presenter class for showing an operations model in an operations view.
     /// </summary>

@@ -1,20 +1,10 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Models.Core;
-    using Views;
-    using Interfaces;
-    using Markdig;
-    using Markdig.Renderers;
-    using Markdig.Syntax;
-    using Markdig.Parsers;
-    using Utility;
+﻿using System.Collections.Generic;
+using System.Text;
+using Models.Core;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presenter of unspecified type
     /// </summary>

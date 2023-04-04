@@ -1,12 +1,11 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using Models;
-    using Models.Core;
-    using Utility;
-    using Interfaces;
-    using Views;
+﻿using System;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using Utility;
 
+
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Attaches an Input model to an Input View.
     /// </summary>

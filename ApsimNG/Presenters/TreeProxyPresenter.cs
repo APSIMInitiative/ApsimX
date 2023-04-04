@@ -1,16 +1,15 @@
-﻿namespace UserInterface.Presenters
-{
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Models.Agroforestry;
-    using Models.Core;
-    using Models.Soils;
-    using Views;
-    using Commands;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Models.Agroforestry;
+using Models.Core;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+using UserInterface.Views;
+using UserInterface.EventArguments;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// The tree proxy presenter
     /// </summary>

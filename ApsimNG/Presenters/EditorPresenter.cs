@@ -1,13 +1,14 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Drawing;
+using System.Linq;
+using Models.Core;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using EventArguments;
-    using Views;
-    using Interfaces;
-    using Commands;
-    using System.Linq;
-    using Models.Core;
 
     /// <summary>
     /// A presenter class for showing a cultivar.

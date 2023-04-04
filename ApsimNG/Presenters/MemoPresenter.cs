@@ -1,13 +1,12 @@
-﻿namespace UserInterface.Presenters
-{
-    using System.IO;
-    using Models;
-    using Views;
-    using System;
-    using Interfaces;
-    using APSIM.Shared.Utilities;
-    using Commands;
+﻿using System.IO;
+using Models;
+using System;
+using APSIM.Shared.Utilities;
+using UserInterface.Views;
+using UserInterface.Commands;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presents the text from a memo component.
     /// </summary>

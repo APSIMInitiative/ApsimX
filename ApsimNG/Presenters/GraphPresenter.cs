@@ -1,20 +1,21 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models;
+using Models.Storage;
+using APSIM.Shared.Graphing;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models.Core;
-    using Models;
-    using Models.Storage;
-    using Views;
-    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// A presenter for a graph.
@@ -412,9 +413,8 @@
             }
         }
 
-        private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
-        {
-                   }
+        //private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
+        //{}
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
@@ -526,12 +526,12 @@
             throw new Exception("Cannot find axis with type: " + position.ToString());
         }
 
-        /// <summary>The axis has changed</summary>
-        /// <param name="axis">The axis.</param>
-        private void OnAxisChanged(Axis axis)
-        {
-            DrawGraph();
-        }
+        ///// <summary>The axis has changed</summary>
+        ///// <param name="axis">The axis.</param>
+        //private void OnAxisChanged()
+        //{
+        //    DrawGraph();
+        //}
 
         /// <summary>User has clicked the legend.</summary>
         /// <param name="sender">Sender of event</param>

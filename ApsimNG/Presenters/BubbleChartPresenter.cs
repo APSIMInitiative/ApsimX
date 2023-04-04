@@ -3,25 +3,20 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Interfaces;
+using Models.Management;
+using APSIM.Shared.Graphing;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments.DirectedGraph;
+using UserInterface.EventArguments;
+using UserInterface.Commands;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using Models;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Management;
-    using Views;
-    using Interfaces;
-    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Presenter for the rotation bubble chart component

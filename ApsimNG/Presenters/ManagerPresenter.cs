@@ -1,18 +1,14 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Models;
-    using Models.Core;
-    using Views;
-    using Interfaces;
-    using Utility;
-
-
-
     /// <summary>
     /// Presenter for the Manager component
     /// </summary>

@@ -1,20 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Globalization;
-    using System.IO;
-    using System.Text;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using Models;
-    using Models.Climate;
-    using Models.Core;
-    using Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Core;
+using UserInterface.Commands;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for displaying weather data</summary>
     public sealed class MetDataPresenter : IPresenter, IDisposable
     {
@@ -450,16 +449,16 @@
                     switch (tabIndex)
                     {
                         case 2:     // Daily Rain
-                            this.DisplayGraphDailyRain(table, startDate, endDate, true);
+                            this.DisplayGraphDailyRain(table, startDate, endDate);
                             break;
                         case 3:     // Monthly Rain
-                            this.DisplayGraphMonthlyRain(table, startDate, endDate, true);
+                            this.DisplayGraphMonthlyRain(table, startDate, endDate);
                             break;
                         case 4:     // Temperature
-                            this.DisplayGraphTemperature(table, startDate, endDate, true);
+                            this.DisplayGraphTemperature(table, startDate, endDate);
                             break;
                         case 5:     // Radiation
-                            this.DisplayGraphRadiation(table, startDate, endDate, true);
+                            this.DisplayGraphRadiation(table, startDate, endDate);
                             break;
                     }
 
@@ -480,7 +479,7 @@
         /// <param name="startDate">The start date</param>
         /// <param name="endDate">The end date</param>
         /// <param name="updateYears">Update the years</param>
-        private void DisplayGraphDailyRain(DataTable table, DateTime startDate, DateTime endDate, bool updateYears)
+        private void DisplayGraphDailyRain(DataTable table, DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -522,7 +521,7 @@
         /// <param name="startDate">The start date</param>
         /// <param name="endDate">The end date</param>
         /// <param name="updateYears">Update the years</param>
-        private void DisplayGraphMonthlyRain(DataTable table, DateTime startDate, DateTime endDate, bool updateYears)
+        private void DisplayGraphMonthlyRain(DataTable table, DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -552,7 +551,7 @@
         /// <param name="startDate">The start date</param>
         /// <param name="endDate">The end date</param>
         /// <param name="updateYears">Update the years</param>
-        private void DisplayGraphTemperature(DataTable table, DateTime startDate, DateTime endDate, bool updateYears)
+        private void DisplayGraphTemperature(DataTable table, DateTime startDate, DateTime endDate)
         {
             try
             {
@@ -579,7 +578,7 @@
         /// <param name="startDate">The start date</param>
         /// <param name="endDate">The end date</param>
         /// <param name="updateYears">Update the years</param>
-        private void DisplayGraphRadiation(DataTable table, DateTime startDate, DateTime endDate, bool updateYears)
+        private void DisplayGraphRadiation(DataTable table, DateTime startDate, DateTime endDate)
         {
             try
             {

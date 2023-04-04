@@ -1,13 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Linq;
+using UserInterface.Interfaces;
+
 namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using Interfaces;
-    using Models.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Text;
-    using System.Linq;
 
     /// <summary>
     /// This presenter displays a table of data, which it gets from the model via

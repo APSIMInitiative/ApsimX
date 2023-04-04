@@ -1,20 +1,20 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models.Core;
-    using Models;
-    using Models.Functions;
-    using Views;
-    using APSIM.Shared.Graphing;
-    using Series = Models.Series;
-	using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models;
+using Models.Functions;
+using APSIM.Shared.Graphing;
+using Series = Models.Series;
+using System.Globalization;
+using UserInterface.Views;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 
+namespace UserInterface.Presenters
+{
 	/// <summary>
 	/// The presenter class for populating an InitialWater view with an InitialWater model.
 	/// </summary>

@@ -1,10 +1,10 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using Views;
-    using Interfaces;
-    using APSIM.Shared.Graphing;
+﻿using System;
+using APSIM.Shared.Graphing;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
     /// UserInterface.Views.AxisView

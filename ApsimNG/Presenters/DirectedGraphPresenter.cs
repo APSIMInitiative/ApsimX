@@ -1,9 +1,9 @@
-﻿namespace UserInterface.Presenters
+﻿using Models.Interfaces;
+using System.IO;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using Models.Interfaces;
-    using System.Drawing;
-    using System.IO;
-    using Views;
 
     /// <summary>
     /// This presenter connects an instance of a Model with a 

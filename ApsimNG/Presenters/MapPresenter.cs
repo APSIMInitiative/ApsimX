@@ -1,13 +1,11 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Models;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using Models;
-    using Models.Core;
-    using Views;
-    using Interfaces;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Map with a 

@@ -1,13 +1,13 @@
-﻿namespace UserInterface.Presenters
-{
-    using APSIM.Shared.Graphing;
-    using Commands;
-    using Models.Soils;
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using Models.Soils;
+using System;
+using System.Globalization;
+using System.Linq;
+using UserInterface.Commands;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the water model.</summary>
     public class WaterPresenter : IPresenter
     {
@@ -90,7 +90,7 @@
                 relativeToDropDown.Values = water.AllowedRelativeTo.ToArray();
                 relativeToDropDown.SelectedValue = water.RelativeTo;
                 depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0", CultureInfo.CurrentCulture);
-                PopulateWaterGraph(graph, water.Physical.Thickness, water.Physical.AirDry, water.Physical.LL15, water.Physical.DUL, water.Physical.SAT,
+                PopulateWaterGraph(graph, water.Physical.Thickness, water.Physical.AirDry, water.Physical.DUL, water.Physical.SAT,
                                    water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 ConnectEvents();
             }
@@ -243,7 +243,7 @@
             Refresh();
         }
 
-        public static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] ll15, double[] dul, double[] sat,
+        public static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] dul, double[] sat,
                                                string cllName, double[] swThickness, double[] cll, double[] sw)
         {
             var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);

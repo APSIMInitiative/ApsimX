@@ -1,14 +1,13 @@
-﻿namespace UserInterface.Presenters
-{
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.GrazPlan;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
+using System;
+using System.Collections.Generic;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the soil profile models.</summary>
     public class ProfilePresenter : IPresenter
     {
@@ -107,10 +106,10 @@
                 try
                 {
                     if (water != null && (model is Physical || model is Water))
-                        WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                        WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.DUL, physical.SAT,
                                                           water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                     else if (model is Organic organic)
-                        PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
+                        PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)
                     {
                         double[] vals = solute.InitialValues;
@@ -136,7 +135,7 @@
             }
         }
 
-        public static void PopulateOrganicGraph(GraphView graph, double[] thickness, double[] fom, double[] SoilCNRatio, double[] fbiom, double[] finert)
+        public static void PopulateOrganicGraph(GraphView graph, double[] thickness, double[] fom, double[] fbiom, double[] finert)
         {
             var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
             graph.Clear();

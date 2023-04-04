@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Commands;
-    using Models;
-    using Models.Core;
-    using Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models;
+using Models.Core;
+using UserInterface.Commands;
+using UserInterface.Views;
+using Orientation = APSIM.Shared.Graphing.LegendOrientation;
+using Position = APSIM.Shared.Graphing.LegendPosition;
 
-    using Orientation = APSIM.Shared.Graphing.LegendOrientation;
-    using Position = APSIM.Shared.Graphing.LegendPosition;
+namespace UserInterface.Presenters
+{
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 

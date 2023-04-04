@@ -1,17 +1,16 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using Interfaces;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Utility;
-    using Views;
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
     class PropertyAndTablePresenter : IPresenter

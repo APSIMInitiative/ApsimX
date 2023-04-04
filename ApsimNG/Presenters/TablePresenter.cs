@@ -1,15 +1,14 @@
-﻿namespace UserInterface.Presenters
-{
-    using Commands;
-    using EventArguments;
-    using Interfaces;
-    using Models.Interfaces;
-    using System;
-    using Views;
-    using Models.Core;
-    using System.Collections.Generic;
-    using System.Data;
+﻿using Models.Interfaces;
+using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Data;
+using UserInterface.Views;
+using UserInterface.EventArguments;
+using UserInterface.Commands;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presenter for any <see cref="IModelAsTable"/>.
     /// </summary>

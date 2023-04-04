@@ -1,12 +1,12 @@
-﻿namespace UserInterface.Presenters
+﻿using Models.Core;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using global::UserInterface.Interfaces;
-    using Models.Core;
-    using Models.Storage;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Views;
 
     /// <summary>This presenter lets the user add/delete checkpoints</summary>
     public class CheckpointsPresenter : IPresenter

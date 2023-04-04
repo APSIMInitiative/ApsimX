@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ApsimNG.Cloud;
-using UserInterface.Interfaces;
-using System.IO;
-using System.ComponentModel;
 using UserInterface.Views;
 using System.Threading.Tasks;
 using System.Threading;
-using ApsimNG.Interfaces;
 using Models.Core;
-using System.Data;
-using UserInterface.Extensions;
 
 namespace UserInterface.Presenters
 {

@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Presenters
-{
-    using EventArguments;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Views;
+﻿using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using UserInterface.EventArguments;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
     {

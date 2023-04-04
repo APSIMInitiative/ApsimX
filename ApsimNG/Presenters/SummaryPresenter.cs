@@ -1,21 +1,18 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Linq;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using System.Collections.Generic;
+using Models.Core.Run;
+using Models.Logging;
+using System.Text;
+using UserInterface.Views;
+using UserInterface.EventArguments;
+using UserInterface.Commands;
+
+namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using System;
-    using System.IO;
-    using System.Linq;
-    using Models;
-    using Models.Core;
-    using Models.Factorial;
-    using Views;
-    using Commands;
-    using Utility;
-    using Models.Storage;
-    using System.Collections.Generic;
-    using Models.Core.Run;
-    using Models.Logging;
-    using System.Text;
-    using APSIM.Shared.Utilities;
 
     /// <summary>Presenter class for working with a summary component</summary>
     public class SummaryPresenter : IPresenter
@@ -212,14 +209,14 @@
             UpdateView();
         }
 
-        /// <summary>
-        /// Event handler for the view's copy event.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnCopy(object sender, CopyEventArgs e)
-        {
-            this.explorerPresenter.SetClipboardText(e.Text, "CLIPBOARD");
-        }
+        ///// <summary>
+        ///// Event handler for the view's copy event.
+        ///// </summary>
+        ///// <param name="sender">Sender object.</param>
+        ///// <param name="e">Event arguments.</param>
+        //private void OnCopy(object sender, CopyEventArgs e)
+        //{
+        //    this.explorerPresenter.SetClipboardText(e.Text, "CLIPBOARD");
+        //}
     }
 }

@@ -5,13 +5,11 @@ using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
 using APSIM.Shared.Graphing;
-using Models.Core.Run;
 using System.Threading;
 
 namespace UserInterface.Presenters

@@ -3,16 +3,10 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Views;
-using UserInterface.Interfaces;
-using Utility;
 
 namespace UserInterface.Presenters
 {

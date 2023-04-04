@@ -1,10 +1,11 @@
-﻿namespace UserInterface.Presenters
+﻿using Models.Factorial;
+using System;
+using System.Drawing;
+using UserInterface.EventArguments;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using Models.Factorial;
-    using System;
-    using System.Drawing;
-    using Views;
 
     /// <summary>
     /// Connects a Factor model to a FactorView.

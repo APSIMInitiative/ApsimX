@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using Models.Core;
+using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Commands;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Views;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddModelPresenter : IPresenter
@@ -136,7 +136,7 @@
             filterEdit.Changed -= OnFilterChanged;
         }
 
-        private Apsim.ModelDescription GetModelDescription(string namePath)
+        private Apsim.ModelDescription GetModelDescription()
         {
             Type selectedType = typeof(IModel).Assembly.GetType(tree.SelectedNode);
             if (selectedType != null)
@@ -155,7 +155,7 @@
         {
             try
             {
-                Apsim.ModelDescription selectedModelType = GetModelDescription(tree.SelectedNode);
+                Apsim.ModelDescription selectedModelType = GetModelDescription();
 
                 if (selectedModelType != null)
                 {

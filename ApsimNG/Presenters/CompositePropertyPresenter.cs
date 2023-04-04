@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Models;
 using Models.Core;
 using UserInterface.Classes;
-using UserInterface.Interfaces;
-using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {

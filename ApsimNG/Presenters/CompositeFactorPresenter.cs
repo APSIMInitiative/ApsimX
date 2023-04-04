@@ -1,12 +1,13 @@
-﻿namespace UserInterface.Presenters
+﻿using Models.Factorial;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using Views;
-    using Interfaces;
 
     /// <summary>
     /// Connects a CompositeFactor model to a EditorView.

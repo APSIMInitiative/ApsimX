@@ -1,10 +1,9 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using Models;
-    using Views;
+﻿using System;
+using Models;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
     /// UserInterface.Views.AxisView

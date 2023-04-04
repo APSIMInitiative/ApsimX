@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using EventArguments;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using Utility;
-    using Views;
-    using Models;
-    using Interfaces;
+﻿using System;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using Utility;
+using Models;
+using UserInterface.Views;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// The Report presenter class
     /// </summary>

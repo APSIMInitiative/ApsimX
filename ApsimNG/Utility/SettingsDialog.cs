@@ -8,6 +8,7 @@ using System.Collections;
 using Models.Core;
 using System.Globalization;
 using UserInterface.Classes;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Views
 {
