@@ -455,7 +455,7 @@
                 string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
 
                 string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
-                                 $"[Link(Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
+                                 $"[Link(Type=LinkType.Path, Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
 
                 explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
             }
