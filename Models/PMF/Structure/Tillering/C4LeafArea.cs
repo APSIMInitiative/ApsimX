@@ -125,7 +125,7 @@ namespace Models.PMF
 			//the effect is to decrease the size of the largest leaf by 10% for each subsequent tiller 
 			largestLeafSize *= (1 - vertAdjust);
 			double leafSize = largestLeafSize * Math.Exp(a * Math.Pow((leafNo - largestLeafPos), 2) + b * Math.Pow((leafNo - largestLeafPos), 3)) * 100;
-			return leafSize;
+			return Math.Max(leafSize,0.0);
 		}
 
 		private double adjustLeafNumberForPlateuEffect(double leafNo, double finalLeafNo, double largestLeafPlateau)
