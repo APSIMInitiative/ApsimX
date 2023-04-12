@@ -8,7 +8,8 @@ def main():
     quit = False
     while quit == False:
         quit = interface()
-    input("Complete. Press Any Key to Quit.")
+    print("Complete")
+    input("Press ENTER to Quit.")
 
 def interface():
 
@@ -22,6 +23,8 @@ def interface():
 
     inputFile = input("Enter filename with Extension (input.apsimx):")
     outputFile = input("Enter output filename with Extension (output.apsimx):")
+    #inputFile = "Grapevine.apsimx"
+    #outputFile = "output.apsimx"
 
     if exists(inputFile) == False:
         input("Invalid Filename")
@@ -32,6 +35,9 @@ def interface():
     counts['SoilNitrogenNO3'] = 0
     counts['SoilNitrogenNH4'] = 0
     counts['SoilNitrogenUrea'] = 0
+    counts['ScriptSoilNitrogen'] = 0
+    counts['ReportSoilNitrogen'] = 0
+
     with open(inputFile, "r") as inf:
         data = json.load(inf)
         counts = countNodes(data, counts)
@@ -43,6 +49,12 @@ def interface():
     print("SoilNitrogenNO3: " + str(counts['SoilNitrogenNO3']))
     print("SoilNitrogenNH4: " + str(counts['SoilNitrogenNH4']))
     print("SoilNitrogenUrea: " + str(counts['SoilNitrogenUrea']))
+    print(" ")
+    print("References In Scripts:")
+    print("SoilNitrogen: " + str(counts['ScriptSoilNitrogen']))
+    print(" ")
+    print("References In Reports:")
+    print("SoilNitrogen: " + str(counts['ReportSoilNitrogen']))
     print(" ")
 
     convertYN = ""
@@ -70,12 +82,21 @@ def countNodes(node, counts):
     if '$type' in node:
         if node['$type'] == "Models.Soils.SoilNitrogen, Models":
             counts['SoilNitrogen'] = counts['SoilNitrogen'] + 1
-        if node['$type'] == "Models.Soils.SoilNitrogenNO3, Models":
+        elif node['$type'] == "Models.Soils.SoilNitrogenNO3, Models":
             counts['SoilNitrogenNO3'] = counts['SoilNitrogenNO3'] + 1
-        if node['$type'] == "Models.Soils.SoilNitrogenNH4, Models":
+        elif node['$type'] == "Models.Soils.SoilNitrogenNH4, Models":
             counts['SoilNitrogenNH4'] = counts['SoilNitrogenNH4'] + 1
-        if node['$type'] == "Models.Soils.SoilNitrogenUrea, Models":
+        elif node['$type'] == "Models.Soils.SoilNitrogenUrea, Models":
             counts['SoilNitrogenUrea'] = counts['SoilNitrogenUrea'] + 1
+        elif node['$type'] == "Models.Manager, Models":
+            if 'Code' in node:
+                if node['Code'].find('SoilNitrogen ') > -1:
+                    counts['ScriptSoilNitrogen'] = counts['ScriptSoilNitrogen'] + 1
+        elif node['$type'] == "Models.Report, Models":
+            if 'VariableNames' in node:
+                for v in node['VariableNames']:
+                    if v.find('SoilNitrogen.') > -1:
+                        counts['ReportSoilNitrogen'] = counts['ReportSoilNitrogen'] + 1
 
     if 'Children' in node:
         for child in node["Children"]:
@@ -102,12 +123,35 @@ def convertNodes(node):
             node['Name'] = "Nutrient"
             node['Enabled'] = True
             node['ReadOnly'] = False
-        if node['$type'] == "Models.Soils.SoilNitrogenNO3, Models":
+
+        elif node['$type'] == "Models.Soils.SoilNitrogenNO3, Models":
             node['$type'] = "Models.Soils.Solute, Models"
-        if node['$type'] == "Models.Soils.SoilNitrogenNH4, Models":
+
+        elif node['$type'] == "Models.Soils.SoilNitrogenNH4, Models":
             node['$type'] = "Models.Soils.Solute, Models"
-        if node['$type'] == "Models.Soils.SoilNitrogenUrea, Models":
+
+        elif node['$type'] == "Models.Soils.SoilNitrogenUrea, Models":
             node['$type'] = "Models.Soils.Solute, Models"
+
+        elif node['$type'] == "Models.Manager, Models":
+            if 'Code' in node:
+                if node['Code'].find('SoilNitrogen') > -1:
+                       node['Code'] = node['Code'].replace('SoilNitrogen ', 'Nutrient ')
+
+        elif node['$type'] == "Models.Report, Models":
+            if 'VariableNames' in node:
+                for i in range(len(node['VariableNames'])):
+                    v = node['VariableNames'][i]
+                    if v.find('SoilNitrogen.FOMN') > -1:
+                        node['VariableNames'][i] = v.replace('SoilNitrogen.FOMN', 'Nutrient.FOM.C')
+                    elif v.find('SoilNitrogen.NFlow') > -1:
+                        node['VariableNames'][i] = v.replace('SoilNitrogen.NFlow', 'Nutrient.NFlow.Value')
+                    elif v.find('SoilNitrogen.mineral_n') > -1:
+                        node['VariableNames'][i] = v.replace('SoilNitrogen.mineral_n', 'Nutrient.MineralN')
+                    elif v.find('SoilNitrogen.Denitrification') > -1:
+                        node['VariableNames'][i] = v.replace('SoilNitrogen.Denitrification', 'Nutrient.DenitrifiedN')
+                    elif v.find('SoilNitrogen.') > -1:
+                        node['VariableNames'][i] = v.replace('SoilNitrogen.', 'Nutrient.')
 
     if 'Children' in node:
         for child in node["Children"]:
