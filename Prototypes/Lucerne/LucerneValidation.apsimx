@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 473,
+  "ExplorerWidth": 285,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -6217,7 +6217,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.35,
+                      "FixedValue": 0.45,
                       "Units": "g dm/g N remoboilized",
                       "Name": "Rate",
                       "ResourceName": null,
@@ -6321,7 +6321,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.01,
+                                  "FixedValue": 0.067,
                                   "Units": "fractional/day",
                                   "Name": "Decreasing",
                                   "ResourceName": null,
@@ -6331,7 +6331,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.01,
+                                  "FixedValue": 0.067,
                                   "Units": "fraction per day - check logic with Xiumei",
                                   "Name": "Increasing",
                                   "ResourceName": null,
@@ -6352,8 +6352,8 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    250.0,
-                                    300.0
+                                    200.0,
+                                    250.0
                                   ],
                                   "Y": [
                                     1.0,
@@ -6486,7 +6486,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.5,
+                                  "FixedValue": 0.15,
                                   "Units": null,
                                   "Name": "Decreasing",
                                   "ResourceName": null,
@@ -6496,7 +6496,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.5,
+                                  "FixedValue": 0.15,
                                   "Units": null,
                                   "Name": "Increasing",
                                   "ResourceName": null,
@@ -6517,8 +6517,8 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    250.0,
-                                    300.0
+                                    200.0,
+                                    250.0
                                   ],
                                   "Y": [
                                     1.0,
@@ -6990,8 +6990,8 @@
                                     {
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
-                                        10.5,
-                                        16.5
+                                        10.0,
+                                        16.8
                                       ],
                                       "Y": [
                                         0.0,
@@ -7321,8 +7321,8 @@
                                     {
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
-                                        10.5,
-                                        16.5
+                                        10.0,
+                                        16.8
                                       ],
                                       "Y": [
                                         0.0,
@@ -9154,7 +9154,17 @@
           "Text": "\r\nSimulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).\r\n",
           "Name": "Combined Results",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "\r\nSimulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).\r\n",
+              "Name": "Combined Results",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -9996,6 +10006,240 @@
               "TableName": "PredictedObserved",
               "XFieldName": "Observed.TotalSWC",
               "YFieldName": "Predicted.TotalSWC",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series1",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Regression, Models",
+                  "ForEachSeries": false,
+                  "showOneToOne": true,
+                  "showEquation": true,
+                  "Name": "Regression",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 9,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "LeafNWt",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Experiment",
+              "FactorToVaryMarkers": "Experiment",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "PredictedObserved",
+              "XFieldName": "Observed.LeafNWt",
+              "YFieldName": "Predicted.LeafNWt",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series1",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Regression, Models",
+                  "ForEachSeries": false,
+                  "showOneToOne": true,
+                  "showEquation": true,
+                  "Name": "Regression",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 2,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "StemNWt",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Experiment",
+              "FactorToVaryMarkers": "Experiment",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "PredictedObserved",
+              "XFieldName": "Observed.StemNWt",
+              "YFieldName": "Predicted.StemNWt",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series1",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Regression, Models",
+                  "ForEachSeries": false,
+                  "showOneToOne": true,
+                  "showEquation": true,
+                  "Name": "Regression",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 2,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "RootNWt",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16777216,
+              "FactorToVaryColours": "Experiment",
+              "FactorToVaryMarkers": "Experiment",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "PredictedObserved",
+              "XFieldName": "Observed.RootNWt",
+              "YFieldName": "Predicted.RootNWt",
               "X2FieldName": "",
               "Y2FieldName": "",
               "ShowInLegend": true,
@@ -12667,7 +12911,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Aboveground live weight(kg/ha)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -12699,7 +12943,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LeafN",
+                          "YFieldName": "LeafNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -12728,7 +12972,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LeafN",
+                          "YFieldName": "LeafNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -19596,10 +19840,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "Iversen_91DefoliationSL",
-                        "Iversen_91DefoliationLS"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "RootWt",
                       "ResourceName": null,
@@ -19622,8 +19863,8 @@
                           "YFieldName": "RootWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
@@ -19652,7 +19893,7 @@
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
@@ -19831,7 +20072,7 @@
                         "LS"
                       ],
                       "LegendOutsideGraph": false,
-                      "Name": "RootN",
+                      "Name": "RootNWt",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -19849,7 +20090,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "RootN",
+                          "YFieldName": "RootNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -19878,7 +20119,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "RootN",
+                          "YFieldName": "RootNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -19930,7 +20171,7 @@
                         "LS"
                       ],
                       "LegendOutsideGraph": false,
-                      "Name": "StemN",
+                      "Name": "StemNWt",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -19948,7 +20189,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "StemN",
+                          "YFieldName": "StemNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -19977,7 +20218,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "StemN",
+                          "YFieldName": "StemNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -20024,7 +20265,6 @@
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
                       "DisabledSeries": [
-                        "LL",
                         "SL",
                         "LS"
                       ],
@@ -20047,7 +20287,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LeafN",
+                          "YFieldName": "LeafNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -20076,7 +20316,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LeafN",
+                          "YFieldName": "LeafNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -20252,11 +20492,11 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "Report1",
+                          "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.Leaf.Photosynthesis",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "YFieldName": "Photoperiod",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -30045,7 +30285,6 @@
                         "Iversen_121DefoliationSSFDFD2",
                         "Iversen_121DefoliationLLFDFD2",
                         "Iversen_121DefoliationHHFDFD2",
-                        "Iversen_121DefoliationHHFDFD5",
                         "Iversen_121DefoliationSSFDFD10",
                         "Iversen_121DefoliationLLFDFD10",
                         "Iversen_121DefoliationHHFDFD10"
@@ -30228,7 +30467,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -30240,7 +30479,7 @@
                           "YFieldName": "Lucerne.TapRoot.MaintenanceRespiration",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -30292,7 +30531,7 @@
                         "Iversen_121DefoliationHHFDFD10"
                       ],
                       "LegendOutsideGraph": false,
-                      "Name": "LeafN",
+                      "Name": "LeafNWt",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -30310,7 +30549,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LeafN",
+                          "YFieldName": "LeafNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -30339,7 +30578,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "LeafN",
+                          "YFieldName": "LeafNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -30394,7 +30633,7 @@
                         "Iversen_121DefoliationHHFDFD10"
                       ],
                       "LegendOutsideGraph": false,
-                      "Name": "RootN",
+                      "Name": "RootNWt",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -30441,7 +30680,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "RootN",
+                          "YFieldName": "RootNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -30475,7 +30714,7 @@
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Leaf live weight (kg DM/ha)",
+                          "Title": "",
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
@@ -30496,7 +30735,7 @@
                         "Iversen_121DefoliationHHFDFD10"
                       ],
                       "LegendOutsideGraph": false,
-                      "Name": "StemN",
+                      "Name": "StemNWt",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -30514,7 +30753,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "StemN",
+                          "YFieldName": "StemNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -30543,7 +30782,7 @@
                           "LineThickness": 0,
                           "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "StemN",
+                          "YFieldName": "StemNWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
