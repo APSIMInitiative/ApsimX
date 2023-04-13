@@ -1,17 +1,19 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using global::UserInterface.Commands;
+using global::UserInterface.Hotkeys;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Utility;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Commands;
-    using global::UserInterface.Hotkeys;
-    using Models.Core;
-    using Models.Core.Run;
-    using Utility;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -198,6 +200,13 @@
                 IModel model = FindRunnable(explorer.CurrentNode);
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");
+
+                //Compile all the Manager Scripts to make sure they don't have errors
+                IEnumerable<Manager> scripts = model.FindAllDescendants<Manager>();
+                foreach (Manager script in scripts)
+                {
+                    script.RebuildScriptModel();
+                }
 
                 Runner runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                 command = new RunCommand(model.Name, runner, explorer);
