@@ -143,7 +143,7 @@ def convertNodes(node):
                 for i in range(len(node['VariableNames'])):
                     v = node['VariableNames'][i]
                     if v.find('SoilNitrogen.FOMN') > -1:
-                        node['VariableNames'][i] = v.replace('SoilNitrogen.FOMN', 'Nutrient.FOM.C')
+                        node['VariableNames'][i] = v.replace('SoilNitrogen.FOMN', 'Nutrient.FOM.N')
                     elif v.find('SoilNitrogen.NFlow') > -1:
                         node['VariableNames'][i] = v.replace('SoilNitrogen.NFlow', 'Nutrient.NFlow.Value')
                     elif v.find('SoilNitrogen.mineral_n') > -1:
