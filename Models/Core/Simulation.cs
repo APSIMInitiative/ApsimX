@@ -211,10 +211,7 @@ namespace Models.Core
                 foreach (Soils.Soil soil in soils)
                     soil.Standardise();
 
-                // Check to make sure there is only one ISoilWater in each zone.
-                foreach (var zone in FindAllChildren<Zone>())
-                    if (zone.FindAllInScope<Models.Interfaces.ISoilWater>().Count() > 1)
-                        throw new Exception($"More than one water balance found in zone {zone.Name}");
+                CheckNotMultipleSoilWaterModels(this);
 
                 // If this simulation was not created from deserialisation then we need
                 // to parent all child models correctly and call OnCreated for each model.
@@ -361,6 +358,21 @@ namespace Models.Core
                 yield return tag;
             foreach (ITag tag in FindAllDescendants<Manager>().SelectMany(m => m.Document()))
                 yield return tag;
+        }
+
+        /// <summary>
+        /// Check that there aren't multiple soil water models in a zone.
+        /// </summary>
+        /// <param name="parentZone">The zone to check.</param>
+        private static void CheckNotMultipleSoilWaterModels(IModel parentZone)
+        {
+            foreach (var soil in parentZone.FindAllChildren<Soils.Soil>())
+                if (soil.FindAllChildren<Models.Interfaces.ISoilWater>().Count() > 1)
+                    throw new Exception($"More than one water balance found in zone {parentZone.Name}");
+
+            // Check to make sure there is only one ISoilWater in each zone.
+            foreach (IModel zone in parentZone.FindAllChildren<Models.Interfaces.IZone>())
+                CheckNotMultipleSoilWaterModels(zone);
         }
     }
 }
