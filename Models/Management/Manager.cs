@@ -100,6 +100,14 @@
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
+        /// Stores the success of the last compile
+        /// Used to check if the binary is up to date before running simulations
+        /// Prevents an old binary brom being used if the last compile had errors
+        /// </summary>
+        [JsonIgnore]
+        public bool SuccessfullyCompiledLast { get; set; } = false;
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>

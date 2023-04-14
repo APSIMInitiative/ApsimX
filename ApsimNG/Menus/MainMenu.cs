@@ -201,11 +201,15 @@ namespace UserInterface.Presenters
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");
 
-                //Compile all the Manager Scripts to make sure they don't have errors
+                //Check if all the managers were able to be compiled last time they built
                 IEnumerable<Manager> scripts = model.FindAllDescendants<Manager>();
                 foreach (Manager script in scripts)
                 {
-                    script.RebuildScriptModel();
+                    if (script.SuccessfullyCompiledLast == false) {
+                        //one of our scripts had an error
+                        //throw an expection to stop simulations from running with old binaries
+                        throw new Exception("Errors found in manager model " + script.Name);
+                    }
                 }
 
                 Runner runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);

@@ -170,12 +170,16 @@
 
                 string code = managerView.Editor.Text;
 
+                //set this to false prior to compiling in case an error is thrown
+                manager.SuccessfullyCompiledLast = false;
+
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
                 bool codeChanged = manager.Code != code;
                 manager.Code = code;
 
                 // If it gets this far then compiles ok.
+                manager.SuccessfullyCompiledLast = true;
                 if (codeChanged)
                 {
                     explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", code));
