@@ -133,6 +133,10 @@
         {
             if (Children.Count != 0)
             {
+                //throw an expection to stop simulations from running with an old binary
+                if (SuccessfullyCompiledLast == false)
+                    throw new Exception("Errors found in manager model " + Name);
+
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
             }
