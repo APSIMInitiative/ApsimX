@@ -807,10 +807,19 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    //check if model is from a resource, if so, set all children to read only
+                    bool isResource = false;
+                    if (!string.IsNullOrEmpty(model.ResourceName))
+                        isResource = true;
+
                     var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
                     hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = hidden; 
+                    {
+                        child.IsHidden = hidden;
+                        if (isResource)
+                            child.ReadOnly = true;
+                    }
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);

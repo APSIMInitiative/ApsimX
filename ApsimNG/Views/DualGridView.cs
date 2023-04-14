@@ -5,18 +5,6 @@ using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    /// <summary>An interface for a drop down</summary>
-    public interface IDualGridView
-    {
-        /// <summary>Top grid in view.</summary>
-        IGridView Grid1 { get; }
-
-        /// <summary>bottom grid in view.</summary>
-        IGridView Grid2 { get; }
-
-        /// <summary>Show the 2nd grid?</summary>
-        void ShowGrid2(bool show);
-    }
 
     /// <summary>A drop down view.</summary>
     public class DualGridView : ViewBase, IDualGridView
@@ -62,5 +50,18 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>An interface for a drop down</summary>
+    public interface IDualGridView
+    {
+        /// <summary>Top grid in view.</summary>
+        IGridView Grid1 { get; }
+
+        /// <summary>bottom grid in view.</summary>
+        IGridView Grid2 { get; }
+
+        /// <summary>Show the 2nd grid?</summary>
+        void ShowGrid2(bool show);
     }
 }

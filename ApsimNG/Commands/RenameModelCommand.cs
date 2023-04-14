@@ -48,6 +48,8 @@
             Structure.Rename(modelToRename, newName);
             tree.Rename(originalPath, this.modelToRename.Name);
             modelChanged(modelToRename);
+            //select root node before changing name, so that we can select the changed node afterwards
+            tree.SelectedNode = ".Simulations";
             tree.SelectedNode = modelToRename.FullPath;
         }
 
@@ -59,6 +61,8 @@
             tree.Rename(modelToRename.FullPath, originalName);
             modelToRename.Name = originalName;
             modelChanged(modelToRename);
+            //select root node before changing name, so that we can select the changed node afterwards
+            tree.SelectedNode = ".Simulations";
             tree.SelectedNode = modelToRename.FullPath;
         }
     }
