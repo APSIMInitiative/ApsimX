@@ -1,18 +1,8 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+
+namespace UserInterface.Views
 {
-    using Extensions;
-    using Gtk;
-    using System;
-
-    /// <summary>Interface for a menu item.</summary>
-    public interface IMenuItemView
-    {
-        /// <summary>Menu clicked event.</summary>
-        event EventHandler Clicked;
-
-        /// <summary>Gets or set the checked status of the menu item.</summary>
-        bool Checked { get; set; }
-    }
 
     /// <summary>Encapsulates a menu item.</summary>
     public class MenuItemView : IMenuItemView
@@ -67,5 +57,15 @@
             }
         }
 
+    }
+
+    /// <summary>Interface for a menu item.</summary>
+    public interface IMenuItemView
+    {
+        /// <summary>Menu clicked event.</summary>
+        event EventHandler Clicked;
+
+        /// <summary>Gets or set the checked status of the menu item.</summary>
+        bool Checked { get; set; }
     }
 }

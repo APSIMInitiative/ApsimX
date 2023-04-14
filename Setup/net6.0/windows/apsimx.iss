@@ -11,7 +11,7 @@
 #ifdef VERSION
 #define AppVerNo VERSION
 #else
-#define AppVerNo GetStringFileInfo(ApsimX + "\bin\Release\netcoreapp3.1\win-x64\publish\Models.exe", PRODUCT_VERSION) 
+#define AppVerNo GetStringFileInfo(ApsimX + "\bin\Release\net6.0\win-x64\publish\Models.exe", PRODUCT_VERSION) 
 #endif
 #define GtkVer "3.24.24"
 #define GtkArchive "gtk-" + GtkVer + ".zip"
@@ -314,7 +314,7 @@ end;
 // this is the main function that detects the required version
 function IsRequiredDotNetDetected(): Boolean;  
 begin
-    result := HasDotNetCore('3.1.0');
+    result := HasDotNetCore('6.0.0');
 end;
 
 function InitializeSetup(): Boolean;
@@ -327,11 +327,11 @@ begin
   if not IsRequiredDotNetDetected() then 
   begin
       result := false;
-      answer := MsgBox('The Microsoft .NET Core Runtime 3.1 or above is required.' + #13#10 + #13#10 +
+      answer := MsgBox('The Microsoft .NET Core Runtime 6.0 or above is required.' + #13#10 + #13#10 +
       'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);
       if (answer = MROK) then
       begin
-        ShellExecAsOriginalUser('open', 'https://download.visualstudio.microsoft.com/download/pr/88437980-f813-4a01-865c-f992ad4909bb/9a936984781f6ce3526ffc946267e0ea/windowsdesktop-runtime-3.1.14-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+        ShellExecAsOriginalUser('open', 'https://download.visualstudio.microsoft.com/download/pr/4c5e26cf-2512-4518-9480-aac8679b0d08/523f1967fd98b0cf4f9501855d1aa063/windowsdesktop-runtime-6.0.13-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
         result := true
       end;
   end;
@@ -344,11 +344,11 @@ Name: {localappdata}\VirtualStore\Apsim\*.*; Type: filesandordirs
 Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 
 [Files]
-Source: {#ApsimX}\bin\Release\netcoreapp3.1\win-x64\publish\*; DestDir: {app}\bin; Flags: ignoreversion;
+Source: {#ApsimX}\bin\Release\net6.0\win-x64\publish\*; DestDir: {app}\bin; Flags: ignoreversion;
 ;fixme
 Source: {#ApsimX}\DeploymentSupport\global\*; DestDir: {app}\bin; Flags: ignoreversion;
 Source: {#ApsimX}\DeploymentSupport\Windows\Bin64\sqlite3.dll; DestDir: {app}\bin; Flags: ignoreversion;
-Source: {#ApsimX}\bin\Release\netcoreapp3.1\win-x64\publish\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
+Source: {#ApsimX}\bin\Release\net6.0\win-x64\publish\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
 Source: {#ApsimX}\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 Source: {#ApsimX}\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
 

@@ -239,7 +239,7 @@
                 // and unmanaged resources.
                 if (disposing && mainWidget != null)
                 {
-                    Utility.GtkUtil.DetachAllHandlers(mainWidget);
+                    Utility.GtkUtilities.DetachAllHandlers(mainWidget);
 
                     // Note: if mainWidget is a top-level widget, Dispose() will destroy the
                     // widget automatically, which can have bad results. Therefore, we only

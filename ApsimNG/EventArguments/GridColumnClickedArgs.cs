@@ -1,8 +1,8 @@
-﻿namespace UserInterface.EventArguments
-{
-    using Interfaces;
-    using System;
+﻿using System;
+using UserInterface.Interfaces;
 
+namespace UserInterface.EventArguments
+{
     /// <summary>
     /// Structure to hold information about clicks that have occurred on 
     /// a grid column.

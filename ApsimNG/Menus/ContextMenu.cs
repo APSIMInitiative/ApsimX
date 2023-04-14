@@ -295,12 +295,15 @@
                 string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
-
-                IModel currentNode = explorerPresenter.CurrentNode as IModel;
-                if (currentNode != null)
+                if (!string.IsNullOrEmpty(text))
                 {
-                    ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
-                    explorerPresenter.CommandHistory.Add(command, true);
+
+                    IModel currentNode = explorerPresenter.CurrentNode as IModel;
+                    if (currentNode != null)
+                    {
+                        ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                    }
                 }
             }
             catch (Exception err)
@@ -452,7 +455,7 @@
                 string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
 
                 string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
-                                 $"[Link(Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
+                                 $"[Link(Type=LinkType.Path, Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
 
                 explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
             }
@@ -804,10 +807,19 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    //check if model is from a resource, if so, set all children to read only
+                    bool isResource = false;
+                    if (!string.IsNullOrEmpty(model.ResourceName))
+                        isResource = true;
+
                     var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
                     hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = hidden; 
+                    {
+                        child.IsHidden = hidden;
+                        if (isResource)
+                            child.ReadOnly = true;
+                    }
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);

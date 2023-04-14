@@ -1,22 +1,13 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+using Models.GrazPlan;
+
+namespace UserInterface.Interfaces
 {
-    using System;
-    using Models.GrazPlan;
 
     public class TSuppAttrArgs : EventArgs
     {
         public int Attr { get; set; }
         public double AttrVal { get; set; }
-    }
-
-    public class TStringArgs : EventArgs
-    {
-        public string Name { get; set; }
-    }
-
-    public class TIntArgs : EventArgs
-    {
-        public int Value { get; set; }
     }
 
     /// <summary>

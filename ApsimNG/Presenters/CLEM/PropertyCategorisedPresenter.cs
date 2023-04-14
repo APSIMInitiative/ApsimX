@@ -15,62 +15,6 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
-    
-    /// <summary>
-    /// Class used to create the heirachy of the the categories and subcategories from the 
-    /// [Category] attribute added to the properties of a model.
-    /// </summary>
-    public class CategoryItem
-    {
-        public string Name;
-
-        /// <summary>
-        /// Subcategories of this category
-        /// </summary>
-        public List<string> SubcategoryNames;
-
-        /// <summary>
-        /// Constructor 
-        /// </summary>
-        public  CategoryItem(string name)
-        {
-            this.Name = name;
-            this.SubcategoryNames = new List<string>();
-        }
-
-        public void AddSubcategoryName(string name)
-        {
-            //is subcategory name already in the list
-            bool subcatExists = this.SubcategoryNames.Exists(subcatname => subcatname == name);
-            // if it isn't then add it.
-            if (!subcatExists)
-            {
-                this.SubcategoryNames.Add(name);
-            }
-        }
-    }
-
-    public class CategoryTree
-    {
-        public List<CategoryItem> CategoryItems;
-
-        public CategoryTree()
-        {
-            this.CategoryItems = new List<CategoryItem>();
-        }
-
-        public CategoryItem FindCategoryInTree(string catName)
-        {
-            return this.CategoryItems.Find(item => item.Name == catName);
-        }
-
-        public void AddCategoryToTree(String catName)
-        {
-            bool catExists = this.CategoryItems.Exists(item => item.Name == catName);
-            if (!catExists)
-                this.CategoryItems.Add(new CategoryItem(catName));
-        }
-    }
 
     /// <summary>
     /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 

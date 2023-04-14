@@ -1,15 +1,14 @@
-﻿namespace UserInterface
-{
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Presenters;
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Utility;
-    using Views;
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using UserInterface.Presenters;
+using UserInterface.Views;
+using Utility;
 
+namespace UserInterface
+{
     static class UserInterface
     {
         /// <summary>

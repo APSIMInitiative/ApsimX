@@ -1,17 +1,9 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using Gtk;
+﻿using System;
+using System.Collections.Generic;
+using Gtk;
 
-    /// <summary>
-    /// Describes an interface for a folder view.
-    /// </summary>
-    interface IFolderView
-    {
-        /// <summary>Sets the user controls to show.</summary>
-        void SetContols(List<GraphView> controls);
-    }
+namespace UserInterface.Views
+{
 
     /// <summary>
     /// A view for showing 1 or more user controls.
@@ -120,5 +112,14 @@
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>
+    /// Describes an interface for a folder view.
+    /// </summary>
+    interface IFolderView
+    {
+        /// <summary>Sets the user controls to show.</summary>
+        void SetContols(List<GraphView> controls);
     }
 }

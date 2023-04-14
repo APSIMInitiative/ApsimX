@@ -1,31 +1,10 @@
 ﻿using Gtk;
 using System;
-using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    public interface IManagerView
-    {
-        /// <summary>
-        /// Provides access to the properties grid.
-        /// </summary>
-        /// <remarks>
-        /// Change type to IProeprtyView when ready to release new property view.
-        /// </remarks>
-        IPropertyView PropertyEditor { get; }
-
-        /// <summary>
-        /// Provides access to the editor.
-        /// </summary>
-        IEditorView Editor { get; }
-
-        /// <summary>
-        /// Indicates the index of the currently active tab
-        /// </summary>
-        int TabIndex { get;  set; }
-    }
-
+    
     public class ManagerView : ViewBase,  IManagerView
     {
 
@@ -82,5 +61,26 @@ namespace UserInterface.Views
 
         public IPropertyView PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
+    }
+
+    public interface IManagerView
+    {
+        /// <summary>
+        /// Provides access to the properties grid.
+        /// </summary>
+        /// <remarks>
+        /// Change type to IProeprtyView when ready to release new property view.
+        /// </remarks>
+        IPropertyView PropertyEditor { get; }
+
+        /// <summary>
+        /// Provides access to the editor.
+        /// </summary>
+        IEditorView Editor { get; }
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
     }
 }
