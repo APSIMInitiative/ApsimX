@@ -105,7 +105,7 @@
         /// Prevents an old binary brom being used if the last compile had errors
         /// </summary>
         [JsonIgnore]
-        public bool SuccessfullyCompiledLast { get; set; } = false;
+        private bool SuccessfullyCompiledLast { get; set; } = false;
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 
@@ -154,6 +154,7 @@
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
+                    SuccessfullyCompiledLast = true;
                     if (Children.Count != 0)
                         Children.Clear();
                     var newModel = results.Instance as IModel;
@@ -164,7 +165,10 @@
                     }
                 }
                 else
+                {
+                    SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
+                }
                 SetParametersInScriptModel();
             }
         }

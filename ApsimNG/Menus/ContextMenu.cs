@@ -1071,6 +1071,7 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     model.RebuildScriptModel();
+                    explorerPresenter.MainPresenter.ShowMessage("\"" + model.Name + "\" compiled successfully", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)
