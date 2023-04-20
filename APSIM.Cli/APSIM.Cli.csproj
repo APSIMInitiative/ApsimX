@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <AssemblyName>apsim</AssemblyName>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +15,9 @@
     <ProjectReference Include="../Models/Models.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
   </ItemGroup>
+
+  <PropertyGroup>
+   <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
 
 </Project>

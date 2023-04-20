@@ -11,9 +11,10 @@
     using System.Drawing;
     using System.Linq;
     using APSIM.Shared.Graphing;
+	using System.Globalization;
 
-    /// <summary>The class represents a single series on a graph</summary>
-    [ValidParent(ParentType = typeof(Graph))]
+	/// <summary>The class represents a single series on a graph</summary>
+	[ValidParent(ParentType = typeof(Graph))]
     [ViewName("UserInterface.Views.SeriesView")]
     [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     [Serializable]
@@ -253,7 +254,7 @@
                                             fieldNames: new string[] { varyByFieldName },
                                             simulationNames: inScopeSimulationNames,
                                             distinct: true);
-                var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName).Distinct().ToList();
+                var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName, CultureInfo.InvariantCulture).Distinct().ToList();
                 validValuesForEachVaryByField.Add(values);
             }
 

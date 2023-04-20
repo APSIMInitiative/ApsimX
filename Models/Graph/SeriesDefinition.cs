@@ -318,8 +318,17 @@
 
                 filter = filter?.Replace('\"', '\'');
                 View = new DataView(data);
-                View.RowFilter = filter;
-
+                try
+                {
+                    View.RowFilter = filter;
+                }
+                catch (Exception ex)
+                {
+                    //this will still cause a pause when running in debug mode, that is due to how visual studio
+                    //works when an exception thrown by external code but is not handled by that external code.
+                    throw new Exception("Filter cannot be parsed: " + ex.Message);
+                }
+                
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(Series.TableName, XFieldName);
                 YFieldUnits = reader.Units(Series.TableName, YFieldName);

@@ -1,0 +1,79 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 159,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Simulation",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "Script1 publishes(invokes) an XEvent which Script2 receives and writes a message to the summary (hello from x).\nWhen Script2 receives a DoManagement event it publishes a MyEvent event. Script1 receives myEvent and writes a message to the summary (received myEvent).",
+          "Name": "Memo",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1900-01-10T00:00:00",
+          "Name": "Clock",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "SummaryFile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\nusing Models.Core;\n\nnamespace Models\n{\n\t// This script publishes a statically-named event called XEvent. It also\n\t// subscribes to an event called \"MyEvent\".\n    [Serializable]\n    public class Script1 : Model\n    {\n    \t[Link] private ISummary summary;\n        public event EventHandler XEvent;\n\n        [EventSubscribe(\"DoManagement\")]\n        private void Daily(object sender, EventArgs e)\n        {\n            if (XEvent != null)\n            \tXEvent.Invoke(this, EventArgs.Empty);\n        }\n\n\t\t[EventSubscribe(\"MyEvent\")]\n\t\tprivate void OnMyEvent(object x, EventArgs y)\n\t\t{\n\t\t\tsummary.WriteMessage(this, \"received MyEvent\", MessageType.Information);\n\t\t}\n    }\n}\n",
+          "Parameters": [],
+          "Name": "Script1",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\nusing Models.Core;\n\nnamespace Models\n{\n\t// This script receives an event called XEvent which is invoked in Script1.\n\t// It also generates a dynamically-named event (name could be determined at simulation runtime).\n    [Serializable]\n    public class Script2 : Model\n    {\n        [Link] private Script1 script1;\n        [Link] private ISummary summary;\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            script1.XEvent += OnX;\n        }\n        private void OnX(object x, EventArgs y)\n        {\n        \tConsole.WriteLine(\"OnX\");\n        \tsummary.WriteMessage(this, \"Hello from X\", MessageType.Information);\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            var events = new Events(this);\n            events.Publish(\"MyEvent\", new object[] { this, EventArgs.Empty });\n        }\n        \n    }\n}\n",
+          "Parameters": [],
+          "Name": "Script2",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}

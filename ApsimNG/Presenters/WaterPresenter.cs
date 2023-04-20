@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Presenters
 {
     using APSIM.Shared.Graphing;
+    using Commands;
     using Models.Soils;
     using System;
     using System.Globalization;
@@ -35,7 +36,7 @@
         private EditView depthWetSoilEdit;
 
         /// <summary>Plant available water label.</summary>
-        private LabelView pawLabel;
+        private EditView pawEdit;
 
         /// <summary>Graph.</summary>
         private GraphView graph;
@@ -61,7 +62,7 @@
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");
             relativeToDropDown = view.GetControl<DropDownView>("relativeToDropDown");
             depthWetSoilEdit = view.GetControl<EditView>("depthWetSoilEdit");
-            pawLabel = view.GetControl<LabelView>("pawLabel");
+            pawEdit = view.GetControl<EditView>("pawEdit");
             graph = view.GetControl<GraphView>("graph");
             graph.SetPreferredWidth(0.3);
 
@@ -83,12 +84,12 @@
             try
             {
                 DisconnectEvents();
-                pawLabel.Text = water.InitialPAWmm.ToString("F0");
-                percentFullEdit.Text = (water.FractionFull * 100).ToString("F0");
+                pawEdit.Text = water.InitialPAWmm.ToString("F0", CultureInfo.CurrentCulture);
+                percentFullEdit.Text = (water.FractionFull * 100).ToString("F0", CultureInfo.CurrentCulture);
                 filledFromTopCheckbox.Checked = water.FilledFromTop;
                 relativeToDropDown.Values = water.AllowedRelativeTo.ToArray();
                 relativeToDropDown.SelectedValue = water.RelativeTo;
-                depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0");
+                depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0", CultureInfo.CurrentCulture);
                 PopulateWaterGraph(graph, water.Physical.Thickness, water.Physical.AirDry, water.Physical.LL15, water.Physical.DUL, water.Physical.SAT,
                                    water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
                 ConnectEvents();
@@ -104,6 +105,7 @@
         {
             DisconnectEvents();
             gridPresenter.CellChanged += OnCellChanged;
+            pawEdit.Changed += OnPawChanged;
             percentFullEdit.Changed += OnPercentFullChanged;
             filledFromTopCheckbox.Changed += OnFilledFromTopChanged;
             relativeToDropDown.Changed += OnRelativeToChanged;
@@ -115,6 +117,7 @@
         private void DisconnectEvents()
         {
             gridPresenter.CellChanged -= OnCellChanged;
+            pawEdit.Changed -= OnPawChanged;
             percentFullEdit.Changed -= OnPercentFullChanged;
             filledFromTopCheckbox.Changed -= OnFilledFromTopChanged;
             relativeToDropDown.Changed -= OnRelativeToChanged;
@@ -131,17 +134,38 @@
             Refresh();
         }
 
+        /// <summary>Invoked when the PAW edit box is changed.</summary>
+        /// <param name="sender">The send of the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void OnPawChanged(object sender, EventArgs e)
+        {
+            // Due to a quirk of gtk, selecting the entire textbox contents and
+            // then commencing typing (so as to overwrite the old value) will
+            // cause this method to be called with an empty string and then
+            // again with each new character in turn. The best thing to do with
+            // an empty string is to just ignore it, but only if there are
+            // pending events.
+            if (string.IsNullOrEmpty(pawEdit.Text) && Gtk.Application.EventsPending())
+                return;
+            double paw = Convert.ToDouble(pawEdit.Text, CultureInfo.CurrentCulture);
+            ChangePropertyValue(new ChangeProperty(water, "InitialPAWmm", paw));
+        }
+
         /// <summary>Invoked when the percent full edit box is changed.</summary>
         /// <param name="sender">The send of the event.</param>
         /// <param name="e">The event arguments.</param>
         private void OnPercentFullChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(percentFullEdit.Text))
-                water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
-            else
-                water.FractionFull = 0;
-            Refresh();
-            gridPresenter.Refresh();
+            // Due to a quirk of gtk, selecting the entire textbox contents and
+            // then commencing typing (so as to overwrite the old value) will
+            // cause this method to be called with an empty string and then
+            // again with each new character in turn. The best thing to do with
+            // an empty string is to just ignore it, but only if there are
+            // pending events.
+            if (string.IsNullOrEmpty(percentFullEdit.Text) && Gtk.Application.EventsPending())
+                return;
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
+            ChangePropertyValue(new ChangeProperty(water, nameof(water.FractionFull), fractionFull));
         }
 
         /// <summary>Invoked when the filled from top checkbox is changed.</summary>
@@ -149,10 +173,16 @@
         /// <param name="e">The event arguments.</param>
         private void OnFilledFromTopChanged(object sender, EventArgs e)
         {
-            water.FilledFromTop = filledFromTopCheckbox.Checked;
-            water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
-            Refresh();
-            gridPresenter.Refresh();
+            var changeFilledFromTop = new ChangeProperty.Property(water, nameof(water.FilledFromTop), filledFromTopCheckbox.Checked);
+
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
+            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
+
+            // Create a single ChangeProperty object with two actual changes.
+            // This will cause both changes to be applied (and be undo-able) in
+            // a single atomic action.
+            ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
+            ChangePropertyValue(changes);
         }
 
         /// <summary>Invoked when the relative to drop down is changed.</summary>
@@ -160,10 +190,16 @@
         /// <param name="e">The event arguments.</param>
         private void OnRelativeToChanged(object sender, EventArgs e)
         {
-            water.RelativeTo = relativeToDropDown.SelectedValue;
-            water.FractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.InvariantCulture) / 100;
-            Refresh();
-            gridPresenter.Refresh();
+            var changeRelativeTo = new ChangeProperty.Property(water, nameof(water.RelativeTo), relativeToDropDown.SelectedValue);
+
+            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
+            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
+
+            // Create a single ChangeProperty object with two actual changes.
+            // This will cause both changes to be applied (and be undo-able) in
+            // a single atomic action.
+            ChangeProperty changes = new ChangeProperty(new[] { changeRelativeTo, changeFractionFull });
+            ChangePropertyValue(changes);
         }
 
         /// <summary>Invoked when the depth of wet soil is changed.</summary>
@@ -171,7 +207,29 @@
         /// <param name="e">The event arguments.</param>
         private void OnDepthWetSoilChanged(object sender, EventArgs e)
         {
-            water.DepthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.InvariantCulture);
+            double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.CurrentCulture);
+            ChangePropertyValue(nameof(water.DepthWetSoil), depthWetSoil);
+        }
+
+        /// <summary>
+        /// Change a property of the water model via the command system, then
+        /// update the GUI.
+        /// </summary>
+        /// <param name="propertyName">Name of the property to be changed.</param>
+        /// <param name="propertyValue">New value of the property.</param>
+        private void ChangePropertyValue(string propertyName, object propertyValue)
+        {
+            ChangePropertyValue(new ChangeProperty(water, propertyName, propertyValue));
+        }
+
+        /// <summary>
+        /// Change a property of the water model via the command system, then
+        /// update the GUI.
+        /// </summary>
+        /// <param name="command">The property change to be applied.</param>
+        private void ChangePropertyValue(ChangeProperty command)
+        {
+            explorerPresenter.CommandHistory.Add(command);
             Refresh();
             gridPresenter.Refresh();
         }

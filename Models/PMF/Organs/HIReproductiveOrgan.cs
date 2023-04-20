@@ -297,6 +297,16 @@ namespace Models.PMF.Organs
             Dead.Clear();
             DMDemand.Clear();
             NDemand.Clear();
+            DMSupply.Clear();
+            NSupply.Clear();
+            potentialDMAllocation.Clear();
+            DailyGrowth = 0;
+            GrowthRespiration = 0;
+            Allocated.Clear();
+            Senesced.Clear();
+            Detached.Clear();
+            Removed.Clear();
+
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>

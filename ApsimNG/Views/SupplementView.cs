@@ -1,13 +1,14 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using Extensions;
-    using Gtk;
-    using Interfaces;
-    using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
+﻿using System;
+using System.Collections.Generic;
+using UserInterface.Extensions;
+using Gtk;
+using Models.GrazPlan;   // For access to the TSuppAttribute enumeration
+using UserInterface.Interfaces;
 
-    public class SupplementView : ViewBase, ISupplementView
+namespace UserInterface.Views
+{
+
+    public class SupplementView : ViewBase
     {
         /// <summary>
         /// Invoked when a supplement has been selected by user.

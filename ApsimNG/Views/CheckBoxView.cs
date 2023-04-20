@@ -3,20 +3,6 @@ using Gtk;
 
 namespace UserInterface.Views
 {
-    /// <summary>An interface for a check box.</summary>
-    public interface ICheckBoxView
-    {
-        /// <summary>Invoked when the user changes the selection</summary>
-        event EventHandler Changed;
-
-        /// <summary>Gets or sets whether the checkbox is checked.</summary>
-        bool Checked { get; set; }
-
-        /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
-        bool IsSensitive { get; set; }
-    }
-
-
     /// <summary>A checkbox view.</summary>
     public class CheckBoxView : ViewBase, ICheckBoxView
     {
@@ -117,5 +103,19 @@ namespace UserInterface.Views
             mainWidget = checkbutton1;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+    }
+
+
+    /// <summary>An interface for a check box.</summary>
+    public interface ICheckBoxView
+    {
+        /// <summary>Invoked when the user changes the selection</summary>
+        event EventHandler Changed;
+
+        /// <summary>Gets or sets whether the checkbox is checked.</summary>
+        bool Checked { get; set; }
+
+        /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
+        bool IsSensitive { get; set; }
     }
 }

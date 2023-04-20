@@ -1,4 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.InkML;
+using Gtk;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -6,14 +8,32 @@ using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace UnitTests
 {
+    [SetUpFixture]
+    public class SetupTrace
+    {
+        [OneTimeSetUp]
+        public void StartTest()
+        {
+            System.Diagnostics.Trace.Listeners.Add(new ConsoleTraceListener());
+        }
+
+        [OneTimeTearDown]
+        public void EndTest()
+        {
+            System.Diagnostics.Trace.Flush();
+        }
+    }
+
     [TestFixture]
     public class CommandLineArgsTests
     {
+
         [Test]
         public void TestCsvSwitch()
         {
@@ -37,18 +57,20 @@ namespace UnitTests
 
             // Verify that the .csv file contains correct data.
             string csvData = File.ReadAllText(csvFile);
-            string expected = @"SimulationName,SimulationID,    2n,CheckpointID,CheckpointName, n,Zone
-    Simulation,           1, 2.000,           1,       Current, 1,Zone
-    Simulation,           1, 4.000,           1,       Current, 2,Zone
-    Simulation,           1, 6.000,           1,       Current, 3,Zone
-    Simulation,           1, 8.000,           1,       Current, 4,Zone
-    Simulation,           1,10.000,           1,       Current, 5,Zone
-    Simulation,           1,12.000,           1,       Current, 6,Zone
-    Simulation,           1,14.000,           1,       Current, 7,Zone
-    Simulation,           1,16.000,           1,       Current, 8,Zone
-    Simulation,           1,18.000,           1,       Current, 9,Zone
-    Simulation,           1,20.000,           1,       Current,10,Zone
+            string expected = @"SimulationName,SimulationID,2n,CheckpointID,CheckpointName,n,Zone
+Simulation,1,2.000,1,Current,1,Zone
+Simulation,1,4.000,1,Current,2,Zone
+Simulation,1,6.000,1,Current,3,Zone
+Simulation,1,8.000,1,Current,4,Zone
+Simulation,1,10.000,1,Current,5,Zone
+Simulation,1,12.000,1,Current,6,Zone
+Simulation,1,14.000,1,Current,7,Zone
+Simulation,1,16.000,1,Current,8,Zone
+Simulation,1,18.000,1,Current,9,Zone
+Simulation,1,20.000,1,Current,10,Zone
 ";
+            Console.WriteLine(expected);
+            Console.WriteLine(csvData);
             Assert.AreEqual(expected, csvData);
         }
 
@@ -74,7 +96,7 @@ namespace UnitTests
             string text = ReflectionUtilities.GetResourceAsString("UnitTests.BasicFile.apsimx");
 
             // Check property values at this point.
-            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false);
+            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
             Clock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();

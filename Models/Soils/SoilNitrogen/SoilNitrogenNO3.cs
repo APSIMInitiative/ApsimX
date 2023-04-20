@@ -8,7 +8,6 @@
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType = typeof(Soil))]
     public class SoilNitrogenNO3 : Solute
     {
         [Link]

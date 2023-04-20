@@ -1,6 +1,6 @@
 ---
 title: "4. Bring folder up to date"
-draft: false
+draft: true
 ---
 
 This document assumes that your APSIM Next Generation folder is C:\Work\ApsimX

@@ -491,6 +491,15 @@
             if (dataType.IsEnum)
                 return Enum.Parse(dataType, newValue, true);
 
+            // Bools as ints - special case
+            if (dataType == typeof(int))
+            {
+                if (newValue.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+                if (newValue.Equals("false", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+
             // Convert.ChangeType() doesn't seem to work properly on nullable types.
             Type underlyingType = Nullable.GetUnderlyingType(dataType);
             if (underlyingType != null)

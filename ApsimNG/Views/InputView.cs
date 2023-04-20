@@ -1,27 +1,9 @@
 ﻿using System;
 using Gtk;
-using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    interface IInputView
-    {
-        /// <summary>
-        /// Invoked when a browse button is clicked.
-        /// </summary>
-        event EventHandler BrowseButtonClicked;
-
-        /// <summary>
-        /// Property to provide access to the filename label.
-        /// </summary>
-        string FileName { get; set; }
-
-        /// <summary>
-        /// Property to provide access to the grid.
-        /// </summary>
-        IGridView GridView { get; }
-    }
 
     public class InputView : ViewBase, IInputView
     {
@@ -108,11 +90,21 @@ namespace UserInterface.Views
         }
     }
 
-    /// <summary>
-    /// A class for holding info about a begin drag event.
-    /// </summary>
-    public class OpenDialogArgs : EventArgs
+    interface IInputView
     {
-        public string FileName;
+        /// <summary>
+        /// Invoked when a browse button is clicked.
+        /// </summary>
+        event EventHandler BrowseButtonClicked;
+
+        /// <summary>
+        /// Property to provide access to the filename label.
+        /// </summary>
+        string FileName { get; set; }
+
+        /// <summary>
+        /// Property to provide access to the grid.
+        /// </summary>
+        IGridView GridView { get; }
     }
 }

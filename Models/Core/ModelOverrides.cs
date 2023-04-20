@@ -11,7 +11,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.EditorPresenter")]
-    [ValidParent(ParentType = typeof(IModel))]
+    [ValidParent(ParentType = typeof(IPlant))]
     public class ModelOverrides : Model, ILineEditor
     {
         /// <summary>The collection of undo overrides that undo the overrides.</summary>

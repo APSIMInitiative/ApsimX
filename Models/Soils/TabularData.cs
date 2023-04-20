@@ -2,6 +2,7 @@
 using Models.Core;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 
 namespace Models.Soils
@@ -68,7 +69,7 @@ namespace Models.Soils
             if (data != null && data.Columns.Count > 0 &&
                 data.Columns[0].ColumnName == "Depth")
             {
-                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth");
+                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth", CultureInfo.CurrentCulture);
                 var numLayers = depths.TrimEnd().Count;
                 while (data.Rows.Count > numLayers)
                     data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
@@ -172,12 +173,7 @@ namespace Models.Soils
                     if (property.DataType == typeof(string[]))
                         values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
                     else if (property.DataType == typeof(double[]))
-                    {
-                        values = ((double[])propertyValue).Select(v => v.ToString("F3")).ToArray();
-                        for (int i = 0; i < values.Length; i++)
-                            if (values[i] == "NaN")
-                                values[i] = null;
-                    }
+                        values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
 
                     DataTableUtilities.AddColumn(data, Name, values, 1, values.Length);
                 }
@@ -198,10 +194,10 @@ namespace Models.Soils
                         else
                         {
                             if (property.DataType == typeof(string[]))
-                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1);
+                                property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
                             else if (property.DataType == typeof(double[]))
                             {
-                                var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1);
+                                var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numLayers, 1, CultureInfo.CurrentCulture);
                                 property.Value = values;
                             }
                         }

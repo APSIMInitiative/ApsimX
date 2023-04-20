@@ -8,7 +8,8 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
-    using System.Linq;
+	using System.Globalization;
+	using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -118,8 +119,8 @@
                 {
                     var tableData = new DataTable();
                     tableData.Load(reader);
-                    var names = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_NAME");
-                    var types = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_TYPE");
+                    var names = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_NAME", CultureInfo.InvariantCulture);
+                    var types = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_TYPE", CultureInfo.InvariantCulture);
                     for (int i = 0; i < names.Length; i++)
                     {
                         if (types[i].Contains("TABLE"))
