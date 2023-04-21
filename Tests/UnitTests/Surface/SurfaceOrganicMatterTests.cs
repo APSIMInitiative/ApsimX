@@ -39,14 +39,14 @@ namespace UnitTests.SurfaceOrganicMatterTests
 
             // Check that the report reported on the correct dates.
             var storage = file.FindInScope<IDataStore>();
-            List<string> fieldNames = new List<string>() { "doy", "allN" };
+            List<string> fieldNames = new List<string>() { "doy", "lyingwt" };
 
             DataTable data = storage.Reader.GetData("ReportOnTilled", fieldNames: fieldNames);
             double[] values = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 2, 3, 4 };
 
-            double[] valuesN = DataTableUtilities.GetColumnAsDoubles(data, "allN", CultureInfo.InvariantCulture);
-            double[] expectedN = new double[] { 2.5, 1.25, 0.625, 0.3125 };
+            double[] valuesN = DataTableUtilities.GetColumnAsDoubles(data, "lyingwt", CultureInfo.InvariantCulture);
+            double[] expectedN = new double[] { 500, 250, 125, 62.5 };
 
             Assert.AreEqual(expected, values);
             Assert.AreEqual(expectedN, valuesN);

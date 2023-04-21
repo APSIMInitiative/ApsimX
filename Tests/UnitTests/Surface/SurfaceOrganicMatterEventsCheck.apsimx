@@ -71,7 +71,7 @@
               "VariableNames": [
                 "[Clock].Today",
                 "[Clock].Today.DayOfYear as doy",
-                "[SurfaceOrganicMatter].N as allN"
+                "[SurfaceOrganicMatter].LyingWt as lyingwt"
               ],
               "EventNames": [
                 "[SurfaceOrganicMatter].Tilled"
