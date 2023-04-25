@@ -1,20 +1,18 @@
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
+using System;
+using APSIM.Shared.Documentation;
+using System.Linq;
+using System.Collections.Generic;
+using System.Data;
+using Newtonsoft.Json;
+using System.Globalization;
 namespace Models.PMF
 {
-    using Models.Core;
-    using Models.Functions;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Models.PMF.Phen;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
-    using System.Globalization;
-
     /// <summary>
     /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
     /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
@@ -271,6 +269,8 @@ namespace Models.PMF
         public event EventHandler Grazing;
         /// <summary>Occurs when a plant is about to flower</summary>
         public event EventHandler Flowering;
+        /// <summary>Occurs when a plant is about to start pod development</summary>
+        public event EventHandler StartPodDevelopment;
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -306,8 +306,10 @@ namespace Models.PMF
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 summary.WriteMessage(this, message, MessageType.Diagnostic);
-                if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
-                    Flowering.Invoke(this, null);
+                if (Phenology.CurrentPhase.Start == "Flowering")
+                    Flowering?.Invoke(this, null);
+                if (Phenology.CurrentPhase.Start == "StartPodDevelopment")
+                    StartPodDevelopment?.Invoke(this, null);
             }
         }
 
