@@ -229,7 +229,7 @@ namespace Models.Soils
 
                     double m = (est2 - est) / dpF;
 
-                    if ((Math.Abs(est - theta) < tolerance) || (m == 0))
+                    if ((Math.Abs(est - theta) < tolerance) || Math.Abs(m) < tolerance)
                         break;
 
                     double pFnew = pF - (est - theta) / m;
