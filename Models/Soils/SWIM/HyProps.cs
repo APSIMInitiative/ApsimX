@@ -229,8 +229,9 @@ namespace Models.Soils
 
                     double m = (est2 - est) / dpF;
 
-                    if (Math.Abs(est - theta) < tolerance)
+                    if ((Math.Abs(est - theta) < tolerance) || (m == 0))
                         break;
+
                     double pFnew = pF - (est - theta) / m;
                     if (pFnew > (Math.Log10(-psi0)))
                         pF += dpF;  // This is not really adequate - just saying...
