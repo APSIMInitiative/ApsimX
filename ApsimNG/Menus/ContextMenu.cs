@@ -973,8 +973,16 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                IModel modelToDocument = explorerPresenter.CurrentNode.Clone();
-                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                IModel currentN = explorerPresenter.CurrentNode;
+                IModel modelToDocument;
+
+                if (currentN is Models.Graph || currentN is Simulation)
+                    modelToDocument = currentN;
+                else
+                {
+                    modelToDocument = currentN.Clone();
+                    explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                }               
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
