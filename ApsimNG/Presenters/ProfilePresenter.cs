@@ -7,6 +7,7 @@
     using Models.Soils;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Views;
 
     /// <summary>A presenter for the soil profile models.</summary>
@@ -56,8 +57,9 @@
             gridPresenter = new NewGridPresenter();
             gridPresenter.Attach(model, v, explorerPresenter);
 
-            physical = this.model.FindInScope<Physical>();
-            water = this.model.FindInScope<Water>();
+            Soil soilNode = this.model.FindAncestor<Soil>();
+            physical = soilNode.FindChild<Physical>();
+            water = soilNode.FindChild<Water>();
 
             var propertyView = view.GetControl<PropertyView>("properties");
             propertyPresenter = new PropertyPresenter();
@@ -110,9 +112,19 @@
                 DisconnectEvents();
                 try
                 {
-                    if (water != null && (model is Physical || model is Water))
+                    if (water != null && (model is Physical || model is Water || model is SoilCrop))
+                    {
+                        double[] llsoil = null;
+                        string llsoilName = null;
+                        if (model is SoilCrop)
+                        {
+                            llsoil = (model as SoilCrop).LL;
+                            llsoilName = (model as SoilCrop).Name + " LL";
+                        }
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                          water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
+                                                          water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues, llsoilName, llsoil);
+                    }
+                        
                     else if (model is Organic organic)
                         PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.SoilCNRatio, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)
