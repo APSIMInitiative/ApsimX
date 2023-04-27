@@ -173,7 +173,7 @@ namespace Models.PMF.Arbitrator
 
                 var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
                 if (soilCrop == null)
-                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
 
                 double[] kl = soilCrop.KL;
 
