@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 487,
+  "ExplorerWidth": 401,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -79,7 +79,6 @@
             "[Lucerne].Leaf.BasalBuds.NodeNumber",
             "[Lucerne].Leaf.SenescenceRate",
             "[Lucerne].Leaf.Dead.Wt",
-            "//[Lucerne].Leaf.Area.LeafArea.Senescence",
             "[Lucerne].Leaf.WaterDemand",
             "[Lucerne].Leaf.BasalBuds.LAI",
             "[Lucerne].Nodule.FixationRate",
@@ -108,15 +107,19 @@
             "[Lucerne].Stem.Live.Wt *10 as StemWt",
             "[Lucerne].TapRoot.Live.N *10 as RootNWt",
             "[Lucerne].TapRoot.Live.StorageN",
+            "[Lucerne].TapRoot.Live.MetabolicN",
             "[Lucerne].TapRoot.Live.StorageNConc",
             "[Lucerne].TapRoot.Live.NConc*100 as RootN ",
             "[Lucerne].TapRoot.Live.StorageWt",
             "[Lucerne].TapRoot.Live.StorageWt *10 as StorageWt",
+            "[Lucerne].TapRoot.Live.MetabolicWt",
             "[Lucerne].TapRoot.Live.StructuralWt",
             "[Lucerne].TapRoot.Live.StructuralWt *10 as StructuralWt",
             "[Lucerne].TapRoot.Live.Wt*10 as RootWt",
             "[Lucerne].TapRoot.MaintenanceRespiration",
             "[Lucerne].TapRoot.RetranslocationWt",
+            "[Lucerne].TapRoot.NRetranslocationFactor",
+            "[Lucerne].TapRoot.NRetranslocationFactor * [Lucerne].TapRoot.Live.StorageN as retranslocationN",
             "[lucerne].TapRoot.Senesced.Wt",
             "[Lucerne].TapRoot.StructuralFraction.FixedValue",
             "[Lucerne].TapRoot.Total.Wt*10 as RootTotal",
@@ -2564,11 +2567,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            200.0,
-                            250.0
+                            300.0,
+                            350.0
                           ],
                           "Y": [
-                            0.8,
+                            1.0,
                             1.0,
                             1.0
                           ],
@@ -2989,7 +2992,7 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\r\nEmpirical parameterisation of lucerne LAI with the \"simple leaf\" class (under test). \r\n\r\n**Context:** \r\n\r\n- This is a first step towards a \"simple leaf\" LAI model that is still empirical without representing individual leaves and canopy components. \r\n- The **Leaf Area** node in simple leaf is same as **LAI (m2 leaf/m2 soil)**\r\n- LeafArea is accumulating daily fractions of LAI **(DeltaLAI)** and subtracting it from Senescence (**SenFracLAI**) and frost damage (**FrostDeath**)\r\n\r\n**Assumptions:**\r\n\r\n- Plant population is optimum for canopy expansion (i.e. plants x shoots/plant x branches/shoot x leaves/shoot or branch compensate to potential rates)\r\n\r\n- Other empirical adjustment factors minimise LAI expansion rates to **actual** values by simple fractional adjustments.",
-                  "Name": "01_LeafArea_ooooooooooooooooooooooo",
+                  "Name": "01_LeafArea_oo",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6132,7 +6135,7 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "DMDemands in **g/m2 per day**\r\n\r\n**Note:** Structure and parameterisaion for a dynamic seasonal taproot biomass are under test - see context below. \r\n\r\n**Rationale:**\r\n\r\n- TapRoot has **Structural and Storage tissues** (i.e. no Metabolic)\r\n\r\n**Assumptions:**\r\n\r\n**1. Input \"demand\" for biomass:**\r\n\r\n- There is a **minimum \"structural\" taproot biomass** possible per plant (e.g. 0.8 g /plant x plant pop = 2.5 t/ha for a 300 plants/m2 pop) \r\n- **Structural demand** grows taproot at a max of 1% of gap between actual and mimimum structural, until min structural/plant is achieved.\r\n- **Storage demand** depends on storage \"capacity\" which is proportional to available structural taproot biomass (**XXX = 5** or ~17% of taproot) \r\n\r\n**2. Output \"desapearance\" of taproot biomass:**\r\n\r\n- **Storage demand** is reduced at decreasing photoperiod (winter/spring) but fixed at 100% at increasing Pp. \r\n- Taproot biomass is then consumed via **Retranslocation (to shoots) or MaintenceRespiration (to void)**\r\n- **DMRetranslocationFactor** is a maximum fraction of storage N available per day for retranslocation (1%/day)\r\n- **Maintenencece respiration** is linearly responsive to TapRoot protein content (1 to 2%/day)\r\n\r\n**3. Issues:**\r\n\r\n- Retranslocation logic **requires documentation/ref**\r\n- References for root dynamics logic **(seasonality and respiration)** given bellow \r\n\r\n**4. References:**\r\n\r\nAtkinson, L.J., Hellicar, M.A., Fitter, A.H., Atkin, O.K., 2007. Impact of temperature on the relationship between respiration and nitrogen concentration in roots: an analysis of scaling relationships, Q10 values and thermal acclimation ratios. New Phytol. 173, 110–120. https://doi.org/https://doi.org/10.1111/j.1469-8137.2006.01891.x\r\n\r\nBurton, A., Pregitzer, K., Ruess, R., Hendrick, R., Allen, M., 2002. Root respiration in North American forests: effects of nitrogen concentration and temperature across biomes. Oecologia 131, 559–568. https://doi.org/10.1007/s00442-002-0931-7\r\n\r\nWaring, R.H., Running, S.W., 2007. CHAPTER 3 - Carbon Cycle, in: Waring, R.H., Running, S.W.B.T.-F.E. (Third E. (Eds.), . Academic Press, San Diego, pp. 59–98. https://doi.org/https://doi.org/10.1016/B978-012370605-8.50008-6\r\n\r\nhttps://www.sciencedirect.com/topics/agricultural-and-biological-sciences/maintenance-respiration\r\n\r\nAtkin, O.K., Edwards, E.J., Loveys, B.R., Norby, R., Fitter, A., Jackson, R., 2000. Response of root respiration to changes in temperature and its relevance to global warming. New Phytol. 147, 141–154.\r\n\r\nTeixeira, E.I., Moot, D.J.D.J., Brown, H.E.H.E., 2009. Modelling seasonality of dry matter partitioning and root maintenance respiration in lucerne (Medicago sativa L.) crops. Crop Pasture Sci. 60, 778–784. https://doi.org/10.1071/CP08409\r\n\r\nTeixeira, E.I., Moot, D.J., Mickelbart, M. V., 2007. Seasonal patterns of root C and N reserves of lucerne crops (Medicago sativa L.) grown in a temperate climate were affected by defoliation regime. Eur. J. Agron. 26, 10–20.\r\n\r\nAvice, J.C., Ourry, A., Lemaire, G., Boucaud, J., 1996. Nitrogen and carbon flows estimated by 15N and 13C pulse-chase labeling during regrowth of alfalfa. Plant-Physiology 112, 281–290.",
-                  "Name": "01_TapRootBiomass_ooooooooooooooooooooooooo",
+                  "Name": "01_TapRootBiomass",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6248,26 +6251,62 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "MaintenanceRespirationFunction",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.45,
-                      "Units": "g dm/g N remoboilized",
-                      "Name": "Rate",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "AbsoluteRespiration",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].N.Retranslocation[5]",
+                          "Name": "NTranslocation",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 80.0,
+                          "Units": "g dm/g N remoboilized",
+                          "Name": "Rate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].N.Retranslocation[5]",
-                      "Name": "NTranslocation",
+                      "$type": "Models.Functions.AddFunction, Models",
+                      "Name": "AddFunction",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[TapRoot].Live.MetabolicWt",
+                          "Name": "MetabolicWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[TapRoot].Live.StorageWt",
+                          "Name": "StorageWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6358,7 +6397,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.067,
+                                  "FixedValue": 0.1,
                                   "Units": "fractional/day",
                                   "Name": "Decreasing",
                                   "ResourceName": null,
@@ -6368,7 +6407,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.067,
+                                  "FixedValue": 0.1,
                                   "Units": "fraction per day - check logic with Xiumei",
                                   "Name": "Increasing",
                                   "ResourceName": null,
@@ -6675,7 +6714,7 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "N retranslocation factor is a maximum fraction of storage N available per day for retranslocation",
-                  "Name": "02_TapRootNitrogen_ooooooooooooooooooooooooo",
+                  "Name": "02_TapRootNitrogen",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6700,12 +6739,10 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        500.0,
                         1000.0
                       ],
                       "Y": [
                         0.015,
-                        0.02,
                         0.025
                       ],
                       "XVariableName": null,
@@ -6738,6 +6775,34 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "CriticalNConc",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[TapRoot].MaximumNConc",
+                      "Name": "MaxConc",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.9,
+                      "Units": "fraction of maximum concentration",
+                      "Name": "FracOfMax",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -6746,13 +6811,11 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        600.0,
                         1000.0
                       ],
                       "Y": [
-                        0.009,
-                        0.009,
-                        0.009
+                        0.01,
+                        0.022
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -6801,15 +6864,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Taproot].MinimumNConc",
-                  "Name": "CriticalNConc",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7031,7 +7085,7 @@
                                         16.8
                                       ],
                                       "Y": [
-                                        0.0,
+                                        0.5,
                                         1.0
                                       ],
                                       "XVariableName": null,
@@ -7067,8 +7121,8 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    250.0,
-                                    300.0
+                                    200.0,
+                                    250.0
                                   ],
                                   "Y": [
                                     0.0,
@@ -7342,7 +7396,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.03,
+                                  "FixedValue": 0.015,
                                   "Units": null,
                                   "Name": "Constant",
                                   "ResourceName": null,
@@ -7402,8 +7456,8 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                250.0,
-                                300.0
+                                200.0,
+                                250.0
                               ],
                               "Y": [
                                 0.0,
@@ -19930,7 +19984,7 @@
                           "YFieldName": "Lucerne.TapRoot.MaintenanceRespiration",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -21074,7 +21128,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.Stem.MEConc",
+                          "YFieldName": "stemNMess",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -21330,10 +21384,7 @@
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "Iversen_91DefoliationSL",
-                        "Iversen_91DefoliationLS"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "StorageN",
                       "ResourceName": null,
@@ -21353,7 +21404,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.TapRoot.Live.StorageN",
+                          "YFieldName": "Lucerne.TapRoot.NRetranslocationFactor",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -21361,7 +21412,7 @@
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
-                          "Name": "Predicted",
+                          "Name": "Predicted1",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -21422,7 +21473,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.TapRoot.Live.StorageNConc",
+                          "YFieldName": "Lucerne.TapRoot.Live.StorageN",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -21534,11 +21585,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "Iversen_91DefoliationSL",
-                        "Iversen_91DefoliationSS",
-                        "Iversen_91DefoliationLS"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "RootNRetrans",
                       "ResourceName": null,
@@ -21604,13 +21651,9 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "Iversen_91DefoliationSL",
-                        "Iversen_91DefoliationSS",
-                        "Iversen_91DefoliationLS"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "RootDMRetrans",
+                      "Name": "RootMaintenanceRespiration",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -21618,17 +21661,17 @@
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
-                          "ColourArgb": -16777216,
+                          "ColourArgb": -16747854,
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.TapRoot.RetranslocationWt",
+                          "YFieldName": "Lucerne.TapRoot.MaintenanceRespiration",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -31560,10 +31603,10 @@
                           "ColourArgb": -990142,
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "SimulationName",
+                          "FactorToVaryLines": "Experiment",
                           "Marker": 11,
                           "MarkerSize": 0,
-                          "Line": 4,
+                          "Line": 0,
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
@@ -33184,16 +33227,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": [
-                        "Iversen_121DefoliationSSFDFD2",
-                        "Iversen_121DefoliationLLFDFD2",
-                        "Iversen_121DefoliationHHFDFD2",
-                        "Iversen_121DefoliationSSFDFD5",
-                        "Iversen_121DefoliationHHFDFD5",
-                        "Iversen_121DefoliationSSFDFD10",
-                        "Iversen_121DefoliationLLFDFD10",
-                        "Iversen_121DefoliationHHFDFD10"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "RootNRetrans",
                       "ResourceName": null,
@@ -33217,7 +33251,7 @@
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
@@ -33302,6 +33336,72 @@
                               "ReadOnly": false
                             }
                           ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Date",
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "",
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "ThermalTimeAfterCutting1",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "ThermalTimeAfterCutting",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
