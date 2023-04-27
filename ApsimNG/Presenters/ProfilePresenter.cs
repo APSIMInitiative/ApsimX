@@ -64,7 +64,11 @@
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
-            graph.SetPreferredWidth(0.3);
+
+            //get the paned object that holds the graph and grid
+            Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
+            int paneWidth = view.MainWidget.ParentWindow.Width; //this shoudl get the width of this view
+            bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 

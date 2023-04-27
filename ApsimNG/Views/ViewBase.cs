@@ -189,6 +189,18 @@
         }
 
         /// <summary>
+        /// Get an object from the glade structure
+        /// </summary>
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <param name="objectName">The name of the object.</param>
+        /// <returns>The object or null if not found.</returns>
+        public T GetGladeObject<T>(string objectName) where T : GLib.Object
+        {
+            T obj = (T)builder.GetObject(objectName);
+            return obj;
+        }
+
+        /// <summary>
         /// Invoke an event handler on the main application thread.
         /// </summary>
         /// <param name="handler">The handler to invoke.</param>
