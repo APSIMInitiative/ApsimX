@@ -1,8 +1,9 @@
+using System;
+using OxyPlot;
+using OxyPlot.Series;
+
 namespace APSIM.Interop.Graphing
 {
-    using System;
-    using OxyPlot;
-    using OxyPlot.Series;
 
     /// <summary>
     /// A line series with a better tracker.

@@ -1,10 +1,10 @@
-﻿namespace UserInterface.Commands
+﻿using Models.Core;
+using Models.Core.ApsimFile;
+using UserInterface.Interfaces;
+using System;
+
+namespace UserInterface.Commands
 {
-    using Presenters;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Interfaces;
-    using System;
 
     /// <summary>
     /// A command for renaming a model.

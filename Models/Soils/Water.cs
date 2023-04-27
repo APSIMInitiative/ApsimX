@@ -1,13 +1,14 @@
-﻿namespace Models.Soils
+﻿using APSIM.Shared.APSoil;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Interfaces;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.APSoil;
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// This class encapsulates the water content (initial and current) in the simulation.

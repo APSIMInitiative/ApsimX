@@ -1,10 +1,11 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.Utilities;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A collection of PAWC methods.

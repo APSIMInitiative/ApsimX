@@ -1,6 +1,7 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
 
     /// <summary>A soil organic matter class.</summary>
     [Serializable]

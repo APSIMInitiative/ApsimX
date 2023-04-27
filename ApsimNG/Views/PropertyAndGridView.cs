@@ -25,14 +25,14 @@ namespace UserInterface.Views
             mainWidget = panel;
             panel.Pack1((PropertiesView as ViewBase).MainWidget, true, false);
             panel.Pack2((Grid2 as ViewBase).MainWidget, true, false);
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

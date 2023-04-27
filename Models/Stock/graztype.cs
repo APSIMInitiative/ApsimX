@@ -1,6 +1,7 @@
+using System;
+
 namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// This is nearly the same information as "GrazType.ReproType" (below), but is intended for

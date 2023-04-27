@@ -1,15 +1,13 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Factorial;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using APSIM.Shared.Utilities;
-    using Functions;
-    using Factorial;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in

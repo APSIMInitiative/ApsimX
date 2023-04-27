@@ -1,16 +1,15 @@
-﻿namespace Models
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Reflection;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Documentation;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
 
+namespace Models
+{
     /// <summary>
     /// The manager model
     /// </summary>

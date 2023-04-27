@@ -1,6 +1,7 @@
+using System;
+
 namespace StdUnits
 {
-    using System;
 
     /// <summary>
     /// GrazPlan date utilities

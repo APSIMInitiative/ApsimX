@@ -2,13 +2,13 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Globalization;
+using Models.Core;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
+using Models.Climate;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {

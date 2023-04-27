@@ -1,10 +1,9 @@
-﻿namespace Models.PMF
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-
-
     /// <summary>
     /// The class that holds states of Structural, Metabolic and Storage components of a resource
     /// </summary>

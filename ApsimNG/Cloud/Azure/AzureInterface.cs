@@ -90,7 +90,7 @@ namespace ApsimNG.Cloud
                 if (File.Exists(zipFile))
                     File.Delete(zipFile);
 
-                CreateApsimXZip(job.ApsimXPath, zipFile, ct);
+                CreateApsimXZip(zipFile, ct);
 
                 job.ApsimXPath = zipFile;
                 job.ApsimXVersion = Path.GetFileName(zipFile).Substring(Path.GetFileName(zipFile).IndexOf('-') + 1);
@@ -587,7 +587,7 @@ namespace ApsimNG.Cloud
         {
             Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
             var cmd = string.Format("cmd.exe /c {0} job-manager {1} {2} {3} {4} {5} {6} {7} {8} {9}",
-                BatchConstants.GetJobManagerPath(job.ID),
+                BatchConstants.GetJobManagerPath(),
                 licence.BatchUrl,
                 licence.BatchAccount,
                 licence.BatchKey,
@@ -670,10 +670,10 @@ namespace ApsimNG.Cloud
         /// Compress all .exe and .dll files in the ApsimX/Bin directory
         /// into a single .zip archive at a given path.
         /// </summary>
-        /// <param name="srcPath">Path of the ApsimX directory.</param>
         /// <param name="zipPath">Path to which the zip file will be saved.</param>
         /// <param name="ct">Cancellation token.</param>
-        private void CreateApsimXZip(string srcPath, string zipPath, CancellationToken ct)
+        /// 
+        private void CreateApsimXZip(string zipPath, CancellationToken ct)
         {
             try
             {

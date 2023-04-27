@@ -1,11 +1,12 @@
-﻿namespace UnitTests.Core
+﻿using Models;
+using Models.Core;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace UnitTests.Core
 {
-    using Models;
-    using Models.Core;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
 
     /// <summary>This is a test class for the RunnableSimulationList class</summary>
     [TestFixture]

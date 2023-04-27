@@ -1,15 +1,16 @@
-﻿namespace UnitTests.Core.ApsimFile
+﻿using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+
+namespace UnitTests.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
-    using Newtonsoft.Json.Linq;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
-	using System.IO;
-    using System.Linq;
 
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]

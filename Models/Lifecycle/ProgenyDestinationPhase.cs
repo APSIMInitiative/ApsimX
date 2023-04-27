@@ -1,11 +1,9 @@
-﻿namespace Models.LifeCycle
-{
-    using Models.Core;
-    using Models.Functions;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
+﻿using Models.Core;
+using Models.Functions;
+using System;
 
+namespace Models.LifeCycle
+{
     /// <summary>
     /// This class specifies which life cycle and which phase the progeny of the parent 
     /// LifeCyclePhase will be added to.  More that one ReproductionDestinationPhase can 

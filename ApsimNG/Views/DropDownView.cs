@@ -71,7 +71,7 @@ namespace UserInterface.Views
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnSelectionChanged;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>
@@ -79,14 +79,14 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
                 combobox1.Changed -= OnSelectionChanged;
                 comboModel.Dispose();
                 comboRender.Dispose();
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

@@ -1,6 +1,7 @@
-﻿namespace UserInterface.EventArguments
+﻿using System;
+
+namespace UserInterface.EventArguments
 {
-    using System;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure

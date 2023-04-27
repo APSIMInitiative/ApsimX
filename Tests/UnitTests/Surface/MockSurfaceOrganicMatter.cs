@@ -1,10 +1,9 @@
-﻿namespace UnitTests.Surface
+﻿using Models.Interfaces;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests.Surface
 {
-    using Models;
-    using Models.Interfaces;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
 
     [Serializable]
     class MockSurfaceOrganicMatter : ISurfaceOrganicMatter

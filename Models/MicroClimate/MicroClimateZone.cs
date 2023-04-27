@@ -1,12 +1,12 @@
-﻿namespace Models
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
+namespace Models
+{
     /// <summary>
     /// A micro climate wrapper around a Zone instance.
     /// </summary>
@@ -357,7 +357,7 @@
         /// <param name="dayLengthEvap">This is the length of time within the day during which the sun is above the horizon.</param>
         public void CalculateLongWaveRadiation(double dayLengthLight, double dayLengthEvap)
         {
-            double sunshineHours = CalcSunshineHours(Radn, dayLengthLight, Latitude, clock.Today.DayOfYear);
+            double sunshineHours = CalcSunshineHours(dayLengthLight, Latitude, clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
             double averageT = CalcAverageT(MinT, MaxT);
             NetLongWaveRadiation = LongWave(averageT, fractionClearSky, Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
@@ -412,7 +412,7 @@
         {
             double sumDeltaZ = DeltaZ.Sum();
             double sumLAI = LAItotsum.Sum();
-            double totalGa = AerodynamicConductanceFAO(Wind, ReferenceHeight, sumDeltaZ, sumLAI);
+            double totalGa = AerodynamicConductanceFAO(Wind, ReferenceHeight, sumDeltaZ);
 
             for (int i = 0; i <= numLayers - 1; i++)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
@@ -678,7 +678,7 @@
             return MathUtilities.Divide(klGreen, klTot, 0.0);
         }
 
-        private double CalcSunshineHours(double rand, double dayLengthLight, double latitude, double day)
+        private double CalcSunshineHours(double dayLengthLight, double latitude, double day)
         {
             double maxSunHrs = dayLengthLight;
             double relativeDistance = 1.0 + 0.033 * Math.Cos(0.0172 * day);
@@ -742,7 +742,7 @@
         /// <summary>
         /// Calculate the aerodynamic conductance using FAO approach
         /// </summary>
-        private double AerodynamicConductanceFAO(double windSpeed, double refHeight, double topHeight, double LAItot)
+        private double AerodynamicConductanceFAO(double windSpeed, double refHeight, double topHeight)
         {
             // Calculate site properties
             double d = 0.666 * topHeight;        // zero plane displacement height (m)
@@ -902,10 +902,10 @@
             double eeq = Radn * 23.8846 * (0.000204 - 0.000183 * albedo) * (wt_ave_temp + 29.0);
             // find potential evapotranspiration (pot_eo)
             // from equilibrium evap rate
-            return eeq * EeqFac(MaxT, MinT);
+            return eeq * EeqFac(MaxT);
         }
 
-        private double EeqFac(double MaxT, double MinT)
+        private double EeqFac(double MaxT)
         {
             //+  Purpose
             //                 calculate coefficient for equilibrium evaporation rate

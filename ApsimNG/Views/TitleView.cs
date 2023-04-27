@@ -27,15 +27,15 @@ namespace UserInterface.Views
             entry1 = (Entry)builder.GetObject("entry1");
             mainWidget = hbox1;
             entry1.Changed += OnPositionComboChanged;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
                 entry1.Changed -= OnPositionComboChanged;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

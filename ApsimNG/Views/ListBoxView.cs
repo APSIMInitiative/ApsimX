@@ -69,10 +69,10 @@ namespace UserInterface.Views
 
             Listview.SelectionChanged += OnSelectionChanged;
             Listview.ButtonPressEvent += OnDoubleClick;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace UserInterface.Views
                 popup.Dispose();
                 listmodel.Dispose();
                 accel.Dispose();
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

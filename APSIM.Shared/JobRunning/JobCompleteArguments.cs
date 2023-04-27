@@ -1,6 +1,7 @@
-﻿namespace APSIM.Shared.JobRunning
+﻿using System;
+
+namespace APSIM.Shared.JobRunning
 {
-    using System;
 
     /// <summary>Arguments for JobComplete event</summary>
     public class JobCompleteArguments

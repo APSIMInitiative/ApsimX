@@ -1,6 +1,7 @@
+using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// This abstract base class encapsulates the interface for a variable from a Model.

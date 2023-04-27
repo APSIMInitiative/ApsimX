@@ -214,6 +214,8 @@ namespace Models.PMF.Struct
 			//if there are still more tillers to add
 			//and the newleaf is greater than 3
 			// get number of tillers added so far
+			var placeholder = newLeafNo;
+			var placeHolder2 = currentLeafNo;
 
 			if (CurrentTillerNumber >= CalculatedTillerNumber) return 0.0;
 			// calculate linear LAI - plantsPerMeter is calculated at sowing

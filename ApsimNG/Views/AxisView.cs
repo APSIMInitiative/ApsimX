@@ -71,7 +71,7 @@ namespace UserInterface.Views
             entryInterval.Activated += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">The event arguments</param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -285,7 +285,7 @@ namespace UserInterface.Views
                 entryInterval.Activated -= OnIntervalChanged;
                 checkbutton1.Toggled -= OnCheckedChanged;
                 checkbutton2.Toggled -= OnCheckedChanged;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

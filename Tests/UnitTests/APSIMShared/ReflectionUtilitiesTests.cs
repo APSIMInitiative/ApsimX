@@ -1,10 +1,11 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using NUnit.Framework;
+using System;
+using System.IO;
+
 namespace UnitTests.APSIMShared
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using NUnit.Framework;
-    using System;
-    using System.IO;
 
     [TestFixture]
     public class ReflectionUtilitiesTests

@@ -3,13 +3,14 @@ using Models;
 using Models.Core;
 using NUnit.Framework;
 using System;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System.Collections.Generic;
+using System.IO;
+using UnitTests.Storage;
+
 namespace UnitTests.ManagerTests
 {
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System.Collections.Generic;
-    using System.IO;
-    using UnitTests.Storage;
 
     /// <summary>
     /// Unit Tests for manager scripts.

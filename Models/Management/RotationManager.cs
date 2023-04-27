@@ -1,16 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Globalization;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System.Linq;
+using APSIM.Shared.Graphing;
+
 namespace Models.Management
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Globalization;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Newtonsoft.Json;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
-
     /// <summary>
     /// The rotation manager model
     /// </summary>

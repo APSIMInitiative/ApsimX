@@ -1,8 +1,9 @@
-﻿namespace Models.GrazPlan
+﻿using StdUnits;
+using System;
+using System.Globalization;
+
+namespace Models.GrazPlan
 {
-    using StdUnits;
-    using System;
-    using System.Globalization;
 
     /// <summary>
     /// An age list item

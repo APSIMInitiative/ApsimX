@@ -1,9 +1,10 @@
-﻿namespace Models.Soils.Arbitrator
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils.Arbitrator
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Models.Interfaces;
 
     /// <summary>
     /// Contains an estimate of uptakes (either water or nitrogen)

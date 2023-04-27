@@ -1,8 +1,9 @@
-﻿namespace UserInterface.Commands
+﻿using System;
+using UserInterface.Interfaces;
+using Models.Core;
+
+namespace UserInterface.Commands
 {
-    using System;
-    using Interfaces;
-    using Models.Core;
 
     /// <summary>
     /// This command moves a model up or down one spot in the siblings

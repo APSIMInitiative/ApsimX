@@ -772,6 +772,7 @@ namespace Models.CLEM
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
+            var placeholder = endDate;
             if (clock.EndDate == clock.Today)
                 return;
 

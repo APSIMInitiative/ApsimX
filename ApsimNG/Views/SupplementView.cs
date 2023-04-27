@@ -127,10 +127,10 @@ namespace UserInterface.Views
             lblDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
             lblDefaultNames.Visible = false;
             lvSupps.CursorChanged += LvSupps_SelectedIndexChanged;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -154,7 +154,7 @@ namespace UserInterface.Views
                 cbxRoughage.Toggled -= CbxRoughage_CheckedChanged;
                 lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
                 lvSupps.CursorChanged -= LvSupps_SelectedIndexChanged;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

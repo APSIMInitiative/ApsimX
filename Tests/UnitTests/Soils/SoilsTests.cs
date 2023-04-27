@@ -1,21 +1,15 @@
-﻿namespace UnitTests.Soils
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using Models.Soils;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Weather;
+
+namespace UnitTests.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.WaterModel;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using UnitTests.Surface;
-    using UnitTests.Weather;
 
     [TestFixture]
     public class SoilsTests

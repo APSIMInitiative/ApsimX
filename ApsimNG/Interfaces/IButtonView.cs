@@ -1,6 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+
+namespace UserInterface.Interfaces
 {
-    using System;
 
     /// <summary>An interface for a button</summary>
     public interface IButtonView

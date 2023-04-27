@@ -2687,6 +2687,8 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void SetPlantAvailableNH4(SoluteSetterType callingModelType, double[] value)
         {
+            var callingModelTypePlaceholder = callingModelType;
+            var valuePlaceholder = value;
             // this variable should not actually be set but needed for SoluteManager to find it
             throw new ApsimXException(this, "should not be trying to set plant available nh4");
         }
@@ -2719,6 +2721,8 @@ namespace Models.Soils
         /// <param name="value">New values</param>
         public void SetPlantAvailableNO3(SoluteSetterType callingModelType, double[] value)
         {
+            var callingModelTypePlaceholder = callingModelType;
+            var valuePlaceholder = value;
             // this variable should not actually be set but needed for SoluteManager to find it
             throw new ApsimXException(this, "should not be trying to set plant available no3");
         }

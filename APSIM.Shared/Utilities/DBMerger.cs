@@ -1,10 +1,11 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// Merges two .db files.

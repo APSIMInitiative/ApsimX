@@ -1,7 +1,8 @@
-﻿namespace Models.PMF.Interfaces
+﻿using Models.Soils.Arbitrator;
+using System.Collections.Generic;
+
+namespace Models.PMF.Interfaces
 {
-    using Soils.Arbitrator;
-    using System.Collections.Generic;
 
     /// <summary>An interface that defines what needs to be implemented by an organthat has a water demand.</summary>
     public interface IWaterNitrogenUptake

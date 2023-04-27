@@ -1,7 +1,8 @@
-﻿namespace Models.Interfaces
+﻿using System;
+using System.Collections.Generic;
+
+namespace Models.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>This interface describes MicroClimate / canopy comms.</summary>
     public interface ICanopy

@@ -1,9 +1,9 @@
-﻿namespace Models.PMF
+﻿using Models.Core;
+using System;
+using System.Collections.Generic;
+
+namespace Models.PMF
 {
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    
     /// <summary>
     /// Daily state of flows into and out of each organ
     /// </summary>

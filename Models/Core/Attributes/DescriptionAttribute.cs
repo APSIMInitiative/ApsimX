@@ -1,7 +1,8 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Runtime.CompilerServices;
+
+namespace Models.Core
 {
-    using System;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Specifies that the related class should use the user interface view

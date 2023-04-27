@@ -1,10 +1,12 @@
+using System;
+using System.Linq;
+using Newtonsoft.Json;
+using Models.Core;
+using Models.Soils;
+
 namespace Models
 {
-    using System;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using Soils;
+
     /// <summary>
     /// This model controls irrigation events, which can be triggered using the Apply() method.
     /// </summary>

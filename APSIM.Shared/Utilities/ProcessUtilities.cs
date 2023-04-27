@@ -3,16 +3,17 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Threading;
+using System.Text;
+using System.Globalization;
+using System.Collections.Generic;
+
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using System.Diagnostics;
-    using System.Threading;
-    using System.Text;
-    using System.Globalization;
-    using System.Collections.Generic;
 
     /// <summary>
     /// A collection of utilities for dealing with processes (threads)

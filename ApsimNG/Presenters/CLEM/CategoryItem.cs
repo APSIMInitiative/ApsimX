@@ -1,7 +1,7 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace UserInterface.Presenters
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// Class used to create the heirachy of the the categories and subcategories from the 

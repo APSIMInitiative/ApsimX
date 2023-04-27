@@ -1,6 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+
+namespace UserInterface.Interfaces
 {
-    using System;
 
     /// <summary>
     /// Describes an interface for an axis view.

@@ -1,9 +1,10 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.IO;
+using System.Xml.Serialization;
+
+namespace APSIM.Shared.APSoil
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.IO;
-    using System.Xml.Serialization;
 
     /// <summary>Various soil utilities.</summary>
     public class APSoilUtilities

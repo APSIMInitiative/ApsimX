@@ -348,7 +348,7 @@ namespace UserInterface.Views
             textEditor.FocusInEvent += OnTextBoxEnter;
             textEditor.FocusOutEvent += OnTextBoxLeave;
             textEditor.KeyPressEvent += OnKeyPress;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
 
             // Attempt to load a style scheme from the user settings.
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
@@ -400,7 +400,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -411,7 +411,7 @@ namespace UserInterface.Views
                 textEditor.FocusInEvent -= OnTextBoxEnter;
                 textEditor.FocusOutEvent -= OnTextBoxLeave;
                 textEditor.KeyPressEvent -= OnKeyPress;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
 
                 // It's good practice to disconnect all event handlers, as it makes memory leaks
                 // less likely. However, we may not "own" the event handlers, so how do we 

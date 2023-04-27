@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Commands
+﻿using Models.Core;
+using Models.Core.Run;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Media;
+using System.Timers;
+using UserInterface.Presenters;
+using Utility;
+
+namespace UserInterface.Commands
 {
-    using Models.Core;
-    using Models.Core.Run;
-    using Presenters;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Media;
-    using System.Timers;
-    using Utility;
 
     public sealed class RunCommand : IDisposable
     {

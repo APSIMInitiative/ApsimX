@@ -179,6 +179,7 @@ namespace APSIM.Server
 
         private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
         {
+            var placeholder = connection;
             return Task.Run(() =>
             {
                 V1Pod pod = GetWorkerPod(podName);
@@ -239,6 +240,7 @@ namespace APSIM.Server
 
         private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
         {
+            var placeholder = connection;
             return Task.Run<DataTable>(() =>
             {
                 V1Pod pod = GetWorkerPod(podName);

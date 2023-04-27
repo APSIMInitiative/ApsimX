@@ -183,6 +183,7 @@ namespace Models.PMF.Struct
 		/// <param name="fractionToAdd"></param>
 		private void AddTiller(double leafAtAppearance, double Leaves, double fractionToAdd)
 		{
+			var placeholder = Leaves;
 			double fraction = 1;
 			if (FertileTillerNumber - CurrentTillerNumber < 1)
 				fraction = FertileTillerNumber - CurrentTillerNumber;

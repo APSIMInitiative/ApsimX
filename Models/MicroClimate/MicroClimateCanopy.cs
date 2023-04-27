@@ -1,8 +1,8 @@
-﻿namespace Models
-{
-    using System;
-    using Models.Interfaces;
+﻿using System;
+using Models.Interfaces;
 
+namespace Models
+{
     /// <summary>A micro climate wrapper around a ICanopy instance.</summary>
     [Serializable]
     public class MicroClimateCanopy

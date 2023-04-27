@@ -69,6 +69,8 @@ namespace Models.CLEM.Resources
         /// <param name="reason"></param>
         public double Remove(double removeAmount, CLEMModel activity, string reason)
         {
+            var placeholder = activity;
+            var placeholder2 = reason;
             removeAmount = Math.Min(this.amount, removeAmount);
             this.amount -= removeAmount;
             return removeAmount;

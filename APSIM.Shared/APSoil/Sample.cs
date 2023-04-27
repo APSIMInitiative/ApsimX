@@ -1,7 +1,8 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+using Newtonsoft.Json;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
-    using Newtonsoft.Json;
 
     /// <summary>Represents a soil sample.</summary>
     [Serializable]

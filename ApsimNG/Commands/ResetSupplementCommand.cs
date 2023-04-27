@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Models.Core;
+using Models.GrazPlan;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Commands
 {
-    using Models.Core;
-    using Models.GrazPlan;
-    using Interfaces;
 
     class ResetSupplementCommand : ICommand
     {

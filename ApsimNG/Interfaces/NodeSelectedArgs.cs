@@ -1,7 +1,7 @@
-﻿namespace UserInterface.Interfaces
-{
+﻿using System;
 
-    using System;
+namespace UserInterface.Interfaces
+{
 
     /// <summary>A class for holding info about a node selection event.</summary>
     public class NodeSelectedArgs : EventArgs

@@ -1,11 +1,10 @@
-﻿
+﻿using Models;
+using Models.Core;
+using Models.Soils;
+using System;
 
 namespace UnitTests
 {
-    using Models;
-    using Models.Core;
-    using Models.Soils;
-    using System;
 
     [Serializable]
     class MockIrrigation : Model, IIrrigation

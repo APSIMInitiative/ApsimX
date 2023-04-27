@@ -30,10 +30,10 @@ namespace UserInterface.Views
             };
             notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(((ViewBase)scriptEditor).MainWidget, new Label("Script"));
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        private void MainWidget_Destroyed(object sender, System.EventArgs e)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace UserInterface.Views
                 propertyEditor = null;
                 (scriptEditor as ViewBase)?.Dispose();
                 scriptEditor = null;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

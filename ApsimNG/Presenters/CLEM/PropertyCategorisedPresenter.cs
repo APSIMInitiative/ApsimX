@@ -1,20 +1,12 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UserInterface.Interfaces;
+using Models.Core;
+using UserInterface.Views;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using global::UserInterface.Extensions;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
 
     /// <summary>
     /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 
@@ -40,12 +32,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
-        protected string selectedCategory { get; set; }
+        protected string SelectedCategory { get; set; }
 
         /// <summary>
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
-        protected string selectedSubCategory { get; set; }
+        protected string SelectedSubCategory { get; set; }
 
         /// <summary>Gets or sets the width of the explorer tree panel</summary>
         /// <value>The width of the tree.</value>
@@ -146,8 +138,8 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.selectedCategory = "";
-            this.selectedSubCategory = "";
+            this.SelectedCategory = "";
+            this.SelectedSubCategory = "";
             this.treeview.AddRightHandView(null); //add an Empty right hand view
         }
 
@@ -187,8 +179,8 @@ namespace UserInterface.Presenters
                         subcategory = path[3];
                         break;
                 }
-                this.selectedCategory = category;
-                this.selectedSubCategory = subcategory;
+                this.SelectedCategory = category;
+                this.SelectedSubCategory = subcategory;
                 (this.propertyPresenter as PropertyPresenter).Filter = IsPropertySelected;
             }
             else
@@ -196,8 +188,8 @@ namespace UserInterface.Presenters
                 //this will show all the properties in the model 
                 //there will be no filtering on Category and Subcategory.
                 (this.propertyPresenter as PropertyPresenter).Filter = null;
-                this.selectedCategory = "";
-                this.selectedSubCategory = "";
+                this.SelectedCategory = "";
+                this.SelectedSubCategory = "";
             }
 
             CreateAndAttachRightPanel();
@@ -331,19 +323,19 @@ namespace UserInterface.Presenters
 
         protected bool IsPropertySelected(PropertyInfo property)
         {
-            if ((this.selectedCategory??"") != "") // a category has been selected
+            if ((this.SelectedCategory??"") != "") // a category has been selected
             {
                 if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
                 {
                     CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
-                    if (catAtt.Category.StartsWith("*") || Array.Exists(catAtt.Category.Split(':'), element => element == this.selectedCategory))
+                    if (catAtt.Category.StartsWith("*") || Array.Exists(catAtt.Category.Split(':'), element => element == this.SelectedCategory))
                     {
-                        if ((selectedSubCategory ?? "") != "") // a sub category has been selected
+                        if ((SelectedSubCategory ?? "") != "") // a sub category has been selected
                         {
                             // The catAtt.Subcategory is by default given a value of 
                             // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
                             // so this line below will also handle "Unspecified" subcategories.
-                            return (catAtt.Subcategory.StartsWith("*") || Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
+                            return (catAtt.Subcategory.StartsWith("*") || Array.Exists(catAtt.Subcategory.Split(':'), element => element == SelectedSubCategory));
                         }
                     }
                     else
@@ -356,7 +348,7 @@ namespace UserInterface.Presenters
                     // if we are filtering on "Unspecified" category then there is no Category Attribute
                     // just a Description Attribute on the property in the model.
                     // So we still may need to include it in this case.
-                    return (this.selectedCategory == "Unspecified");
+                    return (this.SelectedCategory == "Unspecified");
                 }
             }
             return true;

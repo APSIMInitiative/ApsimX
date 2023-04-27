@@ -1,12 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Runtime.InteropServices;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Runtime.InteropServices;
-    using System.Linq;
-    using System.Text;
-    using System.Globalization;
 
     /// <summary>
     /// A custom marshaler that allows us to pass strings to the native SQLite DLL as

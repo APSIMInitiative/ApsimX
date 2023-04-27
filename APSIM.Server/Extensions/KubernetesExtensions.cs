@@ -20,6 +20,7 @@ namespace APSIM.Server.Extensions
 
         public static void CopyFileToPod(this Kubernetes client, V1Pod pod, string container, string sourceFilePath, string destinationFilePath, CancellationToken cancellationToken = default(CancellationToken))
         {
+            var cancellationTokenPlaceholder = cancellationToken;
             if (!IsKubectlInstalled())
                 throw new Exception($"kubectl is either not installed or is not on path\n{kubectlInstallLink}");
             if (!(File.Exists(sourceFilePath) || Directory.Exists(sourceFilePath)))

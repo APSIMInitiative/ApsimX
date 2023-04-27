@@ -125,10 +125,10 @@ namespace UserInterface.Views
             alignment10.Add(worksheetCombo.MainWidget);
             worksheetCombo.Visible = true;
             worksheetCombo.Changed += WorksheetCombo_Changed;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace UserInterface.Views
                 spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
                 notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
                 worksheetCombo.Changed -= WorksheetCombo_Changed;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

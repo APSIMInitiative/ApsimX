@@ -1,6 +1,7 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System.Collections.Generic;
+
+namespace APSIM.Shared.Utilities
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// A group enumerator for the IndexedDataTable class

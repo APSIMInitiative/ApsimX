@@ -1,18 +1,17 @@
-﻿namespace Models
-{
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using CommandLine;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+﻿using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using CommandLine;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
+namespace Models
+{
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
     {
@@ -177,7 +176,7 @@
         private static void UpgradeFile(string file)
         {
             string contents = File.ReadAllText(file);
-            ConverterReturnType converter = Converter.DoConvert(contents, fileName: file);
+            ConverterReturnType converter = Converter.DoConvert(contents);
             if (converter.DidConvert)
                 File.WriteAllText(file, converter.Root.ToString());
         }

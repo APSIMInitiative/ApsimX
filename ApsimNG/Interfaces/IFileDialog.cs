@@ -1,6 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using Utility;
+
+namespace UserInterface.Interfaces
 {
-    using Utility;
 
     /// <summary>
     /// Contract to provide options for asking the user for file names.

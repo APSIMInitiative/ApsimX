@@ -1,14 +1,12 @@
-﻿namespace Models
+﻿using Models.Storage;
+using System.Collections.Generic;
+using System.Drawing;
+using Models.Core;
+using APSIM.Shared.Graphing;
+using Models.Core.Run;
+
+namespace Models
 {
-    using Models.Storage;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using APSIM.Shared.Graphing;
-    using Models.Core.Run;
 
     /// <summary>
     /// An interface for a model that can graph itself.

@@ -3,13 +3,12 @@
 // CSIRO Agriculture & Food
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using StdUnits;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using StdUnits;
 
     /// <summary>
     /// Enterprise type init

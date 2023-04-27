@@ -27,10 +27,10 @@ namespace UserInterface.Views
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.SetCellDataFunc(comboRender, OnDrawColourCombo);
             combobox1.Changed += OnChanged;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace UserInterface.Views
                 combobox1.SetCellDataFunc(comboRender, null);
                 comboModel.Dispose();
                 comboRender.Dispose();
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

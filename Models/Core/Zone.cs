@@ -1,10 +1,11 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A generic system that can have children

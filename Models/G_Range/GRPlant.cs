@@ -1,9 +1,9 @@
 ﻿using System;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {

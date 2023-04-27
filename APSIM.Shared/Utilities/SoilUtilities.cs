@@ -1,8 +1,9 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>Various soil utilities.</summary>
     public class SoilUtilities

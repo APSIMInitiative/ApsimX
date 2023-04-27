@@ -1,7 +1,8 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+using System.Collections.Generic;
+
+namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// The interface for a menu

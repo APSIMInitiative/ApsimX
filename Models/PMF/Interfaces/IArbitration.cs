@@ -1,7 +1,8 @@
-﻿namespace Models.PMF.Interfaces
+﻿using Models.Core;
+using System;
+
+namespace Models.PMF.Interfaces
 {
-    using Models.Core;
-    using System;
 
     /// <summary> Inerface for arbitrators </summary>
     public interface IArbitrator

@@ -1,20 +1,18 @@
-﻿namespace Models.Soils
-{
-    using APSIM.Shared.Utilities;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.WaterModel;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
+﻿using APSIM.Shared.Utilities;
+using Models.WaterModel;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 
-	/// <summary>
-	/// A generic class for turning a DataTable of soil information into
-	/// a list of sois.
-	/// </summary>
-	public class SoilsDataTable
+namespace Models.Soils
+{
+    /// <summary>
+    /// A generic class for turning a DataTable of soil information into
+    /// a list of sois.
+    /// </summary>
+    public class SoilsDataTable
     {
         /// <summary>Convert a table of soils data into a list of soils.</summary>
         public static List<Soil> ToSoils(DataTable table)

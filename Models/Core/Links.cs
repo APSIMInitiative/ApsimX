@@ -1,11 +1,12 @@
-﻿namespace Models.Core
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// 
@@ -34,6 +35,7 @@
         /// <param name="throwOnFail">Should all links be considered optional?</param>
         public void Resolve(IModel rootNode, bool allLinks, bool recurse = true, bool throwOnFail = false)
         {
+            var allLinksPlaceholder = allLinks;
             var scope = new ScopingRules();
 
             if (recurse)

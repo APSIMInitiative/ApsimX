@@ -1,7 +1,8 @@
-﻿namespace Models.Surface
+﻿using Models.Interfaces;
+using System;
+
+namespace Models.Surface
 {
-    using Models.Interfaces;
-    using System;
 
     /// <summary>
     /// 

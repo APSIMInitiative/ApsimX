@@ -1,12 +1,13 @@
-﻿namespace Models.PostSimulationTools
+﻿using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+namespace Models.PostSimulationTools
 {
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>
     /// This is a post simulation tool that lets the user filter the rows of a source data table.

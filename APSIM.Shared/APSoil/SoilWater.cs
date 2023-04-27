@@ -1,6 +1,7 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
 
     /// <summary>A specification of soil water model constants and parameters.</summary>
     [Serializable]

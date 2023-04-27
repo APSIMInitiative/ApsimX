@@ -1,17 +1,17 @@
 ﻿//-----------------------------------------------------------------------
 // Firebird database connection wrapper
 //-----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using FirebirdSql.Data.FirebirdClient;
+using System.IO;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using FirebirdSql.Data.FirebirdClient;
-    using System.IO;
 
     /// <summary>A class representing an exception thrown by this library.</summary>
     [Serializable]
@@ -96,6 +96,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         protected string GetConnectionString(string dbpath, string source, string user, string pass)
         {
+            var placeholder = source;
             FbConnectionStringBuilder cs = new FbConnectionStringBuilder();
 
             // If Not fbDBServerType = FbServerType.Embedded Then

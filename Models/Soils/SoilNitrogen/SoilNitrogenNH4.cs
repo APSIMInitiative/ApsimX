@@ -1,9 +1,9 @@
-﻿namespace Models.Soils
-{
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
+﻿using Models.Core;
+using Newtonsoft.Json;
+using System;
 
+namespace Models.Soils
+{
     /// <summary>This class encapsulates a SoilNitrogen model solute.</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]

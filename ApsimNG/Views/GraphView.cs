@@ -164,7 +164,7 @@ namespace UserInterface.Views
             ForegroundColour = Utility.Colour.ToOxy(foreground);
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
 
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
             // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
@@ -175,7 +175,7 @@ namespace UserInterface.Views
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -190,7 +190,7 @@ namespace UserInterface.Views
                 popup.Dispose();
                 Clear();
                 plot1.Dispose();
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

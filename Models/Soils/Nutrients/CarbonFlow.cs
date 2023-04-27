@@ -1,14 +1,15 @@
-﻿namespace Models.Soils.Nutrients
+﻿using Models.Core;
+using Models.Functions;
+using System;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+namespace Models.Soils.Nutrients
 {
-    using Core;
-    using Models.Functions;
-    using System;
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Models.PMF;
+
 
     /// <summary>
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.

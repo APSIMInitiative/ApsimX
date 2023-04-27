@@ -1,17 +1,17 @@
-﻿namespace UserInterface.EventArguments
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Models.Core;
+using System.Text;
+using APSIM.Shared.Utilities;
+using System.Xml;
+using System.Drawing;
+using Models.Factorial;
+
+namespace UserInterface.EventArguments
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Models.Core;
-    using System.Text;
-    using APSIM.Shared.Utilities;
-    using Intellisense;
-    using System.Xml;
-    using System.Drawing;
-    using Models.Factorial;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure

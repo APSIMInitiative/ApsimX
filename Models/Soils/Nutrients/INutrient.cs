@@ -1,6 +1,5 @@
 ﻿namespace Models.Soils.Nutrients
 {
-    using Models.Soils;
 
     /// <summary>
     /// This interface defines the communications between a soil arbitrator and

@@ -1,8 +1,9 @@
-﻿namespace Models
+﻿using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using System.Drawing;
+
+namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using System.Drawing;
 
     /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
     public class DefaultPainter : ISeriesDefinitionPainter

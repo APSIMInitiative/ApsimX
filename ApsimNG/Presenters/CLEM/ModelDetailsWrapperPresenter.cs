@@ -1,22 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+using Models.CLEM;
+using Models.CLEM.Reporting;
+using Models.Core;
+using Models.Core.Attributes;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using Interfaces;
-    using Models;
-    using Models.CLEM;
-    using Models.CLEM.Reporting;
-    using Models.Core;
-    using Models.Core.Attributes;
-    using Views;
 
     public class ModelDetailsWrapperPresenter : IPresenter
     {

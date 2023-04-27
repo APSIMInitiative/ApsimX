@@ -1,8 +1,9 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Data;
+using System.Globalization;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Data;
-    using System.Globalization;
 
     /// <summary>
     /// A collection of weather utility functions
@@ -162,6 +163,7 @@
         /// <returns></returns>
         public static double TandR_radn(int day, double lat, double dT, double vp, double rain, double dT30)
         {
+            double placeholder = dT30; 
             double TransMax = 0;
             double b = 0;
             double c = 0;

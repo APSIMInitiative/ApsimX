@@ -1,18 +1,15 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
 
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml;
-    using static Models.Factorial.Factor;
 
     /// <summary>
     /// Contains all converters that convert from one XML version to another.
@@ -80,7 +77,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 1. Change xml structure of graph series</summary>
-        private static void UpgradeToVersion1(XmlNode node, string fileName)
+        private static void UpgradeToVersion1(XmlNode node)
         {
             foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
             {
@@ -106,7 +103,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 2. Change xml structure for cultivar aliases</summary>
-        private static void UpgradeToVersion2(XmlNode node, string fileName)
+        private static void UpgradeToVersion2(XmlNode node)
         {
             foreach (XmlNode cultivarNode in XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"))
             {
@@ -125,7 +122,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 3. Make sure all area elements are greater than zero.</summary>
-        private static void UpgradeToVersion3(XmlNode node, string fileName)
+        private static void UpgradeToVersion3(XmlNode node)
         {
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
             {
@@ -146,7 +143,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 4. Make sure all zones have a SoluteManager model.</summary>
-        private static void UpgradeToVersion4(XmlNode node, string fileName)
+        private static void UpgradeToVersion4(XmlNode node)
         {
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
@@ -159,14 +156,14 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 5. Make sure all zones have a CERESSoilTemperature model.</summary>
-        private static void UpgradeToVersion5(XmlNode node, string fileName)
+        private static void UpgradeToVersion5(XmlNode node)
         {
             foreach (XmlNode soilNode in XmlUtilities.FindAllRecursivelyByType(node, "Soil"))
                 XmlUtilities.EnsureNodeExists(soilNode, "CERESSoilTemperature");
         }
 
         /// <summary> Upgrades to version 6. Make sure all KLModifier, KNO3, KNH4 nodes have value XProperty values. </summary>
-        private static void UpgradeToVersion6(XmlNode node, string fileName)
+        private static void UpgradeToVersion6(XmlNode node)
         {
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
             {
@@ -178,7 +175,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 7. Find all occurrences of ESW XProperty values. </summary>
-        private static void UpgradeToVersion7(XmlNode node, string fileName)
+        private static void UpgradeToVersion7(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
                 ConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
@@ -187,7 +184,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 8. Create ApexStandard node. </summary>
-        private static void UpgradeToVersion8(XmlNode node, string fileName)
+        private static void UpgradeToVersion8(XmlNode node)
         {
             XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
             XmlNode stemSen = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
@@ -209,7 +206,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Add a DMDemandFunction constant function to all Root nodes that don't have one</summary>
-        private static void UpgradeToVersion9(XmlNode node, string fileName)
+        private static void UpgradeToVersion9(XmlNode node)
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
@@ -225,7 +222,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Add default values for generic organ parameters that were previously optional</summary>
-        private static void UpgradeToVersion10(XmlNode node, string fileName)
+        private static void UpgradeToVersion10(XmlNode node)
         {
             List<XmlNode> organs = XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan");
             organs.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
@@ -242,7 +239,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Rename NonStructural to Storage in Biomass organs</summary>
-        private static void UpgradeToVersion11(XmlNode node, string fileName)
+        private static void UpgradeToVersion11(XmlNode node)
         {
             ConverterUtilities.RenameVariable(node, ".NonStructural", ".Storage");
             ConverterUtilities.RenameVariable(node, ".NonStructuralDemand", ".StorageDemand");
@@ -268,7 +265,7 @@ namespace Models.Core.ApsimFile
 
         /// <summary> Rename MainStemNodeAppearanceRate to Phyllochron AND 
         ///        MainStemFinalNodeNumber to FinalLeafNumber in Structure </summary>
-        private static void UpgradeToVersion12(XmlNode node, string fileName)
+        private static void UpgradeToVersion12(XmlNode node)
         {
             ConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemNodeAppearanceRate", "Phyllochron");
             ConverterUtilities.RenameVariable(node, ".MainStemNodeAppearanceRate", ".Phyllochron");
@@ -278,7 +275,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Rename Plant15 to Plant.</summary>
-        private static void UpgradeToVersion13(XmlNode node, string fileName)
+        private static void UpgradeToVersion13(XmlNode node)
         {
             ConverterUtilities.RenameNode(node, "Plant15", "Plant");
             ConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
@@ -301,7 +298,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Rename the "Simulations", "Messages", "InitialConditions" .db tables to be prefixed with an underscore. </summary>
-        private static void UpgradeToVersion14(XmlNode node, string fileName)
+        private static void UpgradeToVersion14(string fileName)
         {
             string dbFileName = Path.ChangeExtension(fileName, ".db");
             if (File.Exists(dbFileName))
@@ -325,7 +322,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Ensure report variables have a square bracket around the first word.</summary>
-        private static void UpgradeToVersion15(XmlNode node, string fileName)
+        private static void UpgradeToVersion15(XmlNode node)
         {
             List<string> modelNames = ConverterUtilities.GetAllModelNames(node);
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
@@ -350,7 +347,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Add nodes for new leaf tiller model </summary>
-        private static void UpgradeToVersion16(XmlNode node, string fileName)
+        private static void UpgradeToVersion16(XmlNode node)
         {
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "LeafCohortParameters"))
             {
@@ -389,7 +386,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Rename CohortLive. to Live.</summary>
-        private static void UpgradeToVersion17(XmlNode node, string fileName)
+        private static void UpgradeToVersion17(XmlNode node)
         {
             // Rename .CohortLive to .Live in all compositebiomass nodes and report variables.
             foreach (XmlNode biomass in XmlUtilities.FindAllRecursivelyByType(node, "CompositeBiomass"))
@@ -427,7 +424,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Rename CohortLive. to Live.</summary>
-        private static void UpgradeToVersion18(XmlNode node, string fileName)
+        private static void UpgradeToVersion18(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -455,7 +452,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Add DMConversionEfficiency node</summary>
-        private static void UpgradeToVersion19(XmlNode node, string fileName)
+        private static void UpgradeToVersion19(XmlNode node)
         {
             //Rename existing DMConversionEfficiencyFunction nodes
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
@@ -495,7 +492,7 @@ namespace Models.Core.ApsimFile
             }
         }
 
-        private static void UpgradeToVersion20(XmlNode node, string filename)
+        private static void UpgradeToVersion20(XmlNode node)
         {
             List<XmlNode> nodeList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Root"));
 
@@ -516,7 +513,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Add RemobilisationCost to all organs </summary>
-        private static void UpgradeToVersion21(XmlNode node, string fileName)
+        private static void UpgradeToVersion21(XmlNode node)
         {
             List<XmlNode> nodeList = new List<XmlNode>();
 
@@ -545,7 +542,7 @@ namespace Models.Core.ApsimFile
 
         }
         /// <summary> Upgrades to version 22. Alter MovingAverage Function XProperty values.</summary>
-        private static void UpgradeToVersion22(XmlNode node, string fileName)
+        private static void UpgradeToVersion22(XmlNode node)
         {
             string StartStage = "";
             foreach (XmlNode EmergePhase in XmlUtilities.FindAllRecursivelyByType(node, "EmergingPhase"))
@@ -561,7 +558,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 23. Add CarbonConcentration property to all organs. </summary>
-        private static void UpgradeToVersion23(XmlNode node, string fileName)
+        private static void UpgradeToVersion23(XmlNode node)
         {
             List<XmlNode> nodeList = new List<XmlNode>();
 
@@ -592,7 +589,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 24. Add second argument to SoluteManager.Add method</summary>
-        private static void UpgradeToVersion24(XmlNode node, string fileName)
+        private static void UpgradeToVersion24(XmlNode node)
         {
             foreach (XmlNode managerNode in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -613,7 +610,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 25. Add checkpoint fields and table to .db</summary>
-        private static void UpgradeToVersion25(XmlNode node, string fileName)
+        private static void UpgradeToVersion25(string fileName)
         {
             string dbFileName = Path.ChangeExtension(fileName, ".db");
             if (File.Exists(dbFileName))
@@ -656,7 +653,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 26. Add leaf development rate constant to perrenial leaf </summary>
-        private static void UpgradeToVersion26(XmlNode node, string fileName)
+        private static void UpgradeToVersion26(XmlNode node)
         {
             foreach (XmlNode perennialLeaf in XmlUtilities.FindAllRecursivelyByType(node, "PerennialLeaf"))
                 ConverterUtilities.AddConstantFuntionIfNotExists(perennialLeaf, "LeafDevelopmentRate", "1.0");
@@ -664,7 +661,7 @@ namespace Models.Core.ApsimFile
 
 
         /// <summary> Upgrades to version 27. Some variables in Leaf became ints rather than doubles. Need to add convert.ToDouble(); </summary>
-        private static void UpgradeToVersion27(XmlNode node, string fileName)
+        private static void UpgradeToVersion27(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -679,7 +676,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 28. Change ICrop to IPlant</summary>
-        private static void UpgradeToVersion28(XmlNode node, string fileName)
+        private static void UpgradeToVersion28(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -690,7 +687,7 @@ namespace Models.Core.ApsimFile
 
 
         /// <summary>Upgrades to version 29. Change AgPasture to have leaves, stems, stolons included as child model nodes </summary>
-        private static void UpgradeToVersion29(XmlNode node, string fileName)
+        private static void UpgradeToVersion29(XmlNode node)
         {
             foreach (XmlNode pasture in XmlUtilities.FindAllRecursivelyByType(node, "PastureSpecies"))
             {
@@ -730,7 +727,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 30. Change DisplayAttribute </summary>
-        private static void UpgradeToVersion30(XmlNode node, string fileName)
+        private static void UpgradeToVersion30(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -741,7 +738,7 @@ namespace Models.Core.ApsimFile
 
 
         /// <summary> Upgrades to version 31. Change DisplayAttribute </summary>
-        private static void UpgradeToVersion31(XmlNode node, string fileName)
+        private static void UpgradeToVersion31(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -766,7 +763,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Change the VaryByIndex in series from an integer index to a name of a factor.</summary>
-        private static void UpgradeToVersion32(XmlNode node, string fileName)
+        private static void UpgradeToVersion32(XmlNode node)
         {
             foreach (XmlNode series in XmlUtilities.FindAllRecursivelyByType(node, "series"))
             {
@@ -1136,7 +1133,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Change the stores object array in Supplement components to Stores</summary>
-        private static void UpgradeToVersion33(XmlNode node, string fileName)
+        private static void UpgradeToVersion33(XmlNode node)
         {
             // Find all the Supplement components
             List<XmlNode> nodeList = new List<XmlNode>(XmlUtilities.FindAllRecursivelyByType(node, "Supplement"));
@@ -1148,7 +1145,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Upgrades to version 34. Change DisplayAttribute</summary>
-        private static void UpgradeToVersion34(XmlNode node, string fileName)
+        private static void UpgradeToVersion34(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -1169,7 +1166,7 @@ namespace Models.Core.ApsimFile
             }
         }
         /// <summary> Change the stores object array in Supplement components to Stores</summary>
-        private static void UpgradeToVersion35(XmlNode node, string fileName)
+        private static void UpgradeToVersion35(XmlNode node)
         {
             ConverterUtilities.RenameNode(node, "soil_heat_flux_fraction", "SoilHeatFluxFraction");
             ConverterUtilities.RenameNode(node, "night_interception_fraction", "NightInterceptionFraction");
@@ -1177,7 +1174,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Change the stores object array in Supplement components to Stores</summary>
-        private static void UpgradeToVersion36(XmlNode node, string fileName)
+        private static void UpgradeToVersion36(XmlNode node)
         {
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
                 ConverterUtilities.SearchReplaceReportCode(report, ".WaterSupplyDemandRatio", ".Leaf.Fw");
@@ -1187,7 +1184,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Remove apex nodes from leaf objects </summary>
-        private static void UpgradeToVersion37(XmlNode node, string fileName)
+        private static void UpgradeToVersion37(XmlNode node)
         {
             // Find all the Supplement components
             List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "ApexStandard");
@@ -1201,8 +1198,7 @@ namespace Models.Core.ApsimFile
         /// Upgrades to version 38. Change SurfaceOrganicMatter.AddFaecesType to AddFaecesType.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
-        /// <param name="fileName">The name of the .apsimx file</param>
-        private static void UpgradeToVersion38(XmlNode node, string fileName)
+        private static void UpgradeToVersion38(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
@@ -1215,8 +1211,7 @@ namespace Models.Core.ApsimFile
         /// with TreeProxy.Dates and TreeProxy.Heights.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
-        /// <param name="fileName">The name of the .apsimx file</param>
-        private static void UpgradeToVersion39(XmlNode node, string fileName)
+        private static void UpgradeToVersion39(XmlNode node)
         {
             foreach (XmlNode tree in XmlUtilities.FindAllRecursivelyByType(node, "TreeProxy"))
             {
@@ -1226,7 +1221,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary> Rename ThermalTime functions on phases to Progression </summary>
-        private static void UpgradeToVersion40(XmlNode node, string fileName)
+        private static void UpgradeToVersion40(XmlNode node)
         {
             ConverterUtilities.RenamePMFFunction(node, "GenericPhase", "ThermalTime", "Progression");
             ConverterUtilities.RenamePMFFunction(node, "BuddingPhase", "ThermalTime", "Progression");
@@ -1266,7 +1261,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Rename CohortArrayLive functions which dont do anything and cause problems for checkpointing</summary>
-        private static void UpgradeToVersion41(XmlNode node, string fileName)
+        private static void UpgradeToVersion41(XmlNode node)
         {
             // remove all live and dead cohortArrayLive nodes.
             foreach (XmlNode childToDelete in ConverterUtilities.FindModelNodes(node, "ArrayBiomass", "CohortArrayLive"))
@@ -1278,7 +1273,7 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// Upgrades to version 41. Upgrades parameterisation of DM demands.
         /// </summary>
-        private static void UpgradeToVersion42(XmlNode node, string fileName)
+        private static void UpgradeToVersion42(XmlNode node)
         {
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
@@ -1293,7 +1288,7 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// Upgrades to version 43. Upgrades SimpleLeaf to allow SLN calculations for N Demands.
         /// </summary>
-        private static void UpgradeToVersion43(XmlNode node, string fileName)
+        private static void UpgradeToVersion43(XmlNode node)
         {
             List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf");
 
@@ -1306,7 +1301,7 @@ namespace Models.Core.ApsimFile
         ///<summary>
         ///Upgrades to version 44, renaming StorageDemandFunction to StorageDMDemandFunction
         /// </summary>
-        private static void UpgradeToVersion44(XmlNode node, string fileName)
+        private static void UpgradeToVersion44(XmlNode node)
         {
             foreach (XmlNode StorageFunction in XmlUtilities.FindAllRecursivelyByType(node, "StorageDemandFunction"))
                 XmlUtilities.ChangeType(StorageFunction, "StorageDMDemandFunction");
@@ -1315,7 +1310,7 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// Upgrades to version 41. Upgrades parameterisation of DM demands.
         /// </summary>
-        private static void UpgradeToVersion45(XmlNode node, string fileName)
+        private static void UpgradeToVersion45(XmlNode node)
         {
             List<string> organList = new List<string>(new string[] { "GenericOrgan", "SimpleLeaf", "Nodule", "PerennialLeaf", "Root" });
             foreach (string org in organList)
@@ -1352,7 +1347,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Remove slnDemandFunction in SimpleLeaf as it has been made redundant</summary>
-        private static void UpgradeToVersion46(XmlNode node, string fileName)
+        private static void UpgradeToVersion46(XmlNode node)
         {
             List<XmlNode> nodeList = XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf");
 

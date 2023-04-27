@@ -1,11 +1,10 @@
-﻿namespace Models.Soils.SoilTemp
-{
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using System;
 
+namespace Models.Soils.SoilTemp
+{
     // Note: typing three consecutive comment characters (e.g.///) above a sub or function will generate xml documentation.
 
     /// <summary>

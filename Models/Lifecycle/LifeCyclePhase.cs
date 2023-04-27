@@ -1,11 +1,11 @@
-﻿namespace Models.LifeCycle
-{
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using Models.Functions;
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Newtonsoft.Json;
+using Models.Functions;
 
+namespace Models.LifeCycle
+{
     /// <summary>
     /// A LifeCyclePhase represents a distinct period in the development or an organisum.
     /// Each LifeCyclePhase assembles an arbitary number of cohorts which represent individuals

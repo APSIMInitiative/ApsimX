@@ -1,9 +1,10 @@
-﻿namespace UserInterface.Classes
+﻿using System;
+using Gtk;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Classes
 {
-    using System;
-    using Interfaces;
-    using Gtk;
-    using Views;
 
     /// <summary>
     /// Represents a grid cell.

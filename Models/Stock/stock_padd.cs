@@ -2,18 +2,16 @@
 // GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.ForageDigestibility;
+
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-
     /*
      GRAZPLAN animal biology model for AusFarm - PaddockList && ForageList classes                                                                   
                                                                                

@@ -1,13 +1,13 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Storage;
+using Models.Core.Run;
+
+namespace Models.PostSimulationTools
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Storage;
-    using Models.Core.Run;
-    using System.Threading;
 
     /// <summary>
     /// A post processing model that produces time series stats.

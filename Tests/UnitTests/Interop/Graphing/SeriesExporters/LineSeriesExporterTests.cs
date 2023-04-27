@@ -433,10 +433,10 @@ namespace UnitTests.Graphing.SeriesExporters
             foreach (string title in titles)
             {
                 // Setting 'show on legend' to false should result in title being set to empty string.
-                TestShowOnLegend(title, false, string.Empty);
+                TestShowOnLegend(title);
 
                 // Setting 'show on legend' to true should result in title being set to `title`.
-                TestShowOnLegend(title, true, title);
+                TestShowOnLegend(title);
             }
         }
 
@@ -446,9 +446,9 @@ namespace UnitTests.Graphing.SeriesExporters
         /// series' title matches the specified expected value.
         /// </summary>
         /// <param name="title">Input title.</param>
-        /// <param name="showOnLegend">Input value for 'show on legend'.</param>
-        /// <param name="expectedTitle">Expected title of the oxyplot series.</param>
-        private void TestShowOnLegend(string title, bool showOnLegend, string expectedTitle)
+        /// 
+        /// 
+        private void TestShowOnLegend(string title)
         {
             // Create an apsim series with the given inputs.
             IEnumerable<object> x = Enumerable.Empty<object>();

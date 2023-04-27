@@ -1,20 +1,15 @@
-﻿namespace UnitTests
+﻿using APSIM.Shared.Utilities;
+using Models.PostSimulationTools;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+
+namespace UnitTests
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.PostSimulationTools;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Storage;
-    using Models.Surface;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using UnitTests.Soils;
+
 
     public class PredictedObservedTests
     {

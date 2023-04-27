@@ -1,7 +1,7 @@
-﻿namespace Models.GrazPlan
-{
-    using Models.Core;
+﻿using Models.Core;
 
+namespace Models.GrazPlan
+{
     /// <summary>
     /// Used by the Add() method 
     /// </summary>

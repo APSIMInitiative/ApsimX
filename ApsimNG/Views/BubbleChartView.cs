@@ -680,7 +680,7 @@ namespace UserInterface.Views
         {
             try
             {
-                DelNode?.Invoke(this, new DelNodeEventArgs { nodeNameToDelete = graphView.SelectedObject.Name });
+                DelNode?.Invoke(this, new DelNodeEventArgs { NodeNameToDelete = graphView.SelectedObject.Name });
             }
             catch (Exception err)
             {
@@ -730,7 +730,7 @@ namespace UserInterface.Views
                 if (!(graphView.SelectedObject is DGArc))
                     // This is almost certainly indicative of an internal error, NOT user error.
                     throw new Exception("Unable to add arc - no arc is selected");
-                DelArc?.Invoke(this, new DelArcEventArgs { arcNameToDelete = graphView.SelectedObject.Name });
+                DelArc?.Invoke(this, new DelArcEventArgs { ArcNameToDelete = graphView.SelectedObject.Name });
             }
             catch (Exception err)
             {

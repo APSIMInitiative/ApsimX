@@ -1,15 +1,14 @@
-﻿namespace Models.PostSimulationTools
-{
-    using System;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Storage;
-    using System.Linq;
-    using Models.Core.Run;
-    using System.Threading;
+﻿using System;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using Models.Storage;
+using System.Linq;
+using Models.Core.Run;
 
+namespace Models.PostSimulationTools
+{
     /// <summary>
     /// A post processing model that creates a probability table.
     /// </summary>

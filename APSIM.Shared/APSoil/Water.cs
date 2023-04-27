@@ -1,9 +1,8 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+using System.Collections.Generic;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml;
-    using Newtonsoft.Json;
 
     /// <summary>A water specification for a soil.</summary>
     [Serializable]

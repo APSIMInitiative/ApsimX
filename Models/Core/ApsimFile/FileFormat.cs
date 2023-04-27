@@ -1,17 +1,14 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using System.Xml;
-    using Newtonsoft.Json.Serialization;
-    using System.Collections.Generic;
-    using Models.Core.Interfaces;
-    using Newtonsoft.Json.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
@@ -66,7 +63,7 @@
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+                var converter = ReadFromString<T>(contents, errorHandler, initInBackground);
                 var newModel = converter.NewModel;
 
                 if (newModel is Simulations)
@@ -90,7 +87,7 @@
         public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
         {
             // Run the converter.
-            var converter = Converter.DoConvert(st, -1, fileName);
+            var converter = Converter.DoConvert(st, -1);
 
             T newModel;
             JsonSerializerSettings settings = new JsonSerializerSettings()

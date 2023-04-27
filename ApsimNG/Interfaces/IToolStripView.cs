@@ -1,6 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using System.Collections.Generic;
+
+namespace UserInterface.Interfaces
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// The interface for a toolstrip (button bar)

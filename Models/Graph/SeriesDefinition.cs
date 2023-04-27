@@ -1,17 +1,18 @@
-﻿namespace Models
+﻿using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.

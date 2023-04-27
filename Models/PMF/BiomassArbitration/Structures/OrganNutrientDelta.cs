@@ -1,15 +1,12 @@
-﻿namespace Models.PMF
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using Models.Core;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
+namespace Models.PMF
+{
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
     /// </summary>

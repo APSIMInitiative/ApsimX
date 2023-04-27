@@ -1,11 +1,12 @@
-﻿namespace APSIM.Interop.Visualisation
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Interop.Drawing;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Graphing;
+
+namespace APSIM.Interop.Visualisation
 {
-    using System;
-    using System.Collections.Generic;
-    using APSIM.Interop.Drawing;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// An arc on a directed graph.

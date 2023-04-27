@@ -1,6 +1,7 @@
-﻿namespace Models
+﻿using System.Collections.Generic;
+
+namespace Models
 {
-    using System.Collections.Generic;
 
     /// <summary>A painter for setting the visual element of a simulation description to values of two visual elements.</summary>
     public class MultiDescriptorPainter : ISeriesDefinitionPainter

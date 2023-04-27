@@ -113,7 +113,7 @@ namespace UserInterface.Views
             scroller.PropagateNaturalHeight = true;
             scroller.PropagateNaturalWidth = true;
 
-            mainWidget.Destroyed += mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>
@@ -611,12 +611,12 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
-        protected void mainWidget_Destroyed(object sender, EventArgs e)
+        protected void MainWidget_Destroyed(object sender, EventArgs e)
         {
             propertyTable.Destroy();
             propertyTable.Dispose();
             mainWidget.DetachAllHandlers();
-            mainWidget.Destroyed -= mainWidget_Destroyed;
+            mainWidget.Destroyed -= MainWidget_Destroyed;
 
         }
 

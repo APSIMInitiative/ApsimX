@@ -1,6 +1,7 @@
-﻿namespace UserInterface.EventArguments
+﻿using System;
+
+namespace UserInterface.EventArguments
 {
-    using System;
 
     /// <summary>
     /// Arguments for a legend click

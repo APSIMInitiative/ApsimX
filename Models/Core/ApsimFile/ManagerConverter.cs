@@ -1,14 +1,15 @@
-﻿namespace Models.Core.ApsimFile
+﻿using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System;
+using Newtonsoft.Json.Linq;
+using System.Text;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using System;
-    using Newtonsoft.Json.Linq;
-    using System.Text;
 
     /// <summary>
     /// Provides helper methods to read and manipulate manager scripts.

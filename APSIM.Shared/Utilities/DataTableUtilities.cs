@@ -1,14 +1,15 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Some utilities for manipulating a data table.
@@ -48,6 +49,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         static public void AddColumn(DataTable table, string columnName, double[] values, int startRow, int count)
         {
+            var placeholder = count;
             if (table.Columns.IndexOf(columnName) == -1)
                 table.Columns.Add(columnName, typeof(double));
 
@@ -96,6 +98,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         static public void AddColumn<T>(DataTable table, string columnName, IEnumerable<T> values, int startRow, int count)
         {
+            var placeholder = count;
             if (table.Columns.IndexOf(columnName) == -1)
                 table.Columns.Add(columnName, typeof(T));
 

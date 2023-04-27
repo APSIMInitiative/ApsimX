@@ -1,15 +1,14 @@
-﻿namespace UnitTests
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
 
     [TestFixture]
     class FertiliserTests

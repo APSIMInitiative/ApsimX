@@ -22,15 +22,15 @@ namespace UserInterface.Views
             checkbutton1 = new CheckButton();
             mainWidget = checkbutton1;
             checkbutton1.Toggled += OnCheckChanged;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
                 checkbutton1.Toggled -= OnCheckChanged;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)
@@ -101,7 +101,7 @@ namespace UserInterface.Views
             checkbutton1 = (CheckButton)gtkControl;
             checkbutton1.Clicked += OnCheckChanged;
             mainWidget = checkbutton1;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
     }
 

@@ -1,9 +1,10 @@
-﻿namespace Models.GrazPlan
+﻿using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Models.GrazPlan
 {
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Information required to initialise a single animal group

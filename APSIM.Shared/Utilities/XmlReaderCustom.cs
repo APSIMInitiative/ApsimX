@@ -1,10 +1,9 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
+
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Xml;
 
     /// <summary>
     /// Implements an XmlReader for allowing derived custom readers to be created more easily.

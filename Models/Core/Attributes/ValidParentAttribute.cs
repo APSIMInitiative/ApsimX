@@ -1,6 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
 
     /// <summary>Specifies the models that this class can sit under in the user interface./// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]

@@ -1,7 +1,7 @@
+using System;
+
 namespace Models
 {
-    using System;
-
     /// <summary>A class for outputting a constant value in a report column.</summary>
     [Serializable]
     public class ReportColumnConstantValue : IReportColumn

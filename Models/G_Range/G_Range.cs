@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Reflection;
+using Models.Core;
+using Models.Soils.Arbitrator;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
+using Models.PMF;
+using Models.Soils;
 
 namespace Models
 {
-    using Newtonsoft.Json;
-    using System.Reflection;
-    using Models.Core;
-    using Models.Soils.Arbitrator;
-    using Models.Interfaces;
-    using APSIM.Shared.Utilities;
-    using Models.PMF;
-    using Models.Soils;
 
     /// <summary>
     /// Implements the plant growth model logic abstracted from G_Range

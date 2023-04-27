@@ -1,14 +1,13 @@
-﻿namespace Models.Storage
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for reading from a database connection.

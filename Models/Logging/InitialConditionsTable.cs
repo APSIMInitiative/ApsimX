@@ -1,12 +1,12 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using System.Data;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Models.Logging
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Data;
-    using System.Text;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// A class encapsulating an initial conditions table.

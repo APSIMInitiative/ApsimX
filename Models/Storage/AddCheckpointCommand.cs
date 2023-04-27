@@ -1,13 +1,14 @@
-﻿namespace Models.Storage
+﻿using APSIM.Shared.JobRunning;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading;
 
     /// <summary>Encapsulates a command to empty the database as much as possible.</summary>
     class AddCheckpointCommand : IRunnable

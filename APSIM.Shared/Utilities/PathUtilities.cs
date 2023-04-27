@@ -1,8 +1,9 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.IO;
+using System.Reflection;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.IO;
-    using System.Reflection;
 
     /// <summary>
     /// A collection of path utilities.

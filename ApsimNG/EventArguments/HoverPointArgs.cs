@@ -1,6 +1,7 @@
-﻿namespace UserInterface.EventArguments
+﻿using System;
+
+namespace UserInterface.EventArguments
 {
-    using System;
 
     /// <summary>
     /// When the user hovers over a point on a graph, this structure will be 

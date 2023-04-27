@@ -1,9 +1,10 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Linq;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Linq;
 
     /// <summary>
     /// Implements APSIMs scoping rules.

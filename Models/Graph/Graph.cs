@@ -1,19 +1,17 @@
-﻿namespace Models
+﻿using Models.Factorial;
+using Models.Core;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Newtonsoft.Json;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Documentation;
+using Models.Core.Run;
+
+namespace Models
 {
-    using Factorial;
-    using Models.Core;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Documentation;
-    using Models.Core.Run;
-    using Models.CLEM;
-    using APSIM.Shared.Utilities;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents a graph

@@ -1,10 +1,9 @@
-﻿
+﻿using Models;
+using Models.Core;
+using System;
 
 namespace UnitTests
 {
-    using Models;
-    using Models.Core;
-    using System;
 
     [Serializable]
     class MockClock : Model, IClock

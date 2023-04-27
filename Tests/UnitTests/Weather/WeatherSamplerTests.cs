@@ -1,13 +1,14 @@
-﻿namespace UnitTests.Weather
+﻿using Models;
+using Models.Climate;
+using Models.Core;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+
+namespace UnitTests.Weather
 {
-    using Models;
-    using Models.Climate;
-    using Models.Core;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
 
     /// <summary>Tests for weather randomiser</summary>
     class WeatherSamplerTests

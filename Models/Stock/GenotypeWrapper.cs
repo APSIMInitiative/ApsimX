@@ -1,12 +1,13 @@
-﻿namespace Models.GrazPlan
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.Xml;
+using static Models.Core.Overrides;
+
+namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Xml;
-    using static Models.Core.Overrides;
 
     /// <summary>
     /// Wraps a single genotype and lazy loads from a resource file if it needs to.

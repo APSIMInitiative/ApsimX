@@ -1,12 +1,12 @@
-﻿namespace Models
-{
-    using System;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using System.Linq;
 
+namespace Models
+{
     /// <summary>
     /// The module MICROMET, described here, has been developed to allow the calculation of 
     /// potential transpiration for multiple competing canopies that can be either layered or intermingled.

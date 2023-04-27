@@ -1,17 +1,14 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using Models.Core;
+using Models.Core.Run;
+using Utility;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Commands;
-    using global::UserInterface.Hotkeys;
-    using Models.Core;
-    using Models.Core.Run;
-    using Utility;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.

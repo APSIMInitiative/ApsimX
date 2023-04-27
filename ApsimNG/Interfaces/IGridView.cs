@@ -1,8 +1,9 @@
-﻿namespace UserInterface.Interfaces
+﻿using UserInterface.EventArguments;
+using System;
+using System.Collections.Generic;
+
+namespace UserInterface.Interfaces
 {
-    using EventArguments;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// The interface to a grid view. Clients of this class should set the data source

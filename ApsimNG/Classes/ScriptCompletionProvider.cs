@@ -1,18 +1,15 @@
+using System;
+using System.Linq;
+using Gdk;
+using GLib;
+using Gtk;
+using GtkSource;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Intellisense
 {
-    using System;
-    using System.Linq;
-    using Gdk;
-    using GLib;
-    using EventArguments;
-    using Gtk;
-    using GtkSource;
-    using Presenters;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using Views;
-    using System.Reflection.Metadata;
 
     internal class ScriptCompletionProvider : GLib.Object, ICompletionProvider, ICompletionProviderImplementor
     {

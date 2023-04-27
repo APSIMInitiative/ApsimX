@@ -1,18 +1,18 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+
+namespace APSIM.Shared.Utilities
 {
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Loader;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
     /// Utility class with reflection functions

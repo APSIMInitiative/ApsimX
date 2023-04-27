@@ -1,7 +1,7 @@
+using Models.Core;
 
 namespace Models.PMF.Phen
 {
-    using Models.Core;
 
     /// <summary>Interface for a function</summary>
     public interface IPhase : IModel

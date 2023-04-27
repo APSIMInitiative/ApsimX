@@ -1,12 +1,13 @@
-﻿namespace Models.Core.ApsimFile
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// TODO: Update summary.

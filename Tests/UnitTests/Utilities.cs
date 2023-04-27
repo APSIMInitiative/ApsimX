@@ -1,21 +1,19 @@
-﻿
+﻿using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
 namespace UnitTests
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.GrazPlan;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
 
     [SetUpFixture]
     public static class Utilities

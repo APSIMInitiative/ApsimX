@@ -81,31 +81,28 @@ namespace UnitTests.Storage
             return null;
         }
 
-        public string GetUnits(string tableName, string columnHeading)
-        {
-            return null;
-        }
 
         public void WriteTable(DataTable table, bool deleteAllData)
         {
             tables.Add(table);
         }
 
-        public void DeleteDataInTable(string tableName)
-        {
-        }
 
         public DataTable RunQuery(string sql)
         {
+            var placeholder = sql;
             return null;
         }
 
         public void DeleteAllTables(bool cleanSlate = false)
         {
+            var placeholder = cleanSlate;
         }
 
         public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
+            var placeholder = knownSimulationNames;
+            var placeholder2 = simulationNamesBeingRun;
         }
 
         public void EndWriting()
@@ -122,11 +119,14 @@ namespace UnitTests.Storage
 
         public void CompletedWritingSimulationData(string simulationName)
         {
+            var placeholder = simulationName;
         }
 
         public void WriteTableRaw(DataTable data)
         {
+            var placeholder = data;
         }
+
 
         public List<string> Checkpoints()
         {
@@ -212,6 +212,11 @@ namespace UnitTests.Storage
 
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string orderBy = null, bool distinct = false)
         {
+            var tabelNamePlaceholder = tableName;
+            var checkpointNamePlaceholder = checkpointName;
+            var simulationNamePlaceholder = simulationName;
+            var fieldNamesPlaceholder = fieldNames;
+
             throw new NotImplementedException();
         }
 

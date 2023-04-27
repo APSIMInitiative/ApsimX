@@ -1,17 +1,16 @@
 // An APSIMInputFile is either a ".met" file or a ".out" file.
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
-
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// A simple type for encapsulating a constant
@@ -381,6 +380,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public DataTable ToTableFromExcel(List<string> addConsts = null)
         {
+            var consts = addConsts;
             System.Data.DataTable data = new System.Data.DataTable();
 
             if (_excelData.Rows.Count != 0)

@@ -1,8 +1,9 @@
-﻿namespace UserInterface.EventArguments
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UserInterface.EventArguments
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// TODO: Update summary.

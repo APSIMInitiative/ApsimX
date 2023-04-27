@@ -1,14 +1,14 @@
-﻿namespace UnitTests.Functions
+﻿using Models;
+using Models.Core;
+using Models.Functions;
+using Models.PMF;
+using Models.PMF.Phen;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests.Functions
 {
-    using Models;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF;
-    using Models.PMF.Phen;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
 
     [TestFixture]
     class HoldFunctionTests

@@ -1,8 +1,8 @@
-﻿namespace UserInterface.Interfaces
-{
-    using System.Data;
-    using Views;
+﻿using System.Data;
 using System;
+
+namespace UserInterface.Interfaces
+{
 
     /// <summary>
     /// An interface for a test view

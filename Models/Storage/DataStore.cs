@@ -1,18 +1,13 @@
-﻿namespace Models.Storage
+﻿using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A storage service for reading and writing to/from a database.

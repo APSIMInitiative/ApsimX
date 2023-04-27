@@ -1,6 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies that the related method should be called whenever an event

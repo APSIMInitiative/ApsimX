@@ -1,6 +1,7 @@
-﻿namespace APSIM.Shared.JobRunning
+﻿using System.Threading;
+
+namespace APSIM.Shared.JobRunning
 {
-    using System.Threading;
 
     /// <summary>A simple runnable sleep job.</summary>
     public class JobRunnerSleepJob : IRunnable

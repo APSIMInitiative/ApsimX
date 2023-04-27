@@ -1,8 +1,9 @@
-﻿namespace APSIM.Interop.Visualisation
+﻿using System.Drawing;
+using System;
+using APSIM.Interop.Drawing;
+
+namespace APSIM.Interop.Visualisation
 {
-    using System.Drawing;
-    using System;
-    using APSIM.Interop.Drawing;
 
     /// <summary>A base object for all directed graph view objects</summary>
     public abstract class DGObject

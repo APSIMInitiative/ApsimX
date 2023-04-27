@@ -1,11 +1,11 @@
 ﻿using System;
+using Models.Climate;
+using Models.Core;
+using Models.Interfaces;
+using System.Data;
 
 namespace Models
 {
-    using Models.Climate;
-    using Models.Core;
-    using Models.Interfaces;
-    using System.Data;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {

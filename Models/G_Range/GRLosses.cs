@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {

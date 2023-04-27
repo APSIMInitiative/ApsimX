@@ -1,7 +1,7 @@
-﻿namespace Models.GrazPlan
-{
-    using System;
+﻿using System;
 
+namespace Models.GrazPlan
+{
     /// <summary>
     /// Allocation of energy, protein etc for:
     /// </summary>

@@ -133,14 +133,14 @@ namespace UserInterface.Views
             table1.Attach(lineThicknessDropDown.MainWidget, 3, 6, 1, 1/*, 0, 5*/);
             table1.Attach(new Label("Marker size:") { Xalign = 0 }, 2, 7, 1, 1/*, 0, 5*/);
             table1.Attach(markerSizeDropDown.MainWidget, 3, 7, 1, 1/*, 0, 5*/);
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        private void MainWidget_Destroyed(object sender, System.EventArgs e)
         {
             try
             {
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
                 dataSourceDropDown.Dispose();
                 xDropDown.Dispose();

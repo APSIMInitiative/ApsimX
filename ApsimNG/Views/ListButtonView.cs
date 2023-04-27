@@ -39,14 +39,14 @@ namespace UserInterface.Views
             vbox.PackStart(buttonPanel, false, true, 0);
             vbox.PackStart(scrolledwindow1, true, true, 0);
             mainWidget.ShowAll();
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 filterEntry.Changed -= OnFilterChanged;
                 owner = null;
             }

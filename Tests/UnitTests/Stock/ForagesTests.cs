@@ -1,12 +1,13 @@
-﻿namespace UnitTests.Stock
+﻿using Models.Core;
+using Models.ForageDigestibility;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UnitTests.Stock
 {
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.Linq;
 
     [TestFixture]
     public class ForagesTests

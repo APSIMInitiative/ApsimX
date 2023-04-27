@@ -1,11 +1,12 @@
+using Models.Core;
+using StdUnits;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using static Models.Core.Overrides;
+
 namespace Models.GrazPlan
 {
-    using Models.Core;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using static Models.Core.Overrides;
 
     /// <summary>Encapsulates a parameter set for an animal.</summary>
     [Serializable]

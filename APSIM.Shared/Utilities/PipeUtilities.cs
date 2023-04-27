@@ -1,11 +1,12 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
 
     /// <summary>
     /// A collection of pipe utility methods.

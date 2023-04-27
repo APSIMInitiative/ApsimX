@@ -1,15 +1,11 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Functions;
+using System;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using Models.Functions;
-    using Surface;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Implements the curve number reduction caused by tillage.
@@ -62,10 +58,10 @@ namespace Models.WaterModel
         /// <summary>
         /// Called when a tillage event has occurred.
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
         /// <param name="tillageType">The type of tillage performed.</param>
+        /// 
         [EventSubscribe("TillageCompleted")]
-        private void OnTillageCompleted(object sender, Soils.TillageType tillageType)
+        private void OnTillageCompleted(Soils.TillageType tillageType)
         {
             tillageCnCumWater = tillageType.cn_rain;
             tillageCnRed = tillageType.cn_red;
@@ -75,10 +71,8 @@ namespace Models.WaterModel
         /// <summary>
         /// Called at the start of every day.
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The event arguments.</param>
         [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        private void OnDoDailyInitialisation()
         {
             // If our cumulated rainfall has reached our target then reset everything
             // so that there won't be a continued reduction in curve number.

@@ -1,12 +1,13 @@
 #nullable enable
+using System;
+using System.IO;
+using System.Linq.Expressions;
+using System.Reflection;
+using Microsoft.CodeAnalysis;
+
 namespace UserInterface.Intellisense
 {
-    using System;
-    using System.IO;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Microsoft.CodeAnalysis;
-    
+
     /// <summary>
     /// Metadata references used to create test projects.
     /// </summary>

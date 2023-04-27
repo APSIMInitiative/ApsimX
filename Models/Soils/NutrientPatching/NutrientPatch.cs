@@ -1,14 +1,13 @@
-﻿namespace Models.Soils.NutrientPatching
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace Models.Soils.NutrientPatching
+{
     /// <summary>
     /// Encapsulates a nutrient patch.
     /// </summary>

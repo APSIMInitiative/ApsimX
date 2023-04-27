@@ -1,15 +1,14 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
 
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Xml;
 
     /// <summary>
     /// XML to JSON converter

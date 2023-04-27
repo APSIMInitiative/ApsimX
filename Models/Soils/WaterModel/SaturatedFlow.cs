@@ -1,12 +1,11 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+using Newtonsoft.Json;
+using Models.Soils;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Soils;
-
     /// <summary>
     /// When water content in any layer is below SAT but above DUL, a fraction of the water drains to the next 
     /// deepest layer each day. 

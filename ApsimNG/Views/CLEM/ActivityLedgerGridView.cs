@@ -68,7 +68,7 @@ namespace UserInterface.Views
             image1.Visible = false;
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             if (numberLockedCols > 0)
             {
@@ -126,7 +126,7 @@ namespace UserInterface.Views
                 table.Dispose();
             }
 
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            mainWidget.Destroyed -= MainWidget_Destroyed;
             owner = null;
         }
 

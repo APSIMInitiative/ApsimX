@@ -1,11 +1,9 @@
-﻿namespace Models.GrazPlan
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using Models.Core;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using Models.Core;
 
+namespace Models.GrazPlan
+{
     /// <summary>
     /// Livestock metabolizable energy partition
     /// </summary>

@@ -1,16 +1,17 @@
-﻿namespace UnitTests
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Surface;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Soils;
+
+namespace UnitTests
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Soils;
 
     public class IrrigationTests
     {

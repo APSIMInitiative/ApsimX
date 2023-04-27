@@ -1,16 +1,14 @@
-﻿namespace UnitTests.Core.ApsimFile
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace UnitTests.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Interfaces;
-    using Models.Core.ApsimFile;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
 
     /// <summary>
     /// Test the writer's load/save .apsimx capability 

@@ -1,12 +1,12 @@
-﻿namespace Models.Soils
-{
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
+﻿using Models.Core;
+using Models.Interfaces;
+using Models.Soils.Nutrients;
+using System;
+using Newtonsoft.Json;
+using APSIM.Shared.Utilities;
 
+namespace Models.Soils
+{
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
     /// The outputs can be used for producing summaries and rearrange outputs to facilitate comparison with observed data.

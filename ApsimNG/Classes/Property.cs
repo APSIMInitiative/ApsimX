@@ -1,19 +1,19 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Extensions.Collections;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.LifeCycle;
+using Models.PMF;
+using Models.Storage;
+using Models.Surface;
+
 namespace UserInterface.Classes
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Extensions.Collections;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.LifeCycle;
-    using Models.PMF;
-    using Models.Storage;
-    using Models.Surface;
-
     public enum PropertyType
     {
         SingleLineText,

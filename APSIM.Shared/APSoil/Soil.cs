@@ -1,8 +1,8 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+using System.Collections.Generic;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>The soil class encapsulates a soil characterisation and 0 or more soil samples.</summary>
     [Serializable]

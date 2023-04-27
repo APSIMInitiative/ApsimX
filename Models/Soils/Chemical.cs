@@ -1,12 +1,12 @@
-﻿namespace Models.Soils
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>This class captures chemical soil data</summary>
     [Serializable]

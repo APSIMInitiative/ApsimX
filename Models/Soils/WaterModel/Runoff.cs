@@ -1,11 +1,11 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Soils;
+using System;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Functions;
-    using Models.Soils;
-    using System;
-
     /// <summary>
     /// Runoff from rainfall is calculated using the USDA-Soil Conservation Service procedure known as the curve number technique. 
     /// The procedure uses total precipitation from one or more storms occurring on a given day to estimate runoff.

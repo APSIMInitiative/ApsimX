@@ -1,12 +1,12 @@
-﻿namespace UserInterface.Commands
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Commands
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Presenters;
-    using Models.Core;
-    using Interfaces;
 
     /// <summary>
     /// Perform one or more changes to properties in objects.

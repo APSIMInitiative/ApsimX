@@ -44,7 +44,7 @@ namespace UserInterface.Views
             textentry1.Changed += OnChanged;
             textentry1.FocusOutEvent += OnLeave;
             textentry1.KeyPressEvent += OnKeyPress;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>
@@ -58,12 +58,12 @@ namespace UserInterface.Views
             }
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
                 textentry1.FocusOutEvent -= OnLeave;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 textentry1.Changed -= OnChanged;
                 textentry1.FocusOutEvent -= OnLeave;
                 textentry1.KeyPressEvent -= OnKeyPress;

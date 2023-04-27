@@ -57,7 +57,7 @@ namespace UserInterface.Views
             listview.AppendColumn(column);
             listToggle.Activatable = true;
             listToggle.Toggled += OnItemChecked;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         private void OnToggleLegendInsideGraph(object sender, EventArgs e)
@@ -72,7 +72,7 @@ namespace UserInterface.Views
             }
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace UserInterface.Views
                 listModel.Dispose();
                 listRender.Dispose();
                 listToggle.Dispose();
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

@@ -1,17 +1,18 @@
-﻿namespace Models
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Newtonsoft.Json;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Graphing;
+using System.Globalization;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Newtonsoft.Json;
-    using Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
-	using System.Globalization;
 
 	/// <summary>The class represents a single series on a graph</summary>
 	[ValidParent(ParentType = typeof(Graph))]

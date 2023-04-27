@@ -1,13 +1,14 @@
-﻿namespace UnitTests.Storage
+﻿using APSIM.Shared.Utilities;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Reflection;
+
+namespace UnitTests.Storage
 {
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Reflection;
 
     [TestFixture]
     public class DataStoreWriterTests

@@ -1,17 +1,16 @@
-﻿namespace APSIM.Interop.Documentation.Formats
+﻿using APSIM.Shared.Documentation;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using APSIM.Shared.Extensions;
+using Models.Core.ApsimFile;
+
+namespace APSIM.Interop.Documentation.Formats
 {
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using APSIM.Shared.Extensions;
-    using Newtonsoft.Json.Linq;
-    using Models.Core.ApsimFile;
 
     /// <summary>
     /// This class documents a model's parameters, inputs, and outputs.

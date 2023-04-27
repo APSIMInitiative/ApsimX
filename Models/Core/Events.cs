@@ -1,11 +1,11 @@
-﻿namespace Models.Core
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// An event handling class

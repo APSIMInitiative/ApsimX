@@ -1,7 +1,8 @@
+using System;
+using APSIM.Interop.Visualisation;
+
 namespace UserInterface.EventArguments
 {
-    using System;
-    using APSIM.Interop.Visualisation;
 
     public class GraphObjectSelectedArgs : EventArgs
     {

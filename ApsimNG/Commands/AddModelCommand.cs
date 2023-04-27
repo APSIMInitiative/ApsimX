@@ -1,10 +1,10 @@
-﻿namespace UserInterface.Commands
+﻿using UserInterface.Interfaces;
+using Models.Core;
+using Models.Core.ApsimFile;
+using System;
+
+namespace UserInterface.Commands
 {
-    using Presenters;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
 
     /// <summary>This command adds a model as a child of another model.</summary>
     public class AddModelCommand : ICommand

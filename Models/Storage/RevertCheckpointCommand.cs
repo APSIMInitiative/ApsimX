@@ -1,14 +1,10 @@
-﻿namespace Models.Storage
-{
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading;
+﻿using APSIM.Shared.JobRunning;
+using System.Data;
+using System.IO;
+using System.Threading;
 
+namespace Models.Storage
+{
     /// <summary>Encapsulates a command to revert from a checkpoint.</summary>
     class RevertCheckpointCommand : IRunnable
     {

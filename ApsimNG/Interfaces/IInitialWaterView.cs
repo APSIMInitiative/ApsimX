@@ -1,6 +1,7 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+
+namespace UserInterface.Interfaces
 {
-    using System;
 
     /// <summary>
     /// This interface defines the API for talking to an initial water view.

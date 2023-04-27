@@ -1,12 +1,12 @@
-﻿namespace Models.Soils.Arbitrator
-{
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Interfaces;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Interfaces;
+using System.Linq;
+using APSIM.Shared.Utilities;
 
+namespace Models.Soils.Arbitrator
+{
     /// <summary>
     /// The APSIM farming systems model has a long history of use for simulating mixed or intercropped systems.  Doing this requires methods for simulating the competition of above and below ground resources.  Above ground competition for light has been calculated within APSIM assuming a mixed turbid medium using the Beer-Lambert analogue as described by [Keating1993Intercropping].  The MicroClimate [Snow2004Micromet] model now used within APSIM builds upon this by also calculating the impact of mutual shading on canopy conductance and partitions aerodynamic conductance to individual species in applying the Penman-Monteith model for calculating potential crop water use.  The arbitration of below ground resources of water and nitrogen is calculated by this model.
     /// 

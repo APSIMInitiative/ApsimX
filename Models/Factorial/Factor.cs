@@ -1,11 +1,11 @@
-﻿namespace Models.Factorial
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
 
     /// <summary>
     /// A class representing a treatment of an experiment (e.g. fertiliser).

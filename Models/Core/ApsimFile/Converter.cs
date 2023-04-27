@@ -1,22 +1,21 @@
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Factorial;
+using Models.Functions;
+using Models.PMF;
+using Models.Soils;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml;
+
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
-    using Models.Factorial;
-    using Models.Functions;
-    using Models.LifeCycle;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -29,9 +28,8 @@ namespace Models.Core.ApsimFile
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
         /// <param name="toVersion">The optional version to convert to.</param>
-        /// <param name="fileName">The optional filename where the string came from.</param>
         /// <returns>Returns true if something was changed.</returns>
-        public static ConverterReturnType DoConvert(string st, int toVersion = -1, string fileName = null)
+        public static ConverterReturnType DoConvert(string st, int toVersion = -1)
         {
             ConverterReturnType returnData = new ConverterReturnType();
 
@@ -43,7 +41,7 @@ namespace Models.Core.ApsimFile
 
             if (firstNonBlankChar == '<')
             {
-                bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, XmlConverters.LastVersion), fileName);
+                bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, XmlConverters.LastVersion));
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(st);
                 int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"), CultureInfo.InvariantCulture);
@@ -51,7 +49,7 @@ namespace Models.Core.ApsimFile
                     return new ConverterReturnType()
                     { DidConvert = changed, RootXml = doc };
 
-                st = ConvertToJSON(st, fileName);
+                st = ConvertToJSON(st);
                 returnData.Root = JObject.Parse(st);
             }
             else if (firstNonBlankChar == '{')
@@ -69,7 +67,7 @@ namespace Models.Core.ApsimFile
                 int fileVersion = (int)returnData.Root["Version"];
 
                 if (fileVersion > LatestVersion)
-                    throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
+                    throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?"));
 
                 // Run converters if not at the latest version.
                 while (fileVersion < toVersion)
@@ -83,7 +81,8 @@ namespace Models.Core.ApsimFile
                         throw new Exception("Cannot find converter to go to version " + versionFunction);
 
                     // Found converter method so call it.
-                    method.Invoke(null, new object[] { returnData.Root, fileName });
+                    //method.Invoke(null, new object[] { returnData.Root, fileName });
+                    method.Invoke(null, new object[] { returnData.Root});
 
                     fileVersion++;
                 }
@@ -179,7 +178,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>Upgrades to version 47 - the first JSON version.</summary>
-        private static string ConvertToJSON(string st, string fileName)
+        private static string ConvertToJSON(string st)
         {
             string json = XmlToJson.Convert(st);
             JObject j = JObject.Parse(json);
@@ -187,7 +186,7 @@ namespace Models.Core.ApsimFile
             return j.ToString();
         }
 
-        private static void UpgradeToVersion47(JObject root, string fileName)
+        private static void UpgradeToVersion47()
         {
             // Nothing to do as conversion to JSON has already happened.
         }
@@ -197,8 +196,8 @@ namespace Models.Core.ApsimFile
         /// all instances of the text "DisplayTypeEnum" with "DisplayType".
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion48(JObject root, string fileName)
+        /// 
+        private static void UpgradeToVersion48(JObject root)
         {
             foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
                 JsonUtilities.ReplaceManagerCode(manager, "DisplayTypeEnum", "DisplayType");
@@ -209,8 +208,7 @@ namespace Models.Core.ApsimFile
         /// Upgrades to version 49. Renames Models.Morris+Parameter to Models.Sensitivity.Parameter.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion49(JObject root, string fileName)
+        private static void UpgradeToVersion49(JObject root)
         {
             foreach (JObject morris in JsonUtilities.ChildrenRecursively(root, "Models.Morris"))
                 foreach (var parameter in morris["Parameters"])
@@ -222,13 +220,12 @@ namespace Models.Core.ApsimFile
         /// InitialWater components of soils copied from Apsim Classic.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
         /// <remarks>
         /// ll15 must be renamed to LL15.
         /// Wheat must be renamed to WheatSoil.
         /// Maize must be renamed to MaizeSoil.
         /// </remarks>
-        private static void UpgradeToVersion50(JObject root, string fileName)
+        private static void UpgradeToVersion50(JObject root)
         {
             foreach (JObject initialWater in JsonUtilities.ChildrenRecursively(root, "InitialWater"))
             {
@@ -245,8 +242,7 @@ namespace Models.Core.ApsimFile
         /// Changes GsMax to Gsmax350 in all models that implement ICanopy.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion51(JObject root, string fileName)
+        private static void UpgradeToVersion51(JObject root)
         {
             // Create a list of models that might have gsmax.
             // Might need to add in other models that implement ICanopy 
@@ -269,8 +265,7 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion52(JObject root, string fileName)
+        private static void UpgradeToVersion52(JObject root)
         {
             foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
             {
@@ -307,8 +302,7 @@ namespace Models.Core.ApsimFile
         /// Adds solutes under SoilNitrogen.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion53(JObject root, string fileName)
+        private static void UpgradeToVersion53(JObject root)
         {
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
             {
@@ -400,8 +394,7 @@ namespace Models.Core.ApsimFile
         /// Remove SoluteManager.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion54(JObject root, string fileName)
+        private static void UpgradeToVersion54(JObject root)
         {
             foreach (var soluteManager in JsonUtilities.ChildrenOfType(root, "SoluteManager"))
                 soluteManager.Remove();
@@ -488,8 +481,7 @@ namespace Models.Core.ApsimFile
         /// Changes initial Root Wt to an array.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion55(JObject root, string fileName)
+        private static void UpgradeToVersion55(JObject root)
         {
             foreach (var SOM in JsonUtilities.ChildrenOfType(root, "SoilOrganicMatter"))
             {
@@ -516,8 +508,7 @@ namespace Models.Core.ApsimFile
         /// becomes CompositeFactor.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion56(JToken root, string fileName)
+        private static void UpgradeToVersion56(JToken root)
         {
             foreach (var factor in JsonUtilities.ChildrenRecursively(root as JObject, "Factor"))
             {
@@ -593,8 +584,7 @@ namespace Models.Core.ApsimFile
         /// RetranslocateNitrogen.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion57(JObject root, string fileName)
+        private static void UpgradeToVersion57(JObject root)
         {
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
@@ -606,8 +596,7 @@ namespace Models.Core.ApsimFile
         /// Also change calls to property soil.SWAtWaterThickness to soil.Thickness.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion58(JObject root, string fileName)
+        private static void UpgradeToVersion58(JObject root)
         {
             foreach (JObject weirdo in JsonUtilities.ChildrenRecursively(root, "WEIRDO"))
             {
@@ -631,8 +620,7 @@ namespace Models.Core.ApsimFile
         /// Renames Soil.SoilOrganicMatter.OC to Soil.Initial.OC
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion59(JObject root, string fileName)
+        private static void UpgradeToVersion59(JObject root)
         {
             foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
@@ -754,8 +742,7 @@ namespace Models.Core.ApsimFile
         /// and always store as ppm.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion60(JObject root, string fileName)
+        private static void UpgradeToVersion60(JObject root)
         {
             foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
@@ -826,8 +813,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 60. Ensures that a micromet model is within every simulation.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion61(JObject root, string fileName)
+        private static void UpgradeToVersion61(JObject root)
         {
             foreach (JObject Sim in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
@@ -881,8 +867,7 @@ namespace Models.Core.ApsimFile
         /// following a refactor of this class.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion62(JObject root, string fileName)
+        private static void UpgradeToVersion62(JObject root)
         {
             // We renamed a lot of IFunctions and removed the 'Function' suffix.
             // ie HeightFunction -> Height.
@@ -1010,8 +995,7 @@ namespace Models.Core.ApsimFile
         /// Upgrades to version 63. Rename the 'Water' node under soil to 'Physical'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion63(JObject root, string fileName)
+        private static void UpgradeToVersion63(JObject root)
         {
             foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
             {
@@ -1057,8 +1041,7 @@ namespace Models.Core.ApsimFile
         /// Upgrades to version 64. Rename the 'SoilOrganicMatter' node under soil to 'Organic'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion64(JObject root, string fileName)
+        private static void UpgradeToVersion64(JObject root)
         {
             foreach (var organic in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
             {
@@ -1160,8 +1143,7 @@ namespace Models.Core.ApsimFile
         /// Upgrades to version 65. Rename the 'Analysis' node under soil to 'Chemical'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion65(JObject root, string fileName)
+        private static void UpgradeToVersion65(JObject root)
         {
             foreach (var chemical in JsonUtilities.ChildrenRecursively(root, "Analysis"))
             {
@@ -1283,8 +1265,7 @@ namespace Models.Core.ApsimFile
         /// When a factor is under a factors model, insert a permutation model.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion66(JToken root, string fileName)
+        private static void UpgradeToVersion66(JToken root)
         {
             foreach (var factors in JsonUtilities.ChildrenRecursively(root as JObject, "Factors"))
             {
@@ -1305,8 +1286,7 @@ namespace Models.Core.ApsimFile
         /// in clock to the values previously stored in StartDate and EndDate.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion67(JObject root, string fileName)
+        private static void UpgradeToVersion67(JObject root)
         {
             foreach (JObject clock in JsonUtilities.ChildrenRecursively(root, "Clock"))
             {
@@ -1319,8 +1299,7 @@ namespace Models.Core.ApsimFile
         /// Upgrades to version 68. Removes AgPasture.Sward
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion68(JObject root, string fileName)
+        private static void UpgradeToVersion68(JObject root)
         {
             foreach (JObject sward in JsonUtilities.ChildrenRecursively(root, "Sward"))
             {
@@ -1368,8 +1347,7 @@ namespace Models.Core.ApsimFile
         /// link refactoring.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the .apsimx file.</param>
-        private static void UpgradeToVersion69(JObject root, string fileName)
+        private static void UpgradeToVersion69(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
@@ -1426,8 +1404,7 @@ namespace Models.Core.ApsimFile
         /// from StockGeno to SingleGenotypeInits.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion70(JObject root, string fileName)
+        private static void UpgradeToVersion70(JObject root)
         {
             foreach (var stockNode in JsonUtilities.ChildrenOfType(root, "Stock"))
             {
@@ -1451,8 +1428,8 @@ namespace Models.Core.ApsimFile
         /// string property called XProperty that IFunction then had to locate
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion71(JObject root, string fileName)
+        /// 
+        private static void UpgradeToVersion71(JObject root)
         {
             foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
             {
@@ -1468,8 +1445,7 @@ namespace Models.Core.ApsimFile
         /// Remove .Value() from all variable references because it is redundant
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion72(JObject root, string fileName)
+        private static void UpgradeToVersion72(JObject root)
         {
             foreach (var varRef in JsonUtilities.ChildrenRecursively(root, "VariableReference"))
                 varRef["VariableName"] = varRef["VariableName"].ToString().Replace(".Value()", "");
@@ -1496,8 +1472,7 @@ namespace Models.Core.ApsimFile
         /// to be doing it via Variable reference so we can stream line scoping rules
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion73(JObject root, string fileName)
+        private static void UpgradeToVersion73(JObject root)
         {
             foreach (JObject Alomet in JsonUtilities.ChildrenRecursively(root, "AllometricDemandFunction"))
             {
@@ -1519,8 +1494,7 @@ namespace Models.Core.ApsimFile
         /// Changes the Surface Organic Matter property FractionFaecesAdded to 1.0
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion74(JObject root, string fileName)
+        private static void UpgradeToVersion74(JObject root)
         {
             foreach (JObject som in JsonUtilities.ChildrenRecursively(root, "SurfaceOrganicMatter"))
                 som["FractionFaecesAdded"] = "1.0";
@@ -1530,8 +1504,7 @@ namespace Models.Core.ApsimFile
         /// Change TreeLeafAreas to ShadeModiers in Tree Proxy
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion75(JObject root, string fileName)
+        private static void UpgradeToVersion75(JObject root)
         {
             foreach (JObject TreeProxy in JsonUtilities.ChildrenRecursively(root, "TreeProxy"))
             {
@@ -1548,8 +1521,7 @@ namespace Models.Core.ApsimFile
         /// Change flow_urea to FlowUrea in soil water
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion76(JObject root, string fileName)
+        private static void UpgradeToVersion76(JObject root)
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
@@ -1566,8 +1538,7 @@ namespace Models.Core.ApsimFile
         /// Change the property in Stock to Genotypes
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion77(JObject root, string fileName)
+        private static void UpgradeToVersion77(JObject root)
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
@@ -1584,8 +1555,7 @@ namespace Models.Core.ApsimFile
         /// Change the namespace for SimpleGrazing
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion78(JObject root, string fileName)
+        private static void UpgradeToVersion78(JObject root)
         {
             foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
             {
@@ -1597,8 +1567,7 @@ namespace Models.Core.ApsimFile
         /// Change manager method and AgPasture variable names.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion79(JObject root, string fileName)
+        private static void UpgradeToVersion79(JObject root)
         {
             Tuple<string, string>[] changes =
             {
@@ -1621,8 +1590,7 @@ namespace Models.Core.ApsimFile
         /// Change ExcelInput.FileName from a string into a string[].
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion80(JObject root, string fileName)
+        private static void UpgradeToVersion80(JObject root)
         {
             // Rename ExcelInput.FileName to FileNames and make it an array.
             foreach (JObject excelInput in JsonUtilities.ChildrenRecursively(root, "ExcelInput"))
@@ -1643,8 +1611,7 @@ namespace Models.Core.ApsimFile
         /// Seperate life cycle process class into Growth, Transfer and Mortality classes.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion81(JObject root, string fileName)
+        private static void UpgradeToVersion81(JObject root)
         {
             // Rename ExcelInput.FileName to FileNames and make it an array.
             foreach (JObject LSP in JsonUtilities.ChildrenRecursively(root, "LifeStageProcess"))
@@ -1679,8 +1646,7 @@ namespace Models.Core.ApsimFile
         /// Add Critical N Conc (if not existing) to all Root Objects by copying the maximum N conc
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion82(JObject root, string fileName)
+        private static void UpgradeToVersion82(JObject root)
         {
             foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
             {
@@ -1702,8 +1668,7 @@ namespace Models.Core.ApsimFile
         /// Remove .Value() from everywhere possible.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion83(JObject root, string fileName)
+        private static void UpgradeToVersion83(JObject root)
         {
             // 1. Report
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
@@ -1725,8 +1690,7 @@ namespace Models.Core.ApsimFile
         /// Renames the Input.FileName property to FileNames and makes it an array.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion84(JObject root, string fileName)
+        private static void UpgradeToVersion84(JObject root)
         {
             foreach (JObject input in JsonUtilities.ChildrenRecursively(root, "Input"))
                 if (input["FileName"] != null)
@@ -1736,9 +1700,8 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// Add a field to the Checkpoints table.
         /// </summary>
-        /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion85(JObject root, string fileName)
+        private static void UpgradeToVersion85(string fileName)
         {
             SQLite db = new SQLite();
             var dbFileName = Path.ChangeExtension(fileName, ".db");
@@ -1766,8 +1729,7 @@ namespace Models.Core.ApsimFile
         /// Add new methods structure to OrganArbitrator.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion86(JObject root, string fileName)
+        private static void UpgradeToVersion86(JObject root)
         {
             foreach (var arbitrator in JsonUtilities.ChildrenOfType(root, "OrganArbitrator"))
             {
@@ -1822,8 +1784,7 @@ namespace Models.Core.ApsimFile
         /// Remove Models.Report namespace.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion87(JObject root, string fileName)
+        private static void UpgradeToVersion87(JObject root)
         {
             // Fix type of Report nodes
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
@@ -1887,8 +1848,7 @@ namespace Models.Core.ApsimFile
         /// Replace SoilWater model with WaterBalance model.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion88(JObject root, string fileName)
+        private static void UpgradeToVersion88(JObject root)
         {
             foreach (JObject soilWater in JsonUtilities.ChildrenRecursively(root, "SoilWater"))
             {
@@ -1951,8 +1911,7 @@ namespace Models.Core.ApsimFile
         /// Replace 'avg' with 'mean' in report variables.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion89(JObject root, string fileName)
+        private static void UpgradeToVersion89(JObject root)
         {
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
                 JsonUtilities.SearchReplaceReportVariableNames(report, "avg of ", "mean of ");
@@ -1964,8 +1923,7 @@ namespace Models.Core.ApsimFile
         /// This converter will strip out all script children of managers under replacements.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion90(JObject root, string fileName)
+        private static void UpgradeToVersion90(JObject root)
         {
             foreach (JObject replacements in JsonUtilities.ChildrenRecursively(root, "Replacements"))
                 foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
@@ -1975,8 +1933,7 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion91(JObject root, string fileName)
+        private static void UpgradeToVersion91(JObject root)
         {
             Tuple<string, string>[] changes =
             {
@@ -2002,8 +1959,7 @@ namespace Models.Core.ApsimFile
         /// Change names of a couple of parameters in SimpleGrazing.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion92(JObject root, string fileName)
+        private static void UpgradeToVersion92(JObject root)
         {
             foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
             {
@@ -2023,8 +1979,7 @@ namespace Models.Core.ApsimFile
         /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion93(JObject root, string fileName)
+        private static void UpgradeToVersion93(JObject root)
         {
             foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
             {
@@ -2047,8 +2002,7 @@ namespace Models.Core.ApsimFile
         /// Convert stock genotypes array into GenotypeCross child models.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion94(JObject root, string fileName)
+        private static void UpgradeToVersion94(JObject root)
         {
             foreach (JObject stock in JsonUtilities.ChildrenRecursively(root, "Stock"))
             {
@@ -2114,8 +2068,7 @@ namespace Models.Core.ApsimFile
         /// Change initialDM on Generic organ and root from a single value to a BiomassPoolType so each type can be sepcified
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion95(JObject root, string fileName)
+        private static void UpgradeToVersion95(JObject root)
         {
             // Remove initalDM model and replace with initialBiomass object
             foreach (string org in new List<string>() { "GenericOrgan", "Root" })
@@ -2186,8 +2139,7 @@ namespace Models.Core.ApsimFile
         /// Add RootShape to all simulations.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion96(JObject root, string fileName)
+        private static void UpgradeToVersion96(JObject root)
         {
             foreach (JObject thisRoot in JsonUtilities.ChildrenRecursively(root, "Root"))
             {
@@ -2233,8 +2185,7 @@ namespace Models.Core.ApsimFile
         /// Add RootShape to all simulations.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion97(JObject root, string fileName)
+        private static void UpgradeToVersion97(JObject root)
         {
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
@@ -2247,8 +2198,7 @@ namespace Models.Core.ApsimFile
         /// Convert stock animalparamset
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion98(JObject root, string fileName)
+        private static void UpgradeToVersion98(JObject root)
         {
             foreach (JObject paramSet in JsonUtilities.ChildrenRecursively(root, "AnimalParamSet"))
             {
@@ -2260,8 +2210,7 @@ namespace Models.Core.ApsimFile
         /// Add InterpolationMethod to AirTemperature Function.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion99(JObject root, string fileName)
+        private static void UpgradeToVersion99(JObject root)
         {
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
@@ -2274,8 +2223,7 @@ namespace Models.Core.ApsimFile
         /// Change SimpleGrazing.FractionDefoliatedNToSoil from a scalar to an array.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion100(JObject root, string fileName)
+        private static void UpgradeToVersion100(JObject root)
         {
             foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
             {
@@ -2292,8 +2240,7 @@ namespace Models.Core.ApsimFile
         /// Add canopy width Function.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion101(JObject root, string fileName)
+        private static void UpgradeToVersion101(JObject root)
         {
             foreach (JObject Leaf in JsonUtilities.ChildrenOfType(root, "Leaf"))
             {
@@ -2311,8 +2258,7 @@ namespace Models.Core.ApsimFile
         /// Rename Models.Sensitivity.CroptimizR to Models.Optimisation.CroptimizR.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion102(JObject root, string fileName)
+        private static void UpgradeToVersion102(JObject root)
         {
             foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
                 croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
@@ -2322,8 +2268,7 @@ namespace Models.Core.ApsimFile
         /// Rename TemperatureResponse to Response on Interpolate functions.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion103(JObject root, string fileName)
+        private static void UpgradeToVersion103(JObject root)
         {
             foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
             {
@@ -2353,8 +2298,7 @@ namespace Models.Core.ApsimFile
         /// Add expression function to replace direct call to structure in nodenumberphase
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion104(JObject root, string fileName)
+        private static void UpgradeToVersion104(JObject root)
         {
             foreach (JObject NNP in JsonUtilities.ChildrenRecursively(root, "NodeNumberPhase"))
             {
@@ -2370,8 +2314,7 @@ namespace Models.Core.ApsimFile
         /// Add expression function to replace direct call to structure in nodenumberphase
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion105(JObject root, string fileName)
+        private static void UpgradeToVersion105(JObject root)
         {
             foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
             {
@@ -2386,8 +2329,7 @@ namespace Models.Core.ApsimFile
         /// Change Nutrient.FOMC and Nutrient.FOMN to Nutrient.FOM.C and Nutrient.FOM.N
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion106(JObject root, string fileName)
+        private static void UpgradeToVersion106(JObject root)
         {
             Tuple<string, string>[] changes =
             {
@@ -2417,8 +2359,7 @@ namespace Models.Core.ApsimFile
         /// Add expression function to replace direct call to structure in LeafAppearancePhase
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion107(JObject root, string fileName)
+        private static void UpgradeToVersion107(JObject root)
         {
             foreach (JObject LAP in JsonUtilities.ChildrenRecursively(root, "LeafAppearancePhase"))
             {
@@ -2444,8 +2385,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 108.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion108(JObject root, string fileName)
+        private static void UpgradeToVersion108(JObject root)
         {
             Tuple<string, string>[] changes =
             {
@@ -2466,8 +2406,7 @@ namespace Models.Core.ApsimFile
         /// - WeatherSampler
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion109(JObject root, string fileName)
+        private static void UpgradeToVersion109(JObject root)
         {
             Type[] typesToMove = new Type[] { typeof(ControlledEnvironment), typeof(SlopeEffectsOnWeather), typeof(Weather), typeof(WeatherSampler) };
 
@@ -2499,8 +2438,7 @@ namespace Models.Core.ApsimFile
         /// Add canopy width Function.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion110(JObject root, string fileName)
+        private static void UpgradeToVersion110(JObject root)
         {
             foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "Root"))
                 JsonUtilities.AddConstantFunctionIfNotExists(Root, "RootDepthStressFactor", "1");
@@ -2510,8 +2448,7 @@ namespace Models.Core.ApsimFile
         /// Modify manager scripts to use the new generic model locator API.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion111(JObject root, string fileName)
+        private static void UpgradeToVersion111(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
@@ -2918,8 +2855,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 112. Lots of breaking changes to class Plant.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion112(JObject root, string fileName)
+        private static void UpgradeToVersion112(JObject root)
         {
             var changes = new Tuple<string, string>[]
             {
@@ -3011,8 +2947,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 113. Rename SowPlant2Type to SowingParameters.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion113(JObject root, string fileName)
+        private static void UpgradeToVersion113(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
                 if (manager.Replace("SowPlant2Type", "SowingParameters"))
@@ -3023,8 +2958,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 114. Remove references to Plant.IsC4.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion114(JObject root, string fileName)
+        private static void UpgradeToVersion114(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
                 if (manager.ReplaceRegex(@"(\w+)\.IsC4", "$1.FindByPath(\"Leaf.Photosynthesis.FCO2.PhotosyntheticPathway\")?.Value?.ToString() == \"C4\""))
@@ -3036,11 +2970,10 @@ namespace Models.Core.ApsimFile
         /// which do not already have a mortality rate.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
         /// <remarks>
         /// This is part of the change to make mortality rate non-optional.
         /// </remarks>
-        private static void UpgradeToVersion115(JObject root, string fileName)
+        private static void UpgradeToVersion115(JObject root)
         {
             foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, nameof(Plant)))
             {
@@ -3058,8 +2991,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 115. Add PlantType to IPlants.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion116(JObject root, string fileName)
+        private static void UpgradeToVersion116(JObject root)
         {
             foreach (JObject pasture in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
             {
@@ -3079,8 +3011,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 115. Add PlantType to IPlants.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion117(JObject root, string fileName)
+        private static void UpgradeToVersion117(JObject root)
         {
             foreach (JObject croptimizr in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
             {
@@ -3096,8 +3027,7 @@ namespace Models.Core.ApsimFile
         /// Renames Initial NO3N and NH4N to NO3 and NH4
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion118(JObject root, string fileName)
+        private static void UpgradeToVersion118(JObject root)
         {
             foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
@@ -3116,8 +3046,7 @@ namespace Models.Core.ApsimFile
         /// Change report and manager scripts for soil variables that have been out of soil class. 
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion119(JObject root, string fileName)
+        private static void UpgradeToVersion119(JObject root)
         {
             var changes = new Tuple<string, string>[]
             {
@@ -3179,8 +3108,8 @@ namespace Models.Core.ApsimFile
         /// Remove empty samples from soils.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion120(JObject root, string fileName)
+        /// 
+        private static void UpgradeToVersion120(JObject root)
         {
             foreach (JObject sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
@@ -3221,8 +3150,7 @@ namespace Models.Core.ApsimFile
         /// Replace all instances of PhaseBasedSwitch with PhaseLookupValues.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion121(JObject root, string fileName)
+        private static void UpgradeToVersion121(JObject root)
         {
             foreach (JObject phaseSwitch in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
             {
@@ -3237,8 +3165,7 @@ namespace Models.Core.ApsimFile
         /// Set maps' default zoom level to 360.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion122(JObject root, string fileName)
+        private static void UpgradeToVersion122(JObject root)
         {
             foreach (JObject map in JsonUtilities.ChildrenRecursively(root, nameof(Map)))
             {
@@ -3252,8 +3179,7 @@ namespace Models.Core.ApsimFile
         /// Remove all references to Arbitrator.WDemand, Arbitrator.WSupply, and Arbitrator.WAllocated.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion123(JObject root, string fileName)
+        private static void UpgradeToVersion123(JObject root)
         {
             string[] patterns = new[]
             {
@@ -3280,8 +3206,7 @@ namespace Models.Core.ApsimFile
         /// Rename RadIntTot to RadiationIntercepted.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion124(JObject root, string fileName)
+        private static void UpgradeToVersion124(JObject root)
         {
             Tuple<string, string>[] changes = new Tuple<string, string>[1]
             {
@@ -3304,8 +3229,8 @@ namespace Models.Core.ApsimFile
         /// has been extracted to a variable.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion125(JObject root, string fileName)
+        /// 
+        private static void UpgradeToVersion125(JObject root)
         {
             foreach (JObject sobol in JsonUtilities.ChildrenRecursively(root, "Sobol"))
             {
@@ -3318,8 +3243,7 @@ namespace Models.Core.ApsimFile
         /// Add progeny destination phase and mortality function.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion900(JObject root, string fileName)
+        private static void UpgradeToVersion900(JObject root)
         {
             foreach (JObject LC in JsonUtilities.ChildrenRecursively(root, "LifeCycle"))
             {
@@ -3337,8 +3261,7 @@ namespace Models.Core.ApsimFile
         /// Move physical properties off Weirdo class and use Physical class instead.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion126(JObject root, string fileName)
+        private static void UpgradeToVersion126(JObject root)
         {
 
             foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
@@ -3372,8 +3295,7 @@ namespace Models.Core.ApsimFile
         /// change the syntax in all existing files.
         /// </remarks>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion127(JObject root, string fileName)
+        private static void UpgradeToVersion127(JObject root)
         {
             foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
             {
@@ -3393,8 +3315,7 @@ namespace Models.Core.ApsimFile
         /// Upgrade to version 128. Add ResourceName property to Fertiliser models.
         /// </summary>
         /// <param name="root">The root json token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-         private static void UpgradeToVersion128(JObject root, string fileName)
+         private static void UpgradeToVersion128(JObject root)
         {
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";
@@ -3404,8 +3325,7 @@ namespace Models.Core.ApsimFile
         /// Add canopy width Function.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion129(JObject root, string fileName)
+        private static void UpgradeToVersion129(JObject root)
         {
             foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "EnergyBalance"))
             {
@@ -3430,8 +3350,7 @@ namespace Models.Core.ApsimFile
         /// optional functions non-optional.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion130(JObject root, string fileName)
+        private static void UpgradeToVersion130(JObject root)
         {
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
             {
@@ -3468,8 +3387,7 @@ namespace Models.Core.ApsimFile
         /// optional functions non-optional.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion131(JObject root, string fileName)
+        private static void UpgradeToVersion131(JObject root)
         {
             foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "Leaf+LeafCohortParameters"))
             {
@@ -3482,8 +3400,7 @@ namespace Models.Core.ApsimFile
         /// Replace all XmlIgnore attributes with JsonIgnore attributes in manager scripts.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion132(JObject root, string fileName)
+        private static void UpgradeToVersion132(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
@@ -3501,8 +3418,7 @@ namespace Models.Core.ApsimFile
         /// Remove the WaterAvailableMethod from PastureSpecies.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion133(JObject root, string fileName)
+        private static void UpgradeToVersion133(JObject root)
         {
             foreach (JObject pasturSpecies in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
                 pasturSpecies.Remove("WaterAvailableMethod");
@@ -3512,8 +3428,7 @@ namespace Models.Core.ApsimFile
         /// Set MicroClimate's reference height to 2 if it's 0.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion134(JObject root, string fileName)
+        private static void UpgradeToVersion134(JObject root)
         {
             const string propertyName = "ReferenceHeight";
             foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
@@ -3531,8 +3446,7 @@ namespace Models.Core.ApsimFile
         /// enough to change.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion135(JObject root, string fileName)
+        private static void UpgradeToVersion135(JObject root)
         {
             foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
                 JsonUtilities.RenameProperty(memo, "MemoText", "Text");
@@ -3542,8 +3456,7 @@ namespace Models.Core.ApsimFile
         /// Replace XmlIgnore attributes with JsonIgnore attributes in manager scripts.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion136(JObject root, string fileName)
+        private static void UpgradeToVersion136(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
@@ -3561,8 +3474,7 @@ namespace Models.Core.ApsimFile
         /// Rename RootShapeCylindre to RootShapeCylinder.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion137(JObject root, string fileName)
+        private static void UpgradeToVersion137(JObject root)
         {
             foreach (JObject cylinder in JsonUtilities.ChildrenRecursively(root, "RootShapeCylindre"))
                 cylinder["$type"] = "Models.Functions.RootShape.RootShapeCylinder, Models";
@@ -3572,8 +3484,7 @@ namespace Models.Core.ApsimFile
         /// Remove all parameters from sugarcane and change it to use the sugarcane resource.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion138(JObject root, string fileName)
+        private static void UpgradeToVersion138(JObject root)
         {
             foreach (JObject sugar in JsonUtilities.ChildrenRecursively(root, "Sugarcane"))
             {
@@ -3594,8 +3505,7 @@ namespace Models.Core.ApsimFile
         /// Add priority factor functions into each demand function 
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion139(JObject root, string fileName)
+        private static void UpgradeToVersion139(JObject root)
         {
             foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
             {
@@ -3683,8 +3593,7 @@ namespace Models.Core.ApsimFile
         /// Remove all occurences of SoilNitrogenPlantAvailable NO3 and NH4 types.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion140(JObject root, string fileName)
+        private static void UpgradeToVersion140(JObject root)
         {
             
             foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNO3"))
@@ -3699,8 +3608,7 @@ namespace Models.Core.ApsimFile
         /// Convert CompositeBiomass from a Propertys property to OrganNames.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion141(JObject root, string fileName)
+        private static void UpgradeToVersion141(JObject root)
         {
             foreach (var compositeBiomass in JsonUtilities.ChildrenRecursively(root, "CompositeBiomass"))
             {
@@ -3735,8 +3643,7 @@ namespace Models.Core.ApsimFile
         /// Change OilPalm.NUptake to OilPalm.NitrogenUptake
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion142(JObject root, string fileName)
+        private static void UpgradeToVersion142(JObject root)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
@@ -3762,8 +3669,7 @@ namespace Models.Core.ApsimFile
         ///   into their new ShowInDocs property.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion143(JObject root, string fileName)
+        private static void UpgradeToVersion143(JObject root)
         {
             if (JsonUtilities.Type(root) == "Graph")
                 FixGraph(root);
@@ -3832,8 +3738,7 @@ namespace Models.Core.ApsimFile
         /// Change the namespace of the DirectedGraph type.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion144(JObject root, string fileName)
+        private static void UpgradeToVersion144(JObject root)
         {
             foreach (JObject map in JsonUtilities.ChildrenRecursively(root, "Map"))
             {
@@ -3864,8 +3769,7 @@ namespace Models.Core.ApsimFile
         /// are in the simulation.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion145(JObject root, string fileName)
+        private static void UpgradeToVersion145(JObject root)
         {
             foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
@@ -3896,8 +3800,7 @@ namespace Models.Core.ApsimFile
         /// Fix API calls to summary.WriteX, and pass in an appropriate message type.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion146(JObject root, string fileName)
+        private static void UpgradeToVersion146(JObject root)
         {
             const string infoPattern = @"\.WriteMessage\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
             const string warningPattern = @"\.WriteWarning\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
@@ -3919,8 +3822,7 @@ namespace Models.Core.ApsimFile
         /// Rename report function log to log10.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion147(JObject root, string fileName)
+        private static void UpgradeToVersion147(JObject root)
         {
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
             {
@@ -3938,8 +3840,7 @@ namespace Models.Core.ApsimFile
         /// models will now cause a file to fail to run.)
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion148(JObject root, string fileName)
+        private static void UpgradeToVersion148(JObject root)
         {
             foreach (JObject xyPairs in JsonUtilities.ChildrenRecursively(root, "XYPairs"))
                 foreach (JObject graph in JsonUtilities.ChildrenOfType(xyPairs, "Graph"))
@@ -3951,8 +3852,7 @@ namespace Models.Core.ApsimFile
         /// Also add a seed mortality function to plant models.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion149(JObject root, string fileName)
+        private static void UpgradeToVersion149(JObject root)
         {
             foreach (JObject emergingPhase in JsonUtilities.ChildrenRecursively(root, "EmergingPhase"))
             {
@@ -3985,8 +3885,7 @@ namespace Models.Core.ApsimFile
         /// by writing a new converter function.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion150(JObject root, string fileName)
+        private static void UpgradeToVersion150(JObject root)
         {
             const string correctName = "SeedMortalityRate";
             foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
@@ -4008,8 +3907,7 @@ namespace Models.Core.ApsimFile
         /// Update modified models to new CLEM refactor with Comparable child models.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion151(JObject root, string fileName)
+        private static void UpgradeToVersion151(JObject root)
         {
             Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
             {
@@ -4039,8 +3937,7 @@ namespace Models.Core.ApsimFile
         /// Move solutes out from under nutrient into soil.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion152(JObject root, string fileName)
+        private static void UpgradeToVersion152(JObject root)
         {
             foreach (JObject soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
             {
@@ -4525,6 +4422,8 @@ namespace Models.Core.ApsimFile
                                                              double[] bd, double[] bdThickness,
                                                              double[] thicknessToReturn)
         {
+            var bdPlaceholder = bd;
+            var bdThicknessPlaceholder = bdThickness;
             foreach (var token in tokens)
             {
                 string units = null;
@@ -4585,8 +4484,7 @@ namespace Models.Core.ApsimFile
         /// Replace replacements with a simple folder.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion153(JObject root, string fileName)
+        private static void UpgradeToVersion153(JObject root)
         {
             foreach (JObject replacements in JsonUtilities.ChildrenRecursively(root, "Replacements"))
             {
@@ -4598,8 +4496,7 @@ namespace Models.Core.ApsimFile
         /// Change .psi to .PSI (uppercase)
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion154(JObject root, string fileName)
+        private static void UpgradeToVersion154(JObject root)
         {
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".psi", ".PSI");
@@ -4611,8 +4508,7 @@ namespace Models.Core.ApsimFile
         /// Replace CultivarFolder with a simple folder.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion155(JObject root, string fileName)
+        private static void UpgradeToVersion155(JObject root)
         {
             foreach (JObject cultivarFolder in JsonUtilities.ChildrenRecursively(root, "CultivarFolder"))
                 cultivarFolder["$type"] = "Models.Core.Folder, Models";
@@ -4623,8 +4519,7 @@ namespace Models.Core.ApsimFile
         /// Change PredictedObserved to make SimulationName an explicit first field to match on.
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion156(JObject root, string fileName)
+        private static void UpgradeToVersion156(JObject root)
         {
             foreach (JObject predictedObserved in JsonUtilities.ChildrenRecursively(root, "PredictedObserved"))
             {
@@ -4648,8 +4543,7 @@ namespace Models.Core.ApsimFile
         /// Rename 'Plantain' model to 'PlantainForage'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion157(JObject root, string fileName)
+        private static void UpgradeToVersion157(JObject root)
         {
             // change the name of any Plantain plant
             foreach (JObject crop in JsonUtilities.ChildrenRecursively(root, "Plant"))
@@ -4735,8 +4629,7 @@ namespace Models.Core.ApsimFile
         /// Change [Root].LayerMidPointDepth to [Physical].LayerMidPointDepth
         /// </summary>
         /// <param name="root">Root node.</param>
-        /// <param name="fileName">File name.</param>
-        private static void UpgradeToVersion158(JObject root, string fileName)
+        private static void UpgradeToVersion158(JObject root)
         {
             //Fix variable references
             foreach (JObject varref in JsonUtilities.ChildrenOfType(root, "VariableReference"))
@@ -4750,8 +4643,7 @@ namespace Models.Core.ApsimFile
         /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion159(JObject root, string fileName)
+        private static void UpgradeToVersion159(JObject root)
         {
             foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "BiomassDemandAndPriority"))
             {
@@ -4780,8 +4672,7 @@ namespace Models.Core.ApsimFile
         /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion160(JObject root, string fileName)
+        private static void UpgradeToVersion160(JObject root)
         {
             foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "ThreeHourSin"))
             {
@@ -4797,10 +4688,7 @@ namespace Models.Core.ApsimFile
         /// Update the SoilNitrogen component to be a Nutrient
         /// </summary>
         /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        /// 
-
-        private static void UpgradeToVersion889(JObject root, string fileName)
+        private static void UpgradeToVersion889(JObject root)
         {
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
@@ -4849,8 +4737,7 @@ namespace Models.Core.ApsimFile
         /// Refactor LifeCycle model
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion890(JObject root, string fileName)
+        private static void UpgradeToVersion890(JObject root)
         {
             //Method to convert LifeCycleProcesses to functions
             void ChangeToFunction(JObject LifePhase, string OldType, string NewName, string FunctType, string SubFunctType = "")
@@ -5046,8 +4933,7 @@ namespace Models.Core.ApsimFile
         /// Changes initial Root Wt to an array.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion999(JObject root, string fileName)
+        private static void UpgradeToVersion999(JObject root)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))

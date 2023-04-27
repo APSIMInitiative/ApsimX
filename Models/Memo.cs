@@ -1,10 +1,10 @@
-﻿namespace Models
-{
-    using Models.Core;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
+﻿using Models.Core;
+using System;
+using APSIM.Shared.Documentation;
+using System.Collections.Generic;
 
+namespace Models
+{
     /// <summary>This is a memo/text component that stores user entered text information.</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.MemoView.glade")]

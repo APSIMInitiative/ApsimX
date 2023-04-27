@@ -1,8 +1,9 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+
+namespace Models.Core.ApsimFile
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Xml;
 
     class Writer : XmlTextWriter
     {

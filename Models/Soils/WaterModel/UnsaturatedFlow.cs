@@ -1,9 +1,10 @@
-﻿namespace Models.WaterModel
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
+using System;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Models.Soils;
-    using System;
 
     /// <summary>
     /// For water contents below DUL, movement depends upon the water content gradient between adjacent layers and the diffusivity,

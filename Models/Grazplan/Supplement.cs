@@ -1,13 +1,13 @@
 // -----------------------------------------------------------------------
 // GrazPlan Supplement model
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Models.Core;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Core;
 
     /// <summary>
     /// SupplementModel contains a list of supplement "stores", each of which

@@ -1,7 +1,8 @@
+using System;
+using System.Globalization;
+
 namespace StdUnits
 {
-    using System;
-    using System.Globalization;
 
     /// <summary>
     /// Math utilities

@@ -1,10 +1,10 @@
-﻿namespace UserInterface.Commands
+﻿using Models.Core;
+using UserInterface.Interfaces;
+using Models.Core.ApsimFile;
+using System;
+
+namespace UserInterface.Commands
 {
-    using Models.Core;
-    using Interfaces;
-    using Models.Core.ApsimFile;
-    using Presenters;
-    using System;
 
     /// <summary>This command deletes a model</summary>
     public class DeleteModelCommand : ICommand

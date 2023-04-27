@@ -1,12 +1,13 @@
+using APSIM.Shared.Utilities;
+using Models.Interfaces;
+using Models.Core;
+using StdUnits;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
 namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using Models.Interfaces;
-    using Models.Core;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
 
     /// <summary>
     /// AnimalGroup class
@@ -687,9 +688,9 @@ namespace Models.GrazPlan
                     this.ExportWeaners(ref femaleYoung, ref weanedOff);
 
                 if (!weanMales)                                                                         // Export ewes or cows which still have     
-                    this.SplitMothers(ref maleYoung, totalYoung, malePropn, ref newGroups);             // lambs or calves                        
+                    this.SplitMothers(ref maleYoung, ref newGroups);             // lambs or calves                        
                 if (!weanFemales)
-                    this.SplitMothers(ref femaleYoung, totalYoung, 1.0 - malePropn, ref newGroups);
+                    this.SplitMothers(ref femaleYoung, ref newGroups);
 
                 if (this.Genotype.Animal == GrazType.AnimalType.Sheep)                                   // Sheep don't continue lactation           
                     this.SetLactation(0);
@@ -2338,6 +2339,7 @@ namespace Models.GrazPlan
         /// <param name="newGroups"></param>
         private void Kill(double chill, ref List<AnimalGroup> newGroups)
         {
+            var chillPlaceholder = chill;
             double deathRate;
             DifferenceRecord Diffs;
             int maleLosses;
@@ -4246,10 +4248,10 @@ namespace Models.GrazPlan
         ///   offspring weaned                                                    
         /// </summary>
         /// <param name="youngGroup"></param>
-        /// <param name="totalYoung"></param>
-        /// <param name="GroupPropn"></param>
         /// <param name="newGroups"></param>
-        private void SplitMothers(ref AnimalGroup youngGroup, int totalYoung, double GroupPropn, ref List<AnimalGroup> newGroups)
+        /// 
+        /// 
+        private void SplitMothers(ref AnimalGroup youngGroup, ref List<AnimalGroup> newGroups)
         {
             // becoming : single twin triplet
 

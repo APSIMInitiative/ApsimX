@@ -1,8 +1,7 @@
-﻿namespace Models.Surface
-{
-    using System;
-    using Newtonsoft.Json;
+﻿using System;
 
+namespace Models.Surface
+{
     /// <summary>
     /// Encapsulates a residue type for SurfaceOrganicMatter model
     /// </summary>

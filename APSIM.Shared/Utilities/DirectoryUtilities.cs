@@ -1,8 +1,9 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.IO;
+using System.Linq;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// A collection of directory utilities.

@@ -1,15 +1,14 @@
-﻿namespace Models.Storage
-{
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using Newtonsoft.Json;
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
+namespace Models.Storage
+{
     /// <summary>Encapsulates a table that needs writing to the database.</summary>
     [Serializable]
     public class ReportData

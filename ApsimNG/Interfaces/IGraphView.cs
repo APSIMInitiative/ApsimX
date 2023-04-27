@@ -1,11 +1,11 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+using System.Collections;
+using System.Drawing;
+using UserInterface.EventArguments;
+using APSIM.Shared.Graphing;
+
+namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Collections;
-    using System.Drawing;
-    using Models;
-    using EventArguments;
-    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Event arguments for a Axis click

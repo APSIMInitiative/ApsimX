@@ -173,13 +173,13 @@ namespace UserInterface.Presenters
             
             List<StateNode> newNodes = new List<StateNode>();
             newNodes.AddRange(model.Nodes);
-            newNodes.RemoveAll(n => n.Name == e.nodeNameToDelete);
+            newNodes.RemoveAll(n => n.Name == e.NodeNameToDelete);
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), newNodes));
 
             // Need to also delete any arcs going to/from this node.
             List<RuleAction> newArcs = new List<RuleAction>();
             newArcs.AddRange(model.Arcs);
-            newArcs.RemoveAll(a => a.DestinationName == e.nodeNameToDelete || a.SourceName == e.nodeNameToDelete);
+            newArcs.RemoveAll(a => a.DestinationName == e.NodeNameToDelete || a.SourceName == e.NodeNameToDelete);
             changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
 
             ICommand removeNode = new ChangeProperty(changes);
@@ -221,7 +221,7 @@ namespace UserInterface.Presenters
             // fixme - not undoable
             List<RuleAction> newArcs = new List<RuleAction>();
             newArcs.AddRange(model.Arcs);
-            newArcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.arcNameToDelete); });
+            newArcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.ArcNameToDelete); });
             ICommand deleteArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(deleteArc);
         }

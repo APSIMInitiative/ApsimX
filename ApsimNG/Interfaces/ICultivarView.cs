@@ -1,7 +1,8 @@
-﻿namespace UserInterface.Interfaces
+﻿using System;
+using UserInterface.EventArguments;
+
+namespace UserInterface.Interfaces
 {
-    using System;
-    using EventArguments;
 
     /// <summary>
     /// An interface for a cultivar view.

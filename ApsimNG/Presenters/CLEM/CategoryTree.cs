@@ -1,8 +1,8 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
 
     public class CategoryTree
     {

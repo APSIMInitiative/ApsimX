@@ -1,16 +1,12 @@
-﻿namespace Models
-{
-    using APSIM.Shared.Utilities;
-    using Functions;
-    using Models.Core;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text.RegularExpressions;
+﻿using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
+namespace Models
+{
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 
     /// each time it is told to do so (by calling StoreValue method). This value

@@ -1,20 +1,19 @@
-﻿namespace Models.PMF.Organs
-{
-    using APSIM.Shared.Utilities;
-    using Library;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Soils.Nutrients;
-    using System.Linq;
-    using APSIM.Shared.Documentation;
+﻿using APSIM.Shared.Utilities;
+using Models.PMF.Library;
+using Models.Core;
+using Models.Interfaces;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.Soils;
+using Models.Soils.Arbitrator;
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Linq;
+using APSIM.Shared.Documentation;
 
+namespace Models.PMF.Organs
+{
     ///<summary>
     /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
     ///</summary>

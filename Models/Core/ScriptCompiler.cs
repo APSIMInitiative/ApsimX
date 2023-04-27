@@ -1,18 +1,18 @@
-﻿namespace Models.Core
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.VisualBasic;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
 
-    using APSIM.Shared.Utilities;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.VisualBasic;
-    using Microsoft.CodeAnalysis.Emit;
-    using Microsoft.CodeAnalysis.Text;
+namespace Models.Core
+{
 
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
     [Serializable]

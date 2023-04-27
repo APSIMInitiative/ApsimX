@@ -1,8 +1,9 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Globalization;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Some date manipulation routines, transcribed from their Fortran counterparts

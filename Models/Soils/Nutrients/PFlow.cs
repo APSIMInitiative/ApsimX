@@ -1,9 +1,9 @@
-﻿namespace Models.Soils.Nutrients
-{
-    using Core;
-    using Models.Functions;
-    using System;
+﻿using Models.Core;
+using Models.Functions;
+using System;
 
+namespace Models.Soils.Nutrients
+{
     /// <summary>
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>

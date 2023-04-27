@@ -59,10 +59,10 @@ namespace UserInterface.Views
             treeview1.ButtonPressEvent += OnButtonPress;
             treeview1.RowActivated += OnRowActivated;
 
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             if (rightHandView != null)
             {
@@ -82,7 +82,7 @@ namespace UserInterface.Views
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
 
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            mainWidget.Destroyed -= MainWidget_Destroyed;
             owner = null;
         }
 

@@ -1,13 +1,14 @@
-﻿namespace Models.WaterModel
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Models.Soils;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Soils;
 
     /// <summary>
     ///Soil evaporation is assumed to take place in two stages: the constant and the falling rate stages. 

@@ -1,7 +1,8 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Reflection;
+
+namespace Models.Core
 {
-    using System;
-    using System.Reflection;
 
     /// <summary>
     /// Encapsulates a discovered method of a model. 

@@ -1,9 +1,10 @@
-﻿namespace APSIM.Shared.OldAPSIM
-{
-    using System;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
+﻿using System;
+using System.Xml;
+using APSIM.Shared.Utilities;
 
+
+namespace APSIM.Shared.OldAPSIM
+{
     /// <summary>
     /// A class to remove the old style APSIM shortcuts.
     /// </summary>

@@ -1,10 +1,10 @@
-﻿namespace UserInterface.Commands
-{
-    using System;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
+﻿using System;
+using UserInterface.Interfaces;
+using Models.Core;
+using Models.Core.ApsimFile;
 
+namespace UserInterface.Commands
+{
     /// <summary>This command moves a model from one Parent Node to another.</summary>
     class MoveModelCommand : ICommand
     {

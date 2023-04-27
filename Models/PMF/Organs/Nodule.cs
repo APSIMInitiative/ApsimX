@@ -1,17 +1,16 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using System;
+using APSIM.Shared.Documentation;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-
     /// <summary>
     /// This organ simulates the root structure associate with symbiotic N-fixing bacteria.  It provides the core functions of determining 
     ///  N fixation supply and related costs.  It also calculates the growth, senescence and detachment of nodules.

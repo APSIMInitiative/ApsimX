@@ -1,15 +1,15 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Newtonsoft.Json;
+using Models.Interfaces;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
-    using Models.Soils.Nutrients;
-    using Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The SoilWater module is a cascading water balance model that owes much to its precursors in 

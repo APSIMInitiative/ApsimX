@@ -1,11 +1,12 @@
-﻿namespace Models.Soils.NutrientPatching
+﻿using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils.Nutrients;
+using System;
+using System.Collections.Generic;
+
+namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral

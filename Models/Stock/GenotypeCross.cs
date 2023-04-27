@@ -1,9 +1,10 @@
-﻿namespace Models.GrazPlan
+﻿using Models.Core;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace Models.GrazPlan
 {
-    using Models.Core;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
 
     /// <summary>
     /// An instance of this class creates a genotype cross and adds it to the list of 

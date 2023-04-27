@@ -1,14 +1,15 @@
-﻿namespace Models.Core
+﻿using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// This class encapsulates an instruction to replace a model.

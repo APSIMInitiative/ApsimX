@@ -1,11 +1,12 @@
-﻿namespace UserInterface.Classes
+﻿using Gtk;
+using System;
+using System.Drawing;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using Utility;
+
+namespace UserInterface.Classes
 {
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Drawing;
-    using Utility;
-    using Views;
 
     /// <summary>
     /// Represents a grid column.

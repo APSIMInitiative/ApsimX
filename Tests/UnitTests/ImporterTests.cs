@@ -1,20 +1,20 @@
-﻿namespace UnitTests
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Apsim710File;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Storage;
+using Models.Surface;
+using NUnit.Framework;
+using System;
+using System.IO;
+using UserInterface.Presenters;
+
+namespace UnitTests
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Apsim710File;
-    using Models.Interfaces;
-    using Models.PMF;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Storage;
-    using Models.Surface;
-    using NUnit.Framework;
-    using System;
-    using System.IO;
-    using UserInterface.Presenters;
-    using UserInterface.Views;
 
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]

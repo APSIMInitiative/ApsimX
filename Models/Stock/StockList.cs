@@ -1,16 +1,14 @@
-﻿namespace Models.GrazPlan
+﻿using Models.Core;
+using Models.ForageDigestibility;
+using Models.Interfaces;
+using StdUnits;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
+namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.Surface;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
 
 
     /// <summary>

@@ -1,12 +1,11 @@
-﻿namespace Models.PMF
-{
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using System;
-    using System.Collections.Generic;
+﻿using Models.Core;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using System;
+using System.Collections.Generic;
 
+namespace Models.PMF
+{
     /// <summary>
     /// This class holds the functions for calculating values for each Nutrient component. 
     /// </summary>

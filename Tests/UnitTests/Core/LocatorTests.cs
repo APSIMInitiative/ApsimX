@@ -1,10 +1,9 @@
-﻿namespace UnitTests.Core
+﻿using Models.Core;
+using NUnit.Framework;
+using System;
+
+namespace UnitTests.Core
 {
-    using Models;
-    using Models.Core;
-    using Models.Soils;
-    using NUnit.Framework;
-    using System;
 
     [TestFixture]
     public class LocatorTests

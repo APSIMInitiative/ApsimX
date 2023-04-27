@@ -1,9 +1,8 @@
-﻿namespace UnitTests
+﻿using Models.Core;
+using System;
+
+namespace UnitTests
 {
-    using Models;
-    using Models.Core;
-    using Models.Soils;
-    using System;
 
     [Serializable]
     class MockModelValuesChangeDaily : Model

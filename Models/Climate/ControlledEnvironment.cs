@@ -1,11 +1,11 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+
 namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Diagnostics.CodeAnalysis;
 
     ///<summary>
     /// Reads in controlled environment weather data and makes it available to models.

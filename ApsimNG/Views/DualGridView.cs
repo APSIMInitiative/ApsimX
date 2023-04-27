@@ -24,7 +24,7 @@ namespace UserInterface.Views
             mainWidget = panel;
             panel.Pack1((Grid1 as GridView).MainWidget, true, true);
             panel.Pack2((Grid2 as GridView).MainWidget, true, true);
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>Show the 2nd grid?</summary>
@@ -34,11 +34,11 @@ namespace UserInterface.Views
         }
 
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 //mainWidget.Dispose();
                 Grid1.Dispose();
                 Grid2.Dispose();

@@ -1,11 +1,11 @@
-﻿namespace Models.PMF
-{
-    using Library;
-    using Models.Core;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
+﻿using Models.PMF.Library;
+using Models.Core;
+using Models.Soils;
+using System;
+using System.Collections.Generic;
 
+namespace Models.PMF
+{
     /// <summary>
     /// Data passed to leaf tip appearance occurs.
     /// </summary>

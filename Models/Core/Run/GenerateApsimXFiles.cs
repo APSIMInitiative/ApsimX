@@ -1,12 +1,13 @@
-﻿namespace Models.Core.Run
+﻿using APSIM.Shared.Extensions.Collections;
+using Models.Core.ApsimFile;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.Extensions.Collections;
-    using Models.Core.ApsimFile;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// This class generates individual .apsimx files for each simulation in a runner.

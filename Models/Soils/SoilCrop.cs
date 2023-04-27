@@ -1,11 +1,11 @@
-﻿namespace Models.Soils
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Linq;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using System;
+using System.Linq;
 
+namespace Models.Soils
+{
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]

@@ -1,11 +1,12 @@
-﻿namespace APSIM.Shared.JobRunning
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace APSIM.Shared.JobRunning
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// The class encapsulates the ability to run multiple collections of IRunnable jobs.

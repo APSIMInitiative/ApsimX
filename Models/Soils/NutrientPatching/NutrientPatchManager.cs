@@ -1,13 +1,13 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
     /// <summary>
     /// Encapsulates a cohort of Nutrient models i.e. patching.
     /// </summary>
@@ -487,6 +487,7 @@ namespace Models.Soils.NutrientPatching
         /// <returns>The values of dlt partitioned for each existing patch</returns>
         private double[][] PartitionDelta(double[] incomingDelta, string soluteName, SoluteSetterType callingModelType, PartitionApproachEnum partitionApproach)
         {
+            var callingModelTypePlaceholder = callingModelType;
             int numberLayers = incomingDelta.Length;
 
             // 1. initialise the result array

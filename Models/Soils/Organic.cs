@@ -1,12 +1,11 @@
-﻿namespace Models.Soils
-{
-    using APSIM.Shared.APSoil;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Interfaces;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+using Newtonsoft.Json;
+using Models.Interfaces;
 
+namespace Models.Soils
+{
     /// <summary>A model for capturing soil organic parameters</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]

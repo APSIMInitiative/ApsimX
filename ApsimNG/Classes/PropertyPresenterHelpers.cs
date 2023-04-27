@@ -1,12 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+using Models.LifeCycle;
+using Models.PMF;
+using Models.PMF.Phen;
+
 namespace UserInterface.Classes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Models.Core;
-    using Models.LifeCycle;
-    using Models.PMF;
-    using Models.PMF.Phen;
 
     /// <summary>
     /// Helper functions for the property presenter. Most involve

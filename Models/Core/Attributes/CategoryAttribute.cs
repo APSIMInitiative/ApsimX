@@ -1,6 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies the category and subcategory that the related property belongs to,

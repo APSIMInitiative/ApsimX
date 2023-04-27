@@ -1,8 +1,8 @@
-﻿namespace UserInterface.Interfaces
-{
+﻿using System;
+using System.Runtime.Serialization;
 
-    using System;
-    using System.Runtime.Serialization;
+namespace UserInterface.Interfaces
+{
 
     /// <summary>A class for holding info about a begin drag event.</summary>
     public class DragStartArgs : EventArgs

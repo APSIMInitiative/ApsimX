@@ -1,10 +1,11 @@
-﻿namespace Models.Core.ApsimFile
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Xml;
 
     /// <summary>
     /// This class is a reader for a .apsimx file format into something that the XmlSerializer can read.

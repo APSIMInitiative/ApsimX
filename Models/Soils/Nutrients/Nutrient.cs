@@ -1,19 +1,17 @@
+using Models.Interfaces;
+using Models.Core;
+using System;
+using APSIM.Shared.Utilities;
+using Models.Surface;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Documentation.Tags;
+
 namespace Models.Soils.Nutrients
 {
-    using Interfaces;
-    using Models.Core;
-    using System;
-    using APSIM.Shared.Utilities;
-    using Models.Surface;
-    using Models.Soils;
-    using System.Collections.Generic;
-    using Models;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Documentation.Tags;
-
     /// <summary>
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
     /// </summary>

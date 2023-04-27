@@ -1,15 +1,15 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+
 namespace UnitTests
 {
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
-	using System.IO;
-    using System.Linq;
-    using System.Text;
 
     class TextStorageReader : IStorageReader
     {

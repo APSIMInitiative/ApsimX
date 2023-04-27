@@ -1,11 +1,12 @@
-﻿namespace Models.AgPasture
+﻿using System;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
+using Models.Soils.Nutrients;
+
+namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]

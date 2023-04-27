@@ -1,11 +1,11 @@
-﻿namespace Models.WaterModel
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+using Newtonsoft.Json;
+using Models.Soils;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Functions;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Soils;
 
     /// <summary>
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.

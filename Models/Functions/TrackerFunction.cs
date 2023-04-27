@@ -1,12 +1,10 @@
-﻿namespace Models.Functions
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using System.Globalization;
+
+namespace Models.Functions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Reflection;
-    using Models.Core;
-    using Models.PMF.Phen;
-    using System.Globalization;
 
     /// <summary>
     /// A function that accumulates values from child functions

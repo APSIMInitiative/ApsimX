@@ -1,7 +1,7 @@
-﻿namespace APSIM.Shared.APSoil
+﻿using System;
+
+namespace APSIM.Shared.APSoil
 {
-    using System;
-    using Newtonsoft.Json;
 
     /// <summary>A soil crop parameterisation    /// </summary>
     [Serializable]

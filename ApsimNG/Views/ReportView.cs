@@ -62,7 +62,7 @@ namespace UserInterface.Views
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace UserInterface.Views
             }
         }
 
-        private void _mainWidget_Destroyed(object sender, System.EventArgs e)
+        private void MainWidget_Destroyed(object sender, System.EventArgs e)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace UserInterface.Views
                 frequencyEditor = null;
                 dataStoreView1.Dispose();
                 dataStoreView1 = null;
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

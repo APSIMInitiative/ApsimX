@@ -1,9 +1,10 @@
-﻿namespace APSIM.Shared.Graphing
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System;
+using System.Linq;
+
+namespace APSIM.Shared.Graphing
 {
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System;
-    using System.Linq;
 
     /// <summary>Encapsulates a node on a directed graph</summary>
     [Serializable]

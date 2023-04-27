@@ -1,7 +1,8 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Drawing;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Drawing;
 
     /// <summary>
     /// Colour utility class

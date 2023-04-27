@@ -1,10 +1,11 @@
-﻿namespace APSIM.Interop.Graphing.CustomSeries
+﻿using System;
+using System.Globalization;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+
+namespace APSIM.Interop.Graphing.CustomSeries
 {
-    using System;
-    using System.Globalization;
-    using OxyPlot;
-    using OxyPlot.Axes;
-    using OxyPlot.Series;
 
     /// <summary>
     /// A column series for graphing that doesn't need a category axis.

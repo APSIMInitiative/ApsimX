@@ -27,25 +27,30 @@ namespace UnitTests
 
         public void WriteMessage(IModel model, string message)
         {
+            var placeholder = model;
             messages.Add(message);
         }
 
         public void WriteMessage(object model, string message)
         {
+            var placeholder = model;
             messages.Add(message);
         }
 
         public void WriteWarning(IModel model, string message)
         {
+            var placeholder = model;
             messages.Add("WARNING: " + message);
         }
 
         public void WriteWarning(object model, string message)
         {
+            var placeholder = model;
             messages.Add("WARNING: " + message);
         }
         public void WriteError(IModel model, string message)
         {
+            var placeholder = model;
             messages.Add("ERROR: " + message);
         }
 

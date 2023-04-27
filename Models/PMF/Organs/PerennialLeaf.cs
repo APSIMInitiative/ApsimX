@@ -267,24 +267,36 @@ namespace Models.PMF.Organs
         public double NFixationCost { get { return 0; } }
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-        public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
+        public double[] WaterSupply(ZoneWaterAndN zone) 
+        {
+            var zonePlaceholder = zone;
+            return null;
+        }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
-        public void DoWaterUptake(double[] Amount, string zoneName) { }
+        public void DoWaterUptake(double[] Amount, string zoneName) 
+        {
+            var amountPlaceholder = Amount;
+            var zoneNamePlaceholder = zoneName;
+        }
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
         public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
+            var zonePlaceholder = zone;
             NO3Supply = null;
             NH4Supply = null;
         }
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
+        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) 
+        { 
+            var zonesFromSoilArbitratorPlaceholder = zonesFromSoilArbitrator;
+        }
         /// <summary>Gets the fw.</summary>
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
@@ -324,7 +336,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Apex number by age</summary>
         /// <param name="age">Threshold age</param>
-        public double ApexNumByAge(double age) { return 0; }
+        public double ApexNumByAge(double age) 
+        {
+            var agePlaceholder = age;
+            return 0; 
+        }
         #endregion
 
         #region Arbitrator Methods

@@ -1,12 +1,13 @@
-﻿namespace Models.StockManagement
+﻿using Models.Core;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using Models.GrazPlan;
+using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
+
+namespace Models.StockManagement
 {
-    using Models.Core;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Models.GrazPlan;
-    using APSIM.Shared.Utilities;
-    using Models.PMF.Interfaces;
 
     /// <summary>
     /// An instance of this class creates a genotype cross and adds it to the list of 

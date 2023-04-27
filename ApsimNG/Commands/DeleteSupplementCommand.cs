@@ -1,10 +1,10 @@
 ﻿using System;
+using Models.Core;
+using Models.GrazPlan;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Commands
 {
-    using Models.Core;
-    using Models.GrazPlan;
-    using Interfaces;
 
     class DeleteSupplementCommand : ICommand
     {

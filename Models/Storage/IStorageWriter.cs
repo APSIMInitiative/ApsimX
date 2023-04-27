@@ -1,8 +1,8 @@
-﻿namespace Models.Storage
+﻿using System.Collections.Generic;
+using System.Data;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// Interface for reading and writing data to/from permanent storage.

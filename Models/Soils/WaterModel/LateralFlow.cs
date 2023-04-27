@@ -1,11 +1,11 @@
-﻿namespace Models.WaterModel
-{
-    using APSIM.Shared.Utilities;
-    using Core;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Soils;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+using Newtonsoft.Json;
+using Models.Soils;
 
+namespace Models.WaterModel
+{
     /// <summary>
     /// Lateral movement of water is calculated from a user specified lateral inflow ('InFlow'). 
     /// 

@@ -1,16 +1,17 @@
-﻿namespace Models.Core.Run
+﻿using APSIM.Shared.JobRunning;
+using Models.Core.ApsimFile;
+using Models.PostSimulationTools;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using Models.Core.ApsimFile;
-    using Models.PostSimulationTools;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 

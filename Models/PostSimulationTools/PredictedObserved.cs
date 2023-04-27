@@ -1,20 +1,18 @@
-﻿
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+
 
 namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
-	using System.Linq;
-    using System.Text;
-    using System.Threading;
-
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows

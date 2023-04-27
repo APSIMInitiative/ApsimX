@@ -1,8 +1,9 @@
-﻿namespace UnitTests.Graph
+﻿using Models.Core;
+using Models.Core.Run;
+using System.Collections.Generic;
+
+namespace UnitTests.Graph
 {
-    using Models.Core;
-    using Models.Core.Run;
-    using System.Collections.Generic;
 
     class MockSimulationDescriptionGenerator : Model, ISimulationDescriptionGenerator
     {

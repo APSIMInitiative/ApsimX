@@ -1,16 +1,17 @@
-﻿namespace Models.PostSimulationTools
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Data.SqlClient;
-	using System.Globalization;
-	using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// A post processing model that send one or more tables from the DataStore to 

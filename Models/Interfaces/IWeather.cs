@@ -1,8 +1,8 @@
-﻿namespace Models.Interfaces
-{
-    using Models.Core;
-    using System;
+﻿using Models.Core;
+using System;
 
+namespace Models.Interfaces
+{
     /// <summary>A weather interface.</summary>
     public interface IWeather
     {

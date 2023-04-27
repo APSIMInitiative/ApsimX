@@ -1,6 +1,7 @@
+using System;
+
 namespace UserInterface.EventArguments
 {
-    using System;
 
     /// <summary>
     /// Event arguments for a PropertyChanged event.

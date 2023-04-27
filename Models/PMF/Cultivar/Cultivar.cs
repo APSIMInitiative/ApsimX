@@ -1,11 +1,12 @@
-﻿namespace Models.PMF
+﻿using APSIM.Shared.Documentation;
+using Models.Core;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Documentation;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// A cultivar model - used to override properties of another model

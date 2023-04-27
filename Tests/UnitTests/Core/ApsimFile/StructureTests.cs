@@ -1,14 +1,15 @@
-﻿namespace UnitTests.Core.ApsimFile
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using Models.Soils;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Soils;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>This is a test class for the simulation structure manager.</summary>
     [TestFixture]

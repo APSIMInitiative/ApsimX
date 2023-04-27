@@ -1,16 +1,17 @@
-﻿namespace Models.Core
+﻿using APSIM.Shared.Utilities;
+using Models.Functions;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Functions;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.

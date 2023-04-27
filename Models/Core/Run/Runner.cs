@@ -1,13 +1,11 @@
-﻿namespace Models.Core.Run
+﻿using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// An class for encapsulating a list of simulations that are ready

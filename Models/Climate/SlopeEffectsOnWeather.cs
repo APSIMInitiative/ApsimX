@@ -1,7 +1,8 @@
+using Models.Core;
+using System;
+
 namespace Models.Climate
 {
-    using Models.Core;
-    using System;
 
     /// <summary>
     /// This model can be used to adjust some of the weather variables when simulating a slopping surface (defined by slope and aspect angles)

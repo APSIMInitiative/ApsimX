@@ -1,13 +1,14 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Models.Soils;
+using System.Globalization;
+using APSIM.Shared.Utilities;
+using System.Collections;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Models.Soils;
-    using System.Globalization;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for

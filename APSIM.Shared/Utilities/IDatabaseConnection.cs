@@ -1,9 +1,9 @@
-﻿
+﻿using System.Collections.Generic;
+using System;
+using System.Data;
+
 namespace APSIM.Shared.Utilities
 {
-    using System.Collections.Generic;
-    using System;
-    using System.Data;
 
     /// <summary>
     /// A database specific connection

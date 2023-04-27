@@ -1,9 +1,10 @@
-﻿namespace APSIM.Shared.OldAPSIM
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
+using APSIM.Shared.Utilities;
+
+namespace APSIM.Shared.OldAPSIM
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// TODO: Update summary.

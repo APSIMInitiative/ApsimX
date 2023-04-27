@@ -1,7 +1,8 @@
-﻿namespace UnitTests
+﻿using Models.Core;
+using System;
+
+namespace UnitTests
 {
-    using Models.Core;
-    using System;
 
     [Serializable]
     class MockModelThatThrows : Model

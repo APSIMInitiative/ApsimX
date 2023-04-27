@@ -1,16 +1,17 @@
-﻿namespace Models.PostSimulationTools
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.IO;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.IO;
-    using System.Threading;
+
 
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore. 

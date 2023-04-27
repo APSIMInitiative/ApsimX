@@ -1261,7 +1261,7 @@ namespace UserInterface.Presenters
 
                     // Run the converter.
                     string contents = File.ReadAllText(file);
-                    var converter = Converter.DoConvert(contents, version, file);
+                    var converter = Converter.DoConvert(contents, version);
                     if (converter.DidConvert)
                         File.WriteAllText(file, converter.Root.ToString());
                     view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);

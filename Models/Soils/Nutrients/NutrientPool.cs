@@ -1,11 +1,11 @@
-﻿namespace Models.Soils.Nutrients
-{
-    using Models.Core;
-    using Functions;
-    using System;
-    using System.Collections.Generic;
-    using APSIM.Shared.Documentation;
+﻿using Models.Core;
+using Models.Functions;
+using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 
+namespace Models.Soils.Nutrients
+{
     /// <summary>
     /// A nutrient pool.
     /// </summary>

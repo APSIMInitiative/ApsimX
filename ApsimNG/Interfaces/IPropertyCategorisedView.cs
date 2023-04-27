@@ -1,10 +1,7 @@
-﻿
+﻿using System;
+
 namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-    using EventArguments;
 
     /// <summary>
     /// The interface for an explorer view.

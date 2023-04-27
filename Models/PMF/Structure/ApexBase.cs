@@ -1,14 +1,15 @@
-﻿namespace Models.PMF.Struct
+﻿using Models.Core;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Struct
 {
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Models.PMF.Phen;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Newtonsoft.Json;
+
     /// <summary>
     /// 
     /// </summary>

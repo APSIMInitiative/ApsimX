@@ -1,7 +1,8 @@
-﻿namespace Models.Interfaces
+﻿using System.Collections.Generic;
+using Models.Soils.Arbitrator;
+
+namespace Models.Interfaces
 {
-    using System.Collections.Generic;
-    using Models.Soils.Arbitrator;
 
     /// <summary>
     /// This interface defines the communications between a soil arbitrator and

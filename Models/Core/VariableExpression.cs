@@ -1,9 +1,10 @@
-﻿namespace Models.Core
+﻿using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using Models.Functions;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using Models.Functions;
 
     /// <summary>
     /// TODO: Update summary.

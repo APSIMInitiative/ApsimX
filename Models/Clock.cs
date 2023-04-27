@@ -3,10 +3,6 @@ using Models.Core.Run;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Data;
-using APSIM.Shared.Utilities;
 
 namespace Models
 {

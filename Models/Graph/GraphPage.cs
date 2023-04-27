@@ -1,15 +1,16 @@
-﻿namespace Models
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.CLEM;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Models.CLEM;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>Descibes a page of graphs for the tags system.</summary>
     public class GraphPage : AutoDocumentation.ITag

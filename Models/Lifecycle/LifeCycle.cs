@@ -1,14 +1,14 @@
-﻿namespace Models.LifeCycle
-{
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using static Models.LifeCycle.LifeCyclePhase;
+﻿using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using static Models.LifeCycle.LifeCyclePhase;
 
+namespace Models.LifeCycle
+{
     /// <summary>
     /// The LifeCycle model represents a population of organisms within a zone.  It assembles 
     /// an arbitry number of LifeCyclePhases that cohorts of individuals (of the same developmental

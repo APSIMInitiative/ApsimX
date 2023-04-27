@@ -1,7 +1,7 @@
-﻿namespace Models.Surface
-{
-    using System;
+﻿using System;
 
+namespace Models.Surface
+{
     /// <summary>Type carrying information about the CNP composition of an organic matter fraction</summary>
     [Serializable]
     public class OMFractionType

@@ -1,14 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.Interfaces;
+using Models;
+using Models.CLEM.Reporting;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.IO;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using global::UserInterface.Interfaces;
-    using Models;
-    using Models.CLEM.Reporting;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.IO;
-    using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class ActivityLedgerGridPresenter : IPresenter, IRefreshPresenter, ICLEMPresenter
@@ -78,7 +79,7 @@
                 this.SimulationName = simulation.Name;
                 this.ZoneName = paddock.Name;
                 this.Attach(dataStore, ledgerView, clemPresenter.ExplorerPresenter);
-                dataStorePresenter.tableDropDown.SelectedValue = report.Name;
+                dataStorePresenter.TableDropDown.SelectedValue = report.Name;
 
                 (clemPresenter.View as CLEMView).AddTabView("Display", ledgerView);
                 clemPresenter.PresenterList.Add("Display", this);

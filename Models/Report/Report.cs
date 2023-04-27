@@ -1,17 +1,17 @@
+using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.Core;
+using Models.Storage;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+
 namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.CLEM;
-    using Models.Core;
-    using Models.Functions;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A report class for writing output to the data store.

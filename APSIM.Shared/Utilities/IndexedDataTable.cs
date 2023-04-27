@@ -1,9 +1,10 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>
     /// An indexed DataTable. An index (column name / value pairs) is applied

@@ -1,13 +1,14 @@
-﻿namespace UnitTests.Sheet
+﻿using APSIM.Shared.Utilities;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using UserInterface.Views;
+
+namespace UnitTests.Sheet
 {
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using UserInterface.Views;
 
     [TestFixture]
     class PagedDataTableTests

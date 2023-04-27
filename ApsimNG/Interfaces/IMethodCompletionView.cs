@@ -1,9 +1,10 @@
-﻿namespace UserInterface.Interfaces
+﻿using System.Drawing;
+using UserInterface.Intellisense;
+using System.Collections.Generic;
+using System;
+
+namespace UserInterface.Interfaces
 {
-    using System.Drawing;
-    using Intellisense;
-    using System.Collections.Generic;
-    using System;
 
     /// <summary>
     /// Interface for a small intellisense window which displays the 

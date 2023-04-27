@@ -102,7 +102,7 @@ namespace UserInterface.Views
             vbox1.Add(scroll);
 
             mainWidget = vbox1;
-            mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += MainWidget_Destroyed;
         }
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)
@@ -140,7 +140,7 @@ namespace UserInterface.Views
             }
         }
 
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        private void MainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
@@ -153,7 +153,7 @@ namespace UserInterface.Views
                         child.Dispose();
                     }
                 }
-                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Destroyed -= MainWidget_Destroyed;
                 owner = null;
             }
             catch (Exception err)

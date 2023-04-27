@@ -1,13 +1,14 @@
-﻿namespace UnitTests.Core
+﻿using Models;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Organs;
+using Models.Soils;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UnitTests.Core
 {
-    using Models;
-    using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Organs;
-    using Models.Soils;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.Linq;
 
     [TestFixture]
     class ScopeTests

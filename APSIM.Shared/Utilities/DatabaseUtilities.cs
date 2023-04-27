@@ -1,7 +1,8 @@
+using System.Collections.Generic;
+using System.Data;
+
 namespace APSIM.Shared.Utilities
 {
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// Some utilities for manipulating a data base connection.

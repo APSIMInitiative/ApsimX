@@ -1,10 +1,9 @@
-﻿namespace Models.AgPasture
+﻿using System;
+using Models.Core;
+using Models.Surface;
+
+namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Surface;
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]

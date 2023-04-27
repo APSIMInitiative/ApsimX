@@ -1,6 +1,7 @@
+using System;
+
 namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// Environment interface

@@ -40,7 +40,7 @@ namespace ApsimNG.Cloud.Azure
             return Path.Combine(GetJobInputPath(jobId), "AzCopy.exe");
         }
 
-        public static string GetJobManagerPath(Guid jobId)
+        public static string GetJobManagerPath()
         {
             return string.Format("azure-apsim.exe");
         }

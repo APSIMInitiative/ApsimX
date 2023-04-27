@@ -1,6 +1,7 @@
-﻿namespace Models
+﻿using System;
+
+namespace Models
 {
-    using System;
 
     /// <summary>Interface for a time server,</summary>
     public interface IClock

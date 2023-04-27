@@ -1,14 +1,15 @@
-﻿namespace UnitTests.Factorial
+﻿using Models.Core;
+using Models.Factorial;
+using Models.Core.Run;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Weather;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+
+namespace UnitTests.Factorial
 {
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Core.Run;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Weather;
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
 
     /// <summary>This is a test class for the Experiment class</summary>
     [TestFixture]

@@ -1,8 +1,9 @@
-﻿namespace UnitTests.Weather
+﻿using Models.Core;
+using Models.Interfaces;
+using System;
+
+namespace UnitTests.Weather
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
 
     [Serializable]
     class MockWeather : Model, IWeather

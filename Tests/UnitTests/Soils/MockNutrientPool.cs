@@ -1,7 +1,8 @@
-﻿namespace UnitTests.Soils
+﻿using Models.Core;
+using Models.Soils.Nutrients;
+
+namespace UnitTests.Soils
 {
-    using Models.Core;
-    using Models.Soils.Nutrients;
 
     internal class MockNutrientPool : Model, INutrientPool
     {

@@ -41,7 +41,7 @@ namespace UserInterface.Presenters
         private string[] tablesFilter = new string[0];
 
         /// <summary>table name drop down.</summary>
-        public DropDownView tableDropDown { get; private set; }
+        public DropDownView TableDropDown { get; private set; }
 
         /// <summary>Column filter edit box.</summary>
         private EditView columnFilterEditBox;
@@ -93,18 +93,18 @@ namespace UserInterface.Presenters
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             checkpointDropDown = view.GetControl<DropDownView>("checkpointDropDown");
-            tableDropDown = view.GetControl<DropDownView>("tableDropDown");
+            TableDropDown = view.GetControl<DropDownView>("tableDropDown");
             columnFilterEditBox = view.GetControl<EditView>("columnFilterEditBox");
             rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
             sheetContainer = view.GetControl<ContainerView>("grid");
             statusLabel = view.GetControl<LabelView>("statusLabel");
 
-            tableDropDown.IsEditable = false;
+            TableDropDown.IsEditable = false;
             if (dataStore != null)
             {
-                tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
+                TableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
                 if (tablesFilter != null && tablesFilter.Length > 0)
-                    tableDropDown.Values = tableDropDown.Values.Intersect(tablesFilter).ToArray();
+                    TableDropDown.Values = TableDropDown.Values.Intersect(tablesFilter).ToArray();
                 checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
                 if (checkpointDropDown.Values.Length > 0)
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
@@ -112,10 +112,10 @@ namespace UserInterface.Presenters
                 {
                     statusLabel.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
-                tableDropDown.SelectedIndex = 0;
+                TableDropDown.SelectedIndex = 0;
             }
 
-            tableDropDown.Changed += this.OnTableSelected;
+            TableDropDown.Changed += this.OnTableSelected;
             columnFilterEditBox.Leave += OnColumnFilterChanged;
             columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             rowFilterEditBox.Leave += OnColumnFilterChanged;
@@ -127,7 +127,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             //base.Detach();
-            tableDropDown.Changed -= OnTableSelected;
+            TableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
             rowFilterEditBox.Leave -= OnColumnFilterChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
@@ -139,7 +139,7 @@ namespace UserInterface.Presenters
         /// <summary>Populate the grid control with data.</summary>
         public void PopulateGrid()
         {
-            if (!string.IsNullOrEmpty(tableDropDown.SelectedValue))
+            if (!string.IsNullOrEmpty(TableDropDown.SelectedValue))
             {
                 // Note that the filter contains the zone filter and experiment filter but not simulation filter.
                 IEnumerable<string> simulationNames = null;
@@ -161,7 +161,7 @@ namespace UserInterface.Presenters
                 }
 
                 // Create sheet control
-                if (tableDropDown.SelectedValue != null)
+                if (TableDropDown.SelectedValue != null)
                 {
                     try
                     {
@@ -170,7 +170,7 @@ namespace UserInterface.Presenters
 
                         dataProvider = new PagedDataProvider(dataStore.Reader,
                                                              checkpointDropDown.SelectedValue,
-                                                             tableDropDown.SelectedValue,
+                                                             TableDropDown.SelectedValue,
                                                              simulationNames,
                                                              columnFilterEditBox.Text,
                                                              filter);
@@ -246,7 +246,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, tableDropDown.SelectedValue, dataStore.Reader))
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, TableDropDown.SelectedValue, dataStore.Reader))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)

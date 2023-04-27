@@ -3,13 +3,13 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
+using Models.Management;
+using System.Collections.Generic;
+using UserInterface.EventArguments.DirectedGraph;
+
 namespace UserInterface.Interfaces
 {
-    using System;
-    using Views;
-    using Models.Management;
-    using System.Collections.Generic;
-    using EventArguments.DirectedGraph;
 
     /// <summary>
     /// This interface defines the API for talking to an bubble chart view.

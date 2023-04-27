@@ -1,10 +1,9 @@
-﻿namespace Models.Core
-{
-    using System;
-    using System.Reflection;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
+﻿using System;
+using System.Reflection;
+using APSIM.Shared.Utilities;
 
+namespace Models.Core
+{
 
     /// <summary>
     /// This class encapsulates a single property of a model. Has properties for getting the value
