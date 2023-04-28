@@ -81,9 +81,9 @@ namespace Models.Functions
             {
                 _Value = ValueToHold.Value();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                throw new Exception(ex.Message);
             }
         }
     }
