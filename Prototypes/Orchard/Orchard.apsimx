@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 336,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -3462,7 +3462,7 @@
                 "[Trunk].Tallness.SeasonalHeightPattern.XYPairs.Y= 1800,2400,2400,1800",
                 "[Trunk].Tallness.AgeFactor.XYPairs.X = 1,3",
                 "[Trunk].Tallness.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Area.SeasonalLAIPattern.XYPairs.X = 65, 130, 200, 330,360",
+                "[Leaf].Area.SeasonalLAIPattern.XYPairs.X = 95, 160, 200, 330,360",
                 "[Leaf].Area.SeasonalLAIPattern.XYPairs.Y = 0 ,2.74,3.74,3.74,  0",
                 "[Leaf].Area.AgeFactor.XYPairs.X = 0,3",
                 "[Leaf].Area.AgeFactor.XYPairs.Y = 0.7,1",
@@ -3736,52 +3736,7 @@
         {
           "$type": "Models.Manager, Models",
           "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        public double TotRadn {get; set;}\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n        public double InterceptedRadiation {get; set;}\r\n        public double TreeRadInt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                TreeRadInt = (double)RowZone.Get(\"SimpleFruitTree.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"SimpleFruitTree.Trunk.EnergyBalance.RadiationInterceptedByDead\");\r\n                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                InterceptedRadiation = (double)RowZone.Get(\"SimpleFruitTree.Leaf.RadiationIntercepted\");\r\n                ET = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"SimpleFruitTree.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"SimpleFruitTree.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);\r\n                InterceptedRadiation = (double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\");\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\t\t\tTotRadn = weather.Radn * AreaWidth; \r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
-          "Parameters": [
-            {
-              "Key": "TotRadn",
-              "Value": "0"
-            },
-            {
-              "Key": "FRadInt",
-              "Value": "0"
-            },
-            {
-              "Key": "ET",
-              "Value": "0"
-            },
-            {
-              "Key": "ES",
-              "Value": "0"
-            },
-            {
-              "Key": "PET",
-              "Value": "0"
-            },
-            {
-              "Key": "LAI",
-              "Value": "0"
-            },
-            {
-              "Key": "Height",
-              "Value": "0"
-            },
-            {
-              "Key": "RootDepth",
-              "Value": "0"
-            },
-            {
-              "Key": "PlantWidth",
-              "Value": "0"
-            },
-            {
-              "Key": "InterceptedRadiation",
-              "Value": "0"
-            },
-            {
-              "Key": "TreeRadInt",
-              "Value": "0"
-            }
-          ],
+          "Parameters": [],
           "Name": "PlantVariables",
           "ResourceName": null,
           "Children": [],
@@ -4036,7 +3991,8 @@
                     0.42,
                     0.42
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 636.0,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -4759,7 +4715,8 @@
                     0.42,
                     0.42
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 636.0,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -7171,7 +7128,8 @@
                     0.28400000000000003,
                     0.426
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 342.29999999999995,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -8826,7 +8784,8 @@
                     0.271,
                     0.352
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 329.70000000000005,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -12266,7 +12225,8 @@
                     0.43,
                     0.43
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 684.0,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -13318,7 +13278,8 @@
                     0.43,
                     0.43
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 684.0,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -16142,7 +16103,8 @@
                     0.52,
                     0.52
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 628.0,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -17114,7 +17076,8 @@
                     0.52,
                     0.52
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 628.0,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -21662,6 +21625,7 @@
                         0.28,
                         0.1
                       ],
+                      "InitialPAWmm": 262.5,
                       "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
@@ -22448,6 +22412,7 @@
                         0.28,
                         0.1
                       ],
+                      "InitialPAWmm": 262.5,
                       "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
@@ -28794,7 +28759,8 @@
                         0.28,
                         0.1086153846153846
                       ],
-                      "RelativeTo": null,
+                      "InitialPAWmm": 322.8,
+                      "RelativeTo": "LL15",
                       "FilledFromTop": true,
                       "Name": "Water",
                       "ResourceName": null,
@@ -29000,7 +28966,7 @@
                     },
                     {
                       "Key": "SowingDate",
-                      "Value": "2003-07-01"
+                      "Value": "07/01/2003 00:00:00"
                     },
                     {
                       "Key": "StartAge",
@@ -29017,14 +28983,6 @@
                     {
                       "Key": "KLReductionDepth",
                       "Value": "150"
-                    },
-                    {
-                      "Key": "YKLModifiers",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "XDepth",
-                      "Value": ""
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -29051,12 +29009,7 @@
                 {
                   "$type": "Models.Manager, Models",
                   "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n        public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/3;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
-                  "Parameters": [
-                    {
-                      "Key": "totalIrrigation",
-                      "Value": "0"
-                    }
-                  ],
+                  "Parameters": [],
                   "Name": "DripIrrigator",
                   "ResourceName": null,
                   "Children": [],
@@ -29611,7 +29564,8 @@
                         0.28,
                         0.1086153846153846
                       ],
-                      "RelativeTo": null,
+                      "InitialPAWmm": 322.8,
+                      "RelativeTo": "LL15",
                       "FilledFromTop": true,
                       "Name": "Water",
                       "ResourceName": null,
@@ -30083,7 +30037,7 @@
               "Inverted": false,
               "CrossesAtZero": false,
               "Minimum": null,
-              "Maximum": 12.0,
+              "Maximum": 6.0,
               "Interval": null
             },
             {
@@ -30189,7 +30143,7 @@
               "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
@@ -34368,7 +34322,8 @@
                         0.1,
                         0.1
                       ],
-                      "RelativeTo": null,
+                      "InitialPAWmm": 277.5,
+                      "RelativeTo": "LL15",
                       "FilledFromTop": true,
                       "Name": "Water",
                       "ResourceName": null,
@@ -35141,7 +35096,8 @@
                         0.08950000000000001,
                         0.08950000000000001
                       ],
-                      "RelativeTo": null,
+                      "InitialPAWmm": 219.22500000000002,
+                      "RelativeTo": "LL15",
                       "FilledFromTop": false,
                       "Name": "Water",
                       "ResourceName": null,
@@ -37220,7 +37176,8 @@
                     0.28,
                     0.15
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 394.5,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -38466,7 +38423,8 @@
                     0.28,
                     0.15
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 394.5,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -40029,7 +39987,7 @@
               "Interval": null
             }
           ],
-          "LegendPosition": 3,
+          "LegendPosition": 2,
           "LegendOrientation": 0,
           "AnnotationLocation": 0,
           "DisabledSeries": [],
