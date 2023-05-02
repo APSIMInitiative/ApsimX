@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 336,
+  "ExplorerWidth": 341,
   "Version": 159,
   "Name": "Simulations",
   "ResourceName": null,
@@ -3436,7 +3436,7 @@
                 "[Trunk].Wideness.SeasonalWidthPattern.XYPairs.Y= 1300,1600,1600,1300",
                 "[Trunk].Wideness.AgeFactor.XYPairs.X = 1,6",
                 "[Trunk].Wideness.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].Gsmax350 = 0.008",
+                "[Leaf].Gsmax350 = 0.012",
                 "[Leaf].R50 = 100"
               ],
               "Name": "Apple",
@@ -3508,8 +3508,8 @@
                 "[Trunk].Wideness.SeasonalWidthPattern.XYPairs.Y= 100,400,400,100",
                 "[Trunk].Wideness.AgeFactor.XYPairs.X = 1,3",
                 "[Trunk].Wideness.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Gsmax350 = 0.0045",
-                "[Leaf].R50 = 200"
+                "[Leaf].Gsmax350 = 0.006",
+                "[Leaf].R50 = 100"
               ],
               "Name": "Grape_4Cane",
               "ResourceName": null,
@@ -3705,6 +3705,7 @@
             "[Weather].Rain",
             "[Irrigation].IrrigationApplied",
             "[Soil].SoilWater.Drainage",
+            "[Soil].SoilWater.Eo",
             "[Weather].DaysSinceWinterSolstice",
             "[Row].SimpleFruitTree.Leaf.Transpiration",
             "[Row].SimpleFruitTree.Leaf.Height",
@@ -3735,7 +3736,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        public double TotRadn {get; set;}\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n        public double InterceptedRadiation {get; set;}\r\n        public double TreeRadInt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                TreeRadInt = (double)RowZone.Get(\"SimpleFruitTree.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"SimpleFruitTree.Trunk.EnergyBalance.RadiationInterceptedByDead\");\r\n                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                InterceptedRadiation = (double)RowZone.Get(\"SimpleFruitTree.Leaf.RadiationIntercepted\");\r\n                ET = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"SimpleFruitTree.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"SimpleFruitTree.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);\r\n                InterceptedRadiation = (double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\");\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\t\t\tTotRadn = weather.Radn * AreaWidth; \r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing System.Collections.Generic;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Zones;\r\nusing Models.PMF.Organs;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Weather weather;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n        public double TotRadn {get; set;}\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n        public double InterceptedRadiation {get; set;}\r\n        public double TreeRadInt {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)this.Parent.Parent.Parent.FindInScope(\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                TreeRadInt = (double)RowZone.Get(\"SimpleFruitTree.Leaf.RadiationIntercepted\") + (double)RowZone.Get(\"SimpleFruitTree.Trunk.EnergyBalance.RadiationInterceptedByDead\");\r\n                FRadInt = (TreeRadInt * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                InterceptedRadiation = (double)RowZone.Get(\"SimpleFruitTree.Leaf.RadiationIntercepted\");\r\n                ET = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"SimpleFruitTree.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"SimpleFruitTree.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"SimpleFruitTree.Leaf.Width\")/1000;\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\") * AlleyZone.Width)/(weather.Radn * AreaWidth);\r\n                InterceptedRadiation = (double)AlleyZone.Get(\"Slurp.Leaf.RadiationIntercepted\");\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\t\t\tTotRadn = weather.Radn * AreaWidth; \r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "PlantVariables",
           "ResourceName": null,
@@ -4483,14 +4484,6 @@
                 {
                   "Key": "KLReductionDepth",
                   "Value": "150"
-                },
-                {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
                 }
               ],
               "Name": "TreeInitialisation",
@@ -4791,10 +4784,10 @@
                         0.2
                       ],
                       "KL": [
-                        0.1,
-                        0.05,
-                        0.03,
-                        0.01
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -5210,14 +5203,6 @@
                   "Value": "150"
                 },
                 {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
-                },
-                {
                   "Key": "MaxG",
                   "Value": "0.004"
                 },
@@ -5269,7 +5254,7 @@
               "Parameters": [
                 {
                   "Key": "UseExtraZone",
-                  "Value": "False"
+                  "Value": "True"
                 }
               ],
               "Name": "SetupPastureRootZones",
@@ -12217,184 +12202,20 @@
                     1200.0
                   ],
                   "InitialValues": [
-                    0.4,
-                    0.39,
-                    0.43,
+                    0.42,
+                    0.41,
+                    0.5,
                     0.46,
                     0.45,
                     0.43,
                     0.43
                   ],
-                  "InitialPAWmm": 684.0,
+                  "InitialPAWmm": 702.0,
                   "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Physical, Models",
-                  "Thickness": [
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    1200.0
-                  ],
-                  "ParticleSizeClay": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "Rocks": null,
-                  "Texture": null,
-                  "BD": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "AirDry": [
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2
-                  ],
-                  "LL15": [
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2
-                  ],
-                  "DUL": [
-                    0.4,
-                    0.39,
-                    0.43,
-                    0.46,
-                    0.45,
-                    0.43,
-                    0.43
-                  ],
-                  "SAT": [
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.53,
-                    0.53
-                  ],
-                  "KS": [
-                    100.0,
-                    100.0,
-                    50.0,
-                    40.0,
-                    10.0,
-                    1.0,
-                    0.0
-                  ],
-                  "BDMetadata": null,
-                  "AirDryMetadata": null,
-                  "LL15Metadata": null,
-                  "DULMetadata": null,
-                  "SATMetadata": null,
-                  "KSMetadata": null,
-                  "RocksMetadata": null,
-                  "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
-                  "Name": "Physical",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilCrop, Models",
-                      "LL": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "KL": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "XF": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
-                      "Name": "SimpleFruitTreeSoil",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilCrop, Models",
-                      "LL": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "KL": [
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11
-                      ],
-                      "XF": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
-                      "Name": "SlurpSoil",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12672,6 +12493,170 @@
                   "Name": "Urea",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    1200.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
+                  "BD": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "AirDry": [
+                    0.2,
+                    0.2,
+                    0.25,
+                    0.2,
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "LL15": [
+                    0.2,
+                    0.2,
+                    0.25,
+                    0.2,
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "DUL": [
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.46,
+                    0.45,
+                    0.43,
+                    0.43
+                  ],
+                  "SAT": [
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.53,
+                    0.53
+                  ],
+                  "KS": [
+                    100.0,
+                    100.0,
+                    50.0,
+                    40.0,
+                    40.0,
+                    40.0,
+                    40.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2
+                      ],
+                      "KL": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "SimpleFruitTreeSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2
+                      ],
+                      "KL": [
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "SlurpSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -13116,7 +13101,7 @@
               "Name": "WaterTable",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -13271,183 +13256,19 @@
                   ],
                   "InitialValues": [
                     0.4,
-                    0.39,
-                    0.43,
+                    0.4,
+                    0.4,
                     0.46,
                     0.45,
                     0.43,
                     0.43
                   ],
-                  "InitialPAWmm": 684.0,
+                  "InitialPAWmm": 663.0,
                   "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Physical, Models",
-                  "Thickness": [
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    1200.0
-                  ],
-                  "ParticleSizeClay": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSilt": null,
-                  "Rocks": null,
-                  "Texture": null,
-                  "BD": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "AirDry": [
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2
-                  ],
-                  "LL15": [
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2,
-                    0.2
-                  ],
-                  "DUL": [
-                    0.4,
-                    0.39,
-                    0.43,
-                    0.46,
-                    0.45,
-                    0.43,
-                    0.43
-                  ],
-                  "SAT": [
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.5,
-                    0.53,
-                    0.53
-                  ],
-                  "KS": [
-                    100.0,
-                    100.0,
-                    50.0,
-                    40.0,
-                    10.0,
-                    1.0,
-                    0.0
-                  ],
-                  "BDMetadata": null,
-                  "AirDryMetadata": null,
-                  "LL15Metadata": null,
-                  "DULMetadata": null,
-                  "SATMetadata": null,
-                  "KSMetadata": null,
-                  "RocksMetadata": null,
-                  "TextureMetadata": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClayMetadata": null,
-                  "Name": "Physical",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilCrop, Models",
-                      "LL": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "KL": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "XF": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
-                      "Name": "SimpleFruitTreeSoil",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilCrop, Models",
-                      "LL": [
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2,
-                        0.2
-                      ],
-                      "KL": [
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11,
-                        0.11
-                      ],
-                      "XF": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
-                      "Name": "SlurpSoil",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -13727,6 +13548,170 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    1200.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
+                  "BD": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "AirDry": [
+                    0.2,
+                    0.2,
+                    0.25,
+                    0.2,
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "LL15": [
+                    0.2,
+                    0.2,
+                    0.25,
+                    0.2,
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "DUL": [
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.46,
+                    0.45,
+                    0.43,
+                    0.43
+                  ],
+                  "SAT": [
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.53,
+                    0.53
+                  ],
+                  "KS": [
+                    100.0,
+                    100.0,
+                    50.0,
+                    40.0,
+                    40.0,
+                    40.0,
+                    40.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2
+                      ],
+                      "KL": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "SimpleFruitTreeSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2,
+                        0.2
+                      ],
+                      "KL": [
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11,
+                        0.11
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "SlurpSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -13786,7 +13771,7 @@
                 },
                 {
                   "Key": "SowingDate",
-                  "Value": "2008-07-01"
+                  "Value": "07/01/2008 00:00:00"
                 },
                 {
                   "Key": "RootDepth",
@@ -13803,14 +13788,6 @@
                 {
                   "Key": "KLReductionDepth",
                   "Value": "150"
-                },
-                {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
                 },
                 {
                   "Key": "MaxG",
@@ -15114,6 +15091,15 @@
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The flux meters were flooded by a rising water table so the drainage observations are not representative of actual drainage ",
+              "Name": "Reason why drainage looks bad",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -15205,6 +15191,35 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Observed",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -3376729,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Zone",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PET",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "PET",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -16579,7 +16594,7 @@
                 },
                 {
                   "Key": "SowingDate",
-                  "Value": "2009-07-01"
+                  "Value": "07/01/2009 00:00:00"
                 },
                 {
                   "Key": "StartAge",
@@ -16596,14 +16611,6 @@
                 {
                   "Key": "KLReductionDepth",
                   "Value": "150"
-                },
-                {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
                 }
               ],
               "Name": "TreeInitialisation",
@@ -21715,12 +21722,12 @@
                             0.06
                           ],
                           "KL": [
-                            0.25,
-                            0.1,
-                            0.08,
-                            0.05,
-                            0.05,
-                            0.01
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "XF": [
                             1.0,
@@ -22696,12 +22703,12 @@
                             0.06
                           ],
                           "KL": [
-                            0.25,
-                            0.1,
-                            0.08,
-                            0.05,
-                            0.05,
-                            0.01
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "XF": [
                             1.0,
@@ -23202,7 +23209,7 @@
               "Inverted": false,
               "CrossesAtZero": false,
               "Minimum": null,
-              "Maximum": 12.0,
+              "Maximum": 6.0,
               "Interval": null
             },
             {
@@ -23308,7 +23315,7 @@
               "Name": "Irrigation",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
@@ -28491,11 +28498,11 @@
                             0.06
                           ],
                           "KL": [
-                            0.1,
-                            0.04,
-                            0.03,
-                            0.03,
-                            0.02
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "XF": [
                             1.0,
@@ -28523,11 +28530,11 @@
                             0.06
                           ],
                           "KL": [
-                            0.1,
-                            0.04,
-                            0.01,
-                            0.0,
-                            0.0
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11,
+                            0.11
                           ],
                           "XF": [
                             1.0,
@@ -29562,9 +29569,9 @@
                         0.28,
                         0.28,
                         0.28,
-                        0.1086153846153846
+                        0.109
                       ],
-                      "InitialPAWmm": 322.8,
+                      "InitialPAWmm": 323.55000000000007,
                       "RelativeTo": "LL15",
                       "FilledFromTop": true,
                       "Name": "Water",
@@ -29647,11 +29654,11 @@
                             0.06
                           ],
                           "KL": [
-                            0.12,
-                            0.05,
-                            0.03,
-                            0.03,
-                            0.02
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "XF": [
                             1.0,
@@ -30231,7 +30238,7 @@
               "X2FieldName": "",
               "Y2FieldName": "",
               "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
+              "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
@@ -31468,7 +31475,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": -2793984,
-              "FactorToVaryColours": null,
+              "FactorToVaryColours": "SimulationName",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -31477,7 +31484,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SimpleFruitTree.Fruit.Total.Wt",
+              "YFieldName": "Row.SimpleFruitTree.Fruit.Wt",
               "X2FieldName": "",
               "Y2FieldName": "",
               "ShowInLegend": true,
@@ -34058,11 +34065,11 @@
                             0.05
                           ],
                           "KL": [
-                            0.1,
-                            0.01,
-                            0.05,
-                            0.005,
-                            0.0
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "XF": [
                             1.0,
@@ -35179,11 +35186,11 @@
                             0.05
                           ],
                           "KL": [
-                            0.1,
-                            0.01,
-                            0.05,
-                            0.005,
-                            0.0
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "XF": [
                             1.0,
@@ -36912,11 +36919,11 @@
                         0.06
                       ],
                       "KL": [
-                        0.12,
-                        0.04,
-                        0.03,
-                        0.03,
-                        0.02
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -37383,7 +37390,7 @@
                 },
                 {
                   "Key": "SowingDate",
-                  "Value": "2007-07-01"
+                  "Value": "07/01/2007 00:00:00"
                 },
                 {
                   "Key": "StartAge",
@@ -37400,14 +37407,6 @@
                 {
                   "Key": "KLReductionDepth",
                   "Value": "150"
-                },
-                {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
                 }
               ],
               "Name": "TreeInitialisation",
@@ -38040,7 +38039,7 @@
                 },
                 {
                   "Key": "SowingDate",
-                  "Value": "2007-07-01"
+                  "Value": "07/01/2007 00:00:00"
                 },
                 {
                   "Key": "RootDepth",
@@ -38057,14 +38056,6 @@
                 {
                   "Key": "KLReductionDepth",
                   "Value": "150"
-                },
-                {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
                 },
                 {
                   "Key": "MaxG",
@@ -38096,14 +38087,6 @@
                 {
                   "Key": "MinimumHeight",
                   "Value": "100"
-                },
-                {
-                  "Key": "Cover",
-                  "Value": "0"
-                },
-                {
-                  "Key": "LAI",
-                  "Value": "0"
                 }
               ],
               "Name": "SetPastureVariables",
@@ -38506,11 +38489,11 @@
                         0.06
                       ],
                       "KL": [
-                        0.12,
-                        0.04,
-                        0.03,
-                        0.03,
-                        0.02
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "XF": [
                         1.0,
@@ -39029,7 +39012,7 @@
               "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
+              "Cumulative": true,
               "CumulativeX": false,
               "Filter": null,
               "Name": "Predicted",
@@ -39058,13 +39041,71 @@
               "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
+              "Cumulative": true,
               "CumulativeX": false,
               "Filter": null,
               "Name": "Observed",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -3376729,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Zone",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PET",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "PET",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -11094807,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Zone",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Soil.SoilWater.Eo",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "EO",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
