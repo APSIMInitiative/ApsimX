@@ -39988,7 +39988,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\nusing System.Globalization;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = this.FindInScope<DataStore>() as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");\r\n            var predictedTransp = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.transpiration\", CultureInfo.InvariantCulture);\r\n            var observedTransp = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.transpiration\", CultureInfo.InvariantCulture);\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"transpiration\", predictedTransp, observedTransp);\r\n            if (stats.NSE < 0.09)\r\n                throw new Exception(\"Test failed. NSE for transpiration is below threshold. NSE=\" + stats.NSE);\r\n\r\n            var predictedRadInt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.f.rad.int\", CultureInfo.InvariantCulture);\r\n            var observedRadInt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.f.rad.int\", CultureInfo.InvariantCulture);\r\n\r\n            stats = MathUtilities.CalcRegressionStats(\"RadInt\", predictedRadInt, observedRadInt);\r\n            if (stats.NSE < 0.79)\r\n                throw new Exception(\"Test failed. NSE for radiation interception is below threshold. NSE=\" + stats.NSE);\r\n        }\r\n    }\r\n}\r\n",
+      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\nusing System.Globalization;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = this.FindInScope<DataStore>() as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");\r\n            var predictedTransp = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.transpiration\", CultureInfo.InvariantCulture);\r\n            var observedTransp = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.transpiration\", CultureInfo.InvariantCulture);\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"transpiration\", predictedTransp, observedTransp);\r\n            if (stats.NSE < 0.42)\r\n                throw new Exception(\"Test failed. NSE for transpiration is below threshold. NSE=\" + stats.NSE);\r\n\r\n            var predictedRadInt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.f.rad.int\", CultureInfo.InvariantCulture);\r\n            var observedRadInt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.f.rad.int\", CultureInfo.InvariantCulture);\r\n\r\n            stats = MathUtilities.CalcRegressionStats(\"RadInt\", predictedRadInt, observedRadInt);\r\n            if (stats.NSE < 0.83)\r\n                throw new Exception(\"Test failed. NSE for radiation interception is below threshold. NSE=\" + stats.NSE);\n                \n            var predictedPSW = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.psw\", CultureInfo.InvariantCulture);\r\n            var observedRadInt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.psw\", CultureInfo.InvariantCulture);\r\n\r\n            stats = MathUtilities.CalcRegressionStats(\"RadInt\", predictedRadInt, observedRadInt);\r\n            if (stats.NSE < 0.86)\r\n                throw new Exception(\"Test failed. NSE for profile soil water is below threshold. NSE=\" + stats.NSE);\r\n        }\r\n    }\r\n}\r\n",
       "Parameters": [],
       "Name": "Test",
       "ResourceName": null,
@@ -40152,6 +40152,15 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The flux meters were flooded by a rising water table so the drainage observations are not representative of actual drainage ",
+              "Name": "Reason why drainage looks bad",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
