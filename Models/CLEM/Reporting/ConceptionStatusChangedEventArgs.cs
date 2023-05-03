@@ -30,8 +30,12 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DateTime ConceptionDate { get; set; }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public ConceptionStatusChangedEventArgs()
         {
+
         }
 
         /// <summary>
@@ -44,35 +48,15 @@ namespace Models.CLEM.Reporting
         public ConceptionStatusChangedEventArgs(ConceptionStatus status, RuminantFemale female, DateTime dateTime, Ruminant offspring = null)
         {
             Update(status, female, dateTime, offspring);
-            //Status = status;
-            //Female = female;
-
-            //// Calculate conception date
-            //UpdateConceptionDate(dateTime, offspring?.Age ?? null);
-            //switch (Status)
-            //{
-            //    case ConceptionStatus.Conceived:
-            //    case ConceptionStatus.Failed:
-            //    case ConceptionStatus.Birth:
-            //        ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(female.Age - female.AgeAtLastConception, CultureInfo.InvariantCulture));
-            //        ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
-            //        break;
-            //    case ConceptionStatus.Weaned:
-            //        if (offspring is null)
-            //            throw new ArgumentException("Code logice error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
-            //        ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(offspring.Age + female.BreedParams.GestationLength, CultureInfo.InvariantCulture));
-            //        ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
-            //        break;
-            //    case ConceptionStatus.Unsuccessful:
-            //    case ConceptionStatus.NotMated:
-            //    case ConceptionStatus.NotReady:
-            //        ConceptionDate = dateTime;
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
 
+        /// <summary>
+        /// Update the conception status of an individual for reporting
+        /// </summary>
+        /// <param name="status">Status to use</param>
+        /// <param name="female">Female this change applies to</param>
+        /// <param name="date">Date of change</param>
+        /// <param name="offspring">Offspring included</param>
         public void Update(ConceptionStatus status, RuminantFemale female, DateTime date, Ruminant offspring = null)
         {
             Status = status;
@@ -80,6 +64,12 @@ namespace Models.CLEM.Reporting
             UpdateConceptionDate(date, offspring?.Age);
         }
 
+        /// <summary>
+        /// Performs the update of conception dates based on events such as birth
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="offspringAge"></param>
+        /// <exception cref="ArgumentException"></exception>
         public void UpdateConceptionDate(DateTime date, double? offspringAge = null)
         {
             switch (Status)

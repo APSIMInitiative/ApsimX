@@ -80,6 +80,9 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(e);
         }
 
+        /// <summary>
+        /// Handles reporting transactions
+        /// </summary>
         public void PerformTransactionOccurred()
         {
             TransactionOccurred?.Invoke(this, null);
