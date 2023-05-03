@@ -816,7 +816,7 @@ namespace UserInterface.Presenters
                     foreach (IModel child in model.FindAllDescendants())
                     {
                         child.IsHidden = hidden;
-                        if (isResource)
+                        if (isResource && !(child is Models.PMF.Cultivar))
                             child.ReadOnly = true;
                     }
                     foreach (IModel child in model.Children)
@@ -892,10 +892,15 @@ namespace UserInterface.Presenters
                 IModel model = explorerPresenter.CurrentNode as IModel;
                 if (model == null)
                     return;
-                
+
                 // Don't allow users to change read-only status of released models.
-                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
+                if (!string.IsNullOrEmpty(model.ResourceName))
                     return;
+
+                // Don't allow users to change read-only status resource children, except for Cultivars
+                if ((model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName))) && !(model is Models.PMF.Cultivar))
+                    return;
+                    
 
                 bool readOnly = !model.ReadOnly;
                 List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
