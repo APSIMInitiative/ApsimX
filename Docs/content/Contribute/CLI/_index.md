@@ -1,6 +1,6 @@
 ---
 title: "Version Control via CLI"
-draft: false
+draft: true
 weight: 20
 ---
 

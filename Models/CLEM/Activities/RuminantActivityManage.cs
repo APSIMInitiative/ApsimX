@@ -12,6 +12,7 @@ using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Organs;
 
 namespace Models.CLEM.Activities
 {
@@ -395,14 +396,22 @@ namespace Models.CLEM.Activities
         /// Adjust breeding females up to required amount at start-up
         /// </summary>
         [Category("Task:Start up", "Start up:Breeding females")]
-        [Description("Adjust breeding female numbers at start-up")]
+        [Description("Adjust breeding female cohorts at start-up")]
         public bool AdjustBreedingFemalesAtStartup { get; set; }
+
+        /// <summary>
+        /// Adjust all non breeding females in proportion to breeding females at start-up
+        /// </summary>
+        [Category("Task:Start up", "Start up:Breeding females")]
+        [Description("Adjust all cohorts in proportion to breeding females at start-up")]
+        [Core.Display(EnabledCallback = "PerformingFemaleBreederAdjustment")]
+        public bool AdjustOthersToFemaleBreedersPropAtStartup { get; set; }
 
         /// <summary>
         /// Adjust breeding males up to required amount at start-up
         /// </summary>
         [Category("Task:Start up", "Start up:Breeding males")]
-        [Description("Adjust breeding sire numbers at start-up")]
+        [Description("Adjust breeding sire cohorts at start-up")]
         public bool AdjustBreedingMalesAtStartup { get; set; }
 
         /// <summary>
@@ -475,6 +484,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         public bool EnableGrowoutProperties() { return GrowOutYoungFemales | GrowOutYoungMales; }
 
+        /// <summary>
+        /// Determine where Female grow out properties should be displayed
+        /// </summary>
+        public bool PerformingFemaleBreederAdjustment() { return AdjustBreedingFemalesAtStartup; }
 
         /// <summary>
         /// Constructor
@@ -538,150 +551,135 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>An event handler to allow us to reset initial cohort sizes before crearting the herd.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private new void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            // reset min breeders if set greater than max breeders
+            // this allows multi run versions to only consider maxbreeders
+            minBreeders = (this.MinimumBreedersKept > this.MaximumBreedersKept) ? this.MaximumBreedersKept : this.MinimumBreedersKept;
+            maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
+
+            if (AdjustBreedingMalesAtStartup | AdjustBreedingFemalesAtStartup)
+            {
+                HerdResource = Resources.FindResourceGroup<RuminantHerd>();
+                IEnumerable<RuminantType> herds = HerdResource.FindAllChildren<RuminantType>();
+
+                // NOTE: this only currently works for single herd simulations.
+
+                if (herds.Count() == 1)
+                {
+                    string warn = "";
+                    List<string> information = new List<string>();
+                    // calculate the number of breeders, sucklings, weaners and prebreeders
+                    IEnumerable<RuminantTypeCohort> cohorts = herds.FirstOrDefault().FindAllDescendants<RuminantTypeCohort>();
+
+                    if (cohorts.Any())
+                    {
+                        if (AdjustBreedingFemalesAtStartup)
+                        {
+                            var breederf = cohorts.Where(a => a.Sex == Sex.Female && a.Age >= herds.FirstOrDefault().MinimumAge1stMating);
+                            if (breederf.Any())
+                            {
+                                // if no breeders numbers defined we need to bring them up to 
+                                // distribute evently across breeder cohorts
+                                double totalf = breederf.Sum(a => a.Number);
+                                if (MathUtilities.IsLessThanOrEqual(totalf, 0))
+                                {
+                                    foreach (var item in breederf)
+                                        item.Number = Math.Truncate(minBreeders / breederf.Count() + 0.5);
+
+                                    if (AdjustOthersToFemaleBreedersPropAtStartup)
+                                    {
+                                        warn = $"Unable to [Adjust all cohorts in proportion to breeding females at start-up] using [a={this.Name}].{Environment.NewLine}No individuals (Number = 0 in all cohorts) were identified in cohorts for non-breeders. Breeder female numbers have been adjusted to [MinBreeders] but unable to determine an adjustment factor for the remiander of the herd.";
+                                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                                    }
+                                }
+                                else
+                                {
+                                    double adjustment = 1;
+                                    if (totalf > maxBreeders)
+                                        adjustment = maxBreeders / totalf;
+                                    else if (totalf < minBreeders)
+                                        adjustment = minBreeders / totalf;
+
+                                    if (MathUtilities.IsGreaterThan(adjustment, 500))
+                                    {
+                                        warn = $"Problem [Adjust breeding female cohorts at start-up] using [a={this.Name}]. Adjustment factor [{adjustment:F1}] from initial cohort numbers limited to 500x. Add more individuals to initial cohorts (set Number) to allow ensure a more efficient adjustment.";
+                                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                                    }
+                                    if (adjustment != 1)
+                                    {
+                                        foreach (var item in breederf)
+                                            item.Number = Math.Truncate(item.Number * adjustment + 0.5);
+
+                                        information.Add($"[Adjust breeding female cohorts at start-up] {(adjustment<1?"reduced":"increased")} the female breeder numbers from [{totalf}] to the [{(adjustment<1?"Maximum breeders":"Minimum breeders")} kept] of [{(adjustment < 1 ? maxBreeders : minBreeders)}]");
+
+                                        if (AdjustOthersToFemaleBreedersPropAtStartup)
+                                        {
+                                            foreach (var item in cohorts.Where(a => !breederf.Contains(a) && a.Sire == false))
+                                                item.Number = Math.Truncate(item.Number * adjustment + 0.5);
+                                            information.Add($"[Adjust all cohorts based on breeders at start-up] {(adjustment < 1 ? "reduced" : "increased")} all non-breeder numbers by a factor of [{adjustment:F3}]");
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                warn = $"Unable to [Adjust breeding female cohorts at start-up] using [a={this.Name}]. No cohorts representing female breeders were found.";
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                            }
+                        }
+
+                        if (AdjustBreedingMalesAtStartup)
+                        {
+                            var breederm = cohorts.Where(a => a.Sex == Sex.Male && a.Sire == true);
+                            if(breederm.Any())
+                            {
+                                double totalm = breederm.Sum(a => a.Number);
+                                if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
+                                    SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
+                                else
+                                    SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
+
+                                if (SiresKept > 0 && MathUtilities.IsPositive(totalm))
+                                {
+                                    double sireAdjustment = SiresKept / totalm;
+                                    foreach (var item in breederm)
+                                        item.Number = Math.Truncate(item.Number * sireAdjustment + 0.5);
+
+                                    information.Add($"[Adjust breeding male (sire) cohorts at start-up] {(sireAdjustment < 1 ? "reduced" : "increased")} the male breeder (sire) numbers from [{totalm:F0}] to [{SiresKept}]{(MathUtilities.IsLessThan(MaximumSiresKept, 1)?" based on specified proportion of the adjusted female breeder herd":"")} ");
+                                }
+                            }
+                            else
+                            {
+                                warn = $"Unable to [Adjust breeding male (sire) cohorts at start-up] using [a={this.Name}]. No cohorts representing male breeders (sires) were found.";
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                            }
+                        }
+                        if(information.Any())
+                        {
+                            information.Insert(0, $"The numbers in initial cohorts for [{cohorts.FirstOrDefault().FindAncestor<RuminantType>().Breed}] were adjusted by [a={this.Name}] at start of the simulation.");
+                            Warnings.CheckAndWrite(string.Join(Environment.NewLine, information), Summary, this, MessageType.Information);
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // reset min breeders if set greater than max breeders
-            // this allows multi run versions to only consider maxbreeders
-            // if value is changed it is updated with the experiment so use private
-            minBreeders = (this.MinimumBreedersKept > this.MaximumBreedersKept) ? this.MaximumBreedersKept : this.MinimumBreedersKept;
-
-            // create local version of max breeders so we can modify without affecting user set value
-            maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
-
             this.InitialiseHerd(false, true);
             breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
             // get the mortality rate for the herd if available or assume zero
             mortalityRate = breedParams.MortalityBase;
-
-            int breederHerdSize = 0;
-
-            IEnumerable<Ruminant> individuals = this.CurrentHerd(false);
-            if (individuals.Any() && (AdjustBreedingFemalesAtStartup | AdjustBreedingMalesAtStartup))
-            {
-                int numberAdded = 0;
-                RuminantType breedParams = individuals.FirstOrDefault().BreedParams;
-                RuminantInitialCohorts cohorts = individuals.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault();
-                List<ISetAttribute> initialCohortAttributes = cohorts.FindAllChildren<ISetAttribute>().ToList();
-
-                if (cohorts != null)
-                {
-                    int heifers = 0;
-                    var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && a.Age >= breedParams.MinimumAge1stMating);
-                    int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
-                    breederHerdSize = initialBreeders;
-
-                    if (AdjustBreedingFemalesAtStartup)
-                    {
-                        // breeders
-                        if (initialBreeders < (minBreeders - heifers))
-                        {
-                            double scaleFactor = Math.Round((minBreeders - heifers) / Convert.ToDouble(initialBreeders), 4);
-                            // add new individuals
-                            foreach (var item in cohortList)
-                            {
-                                int numberToAdd = Convert.ToInt32(Math.Round(item.Number * scaleFactor) - item.Number, CultureInfo.InvariantCulture);
-                                foreach (var newind in item.CreateIndividuals(numberToAdd, initialCohortAttributes))
-                                {
-                                    newind.SaleFlag = HerdChangeReason.FillInitialHerd;
-                                    HerdResource.AddRuminant(newind, this);
-                                    numberAdded++;
-                                }
-                            }
-                            if (numberAdded == 0)
-                                throw new ApsimXException(this, $"Unable to scale breeding female population up to the maximum breeders kept at startup\r\nNo cohorts representing breeders were found in the initial herd structure [r=InitialCohorts] for [r={breedParams.Name}]\r\nAdd at least one initial cohort that meets the breeder criteria of age at first mating and max age kept");
-
-                            breederHerdSize += numberAdded;
-                        }
-                        else if (initialBreeders > (maxBreeders - heifers))
-                        {
-                            int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
-                            // reduce initial herd size
-                            // randomly select the individuals to remove from the breeder herd
-                            var breeders = individuals.Where(a => a.Sex == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
-                            foreach (var item in breeders)
-                            {
-                                item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
-                                HerdResource.RemoveRuminant(item, this);
-                                reduceBy--;
-                            }
-
-                            if (reduceBy > 0)
-                            {
-                                // add warning
-                                string warn = $"Unable to reduce breeders at the start of the simulation to number required [{maxBreeders}] using [a={this.Name}]";
-                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                            }
-                            breederHerdSize = maxBreeders;
-                        }
-                    }
-
-                    // max sires
-                    if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
-                        SiresKept = Convert.ToInt32(Math.Ceiling(breederHerdSize * MaximumSiresKept), CultureInfo.InvariantCulture);
-                    else
-                        SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
-
-                    // sires
-                    if (AdjustBreedingMalesAtStartup)
-                    {
-                        // get number in herd
-                        cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Male & a.Sire == true).ToList();
-                        int numberPresent = Convert.ToInt32(cohortList.Sum(a => a.Number));
-                        // expand from those in herd
-                        if (numberPresent < SiresKept)
-                        {
-                            int numberToAdd = SiresKept - numberPresent;
-                            if (cohortList is null)
-                            {
-                                // add warning
-                                string warn = $"Unable to increase breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]\r\nNo representative sires are present in the initial herd. Future sire purchases will be used.";
-                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                            }
-                            else
-                            {
-                                foreach (var item in cohortList)
-                                {
-                                    foreach (var newind in item.CreateIndividuals(Convert.ToInt32(Math.Round(numberToAdd * (item.Number / numberPresent)), CultureInfo.InvariantCulture), initialCohortAttributes))
-                                    {
-                                        newind.SaleFlag = HerdChangeReason.FillInitialHerd;
-                                        HerdResource.AddRuminant(newind, this);
-                                        numberAdded++;
-                                    }
-                                }
-                            }
-                        }
-                        else if (numberPresent > SiresKept)
-                        {
-                            // reduce initial herd.
-                            int reduceBy = Math.Max(0, numberPresent - SiresKept);
-                            // reduce initial sire herd size
-                            // randomly select the individuals to remove form the breeder herd
-                            var sires = individuals.OfType<RuminantMale>().Where(a => a.IsSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
-                            foreach (var item in sires)
-                            {
-                                item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
-                                HerdResource.RemoveRuminant(item, this);
-                                reduceBy--;
-                            }
-
-                            if (reduceBy > 0)
-                            {
-                                // add warning
-                                string warn = $"Unable to reduce breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]";
-                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                            }
-                        }
-                    }
-
-                }
-                else
-                    throw new ApsimXException(this, $"Unable to adjust herd at start of similation!\r\nNo initial herd structure [r=InitialCohorts] has been provided in [r={breedParams.Name}] from which to get details.");
-            }
 
             // check GrazeFoodStoreExists for breeders
             grazeStoreBreeders = "";
@@ -691,11 +689,11 @@ namespace Models.CLEM.Activities
                 foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
+            var ah = this.FindInScope<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
             if (grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
-                var ah = this.FindInScope<ActivitiesHolder>();
-                if(ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                if(ah.FindAllDescendants<PastureActivityManage>().Any())
                     Summary.WriteMessage(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
 
@@ -710,8 +708,7 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if sires placed in yards.
             if (grazeStoreSires == "" && this.SiresKept > 0)
             {
-                var ah = this.FindInScope<ActivitiesHolder>();
-                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                if (ah.FindAllDescendants<PastureActivityManage>().Any())
                     Summary.WriteMessage(this, $"Sires purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
 
@@ -724,8 +721,7 @@ namespace Models.CLEM.Activities
                 // check for managed paddocks and warn if sires placed in yards.
                 if (grazeStoreGrowOutMales == "")
                 {
-                    var ah = this.FindInScope<ActivitiesHolder>();
-                    if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                    if (ah.FindAllDescendants<PastureActivityManage>().Any())
                         Summary.WriteMessage(this, $"Males grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
                 }
             }
@@ -738,8 +734,7 @@ namespace Models.CLEM.Activities
                 // check for managed paddocks and warn if sires placed in yards.
                 if (grazeStoreGrowOutFemales == "")
                 {
-                    var ah = this.FindInScope<ActivitiesHolder>();
-                    if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                    if (ah.FindAllDescendants<PastureActivityManage>().Any())
                         Summary.WriteMessage(this, $"Females grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
                 }
             }
@@ -811,8 +806,8 @@ namespace Models.CLEM.Activities
                     numberFemaleBreedingInHerd = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
 
                     // prevent runaway population growth in individual based model by a check against max breeders
-                    if (numberFemaleBreedingInHerd > MaximumBreedersKept * MaxBreedersMultiplierToStop)
-                        throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{MaximumBreedersKept}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
+                    //if (numberFemaleBreedingInHerd > Math.Max(MaximumBreedersKept, MinimumBreedersKept) * MaxBreedersMultiplierToStop)
+                    //    throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{Math.Max(MaximumBreedersKept, MinimumBreedersKept)}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
 
                     // shortfall between actual and desired numbers of breeders (-ve for shortfall)
                     excessBreeders = numberFemaleBreedingInHerd + numberFemaleInPurchases - maxBreeders;
@@ -839,7 +834,7 @@ namespace Models.CLEM.Activities
                 if (ManageMaleBreederNumbers)
                 {
                     double propOfBreeders = 1;
-                    if (RestockSiresRelativeToBreeders)
+                    if (RestockSiresRelativeToBreeders && maxBreeders > 0)
                         propOfBreeders = Math.Max(1, (double)numberFemaleBreedingInHerd / (double)maxBreeders);
 
                     int sires = Convert.ToInt32(Math.Ceiling(SiresKept * propOfBreeders), CultureInfo.InvariantCulture);
@@ -1056,8 +1051,8 @@ namespace Models.CLEM.Activities
             int numberFemaleBreedingInHerd = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
 
             // prevent runaway population growth in individual based model by a check against max breeders
-            if (numberFemaleBreedingInHerd > MaximumBreedersKept * MaxBreedersMultiplierToStop)
-                throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{MaximumBreedersKept}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
+            if (numberFemaleBreedingInHerd > maxBreeders * MaxBreedersMultiplierToStop)
+                throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{maxBreeders}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
 
             // if any breeder management to be performed calculate current herd size
             if (ManageFemaleBreederNumbers | ManageMaleBreederNumbers)
@@ -1642,10 +1637,15 @@ namespace Models.CLEM.Activities
 
             if (purchaseDetails.Count() == 0)
             {
-                if (MaximumSiresPerPurchase > 0 | MaximumProportionBreedersPerPurchase > 0)
+                if (ManageMaleBreederNumbers && PerformMaleStocking && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
-                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components or disable purchases by setting [MaximumSiresPerPurchase] and/or [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
+                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames));
+                }
+                if (ManageFemaleBreederNumbers && PerformFemaleStocking && MaximumProportionBreedersPerPurchase > 0)
+                {
+                    string[] memberNames = new string[] { "Specify purchased individuals' details" };
+                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
                 }
             }
             else

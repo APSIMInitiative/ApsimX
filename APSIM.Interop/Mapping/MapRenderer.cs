@@ -1,23 +1,16 @@
-using System;
-using SharpMap;
-using MapTag = Models.Mapping.MapTag;
-using System.Drawing;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
-using SharpMap.Data.Providers;
-using SharpMap.Layers;
-using SharpMap.Styles;
-using System.Collections.Generic;
-using System.Linq;
-using GeoAPI;
-using GeoAPI.Geometries;
 using APSIM.Shared.Utilities;
-using ProjNet.CoordinateSystems;
-using SharpMap.CoordinateSystems;
-using ProjNet.CoordinateSystems.Transformations;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Mapsui;
+using Mapsui.Layers;
+using Mapsui.Projection;
+using Mapsui.Styles;
+using Mapsui.Utilities;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using GeoAPI.CoordinateSystems.Transformations;
+using System.Linq;
+using System.Threading;
+using MapTag = Models.Mapping.MapTag;
 
 namespace APSIM.Interop.Mapping
 {
@@ -31,15 +24,6 @@ namespace APSIM.Interop.Mapping
         /// </summary>
         static MapRenderer()
         {
-            Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            GeometryServiceProvider.Instance = new NtsGeometryServices();
-            var coordFactory = new CoordinateSystemFactory(System.Text.Encoding.Unicode);
-            var css = new CoordinateSystemServices(coordFactory, new CoordinateTransformationFactory());
-            css.AddCoordinateSystem(3857, coordFactory.CreateFromWkt("PROJCS[\"WGS 84 / Pseudo-Mercator\", GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], PROJECTION[\"Mercator_1SP\"], PARAMETER[\"latitude_of_origin\", 0], PARAMETER[\"central_meridian\", 0], PARAMETER[\"scale_factor\", 1], PARAMETER[\"false_easting\", 0], PARAMETER[\"false_northing\", 0], AUTHORITY[\"EPSG\", \"3857\"]]"));
-            css.AddCoordinateSystem(4326, coordFactory.CreateFromWkt("GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]]"));
-            Session.Instance.SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
-                            .SetCoordinateSystemServices(css)
-                            .SetCoordinateSystemRepository(css);
         }
 
         /// <remarks>
@@ -48,34 +32,12 @@ namespace APSIM.Interop.Mapping
         /// specified? Where do we get the map? What projection do we use? These remarks are intended to 
         /// (slightly) clarify what is going on.
         /// 
-        /// We are using SharpMap to do the map rendering, and BruTile to fetch a suitable base map. The basemap 
+        /// We are using Mapsui to do the map rendering, which in turn uses BruTile to fetch a suitable base map. The basemap 
         /// tiles use a "projected" coordinate system, specifically EPSG 3857 (also known as Web Mercator); 
         /// the units in this system are (perhaps surpisingly) metres. However, the point data we wish to plot
         /// is expressed as latitude and longitude (using a "geographic" coordinate system, specifically EPSG 4326),
         /// with units of decimal degrees. Note that both are based on WGS84, so they have the same underlying
-        /// model of the shape of the earth, but use vastly different units. The two transformation objects defined 
-        /// below handle coordinate transformation.
-        /// 
-        /// An earlier version of this unit made a call to SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems
-        /// to obtain the co-ordinate systems. That call then attempted to generate a 3 MByte file with almost 4000 different
-        /// systems in it; we only needed 2. We can generate those we need from their WKT descriptions. If additions reference
-        /// systems are needed, their WKT descriptions should be available for download from spatialreference.org.
-        /// </remarks>
-        /// <summary>
-        /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
-        /// </summary>
-        private static readonly ICoordinateTransformation latLonToMetres = new
-                            CoordinateTransformationFactory().CreateFromCoordinateSystems(
-                                GeographicCoordinateSystem.WGS84,
-                                ProjectedCoordinateSystem.WebMercator);
-
-        /// <summary>
-        /// Performs coordinate transformation from  metres (WebMercator) to latitude/longitude (WGS84).
-        /// </summary>
-        private static readonly ICoordinateTransformation metresToLatLon = new
-                            CoordinateTransformationFactory().CreateFromCoordinateSystems(
-                                ProjectedCoordinateSystem.WebMercator,
-                                GeographicCoordinateSystem.WGS84);
+        /// model of the shape of the earth, but use vastly different units. 
 
         /// <summary>
         /// Indicates the ratio between steps when zooming.
@@ -83,67 +45,101 @@ namespace APSIM.Interop.Mapping
         private const double zoomStepFactor = 1.5;
 
         /// <summary>
-        /// Render the map as a <see cref="System.Drawing.Image"/>.
-        /// </summary>
-        /// <param name="map">Map tag to be rendered.</param>
-        /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        public static Image ToImage(this MapTag map)
-        {
-            return map.ToSharpMap().GetMap();
-        }
-
-        /// <summary>
-        /// Render the map as a <see cref="System.Drawing.Image"/> of the specified size.
+        /// Render the map as a <see cref="SkiaSharp.SKImage"/> of the specified size.
         /// </summary>
         /// <param name="map">Map tag to be rendered.</param>
         /// <param name="width">Width of the map in px.</param>
-        /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        public static Image ToImage(this MapTag map, int width)
+        public static SkiaSharp.SKImage ToImage(this MapTag map, int width)
         {
-            Map exported = map.ToSharpMap();
-            exported.Size = new Size(width, width);
-            return exported.GetMap();
+            Map exported = map.ToMapsuiMap();
+            Viewport viewport = new Viewport();
+            Mapsui.Geometries.Point centerMetric = Mapsui.Projection.SphericalMercator.FromLonLat(map.Center.Longitude, map.Center.Latitude);
+            viewport.SetCenter(centerMetric.X, centerMetric.Y);
+            viewport.SetSize(width, width);
+            // Compat check for old zoom units. Should really have used a converter...
+            double zoom = map.Zoom - 1.0;
+            if (zoom >= 60.0 || zoom < 0.0) // Convert any "old" zoom levels into whole-world maps
+                zoom = 0.0;
+            // map.Zoom = map.MaximumZoom / Math.Pow(MapRenderer.GetZoomStepFactor(), setValue);
+            double resolution = (78271.51696401953125 * 512 / width) / Math.Pow(MapRenderer.GetZoomStepFactor(), zoom);
+            viewport.SetResolution(resolution);
+
+            SkiaSharp.SKImage result = null;
+            TileLayer osmLayer = exported.Layers.FindLayer("OpenStreetMap").FirstOrDefault() as TileLayer;
+
+            Mapsui.Fetcher.DataChangedEventHandler changedHandler = (s, e) =>
+            {
+                var layer = (TileLayer)s;
+                if (((!osmLayer.Busy && e.Error == null) || e.Error != null) && !e.Cancelled)
+                {
+                    if (e.Error != null)
+                    // Try to handle failure to fetch Open Street Map layer
+                    // by displaying the country outline layer instead
+                    {
+                        osmLayer.Enabled = false;
+                        Layer countryLayer = exported.Layers.FindLayer("Countries").FirstOrDefault() as Layer;
+                        if (countryLayer != null)
+                        {
+                            countryLayer.Enabled = true;
+                            countryLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
+                            // Give the "country" layer time to be loaded, if necessary.
+                            // Seven seconds should be way more than enough...
+                            int nSleeps = 0;
+                            while (countryLayer.Busy && nSleeps++ < 700)
+                                System.Threading.Thread.Sleep(10);
+                        }
+                    }
+                    MemoryStream bitmap = new Mapsui.Rendering.Skia.MapRenderer().RenderToBitmapStream(viewport, exported.Layers, exported.BackColor);
+                    bitmap.Seek(0, SeekOrigin.Begin);
+                    result = SkiaSharp.SKImage.FromEncodedData(bitmap);
+                }
+            };
+
+            if (osmLayer != null)
+            {
+                osmLayer.Enabled = true;
+                osmLayer.AbortFetch();
+                osmLayer.ClearCache();
+                osmLayer.DataChanged += changedHandler;
+                osmLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
+            }
+            // Allow ourselves up to 10 seconds to get a map.
+            int nSleeps = 0;
+            while (result == null && nSleeps++ < 1000)
+                System.Threading.Thread.Sleep(10);
+
+            osmLayer.DataChanged -= changedHandler;
+            return result;
         }
 
         /// <summary>
         /// Create a <see cref="Map"/> representing this map object.
         /// </summary>
         /// <param name="map">A map to be exported/rendered.</param>
-        public static Map ToSharpMap(this MapTag map)
+        public static Map ToMapsuiMap(this MapTag map)
         {
             Map result = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
-            List<IGeometry> locations = map.Markers.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
-            VectorLayer markerLayer = new VectorLayer("Markers");
-            markerLayer.Style.Symbol = APSIM.Shared.Documentation.Image.LoadFromResource("Marker.png");
-            markerLayer.Style.SymbolOffset = new PointF(0, -16); // Offset so the point is marked by the tip of the symbol, not its center
-            markerLayer.DataSource = new GeometryProvider(locations);
-            markerLayer.CoordinateTransformation = latLonToMetres;
+            Mapsui.Layers.MemoryLayer markerLayer = new Mapsui.Layers.MemoryLayer("Markers")
+            {
+                Transformation = new MinimalTransformation(),
+                CRS = "EPSG:3857"
+            };
 
+            Stream markerStream = APSIM.Shared.Documentation.Image.GetStreamFromResource("Marker.png");
+            int bitmapId = BitmapRegistry.Instance.Register(markerStream);
+            markerLayer.Style = new SymbolStyle { BitmapId = bitmapId, SymbolScale = 1.0, SymbolOffset = new Offset(0.0, 0.5, true) };
+
+            List<Mapsui.Geometries.Point> locations = map.Markers.Select(c => Mapsui.Projection.SphericalMercator.FromLonLat(c.Longitude, c.Latitude)).ToList<Mapsui.Geometries.Point>();
+            markerLayer.DataSource = new Mapsui.Providers.MemoryProvider(locations)
+            {
+                CRS = "EPSG:3857"
+            };
             result.Layers.Add(markerLayer);
-
-            // Compat check for old zoom units. Should really have used a converter...
-            double zoom = map.Zoom - 1;
-            if (zoom >= 60)
-                zoom = 0;
-            result.Zoom = result.MaximumZoom / Math.Pow(zoomStepFactor, zoom);
-
-            Coordinate location = latLonToMetres.MathTransform.Transform(new Coordinate(map.Center.Longitude, map.Center.Latitude));
-            result.Center = location;
 
             return result;
         }
 
-        /// <summary>
-        /// Get a coordinate transformation to convert a latitude and longitude to metres.
-        /// </summary>
-        public static ICoordinateTransformation GetLatLonToMetres() => latLonToMetres;
-
-        /// <summary>
-        /// Get a coordinate transformation to convert metres into a latitude and longitude.
-        /// </summary>
-        public static ICoordinateTransformation GetMetresToLatLon() => metresToLatLon;
 
         /// <summary>
         /// Get the zoom step factor. This is the ratio of each zoom increment to
@@ -157,15 +153,20 @@ namespace APSIM.Interop.Mapping
         /// </summary>
         private static Map InitMap()
         {
-            var result = new SharpMap.Map();
-            result.BackColor = Color.LightBlue;
-            result.Center = new Coordinate(0, 0);
-            result.SRID = 3857;
+            Map result = new Map
+            {
+                CRS = "EPSG:3857",
+                Transformation = new MinimalTransformation()
+            };
+            result.BackColor = Mapsui.Styles.Color.FromString("LightBlue");
 
-            BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
-            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap, persistentCache: fileCache, userAgent: "APSIM Next Generation"), "OpenStreetMap");
-            result.BackgroundLayer.Add(baseLayer);
-            result.MaximumZoom = baseLayer.Envelope.Width;
+            Mapsui.Layers.TileLayer osmLayer = OpenStreetMap.CreateTileLayer("APSIM Next Generation");
+            if (osmLayer.TileSource is BruTile.Web.HttpTileSource)
+            {
+                BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
+                (osmLayer.TileSource as BruTile.Web.HttpTileSource).PersistentCache = fileCache;
+            }
+            result.Layers.Add(osmLayer);
 
             // This layer is used only as a sort of backup in case the BruTile download times out
             // or is otherwise unavailable.
@@ -174,18 +175,26 @@ namespace APSIM.Interop.Mapping
             string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
             if (File.Exists(shapeFileName))
             {
-                VectorLayer layWorld = new VectorLayer("Countries");
-                layWorld.DataSource = new ShapeFile(shapeFileName, true);
-                layWorld.Style = new VectorStyle();
-                layWorld.Style.EnableOutline = true;
-                // Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateFlags.Normal));
-                // Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateFlags.Normal));
-                // layWorld.Style.Fill = new SolidBrush(background);
-                // layWorld.Style.Outline.Color = foreground;
-                layWorld.CoordinateTransformation = latLonToMetres;
-                result.BackgroundLayer.Insert(0, layWorld);
+                Mapsui.Layers.Layer layWorld = new Mapsui.Layers.Layer
+                {
+                    Name = "Countries",
+                    CRS = "EPSG:3857",
+                    Transformation = new MinimalTransformation()
+                };                
+                layWorld.DataSource = new Mapsui.Providers.Shapefile.ShapeFile(shapeFileName, true) 
+                { 
+                    CRS = "EPSG:4326" 
+                };
+                layWorld.Style = new Mapsui.Styles.VectorStyle
+                {
+                    Outline = new Mapsui.Styles.Pen { Color = Mapsui.Styles.Color.Black },
+                    Fill = new Mapsui.Styles.Brush { Color = Mapsui.Styles.Color.White }
+                };
+                layWorld.Style.Enabled = true;
+                layWorld.FetchingPostponedInMilliseconds = 1;
+                layWorld.Enabled = false;
+                result.Layers.Insert(0, layWorld);
             }
-
             return result;
         }
     }

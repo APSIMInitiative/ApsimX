@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using SkiaSharp;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace APSIM.Shared.Documentation
@@ -19,11 +20,11 @@ namespace APSIM.Shared.Documentation
     /// </remarks>
     public class Image : ITag
     {
-        private System.Drawing.Image raster;
+        private SkiaSharp.SKImage raster;
         private string resourceName;
 
         /// <summary>The image to put into the doc.</summary>
-        public System.Drawing.Image GetRaster(string relativePath)
+        public SkiaSharp.SKImage GetRaster(string relativePath)
         {
             if (raster != null)
                 return raster;
@@ -36,7 +37,7 @@ namespace APSIM.Shared.Documentation
         /// </summary>
         /// <param name="uri">Image URI.</param>
         /// <param name="imageSearchPath">The path on which to search for an image with the given filename.</param>
-        public static System.Drawing.Image LoadImage(string uri, string imageSearchPath)
+        public static SkiaSharp.SKImage LoadImage(string uri, string imageSearchPath)
         {
             if (string.IsNullOrWhiteSpace(uri))
                 throw new InvalidOperationException("Unable to load image: resource name not specified");
@@ -59,12 +60,9 @@ namespace APSIM.Shared.Documentation
         /// Read an image from disk.
         /// </summary>
         /// <param name="fileName">Absolute path to the file on disk.</param>
-        public static System.Drawing.Image LoadFromFile(string fileName)
+        public static SkiaSharp.SKImage LoadFromFile(string fileName)
         {
-            // Image.FromFile() will cause the file to be locked until the image is disposed of. 
-            // This workaround allows us to immediately release the lock on the file.
-            using (Bitmap bmp = new Bitmap(fileName))
-                return new Bitmap(bmp);
+            return SkiaSharp.SKImage.FromEncodedData(fileName);
         }
 
         /// <summary>
@@ -72,13 +70,20 @@ namespace APSIM.Shared.Documentation
         /// Will attempt to locate the resource in various assemblies.
         /// </summary>
         /// <param name="resourceName">Resource file name.</param>
-        public static System.Drawing.Image LoadFromResource(string resourceName)
+        public static SkiaSharp.SKImage LoadFromResource(string resourceName)
         {
             using (Stream stream = GetStreamFromResource(resourceName))
-                return System.Drawing.Image.FromStream(stream);
+                return SkiaSharp.SKImage.FromEncodedData(stream);
         }
 
-        private static Stream GetStreamFromResource(string resourceName)
+        /// <summary>
+        /// Loads an image stream from the given resource name
+        /// Will attempt to locate the resource in various assemblies.
+        /// </summary>
+        /// <param name="resourceName">Name of the resource</param>
+        /// <returns>The resource as a stream</returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        public static Stream GetStreamFromResource(string resourceName)
         {
             foreach (Assembly assembly in GetAssemblies())
             {
@@ -113,7 +118,7 @@ namespace APSIM.Shared.Documentation
         /// Create an Image tag for a given image object.
         /// </summary>
         /// <param name="image">The image.</param>
-        public Image(System.Drawing.Image image) => raster = image;
+        public Image(SkiaSharp.SKImage image) => raster = image;
 
         /// <summary>
         /// Create an Image tag from a resource name. The resource name

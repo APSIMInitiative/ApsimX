@@ -135,7 +135,7 @@
                 <property name="can-focus">False</property>
                 <property name="halign">start</property>
                 <property name="xpad">8</property>
-                <property name="label" translatable="yes">PAWC (mm):</property>
+                <property name="label" translatable="yes">PAW (mm):</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -143,11 +143,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="pawLabel">
+              <object class="GtkEntry" id="pawEdit">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">xxxx</property>
+                <property name="can-focus">True</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>

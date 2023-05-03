@@ -134,18 +134,6 @@ namespace Models.CLEM.Activities
             // get trucking settings
             truckingOptions = GetCompanionModelsByIdentifier<RuminantTrucking>(false, false);
             truckingWithImplications = truckingOptions?.Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).Any()??false;
-
-            // check if pricing is present
-            if (bankAccount != null)
-            {
-                var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
-                foreach (var herd in breeds)
-                    if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-                    {
-                        string warn = $"No pricing schedule has been provided for herd [r={herd.Key}]. No financial transactions will be recorded for activity [a={this.Name}]";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                    }
-            }
         }
 
         /// <inheritdoc/>
@@ -339,8 +327,6 @@ namespace Models.CLEM.Activities
                 if (buySellShort != null)
                 {
                     throw new Exception($"Unable to limit [{ActivityStyle}] by units [per km trucked] in [a={NameWithParent}]{Environment.NewLine}This resource cost does not support [ShortfallAffectsActivity] in [a=RuminantHerdBuySell]");
-                    //numberTrucksToSkip = Convert.ToInt32(numberTrucks * buySellShort.Required / buySellShort.Provided);
-                    //this.Status = ActivityStatus.Partial;
                 }
 
                 buySellShort = shortfalls.Where(a => a.CompanionModelDetails.unit == "per km trucked").FirstOrDefault();

@@ -75,8 +75,8 @@ namespace APSIM.Shared.Utilities
                 if (!File.Exists(path))
                 {
                     // create a new database
-                    // FbConnection.CreateDatabase(GetConnectionString(path, "localhost", "SYSDBA", "masterkey"), 4096, false, true);
-                    FbConnection.CreateDatabase(GetConnectionString(path, "localhost", "SYSDBA", "masterkey"), true);
+                    FbConnection.CreateDatabase(GetConnectionString(path, "localhost", "SYSDBA", "masterkey"), 4096, false, true);
+                    // FbConnection.CreateDatabase(GetConnectionString(path, "localhost", "SYSDBA", "masterkey"), true);
                     // TODO: may need to create tables here
 
                 }

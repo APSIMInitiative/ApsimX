@@ -1,16 +1,13 @@
-﻿
-
+﻿using Models.Core;
+using Models.Interfaces;
+using System;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using System.Linq;
 namespace Models.Soils
 {
-    using Core;
-    using Interfaces;
-    using System;
-    using APSIM.Shared.Utilities;
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using APSIM.Shared.Documentation;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.
@@ -26,6 +23,10 @@ namespace Models.Soils
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
         private IPhysical physical = null;
+
+        /// <summary>Access the water model.</summary>
+        [Link]
+        private Water water = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -77,7 +78,7 @@ namespace Models.Soils
         public double WaterTableConcentration { get; set; }
 
         /// <summary>Diffusion coefficient (D0).</summary>
-        [Description("For SWIM: Diffusion coefficient (D0)")]
+        [Description("Diffusion coefficient (D0)")]
         public double D0 { get; set; }
 
         /// <summary>EXCO.</summary>
@@ -125,6 +126,36 @@ namespace Models.Soils
         {
             Reset();
             AmountLostInRunoff = new double[Thickness.Length];
+        }
+
+        /// <summary>Invoked to perform solute daily processes</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnDoSolute(object sender, EventArgs e)
+        {
+            if (D0 > 0)
+            {
+                for (int i = 0; i < physical.Thickness.Length-1; i++)
+                {
+                    // Calculate concentrations in SW solution
+                    double c1 = kgha[i] / (Math.Pow(physical.Thickness[i] * 100000.0, 2) * water.Volumetric[i]);  // kg/mm3 water
+                    double c2 = kgha[i + 1] / (Math.Pow(physical.Thickness[i + 1] * 100000.0, 2) * water.Volumetric[i + 1]);  // kg/mm3 water
+
+                    // Calculate average water content
+                    double avsw = (water.Volumetric[i] + water.Volumetric[i + 1]) / 2.0;
+
+                    // Millington and Quirk type approach for pore water tortuosity
+                    double avt = (Math.Pow(water.Volumetric[i] / Physical.SAT[i], 2) +
+                                  Math.Pow(water.Volumetric[i + 1] / Physical.SAT[i + 1], 2)) / 2.0; // average tortuosity
+
+                    double dx = (Physical.Thickness[i] + Physical.Thickness[i + 1]) / 2.0;
+                    double flux = avt * avsw * D0 * (c1 - c2) / dx * Math.Pow(100000.0, 2); // mm2 / ha
+
+                    kgha[i] = kgha[i] - flux;
+                    kgha[i+1] = kgha[i+1] + flux;
+                }
+            }
         }
 
         /// <summary>

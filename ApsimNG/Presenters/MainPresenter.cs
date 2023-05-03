@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections;
     using System.IO;
     using System.Reflection;
     using System.Xml;
@@ -501,8 +502,15 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    var converter = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    Simulations simulations = converter.NewModel as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
+
+                    // Clear simulation messages.
+                    this.ShowMessage("", Simulation.MessageType.Information, true);
+
+                    if (converter.DidConvert)
+                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -549,30 +557,6 @@
             this.view.StartPage2.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
 
-        /// <summary>
-        /// Event handler invoked when user clicks on 'Standard toolbox'.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        public void OnStandardToolboxClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.StandardToolbox.apsimx");
-                StreamReader streamReader = new StreamReader(s);
-                bool onLeftTabControl = true;
-                if (sender != null)
-                {
-                    onLeftTabControl = this.view.IsControlOnLeft(sender);
-                }
-
-                this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
 
         /// <summary>
         /// Gets the inner-most exception of an exception.
@@ -603,10 +587,6 @@
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
-            startPage.AddButton(
-                                "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
-                                          this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",
@@ -941,7 +921,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).NewModel as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 

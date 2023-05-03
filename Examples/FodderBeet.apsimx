@@ -482,26 +482,26 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Surface;\nusing Models.PMF.Interfaces;\nusing System.Data;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link(ByName = true)] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Simulation Simulation;\n        [Link] SurfaceOrganicMatter SurfOM;\n        \n                \n        [Description(\"Initial Root Depth\")]\n        public double InitialRootDepth { get; set; }\n        [Description(\"Sown Crop\")]\n        [Display(Type=DisplayType.CultivarName, PlantName = \"FodderBeet\")]\n        public string CropToSow { get; set; }\n        [Description(\"Sowing Date\")]\n        public DateTime SowingDate { get; set; }\n        \n        \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Clock.Today.Date == SowingDate)\n            {\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\n                \n            }\n                        \n            \n        }\n    }\n}\n                \n",
-                  "Parameters": [
-                    {
-                      "Key": "InitialRootDepth",
-                      "Value": "2"
-                    },
-                    {
-                      "Key": "CropToSow",
-                      "Value": "Rivage"
-                    },
-                    {
-                      "Key": "SowingDate",
-                      "Value": "10/29/2012 00:00:00"
-                    }
-                  ],
-                  "Name": "SowDateCv",
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                    "Code": "using Models.Surface;\nusing Models.PMF.Interfaces;\nusing System.Data;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\r\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link(ByName = true)] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Simulation Simulation;\n        [Link] SurfaceOrganicMatter SurfOM;\n        \n                \n        [Description(\"Initial Root Depth\")]\n        public double InitialRootDepth { get; set; }\n        [Description(\"Sown Crop\")]\n        [Display(Type=DisplayType.CultivarName, PlantName = \"FodderBeet\")]\n        public string CropToSow { get; set; }\n        [Description(\"Sowing Date\")]\n        public DateTime SowingDate { get; set; }\n        \n        \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Clock.Today.Date == SowingDate)\n            {\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\n                \n            }\n                        \n            \n        }\n    }\n}\n                \n",
+                    "Parameters": [
+                      {
+                        "Key": "InitialRootDepth",
+                        "Value": "2"
+                      },
+                      {
+                        "Key": "CropToSow",
+                        "Value": "Rivage"
+                      },
+                      {
+                        "Key": "SowingDate",
+                        "Value": "10/29/2012 00:00:00"
+                      }
+                    ],
+                    "Name": "SowDateCv",
+                    "IncludeInDocumentation": true,
+                    "Enabled": true,
+                    "ReadOnly": false
+                  },
                 {
                   "$type": "Models.Operations, Models",
                   "Operation": [
@@ -594,24 +594,24 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                {
-                  "$type": "Models.Manager, Models",
-                  "Code": "\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Summary Summary;\n\n\n        [Description(\" Date of Infection\")]\n        public DateTime InfectionDate { get; set; }\n        [Description(\"Is Infected\")]\n        public bool IsInfected  {get; set;}    \n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            \n\n            if (IsInfected == true) // an infected crop\n              if (InfectionDate == Clock.Today)\n               {\n                zone.Set(\"FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue\", 600);\n                Summary.WriteMessage(this,\"Fodder beet infected with fugal disease\");\n                }\n            \n        }\n        \n    }\n}\n                \n",
-                  "Parameters": [
-                    {
-                      "Key": "InfectionDate",
-                      "Value": "01/03/2015 00:00:00"
-                    },
-                    {
-                      "Key": "IsInfected",
-                      "Value": "False"
-                    }
-                  ],
-                  "Name": "FungalInfection",
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
+                  {
+                    "$type": "Models.Manager, Models",
+                    "Code": "\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\r\nusing System.Linq;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Summary Summary;\n\n\n        [Description(\" Date of Infection\")]\n        public DateTime InfectionDate { get; set; }\n        [Description(\"Is Infected\")]\n        public bool IsInfected  {get; set;}    \n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            \n\n            if (IsInfected == true) // an infected crop\n              if (InfectionDate == Clock.Today)\n               {\n                zone.Set(\"FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue\", 600);\n                Summary.WriteMessage(this,\"Fodder beet infected with fugal disease\");\n                }\n            \n        }\n        \n    }\n}\n                \n",
+                    "Parameters": [
+                      {
+                        "Key": "InfectionDate",
+                        "Value": "01/03/2015 00:00:00"
+                      },
+                      {
+                        "Key": "IsInfected",
+                        "Value": "False"
+                      }
+                    ],
+                    "Name": "FungalInfection",
+                    "IncludeInDocumentation": true,
+                    "Enabled": true,
+                    "ReadOnly": false
+                  }
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
