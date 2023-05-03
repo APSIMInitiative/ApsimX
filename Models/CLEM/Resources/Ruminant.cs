@@ -627,7 +627,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean(bool report, string reason, bool atNaturalWeaningAge = false)
+        public void Wean(bool report, string reason)
         {
             weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
             if (weaned > Math.Ceiling(BreedParams.GestationLength))
