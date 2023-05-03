@@ -174,7 +174,12 @@ namespace UserInterface.Presenters
                             throw new Exception("Must specifiy either a place name or a latitude/longitude.");
 
                         // Update the place name edit box.
-                        placeNameEditBox.Text = await GetPlacenameFromLatLongAsync();
+                        string fullName = await GetPlacenameFromLatLongAsync();
+
+                        //remove the address at start of the name "This business is closed, Dalby"
+                        if (fullName.Contains(','))
+                            fullName = fullName.Substring(fullName.IndexOf(',') + 2);
+                        placeNameEditBox.Text = fullName;
 
                         // Use this to monitor task progress
                         Progress<ProgressReportModel> progress = new Progress<ProgressReportModel>();

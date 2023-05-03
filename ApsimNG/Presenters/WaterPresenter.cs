@@ -91,7 +91,7 @@
                 relativeToDropDown.SelectedValue = water.RelativeTo;
                 depthWetSoilEdit.Text = water.DepthWetSoil.ToString("F0", CultureInfo.CurrentCulture);
                 PopulateWaterGraph(graph, water.Physical.Thickness, water.Physical.AirDry, water.Physical.LL15, water.Physical.DUL, water.Physical.SAT,
-                                   water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
+                                   water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues, null, null);
                 ConnectEvents();
             }
             catch (Exception err)
@@ -244,16 +244,27 @@
         }
 
         public static void PopulateWaterGraph(GraphView graph, double[] thickness, double[] airdry, double[] ll15, double[] dul, double[] sat,
-                                               string cllName, double[] swThickness, double[] cll, double[] sw)
+                                               string cllName, double[] swThickness, double[] cll, double[] sw, string llsoilsName, double[] llsoil)
         {
             var cumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(thickness);
             var swCumulativeThickness = APSIM.Shared.Utilities.SoilUtilities.ToCumThickness(swThickness);
             graph.Clear();
 
-            graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
+            if (llsoil != null && llsoilsName != null)
+            {       //draw the area relative to the water LL instead.
+                graph.DrawRegion($"PAW relative to {llsoilsName}", llsoil, swCumulativeThickness,
                              sw, swCumulativeThickness,
                              AxisPosition.Top, AxisPosition.Left,
                              System.Drawing.Color.LightSkyBlue, true);
+            } 
+            else
+            {       //draw the area relative to whatever the water node is currently relative to
+                graph.DrawRegion($"PAW relative to {cllName}", cll, swCumulativeThickness,
+                            sw, swCumulativeThickness,
+                            AxisPosition.Top, AxisPosition.Left,
+                            System.Drawing.Color.LightSkyBlue, true);
+            }
+            
 
             graph.DrawLineAndMarkers("Airdry", airdry,
                                      cumulativeThickness,
@@ -261,7 +272,7 @@
                                      System.Drawing.Color.Red, LineType.DashDot, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
 
-            graph.DrawLineAndMarkers("CLL", cll,
+            graph.DrawLineAndMarkers(cllName, cll,
                                      swCumulativeThickness,
                                      "", "", null, null, AxisPosition.Top, AxisPosition.Left,
                                      System.Drawing.Color.Red, LineType.Solid, MarkerType.None,
@@ -279,6 +290,14 @@
                                      System.Drawing.Color.Blue, LineType.DashDot, MarkerType.None,
                                      LineThickness.Normal, MarkerSize.Normal, 1, true);
 
+            if (llsoil != null && llsoilsName != null)
+            {
+                graph.DrawLineAndMarkers(llsoilsName, llsoil,
+                        cumulativeThickness,
+                        "", "", null, null, AxisPosition.Top, AxisPosition.Left,
+                        System.Drawing.Color.Green, LineType.Dash, MarkerType.None,
+                        LineThickness.Normal, MarkerSize.Normal, 1, true);
+            }
 
             graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
