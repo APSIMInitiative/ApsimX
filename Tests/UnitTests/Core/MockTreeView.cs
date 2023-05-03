@@ -54,6 +54,11 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
+        public int GetNodePosition(string path)
+        {
+            throw new NotImplementedException();
+        }
+
         public void MoveDown(string nodePath)
         {
             
