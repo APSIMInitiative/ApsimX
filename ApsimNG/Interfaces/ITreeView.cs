@@ -76,6 +76,10 @@ namespace UserInterface.Interfaces
         /// <param name="position">The position.</param>
         void AddChild(string parentNodePath, TreeViewNode nodeDescription, int position = -1);
 
+        /// <summary>Return the position of the node under its parent</summary>
+        /// <param name="path">The full node path.</param>
+        public int GetNodePosition(string path);
+
         /// <summary>
         /// Returns tree nodes which are expanded.
         /// </summary>
