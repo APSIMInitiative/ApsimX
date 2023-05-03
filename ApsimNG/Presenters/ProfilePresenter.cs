@@ -114,15 +114,21 @@
                 {
                     if (water != null && (model is Physical || model is Water || model is SoilCrop))
                     {
-                        double[] llsoil = null;
                         string llsoilName = null;
+                        double[] llsoil = null;
+
                         if (model is SoilCrop)
                         {
+                            llsoilName = (model as SoilCrop).Name;
+                            llsoilName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                            llsoilName = llsoilName + " LL";
+
                             llsoil = (model as SoilCrop).LL;
-                            llsoilName = (model as SoilCrop).Name + " LL";
+                            
                         }
+                        //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                         WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
-                                                          water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues, llsoilName, llsoil);
+                                                          "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
                     }
                         
                     else if (model is Organic organic)
