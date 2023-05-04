@@ -3842,7 +3842,7 @@ namespace Models.GrazPlan
         /// <param name="weight">The weight of animals (kg)</param>
         /// <param name="fleeceWeight">The fleece weight of animals (kg)</param>
 		/// <param name="tag">Tag number of animal groups </param>
-        public void Buy(string genotype, double number, ReproductiveType sex, double age, double weight, double fleeceWeight, int tag)
+        public void Buy(string genotype, double number, ReproductiveType sex, double age, double weight, double fleeceWeight, int tag = 0)
         {
             StockBuy stock = new StockBuy();
             stock.Genotype = genotype;
