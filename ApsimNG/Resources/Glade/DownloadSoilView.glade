@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="2.24"/>
-  <!-- interface-naming-policy project-wide -->
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkScrolledWindow" id="scrolledwindow1">
     <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="hscrollbar_policy">automatic</property>
-    <property name="vscrollbar_policy">automatic</property>
+    <property name="can-focus">True</property>
     <child>
       <object class="GtkViewport" id="viewport1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <child>
           <object class="GtkVBox" id="vbox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">5</property>
                 <child>
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="xalign">0</property>
+                    <property name="can-focus">False</property>
                     <property name="xpad">6</property>
                     <property name="label" translatable="yes">1. Enter latitude and longitude OR a country and place name.
 2. Click 'Search for soils'.
 3. Select the soils you want to add to your simulation.
 3. Click 'Add selected soils to simulation' </property>
+                    <property name="xalign">0</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -40,13 +38,13 @@
                 <child>
                   <object class="GtkHBox" id="hbox1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label6">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">0</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">More information:</property>
+                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -59,9 +57,9 @@
                       <object class="GtkLinkButton" id="apsoilButton">
                         <property name="label" translatable="yes">APSOIL</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="has_tooltip">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="has-tooltip">True</property>
                         <property name="relief">none</property>
                         <property name="xalign">0</property>
                         <property name="uri">https://www.apsim.info/apsim-model/apsoil/</property>
@@ -76,9 +74,9 @@
                       <object class="GtkLinkButton" id="isricButton">
                         <property name="label" translatable="yes">ISRIC</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="has_tooltip">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <property name="has-tooltip">True</property>
                         <property name="relief">none</property>
                         <property name="xalign">0</property>
                         <property name="uri">https://www.isric.org/explore/soilgrids</property>
@@ -99,14 +97,14 @@
                 <child>
                   <object class="GtkHBox" id="latlongBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">1</property>
+                        <property name="can-focus">False</property>
                         <property name="xpad">4</property>
                         <property name="label" translatable="yes">Latitude:  </property>
+                        <property name="xalign">1</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -117,13 +115,10 @@
                     <child>
                       <object class="GtkEntry" id="latitudeEditBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="invisible-char">●</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="secondary-icon-activatable">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -134,10 +129,10 @@
                     <child>
                       <object class="GtkLabel" id="label3">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">1</property>
+                        <property name="can-focus">False</property>
                         <property name="xpad">4</property>
                         <property name="label" translatable="yes">Longitude:  </property>
+                        <property name="xalign">1</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -148,13 +143,10 @@
                     <child>
                       <object class="GtkEntry" id="longitudeEditBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="invisible-char">●</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="secondary-icon-activatable">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -165,7 +157,7 @@
                     <child>
                       <object class="GtkLabel" id="label8">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes"> ... or use the country and 
 place name below</property>
                       </object>
@@ -185,13 +177,13 @@ place name below</property>
                 <child>
                   <object class="GtkHBox" id="placeBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label7">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Country:</property>
-                        <property name="width_chars">12</property>
+                        <property name="width-chars">12</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -202,7 +194,7 @@ place name below</property>
                     <child>
                       <object class="GtkComboBox" id="countryDropDown">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -223,13 +215,13 @@ place name below</property>
                 <child>
                   <object class="GtkHBox" id="hbox3">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Place name:  </property>
-                        <property name="width_chars">12</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes"> Place name, Postcode, state: </property>
+                        <property name="width-chars">12</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -240,15 +232,12 @@ place name below</property>
                     <child>
                       <object class="GtkEntry" id="placeNameEditBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="has_tooltip">True</property>
-                        <property name="tooltip_text" translatable="yes">Include the State name when required</property>
-                        <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="has-tooltip">True</property>
+                        <property name="tooltip-text" translatable="yes">Include the State name when required</property>
+                        <property name="invisible-char">●</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="secondary-icon-activatable">False</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -259,8 +248,8 @@ place name below</property>
                     <child>
                       <object class="GtkLabel" id="label9">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="width_chars">5</property>
+                        <property name="can-focus">False</property>
+                        <property name="width-chars">5</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -278,14 +267,14 @@ place name below</property>
                 <child>
                   <object class="GtkHBox" id="hbox2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel" id="label5">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="xalign">1</property>
+                        <property name="can-focus">False</property>
                         <property name="xpad">4</property>
                         <property name="label" translatable="yes">Search radius for APSOIL (km):  </property>
+                        <property name="xalign">1</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -297,13 +286,10 @@ place name below</property>
                     <child>
                       <object class="GtkEntry" id="radiusEditBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">●</property>
-                        <property name="invisible_char_set">True</property>
-                        <property name="primary_icon_activatable">False</property>
-                        <property name="secondary_icon_activatable">False</property>
-                        <property name="primary_icon_sensitive">True</property>
-                        <property name="secondary_icon_sensitive">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="invisible-char">●</property>
+                        <property name="primary-icon-activatable">False</property>
+                        <property name="secondary-icon-activatable">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -321,14 +307,14 @@ place name below</property>
                 <child>
                   <object class="GtkHButtonBox" id="hbuttonbox1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="layout_style">start</property>
+                    <property name="can-focus">False</property>
+                    <property name="layout-style">start</property>
                     <child>
                       <object class="GtkButton" id="searchButton">
                         <property name="label" translatable="yes">Search for soils</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
                         <property name="xalign">0</property>
                       </object>
                       <packing>
@@ -342,8 +328,8 @@ place name below</property>
                       <object class="GtkButton" id="addSoilButton">
                         <property name="label" translatable="yes">Add selected soil(s) to simulation</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
                         <property name="xalign">0</property>
                       </object>
                       <packing>
@@ -355,7 +341,7 @@ place name below</property>
                     <child>
                       <object class="GtkLabel" id="labelCount">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -381,13 +367,14 @@ place name below</property>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow2">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
+                <property name="can-focus">True</property>
                 <child>
                   <object class="GtkTreeView" id="dataListView">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
                   </object>
                 </child>
               </object>

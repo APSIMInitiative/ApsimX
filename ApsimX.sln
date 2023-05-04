@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29318.209
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApsimNG", "ApsimNG\ApsimNG.csproj", "{83F4BD8A-A0D1-4AA7-9DC7-42AF7D9BACBA}"
 EndProject
@@ -16,13 +16,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{130772
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{45A670BC-4A44-4944-A4B4-6FF4F198454D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Interop", "APSIM.Interop\APSIM.Interop.csproj", "{D7C5ABB8-13D9-4088-9204-EB2A539F6D78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSIM.Interop", "APSIM.Interop\APSIM.Interop.csproj", "{D7C5ABB8-13D9-4088-9204-EB2A539F6D78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Cli", "APSIM.Cli\APSIM.Cli.csproj", "{948DE3BD-9906-468B-80EC-C2CC6D2B7837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSIM.Cli", "APSIM.Cli\APSIM.Cli.csproj", "{948DE3BD-9906-468B-80EC-C2CC6D2B7837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Server", "APSIM.Server\APSIM.Server.csproj", "{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSIM.Server", "APSIM.Server\APSIM.Server.csproj", "{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Documentation", "APSIM.Documentation\APSIM.Documentation.csproj", "{99742687-C9AD-4BF7-866D-5C61BA00EB57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APSIM.Documentation", "APSIM.Documentation\APSIM.Documentation.csproj", "{99742687-C9AD-4BF7-866D-5C61BA00EB57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D1EC252D-C551-4D5A-A257-CD4D15BEF101}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

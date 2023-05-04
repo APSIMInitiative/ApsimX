@@ -184,7 +184,7 @@ namespace Models.PMF.Struct
 				var demand = L9Area - L5Area;
 				var supply = radiationAverages.Average() * L5Area * Phy5;
 
-				SupplyDemandRatio = supply / demand;
+                SupplyDemandRatio = MathUtilities.Divide(supply, demand, 0);
 
 				return Math.Max(tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio, 0.0);
 			}

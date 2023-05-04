@@ -13,24 +13,6 @@ using UserInterface.Views;
 namespace UserInterface.Views
 {
     //duplicate of InputView because we want to place this at the top of our simulation not onto the Datastore
-    interface ICLEMView
-    {
-        /// <summary>
-        /// Adds a new tab view to the display
-        /// </summary>
-        /// <param name="tabName"></param>
-        /// <param name="control"></param>
-        void AddTabView(string tabName, object control);
-
-        /// <summary>
-        /// selects the tab view to the display
-        /// </summary>
-        /// <param name="tabName"></param>
-        void SelectTabView(string tabName);
-
-        /// <summary>Invoked when tab is selected</summary>
-        event EventHandler<EventArgs> TabSelected;
-    }
 
     public class CLEMView : ViewBase, Views.ICLEMView
     {
@@ -143,13 +125,22 @@ namespace UserInterface.Views
         }
     }
 
-    public class TabChangedEventArgs : EventArgs
+    interface ICLEMView
     {
-        public string TabName { get; set; }
+        /// <summary>
+        /// Adds a new tab view to the display
+        /// </summary>
+        /// <param name="tabName"></param>
+        /// <param name="control"></param>
+        void AddTabView(string tabName, object control);
 
-        public TabChangedEventArgs(string myString)
-        {
-            this.TabName = myString;
-        }
+        /// <summary>
+        /// selects the tab view to the display
+        /// </summary>
+        /// <param name="tabName"></param>
+        void SelectTabView(string tabName);
+
+        /// <summary>Invoked when tab is selected</summary>
+        event EventHandler<EventArgs> TabSelected;
     }
 }

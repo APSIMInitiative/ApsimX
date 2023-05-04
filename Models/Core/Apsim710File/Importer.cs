@@ -112,6 +112,7 @@
             this.fertilisers.Add("NH4NO3", "NH4NO3N");
             this.fertilisers.Add("DAP", "DAP");
             this.fertilisers.Add("MAP", "MAP");
+            this.fertilisers.Add("UAN_N", "UAN_N");
             this.fertilisers.Add("urea_N", "UreaN");
             this.fertilisers.Add("urea_no3", "UreaNO3");
             this.fertilisers.Add("urea", "Urea");
@@ -209,7 +210,7 @@
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false);
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false).NewModel as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }

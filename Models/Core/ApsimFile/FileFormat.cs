@@ -58,7 +58,7 @@
         /// <param name="fileName">Name of the file.</param>
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
-        public static T ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T : IModel
+        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T:IModel
         {
             try
             {
@@ -66,14 +66,15 @@
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                T newModel = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+                var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+                var newModel = converter.NewModel;
 
-                // Set the filename
                 if (newModel is Simulations)
                     (newModel as Simulations).FileName = fileName;
                 foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
                     sim.FileName = fileName;
-                return newModel;
+                converter.NewModel = newModel;
+                return converter;
             }
             catch (Exception err)
             {
@@ -86,7 +87,7 @@
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
         /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-        public static T ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
+        public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
         {
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
@@ -122,7 +123,9 @@
             else
                 InitialiseModel(newModel, errorHandler);
 
-            return newModel;
+            converter.NewModel = newModel;
+
+            return converter;
         }
 
         /// <summary>
