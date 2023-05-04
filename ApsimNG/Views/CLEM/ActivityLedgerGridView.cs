@@ -1,34 +1,12 @@
+using Gtk;
+using System.Data;
+using System;
+using System.Collections.Generic;
+using Models.Core;
+
 
 namespace UserInterface.Views
 {
-    using Interfaces;
-    using Gtk;
-    using System.Data;
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Drawing.Imaging;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Extensions;
-
-    public interface IActivityLedgerGridView
-    {
-        /// <summary>Provides the name of the report for data collection.</summary>
-        string ModelName { get; set; }
-
-        /// <summary>Grid for holding data.</summary>
-        System.Data.DataTable DataSource { get; set; }
-
-        void LockLeftMostColumns(int number);
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the grid is read only
-        /// </summary>
-        bool ReadOnly { get; set; }
-
-    }
-
     /// <summary>
     /// An activity ledger disply grid view
     /// </summary>
@@ -295,7 +273,7 @@ namespace UserInterface.Views
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.svg");
                 pixbufRender.Xalign = 0.5f;
 
-                if (i == 0 || i == nCols-1)
+                if (i == 0 || i == nCols - 1)
                 {
                     colLookup.Add(textRender, i);
                 }
@@ -313,7 +291,7 @@ namespace UserInterface.Views
                 TreeViewColumn column = new TreeViewColumn();
                 column.Title = this.DataSource.Columns[i].Caption;
 
-                if (i==0 || i == nCols - 1)
+                if (i == 0 || i == nCols - 1)
                 {
                     column.PackStart(textRender, true);     // 0
                 }
@@ -441,7 +419,7 @@ namespace UserInterface.Views
                         iconName = "Skipped";
                         break;
                 }
-                (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+iconName+".png");
+                (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages." + iconName + ".png");
             }
         }
 
@@ -821,4 +799,22 @@ namespace UserInterface.Views
         }
 
     }
+
+    public interface IActivityLedgerGridView
+    {
+        /// <summary>Provides the name of the report for data collection.</summary>
+        string ModelName { get; set; }
+
+        /// <summary>Grid for holding data.</summary>
+        System.Data.DataTable DataSource { get; set; }
+
+        void LockLeftMostColumns(int number);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the grid is read only
+        /// </summary>
+        bool ReadOnly { get; set; }
+
+    }
+
 }

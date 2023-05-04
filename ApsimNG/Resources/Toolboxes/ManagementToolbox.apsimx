@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 388,
-  "Version": 159,
+  "ExplorerWidth": 300,
+  "Version": 160,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -833,6 +833,49 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing Models.Functions;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\n        [Link(Type = LinkType.Path, Path=\"[Nutrient].FOMLignin.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFLignin;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].FOMCellulose.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFCellulose;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].FOMCarbohydrate.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFCarbohydrate;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].Microbial.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFMicrobial;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].Humic.Decomposition.Rate.TF\")] private CERESMineralisationTemperatureFactor TFHumic;\n\t\t[Link(Type = LinkType.Path, Path=\"[Nutrient].Nitrification.Rate.CERESMineralisationTemperatureFactor\")] private CERESMineralisationTemperatureFactor TFNitrification;\n\t\t\n        [Separator(\"WARNING - use with caution and considerable testing. Changing these values invalidates the existing testing in APSIM\")]\n\t\t\n        [Description(\"New base temperature for decomposition (oC)\")] public double BaseTemp { get; set; }\n        [Description(\"New optimum temperature for decomposition (oC)\")] public double OptTemp { get; set; }\n        \n        \n        [Separator(\"To which soil organic matter fractions should the above values apply?\")]\n\n        [Description(\"Apply these to the FOM Lignin fraction?\")] public bool DoLignin { get; set; }\n        [Description(\"Apply these to the FOM Cellulose fraction?\")] public bool DoCellulose { get; set; }\n        [Description(\"Apply these to the FOM Carbohydrate fraction?\")] public bool DoCarbohydrate { get; set; }\n        [Description(\"Apply these to the Microbial fraction?\")] public bool DoMicrobial { get; set; }\n        [Description(\"Apply these to the Humic fraction?\")] public bool DoHumic { get; set; }\n        [Description(\"Apply these to the Nitrification rate?\")] public bool DoNitrification { get; set; }\n\n\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\n   \t\t\tif (DoLignin)\n   \t\t\t{\n   \t\t\t\tTFLignin.MineralisationSTBase = BaseTemp;\n        \t\tTFLignin.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoCellulose)\n   \t\t\t{\n   \t\t\t\tTFCellulose.MineralisationSTBase = BaseTemp;\n        \t\tTFCellulose.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoCarbohydrate)\n   \t\t\t{\n   \t\t\t\tTFCarbohydrate.MineralisationSTBase = BaseTemp;\n        \t\tTFCarbohydrate.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoMicrobial)\n   \t\t\t{\n   \t\t\t\tTFMicrobial.MineralisationSTBase = BaseTemp;\n        \t\tTFMicrobial.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoHumic)\n   \t\t\t{\n   \t\t\t\tTFHumic.MineralisationSTBase = BaseTemp;\n        \t\tTFHumic.MineralisationSTOpt = OptTemp;\n        \t}\n\n   \t\t\tif (DoNitrification)\n   \t\t\t{\n   \t\t\t\tTFNitrification.MineralisationSTBase = BaseTemp;\n        \t\tTFNitrification.MineralisationSTOpt = OptTemp;\n        \t}\n\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "BaseTemp",
+              "Value": "0"
+            },
+            {
+              "Key": "OptTemp",
+              "Value": "32"
+            },
+            {
+              "Key": "DoLignin",
+              "Value": "True"
+            },
+            {
+              "Key": "DoCellulose",
+              "Value": "True"
+            },
+            {
+              "Key": "DoCarbohydrate",
+              "Value": "True"
+            },
+            {
+              "Key": "DoMicrobial",
+              "Value": "True"
+            },
+            {
+              "Key": "DoHumic",
+              "Value": "True"
+            },
+            {
+              "Key": "DoNitrification",
+              "Value": "True"
+            }
+          ],
+          "Name": "ModifyNutrientSoilTempFunctions",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -978,6 +1021,25 @@
             }
           ],
           "Name": "LocationInfo",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing System.Diagnostics;\r\nusing System.Collections.Generic;\r\nusing System.IO;\r\nusing System.Data;\r\nusing System.Linq;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IWeather weather;\r\n        [Link] Simulation simulation;\n        [Link] Plant plant;\n        [Link] Zone zone;\n        [Link] Summary summary;\r\n        \r\n        private DataTable data;\n        \n        [Separator(\"To use you will need an excel file with two columns named 'date' and 'a'.\")]\r\n\r\n        [Description(\"Name of file containing weather data to patch:\")]\r\n        public string PatchFileName { get; set; }\n        \n        [Description(\"Sheet name:\")]\n        public string SheetName {get;set;}\n       \r\n\n\t\t//Name of reportable value.\r\n        public double DataValue{ get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            // Ensure filename is relative to the directory where the .apsimx file is located.\r\n            string fullFileName = PathUtilities.GetAbsolutePath(PatchFileName, simulation.FileName);\r\n        \r\n            // Read in data.\n            data = ExcelUtilities.ReadExcelFileData(fullFileName, SheetName, true); \r\n        }\n        \n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\n        \tDataValue = GetValue(clock.Today.ToString(\"MM/dd/yyyy\"));\n        }\n\n        \n        private double GetValue(string searchDate)\n        {\n        \t\n        \tDataView view =  new DataView(data);\n        \t// Here we are querying the dataView for a matching date column with the date we selected.\n        \tview.RowFilter = $\"date = #{searchDate}#\";\n        \t// Check if any matching results are found.\n        \tif (view.Count == 0)\n        \t\tthrow new Exception(\"Can't find date = \" + searchDate);\n        \telse \n        \t\t// Here we are converting the value to a number.\n        \t\t// Modify this to search for name of the column you want the value from. \n        \t\t// Here it is named \"a\".\n        \t\treturn Convert.ToDouble(view[0][\"a\"]);\n            \n        }\r\n\r\n       \r\n\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "PatchFileName",
+              "Value": "datevalues.xlsx"
+            },
+            {
+              "Key": "SheetName",
+              "Value": "Sheet1"
+            }
+          ],
+          "Name": "ValueFromExcel",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,

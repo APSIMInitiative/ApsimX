@@ -21,89 +21,7 @@ namespace UserInterface.Views
     /// <param name="sheetName"></param>
     public delegate void ExcelSheetDelegate(string fileName, string sheetName);
 
-    /// <summary>
-    /// An interface for a weather data view
-    /// </summary>
-    interface IMetDataView
-    {
-        /// <summary>Occurs when browse button is clicked</summary>
-        event BrowseDelegate BrowseClicked;
-
-        /// <summary>Occurs when a constants file is selected.</summary>
-        event BrowseDelegate ConstantsFileSelected;
-
-        /// <summary>Occurs when the start year numericUpDown is clicked</summary>
-        event GraphRefreshDelegate GraphRefreshClicked;
-
-        /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
-        event ExcelSheetDelegate ExcelSheetChangeClicked;
-
-        /// <summary>Gets or sets the filename.</summary>
-        string Filename { get; set; }
-
-        /// <summary>Gets or sets the filename.</summary>
-        string ConstantsFileName { get; set; }
-
-        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
-        string ExcelWorkSheetName { get; set; }
-
-        /// <summary>Sets the summarylabel.</summary>
-        string Summarylabel { set; }
-
-        /// <summary>Gets the graph.</summary>
-        IGraphView GraphSummary { get; }
-
-        /// <summary>Gets the Rainfall graph.</summary>
-        IGraphView GraphRainfall { get; }
-
-        /// <summary>Gets the Monthly Rainfall graph.</summary>
-        IGraphView GraphMonthlyRainfall { get; }
-
-        /// <summary>Gets the Temperature graph.</summary>
-        IGraphView GraphTemperature { get; }
-
-        /// <summary>Gets the Radiation graph.</summary>
-        IGraphView GraphRadiation { get; }
-
-        /// <summary>sets the Graph Year</summary>
-        int GraphStartYearValue { get; set; }
-
-        /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
-        int GraphStartYearMinValue { get; set; }
-
-        /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
-        int GraphStartYearMaxValue { get; set; }
-
-        /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
-        /// <param name="show"></param>
-        void ShowExcelSheets(bool show);
-
-        /// <summary>Show or hide the constants file selector.</summary>
-        /// <param name="show">If true, the selector will be shown, otherwise it will be hidden.</param>
-        void ShowConstantsFile(bool show);
-
-        /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
-        int GraphShowYearsValue { get; set; }
-
-        /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
-        int GraphShowYearsMaxValue { set; }
-
-        /// <summary>Populates the data grid</summary>
-        /// <param name="data">The data</param>
-        void PopulateData(DataTable data);
-
-        /// <summary>
-        /// Populates the DropDown of Excel WorksheetNames 
-        /// </summary>
-        /// <param name="sheetNames"></param>
-        void PopulateDropDownData(List<string> sheetNames);
-
-        /// <summary>
-        /// Indicates the index of the currently active tab
-        /// </summary>
-        int TabIndex { get; set; }
-    }
-
+    
     /// <summary>
     /// A view for displaying weather data.
     /// </summary>
@@ -555,5 +473,87 @@ namespace UserInterface.Views
             else
                 constantsFileSelectorContainer.Hide();
         }
+    }
+    /// <summary>
+    /// An interface for a weather data view
+    /// </summary>
+    interface IMetDataView
+    {
+        /// <summary>Occurs when browse button is clicked</summary>
+        event BrowseDelegate BrowseClicked;
+
+        /// <summary>Occurs when a constants file is selected.</summary>
+        event BrowseDelegate ConstantsFileSelected;
+
+        /// <summary>Occurs when the start year numericUpDown is clicked</summary>
+        event GraphRefreshDelegate GraphRefreshClicked;
+
+        /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
+        event ExcelSheetDelegate ExcelSheetChangeClicked;
+
+        /// <summary>Gets or sets the filename.</summary>
+        string Filename { get; set; }
+
+        /// <summary>Gets or sets the filename.</summary>
+        string ConstantsFileName { get; set; }
+
+        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
+        string ExcelWorkSheetName { get; set; }
+
+        /// <summary>Sets the summarylabel.</summary>
+        string Summarylabel { set; }
+
+        /// <summary>Gets the graph.</summary>
+        IGraphView GraphSummary { get; }
+
+        /// <summary>Gets the Rainfall graph.</summary>
+        IGraphView GraphRainfall { get; }
+
+        /// <summary>Gets the Monthly Rainfall graph.</summary>
+        IGraphView GraphMonthlyRainfall { get; }
+
+        /// <summary>Gets the Temperature graph.</summary>
+        IGraphView GraphTemperature { get; }
+
+        /// <summary>Gets the Radiation graph.</summary>
+        IGraphView GraphRadiation { get; }
+
+        /// <summary>sets the Graph Year</summary>
+        int GraphStartYearValue { get; set; }
+
+        /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
+        int GraphStartYearMinValue { get; set; }
+
+        /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
+        int GraphStartYearMaxValue { get; set; }
+
+        /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
+        /// <param name="show"></param>
+        void ShowExcelSheets(bool show);
+
+        /// <summary>Show or hide the constants file selector.</summary>
+        /// <param name="show">If true, the selector will be shown, otherwise it will be hidden.</param>
+        void ShowConstantsFile(bool show);
+
+        /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
+        int GraphShowYearsValue { get; set; }
+
+        /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
+        int GraphShowYearsMaxValue { set; }
+
+        /// <summary>Populates the data grid</summary>
+        /// <param name="data">The data</param>
+        void PopulateData(DataTable data);
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        void PopulateDropDownData(List<string> sheetNames);
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
     }
 }

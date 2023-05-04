@@ -389,7 +389,19 @@ namespace APSIM.Shared.Utilities
             }
             //will I ever hit this without having any data???
 
-            return data;
+            if (data != null)
+            {
+                //the excel to table function will not set the column caption
+                //so we do it here manually, otherwise it's just called 'column1' etc
+                for (int i = 0; i < data.Columns.Count; i++)
+                {
+                    data.Columns[i].Caption = data.Columns[i].ColumnName;
+                }
+                return data;
+            } else
+            {
+                throw new Exception("Error converting excel data to table");
+            }
         }
 
 

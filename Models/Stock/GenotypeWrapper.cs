@@ -91,7 +91,7 @@
             try
             {
                 simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
-                                                                         e => throw e, false);
+                                                                         e => throw e, false).NewModel as Simulations;
             }
             catch (Exception err)
             {
