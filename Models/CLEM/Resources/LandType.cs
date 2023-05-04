@@ -10,7 +10,6 @@ using System.IO;
 
 namespace Models.CLEM.Resources
 {
-
     /// <summary>
     /// This stores the initialisation parameters for land
     /// </summary>
@@ -165,19 +164,7 @@ namespace Models.CLEM.Resources
                 else
                     this.areaAvailable += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = amountAdded,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastGain = amountAdded;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
 
                 if (category != "Initialise")
                 {
@@ -215,18 +202,8 @@ namespace Models.CLEM.Resources
             }
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                TransactionType = TransactionType.Loss,
-                Amount = amountRemoved,
-                Activity = request.ActivityModel,
-                Category = request.Category,
-                RelatesToResource = request.RelatesToResource
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+
+            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
 
             UpdateLandAllocatedList(request.ActivityModel, amountRemoved, false);
             // adjust activity using all remaining land as well.
@@ -272,26 +249,6 @@ namespace Models.CLEM.Resources
                 }
             }
         }
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 

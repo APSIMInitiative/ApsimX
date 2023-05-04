@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents an animal food store (e.g. lucerne)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
-    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeedType, IResourceType
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IFeedType, IResourceType
     {
         /// <summary>
         /// Unit type
@@ -102,42 +102,30 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            double addAmount;
+            double amountAdded;
             double nAdded;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
-                    addAmount = (double)resourceAmount;
+                    amountAdded = (double)resourceAmount;
                     nAdded = Nitrogen;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    addAmount = ((FoodResourcePacket)resourceAmount).Amount;
+                    amountAdded = ((FoodResourcePacket)resourceAmount).Amount;
                     nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
                     break;
                 default:
                     throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
-            if (addAmount > 0)
+            if (amountAdded > 0)
             {
                 // update N based on new input added
-                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * addAmount)) / (Amount + addAmount);
+                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * amountAdded)) / (Amount + amountAdded);
 
-                this.amount += addAmount;
+                this.amount += amountAdded;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = addAmount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = addAmount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }
 
@@ -178,19 +166,7 @@ namespace Models.CLEM.Resources
                     (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
                 }
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = amountRemoved,
-                    Activity = request.ActivityModel,
-                    RelatesToResource = request.RelatesToResource,
-                    Category = request.Category
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
-
+                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             return;
         }
@@ -203,26 +179,6 @@ namespace Models.CLEM.Resources
         {
             this.amount = newValue;
         }
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 

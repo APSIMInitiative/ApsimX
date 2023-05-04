@@ -48,7 +48,7 @@ namespace Models.CLEM
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = "Date [" + laterDate.ToString() + "] must be greater than " + dateToCompareToFieldName.ToString() +"[" + earlierDate.ToString() +"]";
+                DefaultErrorMessage = $"Date [{laterDate}] must be greater than {dateToCompareToFieldName} [{earlierDate}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -211,7 +211,7 @@ namespace Models.CLEM
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than [" + compareValue.ToString() +"]";
+                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than [{compareValue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -256,7 +256,7 @@ namespace Models.CLEM
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than or equal to [" + compareValue.ToString()+"]";
+                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than or equal to [{compareValue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -323,7 +323,7 @@ namespace Models.CLEM
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = $"Value [{ changeReason.ToString() }] must be a {compareStyle} change reason";
+                DefaultErrorMessage = $"Value [{ changeReason }] must be a {compareStyle} change reason";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -369,7 +369,7 @@ namespace Models.CLEM
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than " + compareToFieldName + "[" + minvalue.ToString() +"]";
+                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than {compareToFieldName} [{minvalue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -415,7 +415,7 @@ namespace Models.CLEM
                 return ValidationResult.Success;
             else
             {
-                DefaultErrorMessage = "Value [" + maxvalue.ToString() + "] must be greater than or equal to " + compareToFieldName + "[" + minvalue.ToString() + "]";
+                DefaultErrorMessage = $"Value [{maxvalue}] must be greater than or equal to {compareToFieldName} [{minvalue}]";
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
             }
         }
@@ -449,7 +449,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            DefaultErrorMessage += " (expecting " + numberOfArrayItems.ToString() + " values)";
+            DefaultErrorMessage += $" (expecting {numberOfArrayItems} values)";
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if (value.GetType().IsArray)

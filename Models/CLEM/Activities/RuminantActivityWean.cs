@@ -208,6 +208,7 @@ namespace Models.CLEM.Activities
         {
             if (numberToDo - numberToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
             {
+                ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
                 int weaned = 0;
                 foreach (Ruminant ind in uniqueIndividuals.SkipLast(sucklingToSkip).ToList())
                 {
@@ -241,7 +242,9 @@ namespace Models.CLEM.Activities
                                 ind.Location = grazeStore;
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
+                        ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+
                         weaned++;
                         if (weaned > numberToDo - numberToSkip)
                             break;

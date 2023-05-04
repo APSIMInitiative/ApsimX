@@ -479,7 +479,7 @@ namespace Models.CLEM.Resources
         /// Flag to identify individual ready for sale
         /// </summary>
         [FilterByProperty]
-        public HerdChangeReason SaleFlag { get; set; }
+        public HerdChangeReason SaleFlag { get; set; } = HerdChangeReason.None;
 
         /// <summary>
         /// Determines if the change reason is positive or negative
@@ -627,7 +627,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean(bool report, string reason, bool atNaturalWeaningAge = false)
+        public void Wean(bool report, string reason)
         {
             weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
             if (weaned > Math.Ceiling(BreedParams.GestationLength))

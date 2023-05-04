@@ -73,6 +73,14 @@ namespace Models.CLEM.Resources
         public float StandardDeviation { get; set; }
 
         /// <summary>
+        /// Select from tail of normal distribution based on the sign (+ve, -ve) of the standard deviation provided
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Description("Use s.d. sign to specify distribution tail to use")]
+        [Required]
+        public bool UseStandardDeviationSign { get; set; } = false;
+
+        /// <summary>
         /// Inheritance style
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0)]
@@ -96,12 +104,16 @@ namespace Models.CLEM.Resources
                 double value = Value;
                 double randStdNormal = 0;
 
-                if (StandardDeviation > 0)
+                if (StandardDeviation != 0)
                 {
                     double u1 = RandomNumberGenerator.Generator.NextDouble();
                     double u2 = RandomNumberGenerator.Generator.NextDouble();
                     randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                     Math.Sin(2.0 * Math.PI * u2);
+                    if(UseStandardDeviationSign) 
+                    {
+                        randStdNormal = Math.Abs(randStdNormal);
+                    }
                 }
                 value = Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
 

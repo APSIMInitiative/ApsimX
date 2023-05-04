@@ -33,7 +33,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Models.Report, ICLEMUI
+    public class ReportResourceLedger : Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder resources = null;

@@ -696,19 +696,21 @@ namespace Models.CLEM.Resources
                     // do not update if this is ian initialisation pool
                     biomassAddedThisYear += pool.Amount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = pool.Amount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = pool.Amount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
+
+                //ResourceTransaction details = new ResourceTransaction
+                //{
+                //    TransactionType = TransactionType.Gain,
+                //    Amount = pool.Amount,
+                //    Activity = activity,
+                //    RelatesToResource = relatesToResource,
+                //    Category = category,
+                //    ResourceType = this
+                //};
+                //LastTransaction = details;
+                //LastGain = pool.Amount;
+                //TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                //OnTransactionOccurred(te);
             }
         }
 
@@ -795,19 +797,9 @@ namespace Models.CLEM.Resources
                 //if graze activity
                 biomassConsumed += request.Provided;
 
-                // report 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = request.Provided,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                // report
+
+                ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityCutAndCarry))
             {
@@ -835,18 +827,7 @@ namespace Models.CLEM.Resources
                 nitrogen /= request.Provided;
 
                 // report 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = request.Provided,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else
             {
@@ -863,26 +844,6 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 

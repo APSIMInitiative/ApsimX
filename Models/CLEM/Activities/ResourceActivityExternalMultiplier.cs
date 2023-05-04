@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(this.Name);
 
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+                htmlWriter.Write($"\r\n<div class=\"filterborder clearfix\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
                 return htmlWriter.ToString();
             }
         }
