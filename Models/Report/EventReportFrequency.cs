@@ -24,7 +24,6 @@ namespace Models
             if (tokens.Length == 1)
             {
                 new EventReportFrequency(report, events, tokens[0]);
-                return true;
             } 
             else if (tokens.Length > 1) 
             {
@@ -34,12 +33,22 @@ namespace Models
                 }
                 catch
                 {   //if trying with only first token failed, try again with entire line
-                    new EventReportFrequency(report, events, line);
+                    try
+                    {
+                        new EventReportFrequency(report, events, line);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
-                return true;
+            } 
+            else
+            {
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         /// <summary>
