@@ -77,14 +77,7 @@ namespace Models.Functions
         /// <summary>Get value</summary>
         private void GetValue()
         {
-            try
-            {
-                _Value = ValueToHold.Value();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            _Value = ValueToHold.Value();
         }
     }
 }
