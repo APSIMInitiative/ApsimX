@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -91,6 +92,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             List<Ruminant> herd = ruminantHerd.Herd;
+            ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
 
             // Natural weaning takes place here before animals eat or take milk from mother.
             foreach (var ind in herd.Where(a => a.Weaned == false))
@@ -104,7 +106,8 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural");
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
+                    ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
         }
@@ -672,7 +675,7 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.FloatsAreEqual(EnergyGross, 0))
                     htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
                 else
-                    htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{EnergyGross}</span>");
                 htmlWriter.Write(" MJ/kg dry matter</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");

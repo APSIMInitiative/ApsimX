@@ -326,6 +326,18 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Return the position of the node under its parent</summary>
+        /// <param name="path">The full node path.</param>
+        public int GetNodePosition(string path)
+        {
+            int count = 0;
+            if (FindNode(path, out TreeIter node))
+                while (treemodel.IterPrevious(ref node))
+                    count = count + 1;
+
+            return count;
+        }
+
         /// <summary>
         /// Treeview is being destroyed.
         /// </summary>

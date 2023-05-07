@@ -8,6 +8,16 @@ using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Graphing;
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.GrazPlan;
+    using Models.Soils;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Views;
+
     /// <summary>A presenter for the soil profile models.</summary>
     public class ProfilePresenter : IPresenter
     {
@@ -55,15 +65,20 @@ namespace UserInterface.Presenters
             gridPresenter = new NewGridPresenter();
             gridPresenter.Attach(model, v, explorerPresenter);
 
-            physical = this.model.FindInScope<Physical>();
-            water = this.model.FindInScope<Water>();
+            Soil soilNode = this.model.FindAncestor<Soil>();
+            physical = soilNode.FindChild<Physical>();
+            water = soilNode.FindChild<Water>();
 
             var propertyView = view.GetControl<PropertyView>("properties");
             propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(model, propertyView, explorerPresenter);
 
             graph = view.GetControl<GraphView>("graph");
-            graph.SetPreferredWidth(0.3);
+
+            //get the paned object that holds the graph and grid
+            Gtk.Paned bottomPane = view.GetGladeObject<Gtk.Paned>("bottom");
+            int paneWidth = view.MainWidget.ParentWindow.Width; //this shoudl get the width of this view
+            bottomPane.Position = (int)Math.Round(paneWidth * 0.75); //set the slider for the pane at about 75% across
 
             numLayersLabel = view.GetControl<LabelView>("numLayersLabel");
 
@@ -105,9 +120,25 @@ namespace UserInterface.Presenters
                 DisconnectEvents();
                 try
                 {
-                    if (water != null && (model is Physical || model is Water))
-                        WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.DUL, physical.SAT,
-                                                          water.RelativeTo, water.Thickness, water.RelativeToLL, water.InitialValues);
+                    if (water != null && (model is Physical || model is Water || model is SoilCrop))
+                    {
+                        string llsoilName = null;
+                        double[] llsoil = null;
+
+                        if (model is SoilCrop)
+                        {
+                            llsoilName = (model as SoilCrop).Name;
+                            llsoilName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
+                            llsoilName = llsoilName + " LL";
+
+                            llsoil = (model as SoilCrop).LL;
+                            
+                        }
+                        //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
+                        WaterPresenter.PopulateWaterGraph(graph, physical.Thickness, physical.AirDry, physical.LL15, physical.DUL, physical.SAT,
+                                                          "LL15", water.Thickness, physical.LL15, water.InitialValues, llsoilName, llsoil);
+                    }
+                    
                     else if (model is Organic organic)
                         PopulateOrganicGraph(graph, organic.Thickness, organic.FOM, organic.FBiom, organic.FInert);
                     else if (model is Solute solute && solute.Thickness != null)

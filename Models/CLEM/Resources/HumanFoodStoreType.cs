@@ -7,6 +7,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
+using DocumentFormat.OpenXml.Office2016.Excel;
 
 namespace Models.CLEM.Resources
 {
@@ -149,19 +150,7 @@ namespace Models.CLEM.Resources
                 else
                     poolOfAge.Add(pool.Amount);
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = pool.Amount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                base.LastGain = pool.Amount;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
             }
         }
 
@@ -200,19 +189,7 @@ namespace Models.CLEM.Resources
             if (amountRemoved > 0)
             {
                 request.Provided = amountRemoved;
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = amountRemoved,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
-
+                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
         }
 
@@ -246,40 +223,10 @@ namespace Models.CLEM.Resources
                 {
                     Pools.RemoveAll(a => a.Age >= UseByAge);
                     // report spoiled loss
-                    ResourceTransaction details = new ResourceTransaction
-                    {
-                        ResourceType = this,
-                        TransactionType = TransactionType.Loss,
-                        Amount = spoiled,
-                        Activity = this,
-                        Category = "Spoiled"
-                    };
-                    LastTransaction = details;
-                    TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                    OnTransactionOccurred(te);
+                    ReportTransaction(TransactionType.Loss, spoiled, this, "", "Spoiled", this);
                 }
             }
         }
-
-        /// <summary>
-        /// Transaction occured event handler
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 

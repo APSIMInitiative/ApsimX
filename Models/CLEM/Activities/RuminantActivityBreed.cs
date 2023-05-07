@@ -13,6 +13,7 @@ using System.IO;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -48,6 +49,7 @@ namespace Models.CLEM.Activities
         private bool useControlledMating { get { return (controlledMating != null); }  }
 
         private RuminantActivityControlledMating controlledMating = null;
+        private ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
 
         /// <summary>
         /// Records the number of individuals that conceived in the BreedingEvent for sub-components to work with.
@@ -83,8 +85,12 @@ namespace Models.CLEM.Activities
 
             // report previous pregnancies as conceptions
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsPregnant))
+            {
                 // report conception status changed from those assigned suckling at startup
-                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today));
+                conceptionArgs.Update(ConceptionStatus.Conceived, female, clock.Today);
+                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                //female.BreedParams.OnConceptionStatusChanged(new ConceptionStatusChangedEventArgs(ConceptionStatus.Conceived, female, clock.Today));
+            }
 
             // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
@@ -169,7 +175,12 @@ namespace Models.CLEM.Activities
                                                     AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)]);
 
                                                 // report conception status changed
-                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
+                                                conceptionArgs.Status = ConceptionStatus.Conceived;
+                                                conceptionArgs.Female = female;
+
+                                                conceptionArgs.Update(ConceptionStatus.Conceived, female, clock.Today);
+                                                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                                                //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
                                                 // check for perenatal mortality
                                                 for (int j = i; j < monthsAgoStop; j++)
@@ -183,14 +194,23 @@ namespace Models.CLEM.Activities
                                                         {
                                                             female.OneOffspringDies();
                                                             if (female.NumberOfOffspring == 0)
+                                                            {
                                                                 // report conception status changed when last multiple birth dies.
-                                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
+                                                                conceptionArgs.Update(ConceptionStatus.Failed, female, lossDate);
+                                                                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                                                                //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                             else
-                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, conceiveDate));
+                                            {
+                                                // report conception status changed when last multiple birth dies.
+                                                conceptionArgs.Update(ConceptionStatus.Unsuccessful, female, conceiveDate);
+                                                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                                                //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, conceiveDate));
+                                            }
                                         }
                                     }
                                 }
@@ -218,7 +238,9 @@ namespace Models.CLEM.Activities
                                                         AddMalesAttributeDetails(female, controlledMating.SireAttributes);
 
                                                     // report conception status changed
-                                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
+                                                    conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate);
+                                                    female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                                                    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
                                                     // check for perenatal mortality
                                                     for (int j = i; j < monthsAgoStop; j++)
@@ -232,8 +254,12 @@ namespace Models.CLEM.Activities
                                                             {
                                                                 female.OneOffspringDies();
                                                                 if (female.NumberOfOffspring == 0)
+                                                                {
                                                                     // report conception status changed when last multiple birth dies.
-                                                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
+                                                                    conceptionArgs.Update(ConceptionStatus.Failed, female, lossDate);
+                                                                    female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                                                                    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -290,8 +316,12 @@ namespace Models.CLEM.Activities
                     {
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
+                        {
                             // report conception status changed when last multiple birth dies.
-                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, clock.Today));
+                            conceptionArgs.Update(ConceptionStatus.Failed, female, clock.Today);
+                            female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                            //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
+                        }
                     }
                 }
 
@@ -325,7 +355,10 @@ namespace Models.CLEM.Activities
                         // add to sucklings
                         female.SucklingOffspringList.Add(newSucklingRuminant);
                         // this now reports for each individual born not a birth event as individual wean events are reported
-                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, clock.Today));
+
+                        conceptionArgs.Update(ConceptionStatus.Birth, female, clock.Today);
+                        female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                        //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, clock.Today));
                     }
                     female.UpdateBirthDetails();
                     this.Status = ActivityStatus.Success;
@@ -353,7 +386,11 @@ namespace Models.CLEM.Activities
                 // identify not ready for reporting and tracking
                 var notReadyBreeders = herd.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsBreeder && !a.IsAbleToBreed && !a.IsPregnant);
                 foreach (RuminantFemale female in notReadyBreeders)
-                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, clock.Today));
+                {
+                    conceptionArgs.Update(ConceptionStatus.NotReady, female, clock.Today);
+                    female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, clock.Today));
+                }
 
                 int numberPossible = breeders.Sum(a => a.Count());
                 int numberServiced = 1;
@@ -451,8 +488,11 @@ namespace Models.CLEM.Activities
                         // report change in breeding status
                         // do not report for -1 (controlled mating outside timing)
                         if (numberPossible >= 0 && status != Reporting.ConceptionStatus.NotAvailable)
-                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(status, female, clock.Today));
-
+                        {
+                            conceptionArgs.Update(ConceptionStatus.NotAvailable, female, clock.Today);
+                            female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                            //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(status, female, clock.Today));
+                        }
                         cnt++;
                     }
 

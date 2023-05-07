@@ -389,7 +389,19 @@ namespace APSIM.Shared.Utilities
             }
             //will I ever hit this without having any data???
 
-            return data;
+            if (data != null)
+            {
+                //the excel to table function will not set the column caption
+                //so we do it here manually, otherwise it's just called 'column1' etc
+                for (int i = 0; i < data.Columns.Count; i++)
+                {
+                    data.Columns[i].Caption = data.Columns[i].ColumnName;
+                }
+                return data;
+            } else
+            {
+                throw new Exception("Error converting excel data to table");
+            }
         }
 
 
@@ -909,6 +921,10 @@ namespace APSIM.Shared.Utilities
                             value = coltext1.Substring(posEquals + 1).Trim();
                             if (name != "Title")
                                 unit = StringUtilities.SplitOffBracketedValue(ref value, '(', ')');
+
+                            //Replace , notation with . in case they are inputting data from another region
+                            value = value.Replace(",", ".");
+
                             _Constants.Add(new ApsimConstant(name, value, unit, comment));
                         }
                         resultDt.Rows[rowCount].Delete();
@@ -934,6 +950,10 @@ namespace APSIM.Shared.Utilities
                             comment = StringUtilities.SplitOffAfterDelimiter(ref coltext3, "!");
                             comment.Trim();
                         }
+
+                        //Replace , notation with . in case they are inputting data from another region
+                        value = value.Replace(",", ".");
+
                         _Constants.Add(new ApsimConstant(name, value, unit, comment));
                         resultDt.Rows[rowCount].Delete();
                     }

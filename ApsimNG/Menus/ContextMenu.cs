@@ -810,7 +810,11 @@
                     var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
                     hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = hidden; 
+                    {
+                        child.IsHidden = hidden;
+                        if (isResource && !(child is Models.PMF.Cultivar))
+                            child.ReadOnly = true;
+                    }
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);
@@ -884,10 +888,15 @@
                 IModel model = explorerPresenter.CurrentNode as IModel;
                 if (model == null)
                     return;
-                
+
                 // Don't allow users to change read-only status of released models.
-                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
+                if (!string.IsNullOrEmpty(model.ResourceName))
                     return;
+
+                // Don't allow users to change read-only status resource children, except for Cultivars
+                if ((model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName))) && !(model is Models.PMF.Cultivar))
+                    return;
+                    
 
                 bool readOnly = !model.ReadOnly;
                 List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
@@ -965,11 +974,32 @@
                 explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                IModel modelToDocument = explorerPresenter.CurrentNode.Clone();
-                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                IModel currentN = explorerPresenter.CurrentNode;
+                IModel modelToDocument;
+
+                if (currentN is Models.Graph || currentN is Simulation)
+                    modelToDocument = currentN;
+                else
+                {
+                    modelToDocument = currentN.Clone();
+                    explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                }               
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+
+                //if filename is null, prompt user to save the file
+                if (fileNameWritten == null)
+                {
+                    explorerPresenter.Save();
+                    fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+                }
+                //check if filename is still null (user didn't save) and throw a useful exception
+                if (fileNameWritten == null)
+                {
+                    throw new Exception("You must save this file before documentation can be created");
+                }
+
                 pdf.Write(fileNameWritten, modelToDocument.Document());
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
