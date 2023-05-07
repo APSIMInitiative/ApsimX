@@ -253,8 +253,7 @@
                 0.46,
                 0.44
               ],
-              "InitialPAWmm": 400.5,
-              "RelativeTo": "LL15",
+              "RelativeTo": null,
               "FilledFromTop": false,
               "Name": "Water",
               "ResourceName": null,
@@ -640,8 +639,7 @@
                 0.169,
                 0.196
               ],
-              "InitialPAWmm": 61.499999999999986,
-              "RelativeTo": "LL15",
+              "RelativeTo": null,
               "FilledFromTop": false,
               "Name": "Water",
               "ResourceName": null,
@@ -902,7 +900,7 @@
                         "[Soil].SoilWater.Runoff",
                         "[Soil].SoilWater.Drainage",
                         "sum([Soil].NO3.kgha)",
-                        "sum([Soil].Nutrient.MineralisedN",
+                        "sum([Soil].SoilNitrogen.MineralisedN",
                         "[SurfaceOrganicMatter].Wt",
                         "[SurfaceOrganicMatter].Cover"
                       ],
@@ -1197,7 +1195,6 @@
                             0.28,
                             0.28
                           ],
-                          "InitialPAWmm": 40.05,
                           "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
@@ -1667,7 +1664,7 @@
                         "[Soil].SoilWater.Runoff",
                         "[Soil].SoilWater.Drainage",
                         "sum([Soil].NO3.kgha)",
-                        "sum([Soil].Nutrient.MineralisedN",
+                        "sum([Soil].SoilNitrogen.MineralisedN",
                         "[SurfaceOrganicMatter].Wt",
                         "[SurfaceOrganicMatter].Cover"
                       ],
@@ -1911,7 +1908,6 @@
                             0.14,
                             0.14
                           ],
-                          "InitialPAWmm": 6.199999999999999,
                           "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
@@ -2356,7 +2352,7 @@
               "LegendPosition": 0,
               "LegendOrientation": 0,
               "AnnotationLocation": 0,
-              "DisabledSeries": [],
+              "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "Runoff",
               "ResourceName": null,
@@ -2447,7 +2443,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "Descriptors": null,
-              "Name": "Clay Fallow 2",
+              "Name": "Clay Fallow",
               "ResourceName": null,
               "Children": [
                 {
@@ -2499,7 +2495,7 @@
                         "[Soil].SoilWater.Runoff",
                         "[Soil].SoilWater.Drainage",
                         "sum([Soil].NO3.kgha)",
-                        "sum([Soil].Nutrient.MineralisedN",
+                        "sum([Soil].SoilNitrogen.MineralisedN",
                         "[SurfaceOrganicMatter].Wt",
                         "[SurfaceOrganicMatter].Cover"
                       ],
@@ -2794,7 +2790,6 @@
                             0.28,
                             0.28
                           ],
-                          "InitialPAWmm": 40.05,
                           "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
@@ -3169,7 +3164,7 @@
                         "[Soil].SoilWater.Runoff",
                         "[Soil].SoilWater.Drainage",
                         "sum([Soil].NO3.kgha)",
-                        "sum([Soil].Nutrient.MineralisedN",
+                        "sum([Soil].SoilNitrogen.MineralisedN",
                         "[SurfaceOrganicMatter].Wt",
                         "[SurfaceOrganicMatter].Cover"
                       ],
@@ -3464,7 +3459,6 @@
                             0.28,
                             0.28
                           ],
-                          "InitialPAWmm": 40.05,
                           "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
@@ -4049,7 +4043,7 @@
                         "sum([Soil].SoilWater.ESW)",
                         "sum([Soil].NO3.kgha) as NO3Total",
                         "sum([Soil].NH4.kgha) as NH4Total",
-                        "sum([Soil].Nutrient.DenitrifiedN) as Denitrification"
+                        "sum([Soil].SoilNitrogen.Denitrification) as Denitrification"
                       ],
                       "EventNames": [
                         "[Clock].EndOfDay"
@@ -4232,7 +4226,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "WheatSoil",
+                              "Name": "SoilCropSoil",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4270,7 +4264,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "BarleySoil",
+                              "Name": "SoilCropSoil",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4342,7 +4336,6 @@
                             0.37,
                             0.36
                           ],
-                          "InitialPAWmm": 200.24999999999994,
                           "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
@@ -4896,7 +4889,7 @@
                         "[Wheat].Grain.Wt",
                         "[Wheat].Grain.N",
                         "[Wheat].Total.Wt",
-                        "sum([Soil].Nutrient.TotalC)/1000 as SoilCtpha"
+                        "sum([Soil].SoilNitrogen.TotalC)/1000 as SoilCtpha"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -5226,8 +5219,7 @@
                             0.457070570557793,
                             0.452331759845006
                           ],
-                          "InitialPAWmm": 361.2454283127387,
-                          "RelativeTo": "LL15",
+                          "RelativeTo": null,
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -5582,7 +5574,7 @@
                         "[Wheat].Grain.Wt",
                         "[Wheat].Grain.N",
                         "[Wheat].Total.Wt",
-                        "sum([Soil].Nutrient.TotalC)/1000 as SoilCtpha"
+                        "sum([Soil].SoilNitrogen.TotalC)/1000 as SoilCtpha"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -5912,8 +5904,7 @@
                             0.457070570557793,
                             0.452331759845006
                           ],
-                          "InitialPAWmm": 361.2454283127387,
-                          "RelativeTo": "LL15",
+                          "RelativeTo": null,
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -6258,7 +6249,7 @@
                         "[Wheat].Grain.Wt",
                         "[Wheat].Grain.N",
                         "[Wheat].Total.Wt",
-                        "sum([Soil].Nutrient.TotalC)/1000 as SoilCtpha"
+                        "sum([Soil].SoilNitrogen.TotalC)/1000 as SoilCtpha"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -6588,8 +6579,7 @@
                             0.457070570557793,
                             0.452331759845006
                           ],
-                          "InitialPAWmm": 361.2454283127387,
-                          "RelativeTo": "LL15",
+                          "RelativeTo": null,
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,

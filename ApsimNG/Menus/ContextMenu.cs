@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using UserInterface.Commands;
-using Models;
-using Models.Core;
-using Models.Factorial;
-using Models.Soils;
-using APSIM.Shared.Utilities;
-using Models.Storage;
-using Utility;
-using Models.Core.ApsimFile;
-using Models.Core.Run;
-using System.Reflection;
-using System.Linq;
-using System.Text;
-using Models.Functions;
-using Models.Climate;
-using APSIM.Interop.Documentation;
-using System.Threading.Tasks;
-using System.Threading;
-using APSIM.Server.Sensibility;
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Diagnostics;
+    using System.IO;
+    using Commands;
+    using Models;
+    using Models.Core;
+    using Models.Factorial;
+    using Models.Soils;
+    using APSIM.Shared.Utilities;
+    using Models.Storage;
+    using Utility;
+    using Models.Core.ApsimFile;
+    using Models.Core.Run;
+    using System.Reflection;
+    using System.Linq;
+    using System.Text;
+    using Models.Functions;
+    using Models.GrazPlan;
+    using Models.Climate;
+    using APSIM.Interop.Markdown.Renderers;
+    using APSIM.Interop.Documentation;
+    using System.Threading.Tasks;
+    using System.Threading;
+    using APSIM.Server.Sensibility;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -454,7 +455,7 @@ namespace UserInterface.Presenters
                 string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
 
                 string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
-                                 $"[Link(Type=LinkType.Path, Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
+                                 $"[Link(Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
 
                 explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
             }
@@ -806,19 +807,10 @@ namespace UserInterface.Presenters
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
-                    //check if model is from a resource, if so, set all children to read only
-                    bool isResource = false;
-                    if (!string.IsNullOrEmpty(model.ResourceName))
-                        isResource = true;
-
                     var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
                     hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                    {
-                        child.IsHidden = hidden;
-                        if (isResource)
-                            child.ReadOnly = true;
-                    }
+                        child.IsHidden = hidden; 
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);
@@ -1058,27 +1050,5 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
-        [ContextMenu(MenuName = "Compile Script",
-                     ShortcutKey = "",
-                     FollowsSeparator = true,
-                     AppliesTo = new[] { typeof(Manager) })]
-        public void OnCompileScript(object sender, EventArgs e)
-        {
-            try
-            {
-                Manager model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Manager;
-                if (model != null)
-                {
-                    model.RebuildScriptModel();
-                    explorerPresenter.MainPresenter.ShowMessage("\"" + model.Name + "\" compiled successfully", Simulation.MessageType.Information);
-                }
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
     }
 }

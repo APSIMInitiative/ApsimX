@@ -22,9 +22,6 @@ namespace Models.Core
         [NonSerialized]
         private IModel modelParent;
 
-        private bool _enabled = true;
-        private bool _isCreated = false;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Model" /> class.
         /// </summary>
@@ -74,21 +71,7 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets whether the model is enabled
         /// </summary>
-        public bool Enabled
-        {
-            get
-            {
-                return _enabled;
-            }
-            set
-            {
-                _enabled = value;
-                // enable / disable our children if serialisation has completed.
-                if (_isCreated)
-                    foreach (var child in Children)
-                        child.Enabled = _enabled;  
-            }
-        }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Controls whether the model can be modified.
@@ -461,7 +444,6 @@ namespace Models.Core
         /// </summary>
         public virtual void OnCreated()
         {
-            _isCreated = true;
             // Check for duplicate child models (child models with the same name).
             // First, group children according to their name.
             IEnumerable<IGrouping<string, IModel>> groups = Children.GroupBy(c => c.Name);

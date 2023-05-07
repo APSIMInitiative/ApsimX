@@ -104,6 +104,7 @@ namespace UserInterface.Views
             if (cr != null)
                 Sheet.Initialise(new CairoContext(cr, this));
 
+            GrabFocus();
         }
 
         protected override void OnSizeAllocated(Gdk.Rectangle allocation)
