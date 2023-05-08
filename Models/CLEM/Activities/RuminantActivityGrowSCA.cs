@@ -17,8 +17,8 @@ namespace Models.CLEM.Activities
     /// <summary>This activity determines potential intake for the Feeding activities and feeding arbitrator for all ruminants</summary>
     /// <summary>This activity includes deaths</summary>
     /// <summary>See Breed activity for births, suckling mortality etc</summary>
-    /// <version>1.1</version>
-    /// <updates>First implementation of this activity using IAT/NABSA processes</updates>
+    /// <version>2.0</version>
+    /// <updates>This version is consistent with SCA Feeding Standards of Doemesticated Ruminants</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -26,11 +26,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Performs growth and aging of all ruminants. Only one instance of this activity is permitted")]
-    [Version(1, 0, 3, "Allows selection of methane store for emissions")]
-    [Version(1, 0, 2, "Improved reporting of milk status")]
-    [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
-    public class RuminantActivityGrow : CLEMActivityBase
+    [Version(2, 0, 1, "Updated to full SCA compliance")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowSCA.htm")]
+    public class RuminantActivityGrowSCA : CLEMActivityBase
     {
         [Link]
         private Clock clock = null;
@@ -48,11 +46,6 @@ namespace Models.CLEM.Activities
         public string MethaneStoreName { get; set; }
 
         /// <summary>
-        /// Gross Energy of feed (Style used in IAT/NABSA) hrowth section only
-        /// </summary>
-        public double EnergyGross { get; set; } = 19.6;
-
-        /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
         [JsonIgnore]
@@ -61,7 +54,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantActivityGrow()
+        public RuminantActivityGrowSCA()
         {
             this.SetDefaults();
         }
@@ -116,16 +109,16 @@ namespace Models.CLEM.Activities
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            foreach (var ind in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
+            foreach (var groupInd in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
             {
-                foreach (var indi in ind)
+                foreach (var ind in groupInd)
                 {
                     // reset tallies at start of the month
-                    indi.DietDryMatterDigestibility = 0;
-                    indi.PercentNOfIntake = 0;
-                    indi.Intake = 0;
-                    indi.MilkIntake = 0;
-                    CalculatePotentialIntake(indi);
+                    ind.DietDryMatterDigestibility = 0;
+                    ind.PercentNOfIntake = 0;
+                    ind.Intake = 0;
+                    ind.MilkIntake = 0;
+                    CalculatePotentialIntake(ind);
                 }
             }
         }
@@ -393,10 +386,9 @@ namespace Models.CLEM.Activities
             if(manureStore!=null)
             {
                 // sort by animal location
-                foreach (var item in ruminantHerd.Herd.GroupBy(a => a.Location))
+                foreach (var groupInds in ruminantHerd.Herd.GroupBy(a => a.Location))
                 {
-                    double manureProduced = item.Sum(a => a.Intake * ((100 - a.DietDryMatterDigestibility) / 100));
-                    manureStore.AddUncollectedManure(item.Key??"", manureProduced);
+                    manureStore.AddUncollectedManure(groupInds.Key??"", groupInds.Sum(a => a.Intake * ((100 - a.DietDryMatterDigestibility) / 100)));
                 }
             }
         }
