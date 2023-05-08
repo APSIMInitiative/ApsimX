@@ -807,6 +807,12 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+
+                    //check if model is from a resource, if so, set all children to read only
+                    bool isResource = false;
+                    if (!string.IsNullOrEmpty(model.ResourceName))
+                        isResource = true;
+
                     var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
                     hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
