@@ -3,9 +3,6 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using APSIM.Shared.Utilities;
@@ -48,7 +45,7 @@ namespace Models.CLEM
         /// Maximum value possible
         /// </summary>
         [Description("Maximum running value possible")]
-        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
+        [Required, GreaterThanEqual("Minimum", ErrorMessage = "Maximum value must be greater than or equal to minimum value")]
         public double Maximum { get; set; }
 
         /// <summary>

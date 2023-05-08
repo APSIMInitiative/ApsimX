@@ -144,6 +144,9 @@ namespace Models.Surface
         /// <summary>This event is invoked to signal soil nitrogen to incorporate FOM</summary>
         public event FOMPoolDelegate IncorpFOMPool;
 
+        /// <summary>This event is invoked when residues are incorperated</summary>
+        public event EventHandler<TilledType> Tilled;
+
         /// <summary>
         /// Number of pools into which carbon is grouped.
         /// Currently there are three, indexed as follows:
@@ -377,6 +380,14 @@ namespace Models.Surface
         public void Incorporate(double fraction, double depth, bool doOutput = true)
         {
             Incorp(fraction, depth);
+
+            if (Tilled != null)
+            {
+                TilledType tilled = new TilledType();
+                tilled.Fraction = fraction;
+                tilled.Depth = depth;
+                Tilled.Invoke(this, tilled);
+            }
 
             if (doOutput)
                 summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +

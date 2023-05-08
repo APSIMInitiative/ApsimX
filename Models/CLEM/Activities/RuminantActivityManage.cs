@@ -1882,7 +1882,7 @@ namespace Models.CLEM.Activities
                         {
                             htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameBreeders + "</span>");
                             if (MinimumPastureBeforeRestock > 0)
-                                htmlWriter.Write(" with no restocking while pasture is below <span class=\"setvalue\">" + MinimumPastureBeforeRestock.ToString() + "</span> kg/ha");
+                                htmlWriter.Write($" with no restocking while pasture is below <span class=\"setvalue\">{MinimumPastureBeforeRestock}</span> kg/ha");
                         }
                         htmlWriter.Write("</div>");
 
@@ -1945,7 +1945,7 @@ namespace Models.CLEM.Activities
                         {
                             htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameSires + "</span>");
                             if (MinimumPastureBeforeRestock > 0)
-                                htmlWriter.Write(" with no restocking while pasture is below <span class=\"setvalue\">" + MinimumPastureBeforeRestock.ToString() + "</span> kg/ha");
+                                htmlWriter.Write($" with no restocking while pasture is below <span class=\"setvalue\">{MinimumPastureBeforeRestock}</span> kg/ha");
                         }
                     }
                     else

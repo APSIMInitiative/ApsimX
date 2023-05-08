@@ -6786,6 +6786,18 @@ namespace Models.Soils
     }
 
     /// <summary>
+    /// TilledType
+    /// </summary>
+    [Serializable]
+    public class TilledType : EventArgs
+    {
+        /// <summary>The fraction</summary>
+        public double Fraction;
+        /// <summary>The depth</summary>
+        public double Depth;
+    }
+
+    /// <summary>
     /// SurfaceOrganicMatterDecompPoolType
     /// </summary>
     [Serializable]

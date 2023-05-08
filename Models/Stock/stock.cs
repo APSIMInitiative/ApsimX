@@ -3841,7 +3841,8 @@ namespace Models.GrazPlan
         /// <param name="age">The age of animals (months)</param>
         /// <param name="weight">The weight of animals (kg)</param>
         /// <param name="fleeceWeight">The fleece weight of animals (kg)</param>
-        public void Buy(string genotype, double number, ReproductiveType sex, double age, double weight, double fleeceWeight)
+		/// <param name="tag">Tag number of animal groups </param>
+        public void Buy(string genotype, double number, ReproductiveType sex, double age, double weight, double fleeceWeight, int tag = 0)
         {
             StockBuy stock = new StockBuy();
             stock.Genotype = genotype;
@@ -3850,6 +3851,7 @@ namespace Models.GrazPlan
             stock.Age = age;
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
+			stock.UseTag = tag;
             outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ", MessageType.Diagnostic);
             StockModel.Buy(stock);
         }
