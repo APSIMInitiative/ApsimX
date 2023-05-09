@@ -1,0 +1,14 @@
+name: "\U00002753 Question"
+description: Do you have a question about this project
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: "If your question relates to a crop model, please mention which one you are using"
+  - type: textarea
+    id: question-area
+    attributes:
+      label: What is your question?
+      placeholder: Write Message and Upload Files Here
+    validations:
+      required: true
