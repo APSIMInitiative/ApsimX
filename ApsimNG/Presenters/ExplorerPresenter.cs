@@ -87,6 +87,9 @@ namespace UserInterface.Presenters
         /// To be revised if we want to replicate the Windows.Forms version
         public MainPresenter MainPresenter { get; private set; }
 
+        /// <summary>
+        /// Used for holding the column and row filter strings from a reports' datastore view.
+        /// </summary>
         private List<string> tempColumnAndRowFilters = new();
 
         /// <summary>Gets the current right hand presenter.</summary>
