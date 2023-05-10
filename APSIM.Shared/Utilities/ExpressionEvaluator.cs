@@ -1029,6 +1029,12 @@ namespace APSIM.Shared.Utilities
                         result.m_name = name;
                         result.m_values = null;
                     }
+                    else if (args.Length == 2)
+                    {
+                        result.m_value = Math.Min(((Symbol)args[0]).m_value, ((Symbol)args[1]).m_value);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
                     else
                     {
                         result.m_name = "Invalid number of parameters in: " + name + ".";
@@ -1041,6 +1047,12 @@ namespace APSIM.Shared.Utilities
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
                         result.m_value = MathUtilities.Max(Values);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else if (args.Length == 2)
+                    {
+                        result.m_value = Math.Max(((Symbol)args[0]).m_value, ((Symbol)args[1]).m_value);
                         result.m_name = name;
                         result.m_values = null;
                     }
