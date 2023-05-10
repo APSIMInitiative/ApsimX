@@ -4,7 +4,7 @@ labels: ["question"]
 body:
   - type: markdown
     attributes:
-      value: "If your question relates to a crop model, please mention which one you are using"
+      value: "Provide context about what your question applies to (Crop, Stock, Pasture, Swim3, CLEM etc) and any related files that can can inform us"
   - type: textarea
     id: question-area
     attributes:
