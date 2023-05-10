@@ -70,6 +70,11 @@ namespace Models.Soils
         [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
+        /// <summary> Values converted to alternative units.</summary>
+        [Summary]
+        [Display(Format = "N3")]
+        public double[] InitialValuesConverted { get { return SoilUtilities.ppm2kgha(Physical.Thickness, Physical.BD, ppm); } }
+
         /// <summary>Units of the Initial values.</summary>
         public UnitsEnum InitialValuesUnits { get; set; }
 
