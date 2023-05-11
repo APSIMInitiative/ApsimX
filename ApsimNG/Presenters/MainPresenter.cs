@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
 using Models.Core;
+using UserInterface.Views;
 using System.Linq;
+using UserInterface.EventArguments;
 using Utility;
 using Models.Core.ApsimFile;
 using Models.Core.Apsim710File;
-using UserInterface.Views;
-using UserInterface.Interfaces;
-using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
+
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
     /// which is a tab control where each tabs represent an .apsimx file. Each tab

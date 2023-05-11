@@ -1,4 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
@@ -86,6 +88,11 @@ namespace UserInterface.Presenters
         /// <summary>Gets the presenter for the main window</summary>
         /// To be revised if we want to replicate the Windows.Forms version
         public MainPresenter MainPresenter { get; private set; }
+
+        /// <summary>
+        /// Used for holding the column and row filter strings from a reports' datastore view.
+        /// </summary>
+        private List<string> tempColumnAndRowFilters = new();
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
@@ -831,6 +838,17 @@ namespace UserInterface.Presenters
         public ViewBase GetView()
         {
             return this.view as ExplorerView;
+        }
+        
+        public void KeepFilter(string columnFilters, string rowFilters)
+        {
+            tempColumnAndRowFilters.Add(columnFilters);
+            tempColumnAndRowFilters.Add(rowFilters);
+        }
+
+        public List<string> GetFilters()
+        {
+            return tempColumnAndRowFilters;
         }
 
         #region Events from view
