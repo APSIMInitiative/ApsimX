@@ -1,19 +1,19 @@
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
+using System;
+using APSIM.Shared.Documentation;
+using System.Linq;
+using System.Collections.Generic;
+using System.Data;
+using Newtonsoft.Json;
+using System.Globalization;
+
 namespace Models.PMF
 {
-    using Models.Core;
-    using Models.Functions;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Models.PMF.Phen;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
-    using System.Globalization;
 
     /// <summary>
     /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This

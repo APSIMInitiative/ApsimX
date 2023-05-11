@@ -72,7 +72,7 @@ namespace Models.WaterModel
         /// Called at the start of every day.
         /// </summary>
         [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation()
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             // If our cumulated rainfall has reached our target then reset everything
             // so that there won't be a continued reduction in curve number.

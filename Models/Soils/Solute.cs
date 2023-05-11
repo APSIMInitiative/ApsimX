@@ -1,16 +1,14 @@
-﻿
+﻿using Models.Core;
+using Models.Interfaces;
+using System;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using System.Linq;
 
 namespace Models.Soils
 {
-    using Core;
-    using Interfaces;
-    using System;
-    using APSIM.Shared.Utilities;
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using APSIM.Shared.Documentation;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.
