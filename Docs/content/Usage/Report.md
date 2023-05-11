@@ -44,5 +44,22 @@ Clock.Today
 ``` 
 Wheat.AboveGround.Wt.
 ```
+### Multiple columns
+It's possible to have all fields that contain a common keyword to be displayed.
 
-Note: Only one column filter can used at one time.
+If your report variables have many child properties you can use the name of the parent to filter all columns that contain the parent's name.
+
+An example:
+
+```
+Wheat
+```
+
+![report variables](/images/report-vars.png)
+*Report variables in the simulation:*
+
+
+![column filter results](/images/report-column-filter-result.png)
+*Results of using a common keyword*
+
+Note: Only one column filter can be used at one time.
