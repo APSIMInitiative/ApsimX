@@ -149,7 +149,7 @@ namespace UserInterface.Presenters
             // Keep the column and row filters
             explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters); 
             temporaryRowFilters = rowFilterEditBox.Text;
-            tableDropDown.Changed -= OnTableSelected;
+            TableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
             rowFilterEditBox.Leave -= OnColumnFilterChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;

@@ -10,8 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using UserInterface.Commands;
-using UserInterface.Interfaces;
 using UserInterface.Views;
 using Utility;
 
@@ -92,7 +90,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Used for holding the column and row filter strings from a reports' datastore view.
         /// </summary>
-        private List<string> tempColumnAndRowFilters = new();
+        private List<string> tempColumnAndRowFilters = new List<string>();
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
