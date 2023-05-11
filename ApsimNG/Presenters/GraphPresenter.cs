@@ -137,8 +137,19 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                foreach (APSIM.Shared.Graphing.Axis a in graph.Axis)
-                    FormatAxis(a);
+                const double tolerance = 0.00001f;
+                for (int i = 0; i < graph.Axis.Count(); i++)
+                {
+                    var axis = graph.Axis[i];
+                    axis.Minimum = graphView.AxisMinimum(axis.Position) - tolerance;
+                    axis.Maximum = graphView.AxisMaximum(axis.Position) + tolerance;
+                    if (axis.Maximum - axis.Minimum < tolerance)
+                    {
+                        axis.Minimum -= tolerance/2;
+                        axis.Maximum += tolerance/2;
+                    }
+                    FormatAxis(axis);
+                }
 
                 // Get a list of series annotations.
                 DrawOnView(graph.GetAnnotationsToGraph());
