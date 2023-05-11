@@ -69,8 +69,6 @@ Simulation,1,16.000,1,Current,8,Zone
 Simulation,1,18.000,1,Current,9,Zone
 Simulation,1,20.000,1,Current,10,Zone
 ";
-            Console.WriteLine(expected);
-            Console.WriteLine(csvData);
             Assert.AreEqual(expected, csvData);
         }
 

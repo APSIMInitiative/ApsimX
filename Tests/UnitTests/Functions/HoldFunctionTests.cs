@@ -98,9 +98,17 @@ namespace UnitTests.Functions
 
             Utilities.CallEvent(f.Children[1].Children[0], "Commencing", new object[] { this, new EventArgs() });
 
-            (f.Children[0] as MockFunctionThatThrows).DoThrow = true;
-            Utilities.CallEvent(f, "Commencing", new object[] { this, new EventArgs() });
-            Assert.AreEqual(f.Value(), 0);
+            try
+            {
+                (f.Children[0] as MockFunctionThatThrows).DoThrow = true;
+                Utilities.CallEvent(f, "Commencing", new object[] { this, new EventArgs() });
+                Assert.Fail();
+            }
+            catch
+            {
+                Assert.AreEqual(f.Value(), 0);
+            }
+            
 
             (f.Children[0] as MockFunctionThatThrows).DoThrow = false;
             Utilities.CallEvent(f, "DoUpdate", new object[] { this, new EventArgs() });
