@@ -61,7 +61,8 @@ namespace Models.Core.ApsimFile
                         throw new Exception("Cannot find converter to go to version " + versionFunction);
 
                     // Found converter method so call it.
-                    method.Invoke(null, new object[] { rootNode, fileName });
+                    //method.Invoke(null, new object[] { rootNode, fileName });
+                    method.Invoke(null, new object[] { rootNode});
 
                     fileVersion++;
                 }

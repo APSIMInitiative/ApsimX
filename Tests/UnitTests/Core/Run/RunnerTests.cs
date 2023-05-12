@@ -788,7 +788,7 @@ namespace UnitTests.Core.Run
             File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), FileFormat.WriteToString(simulations));
 
             var runner = new Runner(Path.Combine(path, "*.apsimx"));
-            runner.Run();
+            runner.Run(); // doesn't look to be running the apsimx files 
 
             // Check simulation 1 database
             database = new SQLite();

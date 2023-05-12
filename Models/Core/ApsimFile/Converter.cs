@@ -82,8 +82,19 @@ namespace Models.Core.ApsimFile
 
                     // Found converter method so call it.
                     //method.Invoke(null, new object[] { returnData.Root, fileName });
-                    method.Invoke(null, new object[] { returnData.Root});
-
+                    if (method.Name == "UpgradeToVersion47")
+                    {
+                        method.Invoke(null, null);
+                    }
+                    else if (method.Name == "UpgradeToVersion85") 
+                    { 
+                        method.Invoke(null, new object[] { "" }); 
+                    }
+                    else 
+                    { 
+                        method.Invoke(null, new object[] { returnData.Root }); 
+                    }
+                    
                     fileVersion++;
                 }
 
