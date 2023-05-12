@@ -78,8 +78,8 @@ namespace UnitTests.APSIMShared
         /// <param name="input">Input string.</param>
         /// <param name="seekPosition">Position to seek to.</param>
         /// <param name="expectedPosition">Expected position after the seek.</param>
-        [TestCase("asdf\nasdf", 5, SeekOrigin.Begin, 5)]
-        [TestCase("asdf\nasdf", 1, SeekOrigin.End, 1)]
+        [TestCase("asdf\nasdf", 5, 5)]
+        [TestCase("asdf\nasdf", 1, 1)]
         public void TestPositionAfterSeek(string input, int seekPosition, int expectedPosition)
         {
             using (Stream stream = CreateStream(input))
