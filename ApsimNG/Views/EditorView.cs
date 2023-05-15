@@ -9,6 +9,7 @@ using System.Text;
 using UserInterface.Interfaces;
 using UserInterface.EventArguments;
 using UserInterface.Intellisense;
+using FontDescription = Pango.FontDescription;
 
 namespace UserInterface.Views
 {
@@ -368,6 +369,7 @@ namespace UserInterface.Views
 
             textEditor.Realized += OnRealized;
             IntelliSenseChars = ".";
+            ModifyFont(Utility.Configuration.Settings.EditorFontName);
         }
 
         /// <summary>
@@ -604,6 +606,28 @@ namespace UserInterface.Views
         {
             //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
             textEditor.QueueDraw();
+        }
+
+        /// <summary>
+        /// Alters the editor's font.
+        /// </summary>
+        /// <param name="font">The font name and point size.</param>
+        public void ModifyFont(string font)
+        {
+            using var fd = FontDescription.FromString(font);
+            var sizePt = fd.SizeIsAbsolute ? fd.Size : Convert.ToInt32(fd.Size / Pango.Scale.PangoScale);
+            var css = @$"* {{
+                font-family: {fd.Family};
+                font-size: {sizePt}pt;
+                font-style: {fd.Style};
+                font-variant: {fd.Variant};
+                font-weight: {fd.Weight};
+                font-stretch: {fd.Stretch};
+            }}";
+            using var provider = new CssProvider();
+            if (!provider.LoadFromData(css))
+                throw new Exception($"Unable to load font {font}");
+            textEditor.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
         }
 
         /// <summary>
