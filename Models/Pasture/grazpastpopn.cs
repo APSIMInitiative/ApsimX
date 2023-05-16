@@ -4363,7 +4363,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Fertility scalar for Simple nutrient model
         /// </summary>
         /// <param name="value"></param>
         public void SetFertility(double value)

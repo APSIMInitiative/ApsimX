@@ -10,7 +10,7 @@
     using static Models.GrazPlan.PastureUtil;
 
     /// <summary>
-    /// 
+    /// The soil interface for the Pasture model
     /// </summary>
     [Serializable]
     public class TSoilInstance : Core.Model
@@ -62,7 +62,7 @@
 
 
     /// <summary>
-    /// # Pasture class that models temperate pastures
+    /// # Pasture class that models temperate Australian pastures
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.MarkdownView")]
@@ -87,7 +87,6 @@
         private double FFieldArea;
         private double FHarvestHeight;
         private int FToday;             // StdDate.Date
-        private double FFertility;
         private double FIntercepted;
         private double[] FLightAbsorbed = new double[GrazType.stSENC + 1];      // [stSEEDL..stSENC] - [1..3]
         private double[][] FSoilPropn = new double[GrazType.stSENC + 1][];      // [stSEEDL..stSENC] - [1..3][1..]
@@ -101,10 +100,11 @@
         private bool FBiomassRemovedFound;
         private bool FWaterValueReqd;
 
+        // Stages within the timestep
         public const int evtINITSTEP = 1;
         public const int evtWATER = 2;
         public const int evtGROW = 3;
-        public const int evtENDSTEP = 4;
+        public const int evtENDSTEP = 4; 
 
         #region Class links
         /// <summary>
@@ -149,7 +149,7 @@
         {
             FInputs = new TPastureInputs();
 
-            FLightAllocated = false;
+            FLightAllocated = false;    // default to no other plant populations present
             FWaterAllocated = false;
             FSoilAllocated = false;
 
@@ -2021,74 +2021,8 @@
 
             // =========================================================
 
-            FWeather = new TWeatherHandler();
-            PastureModel = new TPasturePopulation();
-            PastureModel.MassUnit = "g/m^2";
-
-            // required at initialisation
-            FWeather.fLatDegrees = locWtr.Latitude;                             // Location. South is -ve
-            SetLayerProfile(soilPhysical.Thickness);                            // Layers
-            Value2LayerArray(soilPhysical.BD, ref F_BulkDensity);               // Soil bulk density profile Mg/m^3
-            Value2LayerArray(soilPhysical.DUL, ref F_DUL);                      // Profile of water content at drained upper limit
-            Value2LayerArray(soilPhysical.LL15, ref F_LL15);                    // Profile of water content at (soil) lower limit
-            Value2LayerArray(soilPhysical.ParticleSizeSand, ref F_SandPropn);   // Sand content profile //// TODO: check this
-
-            // Light interception profiles of plant populations
-            LightProfile lightProfile = null;       //// TODO: populate this light profile from the allocator (paddock)
-            storeLightPropn(lightProfile);
-
-            FWaterValueReqd = false;
-
-            // Water uptake by plant populations from the allocator (paddock)
-            WaterUptake[] water = null;     //// TODO: populate this
-            storeWaterSupply(water);
-
-            //Proportion of the soil volume occupied by roots of plant populations (paddock)
-            SoilFract[] soilFract = null;       //// TODO: populate this
-            StoreSoilPropn(soilFract);
-
-            NutrAvail nutrNH4 = null;      //// TODO: populate this
-            Value2SoilNutrient(nutrNH4, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);   // Soil ammonium availability
-            // if using ppm then
-            // Value2LayerArray(aValue, ref FLayerValues);
-            // LayerArray2SoilNutrient(FLayerValues, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);
-
-            NutrAvail nutrNO3 = null;      //// TODO: populate this
-            Value2SoilNutrient(nutrNO3, ref FInputs.Nutrients[(int)TPlantNutrient.pnNO3]);   // Soil nitrate availability
-
-            this.LocateDestinations();
-
-            if (FSurfaceResidueDest != "")
-            { } // TODO: set biomassremoved to this component also
-
-            PastureModel.ReadParamsFromValues(this.Nutrients, this.Species, this.Fertility, this.MaxRtDep, this.KL, this.LL); // initialise the model with initial values
-
-            double[] fCampbell = new double[GrazType.MaxSoilLayers + 1];
-            for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
-            {
-                fCampbell[Ldx] = Math.Log(15.0 / (0.1)) / Math.Log(F_DUL[Ldx] / F_LL15[Ldx]);
-            }
-
-            if (PastureModel != null)
-            {
-                PastureModel.SetSoilParams(FLayerProfile, F_BulkDensity, F_SandPropn, fCampbell);
-                if (PastureModel.fPlant_LL[1] == 0.0)
-                {
-                    PastureModel.fPlant_LL = F_LL15;
-                }
-
-                PastureModel.ReadStateFromValues(this.LaggedDayT, this.Phenology, this.FlowerLen, this.FlowerTime, this.SencIndex, this.DormIndex, this.DormT, this.ExtinctCoeff, this.Green, this.Dry, this.Seeds, this.SeedDormTime, this.GermIndex);
-
-                FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
-            }
-
-            /* 
-            // TODO: connect these
-            if (FSoilResidueDest != "")
-                addEvent(FSoilResidueDest + ".add_fom", evtADD_FOM, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeADD_FOM, "", "", 0);
-            if ((FSurfaceResidueDest != "") && FBiomassRemovedFound)
-                addEvent(FSurfaceResidueDest + ".BiomassRemoved", evtBIOMASS_OUT, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeBIOMASSREMOVED, "", "", 0);
-             */
+            StartSimulation();
+            
         }
 
         [EventSubscribe("StartOfDay")]
@@ -2139,6 +2073,81 @@
 
         #region Private functions ============================================
 
+        /// <summary>
+        /// This responds to the OnStartOfSimulation event.
+        /// Set up the model and initial values for the pasture. 
+        /// </summary>
+        private void StartSimulation()
+        {
+            FWeather = new TWeatherHandler();
+            PastureModel = new TPasturePopulation();
+            PastureModel.MassUnit = "g/m^2";
+
+            // required at initialisation
+            FWeather.fLatDegrees = locWtr.Latitude;                             // Location. South is -ve
+            SetLayerProfile(soilPhysical.Thickness);                            // Layers
+            Value2LayerArray(soilPhysical.BD, ref F_BulkDensity);               // Soil bulk density profile Mg/m^3
+            Value2LayerArray(soilPhysical.DUL, ref F_DUL);                      // Profile of water content at drained upper limit
+            Value2LayerArray(soilPhysical.LL15, ref F_LL15);                    // Profile of water content at (soil) lower limit
+            Value2LayerArray(soilPhysical.ParticleSizeSand, ref F_SandPropn);   // Sand content profile //// TODO: check this
+
+            // Light interception profiles of plant populations
+            LightProfile lightProfile = GetLightProfile();
+            storeLightPropn(lightProfile);
+
+            FWaterValueReqd = false;
+
+            // Water uptake by plant populations from the allocator (paddock)
+            WaterUptake[] water = null;     //// TODO: populate this
+            storeWaterSupply(water);
+
+            // Proportion of the soil volume occupied by roots of plant populations (paddock)
+            SoilFract[] soilFract = GetSoilInfo();       //// TODO: populate this
+            StoreSoilPropn(soilFract);
+
+            NutrAvail nutrNH4 = null;      //// TODO: populate this
+            Value2SoilNutrient(nutrNH4, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);   // Soil ammonium availability
+            // if using ppm then
+            // Value2LayerArray(aValue, ref FLayerValues);
+            // LayerArray2SoilNutrient(FLayerValues, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);
+
+            NutrAvail nutrNO3 = null;      //// TODO: populate this
+            Value2SoilNutrient(nutrNO3, ref FInputs.Nutrients[(int)TPlantNutrient.pnNO3]);   // Soil nitrate availability
+
+            this.LocateDestinations();
+
+            if (FSurfaceResidueDest != "")
+            { } // TODO: set biomassremoved to this component also
+
+            PastureModel.ReadParamsFromValues(this.Nutrients, this.Species, this.Fertility, this.MaxRtDep, this.KL, this.LL); // initialise the model with initial values
+
+            double[] fCampbell = new double[GrazType.MaxSoilLayers + 1];
+            for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
+            {
+                fCampbell[Ldx] = Math.Log(15.0 / (0.1)) / Math.Log(F_DUL[Ldx] / F_LL15[Ldx]);
+            }
+
+            if (PastureModel != null)
+            {
+                PastureModel.SetSoilParams(FLayerProfile, F_BulkDensity, F_SandPropn, fCampbell);
+                if (PastureModel.fPlant_LL[1] == 0.0)
+                {
+                    PastureModel.fPlant_LL = F_LL15;
+                }
+
+                PastureModel.ReadStateFromValues(this.LaggedDayT, this.Phenology, this.FlowerLen, this.FlowerTime, this.SencIndex, this.DormIndex, this.DormT, this.ExtinctCoeff, this.Green, this.Dry, this.Seeds, this.SeedDormTime, this.GermIndex);
+
+                FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
+            }
+
+            /* 
+            // TODO: connect these
+            if (FSoilResidueDest != "")
+                addEvent(FSoilResidueDest + ".add_fom", evtADD_FOM, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeADD_FOM, "", "", 0);
+            if ((FSurfaceResidueDest != "") && FBiomassRemovedFound)
+                addEvent(FSurfaceResidueDest + ".BiomassRemoved", evtBIOMASS_OUT, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeBIOMASSREMOVED, "", "", 0);
+             */
+        }
 
         /// <summary>
         /// Initial step = 100
@@ -2181,10 +2190,15 @@
         private void DoPastureWater()
         {
             GetWtrDrivers();
-            /* 
-            if (FLightAllocated)                                                                          
-                sendDriverRequest(drvLIGHT, eventID);
+             
+            if (FLightAllocated)
+            {
+                // get the canopy details for all populations and computeLight() 
+                LightProfile lightProfile = GetLightProfile();
+                storeLightPropn(lightProfile);
+            }
 
+            /*
             if (FDriverThere[drvSW_L])                                              // Soil water is obtained *before* soil water dynamics calculations are made      
                 sendDriverRequest(drvSW_L, eventID);                                
             else                                                                                                   
@@ -2192,11 +2206,16 @@
             FWaterFromSWIM = false;
             */
             passDrivers(evtWATER);
-            /* if (!FLightAllocated)
-                 FModel.SetMonocultureLight();
-             if (!FWaterAllocated)
-                 FModel.ComputeWaterUptake();
-             */
+            if (!FLightAllocated)
+            {
+                // If the light_profile has not been calculated based on this paddock's plant populations.
+                PastureModel.SetMonocultureLight();
+            }
+
+            if (!FWaterAllocated)
+            {
+                PastureModel.ComputeWaterUptake();
+            }
         }
 
         /// <summary>
@@ -2291,6 +2310,41 @@
             }
         }
 
+        private SoilFract[] GetSoilInfo()
+        {
+            SoilFract[] soil = new SoilFract[0];
+            
+            // for each plant population
+            WaterInfo[] water_info = WaterDemandSupply;
+            double[] water_params = WaterParams;
+            double[] plant_kl = KL;
+            double[] root_ll = LL;
+            // paddock.storeWaterInfo()
+            
+
+            // paddock get soil_fract
+
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the canopy details for all populations and computeLight()
+        /// </summary>
+        /// <returns></returns>
+        private LightProfile GetLightProfile()
+        {
+            // iterate through each plant population in this paddock and get the canopy structure
+            
+            // calculate the light profile
+
+            LightProfile lightProfile = new LightProfile();
+            
+            lightProfile = null;
+
+            return lightProfile;
+        }
+
         /// <summary>
         /// Pass driving values to the pasture model
         /// </summary>
@@ -2327,7 +2381,7 @@
                 else if (iEventID == evtGROW)
                 {
                     completeInputs(evtGROW);
-                    PastureModel.SetFertility(FFertility);
+                    PastureModel.SetFertility(this.Fertility);
                     PastureModel.Inputs = FInputs;
 
                     for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
@@ -2438,7 +2492,7 @@
 
             if (lightValues != null)
             {
-                FLightAllocated = true; // if light source found
+                FLightAllocated = true; // if light source values found
 
                 for (iComp = stSEEDL; iComp <= stSENC; iComp++)
                     FLightAbsorbed[iComp] = 0.0;
@@ -2688,7 +2742,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Store proportion of the soil volume occupied by roots
         /// </summary>
         /// <param name="aValue"></param>
         private void StoreSoilPropn(SoilFract[] aValue)
