@@ -1,14 +1,16 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.EventArguments;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using UserInterface.Views;
+using APSIM.Shared.Documentation.Extensions;
+
+namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -62,6 +64,16 @@
 
         /// <summary>When specified will only show data from a given zone.</summary>
         public Zone ZoneFilter { get; set; }
+
+        ///<summary>
+        /// The list of stored column filters.
+        /// </summary>
+        private string temporaryColumnFilters = "";
+
+        ///<summary>
+        /// The list of stored row filters.
+        /// </summary>
+        private string temporaryRowFilters = "";
 
         /// <summary>Default constructor</summary>
         public DataStorePresenter()
@@ -120,6 +132,13 @@
             columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             rowFilterEditBox.Leave += OnColumnFilterChanged;
             checkpointDropDown.Changed += OnCheckpointDropDownChanged;
+
+            // Add the filter strings back in the text field.
+            if (explorerPresenter.GetFilters().Count() != 0)
+            {
+                columnFilterEditBox.Text = explorerPresenter.GetFilters()[0];
+                rowFilterEditBox.Text = explorerPresenter.GetFilters()[1];
+            }
             PopulateGrid();
         }
 
@@ -127,6 +146,9 @@
         public void Detach()
         {
             //base.Detach();
+            // Keep the column and row filters
+            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters); 
+            temporaryRowFilters = rowFilterEditBox.Text;
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
             rowFilterEditBox.Leave -= OnColumnFilterChanged;
@@ -234,6 +256,9 @@
         /// <param name="e">Event arguments</param>
         private void OnColumnFilterChanged(object sender, EventArgs e)
         {
+            // Store the filters temporarily.
+            temporaryColumnFilters = columnFilterEditBox.Text;
+            temporaryRowFilters = rowFilterEditBox.Text;
             PopulateGrid();
         }
 

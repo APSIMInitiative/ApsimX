@@ -1,24 +1,19 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+using Models.Core;
+using UserInterface.Views;
+using System.Linq;
+using UserInterface.EventArguments;
+using Utility;
+using Models.Core.ApsimFile;
+using Models.Core.Apsim710File;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
-    using System.Linq;
-    using System.Diagnostics;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using EventArguments;
-    using Utility;
-    using Models.Core.ApsimFile;
-    using Models.Core.Apsim710File;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
