@@ -153,7 +153,7 @@
                 siblingWithSameName = modelToCheck.FindSibling(newName);
             }
 
-            if (counter == 1000)
+            if (counter == 10000)
             {
                 throw new Exception("Cannot create a unique name for model: " + originalName);
             }
