@@ -660,9 +660,13 @@
             {
               "Key": "PercPAWIrrigDeficitShallow",
               "Value": "0"
+            },
+            {
+              "Key": "allowIrrigation",
+              "Value": "True"
             }
           ],
-          "Name": "Centre Pivot",
+          "Name": "CentrePivot",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
