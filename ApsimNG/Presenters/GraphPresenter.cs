@@ -137,12 +137,12 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                const double tolerance = 0.00001f;
-                for (int i = 0; i < graph.Axis.Count(); i++)
+                const double tolerance = 0.00001;
+                foreach (var axis in graph.Axis)
                 {
-                    var axis = graph.Axis[i];
-                    axis.Minimum = graphView.AxisMinimum(axis.Position) - tolerance;
-                    axis.Maximum = graphView.AxisMaximum(axis.Position) + tolerance;
+                    // Guard against null but don't reset if already set.
+                    axis.Minimum ??= graphView.AxisMinimum(axis.Position);
+                    axis.Maximum ??= graphView.AxisMaximum(axis.Position);
                     if (axis.Maximum - axis.Minimum < tolerance)
                     {
                         axis.Minimum -= tolerance/2;
