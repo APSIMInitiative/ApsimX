@@ -67,7 +67,7 @@
               "Name": "SurfaceOrganicMatter.Residue",
               "IsLive": true,
               "DigestibilityString": "0.7",
-              "FractionConsumable": 1.0,
+              "FractionConsumable": 0.0,
               "MinimumAmount": 100.0,
               "UseDigestibilityFromModel": false
             },
@@ -76,7 +76,7 @@
               "Name": "SurfaceOrganicMatter.Residue",
               "IsLive": false,
               "DigestibilityString": "0.3",
-              "FractionConsumable": 1.0,
+              "FractionConsumable": 0.0,
               "MinimumAmount": 0.0,
               "UseDigestibilityFromModel": false
             },
@@ -327,6 +327,94 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.AgPasture.SimpleGrazing, Models",
+          "GrazingRotationType": 1,
+          "SimpleGrazingFrequencyString": "0",
+          "SimpleMinGrazable": 0.0,
+          "SimpleGrazingResidual": 1000.0,
+          "PreGrazeDMArray": [
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0,
+            2800.0
+          ],
+          "PostGrazeDMArray": [
+            1500.0,
+            1500.0,
+            1500.0,
+            1500.0,
+            1250.0,
+            1250.0,
+            1250.0,
+            1250.0,
+            1500.0,
+            1500.0,
+            1500.0,
+            1500.0
+          ],
+          "FlexibleExpressionForTimingOfGrazing": null,
+          "FlexibleGrazePostDM": 0.0,
+          "MaximumRotationLengthArray": [
+            50.0,
+            50.0,
+            50.0,
+            50.0,
+            60.0,
+            60.0,
+            90.0,
+            70.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+          ],
+          "MinimumRotationLengthArray": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            3.0,
+            3.0,
+            3.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "NoGrazingStartString": null,
+          "NoGrazingEndString": null,
+          "FractionDefoliatedBiomassToSoil": [
+            1.0
+          ],
+          "FractionDefoliatedNToSoil": [
+            0.75
+          ],
+          "FractionExcretedNToDung": [
+            0.4
+          ],
+          "CNRatioDung": 0.0,
+          "DepthUrineIsAdded": 250.0,
+          "FractionPopulationDecline": 0.0,
+          "TramplingOn": false,
+          "MaximumPropLitterMovedToSoil": 0.1,
+          "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+          "SpeciesCutProportions": null,
+          "Name": "SimpleGrazing",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Manager, Models",
           "Code": "using Newtonsoft.Json;\nusing Models.Soils.Nutrients;\nusing Models.Soils.NutrientPatching;\nusing Models.Interfaces;\nusing System.Diagnostics;\nusing System.Collections.Generic;\nusing APSIM.Shared.Utilities;\nusing Models.Surface;\nusing Models.Soils;\nusing System.Xml.Serialization;\nusing Models.AgPasture;\nusing Models.Zones;\nusing Models.PMF;\nusing Models.Core;\nusing Models.Core.ApsimFile;\nusing System;\nusing System.Linq;\nusing Models.Climate;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private ISummary summary;\n        [Link] private List<NutrientPatchManager> patchManagers;\n\n        [Description(\"Should this simulation create Patches? If not then explict Zones will be created\")]\n        public bool PseudoPatches { get; set; }\n        \n        [Description(\"How many patches or zones should be created?\")]\n        public int ZoneCount { get; set; }\n        \n\n        public override void OnPreLink()\n        {\n            var simulation = Parent.Parent as Simulation;\n            var zone = simulation.FindChild<Zone>();\n                \n\t\t\t// Set the maximum N uptake for all species\n\t\t\tforeach (var species in zone.FindAllDescendants<PastureSpecies>())\n\t\t\t{\n\t\t\t\tvar root = species.FindChild<PastureBelowGroundOrgan>();\n\t\t\t\troot.MaximumNUptake = 3.0;\n\t\t\t}\n\t\t\t\t\n            if (!PseudoPatches)\n            {\n\t            zone.Area = 1.0 / ZoneCount;  // and then this will apply to all the new zones  \n\t            for (int i = 0; i < ZoneCount-1; i++)\n\t            {\n\t                var newZone = Apsim.Clone(zone);\n\t                Structure.Add(newZone, simulation);\n\t            }\n\t         }\n        }\n\n        [EventSubscribe(\"StartOfSimulation\")] \n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            if (!PseudoPatches)\n            \tsummary.WriteMessage(this, \"Created \" + ZoneCount + \" identical zones, each of area \" + (1.0 / ZoneCount) + \" ha\", MessageType.Diagnostic);\n\n          \tsummary.WriteMessage(this, \"Initialising the ZoneManager for grazing, urine return and reporting\", MessageType.Diagnostic);\n\t\t\t\n            if (PseudoPatches)\n            {\n                foreach (var patchManager in patchManagers)\n                {\n                    //patchManager.MaximumNitrogenAvailableToPlants = 0.45; This is now set in pre start\n                    patchManager.NPartitionApproach = PartitionApproachEnum.BasedOnConcentrationAndDelta;\n                    patchManager.AutoAmalgamationApproach = AutoAmalgamationApproachEnum.None;\n                    patchManager.basePatchApproach = BaseApproachEnum.IDBased;\n                    patchManager.AllowPatchAmalgamationByAge = false;\n                    patchManager.PatchAgeForForcedMerge = 1000000.0;  // ie don't merge                                \n                }\n\n                int[] PatchToAddTo = new int[1];  //need an array variable for this\n                string[] PatchNmToAddTo = new string[1];  \n                int nPatchesAdded = 0;\n                double NewArea = 1.0 / ZoneCount;\n\t\t\t\t\n                while (nPatchesAdded < ZoneCount - 1)\n                {\n                    AddSoilCNPatchType NewPatch = new AddSoilCNPatchType();\n                    NewPatch.DepositionType = DepositionTypeEnum.ToNewPatch;\n                    NewPatch.AreaFraction = NewArea;\n                    PatchToAddTo[0] = 0;\n                    PatchNmToAddTo[0] = \"0\";\n                    NewPatch.AffectedPatches_id = PatchToAddTo;\n                    NewPatch.AffectedPatches_nm = PatchNmToAddTo;\n                    NewPatch.SuppressMessages = false;\n\n                    foreach (var patchManager in patchManagers)\n                        patchManager.Add(NewPatch);\n                    nPatchesAdded += 1;\n                }                \n\n              \tsummary.WriteMessage(this, patchManagers[0].NumPatches.ToString() + \" pseudopatches have been created\", MessageType.Diagnostic); \n            }\n        }\n    }\n}\n",
           "Parameters": [
@@ -493,94 +581,6 @@
                 }
               ],
               "Name": "AutomaticIrrigation",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.SimpleGrazing, Models",
-              "GrazingRotationType": 1,
-              "SimpleGrazingFrequencyString": "0",
-              "SimpleMinGrazable": 0.0,
-              "SimpleGrazingResidual": 1000.0,
-              "PreGrazeDMArray": [
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0,
-                2800.0
-              ],
-              "PostGrazeDMArray": [
-                1500.0,
-                1500.0,
-                1500.0,
-                1500.0,
-                1250.0,
-                1250.0,
-                1250.0,
-                1250.0,
-                1500.0,
-                1500.0,
-                1500.0,
-                1500.0
-              ],
-              "FlexibleExpressionForTimingOfGrazing": null,
-              "FlexibleGrazePostDM": 0.0,
-              "MaximumRotationLengthArray": [
-                50.0,
-                50.0,
-                50.0,
-                50.0,
-                60.0,
-                60.0,
-                90.0,
-                70.0,
-                50.0,
-                50.0,
-                50.0,
-                50.0
-              ],
-              "MinimumRotationLengthArray": [
-                1.0,
-                1.0,
-                1.0,
-                1.0,
-                3.0,
-                3.0,
-                3.0,
-                1.0,
-                1.0,
-                1.0,
-                1.0,
-                1.0
-              ],
-              "NoGrazingStartString": null,
-              "NoGrazingEndString": null,
-              "FractionDefoliatedBiomassToSoil": [
-                1.0
-              ],
-              "FractionDefoliatedNToSoil": [
-                0.75
-              ],
-              "FractionExcretedNToDung": [
-                0.4
-              ],
-              "CNRatioDung": 0.0,
-              "DepthUrineIsAdded": 250.0,
-              "FractionPopulationDecline": 0.0,
-              "TramplingOn": false,
-              "MaximumPropLitterMovedToSoil": 0.1,
-              "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
-              "SpeciesCutProportions": null,
-              "Name": "SimpleGrazing",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
