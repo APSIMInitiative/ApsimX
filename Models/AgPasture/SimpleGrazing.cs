@@ -422,10 +422,9 @@ namespace Models.AgPasture
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            // Calculate pre-grazed dry matter.
-            PreGrazeDM = zones.Sum(z => z.TotalDM);
-            PreGrazeHarvestableDM = zones.Sum(z => z.HarvestableDM);
-
+            foreach (var zone in zones)
+                zone.DoManagement();
+            
             // Determine if we can graze today.
             GrazedToday = false;
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -573,6 +572,7 @@ namespace Models.AgPasture
             private double grazedDM;
             private double grazedN;
             private double grazedME;
+            private double preGrazeDM;
             private double amountDungNReturned;
             private double amountDungWtReturned;
             private double amountUrineNReturned;
@@ -623,6 +623,12 @@ namespace Models.AgPasture
                 amountUrineNReturned = 0;
             }
 
+            public void DoManagement()
+            {
+                // Calculate pre-grazed dry matter.
+                preGrazeDM = TotalDM;
+            }
+
             public void ReducePopulation(double fractionPopulationDecline)
             {
                 foreach (var forage in forages)
@@ -643,7 +649,7 @@ namespace Models.AgPasture
                 // What about non harvestable biomass?
                 // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
                 double currentDM = forages.Sum(f => f.Material.Sum(m => m.Total.Wt) * 10);
-                double removeAmount = Math.Max(0, currentDM - residual);
+                double removeAmount = Math.Max(0, preGrazeDM - residual);
                 dmRemovedToday = removeAmount;
                 if (MathUtilities.IsGreaterThan(removeAmount * 0.1, 0.0))
                 {
@@ -747,6 +753,7 @@ namespace Models.AgPasture
                 else
                     return arr[month - 1];
             }
+
         }
     }
 }
