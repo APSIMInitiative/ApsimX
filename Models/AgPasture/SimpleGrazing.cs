@@ -379,10 +379,11 @@ namespace Models.AgPasture
             if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
+            int numForages = zones.Where(z => z.Zone == this.Parent).First().NumForages;
             if (SpeciesCutProportions == null)
-                SpeciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, zones.First().NumForages);
+                SpeciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, numForages);
 
-            if (SpeciesCutProportions.Sum() != zones.First().NumForages)
+            if (SpeciesCutProportions.Sum() != numForages)
                 throw new Exception("The species cut weightings must add up to the number of species.");
 
             if (SimpleGrazingFrequencyString != null && SimpleGrazingFrequencyString.Equals("end of month", StringComparison.InvariantCultureIgnoreCase))
@@ -561,7 +562,6 @@ namespace Models.AgPasture
 
         private class ZoneWithForage
         {
-            private Zone zone;
             private SurfaceOrganicMatter surfaceOrganicMatter;
             private Solute urea;
             private IPhysical physical;
@@ -584,7 +584,7 @@ namespace Models.AgPasture
             /// <param name="areaOfAllZones">The area of all zones in the simulation.</param>
             public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones)
             {
-                this.zone = zone;
+                this.Zone = zone;
                 this.forages = forages;
                 this.areaOfAllZones = areaOfAllZones;
                 surfaceOrganicMatter = zone.FindInScope<SurfaceOrganicMatter>();
@@ -592,6 +592,8 @@ namespace Models.AgPasture
                 physical = zone.FindInScope<IPhysical>();
                 areaWeighting = zone.Area / areaOfAllZones;
             }
+
+            public Zone Zone { get; private set; }
 
             /// <summary>The number of forages in our care</summary>
             public int NumForages => forages.Count;
