@@ -379,7 +379,12 @@ namespace Models.AgPasture
             if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
-            int numForages = zones.Where(z => z.Zone == this.Parent).First().NumForages;
+            // If we are at the top level of the simulation then look in first zone for number of forages.
+            int numForages;
+            if (Parent is Simulation)
+                numForages = zones.First().NumForages;
+            else
+                numForages = zones.Where(z => z.Zone == this.Parent).First().NumForages;
             if (SpeciesCutProportions == null)
                 SpeciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, numForages);
 
