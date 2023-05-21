@@ -5,15 +5,6 @@ using Utility;
 
 namespace UserInterface.Views
 {
-    /// <summary>An interface for a composite view which shows a property view and a grid view.</summary>
-    public interface IPropertyAndGridView
-    {
-        /// <summary>Top grid in view.</summary>
-        ViewBase PropertiesView { get; }
-
-        /// <summary>bottom grid in view.</summary>
-        IGridView Grid2 { get; }
-    }
 
     /// <summary>A drop down view.</summary>
     public class PropertyAndGridView : ViewBase, IPropertyAndGridView
@@ -49,5 +40,15 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>An interface for a composite view which shows a property view and a grid view.</summary>
+    public interface IPropertyAndGridView
+    {
+        /// <summary>Top grid in view.</summary>
+        ViewBase PropertiesView { get; }
+
+        /// <summary>bottom grid in view.</summary>
+        IGridView Grid2 { get; }
     }
 }

@@ -6,16 +6,6 @@ namespace UserInterface.Views
     public delegate void TitleChangedDelegate(string NewText);
 
     /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface ITitleView
-    {
-        event TitleChangedDelegate OnTitleChanged;
-
-        void Populate(string title);
-    }
-
-    /// <summary>
     /// A Gtk# implementation of an TitleView
     /// </summary>
     public class TitleView : ViewBase, ITitleView
@@ -83,5 +73,15 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>
+    /// Describes an interface for an axis view.
+    /// </summary>
+    interface ITitleView
+    {
+        event TitleChangedDelegate OnTitleChanged;
+
+        void Populate(string title);
     }
 }

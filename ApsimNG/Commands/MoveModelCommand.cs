@@ -13,6 +13,7 @@
         private Func<IModel, TreeViewNode> describeModel;
         private IModel fromParent;
         private string originalName;
+        private int originalPosition;
 
         /// <summary>
         /// The model which was changed by the command. This will be selected
@@ -44,6 +45,7 @@
             // The Move method may rename the FromModel. Go get the original name in case of
             // Undo later.
             originalName = fromModel.Name;
+            originalPosition = tree.GetNodePosition(fromModel.FullPath);
             string originalPath = this.fromModel.FullPath;
 
             // Move model.
@@ -61,7 +63,7 @@
             tree.Delete(fromModel.FullPath);
             Structure.Move(fromModel, fromParent);
             fromModel.Name = originalName;
-            tree.AddChild(fromParent.FullPath, describeModel(fromModel));
+            tree.AddChild(fromParent.FullPath, describeModel(fromModel), originalPosition);
             tree.SelectedNode = fromModel.FullPath;
         }
     }

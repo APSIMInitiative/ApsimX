@@ -69,8 +69,6 @@ Simulation,1,16.000,1,Current,8,Zone
 Simulation,1,18.000,1,Current,9,Zone
 Simulation,1,20.000,1,Current,10,Zone
 ";
-            Console.WriteLine(expected);
-            Console.WriteLine(csvData);
             Assert.AreEqual(expected, csvData);
         }
 
@@ -96,7 +94,7 @@ Simulation,1,20.000,1,Current,10,Zone
             string text = ReflectionUtilities.GetResourceAsString("UnitTests.BasicFile.apsimx");
 
             // Check property values at this point.
-            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false);
+            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
             Clock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();

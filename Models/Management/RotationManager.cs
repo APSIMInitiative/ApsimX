@@ -151,7 +151,7 @@ namespace Models.Management
 
                     if (Verbose)
                     {
-                        string arcName = $"Transition from {arc.DestinationName} to {arc.DestinationName}";
+                        string arcName = $"Transition from {arc.SourceName} to {arc.DestinationName}";
                         string message;
                         if (score > 0)
                         {

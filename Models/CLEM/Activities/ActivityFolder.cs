@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            return "\r\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
+            return $"\r\n<div class=folder>{this.Name} folder {((!this.Enabled) ? " - DISABLED!" : "")}</div>";
         }
 
         /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">";
+            return $"\r\n<div class=\"activityborder\" style=\"opacity: {SummaryOpacity(FormatForParentControl)};\">";
         } 
         #endregion
 

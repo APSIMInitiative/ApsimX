@@ -67,7 +67,7 @@
             IModel modelToAdd = null;
             try
             {
-                modelToAdd = FileFormat.ReadFromString<IModel>(st, e => throw e, false);
+                modelToAdd = FileFormat.ReadFromString<IModel>(st, e => throw e, false).NewModel as IModel;
             }
             catch (Exception err)
             {
@@ -85,7 +85,7 @@
                 var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
                 rootNode.RemoveAll();
                 rootNode.AppendChild(convertedNode);
-                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, e => throw e, false);
+                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, e => throw e, false).NewModel as IModel;
                 if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
                     throw new Exception("Cannot add model. Invalid model being added.");
                 modelToAdd = newSimulationModel.Children[0];
@@ -153,7 +153,7 @@
                 siblingWithSameName = modelToCheck.FindSibling(newName);
             }
 
-            if (counter == 1000)
+            if (counter == 10000)
             {
                 throw new Exception("Cannot create a unique name for model: " + originalName);
             }
