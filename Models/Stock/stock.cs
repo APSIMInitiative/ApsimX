@@ -208,7 +208,10 @@ namespace Models.GrazPlan
         #endregion
 
         #region Readable properties ====================================================
-        /// <summary>Mass of grazers per unit area</summary>
+        /// <summary>
+        /// Mass of grazers per unit area
+        /// This needs to return the kg/ha of all or one specified paddock
+        /// </summary>
         [Units("kg/ha")]
         public double Trampling
         {
