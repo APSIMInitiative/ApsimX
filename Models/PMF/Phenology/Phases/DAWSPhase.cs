@@ -54,7 +54,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Math.Min(1, (met.DaysSinceWinterSolstice-StartDAWS) / (DAWStoProgress-StartDAWS));
+                return Math.Min(1.0, ((double)met.DaysSinceWinterSolstice- (double)StartDAWS) / ((double)DAWStoProgress - (double)StartDAWS));
             }
         }
 
