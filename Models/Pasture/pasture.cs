@@ -1,14 +1,24 @@
-﻿namespace Models.GrazPlan
-{
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using static Models.GrazPlan.GrazType;
-    using static Models.GrazPlan.PastureUtil;
+﻿
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using StdUnits;
+using System;
+using System.Collections.Generic;
+using static Models.GrazPlan.GrazType;
+using static Models.GrazPlan.PastureUtil;
+using Models.Surface;
+using Models.Soils.Nutrients;
+using Models.Soils.Arbitrator;
+using static Models.G_Range;
+using APSIM.Shared.Utilities;
+using Models.AgPasture;
+using System.Linq;
+using APSIM.Shared.APSoil;
+using Docker.DotNet.Models;
+namespace Models.GrazPlan
 
+{
     /// <summary>
     /// The soil interface for the Pasture model
     /// </summary>
@@ -87,7 +97,7 @@
         private double FFieldArea;
         private double FHarvestHeight;
         private int FToday;             // StdDate.Date
-        private double FIntercepted;
+        private double FIntercepted;    // Precipitation intercepted by herbage
         private double[] FLightAbsorbed = new double[GrazType.stSENC + 1];      // [stSEEDL..stSENC] - [1..3]
         private double[][] FSoilPropn = new double[GrazType.stSENC + 1][];      // [stSEEDL..stSENC] - [1..3][1..]
         private double[][] FTranspiration = new double[GrazType.stSENC + 1][];  // [TOTAL..stSENC]   - [0..3][1..]
@@ -100,11 +110,15 @@
         private bool FBiomassRemovedFound;
         private bool FWaterValueReqd;
 
+        private double[] mySoilNH4Available;
+        private double[] mySoilNO3Available;
+        private double[] mySoilWaterAvailable;
+
         // Stages within the timestep
         public const int evtINITSTEP = 1;
         public const int evtWATER = 2;
         public const int evtGROW = 3;
-        public const int evtENDSTEP = 4; 
+        public const int evtENDSTEP = 4;
 
         #region Class links
         /// <summary>
@@ -126,6 +140,14 @@
         [Link]
         private ISoilWater water = null;
 
+        /// <summary>The surface organic matter model.</summary>
+        [Link]
+        private SurfaceOrganicMatter surfaceOrganicMatter = null;
+
+        /// <summary>Link to the zone this pasture species resides in.</summary>
+        [Link]
+        private Zone zone = null;
+
         /// <summary>
         /// The supplement component
         /// </summary>
@@ -139,6 +161,20 @@
         [Link]
         private List<Zone> paddocks = null;
 
+        /// <summary>Soil object where these roots are growing.</summary>
+        private Models.Soils.Soil soil = null;
+                
+        /// <summary>Water balance model.</summary>
+        private ISoilWater waterBalance = null;
+
+        /// <summary>Soil nutrient model.</summary>
+        private INutrient nutrient;
+
+        /// <summary>NO3 solute in the soil.</summary>
+        private ISolute no3 = null;
+
+        /// <summary>NH4 solute in the soil.</summary>
+        private ISolute nh4 = null;
         #endregion
 
 
@@ -316,7 +352,7 @@
             {
                 string sUnit = PastureModel.MassUnit;
                 PastureModel.MassUnit = "kg/ha";
-                
+
                 Canopy[] result = MakeCanopy(PastureModel);
 
                 PastureModel.MassUnit = sUnit;
@@ -335,7 +371,7 @@
         {
             Canopy anElement = new Canopy();
 
-            if (iComp == GrazType.sgLITTER)    
+            if (iComp == GrazType.sgLITTER)
                 anElement.Name = sCOMPNAME[stLITT1];
             else
                 anElement.Name = sCOMPNAME[iComp];
@@ -343,7 +379,7 @@
             anElement.Layer = new CanopyLayer[1];
 
             anElement.Layer[0].Thickness = 0.001 * Model.Height_MM();             // thickness (in metres)    
-            anElement.Layer[0].AreaIndex = Model.AreaIndex(iComp);            
+            anElement.Layer[0].AreaIndex = Model.AreaIndex(iComp);
             if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
             {
                 anElement.Layer[0].CoverGreen = Model.Cover(iComp);
@@ -351,7 +387,7 @@
             }
             else // stDEAD, sgLITTER
             {
-                anElement.Layer[0].CoverGreen = 0.0;               
+                anElement.Layer[0].CoverGreen = 0.0;
                 anElement.Layer[0].CoverTotal = Model.Cover(iComp);
             }
 
@@ -428,7 +464,7 @@
             }
 
             WaterInfo[] result = new WaterInfo[iCount];
-            
+
             iCount = Model.SoilLayerCount;
             Jdx = 0;
             for (iComp = stSEEDL; iComp <= stSENC; iComp++)
@@ -446,10 +482,10 @@
                     result[Jdx - 1].Layer = new WaterLayer[iCount];
                     for (Ldx = 1; Ldx <= iCount; Ldx++)
                     {
-                        result[Jdx - 1].Layer[Ldx-1].Thickness = Model.SoilLayer_MM[Ldx];
+                        result[Jdx - 1].Layer[Ldx - 1].Thickness = Model.SoilLayer_MM[Ldx];
                         result[Jdx - 1].Layer[Ldx - 1].MaxSupply = fSupply[Ldx];
                         result[Jdx - 1].Layer[Ldx - 1].RLD = 1.0E-6 * fRootLD[Ldx]; // converted from m/m^3 to mm/mm^3 
-                        result[Jdx - 1].Layer[Ldx - 1].Radius = fRootRad[Ldx];    
+                        result[Jdx - 1].Layer[Ldx - 1].Radius = fRootRad[Ldx];
                     }
                 }
             }
@@ -980,13 +1016,13 @@
                                      PastureModel.AvailHerbage(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL),
                                      PastureModel.Digestibility(GrazType.sgDRY, GrazType.TOTAL),
                                      PastureModel.AvailHerbage(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL));
-                
+
                 PastureModel.MassUnit = sUnit;
 
                 return result;
             }
         }
-        
+
         /// <summary>Average crude protein content of herbage available for grazing</summary>
         [Units("g/g")]
         public double AvailCP
@@ -1075,13 +1111,13 @@
             double[][] fProfilePropns = new double[5][];     // [ptLEAF..ptSEED] of LayerArray;
             int iPart;
             int iLayer;
-            
-            
+
+
             for (int i = 0; i <= 5; i++)
             {
                 fProfilePropns[i] = new double[MaxSoilLayers + 1];
             }
-         
+
             // init fProfilePropns
             for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
             {
@@ -1093,7 +1129,7 @@
             {
                 fPartMasses[iPart] = Model.GetHerbageMass(iComp, iPart, TOTAL);
             }
-            
+
             fPartMasses[ptSEED] = Model.GetSeedMass(TOTAL, TOTAL, 1);
 
             if (fPartMasses[ptLEAF] + fPartMasses[ptSTEM] + fPartMasses[ptSEED] <= 0.0)
@@ -1108,18 +1144,18 @@
             }
 
             HerbageProfile result = new HerbageProfile(iHeightProfileCount);
-            
+
             for (iLayer = 1; iLayer <= iHeightProfileCount; iLayer++)
             {
                 if (iLayer == 1)
-                    result.bottom[iLayer-1] = 0.0;
+                    result.bottom[iLayer - 1] = 0.0;
                 else
                     result.bottom[iLayer - 1] = fHeightProfile[iLayer - 1];
-                result.top[iLayer-1] = fHeightProfile[iLayer];
-                result.leaf[iLayer-1] = fPartMasses[ptLEAF] * fProfilePropns[ptLEAF][iLayer];
-                result.stem[iLayer-1] = fPartMasses[ptSTEM] * fProfilePropns[ptSTEM][iLayer];
-                result.head[iLayer-1] = fPartMasses[ptSEED] * fProfilePropns[ptSEED][iLayer];
-            } 
+                result.top[iLayer - 1] = fHeightProfile[iLayer];
+                result.leaf[iLayer - 1] = fPartMasses[ptLEAF] * fProfilePropns[ptLEAF][iLayer];
+                result.stem[iLayer - 1] = fPartMasses[ptSTEM] * fProfilePropns[ptSTEM][iLayer];
+                result.head[iLayer - 1] = fPartMasses[ptSEED] * fProfilePropns[ptSEED][iLayer];
+            }
 
             return result;
         }
@@ -1302,7 +1338,7 @@
             {
                 string sUnit = PastureModel.MassUnit;
                 PastureModel.MassUnit = "kg/ha";
-                double result = PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS) ;
+                double result = PastureModel.GetRootDepth(GrazType.sgGREEN, TPasturePopulation.ALL_COHORTS);
                 PastureModel.MassUnit = sUnit;
 
                 return result;
@@ -1466,9 +1502,9 @@
         private double[] LayerArray2Value(double[] fLayers, int iNoLayers)
         {
             double[] result = new double[iNoLayers];
-            
+
             for (int Ldx = 1; Ldx <= iNoLayers; Ldx++)
-                result[Ldx-1] = fLayers[Ldx];
+                result[Ldx - 1] = fLayers[Ldx];
 
             return result;
         }
@@ -1637,7 +1673,7 @@
 
         /// <summary>Ammonium-N uptake from each soil layer</summary>
         [Units("kg/ha/d")]
-        public double[] Uptake_NH4  { get { return UptakeByLayer(TPlantNutrient.pnNH4); } }
+        public double[] Uptake_NH4 { get { return UptakeByLayer(TPlantNutrient.pnNH4); } }
 
         /// <summary>Nitrate-N uptake from each soil layer</summary>
         [Units("kg/ha/d")]
@@ -1765,7 +1801,7 @@
 
                 Residue[] result = new Residue[PastureModel.SoilLayerCount];
                 for (int i = 1; i <= PastureModel.SoilLayerCount; i++)
-                    result[i-1].CopyFrom(PastureModel.GetResidueFlux(GrazType.ptROOT, i));
+                    result[i - 1].CopyFrom(PastureModel.GetResidueFlux(GrazType.ptROOT, i));
 
                 PastureModel.MassUnit = sUnit;
 
@@ -1858,7 +1894,7 @@
                     {
                         for (int Kdx = 1; Kdx <= 12; Kdx++)
                         {
-                            result[Idx-1, Jdx-1, Kdx-1] = PastureModel.Removal(DefoliationCompMap[Idx], DefoliationPartMap[Jdx], Kdx);
+                            result[Idx - 1, Jdx - 1, Kdx - 1] = PastureModel.Removal(DefoliationCompMap[Idx], DefoliationPartMap[Jdx], Kdx);
                         }
                     }
                 }
@@ -1917,7 +1953,7 @@
                 return result;
             }
         }
-        
+
         /// <summary>
         /// Total dry weight of herbage of a plant
         /// </summary>
@@ -2022,7 +2058,7 @@
             // =========================================================
 
             StartSimulation();
-            
+
         }
 
         [EventSubscribe("StartOfDay")]
@@ -2073,6 +2109,79 @@
 
         #region Private functions ============================================
 
+
+        public void Initialise(Zone zone)
+        {
+            // link to soil models parameters
+            soil = zone.FindInScope<Models.Soils.Soil>();
+            if (soil == null)
+            {
+                throw new Exception($"Cannot find soil in zone {zone.Name}");
+            }
+
+            soilPhysical = soil.FindInScope<IPhysical>();
+            if (soilPhysical == null)
+            {
+                throw new Exception($"Cannot find soil physical in soil {soil.Name}");
+            }
+
+            waterBalance = soil.FindInScope<ISoilWater>();
+            if (waterBalance == null)
+            {
+                throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
+            }
+
+            nutrient = zone.FindInScope<INutrient>();
+            if (nutrient == null)
+            {
+                throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
+            }
+
+            no3 = zone.FindInScope("NO3") as ISolute;
+            if (no3 == null)
+            {
+                throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
+            }
+
+            nh4 = zone.FindInScope("NH4") as ISolute;
+            if (nh4 == null)
+            {
+                throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
+            }
+
+            // initialise soil related variables
+            string zoneName = soil.Parent.Name;
+            int nLayers = soilPhysical.Thickness.Length;
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
+            mySoilWaterAvailable = new double[nLayers];
+
+            // check rooting depth
+            double MaximumPotentialRootingDepth  = 750.0;   // TODO: This needs to be set elsewhere 
+            double MaximumAllowedRootingDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
+            for (int z = 0; z < soilPhysical.Thickness.Length; z++)
+            {
+                if (z > 0)
+                {
+                    MaximumAllowedRootingDepth = soilPhysical.ThicknessCumulative[z - 1];
+                }
+            }
+        }
+
+        /// <summary>Finds out the amount of plant available water in the soil.</summary>
+        /// <param name="myZone">The soil information</param>
+        internal void EvaluateSoilWaterAvailability(ZoneWaterAndN myZone)
+        {
+            for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
+            {
+                // TODO: calculate water availability
+             /*   mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]);
+                mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer); */
+            }
+        }
+
+
+
         /// <summary>
         /// This responds to the OnStartOfSimulation event.
         /// Set up the model and initial values for the pasture. 
@@ -2082,6 +2191,8 @@
             FWeather = new TWeatherHandler();
             PastureModel = new TPasturePopulation();
             PastureModel.MassUnit = "g/m^2";
+
+            Initialise(zone);
 
             // required at initialisation
             FWeather.fLatDegrees = locWtr.Latitude;                             // Location. South is -ve
@@ -2098,20 +2209,20 @@
             FWaterValueReqd = false;
 
             // Water uptake by plant populations from the allocator (paddock)
-            WaterUptake[] water = null;     //// TODO: populate this
+            WaterUptake[] water = null;     // TODO: populate this
             storeWaterSupply(water);
 
             // Proportion of the soil volume occupied by roots of plant populations (paddock)
-            SoilFract[] soilFract = GetSoilInfo();       //// TODO: populate this
+            SoilFract[] soilFract = GetSoilInfo();       // TODO: populate this
             StoreSoilPropn(soilFract);
 
-            NutrAvail nutrNH4 = null;      //// TODO: populate this
+            NutrAvail nutrNH4 = null;      // TODO: populate this
             Value2SoilNutrient(nutrNH4, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);   // Soil ammonium availability
             // if using ppm then
             // Value2LayerArray(aValue, ref FLayerValues);
             // LayerArray2SoilNutrient(FLayerValues, ref FInputs.Nutrients[(int)TPlantNutrient.pnNH4]);
 
-            NutrAvail nutrNO3 = null;      //// TODO: populate this
+            NutrAvail nutrNO3 = null;      // TODO: populate this
             Value2SoilNutrient(nutrNO3, ref FInputs.Nutrients[(int)TPlantNutrient.pnNO3]);   // Soil nitrate availability
 
             this.LocateDestinations();
@@ -2161,15 +2272,20 @@
             FFieldDAI = PastureModel.AreaIndex(sgDRY);
             FFieldCoverSum = PastureModel.Cover(TOTAL);
 
-            // TODO: get values from sibling components
-            // From each sibling:
-            //  - cover (add to FFieldCoverSum)
-            //  - green DM (add to FFieldGreenDM)
-            //  - GAI (add to FFieldGAI)
-            //  - DAI (add to FFieldDAI)
+            GetSiblingPasture();
 
             PastureModel.BeginTimeStep();
             passDrivers(evtINITSTEP);
+        }
+
+        private void GetSiblingPasture()
+        {
+            // TODO: get values from sibling components
+            // From each sibling:
+            //  - cover_tot (add to FFieldCoverSum)
+            //  - green_dm  (add to FFieldGreenDM)
+            //  - GAI (add to FFieldGAI)
+            //  - DAI (add to FFieldDAI)
         }
 
         private void GetWtrDrivers()
@@ -2198,13 +2314,12 @@
                 storeLightPropn(lightProfile);
             }
 
-            /*
-            if (FDriverThere[drvSW_L])                                              // Soil water is obtained *before* soil water dynamics calculations are made      
-                sendDriverRequest(drvSW_L, eventID);                                
-            else                                                                                                   
-                sendDriverRequest(drvSW, eventID);
-            FWaterFromSWIM = false;
-            */
+            // Soil water is obtained BEFORE soil water dynamics calculations are made      
+            // TODO:
+            // sw_layer -> set FInputs.Theta - Soil water content profile                               
+            // OR
+            // sw (mm/mm) -> set FInputs.Theta - (value2layerarray)
+
             passDrivers(evtWATER);
             if (!FLightAllocated)
             {
@@ -2223,33 +2338,37 @@
         /// </summary>
         private void DoPastureGrowth()
         {
-            // TODO: sendDriverRequest(drvTIME, eventID);            // Time driver                           
+            FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             GetWtrDrivers(); // Weather drivers                       
 
-            // TODO: sendDriverRequest(drvINTCPD, eventID);
+            // Precipitation intercepted by herbage
+            // FIntercepted = ? // TODO: determine if this is required - 
 
             FFieldGreenDM = PastureModel.GetHerbageMass(sgGREEN, TOTAL, TOTAL);
             FFieldGAI = PastureModel.AreaIndex(sgGREEN);
             FFieldDAI = PastureModel.AreaIndex(sgDRY);
             FFieldCoverSum = PastureModel.Cover(TOTAL);
 
-
-            // TODO: get values from sibling components
-            // From each sibling:
-            //  - cover (add to FFieldCoverSum)
-            //  - green DM (add to FFieldGreenDM)
-            //  - GAI (add to FFieldGAI)
-            //  - DAI (add to FFieldDAI)
+            GetSiblingPasture();
 
             FWaterValueReqd = false;
-            /* if (FWaterAllocated && !FWaterFromSWIM)                                 // Paddock drivers                       
-                sendDriverRequest(drvWATER_UPTAKE, eventID);
-            if (FSoilAllocated)
-                sendDriverRequest(drvSOIL_FRACT, eventID);
+            //if (FWaterAllocated && !FWaterFromSWIM)                                 // Paddock drivers    
+            // TODO:
+            WaterUptake[] water = null;
+            storeWaterSupply(water); // <- water_uptake
+            
+            /*
+         if (FSoilAllocated)
+             sendDriverRequest(drvSOIL_FRACT, eventID);
+         */
 
-            FInputs.TrampleRate = 0.0;
-            sendDriverRequest(drvTRAMPLE, eventID);                                 // Animal drivers                        
+            FInputs.TrampleRate = 0.0;  // default
+            // Animal drivers
+            //  trampling is in kg/ha
+            // TODO: Find the stock component and request the Trampling value for the paddock that this pasture is in.
+            // FInputs.TrampleRate  = FInputs.TrampleRate + Stock.Trampling / 10000.0; // Stocking rate factor used to determine fall of standing dead
 
+            /*
             if (FModel.ElementSet.Length == 0)                                      // Nutrient drivers                      
             {
                 //retrieve the fertility scalar if it exists elsewhere
@@ -2528,7 +2647,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Water uptake by plant populations interacting with this module
         /// </summary>
         /// <param name="water"></param>
         /// <exception cref="Exception"></exception>
@@ -2826,6 +2945,71 @@
             Value2LayerArray(aValue, ref FInputProfile);
         }
 
+        #endregion
+
+        #region Public functions =====================================
+        
+        private double myWaterDemand; // Amount of water demanded by the plant(mm)
+        /// <summary>Minimum significant difference between two values.</summary>
+        internal const double Epsilon = 0.000000001;
+
+        /// <summary>Gets the potential plant water uptake for each layer (mm). Used by the Soil Arbitrator</summary>
+        /// <remarks>The model can only handle one root zone at present.</remarks>
+        /// <param name="soilstate">The soil state (current water content).</param>
+        /// <returns>The potential water uptake (mm).</returns>
+        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
+        {
+            bool IsAlive = true;
+            if (IsAlive)
+            {
+                // 1. get all water supplies.
+                double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+
+                List<double[]> supplies = new List<double[]>();
+                List<Zone> zones = new List<Zone>();
+                foreach (ZoneWaterAndN zone in soilstate.Zones)
+                {
+                    if (zone.Zone.Name == this.zone.Name)
+                    {
+                        // get the amount of water available in the soil
+                        EvaluateSoilWaterAvailability(zone);
+
+                        supplies.Add(mySoilWaterAvailable);
+                        zones.Add(zone.Zone);
+                        waterSupply += mySoilWaterAvailable.Sum() * zone.Zone.Area;
+                    }
+                }
+
+                // 2. get the amount of soil water demanded NOTE: This is in L, not mm,
+                Zone parentZone = FindAncestor<Zone>();
+                double waterDemand = myWaterDemand * parentZone.Area;
+
+                // 3. estimate fraction of water used up
+                double fractionUsed = 0.0;
+                if (waterSupply > Epsilon)
+                {
+                    fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+                }
+
+                // 4. apply demand supply ratio to each zone and create a ZoneWaterAndN structure to return to caller.
+                List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
+                for (int i = 0; i < supplies.Count; i++)
+                {
+                    // just send uptake from my zone
+                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
+                    uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+                    uptake.NO3N = new double[uptake.Water.Length];
+                    uptake.NH4N = new double[uptake.Water.Length];
+                    ZWNs.Add(uptake);
+                }
+
+                return ZWNs;
+            }
+            else
+            {
+                return null;
+            }
+        }
         #endregion
     }
 }

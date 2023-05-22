@@ -70,8 +70,9 @@
         /// <summary>Gets or sets the Proportion of precip intercepted (0-1)</summary>
         public double RainIntercept { get; set; }
 
-        /// <summary>Gets or sets the Trampling rate (DSE/ha)</summary>
-        public double TrampleRate { get; set; }
+        /// <summary>Gets or sets the Trampling rate (DSE/ha).
+        /// Stocking rate factor used to determine fall of standing dead. Read as mass of grazers per unit area. Default is 0.0</summary>
+        public double TrampleRate { get; set; } = 0.0;
 
         /// <summary>
         /// Available nutrient in soil
