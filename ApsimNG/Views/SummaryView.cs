@@ -1,13 +1,11 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+using System.Linq;
+using Utility;
+using MessageType = Models.Core.MessageType;
+
+namespace UserInterface.Views
 {
-    using Interfaces;
-    using Gtk;
-    using System;
-    using Extensions;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Utility;
-    using MessageType = Models.Core.MessageType;
 
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView

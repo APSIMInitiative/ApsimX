@@ -1,20 +1,19 @@
-﻿namespace Models
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Soils;
-    using Models;
-    using Storage;
-    using Logging;
-    using System.Linq;
-    using APSIM.Shared.Documentation.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Storage;
+using Models.Logging;
+using APSIM.Shared.Documentation.Extensions;
 
+
+namespace Models
+{ 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
     /// It also provides an API for writing messages to the DataStore.

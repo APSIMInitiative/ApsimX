@@ -1,21 +1,20 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Text;
+using System.Linq;
+using System.Collections.Generic;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Logging;
+using Models.Factorial;
+using UserInterface.Views;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using DocumentFormat.OpenXml.Presentation;
+using System.Data;
+
+namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using System;
-    using System.IO;
-    using System.Linq;
-    using Models;
-    using Models.Core;
-    using Models.Factorial;
-    using Views;
-    using Commands;
-    using Utility;
-    using Models.Storage;
-    using System.Collections.Generic;
-    using Models.Core.Run;
-    using Models.Logging;
-    using System.Text;
-    using APSIM.Shared.Utilities;
 
     /// <summary>Presenter class for working with a summary component</summary>
     public class SummaryPresenter : IPresenter
@@ -162,7 +161,32 @@
                 if (!initialConditions.ContainsKey(simulationName))
                     initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
-                markdown.AppendLine(string.Join("", initialConditions[simulationName].Select(i => i.ToMarkdown())));
+                //markdown.AppendLine(string.Join("", initialConditions[simulationName].Select(i => i.ToMarkdown())));
+               IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName].Select(i => i);
+                // Initial condition tables list for solutes.
+                List<InitialConditionsTable> soluteTables = new List<InitialConditionsTable>();
+                List<InitialConditionsTable> tablesWithoutSolutes = new List<InitialConditionsTable>();
+                // Custom data table for solutes.
+                DataTable soluteTable = new()
+                {
+                    TableName = "Solutes"
+                };
+                foreach (InitialConditionsTable table in initialTables)
+                {
+                    // Required to get the solutes arranged into a single table.
+                    if (table.Model is Models.Soils.Solute)
+                    {
+                        soluteTables.Add(table);
+                    }
+                    else
+                    {
+                        tablesWithoutSolutes.Add(table);
+                    }
+                }
+                // Print out a set of initial conditions without the solutes.
+                markdown.AppendLine(string.Join("", tablesWithoutSolutes.Select(i => i.ToMarkdown())));
+
+
             }
 
             // Fetch messages from the model for this simulation name.
@@ -178,11 +202,19 @@
                 markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
                 {
                     StringBuilder md = new StringBuilder();
+                    string soluteMsgs = "";
                     md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
                     md.AppendLine();
                     md.AppendLine("```");
                     foreach (Message msg in m)
-                        md.AppendLine(msg.Text);
+                        if (msg.Provider.Name == "Field.Soil.NH3")
+                        {
+                            soluteMsgs += msg.Text;
+                        }
+                        else
+                        {
+                            md.AppendLine(msg.Text);
+                        }
                     md.AppendLine("```");
                     md.AppendLine();
                     return md.ToString();
