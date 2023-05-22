@@ -1,18 +1,17 @@
-﻿namespace Models.Core.Apsim710File
+﻿using APSIM.Shared.OldAPSIM;
+using APSIM.Shared.Utilities;
+using Microsoft.CSharp;
+using Models.Core;
+using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+namespace Models.Core.Apsim710File
 {
-    using APSIM.Shared.OldAPSIM;
-    using APSIM.Shared.Utilities;
-    using Microsoft.CSharp;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Xml;
-
     /// <summary>
     /// Manager script parameter
     /// </summary>
@@ -330,6 +329,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name.ToLower() == "water")
                 {
@@ -369,6 +369,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name == "SoilCrop")
                 {
