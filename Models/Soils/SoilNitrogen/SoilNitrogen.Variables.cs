@@ -26,7 +26,7 @@ namespace Models.Soils
 
         /// <summary>Link to APSIM's Clock (time information).</summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         /// <summary>Link to APSIM's WeatherFile (weather data).</summary>
         [Link]
@@ -1733,7 +1733,7 @@ namespace Models.Soils
 
         #region Values for soil mineral N
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
@@ -1762,7 +1762,7 @@ namespace Models.Soils
             }
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
@@ -1791,7 +1791,7 @@ namespace Models.Soils
             }
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
@@ -2519,7 +2519,7 @@ namespace Models.Soils
             double[] deltaN = new double[value.Length];
             for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
                 deltaN[layer] = value[layer] - nh4[layer];
-            
+
             SetNH4Delta(callingModelType, deltaN);
         }
 

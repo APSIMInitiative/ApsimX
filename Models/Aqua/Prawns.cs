@@ -17,9 +17,9 @@ namespace Models.Aqua
 
 
     ///<summary>
-    /// Aquaculture Prawns. 
+    /// Aquaculture Prawns.
     /// Simple prawn growth model.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -34,7 +34,7 @@ namespace Models.Aqua
 
         ///// <summary>The clock</summary>
         //[Link]
-        //private Clock Clock = null;
+        //private IClock Clock = null;
 
 
         [Link]
@@ -105,7 +105,7 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// DM digestibility: constant 
+        /// DM digestibility: constant
         /// (g/g)
         /// </summary>
         [Description("DM digestibility: constant")]
@@ -114,7 +114,7 @@ namespace Models.Aqua
 
         /// <summary>
         /// DM digestibility: DE/DM coefficient
-        /// (g/kJ) nb. DE/DM ratio is same, whether expressed as kJ/g or MJ/kg 
+        /// (g/kJ) nb. DE/DM ratio is same, whether expressed as kJ/g or MJ/kg
         /// </summary>
         [Description("DM digestibility: DE/DM coefficient")]
         [Units("(g/kJ)")]
@@ -123,7 +123,7 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// N digestibility: constant 
+        /// N digestibility: constant
         /// (g/g)
         /// </summary>
         [Description("N digestibility: constant")]
@@ -132,7 +132,7 @@ namespace Models.Aqua
 
         /// <summary>
         /// N digestibility: DE/DM coefficient
-        /// (g/kJ) nb. DE/DM ratio is same, whether expressed as kJ/g or MJ/kg 
+        /// (g/kJ) nb. DE/DM ratio is same, whether expressed as kJ/g or MJ/kg
         /// </summary>
         [Description("N digestibility: DE/DM coefficient")]
         [Units("(g/kJ)")]
@@ -178,7 +178,7 @@ namespace Models.Aqua
         /// Maintenance energy requirement in kJ for a 1g prawn.
         /// (kJ/g^0.8)
         /// This value is for a G8 prawn in Glencross et al. 2013;
-        /// (for the Jackson and Yang (1998) dataset, the value is 0.19) 
+        /// (for the Jackson and Yang (1998) dataset, the value is 0.19)
         /// </summary>
         [Description("Maintenance energy requirement in kJ for a 1g prawn.")]
         [Units("(kJ/g^0.8)")]
@@ -211,7 +211,7 @@ namespace Models.Aqua
         /// <summary>
         /// Efficiency of nitrogen use for growth
         /// (g/g)
-        /// Estimated very approximately by assuming 
+        /// Estimated very approximately by assuming
         /// a diet below 0.030 g CP/g DM will limit early prawn growth (at a typical DE:DM ratio of 16)
         /// and back calculating the corresponding efficiency.
         /// </summary>
@@ -286,7 +286,7 @@ namespace Models.Aqua
         /// <summary>
         /// Convert from grams to kg
         /// </summary>
-        double g2kg = 0.001; 
+        double g2kg = 0.001;
 
 
 
@@ -318,7 +318,7 @@ namespace Models.Aqua
         Food digestedFoodPP;
 
 
-        double energyMaintenancePP; 
+        double energyMaintenancePP;
         double weightGainPP;
         double nitrogenGainPP;
 
@@ -484,7 +484,7 @@ namespace Models.Aqua
             {
             double intake, consumed;
 
-            intake = Ki1 * Math.Pow(Prawns.LiveWeight, Ki2);  
+            intake = Ki1 * Math.Pow(Prawns.LiveWeight, Ki2);
             intake = intake * StressStock * stressTemp;
             consumed = (1 / Ki4) * intake;  //invert consumption efficiency to go back the other way.
             return consumed;
@@ -492,7 +492,7 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// Restricts the Potential total amount of DM Consumed (per prawn) by what is actually available in the pond to be consumed. 
+        /// Restricts the Potential total amount of DM Consumed (per prawn) by what is actually available in the pond to be consumed.
         /// </summary>
         /// <param name="FoodAvailable">Food that is currently in the pond</param>
         /// <param name="Prawns">Prawns that are currently in the pond</param>
@@ -506,7 +506,7 @@ namespace Models.Aqua
             if ((FoodAvailable.TotalDM <= 0.0) && (Prawns.NumberOfPrawns > 0))
                 {
                 Summary.WriteMessage(this, "There is no food in the pond. The prawns are starving", MessageType.Warning);
-                return 0.0; 
+                return 0.0;
                 }
 
             //Check there is enough food in the pond
@@ -527,7 +527,7 @@ namespace Models.Aqua
 
         /// <summary>
         /// Returns the feed that was destroyed by a single prawn in the process of feeding today.
-        /// Prawns are messy feeders and don't intake everything that they consume. 
+        /// Prawns are messy feeders and don't intake everything that they consume.
         /// </summary>
         /// <param name="FoodInPond">Food currently in the pond</param>
         /// <param name="CurrentFeed">A feed that is currently available for eating today</param>
@@ -549,7 +549,7 @@ namespace Models.Aqua
 
         /// <summary>
         /// Returns the feed actually ingested by the prawn today (given the feed that was consumed by that prawn today).
-        /// Prawns are messy feeders and don't intake everything that they consume. 
+        /// Prawns are messy feeders and don't intake everything that they consume.
         /// </summary>
         /// <param name="ConsumedFeedPP">Feed that the prawn has consumed today</param>
         /// <returns>(/prawn/d)</returns>
@@ -625,16 +625,16 @@ namespace Models.Aqua
             //ECG = 5.4 kJ/g
             //NCG = 0.030 g N/g
             //
-            //These values have been calculated from body composition information provided in Sarac et al (1994) 
+            //These values have been calculated from body composition information provided in Sarac et al (1994)
             //dry matter content = 0.26 g/g (an average of 3 quoted values)
-            //crude protein: dry weight = 0.72 g/g 
+            //crude protein: dry weight = 0.72 g/g
             //gross energy: dry weight = 20.8 kJ/g
             //and the standard CP:N ratio of 6.25
 
             double ecg = 5.4; // (kJ/g) Energy content of live weight gain
 
             double energy = Kg1 * (DigestedFoodPP.TotalDE - EnergyMaintenance);
-            return energy / ecg; 
+            return energy / ecg;
             }
 
 
@@ -649,9 +649,9 @@ namespace Models.Aqua
             //ECG = 5.4 kJ/g
             //NCG = 0.030 g N/g
             //
-            //These values have been calculated from body composition information provided in Sarac et al (1994) 
+            //These values have been calculated from body composition information provided in Sarac et al (1994)
             //dry matter content = 0.26 g/g (an average of 3 quoted values)
-            //crude protein: dry weight = 0.72 g/g 
+            //crude protein: dry weight = 0.72 g/g
             //gross energy: dry weight = 20.8 kJ/g
             //and the standard CP:N ratio of 6.25
 
@@ -665,7 +665,7 @@ namespace Models.Aqua
 
         /// <summary>
         /// Actual weight gain of an individual prawn based on the food it has digested.
-        /// Assumed to be the lesser of the Energy Limited and Nitrogen Limited growth. 
+        /// Assumed to be the lesser of the Energy Limited and Nitrogen Limited growth.
         /// </summary>
         /// <param name="DigestedFoodPP">Food the prawn has digested</param>
         /// <param name="EnergyMaintenance">Energy required to maintain this prawns weight</param>
@@ -702,7 +702,7 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// Number of prawns that died today. 
+        /// Number of prawns that died today.
         /// Background deaths (approximately equivalent to 20% per year)
         /// plus additional deaths due low salinity and high ammonium.
         /// (using an equation fitted to the data of Li et al 2007)
@@ -716,11 +716,11 @@ namespace Models.Aqua
             double background = Kd1;
 
             double lowSalinity = MathUtilities.Divide(Salinity, Kd3, 0.0);
-            lowSalinity = 1.0 - lowSalinity; 
-            lowSalinity = Math.Max(0, lowSalinity); 
+            lowSalinity = 1.0 - lowSalinity;
+            lowSalinity = Math.Max(0, lowSalinity);
 
             double highAmmonium = MathUtilities.Divide(Ammonium, Kd4, 0.0);
-            highAmmonium = highAmmonium - 1.0;  
+            highAmmonium = highAmmonium - 1.0;
             highAmmonium = Math.Max(0, highAmmonium);
             highAmmonium = Math.Pow(highAmmonium, Kd5);
 
@@ -781,7 +781,7 @@ namespace Models.Aqua
 
         private Feed FeedIntake(PrawnCohort Prawns, Feed IntakeFeedPP)
             {
-            double dm, n, de; 
+            double dm, n, de;
 
             dm = IntakeFeedPP.DryMatter * Prawns.NumberOfPrawns * g2kg;
             n = IntakeFeedPP.Nitrogen * Prawns.NumberOfPrawns * g2kg;
@@ -795,7 +795,7 @@ namespace Models.Aqua
 
         private Feed FeedDigested(PrawnCohort Prawns, Feed DigestedFeedPP)
             {
-            double dm, n, de; 
+            double dm, n, de;
 
             dm = DigestedFeedPP.DryMatter * Prawns.NumberOfPrawns * g2kg;
             n = DigestedFeedPP.Nitrogen * Prawns.NumberOfPrawns * g2kg;

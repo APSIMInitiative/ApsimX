@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
         /// Public so children can be dynamically created after links defined
         /// </summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -189,9 +189,9 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

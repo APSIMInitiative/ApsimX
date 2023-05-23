@@ -12,7 +12,7 @@ namespace Models.Soils
     ///<summary>
     /// .NET port of the Fortran SWIM3 model
     /// Ported by Eric Zurcher July 2014
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -26,7 +26,7 @@ namespace Models.Soils
         private ISummary summary = null;
 
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical physical = null;
 
         [Link]
@@ -89,27 +89,27 @@ namespace Models.Soils
         private const int max_iterations = 50;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private const double ersoil = 0.000001;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private const double ernode = 0.000001;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private const double errex = 0.01;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private const double dppl = 1;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private const double dpnl = 1;
 
@@ -451,7 +451,7 @@ namespace Models.Soils
         /// <summary>Water potential of layer</summary>
         [JsonIgnore]
         [Units("cm")]
-        public double[] PSI        
+        public double[] PSI
         {
             get
             {
@@ -470,7 +470,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Soil water potential including solute concentration effects. Not currently active. 
+        /// Soil water potential including solute concentration effects. Not currently active.
         /// Maybe useful in the future for salinity effects on plant water uptake.
         /// </summary>
         [Units("cm")]
@@ -666,7 +666,7 @@ namespace Models.Soils
         /// <param name="precipitationConstant">Precipitation constant (mm).</param>
         /// <param name="runoffRateFactor">Runoff rate factor (mm/mm^p).</param>
         /// <param name="runoffRatePower">Runoff rate power ().</param>
-        public void SetSurfaceBCForPowerFunction(double minimumSurfaceStorage, double maximumSurfaceStorage, 
+        public void SetSurfaceBCForPowerFunction(double minimumSurfaceStorage, double maximumSurfaceStorage,
                                                  double initialSurfaceStorage, double precipitationConstant,
                                                  double runoffRateFactor, double runoffRatePower)
         {
@@ -777,7 +777,7 @@ namespace Models.Soils
         {
             if (echo_directives != null && echo_directives.Trim() == "on")
                 summary.WriteMessage(this, "APSwim responding to tillage", MessageType.Diagnostic);
-            // THIS ISN'T RIGHT. 
+            // THIS ISN'T RIGHT.
             // I think the values for hm1, hm0, etc, are meant to be recovered from the event data,
             // but they aren't fields in the current TillageType structure.
             if (!Double.IsNaN(hm1))
@@ -799,11 +799,11 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Sum_Report()
         {
-            //Manager module can request that each module write its variables out to the summary file. This handles that event. 
+            //Manager module can request that each module write its variables out to the summary file. This handles that event.
 
             //+  Purpose
             //   Report all initial conditions and input parameters to the
@@ -1387,7 +1387,7 @@ namespace Models.Soils
 
             if (reset_theta == null && reset_psi == null)
             {
-                th = water.InitialValues.Clone() as double[]; 
+                th = water.InitialValues.Clone() as double[];
             }
 
             ibbc = 0;
@@ -1493,7 +1493,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="vegnum"></param>
         /// <param name="uarray"></param>
@@ -1513,7 +1513,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="vegnum"></param>
         /// <param name="sol"></param>
@@ -2016,13 +2016,13 @@ namespace Models.Soils
                     // Calculate an amount of solution in solution (kg/ha)
                     double[] concInWater = ConcWaterSolute(solnum);
                     solutes[solnum].AmountInSolution = MathUtilities.Multiply(concInWater, th);
-                    solutes[solnum].AmountInSolution = SoilUtilities.ppm2kgha(physical.Thickness, physical.BD, 
+                    solutes[solnum].AmountInSolution = SoilUtilities.ppm2kgha(physical.Thickness, physical.BD,
                                                                               solutes[solnum].AmountInSolution);
                     solutes[solnum].ConcAdsorpSolute = ConcAdsorptionSolute(solnum);
 
                     // Calculate amount of solute lost (kg/ha) in runoff water.
-                    if (TD_runoff > 0 && 
-                        solutes[solnum].DepthConstant > 0 && 
+                    if (TD_runoff > 0 &&
+                        solutes[solnum].DepthConstant > 0 &&
                         solutes[solnum].MaxDepthSoluteAccessible > 0 &&
                         solutes[solnum].MaxEffectiveRunoff > 0 &&
                         solutes[solnum].RunoffEffectivenessAtMovingSolute > 0)
@@ -2502,7 +2502,7 @@ namespace Models.Soils
 
             for (int node = 0; node <= n+1; node++)
                 TD_wflow[node] = 0.0;
-            
+
             for (int node = 0; node <= n; node++)
             {
                 for (int vegnum = 0; vegnum < num_crops; vegnum++)
@@ -2804,7 +2804,7 @@ namespace Models.Soils
 
                 if (fail)
                 {
-                    // SWIM failed to find a solution, should reset values to its previous state 
+                    // SWIM failed to find a solution, should reset values to its previous state
                     // and attempt to solve again with a smaller dt
 
                     ShowDiagnostics(pold);
@@ -3136,7 +3136,7 @@ namespace Models.Soils
                 // water table boundary condition
                 solute_bbc = constant_conc;
             else if (ibbc == 0 && q[n + 1] < 0)
-                // you have a gradient with flow upward 
+                // you have a gradient with flow upward
                 solute_bbc = constant_conc;
             else
                 solute_bbc = convection_only;
@@ -3232,7 +3232,7 @@ namespace Models.Soils
                     //RC         Changed by RCichota 30/jan/2010
                     exco1 = ex[solnum][j] * c2[i];
                     //            exco1=p%ex(solnum,j)*p%fip(solnum,j)*c2(i)    !<---old code
-                    //			
+                    //
                 }
                 b[i] = (-(thi + exco1) / _dt) * dx[i] - qssof[i];
                 //nh     1        apswim_slupf(1,solnum)*g%qex(i)-g%qssof(i)
@@ -3447,7 +3447,7 @@ namespace Models.Soils
                             //````````````````````````````````````````````````````````````````````````````````````````````````````````````````
                             // Changes in the calc of d1 are to agree with the calc of exco1 above (no need to multiply by p%fip
                             // If p%fip < 1, the unkown is Cw, and is only used in the calc of b. thus rhs is commented out.
-                            //`	 
+                            //`
                         }
                     }
                     goto loop;
@@ -3544,7 +3544,7 @@ namespace Models.Soils
                 j = n;
                 qsl[solnum][n + 1] = qsl[solnum][n] - qsls[solnum][n] - qssof[n] * csl[solnum][n];
                 //nh     :                  -g%qex(p%n)*g%csl(solnum,p%n)*p%slupf(solnum)
-                //nh     :              -g%qex(p%n)*g%csl(solnum,p%n)*apswim_slupf(1,solnum)                 
+                //nh     :              -g%qex(p%n)*g%csl(solnum,p%n)*apswim_slupf(1,solnum)
 
                 for (int crop = 0; crop < num_crops; crop++)
                     qsl[solnum][n + 1] -= qr[n][crop] * csl[solnum][n] * Slupf(crop, solnum);
@@ -4202,7 +4202,7 @@ namespace Models.Soils
                                                   //! first in the pairs of log suction vs p%wc
 
             // EJZ - this was in the fortran source, but is clearly futile
-            //if (thsat == 0.0)       
+            //if (thsat == 0.0)
             //    thsat = _sat[ix];
 
             if (WaterVapourConductivityOn)
@@ -4433,7 +4433,7 @@ namespace Models.Soils
             }
 
             //   get soil surface fluxes, taking account of top boundary condition
-            //   
+            //
             double respsi;
             double roffd;
             if (itbc == 0)

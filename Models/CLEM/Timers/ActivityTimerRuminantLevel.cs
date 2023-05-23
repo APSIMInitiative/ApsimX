@@ -28,7 +28,7 @@ namespace Models.CLEM.Timers
     [Version(1, 0, 1, "")]
     public class ActivityTimerRuminantLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [Link] Clock clock = null;
+        [Link] IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -78,7 +78,7 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// Determines if a property name is needed from user
         /// </summary>
-        public bool PropertyNameNeeded() => TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals; 
+        public bool PropertyNameNeeded() => TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals;
 
         private IEnumerable<string> GetParameters() => typeof(Ruminant).GetProperties().Where(a => a.PropertyType == typeof(double) || a.PropertyType == typeof(int)).Select(a => a.Name).OrderBy(k => k);
 

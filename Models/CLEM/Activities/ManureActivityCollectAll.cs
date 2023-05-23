@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class ManureActivityCollectAll : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // locate a cut and carry limiter associarted with this event.
-            limiter = ActivityCarryLimiter.Locate(this); 
+            limiter = ActivityCarryLimiter.Locate(this);
         }
 
         /// <inheritdoc/>

@@ -106,7 +106,7 @@ namespace Models.PMF.Struct
 			}
 			return dltLeafNoMainCulm;
         }
-        
+
 		/// <summary> Calculate the potential leaf area for the tillers</summary>
 		public double CalcPotentialLeafArea()
         {
@@ -132,7 +132,7 @@ namespace Models.PMF.Struct
 			var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
 			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
-			
+
 			// In sorghum, this is added to current leafno immediately. In
 			// maize, this doesn't happen until end of day.
 			culm.AddNewLeaf(dltLeafNo);
@@ -187,8 +187,8 @@ namespace Models.PMF.Struct
 			if (FertileTillerNumber - CurrentTillerNumber < 1)
 				fraction = FertileTillerNumber - CurrentTillerNumber;
 
-			// get number of tillers 
-			// add fractionToAdd 
+			// get number of tillers
+			// add fractionToAdd
 			// if new tiller is neded add one
 			// fraction goes to proportions
 			double tillerFraction = culms.Culms.Last().Proportion;
@@ -310,7 +310,7 @@ namespace Models.PMF.Struct
 				// South Queensland.
 				if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
 				{
-					// Between 1 July and 15 November. 
+					// Between 1 July and 15 November.
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double  (2.0).
@@ -352,7 +352,7 @@ namespace Models.PMF.Struct
 				// Northern NSW.
 				if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
 				{
-					//  Between 1 July and 15 November. 
+					//  Between 1 July and 15 November.
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).

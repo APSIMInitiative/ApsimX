@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         private double amountToDo;
         private double amountToSkip;
         private string task = "";
@@ -212,7 +212,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on associated Fee components</div>");
                 return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }
