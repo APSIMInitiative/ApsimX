@@ -1,20 +1,20 @@
-﻿namespace Models.Climate
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.PMF.Scrum;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Scrum;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 
+namespace Models.Climate
+{
     ///<summary>
     /// Reads in temperature data over a specified period and returns thermal time sum.
     ///</summary>
     [Serializable]
-    [ValidParent(ParentType=typeof(Referee))]
+    [ValidParent(ParentType=typeof(CoefficientCalculator))]
     public class GetTempSum : Model, IReferenceExternalFiles
     {
         /// <summary>
@@ -107,7 +107,7 @@
             for (DateTime d = start; d <= end; d = d.AddDays(1))
             {
                 DailyMetDataFromFile TodaysMetData = GetMetData(d); // Read another line ahead to get tomorrows data
-                TtSum += Math.Max(0,(TodaysMetData.MaxT+TodaysMetData.MinT)/2);
+                TtSum += Math.Max(0,((TodaysMetData.MaxT+TodaysMetData.MinT)-BaseT)/2);
             }
 
             if (this.reader != null)
@@ -115,6 +115,39 @@
             this.reader = null;
 
             return TtSum;
+        }
+
+        /// <summary>
+        /// Calculates the accumulated thermal time between two dates
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="HarvTt"></param>
+        /// <param name="BaseT"></param>
+        public DateTime GetHarvestDate(DateTime start, double HarvTt, double BaseT)
+        {
+            this.maximumTemperatureIndex = 0;
+            this.minimumTemperatureIndex = 0;
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
+            }
+
+            double TtSum = 0;
+            DateTime d = start;
+            while (TtSum < HarvTt)
+            {
+                DailyMetDataFromFile TodaysMetData = GetMetData(d); // Read another line ahead to get tomorrows data
+                TtSum += Math.Max(0, ((TodaysMetData.MaxT + TodaysMetData.MinT) - BaseT) / 2);
+                d = d.AddDays(1);
+            }
+
+
+            if (this.reader != null)
+                this.reader.Close();
+            this.reader = null;
+
+            return d;
         }
 
         /// <summary>Method to read one days met data in from file</summary>
