@@ -9,7 +9,6 @@ namespace Models.PMF.Scrum
     /// <summary>
     /// Data structure that contains information for a specific crop type in Scrum
     /// </summary>
-    [ValidParent(ParentType = typeof(Referee))]
     [ValidParent(ParentType = typeof(Plant))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -89,15 +88,41 @@ namespace Models.PMF.Scrum
             scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
             scrum.Phenology.Emerged = true;
         }
+        
+        /// <summary>Stages that Scrum crops may be established at</summary>
+        public enum EstablishStages
+        {
+            /// <summary>Crop established as dry seed</summary>
+            Seed,
+            /// <summary>Crop established by transplanting seedlings</summary>
+            Seedling,
+        };
+
+        /// <summary>Stages that Scrum crops may be established at</summary>
+        public enum HarvestStages
+        {
+            /// <summary>Crop harvested prior to reproductive growth e.g lettice</summary>
+            Vegetative,
+            /// <summary>Crop harvested in an early reproductive state e.g brocolii</summary>
+            EarlyReproductive,
+            /// <summary>Crop harvested in mid reproductive state e.g green peas</summary>
+            MidReproductive,
+            /// <summary>Crop harvested in late reproductive state e.g canola</summary>
+            LateReproductive,
+            /// <summary>Crop harvested at maturity e.g wheat if dried in storage</summary>
+            Maturity,
+            /// <summary>Crop harvested after maturity e.g wheat dried standing</summary>
+            Ripe,
+        };
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { { "Sowing", 0.0066 },{ "Seedling", 0.015 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.75},
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { { "Seed", 0.0066 },{ "Seedling", 0.015 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.75},
             { "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9933},{"Ripe",0.9995 } };
 
         /// <summary>Dictionary containing values for the proportion of thermal time to maturity that has accumulate at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { { "Sowing", 0 },{ "Seedling", 0.16 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.61},
+        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { { "Seed", 0 },{ "Seedling", 0.16 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.61},
             { "MidReproductive",0.69},{  "LateReproductive",0.8},{"Maturity",1.0},{"Ripe",1.27} };
 
         [JsonIgnore]
@@ -142,7 +167,7 @@ namespace Models.PMF.Scrum
             else
                 cropParams["FixationRate"] += "0.0";
             cropParams["DryMatterContent"] += ((100 - this.MoisturePc) / 100).ToString();
-            cropParams["ExpectedYield"] += management.ExpectedYield.ToString();
+            cropParams["ExpectedYield"] += (management.ExpectedYield * 100).ToString();
             cropParams["HarvestIndex"] += this.HarvestIndex.ToString();
             cropParams["ProductNConc"] += this.ProductNConc.ToString();
             cropParams["StoverNConc"] += this.StoverNConc.ToString();
@@ -160,8 +185,7 @@ namespace Models.PMF.Scrum
             }
             else
             {
-                Tt_Harv = management.HarvestTt;
-                management.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate, management.HarvestTt, this.BaseT);
+                Tt_Harv = management.HarvestTt;     
             }
 
             double Tt_estab = Tt_Harv * (PropnTt[management.EstablishStage] / PropnTt[management.HarvestStage]);
@@ -176,7 +200,7 @@ namespace Models.PMF.Scrum
             cropParams["XoCover"] += Xo_cov.ToString();
             cropParams["bCover"] += b_cov.ToString();
 
-            cropParams["TtSeedling"] += (T_mat * (PropnTt["Seedling"] - PropnTt["Sowing"])).ToString();
+            cropParams["TtSeedling"] += (T_mat * (PropnTt["Seedling"] - PropnTt["Seed"])).ToString();
             cropParams["TtVegetative"] += (T_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
             cropParams["TtEarlyReproductive"] += (T_mat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
             cropParams["TtMidReproductive"] += (T_mat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();

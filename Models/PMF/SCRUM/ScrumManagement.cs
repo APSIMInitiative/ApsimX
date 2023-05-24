@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Interfaces;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Models.PMF.Scrum
 {
@@ -50,11 +51,30 @@ namespace Models.PMF.Scrum
         [Description("Expected Yield (t/Ha)")]
         public double ExpectedYield { get; set; }
 
+        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field 
+        /// because of diseaese, poor quality or lack of market)</summary>
+        [Description("Field loss (0-1)")]
+        public double FieldLoss { get; set; }
+
+        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field 
+        /// by bailing or some other means)</summary>
+        [Description("Residue removal (0-1)")]
+        public double ResidueRemoval { get; set; }
+
+        [JsonIgnore] private RemovalFractions Remove { get; set; }
+
         [Link(Type =LinkType.Scoped)]
         private Clock clock = null;
         
         [Link(Type=LinkType.Ancestor)]
         private Zone zone = null;
+
+        /// <summary>The plant</summary>
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        public Plant scrum = null;
+
+        [Link]
+        private GetTempSum ttSum = null;
 
         /// <summary>
         /// Parameterless constructor
@@ -93,6 +113,23 @@ namespace Models.PMF.Scrum
                 {
                     ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);
                     currentCrop.Establish(this);
+                    if (HarvestDate == null)
+                    {
+                        HarvestDate = ttSum.GetHarvestDate(EstablishDate, HarvestTt, currentCrop.BaseT);
+                    }
+                }
+
+                if (clock.Today == HarvestDate)
+                {
+                    Remove = new RemovalFractions();
+                    Remove.SetFractionToResidue("Product", FieldLoss);
+                    Remove.SetFractionToRemove("Product", 1 - FieldLoss);
+                    Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval);
+                    Remove.SetFractionToRemove("Stover", ResidueRemoval);
+                    Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval,"dead");
+                    Remove.SetFractionToRemove("Stover", ResidueRemoval,"dead");
+                    scrum.RemoveBiomass("Harvest",Remove);
+                    scrum.EndCrop();
                 }
             }
         }
