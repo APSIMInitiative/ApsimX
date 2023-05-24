@@ -58,7 +58,7 @@ namespace Models.CLEM.Groupings
                 {
                     case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
                     case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                        htmlWriter.Write("<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "</span>");
+                        htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value}</span>");
                         break;
                     default:
                         break;

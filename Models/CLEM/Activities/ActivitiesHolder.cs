@@ -205,7 +205,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
+            return $"\r\n<div class=\"activity\"style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">";
         }
 
         /// <inheritdoc/>

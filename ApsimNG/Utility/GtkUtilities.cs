@@ -1,11 +1,11 @@
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace Utility
 {
-    using Gtk;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-
-    public static class GtkUtil
+    public static class GtkUtilities
     {
         /// <summary>
         /// Detaches all event handlers on the widget and all descendants.

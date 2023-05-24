@@ -1,10 +1,11 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using Models.GrazPlan;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using Interfaces;
-    using Models.GrazPlan;
-    using Views;
 
     /// <summary>
     /// A presenter class for the supplement model
@@ -19,7 +20,7 @@
         /// <summary>
         /// The initial water view;
         /// </summary>
-        private ISupplementView supplementView;
+        private SupplementView supplementView;
 
         /// <summary>
         /// The parent explorer presenter.

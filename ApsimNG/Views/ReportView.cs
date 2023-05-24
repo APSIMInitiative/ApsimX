@@ -1,48 +1,10 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using GLib;
+using Gtk;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using GLib;
-    using Extensions;
-    using Gtk;
-    using Interfaces;
-
-    interface IReportView
-    {
-        /// <summary>Provides access to the variable list.</summary>
-        IEditorView VariableList { get; }
-
-        /// <summary>Provides access to the variable list.</summary>
-        IEditorView EventList { get; }
-
-        /// <summary>Provides access to the DataGrid.</summary>
-        ViewBase DataStoreView { get; }
-
-        /// <summary>Provides access to the group by edit.</summary>
-        IEditView GroupByEdit { get; }
-
-        /// <summary>
-        /// Invoked when the user moves the vertical splitter
-        /// between the two text editors.
-        /// </summary>
-        event EventHandler SplitterChanged;
-
-        /// <summary>
-        /// Invoked when the selected tab is changed.
-        /// </summary>
-        event EventHandler TabChanged;
-
-        /// <summary>
-        /// Indicates the index of the currently active tab
-        /// </summary>
-        int TabIndex { get; set; }
-
-        /// <summary>
-        /// Position of the splitter between the variable and
-        /// frequency text editors. Larger number means further
-        /// down.
-        /// </summary>
-        int SplitterPosition { get; set; }
-    }
 
     /// <summary>
     /// View for a report component.
@@ -230,5 +192,43 @@
                 panel.Position = value;
             }
         }
+    }
+
+    interface IReportView
+    {
+        /// <summary>Provides access to the variable list.</summary>
+        IEditorView VariableList { get; }
+
+        /// <summary>Provides access to the variable list.</summary>
+        IEditorView EventList { get; }
+
+        /// <summary>Provides access to the DataGrid.</summary>
+        ViewBase DataStoreView { get; }
+
+        /// <summary>Provides access to the group by edit.</summary>
+        IEditView GroupByEdit { get; }
+
+        /// <summary>
+        /// Invoked when the user moves the vertical splitter
+        /// between the two text editors.
+        /// </summary>
+        event EventHandler SplitterChanged;
+
+        /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        event EventHandler TabChanged;
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
+
+        /// <summary>
+        /// Position of the splitter between the variable and
+        /// frequency text editors. Larger number means further
+        /// down.
+        /// </summary>
+        int SplitterPosition { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using System;
+using System.Linq.Expressions;
 
 namespace Models
 {
@@ -23,9 +24,31 @@ namespace Models
             if (tokens.Length == 1)
             {
                 new EventReportFrequency(report, events, tokens[0]);
-                return true;
+            } 
+            else if (tokens.Length > 1) 
+            {
+                try
+                {
+                    new EventReportFrequency(report, events, tokens[0]);
+                }
+                catch
+                {   //if trying with only first token failed, try again with entire line
+                    try
+                    {
+                        new EventReportFrequency(report, events, line);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            } 
+            else
+            {
+                return false;
             }
-            return false;
+
+            return true;
         }
 
         /// <summary>

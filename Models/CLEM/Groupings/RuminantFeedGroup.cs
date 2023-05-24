@@ -247,7 +247,7 @@ namespace Models.CLEM.Groupings
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                        htmlWriter.Write("<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "kg</span>");
+                        htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value} kg</span>");
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                     case RuminantFeedActivityTypes.ProportionOfWeight:
@@ -255,7 +255,7 @@ namespace Models.CLEM.Groupings
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                         if (Value != 1)
                         {
-                            htmlWriter.Write("<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString("0.##%") + "</span>");
+                            htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value.ToString("0.##%")}</span>");
                         }
                         break;
                     default:

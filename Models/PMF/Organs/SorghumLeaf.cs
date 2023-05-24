@@ -155,12 +155,24 @@ namespace Models.PMF.Organs
         public int TilleringMethod { get; set; }
 
         /// <summary>Determined by the tillering method chosen.</summary>
-        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user at sowing.</summary>
+        [JsonIgnore]
         [Description("Fertile Tiller Number")]
-        public double FertileTillerNumber => culms.FertileTillerNumber;
+        public double FertileTillerNumber 
+        { 
+            get  => culms.FertileTillerNumber; 
+            set 
+            {
+                //the preferred method for setting FertileTillerNumber is during the sowing event
+                //this is here to enable access by external processes immediately following sowing
+                //setting it after sowing will produce unexpected results
+                culms.FertileTillerNumber = value; 
+            } 
+        }
 
         /// <summary>Determined by the tillering method chosen.</summary>
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        [JsonIgnore]
         [Description("Current Tiller Number")]
         public double CurrentTillerNumber => culms.CurrentTillerNumber;
 
