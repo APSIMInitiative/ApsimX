@@ -1,11 +1,9 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
-using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;

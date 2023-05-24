@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.CLEM.Resources;
+﻿using Models.CLEM.Resources;
 using Models.Core;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// A CLEM model able to be identified by the parent given a user specified identifier
     /// </summary>
-    public interface IActivityCompanionModel: IModel
+    public interface IActivityCompanionModel : IModel
     {
         /// <summary>
         /// Identifier of this component 

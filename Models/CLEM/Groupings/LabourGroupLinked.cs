@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Models.CLEM.Groupings
 {
@@ -23,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This filter group provides a link to an existing labour group")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourGroupLinked.htm")]
-    public class LabourGroupLinked: LabourGroup, IValidatableObject
+    public class LabourGroupLinked : LabourGroup, IValidatableObject
     {
         [NonSerialized]
         private IEnumerable<LabourGroup> groupsAvailable;

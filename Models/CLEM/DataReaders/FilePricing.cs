@@ -1,7 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -11,8 +10,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM
 {

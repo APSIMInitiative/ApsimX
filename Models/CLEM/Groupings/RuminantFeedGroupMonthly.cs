@@ -1,17 +1,13 @@
-using Models.Core;
 using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using Newtonsoft.Json;
-using Models.CLEM.Resources;
 using System.IO;
-using System.Xml.Serialization;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -38,8 +34,9 @@ namespace Models.CLEM.Groupings
         public double[] MonthlyValues { get; set; }
 
         /// <inheritdoc/>
-        public override double CurrentValue{
-            get { return MonthlyValues[clock.Today.Month - 1]; } 
+        public override double CurrentValue
+        {
+            get { return MonthlyValues[clock.Today.Month - 1]; }
         }
 
         /// <summary>
@@ -177,7 +174,7 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write("</div>");
                 }
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

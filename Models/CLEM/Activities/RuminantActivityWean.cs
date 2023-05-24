@@ -4,15 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
-using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
-using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {

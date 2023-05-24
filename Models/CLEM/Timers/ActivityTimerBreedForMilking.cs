@@ -32,7 +32,7 @@ namespace Models.CLEM.Timers
         private int minConceiveInterval;
         private int startBreedCycleGestationOffsett;
         private int pregnancyDuration;
-        private RuminantType breedParams; 
+        private RuminantType breedParams;
         private RuminantActivityBreed breedParent = null;
         private RuminantActivityControlledMating controlledMatingParent = null;
 
@@ -103,7 +103,7 @@ namespace Models.CLEM.Timers
             }
 
             // get the milking period
-            milkingsPerConceptionsCycle = Math.Ceiling((minConceiveInterval * 1.0)/ monthsOfMilking);
+            milkingsPerConceptionsCycle = Math.Ceiling((minConceiveInterval * 1.0) / monthsOfMilking);
         }
 
         /// <summary>An event handler to determine the breeders to breed</summary>
@@ -162,7 +162,7 @@ namespace Models.CLEM.Timers
                 numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
             }
 
-            if(numberNeeded > 0)
+            if (numberNeeded > 0)
             {
                 // return the number needed of breeders able to mate in this timestep
                 IndividualsToBreed = breedersNotTooOldToMate.Where(a => a.IsAbleToBreed).Take(numberNeeded);
@@ -183,7 +183,7 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                if(IndividualsToBreed != null && IndividualsToBreed.Any())
+                if (IndividualsToBreed != null && IndividualsToBreed.Any())
                 {
                     return true;
                 }
@@ -213,13 +213,13 @@ namespace Models.CLEM.Timers
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("\r\nTiming of breeding and selection of breeders for continous milk production");
-                if(RestMonths + ShortenLactationMonths > 0)
+                if (RestMonths + ShortenLactationMonths > 0)
                 {
                     htmlWriter.Write("\r\n<br />");
-                    if(RestMonths > 0)
+                    if (RestMonths > 0)
                     {
-                        htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths>1)?"s":"")} rest after lactation");
-                        if(ShortenLactationMonths > 0)
+                        htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths > 1) ? "s" : "")} rest after lactation");
+                        if (ShortenLactationMonths > 0)
                             htmlWriter.Write(" and ");
                     }
                     if (ShortenLactationMonths > 0)
