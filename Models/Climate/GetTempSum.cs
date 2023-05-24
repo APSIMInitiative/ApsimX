@@ -14,7 +14,7 @@ namespace Models.Climate
     /// Reads in temperature data over a specified period and returns thermal time sum.
     ///</summary>
     [Serializable]
-    [ValidParent(ParentType=typeof(CoefficientCalculator))]
+    [ValidParent(ParentType=typeof(Simulation))]
     public class GetTempSum : Model, IReferenceExternalFiles
     {
         /// <summary>

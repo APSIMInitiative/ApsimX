@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 526,
+  "ExplorerWidth": 293,
   "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
@@ -6034,6 +6034,48 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Scrum.ScrumCrop, Models",
+              "HarvestIndex": 0.5,
+              "MoisturePc": 12.0,
+              "Proot": 0.1,
+              "MaxRD": 1005.0,
+              "Acover": 0.97,
+              "ExtinctCoeff": 0.55,
+              "RootNConc": 0.01,
+              "StoverNConc": 0.01,
+              "ProductNConc": 0.015,
+              "Legume": false,
+              "BaseT": 0.0,
+              "OptT": 30.0,
+              "MaxT": 40.0,
+              "Name": "Cereal",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Scrum.ScrumCrop, Models",
+              "HarvestIndex": 0.5,
+              "MoisturePc": 12.0,
+              "Proot": 0.1,
+              "MaxRD": 600.0,
+              "Acover": 0.97,
+              "ExtinctCoeff": 0.85,
+              "RootNConc": 0.01,
+              "StoverNConc": 0.03,
+              "ProductNConc": 0.025,
+              "Legume": true,
+              "BaseT": 0.0,
+              "OptT": 30.0,
+              "MaxT": 40.0,
+              "Name": "Legume",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -6092,6 +6134,16 @@
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Climate.GetTempSum, Models",
+          "FileName": null,
+          "ExcelWorkSheetName": null,
+          "Name": "GetTempSum",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -6649,7 +6701,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Referee referee;\r\n        \r\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n\n        /// <summary>Establishment Stage</summary>\n        [Description(\"Establishment Stage\")]\n        [Display(Type = DisplayType.CropStageName)]\n        public string EstablishStage { get; set; }\n\n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Harvest Stage</summary>\n        [Description(\"Harvest Stage\")]\n        [Display(Type = DisplayType.CropStageName)]\n        public string HarvestStage { get; set; }\n\n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Expected Yield (t/Ha\")]\n        public double ExpectedYield { get; set; }\n        \n        private ScrumManagement management {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage,HarvestStage,ExpectedYield,\n                HarvestDate, HarvestTT);\n                referee.SetScrumRunning(management);   \r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\r\n        \r\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        [Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n\n        /// <summary>Establishment Stage</summary>\n        [Description(\"Establishment Stage\")]\n        [Display(Type = DisplayType.CropStageName)]\n        public string EstablishStage { get; set; }\n\n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Harvest Stage</summary>\n        [Description(\"Harvest Stage\")]\n        [Display(Type = DisplayType.CropStageName)]\n        public string HarvestStage { get; set; }\n\n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Expected Yield (t/Ha\")]\n        public double ExpectedYield { get; set; }\n        \n        private ScrumManagement management {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage,HarvestStage,ExpectedYield,\n                HarvestDate, HarvestTT);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);\n                //referee.SetScrumRunning(management);   \r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "CropName",
@@ -6683,7 +6735,7 @@
               "Name": "Sow Cereal on a fixed date",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -6695,72 +6747,17 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Scrum.Referee, Models",
-              "Name": "Referee",
+              "$type": "Models.PMF.Scrum.ScrumManagement, Models",
+              "CropName": "Cereal",
+              "EstablishDate": "1998-10-14T00:00:00",
+              "EstablishStage": "Sowing",
+              "HarvestDate": "1999-04-14T00:00:00",
+              "HarvestTt": 0.0,
+              "HarvestStage": "Maturity",
+              "ExpectedYield": 5.3,
+              "Name": "ScrumManagement",
               "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
-                  "HarvestIndex": 0.5,
-                  "MoisturePc": 12.0,
-                  "Proot": 0.1,
-                  "MaxRD": 1005.0,
-                  "Acover": 0.97,
-                  "ExtinctCoeff": 0.55,
-                  "RootNConc": 0.01,
-                  "StoverNConc": 0.01,
-                  "ProductNConc": 0.015,
-                  "Legume": false,
-                  "BaseT": 0.0,
-                  "OptT": 30.0,
-                  "MaxT": 40.0,
-                  "Name": "Cereal",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
-                  "HarvestIndex": 0.5,
-                  "MoisturePc": 12.0,
-                  "Proot": 0.1,
-                  "MaxRD": 600.0,
-                  "Acover": 0.97,
-                  "ExtinctCoeff": 0.85,
-                  "RootNConc": 0.01,
-                  "StoverNConc": 0.03,
-                  "ProductNConc": 0.025,
-                  "Legume": true,
-                  "BaseT": 0.0,
-                  "OptT": 30.0,
-                  "MaxT": 40.0,
-                  "Name": "Legume",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Scrum.CoefficientCalculator, Models",
-                  "Name": "CoefficientCalculator",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Climate.GetTempSum, Models",
-                      "FileName": null,
-                      "ExcelWorkSheetName": null,
-                      "Name": "GetTempSum",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7532,8 +7529,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.02197671388409669,
-              "Maximum": 2.218648102319028,
+              "Minimum": -0.022110446493937782,
+              "Maximum": 2.232155095912978,
               "Interval": null
             },
             {
@@ -7542,8 +7539,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -28.171010016331422,
-              "Maximum": 2845.2710116494986,
+              "Minimum": -21.412563839552185,
+              "Maximum": 3611.0679040211444,
               "Interval": null
             }
           ],
@@ -7830,8 +7827,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.3118258065215979,
-              "Maximum": 31.49340645870665,
+              "Minimum": -0.32825448431663384,
+              "Maximum": 33.152702916005275,
               "Interval": null
             },
             {
@@ -8243,8 +8240,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -28.171010016331422,
-              "Maximum": 2845.2710116494986,
+              "Minimum": -21.412563839552185,
+              "Maximum": 3611.0679040211444,
               "Interval": null
             },
             {
@@ -8253,8 +8250,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -9.961294638079353,
-              "Maximum": 1006.08975844604,
+              "Minimum": -1.6090736654020752,
+              "Maximum": 1006.0070631888848,
               "Interval": null
             }
           ],
@@ -8407,8 +8404,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.020051123393980227,
-              "Maximum": 2.024163462817265,
+              "Minimum": -0.02003625958937633,
+              "Maximum": 2.0226622185522714,
               "Interval": null
             },
             {

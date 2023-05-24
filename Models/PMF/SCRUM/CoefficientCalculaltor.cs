@@ -79,12 +79,12 @@ namespace Models.PMF.Scrum
             double Tt_Harv = 0.0;
             if (Double.IsNaN(management.HarvestTt)||(management.HarvestTt==0))
             {
-                Tt_Harv = ttSum.GetTtSum(management.EstablishmentDate, (DateTime)management.HarvestDate, crop.BaseT);
+                Tt_Harv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, crop.BaseT);
             }
             else
             {
                 Tt_Harv = management.HarvestTt;
-                management.HarvestDate = ttSum.GetHarvestDate(management.EstablishmentDate, management.HarvestTt, crop.BaseT);
+                management.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate, management.HarvestTt, crop.BaseT);
             }
 
             double Tt_estab = Tt_Harv * (PropnTt[management.EstablishStage] / PropnTt[management.HarvestStage]);
