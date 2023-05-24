@@ -1,17 +1,15 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace Models.Surface
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-
     /// <summary>
     /// The surface organic matter model.
     /// </summary>
@@ -534,7 +532,7 @@ namespace Models.Surface
         /// <summary>Called when a plant drops biomass to the soil surface</summary>
         /// <param name="BiomassRemoved">The biomass removed.</param>
         [EventSubscribe("BiomassRemoved")]
-        private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved)
+        public void OnBiomassRemoved(BiomassRemovedType BiomassRemoved)
         {
             double surfomAdded = 0;   // amount of residue added (kg/ha)
             double surfomNAdded = 0;  // amount of residue N added (kg/ha)

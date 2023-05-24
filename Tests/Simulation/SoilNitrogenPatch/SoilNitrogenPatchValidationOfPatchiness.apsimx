@@ -6,6 +6,15 @@
   "ResourceName": null,
   "Children": [
     {
+      "$type": "Models.Memo, Models",
+      "Text": "The purpose of this simulation is to test that creating multiple patches (but then not doing anything else to make them different from each other) does not change any outputs when compared to the default/single patch. It might, perhaps, do with a better name.\n\nSucess is when the delets are zero.",
+      "Name": "Memo",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
