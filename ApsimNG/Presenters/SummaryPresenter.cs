@@ -12,6 +12,7 @@ using UserInterface.Commands;
 using UserInterface.EventArguments;
 using DocumentFormat.OpenXml.Presentation;
 using System.Data;
+using Models.Soils;
 
 namespace UserInterface.Presenters
 {
@@ -185,7 +186,80 @@ namespace UserInterface.Presenters
                 }
                 // Print out a set of initial conditions without the solutes.
                 markdown.AppendLine(string.Join("", tablesWithoutSolutes.Select(i => i.ToMarkdown())));
+                // Now arrange solutes into a nice markdown table.
+                StringBuilder soluteMarkdownTable = new StringBuilder();
+                soluteMarkdownTable.AppendLine("### Solutes");
+                soluteMarkdownTable.AppendLine();
+                soluteMarkdownTable.Append("|");
 
+
+                // Table headings
+                foreach (InitialConditionsTable table in soluteTables)
+                {
+                    soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
+                }
+
+                soluteMarkdownTable.AppendLine();
+                soluteMarkdownTable.Append("|");
+                // Dividers for headings.
+                foreach (InitialConditionsTable table in soluteTables)
+                {
+                    soluteMarkdownTable.AppendFormat("---|---|---|");
+                }
+
+                soluteMarkdownTable.AppendLine();
+                // Value columns
+                foreach (InitialConditionsTable table in soluteTables)
+                {
+                    IEnumerable<string> units = table.Conditions.Select(i => i.Units);
+                    List<string> unitStrings = units.ToList();
+                    if (unitStrings[1] == "ppm")
+                        soluteMarkdownTable.Append($"|**Depth (mm)**|**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (kg/ha)**");
+                    else
+                        soluteMarkdownTable.Append($"|**Depth (mm)**|**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (ppm)**");
+
+
+                }
+                soluteMarkdownTable.Append("|");
+           
+                List<List<InitialCondition>> allInitialConditionsLists = new();
+
+                // List for storing new condition value lists.
+                List<List<string>> tempValueLists = new();
+                foreach (InitialConditionsTable table in soluteTables)
+                {
+                    // Temp storage for each condition for allInitialConditionsLists.
+                    List<InitialCondition> conditions = new List<InitialCondition>();
+                    foreach (InitialCondition condition in table.Conditions)
+                    {                       
+                        string stringToBeList = condition.Value;
+                        List<string> newConditionValueList = stringToBeList.Split(", ").ToList(); // this needs to be done lower down.
+                        tempValueLists.Add(newConditionValueList);
+                        conditions.Add(condition);                      
+                    }
+                    allInitialConditionsLists.Add(conditions);
+                }
+
+                // Print the values line-by-line for each condition.
+                soluteMarkdownTable.AppendLine();
+                foreach (List<InitialCondition> conditionlist in allInitialConditionsLists)
+                {
+                    // Gets the list length of one of the InitialCondition value lists.
+                    int valueCount = tempValueLists[0].Count;
+                    // Create a markdown table row for each value in the list.
+                    for (int i=0; i<valueCount; i++)
+                    {
+                        soluteMarkdownTable.Append("|");
+                        // Put the actual value in the markdown table.
+                        foreach (List<string> valueList in tempValueLists)
+                        {
+                            soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
+                        }
+                        soluteMarkdownTable.AppendLine();
+                    }
+
+                }
+                markdown.Append(soluteMarkdownTable.ToString());
 
             }
 
