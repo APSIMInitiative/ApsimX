@@ -1,18 +1,17 @@
-﻿using System;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
+﻿using MathNet.Numerics;
 using Models;
 using Models.Core;
 using Models.Core.Run;
-using Models.Logging;
 using Models.Factorial;
-using UserInterface.Views;
+using Models.Logging;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
-using DocumentFormat.OpenXml.Presentation;
-using System.Data;
-using Models.Soils;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -163,7 +162,7 @@ namespace UserInterface.Presenters
                     initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
                 //markdown.AppendLine(string.Join("", initialConditions[simulationName].Select(i => i.ToMarkdown())));
-               IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName].Select(i => i);
+                IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName].Select(i => i);
                 // Initial condition tables list for solutes.
                 List<InitialConditionsTable> soluteTables = new List<InitialConditionsTable>();
                 List<InitialConditionsTable> tablesWithoutSolutes = new List<InitialConditionsTable>();
@@ -221,7 +220,7 @@ namespace UserInterface.Presenters
 
                 }
                 soluteMarkdownTable.Append("|");
-           
+
                 List<List<InitialCondition>> allInitialConditionsLists = new();
 
                 // List for storing new condition value lists.
@@ -231,11 +230,11 @@ namespace UserInterface.Presenters
                     // Temp storage for each condition for allInitialConditionsLists.
                     List<InitialCondition> conditions = new List<InitialCondition>();
                     foreach (InitialCondition condition in table.Conditions)
-                    {                       
+                    {
                         string stringToBeList = condition.Value;
-                        List<string> newConditionValueList = stringToBeList.Split(", ").ToList(); // this needs to be done lower down.
+                        List<string> newConditionValueList = stringToBeList.Split(", ").ToList();
                         tempValueLists.Add(newConditionValueList);
-                        conditions.Add(condition);                      
+                        conditions.Add(condition);
                     }
                     allInitialConditionsLists.Add(conditions);
                 }
@@ -247,13 +246,18 @@ namespace UserInterface.Presenters
                     // Gets the list length of one of the InitialCondition value lists.
                     int valueCount = tempValueLists[0].Count;
                     // Create a markdown table row for each value in the list.
-                    for (int i=0; i<valueCount; i++)
+                    for (int i = 0; i < valueCount; i++)
                     {
                         soluteMarkdownTable.Append("|");
                         // Put the actual value in the markdown table.
                         foreach (List<string> valueList in tempValueLists)
                         {
-                            soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
+                            double convertedValue = 0.0;
+                            bool canConvert = double.TryParse(valueList[i], out convertedValue);
+                            if (canConvert)
+                                soluteMarkdownTable.AppendFormat("{0}|", convertedValue.Round(3));
+                            else
+                                soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
                         }
                         soluteMarkdownTable.AppendLine();
                     }
@@ -273,7 +277,7 @@ namespace UserInterface.Presenters
             {
                 markdown.AppendLine($"## Simulation log");
                 markdown.AppendLine();
-                markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
+                markdown.AppendLine(string.Join("", groupedMessages.Select(m =>
                 {
                     StringBuilder md = new StringBuilder();
                     string soluteMsgs = "";
