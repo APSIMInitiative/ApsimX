@@ -1,17 +1,19 @@
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.ForageDigestibility;
-using Models.Functions;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 using Models.PMF;
-using Models.PMF.Interfaces;
+using Models.Core;
 using Models.Soils;
 using Models.Surface;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.ForageDigestibility;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using APSIM.Shared.Utilities;
+
 namespace Models.AgPasture
 {
+
     /// <summary>
     /// A model for cutting pasture / plants and calculating and returning excreta to the
     /// soil based on the biomass cut. If this model is put at the top level of the simulation
