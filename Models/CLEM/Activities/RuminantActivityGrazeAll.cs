@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -157,9 +157,9 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

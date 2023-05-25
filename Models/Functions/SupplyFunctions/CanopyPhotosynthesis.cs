@@ -33,7 +33,7 @@ namespace Models.Functions.SupplyFunctions
         public Weather Weather = null;
         /// <summary>The Weather file</summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         /// <summary>Link to the hourly photosynthesis model </summary>
         [Link]
@@ -80,7 +80,7 @@ namespace Models.Functions.SupplyFunctions
         ///Reference:1. Wang,Enli. xxxx.
         ///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% </summary>
         public double DailyCanopyGrossPhotosythesis(double LAI, double Latitude, int Day,
-                                                double Radn, double Tmax, double Tmin, double CO2, 
+                                                double Radn, double Tmax, double Tmin, double CO2,
                                                 double DifFr,
                                                 double Fact)
         {
@@ -208,7 +208,7 @@ namespace Models.Functions.SupplyFunctions
                                                       Weather.CO2,
                                                       Weather.DiffuseFraction,
                                                       1.0) * 30 / 44 * 0.1;
-                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
+                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2
 
             }
             return GrossPhotosynthesis;

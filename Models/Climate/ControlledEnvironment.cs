@@ -20,7 +20,7 @@ namespace Models.Climate
         /// A link to the clock model.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         /// <summary>
         /// Gets the start date of the weather file
         /// </summary>
@@ -92,7 +92,7 @@ namespace Models.Climate
         [Description("Solar Radiation")]
         [Units("MJ/m2/d")]
         public double Radn { get; set; }
-		
+
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>

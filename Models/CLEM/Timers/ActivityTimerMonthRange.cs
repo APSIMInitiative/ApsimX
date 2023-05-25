@@ -32,7 +32,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerMonthRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private int startMonth;
         private int endMonth;

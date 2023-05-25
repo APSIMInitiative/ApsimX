@@ -30,7 +30,7 @@ namespace Models.CLEM.Timers
         [Link]
         private ResourcesHolder resources = null;
 
-        [Link] Clock clock = null;
+        [Link] IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;

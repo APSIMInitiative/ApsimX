@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         [Link]
         private ZoneCLEM zoneCLEM = null;
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
@@ -193,7 +193,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Return the specified pool 
+        /// Return the specified pool
         /// </summary>
         /// <param name="index">index to use</param>
         /// <param name="getByAge">return where index is age</param>
@@ -383,7 +383,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Constructor 
+        /// Constructor
         /// </summary>
         public GrazeFoodStoreType()
         {
@@ -523,7 +523,7 @@ namespace Models.CLEM.Resources
         public event EventHandler EcologicalIndicatorsCalculated;
 
         /// <summary>
-        /// Ecological indicators calculated 
+        /// Ecological indicators calculated
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
@@ -539,7 +539,7 @@ namespace Models.CLEM.Resources
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
         /// <summary>
-        /// A method to initialise initial pasture  biomass across pools 
+        /// A method to initialise initial pasture  biomass across pools
         /// </summary>
         /// <param name="area">Area of pasture (ha)</param>
         /// <param name="firstMonthsGrowth">The growth (kg per ha) expected in the first month for accuracy</param>
@@ -570,7 +570,7 @@ namespace Models.CLEM.Resources
 
             List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
 
-            // number of previous growth months to consider. default should be 5 
+            // number of previous growth months to consider. default should be 5
             int growMonthHistory = NumberMonthsForInitialBiomass;
 
             while (includedMonthCount < growMonthHistory)
@@ -716,7 +716,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="removeAmount"></param>
         /// <param name="activityName"></param>
@@ -727,7 +727,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         public new void Remove(ResourceRequest request)
@@ -827,7 +827,7 @@ namespace Models.CLEM.Resources
                 dryMatterDigestibility /= request.Provided;
                 nitrogen /= request.Provided;
 
-                // report 
+                // report
                 ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else
@@ -838,7 +838,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)

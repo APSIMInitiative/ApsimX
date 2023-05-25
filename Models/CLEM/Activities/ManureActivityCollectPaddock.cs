@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     public class ManureActivityCollectPaddock: CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
@@ -176,7 +176,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

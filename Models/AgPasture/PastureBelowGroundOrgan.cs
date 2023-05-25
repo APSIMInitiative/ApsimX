@@ -1,15 +1,15 @@
-﻿namespace Models.AgPasture
+﻿using System;
+using System.Linq;
+using Models.PMF;
+using Models.Core;
+using Models.Soils;
+using Models.Interfaces;
+using Models.Soils.Nutrients;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+
+namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.PMF;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
-    using Models.Soils.Nutrients;
-    using Models.Interfaces;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]

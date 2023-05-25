@@ -9,7 +9,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// CLEM Resource Type base model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel, IResourceWithTransactionType
     {
         [Link]
-        private readonly Clock clock = null;
+        private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (!EquivalentMarketStoreDetermined)
+                if(!EquivalentMarketStoreDetermined)
                     FindEquivalentMarketStore();
 
                 return !(EquivalentMarketStore is null);

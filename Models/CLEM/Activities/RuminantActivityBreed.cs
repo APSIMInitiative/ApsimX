@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
@@ -269,7 +269,7 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
-                    } 
+                    }
                 }
             }
 
@@ -301,7 +301,7 @@ namespace Models.CLEM.Activities
             // determine all fetus and newborn mortality of all pregnant females.
             foreach (RuminantFemale female in pregnantherd)
             {
-                // calculate fetus and newborn mortality 
+                // calculate fetus and newborn mortality
                 // total mortality / (gestation months + 1) to get monthly mortality
                 // done here before births to account for post birth motality as well..
                 // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
@@ -330,7 +330,7 @@ namespace Models.CLEM.Activities
                         bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale;
                         Sex sex = isMale ? Sex.Male : Sex.Female;
                         double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
-                        
+
                         Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, 0, weight);
                         newSucklingRuminant.HerdName = female.HerdName;
                         newSucklingRuminant.Breed = female.BreedParams.Breed;
@@ -418,7 +418,7 @@ namespace Models.CLEM.Activities
                     numberServiced = 0;
                     lastJoinIndex = -1;
                     int cnt = 0;
-                    // shuffle the not pregnant females when obtained to avoid any inherant order by creation of individuals affecting which individuals are available first 
+                    // shuffle the not pregnant females when obtained to avoid any inherant order by creation of individuals affecting which individuals are available first
                     var notPregnantFemales = location.OfType<RuminantFemale>().Where(a => !a.IsPregnant).OrderBy(a => RandomNumberGenerator.Generator.Next()).ToList();
                     int totalToBreed = notPregnantFemales.Count;
                     while(cnt < totalToBreed)
@@ -431,7 +431,7 @@ namespace Models.CLEM.Activities
 
                             if (female.ActivityDeterminedConceptionRate != null)
                                 // If an activity controlled mating has previously determined conception rate and saved it (it will not be null if mated)
-                                // This conception rate can be used instead of determining conception here. 
+                                // This conception rate can be used instead of determining conception here.
                                 conceptionRate = female.ActivityDeterminedConceptionRate ?? 0;
                             else
                                 // calculate conception
@@ -519,7 +519,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// A method to add the available male attributes to the female store at mating using attributes supplied by controlled mating 
+        /// A method to add the available male attributes to the female store at mating using attributes supplied by controlled mating
         /// </summary>
         /// <param name="female">The female breeder successfully mated</param>
         /// <param name="maleAttributes">a list of available male attributes setters</param>
@@ -546,7 +546,7 @@ namespace Models.CLEM.Activities
             {
                 var maleAttribute = male.Attributes.GetValue(attribute.Key);
                 SetFemaleMateAttributes(female, attribute, maleAttribute);
-            } 
+            }
         }
 
         private void SetFemaleMateAttributes(RuminantFemale female, KeyValuePair<string, IIndividualAttribute> femaleAttribute, IIndividualAttribute maleAttribute)
@@ -607,7 +607,7 @@ namespace Models.CLEM.Activities
 
                         // DEVELOPMENT NOTE:
                         // The following IPI calculation and check present in NABSA has been removed for testing
-                        // It is assumed that the individual based model with weight influences will handle the old IPI calculation 
+                        // It is assumed that the individual based model with weight influences will handle the old IPI calculation
                         // These parameters can now be removed form the RuminantType list
                         //double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow(female.ProportionOfNormalisedWeight, female.BreedParams.InterParturitionIntervalCoefficient) * 30.4;
                         //double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
@@ -666,9 +666,9 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("This simulation uses natural (uncontrolled) mating that will occur when males and females of breeding condition are located together");
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

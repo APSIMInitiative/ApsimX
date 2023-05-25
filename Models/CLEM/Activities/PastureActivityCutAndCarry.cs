@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         private GrazeFoodStoreType pasture;
         private AnimalFoodStoreType foodstore;
         private ActivityCarryLimiter limiter;
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
         {
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
-            
+
             // get pasture
             pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
@@ -281,9 +281,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(" and carry to ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Store not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of Labour Person models.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
     public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private List<string> warningsMultipleEntry = new List<string>();
         private List<string> warningsNotFound = new List<string>();

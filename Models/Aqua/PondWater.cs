@@ -1,23 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using Models;
-using Models.Climate;
 using Models.Core;
+using Models.Climate;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 
 namespace Models.Aqua
     {
 
     ///<summary>
-    /// Aquaculture Pond Water. 
+    /// Aquaculture Pond Water.
     /// Maintains a water balance in the Pond.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -32,7 +25,7 @@ namespace Models.Aqua
 
         ///// <summary>The clock</summary>
         //[Link]
-        //private Clock Clock = null;
+        //private IClock Clock = null;
 
 
         /// <summary>The weather</summary>
@@ -123,9 +116,9 @@ namespace Models.Aqua
         /// </summary>
         [Units("(m)")]
         [JsonIgnore]
-        public double PondDepth 
+        public double PondDepth
             {
-            get { return pondVolume / SurfaceArea; } //TODO: watch out for a divide by zero exception. 
+            get { return pondVolume / SurfaceArea; } //TODO: watch out for a divide by zero exception.
             }
 
 
@@ -136,7 +129,7 @@ namespace Models.Aqua
         [JsonIgnore]
         public WaterProperties PondProps
             {
-            get 
+            get
                 {
                 //have to create and return a new instance because otherwise, it will just return a reference.
                 WaterProperties result = new WaterProperties(pondProps.Temperature, pondProps.Salinity, pondProps.PH, pondProps.N, pondProps.P, pondProps.TSS);
@@ -150,9 +143,9 @@ namespace Models.Aqua
         /// </summary>
         [Units("(oC)")]
         [JsonIgnore]
-        public double PondTemp 
-            { 
-            get { return pondProps.Temperature; } 
+        public double PondTemp
+            {
+            get { return pondProps.Temperature; }
             }
 
         /// <summary>
@@ -167,7 +160,7 @@ namespace Models.Aqua
 
 
         /// <summary>
-        /// PH of the water in the Pond 
+        /// PH of the water in the Pond
         /// </summary>
         [Units("()")]
         [JsonIgnore]
@@ -247,7 +240,7 @@ namespace Models.Aqua
             //Not sure about filling due to pumping the water though.
 
             //If it overfills due to rain, then because saltwater is more dense than rain water
-            //the rainwater just runs straight off without mixing with the pond water. 
+            //the rainwater just runs straight off without mixing with the pond water.
             //Therefore no solutes are lost due to this runoff.
 
             double maxPondVolume = SurfaceArea * MaxPondDepth;
@@ -310,7 +303,7 @@ namespace Models.Aqua
 
         /// <summary>
         /// Do a weighted average.
-        /// Useful when mixing two different volumes of water, and you want to know the resulting concentrations of water solutes. 
+        /// Useful when mixing two different volumes of water, and you want to know the resulting concentrations of water solutes.
         /// </summary>
         private double WeightedAverage(double Volume1, double PerVolume1, double Volume2, double PerVolume2)
             {
@@ -442,8 +435,8 @@ namespace Models.Aqua
                 string errorMsg = "PondWater module requires 'evap' column in the weather file (Pan Evaporation).";
                 throw new ApsimXException(this, errorMsg);
                 }
-                
-            return (Kpan * Weather.PanEvap); //returns mm 
+
+            return (Kpan * Weather.PanEvap); //returns mm
             }
 
 
@@ -524,7 +517,7 @@ namespace Models.Aqua
             {
             double angleSolarAltitude;  //aka. lambda (units are in Radians)
 
-            //TODO: convert latitude into Solar Altitude Angle. 
+            //TODO: convert latitude into Solar Altitude Angle.
             //for now hard code summer and winder values for northern australia.
 
             bool isWinter = DateUtilities.WithinDates("01Apr", Today, "01Nov");
@@ -534,8 +527,8 @@ namespace Models.Aqua
             else
                 angleSolarAltitude = Math.PI / 2; //90 degrees
 
-            return (2.2 * Math.Pow((180 * (angleSolarAltitude/Math.PI)), -0.97)) * (1-(0.08* WindSpeed)); 
-            
+            return (2.2 * Math.Pow((180 * (angleSolarAltitude/Math.PI)), -0.97)) * (1-(0.08* WindSpeed));
+
             }
 
 
@@ -548,14 +541,14 @@ namespace Models.Aqua
         private double HeatIn_SN_SolarRadiation(double Heat_S_Radn, double Reflection)
             {
             double MJ2kJ = 1000;
-            return Heat_S_Radn * (1 - Reflection) * MJ2kJ; 
+            return Heat_S_Radn * (1 - Reflection) * MJ2kJ;
             }
 
 
         /// <summary>
         /// Heat Flux due to incomming atmospheric radiation
         /// (Long-wave, sensible heat transfer from the atmospheric air)
-        /// This still occurs at night unlike the solar radiation. 
+        /// This still occurs at night unlike the solar radiation.
         /// </summary>
         /// <param name="MaxT">Maximum Temperature of the Atmosphere (oC)</param>
         /// <param name="MinT">Minimum Temperature of the Atmosphere (oC)</param>
@@ -566,12 +559,12 @@ namespace Models.Aqua
             double sigma = 2.07 * Math.Pow(10, -7); //Stefan Boltzman constant (kJ/m^2/hr/K^4)
             double avgTemp_K = ((MaxT+MinT)/2) + 273.15;  //average temperature converted from oC to Kelvin
 
-            //Emittance of the atmosphere. 
+            //Emittance of the atmosphere.
             //Emittance is the ratio of emissivity of a particular body to the the emissivity of a of a perfect black body.
             double emittanceAtmosphere; //ratio (dimensionless) (between 0 and 1)
-            emittanceAtmosphere = 0.398 * Math.Pow(10, -5) * Math.Pow(avgTemp_K, 2.148); 
+            emittanceAtmosphere = 0.398 * Math.Pow(10, -5) * Math.Pow(avgTemp_K, 2.148);
 
-            //Stephan Boltzmans Law decribes the power radiated from a perfect black body. 
+            //Stephan Boltzmans Law decribes the power radiated from a perfect black body.
             //(The choice of units for Stephan Boltzmans constant gives the units)
             double stephanBoltzmansLaw = sigma * Math.Pow(avgTemp_K, 4);  //kJ/m^2/hr
 
@@ -590,11 +583,11 @@ namespace Models.Aqua
             double sigma = 2.07 * Math.Pow(10, -7); //Stefan Boltzman constant (kJ/m^2/hr/K^4)
             double pondTemp_K = PondTemp + 273.15;  //Pond Water Temp converted from oC to Kelvin
 
-            //Emittance of the Pond Water Surface. 
+            //Emittance of the Pond Water Surface.
             //Emittance is the ratio of emissivity of a particular body to the the emissivity of a of a perfect black body.
             double emittanceWaterSurface = 0.97; //ratio (dimensionless) (between 0 and 1)
 
-            //Stephan Boltzmans Law decribes the power radiated from a perfect black body. 
+            //Stephan Boltzmans Law decribes the power radiated from a perfect black body.
             //(The choice of units for Stephan Boltzmans constant gives the units)
             double stephanBoltzmansLaw = sigma * Math.Pow(pondTemp_K, 4);  //kJ/m^2/hr
 
@@ -619,7 +612,7 @@ namespace Models.Aqua
 
             satVP = 25.374 * Math.Exp(17.62 - (5271 / PondTemp));
             pondVP = 610.78 * Math.Exp(17.2694 * ((MinT - 2) / (MinT + 235.3)));
-            double VPdeficit = satVP - pondVP;   
+            double VPdeficit = satVP - pondVP;
 
             return N * WindSpeed * VPdeficit;
             }
@@ -657,7 +650,7 @@ namespace Models.Aqua
 
             double tempGradient = PondTemp - airTemp;
 
-            return 1.5701 * WindSpeed * tempGradient; 
+            return 1.5701 * WindSpeed * tempGradient;
             }
 
 
@@ -710,7 +703,7 @@ namespace Models.Aqua
         private double HeatOut_GW_HeatLostFromSedimentToGroundWater(double SedimentTemp)
             {
             double Ke = 2.53;  //thermal conductivity coefficient for the Earth. (kJ/m/hr/oC)  //nb. using same value for Sediment (Ksed)
-            double groundWaterTemp = 20;   //Temperature of the Ground Water (oC) 
+            double groundWaterTemp = 20;   //Temperature of the Ground Water (oC)
             double deltaZ = 5;    //distance betweeen centres of sediment and GW volumes (m)
 
             double tempGradient = SedimentTemp - groundWaterTemp;
@@ -763,13 +756,13 @@ namespace Models.Aqua
 
             //Add Today's Rain
             double rainVolume = SurfaceArea * (Weather.Rain * mm2m);
-            WaterProperties rainProps = new WaterProperties(Weather.Tav, 0, 7.0, 0, 0, 0);            
+            WaterProperties rainProps = new WaterProperties(Weather.Tav, 0, 7.0, 0, 0, 0);
             AddWater(rainVolume, rainProps);
 
             //Remove Today's Evaporation
             double evapAmount_mm;
             evapAmount_mm = CalcEvap();
-            EvaporateWater(evapAmount_mm); 
+            EvaporateWater(evapAmount_mm);
             }
 
 
