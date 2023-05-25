@@ -65,7 +65,7 @@ namespace UserInterface.Intellisense.Extensions
             {
                 return recommendedSymbols
                     .Where(x => (int)x.Kind == symbolKindInt && x.Name.Equals(symbolNameValue, StringComparison.OrdinalIgnoreCase))
-                    .Distinct();
+                    .Distinct(SymbolEqualityComparer.Default);
             }
 
             return Enumerable.Empty<ISymbol>();

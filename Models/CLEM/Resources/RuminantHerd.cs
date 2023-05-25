@@ -13,6 +13,7 @@ using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using System.Diagnostics;
+using Docker.DotNet.Models;
 
 namespace Models.CLEM.Resources
 {
@@ -218,13 +219,14 @@ namespace Models.CLEM.Resources
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             // report all females of breeding age at end of simulation
+            RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+            {
+                Category = "breeding stats"
+            };
+
             foreach (RuminantFemale female in Herd.Where(a => a.Sex == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
             {
-                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
-                {
-                    RumObj = female,
-                    Category = "breeding stats"
-                };
+                args.RumObj = female;
                 OnFinalFemaleOccurred(args);
             }
         }
@@ -245,19 +247,15 @@ namespace Models.CLEM.Resources
             // check mandatory attributes
             ind.BreedParams.CheckMandatoryAttributes(ind, model);
 
-            ResourceTransaction details = new ResourceTransaction
-            {
-                TransactionType = TransactionType.Gain,
-                Amount = 1,
-                Activity = model as CLEMModel,
-                Category = ind.SaleFlag.ToString(),
-                ResourceType = ind.BreedParams,
-                RelatesToResource = null, // ind.BreedParams.NameWithParent,
-                ExtraInformation = ind
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+            LastTransaction.TransactionType = TransactionType.Gain;
+            LastTransaction.Amount = 1;
+            LastTransaction.Activity = model as CLEMModel;
+            LastTransaction.RelatesToResource = null;
+            LastTransaction.Category = ind.SaleFlag.ToString();
+            LastTransaction.ResourceType = ind.BreedParams;
+            LastTransaction.ExtraInformation = ind;
+
+            OnTransactionOccurred(null);
 
             // remove change flag
             ind.SaleFlag = HerdChangeReason.None;
@@ -293,20 +291,15 @@ namespace Models.CLEM.Resources
             Herd.Remove(ind);
             LastIndividualChanged = ind;
 
-            // report transaction of herd change
-            ResourceTransaction details = new ResourceTransaction
-            {
-                TransactionType = TransactionType.Loss,
-                Amount = 1,
-                Activity = model as CLEMModel,
-                Category = ind.SaleFlag.ToString(),
-                ResourceType = ind.BreedParams,
-                RelatesToResource = null, //ind.BreedParams.NameWithParent,
-                ExtraInformation = ind
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+            LastTransaction.TransactionType = TransactionType.Loss;
+            LastTransaction.Amount = 1;
+            LastTransaction.Activity = model as CLEMModel;
+            LastTransaction.RelatesToResource = null;
+            LastTransaction.Category = ind.SaleFlag.ToString();
+            LastTransaction.ResourceType = ind.BreedParams;
+            LastTransaction.ExtraInformation = ind;
+
+            OnTransactionOccurred(null);
 
             // report female breeding stats if needed
             if(ind.Sex == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
@@ -329,13 +322,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (Herd != null)
-                Herd.Clear();
-
+            Herd?.Clear();
             Herd = null;
-            if (PurchaseIndividuals != null)
-                PurchaseIndividuals.Clear();
-
+            PurchaseIndividuals?.Clear();
             PurchaseIndividuals = null;
         }
 
@@ -345,8 +334,7 @@ namespace Models.CLEM.Resources
         {
             // clear purchased individuals at start of time step as there is no carryover
             // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
-            if (PurchaseIndividuals != null)
-                PurchaseIndividuals.Clear();
+            PurchaseIndividuals?.Clear();
         }
 
         /// <summary>

@@ -70,7 +70,16 @@ namespace Models.PMF.Struct
 
         /// <summary> FertileTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
-        public double FertileTillerNumber { get => tillering.FertileTillerNumber; }
+        public double FertileTillerNumber 
+		{ 
+			get => tillering.FertileTillerNumber; 
+			set 
+			{ 
+				//the preferred method for setting FertileTillerNumber is during the sowing event
+				//this is here to enable access by external processes immediately following sowing
+				fixedTillering.FertileTillerNumber = value; 
+			} 
+		}
 
         /// <summary> CurrentTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]

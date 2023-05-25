@@ -104,31 +104,10 @@ namespace Models.CLEM.Resources
         #region Transactions
 
         /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
-
-        /// <summary>
         /// Amount
         /// </summary>
         [JsonIgnore]
         public double Amount { get; set; }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected void OnTransactionOccurred(EventArgs e)
-        {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null)
-                invoker(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public event EventHandler TransactionOccurred;
 
         /// <summary>
         /// Add individuals to type based on cohort
@@ -150,23 +129,8 @@ namespace Models.CLEM.Resources
                 cohortexists.Number += cohortToAdd.Number;
 
             LastCohortChanged = cohortToAdd;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                TransactionType = TransactionType.Gain,
-                Amount = cohortToAdd.Number,
-                Activity = activity,
-                RelatesToResource = relatesToResource,
-                Category = category,
-                ResourceType = this,
-                ExtraInformation = cohortToAdd
-            };
-            LastTransaction = details;
-            LastGain = cohortToAdd.Number;
-            TransactionEventArgs eargs = new TransactionEventArgs
-            {
-                Transaction = LastTransaction
-            };
-            OnTransactionOccurred(eargs);
+
+            ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, cohortToAdd);
         }
 
         /// <summary>
@@ -192,21 +156,7 @@ namespace Models.CLEM.Resources
             }
 
             LastCohortChanged = cohortToRemove;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                TransactionType = TransactionType.Loss,
-                Amount = cohortToRemove.Number,
-                Activity = activity,
-                Category = reason,
-                ResourceType = this,
-                ExtraInformation = cohortToRemove
-            };
-            LastTransaction = details;
-            TransactionEventArgs eargs = new TransactionEventArgs
-            {
-                Transaction = LastTransaction
-            };
-            OnTransactionOccurred(eargs);
+            ReportTransaction(TransactionType.Loss, cohortToRemove.Number, activity, "", reason, this, cohortToRemove);
         }
 
         /// <summary>

@@ -15,10 +15,11 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Type Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
-    public class CLEMResourceTypeBase : CLEMModel
+    public class CLEMResourceTypeBase : CLEMModel, IResourceWithTransactionType
     {
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
+        private ResourceBaseWithTransactions parent;
 
         /// <summary>
         /// A link to the equivalent market store for trading.
@@ -56,6 +57,15 @@ namespace Models.CLEM.Resources
             {
                 return this.FindAllChildren<Transmutation>().Where(a => a.Enabled).Count() > 0;
             }
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        protected void OnSetupTypeBase(object sender, EventArgs e)
+        {
+            parent = FindAncestor<ResourceBaseWithTransactions>();
         }
 
         /// <summary>
@@ -251,10 +261,59 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Last transaction received
+        /// </summary>
+        public ResourceTransaction LastTransaction { get; set; }
+
+        /// <summary>
+        /// Bank account transaction occured
+        /// </summary>
+        public virtual event EventHandler TransactionOccurred;
+
+        /// <summary>
         /// Amount of last gain transaction
         /// </summary>
         [JsonIgnore]
         public double LastGain { get; set; }
+
+        /// <summary>
+        /// Report a transaction with details for reporting
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="amount"></param>
+        /// <param name="activity"></param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        /// <param name="resource"></param>
+        /// <param name="extraInformation"></param>
+        public void ReportTransaction(TransactionType type, double amount, CLEMModel activity, string relatesToResource, string category, CLEMResourceTypeBase resource, object extraInformation = null)
+        {
+            //ResourceBaseWithTransactions parent = FindAncestor<ResourceBaseWithTransactions>();
+            if (parent != null)
+            {
+                // update the last transaction object of parent
+                parent.LastTransaction.TransactionType = type;
+                parent.LastTransaction.Amount = amount;
+                parent.LastTransaction.Activity = activity;
+                parent.LastTransaction.RelatesToResource = relatesToResource;
+                parent.LastTransaction.Category = category;
+                parent.LastTransaction.ResourceType = resource;
+
+                if (type == TransactionType.Gain)
+                    LastGain = amount;
+
+                LastTransaction = parent.LastTransaction;
+                TransactionOccurred?.Invoke(this, null); 
+            }
+        }
+
+        /// <summary>
+        /// Handles reporting of transactions
+        /// </summary>
+        public void PerformTransactionOccurred()
+        {
+            TransactionOccurred?.Invoke(this, null);
+        }
 
         /// <summary>
         /// Add resources from various objects

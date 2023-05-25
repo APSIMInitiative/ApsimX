@@ -195,7 +195,7 @@ namespace Models.CLEM.Groupings
                         htmlWriter.Write(this.Value.ToString("#,0.##"));
                     }
                     htmlWriter.Write("</span></td>");
-                    htmlWriter.Write("<td><span class=\"setvalue\">" + this.PricingStyle.ToString() + "</span></td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{PricingStyle.ToString()}</span></td>");
                     string buySellString = "";
                     switch (PurchaseOrSale)
                     {
@@ -209,7 +209,7 @@ namespace Models.CLEM.Groupings
                             buySellString = "Sell";
                             break;
                     }
-                    htmlWriter.Write("<td><span class=\"setvalue\">" + buySellString + "</span></td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{buySellString}</span></td>");
                     htmlWriter.Write("</tr>");
                 }
                 else

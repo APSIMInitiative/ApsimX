@@ -8,6 +8,8 @@ namespace Models.Functions
     /// <summary>Fraction of NO3 which denitrifies today</summary>
     /// \pre All children have to contain a public function "Value"
     /// \retval fraction of NO3 denitrified.
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [Serializable]
     [Description("Soil NO3 Denitrification model from CERES-Maize")]
     public class CERESDenitrificationModel : Model, IFunction
@@ -40,11 +42,13 @@ namespace Models.Functions
         /// <summary>
         /// Rate modifier on the CERES denitrification model. Default = 0.0006.
         /// </summary>
+        [Description("Denitrification rate modifier")]
         public double DenitrificationRateModifier { get; set; } = 0.0006;
 
         /// <summary>
         /// Kludge
         /// </summary>
+        [Description("Is inert pool active?")]
         public bool IsInertActive { get; set; } = true;
 
 

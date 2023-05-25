@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 159,
+  "Version": 160,
   "Name": "Simulations",
   "Children": [
     {
@@ -654,7 +654,6 @@
                   "Name": "Rate",
                   "ResourceName": null,
                   "PotentialRate": 0.05,
-
                   "Children": [
                     {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
@@ -781,7 +780,6 @@
                   "Name": "Rate",
                   "ResourceName": null,
                   "PotentialRate": 0.2,
-
                   "Children": [
                     {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",
@@ -1137,7 +1135,6 @@
                   "Name": "Rate",
                   "ResourceName": null,
                   "PotentialRate": 0.00015,
-
                   "Children": [
                     {
                       "$type": "Models.Functions.CERESMineralisationTemperatureFactor, Models",

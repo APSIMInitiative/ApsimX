@@ -125,7 +125,7 @@
                     foreach (var (job, jobManager) in GetJobs())
                     {
                         if (cancelToken.IsCancellationRequested)
-                            return;
+                            break;
 
                         // Wait until we have a spare processor to run a job.
                         if (multiThreaded)

@@ -109,7 +109,7 @@ namespace Models.CLEM.Reporting
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMValidate")]
-        private void OncCLEMValidate(object sender, EventArgs e)
+        private void OnCLEMValidate(object sender, EventArgs e)
         {
             if(ReportAtStart)
                 ReportHerd();

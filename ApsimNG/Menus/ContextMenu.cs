@@ -1,31 +1,30 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using UserInterface.Commands;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+using Models.Storage;
+using Utility;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System.Reflection;
+using System.Linq;
+using System.Text;
+using Models.Functions;
+using Models.Climate;
+using APSIM.Interop.Documentation;
+using System.Threading.Tasks;
+using System.Threading;
+using APSIM.Server.Sensibility;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics;
-    using System.IO;
-    using Commands;
-    using Models;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Soils;
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using Utility;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System.Reflection;
-    using System.Linq;
-    using System.Text;
-    using Models.Functions;
-    using Models.GrazPlan;
-    using Models.Climate;
-    using APSIM.Interop.Markdown.Renderers;
-    using APSIM.Interop.Documentation;
-    using System.Threading.Tasks;
-    using System.Threading;
-    using APSIM.Server.Sensibility;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -295,12 +294,15 @@
                 string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
-
-                IModel currentNode = explorerPresenter.CurrentNode as IModel;
-                if (currentNode != null)
+                if (!string.IsNullOrEmpty(text))
                 {
-                    ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
-                    explorerPresenter.CommandHistory.Add(command, true);
+
+                    IModel currentNode = explorerPresenter.CurrentNode as IModel;
+                    if (currentNode != null)
+                    {
+                        ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                    }
                 }
             }
             catch (Exception err)
@@ -452,7 +454,7 @@
                 string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
 
                 string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
-                                 $"[Link(Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
+                                 $"[Link(Type=LinkType.Path, Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
 
                 explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
             }
@@ -804,10 +806,19 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
+                    //check if model is from a resource, if so, set all children to read only
+                    bool isResource = false;
+                    if (!string.IsNullOrEmpty(model.ResourceName))
+                        isResource = true;
+
                     var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
                     hidden = !hidden; // toggle
                     foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = hidden; 
+                    {
+                        child.IsHidden = hidden;
+                        if (isResource && !(child is Models.PMF.Cultivar))
+                            child.ReadOnly = true;
+                    }
                     foreach (IModel child in model.Children)
                         if (child.IsHidden)
                             explorerPresenter.Tree.Delete(child.FullPath);
@@ -881,10 +892,15 @@
                 IModel model = explorerPresenter.CurrentNode as IModel;
                 if (model == null)
                     return;
-                
+
                 // Don't allow users to change read-only status of released models.
-                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
+                if (!string.IsNullOrEmpty(model.ResourceName))
                     return;
+
+                // Don't allow users to change read-only status resource children, except for Cultivars
+                if ((model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName))) && !(model is Models.PMF.Cultivar))
+                    return;
+                    
 
                 bool readOnly = !model.ReadOnly;
                 List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
@@ -962,11 +978,32 @@
                 explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                IModel modelToDocument = explorerPresenter.CurrentNode.Clone();
-                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                IModel currentN = explorerPresenter.CurrentNode;
+                IModel modelToDocument;
+
+                if (currentN is Models.Graph || currentN is Simulation)
+                    modelToDocument = currentN;
+                else
+                {
+                    modelToDocument = currentN.Clone();
+                    explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                }               
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+
+                //if filename is null, prompt user to save the file
+                if (fileNameWritten == null)
+                {
+                    explorerPresenter.Save();
+                    fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+                }
+                //check if filename is still null (user didn't save) and throw a useful exception
+                if (fileNameWritten == null)
+                {
+                    throw new Exception("You must save this file before documentation can be created");
+                }
+
                 pdf.Write(fileNameWritten, modelToDocument.Document());
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
@@ -1047,5 +1084,27 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
+
+        [ContextMenu(MenuName = "Compile Script",
+                     ShortcutKey = "",
+                     FollowsSeparator = true,
+                     AppliesTo = new[] { typeof(Manager) })]
+        public void OnCompileScript(object sender, EventArgs e)
+        {
+            try
+            {
+                Manager model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Manager;
+                if (model != null)
+                {
+                    model.RebuildScriptModel();
+                    explorerPresenter.MainPresenter.ShowMessage("\"" + model.Name + "\" compiled successfully", Simulation.MessageType.Information);
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
     }
 }

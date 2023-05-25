@@ -298,7 +298,6 @@
         {
             if (jobRunner != null)
             {
-                jobRunner.AllCompleted -= OnAllCompleted;
                 jobRunner?.Stop();
                 // jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
@@ -331,20 +330,30 @@
         /// <param name="e">Event arguments.</param>
         private void OnAllCompleted(object sender, AllCompleteArguments e)
         {
-            Stop();
+            try
+            {
+                foreach (var job in jobs.OfType<SimulationGroup>())
+                    job.StorageFinishWriting();    
+                    
+                Stop();
 
-            AddException(e.ExceptionThrowByRunner);
+                AddException(e.ExceptionThrowByRunner);
 
-            foreach (var job in jobs.OfType<SimulationGroup>())
-                if (job.PrePostExceptionsThrown != null)
-                    job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
+                foreach (var job in jobs.OfType<SimulationGroup>())
+                    if (job.PrePostExceptionsThrown != null)
+                        job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
 
-            AllSimulationsCompleted?.Invoke(this,
-                new AllJobsCompletedArgs()
-                {
-                    AllExceptionsThrown = ExceptionsThrown,
-                    ElapsedTime = ElapsedTime
-                });
+                AllSimulationsCompleted?.Invoke(this,
+                    new AllJobsCompletedArgs()
+                    {
+                        AllExceptionsThrown = ExceptionsThrown,
+                        ElapsedTime = ElapsedTime
+                    });
+            }
+            finally
+            {
+                jobRunner.AllCompleted -= OnAllCompleted;
+            }
         }
 
         /// <summary>

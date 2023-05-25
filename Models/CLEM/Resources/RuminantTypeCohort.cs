@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
                         }
                     }
                     else
-                        ruminant.Wean(false, "Initial state", true);
+                        ruminant.Wean(false, "Initial state");
 
                     if (Sire)
                     {

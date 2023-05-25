@@ -130,7 +130,7 @@
 
         private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
             var overrides = Overrides.ParseStrings(File.ReadAllLines(configFilePath));
             Overrides.Apply(file, overrides);
             return file;
@@ -184,7 +184,7 @@
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
             SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
             jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
@@ -193,7 +193,7 @@
 
         private static void ListReferencedFileNames(string fileName)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
             foreach (var referencedFileName in file.FindAllReferencedFiles())
                 Console.WriteLine(referencedFileName);

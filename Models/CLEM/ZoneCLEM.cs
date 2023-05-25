@@ -10,6 +10,8 @@ using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using Models.Factorial;
+using System.Text;
 
 namespace Models.CLEM
 {
@@ -30,9 +32,9 @@ namespace Models.CLEM
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -137,7 +139,7 @@ namespace Models.CLEM
         {
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
-            wholeSimulationSummaryFile = filebits.First() + "." + "html";
+            wholeSimulationSummaryFile = $"{filebits.First()}.html";
             if (File.Exists(wholeSimulationSummaryFile))
                 File.Delete(wholeSimulationSummaryFile);
         }
@@ -146,10 +148,10 @@ namespace Models.CLEM
         private void OnCompleted(object sender, EventArgs e)
         {
             // if auto create summary 
-            if (AutoCreateDescriptiveSummary)
+            if (AutoCreateDescriptiveSummary && !FindAllAncestors<Experiment>().Any())
             {
                 if (!File.Exists(wholeSimulationSummaryFile))
-                    System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
+                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
                 else
                 {
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
@@ -161,7 +163,7 @@ namespace Models.CLEM
                             htmlWriter.Write(html.Substring(0, index - 1));
                             htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
                             htmlWriter.Write(html.Substring(index));
-                            System.IO.File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
+                            File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                         }
                     }
                 }
@@ -175,7 +177,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public bool IsEcologicalIndicatorsCalculationMonth()
         {
-            return this.EcologicalIndicatorsNextDueDate.Year == clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == clock.Today.Month;
+            return EcologicalIndicatorsNextDueDate.Year == clock.Today.Year && EcologicalIndicatorsNextDueDate.Month == clock.Today.Month;
         }
 
         /// <summary>Data stores to clear at start of month</summary>
@@ -185,7 +187,7 @@ namespace Models.CLEM
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (IsEcologicalIndicatorsCalculationMonth())
-                this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
+                EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
         }
 
         #region validation
@@ -247,9 +249,9 @@ namespace Models.CLEM
         {
             // validation is performed here
             // this event fires after Activity and Resource initialisation so that resources are available to check in the validation.
-            // Commencing is too early as Summary has not been created for reporting.
-            // some values assigned in commencing will not be checked before processing, but will be caught here
-            // each ZoneCLEM and Market will call this validation for all children
+            // Commencing event is too early as Summary has not been created for reporting.
+            // Some values assigned in commencing will not be checked before processing, but will be caught here
+            // Each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
 
             // not all errors will be reported in validation so perform in two steps
@@ -304,11 +306,11 @@ namespace Models.CLEM
             if (messages.Any())
             {
                 // create combined inner exception
-                string innerExceptionString = "";
+                StringBuilder innerExceptionString = new StringBuilder();
                 foreach (var error in messages)
-                    innerExceptionString += $"{error.Text}{Environment.NewLine}";
+                    innerExceptionString.Append($"{error.Text}{Environment.NewLine}");
 
-                Exception innerException = new Exception(innerExceptionString);
+                Exception innerException = new Exception(innerExceptionString.ToString());
                 throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }

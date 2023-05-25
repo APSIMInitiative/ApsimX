@@ -9,6 +9,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Object for an individual male Ruminant.
     /// </summary>
+    [Serializable]
     public class RuminantMale: Ruminant
     {
         /// <summary>

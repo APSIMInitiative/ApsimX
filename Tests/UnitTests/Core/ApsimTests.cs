@@ -41,7 +41,7 @@
             Directory.SetCurrentDirectory(tempFolder);
 
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimTests.xml");
-            simulations = FileFormat.ReadFromString<Simulations>(xml, e => throw e, false);
+            simulations = FileFormat.ReadFromString<Simulations>(xml, e => throw e, false).NewModel as Simulations;
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 

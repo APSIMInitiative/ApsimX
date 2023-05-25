@@ -1,18 +1,17 @@
-﻿namespace Models.Core.Apsim710File
+﻿using APSIM.Shared.OldAPSIM;
+using APSIM.Shared.Utilities;
+using Microsoft.CSharp;
+using Models.Core;
+using Models.Core.ApsimFile;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+namespace Models.Core.Apsim710File
 {
-    using APSIM.Shared.OldAPSIM;
-    using APSIM.Shared.Utilities;
-    using Microsoft.CSharp;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Xml;
-
     /// <summary>
     /// Manager script parameter
     /// </summary>
@@ -112,6 +111,7 @@
             this.fertilisers.Add("NH4NO3", "NH4NO3N");
             this.fertilisers.Add("DAP", "DAP");
             this.fertilisers.Add("MAP", "MAP");
+            this.fertilisers.Add("UAN_N", "UAN_N");
             this.fertilisers.Add("urea_N", "UreaN");
             this.fertilisers.Add("urea_no3", "UreaNO3");
             this.fertilisers.Add("urea", "Urea");
@@ -209,7 +209,7 @@
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false);
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false).NewModel as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }
@@ -329,6 +329,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name.ToLower() == "water")
                 {
@@ -368,6 +369,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name == "SoilCrop")
                 {

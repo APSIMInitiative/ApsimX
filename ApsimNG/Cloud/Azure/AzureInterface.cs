@@ -507,7 +507,7 @@ namespace ApsimNG.Cloud
                 }
                 string owner = await GetContainerMetaDataAsync($"job-{cloudJob.Id}", "Owner", ct);
 
-                TaskCounts tasks = await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id, cancellationToken: ct);
+                TaskCounts tasks = (await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id, cancellationToken: ct)).TaskCounts;
                 int numTasks = tasks.Active + tasks.Running + tasks.Completed;
 
                 // If there are no tasks, set progress to 100%.
@@ -750,7 +750,7 @@ namespace ApsimNG.Cloud
                     VirtualMachineSize = "standard_d5_v2",
 
                     // Each task needs only one vCPU. Therefore number of tasks per VM will be number of vCPUs per VM.
-                    MaxTasksPerComputeNode = 16
+                    TaskSlotsPerNode = 16
                 }
             };
 

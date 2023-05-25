@@ -1,15 +1,15 @@
+using Models.Core;
+using Models.Core.Run;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Data;
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-    using APSIM.Shared.Utilities;
-
     /// <summary>
     /// The clock model is resonsible for controlling the daily timestep in APSIM. It 
     /// keeps track of the simulation date and loops from the start date to the end
@@ -140,6 +140,8 @@ namespace Models
         public event EventHandler DoSoilErosion;
         /// <summary>Occurs when [do soil temperature].</summary>
         public event EventHandler DoSoilTemperature;
+        /// <summary>Invoked to do solute processes.</summary>
+        public event EventHandler DoSolute;
         //DoSoilNutrientDynamics will be here
         /// <summary>Occurs when [do soil organic matter].</summary>
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
@@ -291,10 +293,10 @@ namespace Models
         }
 
         /// <summary>An event handler to signal start of a simulation.</summary>
-        /// <param name="sender">The sender.</param>
+        /// <param name="_">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, CommenceArgs e)
+        private void OnDoCommence(object _, CommenceArgs e)
         {
             Today = StartDate;
 
@@ -352,6 +354,9 @@ namespace Models
 
                 if (DoSoilTemperature != null)
                     DoSoilTemperature.Invoke(this, args);
+
+                if (DoSolute != null)
+                    DoSolute.Invoke(this, args);
 
                 if (DoSoilOrganicMatter != null)
                     DoSoilOrganicMatter.Invoke(this, args);
