@@ -11,8 +11,8 @@ using System.Text;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase goes from a start stage to an end stage and simulates time to 
-    /// emergence as a function of sowing depth.  
+    /// This phase goes from a start stage to an end stage and simulates time to
+    /// emergence as a function of sowing depth.
     /// Progress toward emergence is driven by a thermal time accumulation child function.
     /// </summary>
     [Serializable]
@@ -28,7 +28,7 @@ namespace Models.PMF.Phen
         Phenology phenology = null;
 
         [Link]
-        Clock clock = null;
+        IClock clock = null;
 
         [Link]
         Plant plant = null;
@@ -62,7 +62,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Thermal time target to end this phase.</summary>
         [JsonIgnore]
-        public double Target { get; set; } 
+        public double Target { get; set; }
 
         /// <summary>Thermal time for this time-step.</summary>
         public double TTForTimeStep { get; set; }

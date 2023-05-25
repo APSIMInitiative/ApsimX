@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         [Link]
         private ResourcesHolder resources = null;
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Number of months pregnant

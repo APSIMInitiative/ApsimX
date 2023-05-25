@@ -14,7 +14,7 @@ namespace Models
     public class Log : Model
     {
         [Link]
-        Clock Clock = null;
+        IClock Clock = null;
 
         [Link]
         Simulation Simulation = null;

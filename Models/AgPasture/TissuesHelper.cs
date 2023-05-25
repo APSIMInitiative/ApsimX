@@ -1,12 +1,10 @@
-﻿
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Models.Core;
+
 namespace Models.AgPasture
 {
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>Helper class for providing outputs from multiple tissues.</summary>
     [Serializable]

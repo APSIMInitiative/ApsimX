@@ -9,7 +9,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of finance models.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     public class Finance : ResourceBaseWithTransactions
     {
         [Link]
-        Clock Clock = null;
+        IClock Clock = null;
 
         /// <summary>
         /// Currency used
@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
             }
             htmlWriter.Write("</div>");
             return htmlWriter.ToString();
-        } 
+        }
 
         #endregion
 

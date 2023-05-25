@@ -9,7 +9,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// CLEM Resource Type base model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel, IResourceWithTransactionType
     {
         [Link]
-        private readonly Clock clock = null;
+        private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
 
         /// <summary>
@@ -31,15 +31,15 @@ namespace Models.CLEM.Resources
         /// Has a market store been found
         /// </summary>
         [JsonIgnore]
-        public bool MarketStoreExists 
-        { 
-            get 
-            { 
+        public bool MarketStoreExists
+        {
+            get
+            {
                 if(!EquivalentMarketStoreDetermined)
                     FindEquivalentMarketStore();
 
-                return !(EquivalentMarketStore is null); 
-            } 
+                return !(EquivalentMarketStore is null);
+            }
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Models.CLEM.Resources
         /// Determine whether transmutation has been defined for this foodtype
         /// </summary>
         [JsonIgnore]
-        public bool TransmutationDefined 
+        public bool TransmutationDefined
         {
             get
             {
@@ -303,7 +303,7 @@ namespace Models.CLEM.Resources
                     LastGain = amount;
 
                 LastTransaction = parent.LastTransaction;
-                TransactionOccurred?.Invoke(this, null); 
+                TransactionOccurred?.Invoke(this, null);
             }
         }
 

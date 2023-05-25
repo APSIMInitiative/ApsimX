@@ -107,7 +107,7 @@
         //    APSIM.Shared.Soils.Soil soil = Setup();
 
         //    // convert sw from gravimetric to volumetric.
-        //    APSIMReadySoil.Create(soil); 
+        //    APSIMReadySoil.Create(soil);
 
         //    // Make sure the samples have been removed.
         //    Assert.AreEqual(soil.Samples.Count, 0);
@@ -355,7 +355,7 @@
         //    APSIM.Shared.Soils.Soil soilProperties = Setup();
         //    APSIMReadySoil.Create(soilProperties);
 
-        //    MockClock clock = new MockClock();
+        //    MockIClock clock = new MockClock();
         //    clock.Today = new DateTime(2015, 6, 1);
 
         //    MockWeather weather = new MockWeather();

@@ -32,7 +32,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private int startMonth;
         private int endMonth;
@@ -155,7 +155,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write("</div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -175,9 +175,9 @@ namespace Models.CLEM.Timers
                     htmlWriter.Write(this.Name);
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

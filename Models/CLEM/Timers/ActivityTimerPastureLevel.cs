@@ -29,7 +29,7 @@ namespace Models.CLEM.Timers
         [Link]
         private ResourcesHolder resources = null;
 
-        [Link] Clock clock = null;
+        [Link] IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -139,7 +139,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write(" kg per hectare</div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -159,9 +159,9 @@ namespace Models.CLEM.Timers
                     htmlWriter.Write(this.Name);
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

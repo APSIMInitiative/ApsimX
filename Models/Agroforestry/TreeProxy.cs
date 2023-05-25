@@ -1,35 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra.Double;
-using Models.Core;
 using Newtonsoft.Json;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.Soils.Arbitrator;
+using Models.Core;
 using Models.Zones;
-using Models.Soils.Nutrients;
 using Models.Soils;
+using Models.Interfaces;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
 
 namespace Models.Agroforestry
 {
     /// <summary>
     /// A simple proxy for a full tree model is provided for use in agroforestry simulations.  It allows the user to directly specify the size and structural data for trees within the simulation rather than having to simulate complex tree development (e.g. tree canopy structure under specific pruning regimes).
-    /// 
+    ///
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
-    /// 
+    ///
     /// * Tree height (m)
     /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
     /// * Tree root length density at various depths and distances from the trees (cm/cm^3^)
     /// * Tree daily nitrogen demand (g/m2/day for tree zone area)
-    /// 
+    ///
     /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering [smethurst1997paste;smethurst1999phase;van1990defining].
     /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm^3^ and spatial water uptake is scales using this value and the user-input of tree root length density.
-    /// 
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.TreeProxyView")]
@@ -41,7 +38,7 @@ namespace Models.Agroforestry
         [Link]
         IWeather weather = null;
         [Link]
-        Clock clock = null;
+        IClock clock = null;
 
         /// <summary>
         /// Gets or sets the table data.
@@ -207,7 +204,7 @@ namespace Models.Agroforestry
                     if (zone == ZoneList.FirstOrDefault())
                         D += 0; // the tree is at distance 0
                     else
-                        D += (zone as RectangularZone).Width; 
+                        D += (zone as RectangularZone).Width;
                 }
                 else if (zone is CircularZone)
                     D += (zone as CircularZone).Width;
@@ -217,7 +214,7 @@ namespace Models.Agroforestry
                 if (zone == z)
                     return D;
             }
-        
+
             throw new ApsimXException(this, "Could not find zone called " + z.Name);
         }
 
@@ -239,7 +236,7 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="z"></param>
         /// <returns></returns>
@@ -263,7 +260,7 @@ namespace Models.Agroforestry
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="z"></param>
         /// <returns></returns>
@@ -278,7 +275,7 @@ namespace Models.Agroforestry
             {
                 rldInterp[i] = MathUtilities.LinearInterpReal(distInTH, rld.Keys.ToArray(), rldM.Row(i).ToArray(), out didInterp);
             }
-                       
+
             return rldInterp;
         }
 
@@ -292,7 +289,7 @@ namespace Models.Agroforestry
 
             for (int i = 2; i < Table.Count; i++)
             {
-                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0], 
+                shade.Add(THCutoffs[i - 2], Convert.ToDouble(Table[i][0],
                                                              System.Globalization.CultureInfo.InvariantCulture));
                 List<double> getRLDs = new List<double>();
                 for (int j = 3; j < Table[1].Count; j++)
@@ -357,7 +354,7 @@ namespace Models.Agroforestry
         /// Calculate water use on a per tree basis (L)
         /// </summary>
         [Units("L")]
-        public double IndividualTreeWaterUptake { 
+        public double IndividualTreeWaterUptake {
             get
             {
                 double TWU = 0;
@@ -382,7 +379,7 @@ namespace Models.Agroforestry
             get;
             private set;
         }
-        
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -418,7 +415,7 @@ namespace Models.Agroforestry
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotSWSupply = 0; // Total water supply (L)
-            
+
             foreach (ZoneWaterAndN Z in soilstate.Zones)
             {
                 foreach (Zone ZI in ZoneList)
@@ -447,7 +444,7 @@ namespace Models.Agroforestry
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.Water[i] = Math.Max(SW[i] - LL15mm[i],0.0) * BaseKL*RLD[i]; 
+                            Uptake.Water[i] = Math.Max(SW[i] - LL15mm[i],0.0) * BaseKL*RLD[i];
                             PotSWSupply += Uptake.Water[i] * ZI.Area * 10000;
                         }
                         Uptakes.Add(Uptake);
@@ -490,7 +487,7 @@ namespace Models.Agroforestry
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)
-            
+
             double NDemandkg = GetNDemandToday()*10 * treeZone.Area;
 
             foreach (ZoneWaterAndN Z in soilstate.Zones)
@@ -513,7 +510,7 @@ namespace Models.Agroforestry
                             }
 
                         double[] SW = Z.Water;
-                        
+
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
@@ -601,7 +598,7 @@ namespace Models.Agroforestry
                     }
                 }
             }
-            
+
         }
 
         /// <summary>

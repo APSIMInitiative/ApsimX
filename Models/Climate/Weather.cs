@@ -25,7 +25,7 @@
         /// A link to the clock model.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -148,7 +148,7 @@
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
         [JsonIgnore]
         public string FullFileName
@@ -432,19 +432,19 @@
         public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
         /// <summary>First date of summer.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfSummer { get; set; } = "1-dec";
 
         /// <summary>First date of autumn / fall.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfAutumn { get; set; } = "1-mar";
 
         /// <summary>First date of winter.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfWinter { get; set; } = "1-jun";
 
         /// <summary>First date of spring.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfSpring { get; set; } = "1-sep";
 
         /// <summary>
@@ -601,7 +601,7 @@
         {
             if (this.reader != null)
                 this.reader.Close();
-            this.reader = null;            
+            this.reader = null;
         }
 
         /// <summary>
@@ -646,7 +646,7 @@
             { // Move everything forward a day
                 YesterdaysMetData = TodaysMetData;
                 TodaysMetData = TomorrowsMetData;
-                
+
                 if (clock.Today == clock.EndDate && clock.EndDate == reader.LastDate)
                     TomorrowsMetData = TodaysMetData;
                 else
@@ -665,7 +665,7 @@
             this.DayLength = TodaysMetData.DayLength;
             if (co2Index != -1)
                 CO2 = TodaysMetData.CO2;
-            
+
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
@@ -675,13 +675,13 @@
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year-1))
-                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;  
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;
                     else
-                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear; 
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear;
                 }
                 else
                     DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
-                    
+
                 First = false;
             }
 
@@ -900,7 +900,7 @@
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true) 
+                    if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
                 }
 
@@ -948,7 +948,7 @@
                 this.reader.AddConstant("tav", tav.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
                 this.reader.SetConstant("tav", tav.ToString(CultureInfo.InvariantCulture));
- 
+
             if (this.reader.Constant("amp") == null)
                 this.reader.AddConstant("amp", amp.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
