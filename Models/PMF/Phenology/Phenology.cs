@@ -226,7 +226,7 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name) >= oldPhaseIndex)
+                    if (IndexFromPhaseName(phase.Name) < currentPhaseIndex)
                         phasesToFastForward.Add(phase);
                 }
                 foreach (IPhase phase in phasesToFastForward)
@@ -236,6 +236,17 @@ namespace Models.PMF.Phen
                         stagesPassedToday.Add(phase.Start); //Fixme.  This is a pretty ordinary bit of programming to get around the fact we use a phenological stage to match observed values. We should change this so plant has a harvest tag to match on.
                     }
                     stagesPassedToday.Add(phase.End);
+                    if (phase is IPhaseWithTarget)
+                    {
+                        IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
+                        AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                    }
+                    else
+                    {
+                        throw new Exception("Can only skip over phases with target");
+                    }
+                    
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
