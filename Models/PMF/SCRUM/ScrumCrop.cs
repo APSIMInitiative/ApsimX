@@ -1,5 +1,6 @@
 ﻿using Models.Climate;
 using Models.Core;
+using Models.PMF.Phen;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,10 @@ namespace Models.PMF.Scrum
 
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
-        public Plant scrum = null;
+        private Plant scrum = null;
+
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Phenology phenology = null;
 
         [Link]
         private GetTempSum ttSum = null;
@@ -87,6 +91,10 @@ namespace Models.PMF.Scrum
             Cultivar crop = coeffCalc(management);
             scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
             scrum.Phenology.Emerged = true;
+            if(management.EstablishStage == "Seedling")
+            {
+                phenology.SetToStage(2.0);
+            }
         }
         
         /// <summary>Stages that Scrum crops may be established at</summary>

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 273,
   "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
@@ -4418,6 +4418,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
+              "FractionFaecesAdded": 1.0,
               "Name": "surface organic matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
@@ -4466,7 +4467,7 @@
                 },
                 {
                   "Key": "HarvestStage",
-                  "Value": "Ripe"
+                  "Value": "LateReproductive"
                 },
                 {
                   "Key": "PotentialYield",
@@ -4481,6 +4482,9 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "PlantType": "SCRUM",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
               "Children": [],
@@ -4514,6 +4518,200 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "Definitions": [
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "CalciteCA",
+                  "Description": "Ca as finely ground Agricultural Lime",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 1.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "CalciteFine",
+                  "Description": "finely ground Agricultural Lime",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.4
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "Dolomite",
+                  "Description": "finely ground dolomite",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.22
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NO3N",
+                  "Description": "N as nitrate",
+                  "FractionNO3": 1.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4N",
+                  "Description": "N as ammonium",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 1.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4NO3N",
+                  "Description": "ammonium nitrate",
+                  "FractionNO3": 0.5,
+                  "FractionNH4": 0.5,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "DAP",
+                  "Description": "di-ammonium phosphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.18,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "MAP",
+                  "Description": "mono-ammonium phosphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.11,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UAN_N",
+                  "Description": "N as Urea-AmmoniumNitrate",
+                  "FractionNO3": 0.25,
+                  "FractionNH4": 0.25,
+                  "FractionUrea": 0.5,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UreaN",
+                  "Description": "N as urea",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 1.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UreaNO3",
+                  "Description": "N as urea",
+                  "FractionNO3": 0.5,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.5,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "Urea",
+                  "Description": "Urea fertiliser",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.46,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4SO4N",
+                  "Description": "ammonium sulphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 1.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "RockP",
+                  "Description": "Rock phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.8,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.2,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "BandedP",
+                  "Description": "Banded phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 1.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "BroadcastP",
+                  "Description": "Broadcast phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 1.0,
+                  "FractionCa": 0.0
+                }
+              ],
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
@@ -4696,8 +4894,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -16.40627426535778,
-              "Maximum": 1657.032700801161,
+              "Minimum": -16.6793956412923,
+              "Maximum": 1684.6179597705475,
               "Interval": null
             },
             {
@@ -4994,8 +5192,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.20153387898720504,
-              "Maximum": 20.35392177773297,
+              "Minimum": -0.195686311141307,
+              "Maximum": 19.76331742529727,
               "Interval": null
             },
             {
@@ -5148,7 +5346,7 @@
               "Inverted": false,
               "CrossesAtZero": false,
               "Minimum": -0.0001599999997473788,
-              "Maximum": 0.015159999999747382,
+              "Maximum": 0.015159999999747384,
               "Interval": null
             },
             {
@@ -5521,8 +5719,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.009709992240422079,
-              "Maximum": 0.9797092163078921,
+              "Minimum": -0.00970999271515199,
+              "Maximum": 0.9797092642556131,
               "Interval": null
             },
             {
@@ -5541,8 +5739,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -1.6090736654020752,
-              "Maximum": 1006.0070631888848,
+              "Minimum": -3.3383363194774756,
+              "Maximum": 1011.9642666538504,
               "Interval": null
             }
           ],
@@ -5790,8 +5988,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.002441709899130958,
-              "Maximum": 0.24561269983748726,
+              "Minimum": -0.1947511784610485,
+              "Maximum": 19.668869024591004,
               "Interval": null
             },
             {
@@ -6260,8 +6458,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 0.9619030744928645,
-              "Maximum": 8.046602225125206,
+              "Minimum": 1.9598357328186509,
+              "Maximum": 7.0594538085193115,
               "Interval": null
             },
             {
