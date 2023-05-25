@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using Models.DCAPST;
 
     /// <summary>
     /// A folder model
@@ -26,6 +27,7 @@
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
+    [ValidParent(ParentType = typeof(DCaPSTModelNG))]
     public class Folder : Model
     {
         /// <summary>Show in the autodocs?</summary>

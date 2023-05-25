@@ -10,6 +10,7 @@ namespace Models.DCAPST
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public class DCAPSTModel : IPhotosynthesisModel
     {
         /// <summary>
@@ -40,7 +41,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The transpiration model
         /// </summary>
-        Transpiration transpiration;
+        private Transpiration transpiration;
 
         /// <summary>
         /// A public option to toggle if the interval values are tracked or not
@@ -255,12 +256,10 @@ namespace Models.DCAPST
             var CPath = Canopy.Canopy;
             var temp = Temperature.AirTemperature;
 
-            bool[] tempConditions = new bool[4]
+            bool[] tempConditions = new bool[2]
             {
                 temp > pathway.ElectronTransportRateParams.TMax,
                 temp < pathway.ElectronTransportRateParams.TMin,
-                temp > pathway.MesophyllCO2ConductanceParams.TMax,
-                temp < pathway.MesophyllCO2ConductanceParams.TMin
             };
 
             bool invalidTemp = tempConditions.Any(b => b == true);
