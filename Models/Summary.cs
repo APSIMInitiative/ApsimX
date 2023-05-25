@@ -34,7 +34,7 @@
 
         /// <summary>A link to the clock in the simulation</summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>A link to the parent simulation</summary>
         [Link]
@@ -198,14 +198,14 @@
             // run, so we don't need to delete existing data in this call to WriteTable().
             storage.Writer.WriteTable(initConditions, false);
         }
-        
+
         #region Static summary report generation
 
         /// <summary>
         /// Write a single sumary file for all simulations.
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
-        /// <param name="fileName">The file name to write</param>           
+        /// <param name="fileName">The file name to write</param>
         /// <param name="darkTheme">Whether or not the dark theme should be used.</param>
         public static void WriteSummaryToTextFiles(IDataStore storage, string fileName, bool darkTheme)
         {
@@ -222,7 +222,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="simulationName"></param>
         public IEnumerable<Message> GetMessages(string simulationName)
@@ -248,7 +248,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="simulationName"></param>
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
@@ -337,7 +337,7 @@
 
             }
 
-            // Get the initial conditions table.            
+            // Get the initial conditions table.
             if (showInitialConditions)
             {
                 DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName:"_InitialConditions");
@@ -573,7 +573,7 @@
                             st = "Total";
                         else
                             st = row[i].ToString();
-                        
+
                         writer.Write("<td");
                         if (i == 0)
                             writer.Write(" class='col1'");

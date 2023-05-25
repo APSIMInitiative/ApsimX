@@ -26,7 +26,7 @@ namespace Models.Functions
 
         /// <summary>The Clock</summary>
         [Link]
-        Clock clock = null;
+        IClock clock = null;
 
         /// <summary>The start date</summary>
         [Description("Date to start accumulation dd-mmm")]

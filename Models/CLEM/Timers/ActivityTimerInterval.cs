@@ -31,7 +31,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok
@@ -186,7 +186,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write("</span></div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -207,9 +207,9 @@ namespace Models.CLEM.Timers
 
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

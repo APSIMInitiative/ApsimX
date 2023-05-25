@@ -27,7 +27,7 @@ namespace Models
     public class Report : Model
     {
         /// <summary>Link to script compiler.</summary>
-        [Link] 
+        [Link]
         ScriptCompiler compiler = null;
 
         /// <summary>The columns to write to the data store.</summary>
@@ -59,7 +59,7 @@ namespace Models
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public int ActiveTabIndex = 0;
 
         /// <summary>

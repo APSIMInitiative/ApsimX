@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of Labour Person models.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
     public class Labour: ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private List<string> warningsMultipleEntry = new List<string>();
         private List<string> warningsNotFound = new List<string>();
@@ -259,7 +259,7 @@ namespace Models.CLEM.Resources
         {
             List<LabourType> checkList = new List<LabourType>() { labour };
             if (labour.LabourAvailability != null)
-            {                
+            {
                 // check labour availability still ok
                 if (!(labour.LabourAvailability as IFilterGroup).Filter(checkList).Any())
                     labour.LabourAvailability = null;
@@ -286,7 +286,7 @@ namespace Models.CLEM.Resources
 
                     throw new ApsimXException(this, msg);
                 }
-            }            
+            }
         }
 
         /// <summary>Age individuals</summary>
@@ -346,7 +346,7 @@ namespace Models.CLEM.Resources
             {
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
-                    if (item.Filter(ind))                    
+                    if (item.Filter(ind))
                         return item.Value;
 
                 // no price match found.
@@ -376,7 +376,7 @@ namespace Models.CLEM.Resources
                 LabourPriceGroup matchCriteria = null;
                 foreach (LabourPriceGroup priceGroup in PayList.FindAllChildren<LabourPriceGroup>())
                 {
-                    if (priceGroup.Filter(ind) && matchIndividual == null)                    
+                    if (priceGroup.Filter(ind) && matchIndividual == null)
                         matchIndividual = priceGroup;
 
                     // check that pricing item meets the specified criteria.
@@ -478,7 +478,7 @@ namespace Models.CLEM.Resources
                 }
                 htmlWriter.Write("</table>");
                 htmlWriter.Write("</div></div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

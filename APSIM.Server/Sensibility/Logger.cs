@@ -17,7 +17,7 @@ namespace APSIM.Server.Sensibility
         /// Link to clock, used to find first day of simulation.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Link to the simulation. This is what will be serialized.

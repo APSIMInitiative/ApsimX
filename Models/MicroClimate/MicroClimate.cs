@@ -8,7 +8,7 @@
     using System.Linq;
 
     /// <summary>
-    /// The module MICROMET, described here, has been developed to allow the calculation of 
+    /// The module MICROMET, described here, has been developed to allow the calculation of
     /// potential transpiration for multiple competing canopies that can be either layered or intermingled.
     /// </summary>
     [Serializable]
@@ -20,7 +20,7 @@
     {
         /// <summary>The clock</summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>The weather</summary>
         [Link]
@@ -284,7 +284,7 @@
         ///<summary> Calculate the short wave radiation balance for strip crop system</summary>
         private void CalculateStripZoneShortWaveRadiation()
         {
-            
+
             MicroClimateZone tallest;
             MicroClimateZone shortest;
             if (microClimatesZones[0].DeltaZ.Sum()> microClimatesZones[1].DeltaZ.Sum())
@@ -303,7 +303,7 @@
             double Wt = (tallest.Zone as Zones.RectangularZone).Width*1000;    // Width of tallest crop zone
             foreach (MicroClimateCanopy c in tallest.Canopies)
             {
-               
+
                 if ((c.Canopy.Height - c.Canopy.Depth) > 0  && c.Canopy.Width > Wt)
                     TallestIsTree = true;
 
@@ -368,7 +368,7 @@
                 double It = 1 - Tt - Ta;                                    // Interception by the trees
                 double St = Tt * Wt / CWt;                                  // Transmission to the soil in the tree zone
                 double IaOl = Tt * WaOl / CWt * (1 - Math.Exp(-Ka * LAIa)); // Interception by the alley canopy below the overlap of the trees
-                double IaOp = Ta * (1 - Math.Exp(-Ka * LAIa));              // Interception by the alley canopy in the gaps between tree canopy 
+                double IaOp = Ta * (1 - Math.Exp(-Ka * LAIa));              // Interception by the alley canopy in the gaps between tree canopy
                 double Ia = IaOl + IaOp;                                    // Interception by the alley canopy
                 double SaOl = Tt * WaOl / CWt * (Math.Exp(-Ka * LAIa));     // Transmission to the soil beneigth the alley canopy under the tree canopy
                 double SaOp = Ta * (Math.Exp(-Ka * LAIa));                  // Transmission to the soil beneigth the alley canopy in the open
@@ -390,7 +390,7 @@
                 {
                     if (double.IsNaN(Rint))
                         throw new Exception("Bad Radiation Value in Light partitioning");
-                    Rint = Rin; 
+                    Rint = Rin;
                     for (int j = 0; j <= treeZone.Canopies.Count - 1; j++)
                         treeZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(treeZone.Canopies[j].Ftot[i] * treeZone.Canopies[j].Ktot, treeZone.layerKtot[i], 0.0);
                     Rin -= Rint;
@@ -405,7 +405,7 @@
                 {
                     if (double.IsNaN(Rint))
                         throw new Exception("Bad Radiation Value in Light partitioning");
-                    Rint = Rin; 
+                    Rint = Rin;
                     for (int j = 0; j <= alleyZone.Canopies.Count - 1; j++)
                         alleyZone.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(alleyZone.Canopies[j].Ftot[i] * alleyZone.Canopies[j].Ktot, alleyZone.layerKtot[i], 0.0);
                     Rin -= Rint;
@@ -498,7 +498,7 @@
             {
                 double Ht = vine.DeltaZ.Sum();                // Height of tree canopy
 
-                double CDt = vine.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy    
+                double CDt = vine.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
                 double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
                 double Ha = alley.DeltaZ.Sum();               // Height of alley canopy
                 if ((Ha > CBHt) & (vine.DeltaZ.Length > 1))
@@ -556,7 +556,7 @@
 
                 //double fb = fhomo * (1 - W) + fcompr * W;  //light interception by the vine row
 
-                double Soilt = SRb * Ft;                   // Transmission to the soil below tallest strip        
+                double Soilt = SRb * Ft;                   // Transmission to the soil below tallest strip
 
                 double Intttop = ftop;   // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
 

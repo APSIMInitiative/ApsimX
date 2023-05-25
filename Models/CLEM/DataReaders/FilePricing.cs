@@ -19,7 +19,7 @@ namespace Models.CLEM
     ///<summary>
     /// Reads in external pricing input data and adjusts resource pricing as specified through simulation.
     ///</summary>
-    ///    
+    ///
     ///<remarks>
     ///</remarks>
     [Serializable]
@@ -34,7 +34,7 @@ namespace Models.CLEM
     public class FilePricing : CLEMModel, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -69,7 +69,7 @@ namespace Models.CLEM
         private List<IResourcePricing> pricingComonentsFound;
 
         /// <summary>
-        /// Gets or sets the full file name (with path). 
+        /// Gets or sets the full file name (with path).
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
@@ -115,7 +115,7 @@ namespace Models.CLEM
                 throw new ApsimXException(this, errorMsg);
             }
 
-            // get all pricing component names 
+            // get all pricing component names
             // put in a list that provides a link to the object so we can use this to set values
             var resources = FindAllAncestors<Zone>().FirstOrDefault();
             if (resources != null)
@@ -126,7 +126,7 @@ namespace Models.CLEM
                 Sort = $"{DateColumnName} ASC"
             };
             priceFileAsRows = dataView.ToTable().Rows;
-            
+
             UpdatePricingToDate(clock.StartDate.Year, clock.StartDate.Month);
         }
 
@@ -150,7 +150,7 @@ namespace Models.CLEM
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             // update all pricing this timestep
-            // use last price provided for timestep 
+            // use last price provided for timestep
             UpdatePricingToDate(clock.Today.Year, clock.Today.Month);
         }
 
@@ -185,8 +185,8 @@ namespace Models.CLEM
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
+        ///
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         [JsonIgnore]

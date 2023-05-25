@@ -17,7 +17,7 @@ namespace Models.CLEM.Groupings
 {
     ///<summary>
     /// Contains a group of filters and sorts to identify individual ruminants
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -28,7 +28,7 @@ namespace Models.CLEM.Groupings
     public class RuminantFeedGroupMonthly : RuminantFeedGroup, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Daily value to supply for each month
@@ -39,7 +39,7 @@ namespace Models.CLEM.Groupings
 
         /// <inheritdoc/>
         public override double CurrentValue{
-            get { return MonthlyValues[clock.Today.Month - 1]; } 
+            get { return MonthlyValues[clock.Today.Month - 1]; }
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write("</div>");
                 }
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
