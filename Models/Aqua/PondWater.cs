@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using Models;
-using Models.Climate;
 using Models.Core;
+using Models.Climate;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 
 namespace Models.Aqua
