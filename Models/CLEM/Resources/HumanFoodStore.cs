@@ -1,7 +1,6 @@
-﻿using System;
-using Models.CLEM.Interfaces;
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
+using System;
 
 namespace Models.CLEM.Resources
 {
@@ -15,7 +14,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all human food store types in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStore.htm")]
-    public class HumanFoodStore: ResourceBaseWithTransactions
+    public class HumanFoodStore : ResourceBaseWithTransactions
     {
 
     }

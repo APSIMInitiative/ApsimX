@@ -1,13 +1,13 @@
+using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Groupings;
-using Models.Core.Attributes;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Models.CLEM.Resources
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all labour types (people) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
-    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
+    public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
         private IClock clock = null;
@@ -295,7 +295,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void ONCLEMAgeResources(object sender, EventArgs e)
         {
-            if(AllowAging)
+            if (AllowAging)
             {
                 foreach (LabourType item in Items)
                 {
@@ -332,7 +332,7 @@ namespace Models.CLEM.Resources
             double ae = 0;
             foreach (LabourType person in Items)
                 if (!person.Hired | (includeHired))
-                    ae += (CalculateAE(person.AgeInMonths)??1)*Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
+                    ae += (CalculateAE(person.AgeInMonths) ?? 1) * Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
             return ae;
         }
 

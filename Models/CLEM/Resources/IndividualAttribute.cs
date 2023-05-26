@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
     /// A ruminant attribute that stores an associated object
     /// </summary>
     [Serializable]
-    public class IndividualAttribute: IIndividualAttribute
+    public class IndividualAttribute : IIndividualAttribute
     {
         /// <summary>
         /// Value object of attribute
@@ -57,7 +57,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(float.TryParse((StoredValue??-9999).ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float val))
+                if (float.TryParse((StoredValue ?? -9999).ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float val))
                     return val;
                 else
                     return -9999;
@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (float.TryParse((StoredMateValue??-9999).ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float val))
+                if (float.TryParse((StoredMateValue ?? -9999).ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float val))
                     return val;
                 else
                     return -9999;
@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The value of the attribute of the most recent mate
         /// </summary>
-        public  object StoredMateValue { get; set; }
+        public object StoredMateValue { get; set; }
 
         /// <summary>
         /// The style of inheritance of the attribute

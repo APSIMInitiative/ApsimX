@@ -1,8 +1,7 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {

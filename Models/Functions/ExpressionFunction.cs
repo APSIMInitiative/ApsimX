@@ -124,7 +124,7 @@ namespace Models.Functions
             fn.EvaluatePostfix();
             if (fn.Error)
             {
-               // throw new Exception(fn.ErrorDescription);
+                throw new Exception(fn.ErrorDescription);
             }
         }
 
