@@ -1,12 +1,12 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ManureType.htm")]
-    public class ProductStoreTypeManure: CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
+    public class ProductStoreTypeManure : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
         /// Unit type
@@ -103,15 +103,15 @@ namespace Models.CLEM.Resources
         public void AddUncollectedManure(string storeName, double amount)
         {
             ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
-            if(store == null)
+            if (store == null)
             {
                 store = new ManureStoreUncollected() { Name = storeName };
                 UncollectedStores.Add(store);
             }
             ManurePool pool = store.Pools.Where(a => a.Age == 0).FirstOrDefault();
-            if(pool == null)
+            if (pool == null)
             {
-                pool = new ManurePool() { Age = 0, ProportionMoisture= ProportionMoistureFresh };
+                pool = new ManurePool() { Age = 0, ProportionMoisture = ProportionMoistureFresh };
                 store.Pools.Add(pool);
             }
             pool.Amount += amount;
@@ -155,16 +155,16 @@ namespace Models.CLEM.Resources
                 double amountPossible = store.Pools.Sum(a => a.Amount) * limiter;
                 double amountMoved = 0;
 
-                while (store.Pools.Count > 0 && amountMoved<amountPossible)
+                while (store.Pools.Count > 0 && amountMoved < amountPossible)
                 {
                     // take needed
                     double take = Math.Min(amountPossible - amountMoved, store.Pools[0].Amount);
                     amountMoved += take;
-                    store.Pools[0].Amount -= take; 
+                    store.Pools[0].Amount -= take;
                     // if 0 delete
                     store.Pools.RemoveAll(a => a.Amount == 0);
                 }
-                this.Add(amountMoved, activity, this.NameWithParent, ((storeName=="")?"General":storeName));
+                this.Add(amountMoved, activity, this.NameWithParent, ((storeName == "") ? "General" : storeName));
             }
         }
 
@@ -247,7 +247,7 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -283,7 +283,7 @@ namespace Models.CLEM.Resources
         /// Amount (dry weight) in pool
         /// </summary>
         public double Amount { get; set; }
-        
+
         /// <summary>
         /// Proportion water in pool
         /// </summary>

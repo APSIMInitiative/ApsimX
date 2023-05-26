@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Groupings
 {
@@ -91,7 +90,7 @@ namespace Models.CLEM.Groupings
                 string cssSet = "";
                 string cssError = "";
                 string cssClose = "";
-                if(htmltags)
+                if (htmltags)
                 {
                     cssSet = "<span class = \"filterset\">";
                     cssError = "<span class = \"filtererror\">";
@@ -99,7 +98,7 @@ namespace Models.CLEM.Groupings
                 }
                 bool isTake = (TakeStyle.ToString().Contains("Take"));
                 bool isIndividuals = (TakeStyle == TakeFromFilterStyle.TakeIndividuals || TakeStyle == TakeFromFilterStyle.SkipIndividuals);
-                takeWriter.Write((isTake)?$"Take: ": "Skip: ");
+                takeWriter.Write((isTake) ? $"Take: " : "Skip: ");
                 string errorString = "";
                 if (Value < 0 || (isIndividuals & Value > 1))
                     errorString = "Invalid";
@@ -126,7 +125,7 @@ namespace Models.CLEM.Groupings
             if (Value == 0)
             {
                 string[] memberNames = new string[] { "Invalid value to take from filter" };
-                results.Add(new ValidationResult($"Provide a {((isProportion)?"proportion":"number of individuals")} greater than 0 for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
+                results.Add(new ValidationResult($"Provide a {((isProportion) ? "proportion" : "number of individuals")} greater than 0 for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
             }
 
             if (isProportion)
@@ -135,7 +134,7 @@ namespace Models.CLEM.Groupings
                 {
                     bool isTake = (TakeStyle.ToString().Contains("Take"));
 
-                    string[] memberNames = new string[] { $"Invalid proportion to {(isTake?"take":"skip")} from filter" };
+                    string[] memberNames = new string[] { $"Invalid proportion to {(isTake ? "take" : "skip")} from filter" };
                     results.Add(new ValidationResult($"The proportion to {(isTake ? "take" : "skip")} from [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] must be less than or equal to 1", memberNames));
                 }
             }

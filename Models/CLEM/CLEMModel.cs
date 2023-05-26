@@ -3,11 +3,11 @@ using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Models.CLEM
@@ -156,7 +156,7 @@ namespace Models.CLEM
                             results.Add(type as string);
                         else if (type is Type)
                         {
-                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent)??null;
+                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent) ?? null;
                             if (list != null)
                                 results.AddRange(resources.FindResource(type as Type).FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent));
                         }
@@ -333,7 +333,7 @@ namespace Models.CLEM
         public static string DisplaySummaryValueSnippet<T>(IList<T> value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false)
         {
             string result = string.Empty;
-            if(value.Any())
+            if (value.Any())
             {
                 foreach (T item in value)
                     result += DisplaySummaryValueSnippet<T>(item, errorString, entryStyle, htmlTags, warnZero) + " ";
@@ -383,7 +383,7 @@ namespace Models.CLEM
         /// <returns>List of (type, include, borderClass, introtext)</returns>
         public virtual List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText,string missingText)>
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
             };
         }
@@ -459,7 +459,7 @@ namespace Models.CLEM
                     var childrenToSummarise = HandleChildrenInSummary();
                     foreach (var item in childrenToSummarise)
                     {
-                        if(item.include)
+                        if (item.include)
                             htmlWriter.Write(GetChildDescriptiveSummaries(item.models, item.introText, item.missingText, item.borderClass, htmlString, cm, markdown2Html));
                     }
 
@@ -467,7 +467,7 @@ namespace Models.CLEM
 
                     htmlWriter.Write(cm.ModelSummaryClosingTags());
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -503,11 +503,11 @@ namespace Models.CLEM
                         }
                         else
                         {
-                            if(item is CLEMModel)
+                            if (item is CLEMModel)
                                 htmlWriter.Write((item as CLEMModel).GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
                         }
                     }
-                    if(!models.Any() && MissingText!="")
+                    if (!models.Any() && MissingText != "")
                         // write models not found error
                         htmlWriter.Write($"<div class=\"errorbanner clearfix><div class=\"filtererror\">{MissingText}</div></div>");
 
@@ -624,7 +624,7 @@ namespace Models.CLEM
                 htmlWriter.Write($"\r\n<div class=\"clearfix {overall}banner{extra}\">{ModelSummaryNameTypeHeader()}</div>");
                 htmlWriter.Write($"\r\n<div class=\"{overall}content{((extra != "") ? extra : "")}\">");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -644,13 +644,13 @@ namespace Models.CLEM
                     // add units when completed
                     string units = (this as IResourceType).Units;
                     if (units != "NA")
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">This resource is measured in { CLEMModel.DisplaySummaryValueSnippet(units)}</div>");
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">This resource is measured in {CLEMModel.DisplaySummaryValueSnippet(units)}</div>");
                 }
                 if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
                     if (this.Children.Count() == 0)
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Empty</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -697,11 +697,11 @@ namespace Models.CLEM
                     if (this is CLEMActivityBase)
                     {
                         string transCat = CLEMActivityBase.UpdateTransactionCategory(this as CLEMActivityBase);
-                    if (transCat != "")
+                        if (transCat != "")
                             htmlWriter.Write($"<div class=\"partialdiv\">tag: {transCat}</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -918,7 +918,7 @@ namespace Models.CLEM
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
 
-                if(apsimFilename != "")
+                if (apsimFilename != "")
                 {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">Filename: {apsimFilename}</div>");
                     Model sim = (modelToSummarise as Model).FindAncestor<Simulation>();

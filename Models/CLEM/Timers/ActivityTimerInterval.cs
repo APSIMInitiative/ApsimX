@@ -1,14 +1,14 @@
-﻿using Models.CLEM.Reporting;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Timers
 {
@@ -28,7 +28,7 @@ namespace Models.CLEM.Timers
     [Description("This timer defines a start month and interval upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/Interval.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
+    public class ActivityTimerInterval : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
         private IClock clock = null;
@@ -93,14 +93,14 @@ namespace Models.CLEM.Timers
             DateTime dd2c = new DateTime(dateToCheck.Year, dateToCheck.Month, 1);
 
             int direction = (dd2c < dd) ? -1 : 1;
-            if(direction < 0)
+            if (direction < 0)
             {
-                while(dd2c<=dd)
+                while (dd2c <= dd)
                 {
                     if (dd2c == dd)
                         return true;
 
-                    dd = dd.AddMonths(Interval*-1);
+                    dd = dd.AddMonths(Interval * -1);
                 }
                 return false;
             }
@@ -172,7 +172,7 @@ namespace Models.CLEM.Timers
                     htmlWriter.Write("<span class=\"errorlink\">");
                     htmlWriter.Write("NOT SET");
                 }
-                htmlWriter.Write($"</span> month{((Interval == 1)?"":"s")} from ");
+                htmlWriter.Write($"</span> month{((Interval == 1) ? "" : "s")} from ");
                 if (MonthDue > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");

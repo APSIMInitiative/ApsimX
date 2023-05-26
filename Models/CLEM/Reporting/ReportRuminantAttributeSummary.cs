@@ -1,16 +1,14 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -115,7 +113,7 @@ namespace Models.CLEM.Reporting
             report.EventNames = new string[] {
                 $"[{Name}].OnReportItemGenerated"
             };
-            if(!ReportMateValues)
+            if (!ReportMateValues)
             {
                 report.VariableNames = report.VariableNames.Take(6).ToArray();
             }
@@ -204,7 +202,7 @@ namespace Models.CLEM.Reporting
                         GroupName = fgroup.Name,
                         Statistics = listStatistics
                     };
-                    ReportItemGenerated(LastStatistics); 
+                    ReportItemGenerated(LastStatistics);
                 }
             }
         }
@@ -227,7 +225,7 @@ namespace Models.CLEM.Reporting
             // do not report mate if greater than max months since conception
             // if not valid report NAN that is filtered out in calculations below 
             var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
-                (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN: Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
+                (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
                 (a.Sex == Sex.Female && a.Age - (a as RuminantFemale).AgeAtLastConception <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
             if (values.Count() == 0)
