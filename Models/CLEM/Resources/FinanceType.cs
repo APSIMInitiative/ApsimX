@@ -1,11 +1,10 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 using System.IO;
-using System.Diagnostics;
 
 namespace Models.CLEM.Resources
 {
@@ -47,7 +46,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Withdrawal limit (<0 credit, 0 no credit)")]
         [Core.Display(EnabledCallback = "WithdrawalLimitEnabled")]
-        [Required ]
+        [Required]
         public double WithdrawalLimit { get; set; }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(!EnforceWithdrawalLimit)
+                if (!EnforceWithdrawalLimit)
                     return double.PositiveInfinity;
                 else
                     return amount - WithdrawalLimit;
@@ -128,7 +127,7 @@ namespace Models.CLEM.Resources
         }
 
         #region Transactions
-  
+
         /// <summary>
         /// Add money to account
         /// </summary>
@@ -189,9 +188,9 @@ namespace Models.CLEM.Resources
                 FindEquivalentMarketStore();
 
             double amountRemoved = request.Required;
-            
+
             // more than positive balance can be taken if withdrawal limit set to false
-            if(this.EnforceWithdrawalLimit)
+            if (this.EnforceWithdrawalLimit)
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
 
             if (amountRemoved == 0)
@@ -201,7 +200,7 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, (request.RelatesToResource!=""?request.RelatesToResource: this.NameWithParent),  "Household purchase");
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, (request.RelatesToResource != "" ? request.RelatesToResource : this.NameWithParent), "Household purchase");
 
             request.Provided = amountRemoved;
 
@@ -255,9 +254,9 @@ namespace Models.CLEM.Resources
                     }
                 }
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
 
 namespace Models.CLEM.Activities
 {

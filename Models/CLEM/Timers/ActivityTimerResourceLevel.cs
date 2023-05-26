@@ -3,11 +3,11 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Models.CLEM.Timers
@@ -25,7 +25,7 @@ namespace Models.CLEM.Timers
     [Description("This timer is based on whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IActivityPerformedNotifier
+    public class ActivityTimerResourceLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
         private ResourcesHolder resources = null;

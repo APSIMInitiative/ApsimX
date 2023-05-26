@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
-using System.ComponentModel.DataAnnotations;
+using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -46,7 +46,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
+        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -181,9 +181,9 @@ namespace Models.CLEM.Resources
             }
             set
             {
-                if(manager!=null && manager!=value )
+                if (manager != null && manager != value)
                 {
-                    if(manager is CropActivityManageCrop)
+                    if (manager is CropActivityManageCrop)
                         Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
                     else
                         throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
@@ -246,9 +246,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (biomassAddedThisYear == 0)
-                    return (biomassConsumed > 0) ? 100: 0;
+                    return (biomassConsumed > 0) ? 100 : 0;
 
-                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
+                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100, 100);
             }
         }
 
@@ -290,7 +290,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (DetachRate+CarryoverDetachRate+DecayDMD+DecayNitrogen != 0);
+                return (DetachRate + CarryoverDetachRate + DecayDMD + DecayNitrogen != 0);
             }
         }
 
@@ -298,7 +298,8 @@ namespace Models.CLEM.Resources
         /// Amount (kg)
         /// </summary>
         [JsonIgnore]
-        public double Amount {
+        public double Amount
+        {
             get
             {
                 return Pools.Sum(a => a.Amount);
@@ -325,15 +326,15 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
         {
-            if ((hectares && Manager is null)|(age>11))
+            if ((hectares && Manager is null) | (age > 11))
                 return 0;
 
-            double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area:1);
+            double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area : 1);
             double valueToUse = 0;
             switch (grazeProperty)
             {
                 case "Amount":
-                    if(age < 0)
+                    if (age < 0)
                         valueToUse = Pools.Sum(a => a.Amount);
                     else
                         valueToUse = Pool(age, true).Sum(a => a.Amount);
@@ -423,7 +424,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("FinalInitialise")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
-            if(Manager == null)
+            if (Manager == null)
                 Summary.WriteMessage(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name), MessageType.Warning);
         }
 
@@ -513,7 +514,7 @@ namespace Models.CLEM.Resources
         private void ONCLEMPastureReady(object sender, EventArgs e)
         {
             // do not return zero as there is always something there and zero affects calculations.
-            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare,0.01);
+            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare, 0.01);
         }
 
         /// <summary>
@@ -680,7 +681,7 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
-                if(pool.Age == 0)
+                if (pool.Age == 0)
                 {
                     pool.Growth = pool.Amount;
                 }

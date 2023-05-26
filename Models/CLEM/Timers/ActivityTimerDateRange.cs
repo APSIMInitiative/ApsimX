@@ -1,14 +1,14 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
+using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
 using System.IO;
-using Models.CLEM.Reporting;
-using Models.CLEM.Activities;
+using System.Linq;
 
 namespace Models.CLEM.Timers
 {
@@ -85,7 +85,7 @@ namespace Models.CLEM.Timers
                     return true;
                 }
                 bool inrange = IsMonthInRange(clock.Today);
-                if(inrange)
+                if (inrange)
                 {
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs

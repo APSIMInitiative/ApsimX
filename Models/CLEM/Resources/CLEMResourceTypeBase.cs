@@ -1,9 +1,9 @@
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -97,9 +97,9 @@ namespace Models.CLEM.Resources
                 if (FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null)
                 {
                     string market = "";
-                    if((this.Parent.Parent as ResourcesHolder).MarketPresent)
+                    if ((this.Parent.Parent as ResourcesHolder).MarketPresent)
                     {
-                        if(!(this.EquivalentMarketStore is null))
+                        if (!(this.EquivalentMarketStore is null))
                             market = this.EquivalentMarketStore.CLEMParentName + ".";
                         else
                             market = this.CLEMParentName + ".";
@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
                     if (Summary != null)
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
-                return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
+                return new ResourcePricing() { PricePerPacket = 0, PacketSize = 1, UseWholePackets = true };
             }
             return price;
         }
@@ -126,7 +126,7 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName, double amount)
         {
             // get converted value
-            if(converterName.StartsWith("$"))
+            if (converterName.StartsWith("$"))
             {
                 // calculate price as special case using pricing structure if present.
                 ResourcePricing price;
@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    if(FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null && amount != 0)
+                    if (FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null && amount != 0)
                     {
                         string market = "";
                         if ((this.Parent.Parent as ResourcesHolder).MarketPresent)
@@ -167,7 +167,7 @@ namespace Models.CLEM.Resources
                                 market = this.CLEMParentName + ".";
                         }
 
-                        string warn = $"Cannot report the value of {((converterName.Contains("gain"))?"gains":"losses")} for [r={market}{this.Parent.Name}.{this.Name}]";
+                        string warn = $"Cannot report the value of {((converterName.Contains("gain")) ? "gains" : "losses")} for [r={market}{this.Parent.Name}.{this.Name}]";
                         warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";
                         warn += $"\r\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
                         if (Summary != null)
@@ -184,7 +184,7 @@ namespace Models.CLEM.Resources
                     double result = amount;
                     // convert to edible proportion for all HumanFoodStore converters
                     // this assumes these are all nutritional. Price will be handled above.
-                    if(this.GetType() == typeof(HumanFoodStoreType))
+                    if (this.GetType() == typeof(HumanFoodStoreType))
                         result *= (this as HumanFoodStoreType).EdibleProportion;
 
                     return result * converter.Factor;
@@ -242,10 +242,10 @@ namespace Models.CLEM.Resources
             }
 
             // if not already checked
-            if(!EquivalentMarketStoreDetermined)
+            if (!EquivalentMarketStoreDetermined)
             {
                 // haven't already found a market store
-                if(EquivalentMarketStore is null)
+                if (EquivalentMarketStore is null)
                 {
                     ResourcesHolder holder = FindAncestor<ResourcesHolder>();
                     // is there a market

@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("Allows for the reduction of new pasture nitrogen content (N%) based on annual yield or growth month")]
     [Version(1, 0, 1, "Provides NABSA 'Fertility - N decline yield' functionality")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreFertilityLimiter.htm")]
-    public class GrazeFoodStoreFertilityLimiter: CLEMModel
+    public class GrazeFoodStoreFertilityLimiter : CLEMModel
     {
         [Link]
         private IClock clock = null;
@@ -91,10 +91,10 @@ namespace Models.CLEM.Resources
             else
             {
                 // calculate proportion N based on N required and already used for year
-                double shortfall = Math.Min(nRequired, Math.Max(0, nRequired - (AnnualNitrogenSupply- annualNUsed)));
+                double shortfall = Math.Min(nRequired, Math.Max(0, nRequired - (AnnualNitrogenSupply - annualNUsed)));
                 reduction = ((shortfall * (1 - NitrogenReduction)) + (nRequired - shortfall)) / nRequired;
             }
-            annualNUsed += (nRequired*reduction);
+            annualNUsed += (nRequired * reduction);
             return reduction;
         }
 
@@ -104,7 +104,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            if(clock.Today.Month == (int)AnnualYieldStartMonth)
+            if (clock.Today.Month == (int)AnnualYieldStartMonth)
                 annualNUsed = 0;
         }
 

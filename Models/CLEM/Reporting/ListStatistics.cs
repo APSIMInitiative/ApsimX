@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Reporting
 {
@@ -16,7 +12,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Average of list
         /// </summary>
-        public double Average{ get; set; }
+        public double Average { get; set; }
 
         /// <summary>
         /// Standard deviation

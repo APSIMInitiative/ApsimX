@@ -3,12 +3,8 @@ using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -62,7 +58,7 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
         [Required]
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
-        
+
         /// <inheritdoc/>
         [JsonIgnore]
         public ResourcePriceChangeDetails LastPriceChange { get; set; }
@@ -89,7 +85,7 @@ namespace Models.CLEM.Resources
             else
             {
                 var packets = (amount / PacketSize);
-                if(respectUseWholePacket && UseWholePackets)
+                if (respectUseWholePacket && UseWholePackets)
                     packets = Math.Truncate(packets);
 
                 return packets * PricePerPacket;
@@ -124,7 +120,7 @@ namespace Models.CLEM.Resources
             LastPriceChange.PriceChanged = this;
 
             // price change event
-            OnPriceChanged(new PriceChangeEventArgs() {  Details = LastPriceChange });
+            OnPriceChanged(new PriceChangeEventArgs() { Details = LastPriceChange });
         }
 
         /// <summary>
@@ -184,7 +180,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
 
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
