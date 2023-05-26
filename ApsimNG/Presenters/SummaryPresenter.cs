@@ -1,14 +1,15 @@
-﻿using MathNet.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using MathNet.Numerics;
+using Microsoft.IdentityModel.Tokens;
 using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Logging;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Views;
@@ -203,21 +204,24 @@ namespace UserInterface.Presenters
                 // Dividers for headings.
                 foreach (InitialConditionsTable table in soluteTables)
                 {
-                    soluteMarkdownTable.AppendFormat("---|---|---|");
+                    soluteMarkdownTable.AppendFormat("---|---:|---:|");
                 }
 
                 soluteMarkdownTable.AppendLine();
+                if (!soluteTables.IsNullOrEmpty<InitialConditionsTable>())
+                {
+                    soluteMarkdownTable.Append("|**Depth (mm)**|");
+                }
+
                 // Value columns
                 foreach (InitialConditionsTable table in soluteTables)
                 {
                     IEnumerable<string> units = table.Conditions.Select(i => i.Units);
                     List<string> unitStrings = units.ToList();
                     if (unitStrings[1] == "ppm")
-                        soluteMarkdownTable.Append($"|**Depth (mm)**|**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (kg/ha)**");
+                        soluteMarkdownTable.Append($"**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (kg/ha)**");
                     else
-                        soluteMarkdownTable.Append($"|**Depth (mm)**|**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (ppm)**");
-
-
+                        soluteMarkdownTable.Append($"**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (ppm)**");
                 }
                 soluteMarkdownTable.Append("|");
 
@@ -252,10 +256,11 @@ namespace UserInterface.Presenters
                         // Put the actual value in the markdown table.
                         foreach (List<string> valueList in tempValueLists)
                         {
+                            // TODO: Only ever print the first Depth values for each row.
                             double convertedValue = 0.0;
                             bool canConvert = double.TryParse(valueList[i], out convertedValue);
                             if (canConvert)
-                                soluteMarkdownTable.AppendFormat("{0}|", convertedValue.Round(3));
+                                soluteMarkdownTable.AppendFormat("{0:F3}|", convertedValue.Round(3));
                             else
                                 soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
                         }
@@ -280,19 +285,11 @@ namespace UserInterface.Presenters
                 markdown.AppendLine(string.Join("", groupedMessages.Select(m =>
                 {
                     StringBuilder md = new StringBuilder();
-                    string soluteMsgs = "";
                     md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
                     md.AppendLine();
                     md.AppendLine("```");
                     foreach (Message msg in m)
-                        if (msg.Provider.Name == "Field.Soil.NH3")
-                        {
-                            soluteMsgs += msg.Text;
-                        }
-                        else
-                        {
-                            md.AppendLine(msg.Text);
-                        }
+                        md.AppendLine(msg.Text);
                     md.AppendLine("```");
                     md.AppendLine();
                     return md.ToString();
