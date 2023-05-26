@@ -232,7 +232,7 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name) < currentPhaseIndex)
+                    if ((IndexFromPhaseName(phase.Name)>=oldPhaseIndex)&&(IndexFromPhaseName(phase.Name) < currentPhaseIndex))
                         phasesToFastForward.Add(phase);
                 }
                 foreach (IPhase phase in phasesToFastForward)
@@ -247,10 +247,6 @@ namespace Models.PMF.Phen
                         IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
                         AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
                         AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
-                    }
-                    else
-                    {
-                        throw new Exception("Can only skip over phases with target");
                     }
                     
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
