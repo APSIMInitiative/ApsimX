@@ -1,7 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using System;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -45,7 +45,7 @@ namespace Models.PMF.Phen
             {
                 double F = 0;
                 F = (currentLeafNumber.Value() - LeafNoAtStart) / TargetLeafForCompletion;
-                F = MathUtilities.Bound(F,0,1);
+                F = MathUtilities.Bound(F, 0, 1);
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
         }
@@ -54,7 +54,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-                        
+
             if (First)
             {
                 LeafNoAtStart = currentLeafNumber.Value();
@@ -64,15 +64,15 @@ namespace Models.PMF.Phen
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (FractionComplete>=1)
+            if (FractionComplete >= 1)
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
             }
-            
+
             return proceedToNextPhase;
         }
-                
+
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
@@ -81,7 +81,7 @@ namespace Models.PMF.Phen
             TargetLeafForCompletion = 0;
             First = true;
         }
-        
+
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
 

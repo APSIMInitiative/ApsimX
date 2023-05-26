@@ -1,17 +1,17 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using CommandLine;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+
+namespace Models
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using CommandLine;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -48,7 +48,7 @@
         /// <param name="errors">Parse errors.</param>
         private static void HandleParseError(IEnumerable<Error> errors)
         {
-            if ( !(errors.IsHelp() || errors.IsVersion()) )
+            if (!(errors.IsHelp() || errors.IsVersion()))
                 exitCode = 1;
         }
 

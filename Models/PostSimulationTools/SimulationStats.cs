@@ -1,14 +1,15 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
-	using System.Linq;
 
     /// <summary>
     /// A post processing model that produces simulation stats.
@@ -101,29 +102,29 @@
                     if (column.DataType == typeof(double))
                     {
                         if (CalcCount)
-                            statsData.Columns.Add($"{ column.ColumnName}Count", typeof(int));
+                            statsData.Columns.Add($"{column.ColumnName}Count", typeof(int));
                         if (CalcTotal)
-                            statsData.Columns.Add($"{ column.ColumnName}Total", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Total", typeof(double));
                         if (CalcMean)
-                            statsData.Columns.Add($"{ column.ColumnName}Mean", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Mean", typeof(double));
                         if (CalcMin)
-                            statsData.Columns.Add($"{ column.ColumnName}Min", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Min", typeof(double));
                         if (CalcMax)
-                            statsData.Columns.Add($"{ column.ColumnName}Max", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Max", typeof(double));
                         if (CalcStdDev)
-                            statsData.Columns.Add($"{ column.ColumnName}StdDev", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}StdDev", typeof(double));
                         if (CalcMedian)
-                            statsData.Columns.Add($"{ column.ColumnName}Median", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Median", typeof(double));
                         if (CalcPercentiles)
                         {
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile10", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile20", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile30", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile40", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile60", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile70", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile80", typeof(double));
-                            statsData.Columns.Add($"{ column.ColumnName}Percentile90", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile10", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile20", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile30", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile40", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile60", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile70", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile80", typeof(double));
+                            statsData.Columns.Add($"{column.ColumnName}Percentile90", typeof(double));
                         }
                         columnNames.Add(column.ColumnName);
                     }
@@ -228,30 +229,30 @@
             {
                 var values = DataTableUtilities.GetColumnAsDoubles(view, columnName);
                 if (CalcCount)
-                    row[$"{ columnName}Count"] = values.Length;
+                    row[$"{columnName}Count"] = values.Length;
 
                 if (CalcTotal)
-                    row[$"{ columnName}Total"] = MathUtilities.Sum(values);
+                    row[$"{columnName}Total"] = MathUtilities.Sum(values);
                 if (CalcMean)
-                    row[$"{ columnName}Mean"] = MathUtilities.Average(values);
+                    row[$"{columnName}Mean"] = MathUtilities.Average(values);
                 if (CalcMin)
-                    row[$"{ columnName}Min"] = MathUtilities.Min(values);
+                    row[$"{columnName}Min"] = MathUtilities.Min(values);
                 if (CalcMax)
-                    row[$"{ columnName}Max"] = MathUtilities.Max(values);
+                    row[$"{columnName}Max"] = MathUtilities.Max(values);
                 if (CalcStdDev)
-                    row[$"{ columnName}StdDev"] = MathUtilities.SampleStandardDeviation(values);
+                    row[$"{columnName}StdDev"] = MathUtilities.SampleStandardDeviation(values);
                 if (CalcMedian)
-                    row[$"{ columnName}Median"] = MathUtilities.Percentile(values, 0.5);
+                    row[$"{columnName}Median"] = MathUtilities.Percentile(values, 0.5);
                 if (CalcPercentiles)
                 {
-                    row[$"{ columnName}Percentile10"] = MathUtilities.Percentile(values, 0.1);
-                    row[$"{ columnName}Percentile20"] = MathUtilities.Percentile(values, 0.2);
-                    row[$"{ columnName}Percentile30"] = MathUtilities.Percentile(values, 0.3);
-                    row[$"{ columnName}Percentile40"] = MathUtilities.Percentile(values, 0.4);
-                    row[$"{ columnName}Percentile60"] = MathUtilities.Percentile(values, 0.6);
-                    row[$"{ columnName}Percentile70"] = MathUtilities.Percentile(values, 0.7);
-                    row[$"{ columnName}Percentile80"] = MathUtilities.Percentile(values, 0.8);
-                    row[$"{ columnName}Percentile90"] = MathUtilities.Percentile(values, 0.9);
+                    row[$"{columnName}Percentile10"] = MathUtilities.Percentile(values, 0.1);
+                    row[$"{columnName}Percentile20"] = MathUtilities.Percentile(values, 0.2);
+                    row[$"{columnName}Percentile30"] = MathUtilities.Percentile(values, 0.3);
+                    row[$"{columnName}Percentile40"] = MathUtilities.Percentile(values, 0.4);
+                    row[$"{columnName}Percentile60"] = MathUtilities.Percentile(values, 0.6);
+                    row[$"{columnName}Percentile70"] = MathUtilities.Percentile(values, 0.7);
+                    row[$"{columnName}Percentile80"] = MathUtilities.Percentile(values, 0.8);
+                    row[$"{columnName}Percentile90"] = MathUtilities.Percentile(values, 0.9);
                 }
             }
         }

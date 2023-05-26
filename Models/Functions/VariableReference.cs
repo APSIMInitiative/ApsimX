@@ -1,8 +1,8 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using Models.Core;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -23,11 +23,11 @@ namespace Models.Functions
         public string VariableName
         {
             get
-            { 
-                return trimmedVariableName; 
+            {
+                return trimmedVariableName;
             }
             set
-            { 
+            {
                 trimmedVariableName = value.Trim();
                 variable = null;
             }
@@ -54,7 +54,7 @@ namespace Models.Functions
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
             else if (o is Array)
-                return Convert.ToDouble((o as Array).GetValue(arrayIndex), 
+                return Convert.ToDouble((o as Array).GetValue(arrayIndex),
                                         System.Globalization.CultureInfo.InvariantCulture);
             else
             {

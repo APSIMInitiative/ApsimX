@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -5,9 +8,7 @@ using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.Soils;
 using Models.Soils.Nutrients;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 namespace Models.Surface
 {
     /// <summary>
@@ -16,7 +17,7 @@ namespace Models.Surface
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(Zone))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass
     {
         /// <summary>The water balance model</summary>
@@ -24,7 +25,7 @@ namespace Models.Surface
         ISoilWater waterBalance = null;
 
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>Link to the summary component</summary>
@@ -275,7 +276,7 @@ namespace Models.Surface
             {
                 // Return an empty live material. Stock won't find the dead material unless there 
                 // is matching live material.
-                yield return new DamageableBiomass("Residue", new Biomass(), isLive:true);  
+                yield return new DamageableBiomass("Residue", new Biomass(), isLive: true);
                 yield return new DamageableBiomass("Residue", new Biomass()
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
@@ -286,7 +287,7 @@ namespace Models.Surface
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
                     StorageN = 0.0,
-                }, isLive:false);
+                }, isLive: false);
             }
         }
 
@@ -879,7 +880,7 @@ namespace Models.Surface
                 residue_no = GetResidueNumber(SOMDecomp.Pool[counter].Name);
 
                 if (MathUtilities.IsLessThan(totNDecomp, 0.0) || MathUtilities.IsGreaterThan(totNDecomp, nPotDecomp[residue_no]))
-                    summary.WriteMessage(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}", 
+                    summary.WriteMessage(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}",
                                                              0.0, totNDecomp, nPotDecomp[residue_no]), MessageType.Warning);
 
                 SOMc = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.C) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.C);
@@ -939,7 +940,7 @@ namespace Models.Surface
         /// <param name="fIncorp">The f incorp.</param>
         /// <param name="tillageDepth">The tillage depth.</param>
         private void Incorp(double fIncorp, double tillageDepth)
-        {            
+        {
             int deepestLayer;
             int nLayers = soilPhysical.Thickness.Length;
             double F_incorp_layer = 0;
@@ -980,7 +981,7 @@ namespace Models.Surface
                 cumDepth = cumDepth + soilPhysical.Thickness[layer];
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
-            
+
             Incorporated.Layer = new FOMPoolLayerType[deepestLayer + 1];
 
             for (int layer = 0; layer <= deepestLayer; layer++)
@@ -1156,15 +1157,15 @@ namespace Models.Surface
                 SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
                 SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
-            }            
+            }
         }
 
         /// <summary>Resize2s the d array.</summary>
         /// <param name="original">The original.</param>
         /// <returns></returns>
-        private double[,] IncreasePoolArray (double[,] original)
+        private double[,] IncreasePoolArray(double[,] original)
         {
-            double[,] newArray = new double[original.GetLength(0), original.GetLength(1)+1];
+            double[,] newArray = new double[original.GetLength(0), original.GetLength(1) + 1];
 
             for (int x = 0; x < original.GetLength(0); x++)
                 for (int y = 0; y < original.GetLength(1); y++)

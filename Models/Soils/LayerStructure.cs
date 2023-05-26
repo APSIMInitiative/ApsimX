@@ -1,8 +1,8 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
-using System;
 
 namespace Models.Soils
 {

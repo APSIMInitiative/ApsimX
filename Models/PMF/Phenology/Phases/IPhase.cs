@@ -1,7 +1,7 @@
+using Models.Core;
 
 namespace Models.PMF.Phen
 {
-    using Models.Core;
 
     /// <summary>Interface for a function</summary>
     public interface IPhase : IModel
@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
         bool DoTimeStep(ref double PropOfDayToUse);
 
         /// <summary> Fraction of progress through the phase</summary>
-        double FractionComplete { get;}
+        double FractionComplete { get; }
 
         /// <summary>Resets the phase.</summary>
         void ResetPhase();

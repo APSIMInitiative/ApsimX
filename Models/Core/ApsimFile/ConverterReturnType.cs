@@ -1,8 +1,8 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System.Xml;
+using Newtonsoft.Json.Linq;
+
+namespace Models.Core.ApsimFile
 {
-    using Newtonsoft.Json.Linq;
-    using System.Xml;
-    using System.Collections.Generic;
 
     /// <summary>A class for holding return values from Converter.DoConvert method.</summary>
     public class ConverterReturnType
@@ -17,7 +17,7 @@
         public bool DidConvert { get; set; }
 
         /// <summary>A model being converted</summary>
-        public IModel NewModel{ get; set; }
+        public IModel NewModel { get; set; }
 
 
     }

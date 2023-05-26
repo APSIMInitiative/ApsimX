@@ -1,11 +1,9 @@
-﻿
+﻿using System;
+using Models.Core;
+using Models.Functions;
+
 namespace Models.Soils.Nutrients
 {
-    using Core;
-    using Models.Functions;
-    using System;
-    using System.Reflection;
-    using Interfaces;
 
     /// <summary>
     /// Encapsulates a nitrogen flow between mineral N pools.
@@ -38,7 +36,7 @@ namespace Models.Soils.Nutrients
         /// Value of total loss
         /// </summary>
         public double[] Natm { get; set; }
-        
+
         /// <summary>
         /// Value of N2O lost
         /// </summary>
@@ -94,13 +92,13 @@ namespace Models.Soils.Nutrients
 
 
             double[] destination = null;
-            if (destinationName !=null)
+            if (destinationName != null)
                 destination = destinationSolute.kgha;
 
-            for (int i= 0; i < numLayers; i++)
+            for (int i = 0; i < numLayers; i++)
             {
                 double nitrogenFlow = 0;
-                if (source[i]>0)
+                if (source[i] > 0)
                     nitrogenFlow = rate.Value(i) * source[i];
 
                 if (nitrogenFlow > 0)

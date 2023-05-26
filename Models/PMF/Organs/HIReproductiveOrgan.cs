@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
-using Models.Interfaces;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
-using System.Linq;
 
 namespace Models.PMF.Organs
 {
@@ -93,19 +93,19 @@ namespace Models.PMF.Organs
         public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
-        public BiomassSupplyType NSupply { get;  set; }
+        public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>Sets the dm potential allocation.</summary>
         /// <summary>Sets the dry matter potential allocation.</summary>
-         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter) { }
-        
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter) { }
+
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
-         public double NFixationCost { get { return 0; } }
+        public double NFixationCost { get { return 0; } }
 
         /// <summary>Minimum N concentration</summary>
         [JsonIgnore]
-         public double MinNconc { get { return 0; } }
+        public double MinNconc { get { return 0; } }
 
 
 
@@ -234,7 +234,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Sets the n allocation.</summary>
-        public  void SetNitrogenAllocation(BiomassAllocationType nitrogen)
+        public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
             Live.StructuralN += nitrogen.Structural;
         }

@@ -1,9 +1,9 @@
 ﻿using System;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
@@ -919,18 +919,18 @@ namespace Models
             }
         }
 
-    /// <summary>
-    /// Restrict actual production for plants based on carbon to nitrogen ratios
-    /// Note, currently(and it could be changed for clarity), cfrac stores carbon allocation in ABOVE and BELOW for herbs,
-    /// in plant parts for woody plants.
-    /// </summary>
-    /// <param name="iFacet">Facet under consideration</param>
-    /// <param name="nparts"></param>
-    /// <param name="availableNitrogen"></param>
-    /// <param name="rimpct"></param>
-    /// <param name="cfrac"></param>
-    /// <param name="uptake"></param>
-    private void RestrictProduction(int iFacet, int nparts, double availableNitrogen, double rimpct, double[] cfrac, out double[] uptake)
+        /// <summary>
+        /// Restrict actual production for plants based on carbon to nitrogen ratios
+        /// Note, currently(and it could be changed for clarity), cfrac stores carbon allocation in ABOVE and BELOW for herbs,
+        /// in plant parts for woody plants.
+        /// </summary>
+        /// <param name="iFacet">Facet under consideration</param>
+        /// <param name="nparts"></param>
+        /// <param name="availableNitrogen"></param>
+        /// <param name="rimpct"></param>
+        /// <param name="cfrac"></param>
+        /// <param name="uptake"></param>
+        private void RestrictProduction(int iFacet, int nparts, double availableNitrogen, double rimpct, double[] cfrac, out double[] uptake)
         {
             uptake = new double[3];
             if ((availableNitrogen <= 1E-4) && (parms.maxSymbioticNFixationRatio == 0.0))
@@ -1320,7 +1320,7 @@ namespace Models
             double avg_lignin = (ligninLeaf[Facet.herb] + ligninLeaf[Facet.shrub] + ligninLeaf[Facet.tree]) / 3.0;
             avg_lignin = Math.Max(0.02, avg_lignin);   // From Century CmpLig.f
             avg_lignin = Math.Min(0.50, avg_lignin);
-            PartitionLitter(surfaceIndex, feces, urine, avg_lignin);  
+            PartitionLitter(surfaceIndex, feces, urine, avg_lignin);
         }
 
         /// <summary>
@@ -1813,7 +1813,7 @@ namespace Models
                     // Incorproate annuals.  Do so after the season has ended and standing dead has fallen to litter, etc. The best time to account for
                     // annual death may be the beginning of the following year, when phenology is reset to 0.
                     if (month == Math.Round(parms.monthToRemoveAnnuals) && iFacet == Facet.herb)
-                        death_rate = death_rate + propAnnualDecid[Facet.herb];  
+                        death_rate = death_rate + propAnnualDecid[Facet.herb];
                     // EJZ - The C# compiler points out that the assignment above is futile; the value is never used.
 #if CONSTRAIN_MODEL
                     temp_rate = Math.Min(death_rate, partBasedDeathRate[iFacet]);

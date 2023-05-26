@@ -1,10 +1,8 @@
 using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Newtonsoft.Json;
-using System.IO;
-using Models.Functions;
-using APSIM.Shared.Documentation;
-using System.Collections.Generic;
 
 namespace Models.PMF.Phen
 {
@@ -48,7 +46,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase()  { }
+        public void ResetPhase() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public override IEnumerable<ITag> Document()
@@ -59,5 +57,5 @@ namespace Models.PMF.Phen
     }
 }
 
-      
-      
+
+

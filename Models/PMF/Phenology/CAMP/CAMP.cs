@@ -1,14 +1,11 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
 using Models.Core;
 using Models.Functions;
-using Models.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
 
 namespace Models.PMF.Phen
 {
-   
+
     /// <summary>
     /// Development Gene Expression
     /// </summary>
@@ -139,7 +136,7 @@ namespace Models.PMF.Phen
         private bool isAtFlagLeaf { get; set; }
 
         /// <summary></summary>
-        [JsonIgnore] public bool IsVernalised { get { return isVernalised; }}
+        [JsonIgnore] public bool IsVernalised { get { return isVernalised; } }
 
         /// <summary>Long photoperiod Haunstage accumulation.</summary>
         [JsonIgnore] public double LPp { get; private set; }
@@ -232,7 +229,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PrePhenology")]
         private void OnPrePhenology(object sender, EventArgs e)
         {
-            if ((isImbibed==true) && (isAtFlagLeaf == false))
+            if ((isImbibed == true) && (isAtFlagLeaf == false))
             {
                 ZeroDeltas();
 
@@ -268,7 +265,7 @@ namespace Models.PMF.Phen
                     { isMethalating = true; }
                     else
                     { isMethalating = false; }
-                    
+
                     if (isMethalating == true)
                     {
                         dMethColdVrn1 = Math.Min(ColdVrn1 - MethalationThreshold,
@@ -291,10 +288,10 @@ namespace Models.PMF.Phen
                 VrnX += dVrnX;
                 BaseVrn1 += dBaseVrn1;
                 MethColdVrn1 += dMethColdVrn1;
-                
+
                 // Effective expression of Vrn1 is the sum of baseVrn1, MethalatedVrn1 and Vrnx expression
                 Vrn1 += (dMethColdVrn1 + dBaseVrn1 + dVrnX);
-                
+
                 // Effective Vrn2 expression is the potential expression less that which is blocked by Vrn1
                 Vrn2 = Math.Max(0.0, pVrn2 - Vrn1);
 
@@ -304,14 +301,14 @@ namespace Models.PMF.Phen
                 {
                     isVernalised = true;
                 }
-                    
+
                 // Then work out Vrn3 expression
                 if ((isVernalised == true) && (isReproductive == false))
-                dVrn3 = CalcdPPVrn(Params.BaseDVrn3, Params.MaxDVrn3, dHS);
+                    dVrn3 = CalcdPPVrn(Params.BaseDVrn3, Params.MaxDVrn3, dHS);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
                 // Then work out phase progression based on Vrn expression
-                if ((Vrn3 >=  0.3) && (isInduced == false))
+                if ((Vrn3 >= 0.3) && (isInduced == false))
                     isInduced = true;
                 if ((Vrn3 >= 1.0) && (isReproductive == false))
                     isReproductive = true;

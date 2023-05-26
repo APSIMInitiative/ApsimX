@@ -1,10 +1,11 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF.Library;
+using Models.Soils;
+
+namespace Models.PMF
 {
-    using Library;
-    using Models.Core;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Data passed to leaf tip appearance occurs.
@@ -177,7 +178,7 @@
                     throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
             }
         }
-        
+
         /// <summary>
         /// Method to set the FractionToResidue for specified Organ
         ///</summary>

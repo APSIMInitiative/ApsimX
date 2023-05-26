@@ -80,7 +80,7 @@ namespace Models.Functions.SupplyFunctions
                 return Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value())) * FW.Value() * FCO2.Value();
             }
         }
-        
+
         /// <summary>
         /// Total plant "actual" radiation use efficiency (for the day) corrected by reducing factors (g biomass/MJ global solar radiation) CHCK-EIT
         /// </summary>

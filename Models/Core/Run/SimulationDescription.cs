@@ -1,12 +1,13 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using Models.Storage;
+using static Models.Core.Overrides;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using static Models.Core.Overrides;
 
     /// <summary>
     /// Encapsulates all the bits that are need to construct a simulation

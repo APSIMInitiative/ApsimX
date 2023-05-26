@@ -1,10 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
 using Models.Core;
-using Models.Functions;
-using Models.Interfaces;
-using Newtonsoft.Json;
-using System;
-using System.Linq;
 
 namespace Models.PMF.Phen
 {
@@ -21,15 +16,15 @@ namespace Models.PMF.Phen
         /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
         [Description("MinLN - Final Leaf Number (FLN) when fully vernalised before HS1.1 and then grown in >16h Pp")]
         public double MinLN { get; set; }
-        
+
         /// <summary>PpLN - Increase in FLN when fully vernalised before HS1.1 then grown at >18oC in 8h Pp</summary>
         [Description("PpLN - Increase in FLN when fully vernalised before HS1.1 then grown at >18oC in <8h Pp")]
         public double PpLN { get; set; }
-        
+
         /// <summary>VrnLN - Increase in FLN when un-vernalised and then grown in 8h Pp</summary>
         [Description("VrnLN - Increase in FLN when un-vernalised and grown in 8h Pp")]
         public double VrnLN { get; set; }
-        
+
         /// <summary>Final Leaf Number when grown at > 20oC in 8h Pp</summary>
         [Description("VxPLN - Increase/Decrease in VrnLN when unvernalised and grown in >16h Pp")]
         public double VxPLN { get; set; }

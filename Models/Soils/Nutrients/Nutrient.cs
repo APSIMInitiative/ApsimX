@@ -1,18 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Documentation.Tags;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Surface;
+
 namespace Models.Soils.Nutrients
 {
-    using Interfaces;
-    using Models.Core;
-    using System;
-    using APSIM.Shared.Utilities;
-    using Models.Surface;
-    using Models.Soils;
-    using System.Collections.Generic;
-    using Models;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Documentation.Tags;
 
     /// <summary>
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
@@ -52,9 +51,9 @@ namespace Models.Soils.Nutrients
         /// <summary>The surface organic matter</summary>
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>The inert pool.</summary>
@@ -255,7 +254,7 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>Net N Mineralisation from surface residue</summary>
-        public double[] MineralisedNSurfaceResidue 
+        public double[] MineralisedNSurfaceResidue
         {
             get
             {
@@ -416,7 +415,7 @@ namespace Models.Soils.Nutrients
                 // way to do this easily.
                 for (int i = 0; i < totalN.Length; i++)
                     totalN[i] += Urea.kgha[i] + NO3.kgha[i] + NH4.kgha[i];
-                
+
                 return totalN;
             }
         }
@@ -447,7 +446,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
         public void DoIncorpFOM(FOMLayerType FOMdata)
-        { 
+        {
             bool nSpecified = false;
             for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
             {
@@ -524,8 +523,8 @@ namespace Models.Soils.Nutrients
             for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
                 InitialResidueC += SurfaceResidueDecomposition.Pool[i].FOM.C;
             FinalResidueC = SurfaceResidue.C[0];
-            FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC,InitialResidueC,0);
-            if (FractionDecomposed <1)
+            FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
+            if (FractionDecomposed < 1)
             { }
             for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
             {
@@ -554,7 +553,7 @@ namespace Models.Soils.Nutrients
 
             surfaceResiduePool.C[0] = 0;
             surfaceResiduePool.N[0] = 0;
-            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]),0.0);
+            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
 
             for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
             {
@@ -626,7 +625,7 @@ namespace Models.Soils.Nutrients
             if (needAtmosphereNode)
                 directedGraphInfo.AddTransparentNode("Atmosphere");
 
-            
+
             directedGraphInfo.End();
         }
 

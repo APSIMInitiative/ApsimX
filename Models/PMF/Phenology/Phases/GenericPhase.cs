@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -134,5 +133,5 @@ namespace Models.PMF.Phen
     }
 }
 
-      
-      
+
+

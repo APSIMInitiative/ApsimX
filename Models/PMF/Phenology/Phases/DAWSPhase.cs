@@ -1,11 +1,7 @@
 using System;
-using Models.Core;
-using Models.PMF.Organs;
-using Newtonsoft.Json;
-using Models.PMF.Struct;
-using System.IO;
-using Models.Functions;
 using Models.Climate;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -54,7 +50,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return Math.Min(1.0, ((double)met.DaysSinceWinterSolstice- (double)StartDAWS) / ((double)DAWStoProgress - (double)StartDAWS));
+                return Math.Min(1.0, ((double)met.DaysSinceWinterSolstice - (double)StartDAWS) / ((double)DAWStoProgress - (double)StartDAWS));
             }
         }
 
@@ -71,9 +67,9 @@ namespace Models.PMF.Phen
                 if (clock.Today.DayOfYear < met.WinterSolsticeDOY)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
-                        StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
+                        StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear - 1;
                     else
-                        StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
+                        StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear - 1;
                 }
                 else
                     StartDAWS = clock.Today.DayOfYear - met.WinterSolsticeDOY;
@@ -81,7 +77,7 @@ namespace Models.PMF.Phen
                 First = false;
             }
 
-            if ((met.DaysSinceWinterSolstice >= DAWStoProgress)||
+            if ((met.DaysSinceWinterSolstice >= DAWStoProgress) ||
                 ((DAWStoProgress >= 365) & (met.DaysSinceWinterSolstice == 0)))
             {
                 proceedToNextPhase = true;

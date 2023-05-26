@@ -1,13 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
@@ -142,7 +138,7 @@ namespace Models
                 double avg_int = (0.0003 * litterd + 0.0006 * sd) * fwloss_1;   // Not stored long-term until shown as needed
                                                                                 // Calculate bare soil evaporation
                 avg_bare_soil_evap = 0.5 * Math.Exp((-0.002 * litterd) - (0.004 * sd)) * fwloss_2;  // Not stored long-term so far.
-                                                                                                           // Calculate total surface evaporation losses.  The maximum allowable is 0.4 * PET
+                                                                                                    // Calculate total surface evaporation losses.  The maximum allowable is 0.4 * PET
                 evl = Math.Min(((avg_bare_soil_evap + avg_int) * pptSoil), (0.4 * petRemaining));
                 evaporation = evaporation + evl;
                 // Calculate remaining water to add to soil and potential transpiration as remaining pet
@@ -167,7 +163,7 @@ namespace Models
                 pttr = petRemaining * 0.65 * (1.0 - Math.Exp(-0.020 * avg_live_biomass)) *
                   ((co2EffectOnProduction[Facet.herb] + co2EffectOnProduction[Facet.shrub] +
                     co2EffectOnProduction[Facet.tree]) / 3.0);  // NOT facet-based.Water loss will be based on the average of the
-                                                                     // three facets.
+                                                                // three facets.
             if (pttr <= trap)
                 trap = pttr;
             if (trap <= 0.0)
@@ -901,7 +897,7 @@ namespace Models
             runoffN = parms.precipNDeposition[1] * runoff;
 
             mineralNitrogen[surfaceIndex] = mineralNitrogen[surfaceIndex] - runoffN;
-        }        
+        }
 
         /// <summary>
         /// calculate effects on decomposition, including temperature, water, and anerobic effects from precipitation.

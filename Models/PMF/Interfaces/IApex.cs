@@ -1,7 +1,4 @@
-﻿using Models.PMF.Organs;
-using System.Collections.Generic;
-
-namespace Models.PMF.Interfaces
+﻿namespace Models.PMF.Interfaces
 {
     /// <summary>
     /// An interface for an apex model.

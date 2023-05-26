@@ -1,13 +1,14 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Soils;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Models.Soils;
-    using System.Globalization;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -413,7 +414,7 @@
                         throw new Exception($"Array index {index} is invalid for {property.Name} ({property.Name} is not an array)");
                     }
                 }
-                
+
 
                 return obj;
             }

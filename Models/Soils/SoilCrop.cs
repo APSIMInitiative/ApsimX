@@ -1,10 +1,11 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Linq;
 
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
@@ -80,7 +81,7 @@
                 var soilPhysical = FindAncestor<IPhysical>();
                 if (soilPhysical == null)
                     return null;
-                return  MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
+                return MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
             }
         }
 

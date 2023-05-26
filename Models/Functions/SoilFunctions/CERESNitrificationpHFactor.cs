@@ -1,6 +1,6 @@
 ﻿using System;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Soils;
 
 namespace Models.Functions
