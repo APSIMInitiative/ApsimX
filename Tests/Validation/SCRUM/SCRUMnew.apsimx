@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 273,
+  "ExplorerWidth": 326,
   "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
@@ -1372,62 +1372,19 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "InitialWt",
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "",
+                  "Name": "ExpressionFunction",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "InitialFraction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            1.0,
-                            2.0
-                          ],
-                          "Y": [
-                            0.0066,
-                            0.015
-                          ],
-                          "XVariableName": null,
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Stage",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Plant].TotalDMatHarvest",
-                      "Name": "FinalWt",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "",
-                  "Name": "ExpressionFunction",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m2",
+                  "Name": "InitialWt",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4418,7 +4375,6 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 1.0,
               "Name": "surface organic matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
@@ -4443,7 +4399,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        public enum EstablishStages {Seed, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        private ScrumManagement management {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);\n                //referee.SetScrumRunning(management);   \r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        public enum EstablishStages {Seed, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        private ScrumManagement management {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "CropName",
@@ -4455,7 +4411,7 @@
                 },
                 {
                   "Key": "EstablishStage",
-                  "Value": "Seed"
+                  "Value": "Seedling"
                 },
                 {
                   "Key": "HarvestDate",
@@ -4482,9 +4438,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "PlantType": "SCRUM",
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
               "Children": [],
@@ -4518,200 +4471,6 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "Definitions": [
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "CalciteCA",
-                  "Description": "Ca as finely ground Agricultural Lime",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 1.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "CalciteFine",
-                  "Description": "finely ground Agricultural Lime",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.4
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "Dolomite",
-                  "Description": "finely ground dolomite",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.22
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NO3N",
-                  "Description": "N as nitrate",
-                  "FractionNO3": 1.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NH4N",
-                  "Description": "N as ammonium",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 1.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NH4NO3N",
-                  "Description": "ammonium nitrate",
-                  "FractionNO3": 0.5,
-                  "FractionNH4": 0.5,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "DAP",
-                  "Description": "di-ammonium phosphate",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.18,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "MAP",
-                  "Description": "mono-ammonium phosphate",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.11,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "UAN_N",
-                  "Description": "N as Urea-AmmoniumNitrate",
-                  "FractionNO3": 0.25,
-                  "FractionNH4": 0.25,
-                  "FractionUrea": 0.5,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "UreaN",
-                  "Description": "N as urea",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 1.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "UreaNO3",
-                  "Description": "N as urea",
-                  "FractionNO3": 0.5,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.5,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "Urea",
-                  "Description": "Urea fertiliser",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.46,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NH4SO4N",
-                  "Description": "ammonium sulphate",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 1.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "RockP",
-                  "Description": "Rock phosphorus",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.8,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.2,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "BandedP",
-                  "Description": "Banded phosphorus",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 1.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "BroadcastP",
-                  "Description": "Broadcast phosphorus",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 1.0,
-                  "FractionCa": 0.0
-                }
-              ],
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
@@ -4894,8 +4653,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -16.6793956412923,
-              "Maximum": 1684.6179597705475,
+              "Minimum": -16.66706260425526,
+              "Maximum": 1683.3723230298067,
               "Interval": null
             },
             {
@@ -5719,8 +5478,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.00970999271515199,
-              "Maximum": 0.9797092642556131,
+              "Minimum": -0.009709992549125924,
+              "Maximum": 0.9797092474869804,
               "Interval": null
             },
             {
@@ -5729,8 +5488,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -21.412563839552185,
-              "Maximum": 3611.0679040211444,
+              "Minimum": 657.5646466551842,
+              "Maximum": 4290.045114515882,
               "Interval": null
             },
             {
@@ -5739,8 +5498,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -3.3383363194774756,
-              "Maximum": 1011.9642666538504,
+              "Minimum": -1.7721346536513645,
+              "Maximum": 741.3123486743131,
               "Interval": null
             }
           ],
@@ -6545,8 +6304,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.06376512787677997,
-              "Maximum": 6.439277915580039,
+              "Minimum": -0.06376514658562962,
+              "Maximum": 6.439279805173854,
               "Interval": null
             }
           ],

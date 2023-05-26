@@ -158,6 +158,7 @@ namespace Models.PMF.Scrum
             {"TtLateReproductive","[Phenology].LateReproductive.Target.FixedValue ="},
             {"TtMaturity","[Phenology].Maturity.Target.FixedValue ="},
             {"TtRipe","[Phenology].Ripe.Target.FixedValue ="},
+            {"InitialWt","[Stover].InitialWt.FixedValue = "},
             {"BaseT","[Phenology].ThermalTime.Response.Y[1] = "},
             {"OptT","[Phenology].ThermalTime.Response.Y[2] = " },
             {"MaxT","[Phenology].ThermalTime.Response.Y[3] = " }
@@ -174,8 +175,10 @@ namespace Models.PMF.Scrum
                 cropParams["FixationRate"] += "1000";
             else
                 cropParams["FixationRate"] += "0.0";
-            cropParams["DryMatterContent"] += ((100 - this.MoisturePc) / 100).ToString();
-            cropParams["ExpectedYield"] += (management.ExpectedYield * 100).ToString();
+            double dmc = (100 - this.MoisturePc) / 100;
+            cropParams["DryMatterContent"] += dmc.ToString();
+            double ey = management.ExpectedYield * 100;
+            cropParams["ExpectedYield"] += ey.ToString();
             cropParams["HarvestIndex"] += this.HarvestIndex.ToString();
             cropParams["ProductNConc"] += this.ProductNConc.ToString();
             cropParams["StoverNConc"] += this.StoverNConc.ToString();
@@ -215,6 +218,9 @@ namespace Models.PMF.Scrum
             cropParams["TtLateReproductive"] += (T_mat * (PropnTt["LateReproductive"] - PropnTt["MidReproductive"])).ToString();
             cropParams["TtMaturity"] += (T_mat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (T_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
+
+            double finalDM = ey * dmc * (1 / this.HarvestIndex);
+            cropParams["InitialWt"] += (finalDM * PropnMaxDM[management.EstablishStage]).ToString();  
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
