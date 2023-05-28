@@ -1484,7 +1484,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "1000000/[Peanut].SowingData.Population/[Peanut].SowingData.RowSpacing",
+                  "Expression": "divide(divide(1000000,[Peanut].SowingData.Population),[Peanut].SowingData.RowSpacing)",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
