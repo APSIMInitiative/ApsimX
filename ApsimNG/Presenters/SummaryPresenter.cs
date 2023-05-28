@@ -194,23 +194,37 @@ namespace UserInterface.Presenters
 
 
                 // Table headings
+                bool isFirstTableNamePrinted = false;
                 foreach (InitialConditionsTable table in soluteTables)
                 {
-                    soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
+                    if (!isFirstTableNamePrinted)
+                    {
+                        soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
+                        isFirstTableNamePrinted = true;
+                    }
+                    else
+                        soluteMarkdownTable.AppendFormat("{0}|   |", table.Model.Name);
                 }
 
                 soluteMarkdownTable.AppendLine();
                 soluteMarkdownTable.Append("|");
                 // Dividers for headings.
+                bool isFirstSoluteTablePrinted = false;
                 foreach (InitialConditionsTable table in soluteTables)
                 {
-                    soluteMarkdownTable.AppendFormat("---|---:|---:|");
+                    if (!isFirstSoluteTablePrinted)
+                    {
+                        soluteMarkdownTable.AppendFormat("---|---:|---:|");
+                        isFirstSoluteTablePrinted = true;
+                    }
+                    else
+                        soluteMarkdownTable.AppendFormat("---:|---:|");
                 }
 
                 soluteMarkdownTable.AppendLine();
                 if (!soluteTables.IsNullOrEmpty<InitialConditionsTable>())
                 {
-                    soluteMarkdownTable.Append("|**Depth (mm)**|");
+                    soluteMarkdownTable.Append("|**Depth(mm)**|");
                 }
 
                 // Value columns
@@ -219,11 +233,10 @@ namespace UserInterface.Presenters
                     IEnumerable<string> units = table.Conditions.Select(i => i.Units);
                     List<string> unitStrings = units.ToList();
                     if (unitStrings[1] == "ppm")
-                        soluteMarkdownTable.Append($"**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (kg/ha)**");
+                        soluteMarkdownTable.Append($"**{unitStrings[1]}**|**kg/ha**|");
                     else
-                        soluteMarkdownTable.Append($"**InitialValues ({unitStrings[1]})**|**InitialValuesConverted (ppm)**");
+                        soluteMarkdownTable.Append($"**{unitStrings[1]}**|**ppm**|");
                 }
-                soluteMarkdownTable.Append("|");
 
                 List<List<InitialCondition>> allInitialConditionsLists = new();
 
@@ -245,28 +258,27 @@ namespace UserInterface.Presenters
 
                 // Print the values line-by-line for each condition.
                 soluteMarkdownTable.AppendLine();
-                foreach (List<InitialCondition> conditionlist in allInitialConditionsLists)
+                // Gets the list length of one of the InitialCondition value lists.
+                int valueCount = tempValueLists[0].Count;
+                // Create a markdown table row for each value in the list.
+                for (int i = 0; i < valueCount; i++)
                 {
-                    // Gets the list length of one of the InitialCondition value lists.
-                    int valueCount = tempValueLists[0].Count;
-                    // Create a markdown table row for each value in the list.
-                    for (int i = 0; i < valueCount; i++)
+                    soluteMarkdownTable.Append("| ");
+                    // Put the actual value in the markdown table.
+                    bool depthPrinted = false;
+                    foreach (List<string> valueList in tempValueLists)
                     {
-                        soluteMarkdownTable.Append("|");
-                        // Put the actual value in the markdown table.
-                        foreach (List<string> valueList in tempValueLists)
+                        double convertedValue = 0.0;
+                        bool canConvert = double.TryParse(valueList[i], out convertedValue);
+                        if (canConvert)
+                            soluteMarkdownTable.AppendFormat("{0:F3}|", convertedValue.Round(3));
+                        else if (!depthPrinted && !canConvert)
                         {
-                            // TODO: Only ever print the first Depth values for each row.
-                            double convertedValue = 0.0;
-                            bool canConvert = double.TryParse(valueList[i], out convertedValue);
-                            if (canConvert)
-                                soluteMarkdownTable.AppendFormat("{0:F3}|", convertedValue.Round(3));
-                            else
-                                soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
+                            soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
+                            depthPrinted = true;
                         }
-                        soluteMarkdownTable.AppendLine();
                     }
-
+                    soluteMarkdownTable.AppendLine();
                 }
                 markdown.Append(soluteMarkdownTable.ToString());
 
