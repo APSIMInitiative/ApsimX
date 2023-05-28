@@ -690,6 +690,9 @@
             else DaysSinceWinterSolstice += 1;
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+
+            //do sanity check on weather
+            Weather.SanityCheck(clock as Clock, this);
         }
 
         /// <summary>Method to read one days met data in from file</summary>
@@ -1038,6 +1041,44 @@
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
+        }
+
+        /// <summary>
+        /// Does a santiy check on this weather data to check that temperatures,
+        /// VP, radition and rain are potentially valid numbers.
+        /// Also checks that every day has weather.
+        /// </summary>
+        private static void SanityCheck(Clock clock, Weather weatherToday)
+        {
+            //things to check:
+            //Mint > MaxtT
+            //VP(if present) <= 0
+            //Radn < 0 or Radn > 40
+            //Rain < 0
+
+            List<string> errors = new List<string>();
+            
+            if (weatherToday.MinT > weatherToday.MaxT)
+            {
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")");
+            }
+            if (weatherToday.VP <= 0)
+            {
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has Vapor Pressure (" + weatherToday.VP + ") which is below 0");
+            }
+            if (weatherToday.Radn < 0)
+            {
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative solar raditation (" + weatherToday.Radn + ")");
+            }
+            if (weatherToday.Radn > 40)
+            {
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has solar raditation (" + weatherToday.Radn + ") which is above 40");
+            }
+            if (weatherToday.Rain < 0)
+            {
+                throw new Exception("Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")");
+            }
+            return;
         }
     }
 }
