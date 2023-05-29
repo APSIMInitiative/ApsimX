@@ -44,28 +44,33 @@ namespace Models.PMF.Scrum
         [Description("Root Nitrogen concentration (g/g)")]
         public double RootNConc { get; set; }
 
-        /// <summary>Stover Nitrogen Concentration</summary>
-        [Description("Stover Nitrogen concentration (g/g)")]
+        /// <summary>Stover Nitrogen Concentration at maturity</summary>
+        [Description("Stover Nitrogen concentration at maturity (g/g)")]
         public double StoverNConc { get; set; }
 
-        /// <summary>Product Nitrogen Concentration</summary>
-        [Description("Product Nitrogen concentration (g/g)")]
+        /// <summary>Product Nitrogen Concentration at maturity</summary>
+        [Description("Product Nitrogen concentration at maturity(g/g)")]
         public double ProductNConc { get; set; }
         
-        /// <summary>Is the crop a legume</summary>
-        [Description("Is the crop a legume")]
-        public bool Legume { get; set; }
-
         /// <summary>Base temperature for crop</summary>
         [Description("Base temperature for crop (oC)")]
         public double BaseT { get; set; }
+        
         /// <summary>Optimum temperature for crop</summary>
         [Description("Optimum temperature for crop (oC)")]
         public double OptT { get; set; }
+        
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for crop (oC)")]
         public double MaxT { get; set; }
 
+        /// <summary>Is the crop a legume</summary>
+        [Description("Is the crop a legume")]
+        public bool Legume { get; set; }
+
+        /// <summary>"Does the crop respond to water stress?"</summary>
+        [Description("Does the crop respond to water stress?")]
+        public bool WaterStress { get; set; }
 
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
@@ -140,8 +145,8 @@ namespace Models.PMF.Scrum
             {"HarvestIndex","[Product].HarvestIndex.FixedValue = "},
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
             {"RootProportion","[Root].RootProportion.FixedValue = "},
-            {"ProductNConc","[Product].MaximumNConc.FixedValue = "},
-            {"StoverNConc","[Stover].MaximumNConc.FixedValue = "},
+            {"ProductNConc","[Product].NConcAtMaturity.FixedValue = "},
+            {"StoverNConc","[Stover].NConcAtMaturity.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
             {"FixationRate","[Nodule].FixationRate.FixedValue = "},
             {"ExtinctCoeff","[Stover].ExtinctionCoefficient.FixedValue = "},
@@ -161,7 +166,8 @@ namespace Models.PMF.Scrum
             {"InitialWt","[Stover].InitialWt.FixedValue = "},
             {"BaseT","[Phenology].ThermalTime.Response.Y[1] = "},
             {"OptT","[Phenology].ThermalTime.Response.Y[2] = " },
-            {"MaxT","[Phenology].ThermalTime.Response.Y[3] = " }
+            {"MaxT","[Phenology].ThermalTime.Response.Y[3] = " },
+            {"WaterStressSens","[Stover].Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "}
         };
 
         /// <summary>
@@ -175,6 +181,11 @@ namespace Models.PMF.Scrum
                 cropParams["FixationRate"] += "1000";
             else
                 cropParams["FixationRate"] += "0.0";
+            if (this.WaterStress)
+                cropParams["WaterStressSens"] += "0.0";
+            else
+                cropParams["WaterStressSens"] += "1.0";
+
             double dmc = (100 - this.MoisturePc) / 100;
             cropParams["DryMatterContent"] += dmc.ToString();
             double ey = management.ExpectedYield * 100;
@@ -187,6 +198,7 @@ namespace Models.PMF.Scrum
             cropParams["RootProportion"] += this.Proot.ToString();
             cropParams["ACover"] += this.Acover.ToString();
             cropParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
+            
 
             // Derive Crop Parameters
             double Tt_Harv = 0.0;

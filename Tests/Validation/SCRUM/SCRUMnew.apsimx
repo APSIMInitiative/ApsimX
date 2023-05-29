@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 326,
+  "ExplorerWidth": 384,
   "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
@@ -612,17 +612,117 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.012,
+                  "FixedValue": 0.008,
                   "Units": null,
-                  "Name": "MaximumNConc",
+                  "Name": "NConcAtMaturity",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "MaximumNConc",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Product].NConcAtMaturity",
+                      "Name": "NConcAtMaturity",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "EarlyNConcElevation",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "SubtractFunction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.05,
+                              "Units": null,
+                              "Name": "NConcAtSeedling",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Product].NConcAtMaturity",
+                              "Name": "NConcAtMaturity",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "DilutionCurve",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                1.0,
+                                2.0,
+                                3.0,
+                                4.0,
+                                5.0,
+                                6.0,
+                                7.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                0.15,
+                                0.05,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "XVariableName": null,
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Stage",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].MinimumNConc",
+                  "VariableName": "[Product].NConcAtMaturity",
                   "Name": "CriticalNConc",
                   "ResourceName": null,
                   "Children": [],
@@ -630,30 +730,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Product].NConcAtMaturity",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].MaximumNConc",
-                      "Name": "MaximumNConc",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.7,
-                      "Units": null,
-                      "Name": "Half",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1108,6 +1189,16 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "off",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -1149,6 +1240,16 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "off",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1481,13 +1582,9 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.0,
-                            0.5,
                             1.0
                           ],
                           "Y": [
-                            0.0,
-                            0.0,
                             1.0,
                             1.0
                           ],
@@ -2035,17 +2132,117 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.008,
+                  "FixedValue": 0.2,
                   "Units": null,
-                  "Name": "MaximumNConc",
+                  "Name": "NConcAtMaturity",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "MaximumNConc",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stover].NConcAtMaturity",
+                      "Name": "NConcAtMaturity",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "EarlyNConcElevation",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "SubtractFunction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.05,
+                              "Units": null,
+                              "Name": "NConcAtSeedling",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Stover].NConcAtMaturity",
+                              "Name": "NConcAtMaturity",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "DilutionCurve",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                1.0,
+                                2.0,
+                                3.0,
+                                4.0,
+                                5.0,
+                                6.0,
+                                7.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                0.15,
+                                0.05,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "XVariableName": null,
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Stage",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].MinimumNConc",
+                  "VariableName": "[Stover].NConcAtMaturity",
                   "Name": "CriticalNConc",
                   "ResourceName": null,
                   "Children": [],
@@ -2053,30 +2250,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stover].NConcAtMaturity",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].MaximumNConc",
-                      "Name": "MaximumNConc",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.7,
-                      "Units": null,
-                      "Name": "Propn",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2421,6 +2599,16 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "off",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -2466,6 +2654,16 @@
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "off",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -2487,7 +2685,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].maximumNconc",
+                          "VariableName": "[Stover].MaximumNconc",
                           "Name": "MaxNconc",
                           "ResourceName": null,
                           "Children": [],
@@ -3744,10 +3942,11 @@
               "RootNConc": 0.01,
               "StoverNConc": 0.01,
               "ProductNConc": 0.015,
-              "Legume": false,
               "BaseT": 0.0,
               "OptT": 30.0,
               "MaxT": 40.0,
+              "Legume": false,
+              "WaterStress": false,
               "Name": "Cereal",
               "ResourceName": null,
               "Children": [],
@@ -3765,10 +3964,11 @@
               "RootNConc": 0.01,
               "StoverNConc": 0.03,
               "ProductNConc": 0.025,
-              "Legume": true,
               "BaseT": 0.0,
               "OptT": 30.0,
               "MaxT": 40.0,
+              "Legume": true,
+              "WaterStress": true,
               "Name": "Legume",
               "ResourceName": null,
               "Children": [],
@@ -4653,8 +4853,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -16.66706260425526,
-              "Maximum": 1683.3723230298067,
+              "Minimum": -15.883202689481616,
+              "Maximum": 1604.2024716376684,
               "Interval": null
             },
             {
@@ -4663,8 +4863,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -21.412563839552185,
-              "Maximum": 3611.0679040211444,
+              "Minimum": 657.5646466551842,
+              "Maximum": 4290.045114515882,
               "Interval": null
             }
           ],
@@ -4701,7 +4901,18 @@
               "Filter": null,
               "Name": "Stover",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4951,8 +5162,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.195686311141307,
-              "Maximum": 19.76331742529727,
+              "Minimum": -0.19113378096713476,
+              "Maximum": 19.303511877705873,
               "Interval": null
             },
             {
@@ -4999,7 +5210,18 @@
               "Filter": null,
               "Name": "Stover",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5104,8 +5326,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.0001599999997473788,
-              "Maximum": 0.015159999999747384,
+              "Minimum": -0.0005099999997473788,
+              "Maximum": 0.05050999999974738,
               "Interval": null
             },
             {
@@ -5152,7 +5374,18 @@
               "Filter": null,
               "Name": "Stover",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5228,8 +5461,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.08492926679886421,
-              "Maximum": 8.576855946710548,
+              "Minimum": -0.08288759496848053,
+              "Maximum": 8.370647091841796,
               "Interval": null
             },
             {
@@ -5248,8 +5481,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -12.000009999999747,
-              "Maximum": 1212.0000099999997,
+              "Minimum": -6.431862684881562,
+              "Maximum": 1211.944879828563,
               "Interval": null
             }
           ],
@@ -5652,8 +5885,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.02003625958937633,
-              "Maximum": 2.0226622185522714,
+              "Minimum": -0.0031434365828434258,
+              "Maximum": 0.31648709489244814,
               "Interval": null
             },
             {
@@ -5900,8 +6133,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -2.106022247491791,
-              "Maximum": 212.7072469966961,
+              "Minimum": -2.2213145377236017,
+              "Maximum": 224.35176831010904,
               "Interval": null
             },
             {
