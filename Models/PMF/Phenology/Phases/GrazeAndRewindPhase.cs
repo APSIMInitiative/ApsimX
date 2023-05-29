@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
-using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
 using APSIM.Shared.Documentation;
 
@@ -42,6 +40,10 @@ namespace Models.PMF.Phen
                 return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]

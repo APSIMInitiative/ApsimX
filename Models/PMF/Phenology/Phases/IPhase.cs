@@ -1,8 +1,7 @@
+using Models.Core;
 
 namespace Models.PMF.Phen
 {
-    using Models.Core;
-
     /// <summary>Interface for a function</summary>
     public interface IPhase : IModel
     {
@@ -21,5 +20,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         void ResetPhase();
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        bool IsEmerged { get; }
     }
 }

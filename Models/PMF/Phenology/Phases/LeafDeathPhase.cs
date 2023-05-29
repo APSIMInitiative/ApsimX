@@ -3,8 +3,6 @@ using Models.Core;
 using Models.PMF.Organs;
 using Newtonsoft.Json;
 using Models.PMF.Struct;
-using System.IO;
-using Models.Functions;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 
@@ -45,6 +43,10 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]

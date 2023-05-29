@@ -400,9 +400,9 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase is StartPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
+                    if (!Emerged && (CurrentPhase.IsEmerged || CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
-                         Emerged = true;
+                        Emerged = true;
                         PlantEmerged?.Invoke(this, new EventArgs());
                     }
 
