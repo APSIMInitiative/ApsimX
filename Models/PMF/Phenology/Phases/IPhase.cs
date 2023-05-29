@@ -21,5 +21,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         void ResetPhase();
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        bool IsEmerged { get; }
     }
 }

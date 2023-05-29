@@ -2,6 +2,7 @@ using System;
 using Models.Climate;
 using Models.Core;
 using Newtonsoft.Json;
+using Models.Climate;
 
 namespace Models.PMF.Phen
 {
@@ -39,6 +40,10 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Days after winter solstice to progress from phase</summary>
         [Description("DAWStoProgress")]

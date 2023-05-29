@@ -1,15 +1,15 @@
-﻿namespace UnitTests.Functions
+﻿using Models;
+using Models.Core;
+using Models.Functions;
+using Models.PMF;
+using Models.PMF.Phen;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+namespace UnitTests.Functions
 {
-    using Models;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF;
-    using Models.PMF.Phen;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-
     [TestFixture]
     class HoldFunctionTests
     {
@@ -31,6 +31,8 @@
         {
             public string Start { get; set; }
             public string End { get; set; }
+
+            public bool IsEmerged { get; } = true;
 
             public double FractionComplete { get; set; }
 

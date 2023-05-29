@@ -41,6 +41,10 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
+
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
         public string PhaseNameToGoto { get; set; }

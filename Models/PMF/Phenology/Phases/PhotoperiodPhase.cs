@@ -55,6 +55,10 @@ namespace Models.PMF.Phen
         [Description("End")]
         public string End { get; set; }
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
+
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
         public double FractionComplete { get; }
