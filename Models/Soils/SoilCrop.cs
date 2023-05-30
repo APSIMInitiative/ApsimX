@@ -1,4 +1,11 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils
 {
 
     /// <summary>A soil crop parameterization class.</summary>
